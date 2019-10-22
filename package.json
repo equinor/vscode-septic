@@ -1,0 +1,30 @@
+{
+    "name": "septic-config",
+    "displayName": "Septic config",
+    "description": "Syntax highlighting and folding for Septic config files.",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.39.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "septic",
+            "aliases": ["Septic", "septic"],
+            "extensions": [".cnfg"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "septic",
+            "scopeName": "source.septic",
+            "path": "./syntaxes/septic.tmLanguage.myoriginal.json"
+        }],
+        "configurationDefaults": {
+            "[septic]": {
+                "files.encoding": "windows1252",
+            }
+        }
+    }
+}
