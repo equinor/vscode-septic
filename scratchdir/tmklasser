@@ -1,0 +1,13 @@
+// entity.name.function (fra meta.function) eller
+// meta.function-call.generic (fra meta.function-call) for calcer
+
+// variable.parameter.function.language (fra meta.function.parameters fra meta.function) 
+// eller meta.function-call.arguments (fra meta.function-call) for calcargumenter
+
+// storage.type.function (fra meta.function) for "def"
+// constant.numeric.dec for tall
+// keyword.control
+
+// entity.name.tag eller entity.name.class for "system", "sopcproc", "dmmyappl" osv
+
+// punctuation.separator.key-value.mapping for :, =

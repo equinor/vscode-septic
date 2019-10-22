@@ -19,7 +19,7 @@
         "grammars": [{
             "language": "septic",
             "scopeName": "source.septic",
-            "path": "./syntaxes/septic.tmLanguage.myoriginal.json"
+            "path": "./syntaxes/septic.tmLanguage.json"
         }],
         "configurationDefaults": {
             "[septic]": {
