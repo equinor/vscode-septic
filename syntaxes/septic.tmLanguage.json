@@ -1,4 +1,5 @@
 {
+	"comment": "TODO: Allow scgparameter in section name++",
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "Septic",
 	"scopeName": "source.septic",
@@ -7,44 +8,25 @@
 			"include": "#section"
 		},
 		{
+			"include": "#tagmapalg"
+		},
+		{
 			"include": "#tagmap"
 		},
 		{
-			"include": "#string"
+			"comment": "Should be removed and fix grps etc explicitly using begin/end instead",
+			"include": "#string" 
+		},
+		{
+			"include": "#scgparameter"
 		}
 	],
 	"repository": {
-		"section": {
+		"tagmapalg": {
+			"comment": "Overrides regular tagmap for the Alg line in CalcPvr",
 			"patterns": [
 				{
-					"match": "^\\s*\\b(\\w*)\\b(:)[\\s]*([\\S\\ ]*)",
-					"captures": {
-						"1": {
-							"name": "entity.name.class.septic"
-						},
-						"2": {
-							"name": "punctuation.separator.key-value.mapping.septic"
-						},
-						"3": {
-							"patterns": [
-								{
-									"match": "(.*)",
-									"captures": {
-										"1": {
-											"name": "constant.numeric.septic"
-										}
-									}
-								}
-							]
-						}
-					}
-				}
-			]
-		},
-		"tagmap": {
-			"patterns": [
-				{
-					"match": "\\s*\\b(.*)\\b(=)[\\s]*(.*)",
+					"match": "^\\s*\\b(Alg)\\b(=)[\\s]*(.*)",
 					"captures": {
 						"1": {
 							"name": "entity.name.tag.septic"
@@ -53,57 +35,109 @@
 							"name": "punctuation.separator.key-value.mapping.septic"
 						},
 						"3": {
-							"name": "variable.parameter.septic"
+							"name": "variable.parameter.septic",
+							"patterns": [
+								{
+									"include": "#scgparameter"
+								},
+								{
+									"include": "#calc"
+								},
+								{
+									"include": "#operator"
+								},
+								{
+									"include": "#separator"
+								},
+								{
+									"include": "#numeric"
+								}			
+							]
 						}
 					}
 				}
 			]
 		},
-		"basicstart": {
+		"calc": {
+			"name": "entity.name.function.septic",
+			"begin": "\\w*\\(",
+			"end": "\\)",
 			"patterns": [
 				{
-					"name": "entity.name.class.septic",
-					"match": "\\s*(S)\\w*(?=:\\s\\w*)"
+					"include": "#scgparameter"
+				},
+				{
+					"include": "#calc"
+				},
+				{
+					"include": "#operator"
+				},
+				{
+					"include": "#separator"
+				},
+				{
+					"include": "#numeric"
+				},
+				{
+					"name": "variable.parameter.function.septic",
+					"match": "\\b\\w*\\b"
 				}
 			]
 		},
-		"basicstop": {
+		"operator": {
+			"name": "keyword.operator.septic",
+			"match": "[+-/*<>]"
+		},
+		"separator": {
+			"name": "punctuation.separator.parameters.septic",
+			"match": "[, ]"
+		},		
+		"tagmap": {
 			"patterns": [
 				{
-					"name": "variable.name.septic",
-					"match": "(?<=\\w: )XYZ"
+					"match": "\\b(\\w*)\\b(=)[\\s]*(.*)$",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag.septic"
+						},
+						"2": {
+							"name": "punctuation.separator.key-value.mapping.septic"
+						},
+						"3": {
+							"name": "variable.parameter.septic",
+							"patterns": [
+								{
+									"include": "#bitfield"
+								},
+								{
+									"include": "#numeric"
+								},
+								{
+									"include": "#string"
+								}
+							]
+						}
+					}
 				}
 			]
 		},
-		"entityclass": {
+		"section": {
 			"patterns": [
 				{
-					"name": "entity.name.class.septic",
-					"match": "\\b[\\w]*\\b(?=[:])"
+					"match": "\\b(\\w*)\\b(:)[\\s]*([\\w\\*]*)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.septic"
+						},
+						"2": {
+							"name": "punctuation.separator.key-value.mapping.septic"
+						},
+						"3": {
+							"name": "entity.name.class.septic"
+						}
+					}
 				}
 			]
-		},
-		"entityname": {
-			"patterns": [
-				{
-					"name": "variable.name.septic",
-					"match": "(?<=: )\\w+"
-				}
-			]
-		},
-		"constant": {
-			"patterns": [
-				{
-					"name": "constant.numeric.dec.septic",
-					"match": "(?<=\\w=\\s\\s)\\d+"
-				}
-			]
-		},
-		"keyword": {
-			"patterns": [{
-				"name": "entity.name.tag.septic",
-				"match": "\\b[\\w]*\\b(?=[=])"
-			}]
 		},
 		"string": {
 			"name": "string.quoted.double.septic",
@@ -113,6 +147,37 @@
 				{
 					"name": "constant.character.escape.septic",
 					"match": "\\\\."
+				}
+			]
+		},
+		"scgparameter": {
+			"patterns": [
+				{
+					"name": "support.type",
+					"begin": "\\{\\{\\s*",
+					"end": "\\s*\\}\\}",
+					"patterns": [
+						{
+							"name": "variable.other",
+							"match": "\\b\\w*\\b"
+						}
+					]
+				}
+			]
+		},
+		"numeric": {
+			"patterns": [
+				{
+					"match": "[+-]?\\b\\d*\\.*\\d+([eE][-+]?\\d+)*\\b",
+					"name": "constant.numeric.septic"
+				}
+			]
+		},
+		"bitfield": {
+			"patterns": [
+				{
+					"match": "[01]{25,}",
+					"name": "constant.numeric.bitfield.septic"
 				}
 			]
 		}
