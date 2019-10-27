@@ -5,6 +5,9 @@
 	"scopeName": "source.septic",
 	"patterns": [
 		{
+			"include": "#comment"
+		},
+		{
 			"include": "#section"
 		},
 		{
@@ -51,7 +54,10 @@
 								},
 								{
 									"include": "#numeric"
-								}			
+								},
+								{
+									"include": "#line_comment"
+								}
 							]
 						}
 					}
@@ -114,6 +120,9 @@
 								},
 								{
 									"include": "#string"
+								},
+								{
+									"include": "#line_comment"
 								}
 							]
 						}
@@ -178,6 +187,43 @@
 				{
 					"match": "[01]{25,}",
 					"name": "constant.numeric.bitfield.septic"
+				}
+			]
+		},
+		"comment": {
+			"patterns": [
+				{
+					"include": "#block_comment"
+				},
+				{
+					"include": "#line_comment"
+				}
+			]
+		},
+		"line_comment": {
+			"patterns": [
+				{
+					"name": "comment.line.double-slash.septic", 
+					"match": "//.*$"
+				}
+			]	
+		},
+		"block_comment": {
+			"patterns": [
+				{
+					"name": "comment.block.septic",
+					"begin": "(\\/\\*)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.definition.comment.begin.septic"
+						}
+					},
+					"end": "(\\*\\/)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.comment.end.septic"
+						}
+					}
 				}
 			]
 		}
