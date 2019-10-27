@@ -2,7 +2,7 @@
     "System": {
         "prefix": "system",
         "body": [
-          "System:        ${1:SystemName}",
+          "System:          ${1:SystemName}",
           "         Text1=  \"${2}\"",
           "         Text2=  \"\"",
           "         Nsecs=  10",
