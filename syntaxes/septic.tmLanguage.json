@@ -11,9 +11,6 @@
 			"include": "#section"
 		},
 		{
-			"include": "#tagmapalg"
-		},
-		{
 			"include": "#tagmap"
 		},
 		{
@@ -25,7 +22,35 @@
 		}
 	],
 	"repository": {
-		"tagmapalg": {
+		"section": {
+			"patterns": [
+				{
+					"match": "\\b(\\w*)\\b(:)[\\s]*([\\w\\*]*)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.septic"
+						},
+						"2": {
+							"name": "punctuation.separator.key-value.mapping.septic"
+						},
+						"3": {
+							"name": "entity.name.class.septic"
+						}
+					}
+				}
+			]
+		},
+		"tagmap": {
+			"patterns": [
+				{
+					"include": "#tagmap_alg"
+				},
+				{
+					"include": "#tagmap_default"
+				}
+			]
+		},
+		"tagmap_alg": {
 			"comment": "Overrides regular tagmap for the Alg line in CalcPvr",
 			"patterns": [
 				{
@@ -64,41 +89,7 @@
 				}
 			]
 		},
-		"calc": {
-			"name": "entity.name.function.septic",
-			"begin": "\\w*\\(",
-			"end": "\\)",
-			"patterns": [
-				{
-					"include": "#scgparameter"
-				},
-				{
-					"include": "#calc"
-				},
-				{
-					"include": "#operator"
-				},
-				{
-					"include": "#separator"
-				},
-				{
-					"include": "#numeric"
-				},
-				{
-					"name": "variable.parameter.function.septic",
-					"match": "\\b\\w*\\b"
-				}
-			]
-		},
-		"operator": {
-			"name": "keyword.operator.septic",
-			"match": "[+-/*<>]"
-		},
-		"separator": {
-			"name": "punctuation.separator.parameters.septic",
-			"match": "[, ]"
-		},		
-		"tagmap": {
+		"tagmap_default": {
 			"patterns": [
 				{
 					"match": "\\b(\\w*)\\b(=)[\\s]*(.*)$",
@@ -130,32 +121,56 @@
 				}
 			]
 		},
-		"section": {
+		"calc": {
+			"name": "entity.name.function.septic",
+			"begin": "\\w*\\(",
+			"end": "\\)",
 			"patterns": [
 				{
-					"match": "\\b(\\w*)\\b(:)[\\s]*([\\w\\*]*)",
-					"captures": {
-						"1": {
-							"name": "keyword.control.septic"
-						},
-						"2": {
-							"name": "punctuation.separator.key-value.mapping.septic"
-						},
-						"3": {
-							"name": "entity.name.class.septic"
-						}
-					}
+					"include": "#scgparameter"
+				},
+				{
+					"include": "#calc"
+				},
+				{
+					"include": "#operator"
+				},
+				{
+					"include": "#separator"
+				},
+				{
+					"include": "#numeric"
+				},
+				{
+					"name": "variable.parameter.function.septic",
+					"match": "\\b\\w*\\b"
 				}
 			]
 		},
-		"string": {
-			"name": "string.quoted.double.septic",
-			"begin": "\"",
-			"end": "\"",
+		"comment": {
 			"patterns": [
 				{
-					"name": "constant.character.escape.septic",
-					"match": "\\\\."
+					"include": "#block_comment"
+				},
+				{
+					"include": "#line_comment"
+				}
+			]
+		},
+		"line_comment": {
+			"patterns": [
+				{
+					"name": "comment.line.septic", 
+					"match": "//.*$"
+				}
+			]	
+		},
+		"block_comment": {
+			"patterns": [
+				{
+					"name": "comment.block.septic",
+					"begin": "\\/\\*",
+					"end": "\\*\\/"
 				}
 			]
 		},
@@ -174,6 +189,25 @@
 				}
 			]
 		},
+		"string": {
+			"name": "string.quoted.double.septic",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.septic",
+					"match": "\\\\."
+				}
+			]
+		},
+		"operator": {
+			"name": "keyword.operator.septic",
+			"match": "[+-/*<>]"
+		},
+		"separator": {
+			"name": "punctuation.separator.parameters.septic",
+			"match": "[, ]"
+		},		
 		"numeric": {
 			"patterns": [
 				{
@@ -185,45 +219,26 @@
 		"bitfield": {
 			"patterns": [
 				{
-					"match": "[01]{25,}",
-					"name": "constant.numeric.bitfield.septic"
-				}
-			]
-		},
-		"comment": {
-			"patterns": [
-				{
-					"include": "#block_comment"
-				},
-				{
-					"include": "#line_comment"
-				}
-			]
-		},
-		"line_comment": {
-			"patterns": [
-				{
-					"name": "comment.line.double-slash.septic", 
-					"match": "//.*$"
-				}
-			]	
-		},
-		"block_comment": {
-			"patterns": [
-				{
-					"name": "comment.block.septic",
-					"begin": "(\\/\\*)",
-					"beginCaptures": {
-						"1": {
-							"name": "punctuation.definition.comment.begin.septic"
-						}
-					},
-					"end": "(\\*\\/)",
-					"endCaptures": {
-						"1": {
-							"name": "punctuation.definition.comment.end.septic"
+					"match": "([01]{25,})",
+					"name": "constant.numeric.bitfield.septic",
+					"captures": {
+						"0": {
+							"name": "constant.numeric.septic",
+							"patterns": [
+								{
+									"include": "#bitfield_one"
+								}
+							]
 						}
 					}
+				}
+			]
+		},
+		"bitfield_one": {
+			"patterns": [
+				{
+					"match": "1",
+					"name": "markup.bold.septic"
 				}
 			]
 		}
