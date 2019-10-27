@@ -1,0 +1,589 @@
+{
+    "System": {
+        "prefix": "system",
+        "body": [
+          "System:        ${1:SystemName}",
+          "         Text1=  \"${2}\"",
+          "         Text2=  \"\"",
+          "         Nsecs=  10",
+          "       PlotMax=  10",
+          "         Nhist=  8640",
+          "         Npred=  360",
+          "         Nmodl=  360",
+          "         Nxupd=  1",
+          "        ClipOn=  OFF",
+          "     ChngLogOn=  ON",
+          "         WdwDx=  800",
+          "         WdwDy=  400",
+          "         Xline=  0",
+          "         Xback=  1",
+          "          Grps=  3",
+          "                 \"\"  \"\"  \"\"",  
+          "       GrpLock=  0000000000000000000000000",
+          "        Xgroup=  0000000000000000000000001",
+          "      MaxLogon=  ROOT",
+          "       RootPwd=  \"\"",
+          "       MngrPwd=  \"\"",
+          "       OperPwd=  \"\"",
+          "       UserPwd=  \"\"",
+          "          Terr=  0",
+          "       DebugNR=  1000",
+          "       DebugOn=  00000010",
+          "         Zname=  225.5",
+          "         Zhilo=  275",
+          "        Zstate=  225",
+          "         Zopen=  225",
+          "         Zfont=  275",
+          "         Zline=  275",
+          "      FontSize=  -1",
+          "  InitialGroup=  -1",
+          "ShowText1WithName=  ON",
+          "       MinXPos=  0",
+          "       MinYPos=  0",
+          "       MaxXPos=  0",
+          "       MaxYPos=  0",
+          "    InitScreen=  -1",
+          "      InitXPos=  -1",
+          "      InitYPos=  -1",
+          "     InitWidth=  -1",
+          "    InitHeight=  -1",
+          "MinimizeByHide=  OFF",
+          "HideCloseButton=  OFF",
+          "OPCSampleTimeOffset=  0"
+        ],
+        "description": "System snippet"
+    },
+    "SopcProc": {
+        "prefix": "sopcproc",
+        "body": [
+          "  SopcProc:      ${1:SopcProcName}",
+          "         Text1=  \"\"",
+          "         Text2=  \"\"",
+          "          Site=  ${2|AIM_AIMGUI|}",
+          "      ServName=  \"${3:OPC Server address}\"",
+          "      ServNode=  \"SERVNODE\"",
+          "   RealTimeFac=  1",
+          "       ProcTag=  \"\"",
+          "AllowActiveTag=  \"${4}\"",
+          "     StatusTag=  \"NotUsed\"",
+          "    DesModeTag=  \"DUMMY_TAG\"",
+          "       PulsTag=  \"${5}\"",
+          "LoopcheckWriteTag=  \"DUMMY_TAG\"",
+          "LoopcheckReadTag=  \"DUMMY_TAG\"",
+          " ServFactorTag=  \"DUMMY_TAG\"",
+          "    CPUTimeTag=  \"DUMMY_TAG\"",
+          "         IdTag=  \"\"",
+          "   ScheduleTag=  \"DUMMY_TAG\"",
+          "        RunSec=  -1",
+          "   RequestRate=  -1",
+          " BadCountLimit=  0",
+          "SampleAgeLimit=  -1",
+          "BlockWritingIfBad=  OFF",
+          "   WriteGroups=  1",
+          "WriteGroupPause=  10"
+        ],
+        "description": "SopcProc snippet"
+    },
+    "SopcCvr": {
+        "prefix": "sopccvr",
+        "body": [
+          "  SopcCvr:       ${1:SopcCvrName}",
+          "         Text1=  \"${2}\"",
+          "         Text2=  \"\"",
+          "        CvrTag=  \"${3}\"",
+          "       MeasTag=  \"${3}.YX\"",
+          "         IdTag=  \"\"",
+          "         SpTag=  \"${3}.YR\"",
+          "      CvLowTag=  \"NotUsed\"",
+          "     CvHighTag=  \"NotUsed\"",
+          " CvSetpointTag=  \"NotUsed\"",
+          "   NotValidTag=  \"${3}.YXF\"",
+          "   CvSwitchTag=  \"${3}.YADA\"",
+          "   CvActiveTag=  \"${3}.XAPC\"",
+          "         LoTag=  \"NotUsed\"",
+          "         HiTag=  \"NotUsed\"",
+          "         Scale=  1",
+          "        Offset=  0"
+        ],
+        "description": "SopcCvr snippet"
+    },
+    "SopcEvr": {
+        "prefix": "sopcevr",
+        "body": [
+          "  SopcEvr:       ${1:SopcEvrName}",
+          "         Text1=  \"${2}\"",
+          "         Text2=  \"\"",
+          "        EvrTag=  \"${3}\"",
+          "       MeasTag=  \"${3}\"",
+          "         IdTag=  \"\"",
+          "   NotValidTag=  \"DUMMY_TAG\""
+        ],
+        "description": "SopcEvr snippet"
+    },
+    "SopcMvr": {
+        "prefix": ["sopcmvr"],
+        "body": [
+          "  SopcMvr:       ${1:SopcMvrName}",
+          "         Text1=  \"${2}\"",
+          "         Text2=  \"\"",
+          "        MvrTag=  \"${3}\"",
+          "       MeasTag=  \"${3}.YXR\"",
+          "         PVTag=  \"${3}.YX\"",
+          "         IdTag=  \"\"",
+          "   NotValidTag=  \"${3}.YXF\"",
+          "     SpCalcTag=  \"${3}.XOUT\"",
+          "         HiTag=  \"${3}.YWRH\"",
+          "         LoTag=  \"${3}.YWRL\"",
+          "         IvTag=  \"${3}.YR\"",
+          "      MvLowTag=  \"DUMMY_TAG\"",
+          "     MvHighTag=  \"DUMMY_TAG\"",
+          "       MvIvTag=  \"DUMMY_TAG\"",
+          "      MaxUpTag=  \"NotUsed\"",
+          "    MaxDownTag=  \"NotUsed\"",
+          "       AutoTag=  \"${3}.YBA\"",
+          "        WhiTag=  \"${3}.YXWH\"",
+          "        WloTag=  \"${3}.YXWL\"",
+          "       CompTag=  \"${3}.YADA\"",
+          "       CaraTag=  \"DUMMY_TAG\"",
+          "       TrakTag=  \"DUMMY_TAG\"",
+          "     ToCompTag=  \"DUMMY_TAG\"",
+          "    ToLocalTag=  \"DUMMY_TAG\"",
+          "   MvActiveTag=  \"${3}.XAPC\"",
+          "   MvSwitchTag=  \"DUMMY_TAG\"",
+          "         Scale=  1",
+          "        Offset=  0"
+        ],
+        "description": "SopcMvr snippet"
+    },
+    "SopcTvr": {
+        "prefix": "sopctvr",
+        "body": [
+          "  SopcTvr:       ${1:SopcTvrName}",
+          "         Text1=  \"${2}\"",
+          "         Text2=  \"\"",
+          "        TvrTag=  \"${3}\"",
+          "       MeasTag=  \"${3}\"",
+          "   NotValidTag=  \"NotUsed\"",
+          "      Text1Tag=  \"\"",
+          "         Scale=  1",
+          "        Offset=  0"
+        ],
+        "description": "SopcTvr snippet"
+    },
+    "DmmyAppl": {
+        "prefix": "dmmyappl",
+        "body": [
+          "  DmmyAppl:      ${1:SystemCalcs}",
+          "         Text1=  \"${2:System calcs}\"",
+          "         Text2=  \"\"",
+          "         Nstep=  1",
+          "       PlotMax=  25",
+          "      MasterOn=  ON",
+          "       DesMode=  ACTIVE"
+        ],
+        "description": "DmmyAppl snippet"
+    },    
+    "Cvr": {
+        "prefix": ["cvr"],
+        "body": [
+            "  Cvr:           ${1:CvrName}",
+            "         Text1=  \"${2}\"",
+            "         Text2=  \"\"",
+            "          Mode=  TRACKING",
+            "          Auto=  OFF",
+            "       PlotMax=  15",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "       PlotGrp=  0000000000000000000000000000000",
+            "          Nfix=  2",
+            "        MaxChg=  -1",
+            "          Unit=  \"\"",
+            "          Meas=  0.0",
+            "       GrpMask=  0000000000000000000000000000000",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  1",
+            "      SetPntOn=  50",
+            "       HighOff=  0",
+            "        LowOff=  0",
+            "    SetPntPrio=  2",
+            "      HighPrio=  1",
+            "       LowPrio=  1",
+            "   HighBackOff=  0",
+            "    LowBackOff=  0",
+            "          Fulf=  1",
+            "     HighPnlty=  1",
+            "      LowPnlty=  1",
+            "     HighLimit=  1000",
+            "      LowLimit=  1000",
+            "     RelxParam=  3    1   30   80",
+            "   FulfReScale=  0.001",
+            "      SetpTref=  1",
+            "     BiasTfilt=  0",
+            "     BiasTpred=  0",
+            "     ConsTfilt=  -1",
+            "         Integ=  0",
+            " TransformType=  NOTRANS",
+            "     BadCntLim=  0",
+            "       DesHorz=  0",
+            "         Neval=  5",
+            "        EvalDT=  0",
+            "   KeepTargets=  OFF",
+            "MeasValidation=  OFF",
+            " MeasHighLimit=  1e+010",
+            "  MeasLowLimit=  -1e+010",
+            "        LockHL=  OFF",
+            "        LockSP=  OFF",
+            "        LockLL=  OFF",
+            "UseFactorWeight=  0"
+        ],
+        "description": "Cvr snippet"
+    },
+    "Dvr": {
+        "prefix": "dvr",
+        "body": [
+          "  Dvr:           ${1:DvrName}",
+          "         Text1=  \"${2}\"",
+          "         Text2=  \"\"",
+          "          Mode=  TRACKING",
+          "       PlotMax=  1.1",
+          "       PlotMin=  -0.1",
+          "      PlotSpan=  -1",
+          "       PlotGrp=  0000000000000000000000000000000",
+          "          Nfix=  0",
+          "          Unit=  \"\"",
+          "          Meas=  0",
+          "       GrpMask=  0000000000000000000000000000000",
+          "       GrpType=  0000000000000000000000000000000",
+          "          Span=  1",
+          "MeasValidation=  OFF",
+          " MeasHighLimit=  1e+010",
+          "  MeasLowLimit=  -1e+010"
+        ],
+        "description": "Dvr snippet"
+    },
+    "Evr": {
+        "prefix": "evr",
+        "body": [
+          "  Evr:           ${1:EvrName}",
+          "         Text1=  \"${2}\"",
+          "         Text2=  \"\"",
+          "       PlotMax=  100",
+          "       PlotMin=  0",
+          "      PlotSpan=  -1",
+          "       PlotGrp=  0000000000000000000000000000000",
+          "          Nfix=  0",
+          "          Unit=  \"\"",
+          "          Meas=  0",
+          "       GrpMask=  0000000000000000000000000000000",
+          "       GrpType=  0000000000000000000000000000000",
+          "          Span=  10",
+          "     UserInput=  OFF",
+          "    UserAccess=  WRRR",
+          "      UserMeas=  0",
+          "      MinInput=  0",
+          "      MaxInput=  0",
+          "ValidationLimit=  -1",
+          "         Color=  BLACK"
+        ],
+        "description": "Evr snippet"
+    },    
+    "Mvr": {
+        "prefix": "mvr",
+        "body": [
+          "  Mvr:           ${1:MvrName}",
+          "         Text1=  \"${2}\"",
+          "         Text2=  \"\"",
+          "          Mode=  ACTIVE",
+          "          Auto=  OFF",
+          "       PlotMax=  100",
+          "       PlotMin=  0",
+          "      PlotSpan=  -1",
+          "       PlotGrp=  0000000000000000000000000000000",
+          "          Nfix=  1",
+          "        MaxChg=  100",
+          "          Unit=  \"\"",
+          "          Meas=  0.0",
+          "       GrpMask=  0000000000000000000000000000000",
+          "       GrpType=  0000000000000000000000000000000",
+          "          Span=  1",
+          "        HighOn=  100",
+          "         LowOn=  0",
+          "  ProcessValue=  0.0",
+          "         IvOff=  0",
+          "         MaxUp=  1",
+          "         MaxDn=  -1",
+          "     MovePnlty=  1",
+          "         IvRoc=  -1",
+          "        IvPrio=  5",
+          "          Fulf=  1",
+          "   FulfReScale=  1",
+          "         Price=  0",
+          "      Blocking=  8    1    2    4    8   16   32   64   96",
+          "MeasValidation=  OFF",
+          " MeasHighLimit=  1e+010",
+          "  MeasLowLimit=  -1e+010",
+          "        LockHL=  OFF",
+          "        LockIV=  OFF",
+          "        LockLL=  OFF",
+          "UseFactorWeight=  0"
+        ],
+        "description": "Mvr snippet"
+    },
+    "Tvr": {
+        "prefix": "tvr",
+        "body": [
+          "  Tvr:           ${1:TvrName}",
+          "         Text1=  \"${2}\"",
+          "         Text2=  \"\"",
+          "       PlotMax=  100",
+          "       PlotMin=  0",
+          "      PlotSpan=  -1",
+          "       PlotGrp=  0000000000000000000000000000000",
+          "          Nfix=  1",
+          "          Unit=  \"\"",
+          "          Meas=  0",
+          "       GrpMask=  0000000000000000000000000000000",
+          "       GrpType=  0000000000000000000000000000000",
+          "          Span=  1",
+          "MeasValidation=  OFF",
+          " MeasHighLimit=  1e+010",
+          "  MeasLowLimit=  -1e+010",
+          "         Color=  BLACK"
+        ],
+        "description": "Tvr snippet"
+      },
+    "ExprModl": {
+        "prefix": "exprmodl",
+        "body": [
+            "  ExprModl:      ${1:ExprModlName}"
+        ]
+    },
+    "CalcModl": {
+        "prefix": "calcmodl",
+        "body": [
+          "  CalcModl:      ${1:SystemCalcs}",
+          "         Text1=  \"\"",
+          "         Text2=  \"\""
+        ],
+        "description": "CalcModl snippet"
+    },
+    "CalcPvr": {
+        "prefix": "calcpvr",
+        "body": [
+            "  CalcPvr:       ${1:CalcPvrName}",
+            "         Text1=  \"${2}\"",
+            "         Text2=  \"\"",
+            "           Alg=  \"${3}\""
+        ],
+        "description": "CalcPvr snippet"
+    },
+    "SmpcAppl": {
+        "prefix": "smpcappl",
+        "body": [
+          "  SmpcAppl:      ${1:SmpcApplName}",
+          "         Text1=  \"\"",
+          "         Text2=  \"\"",
+          "         Npred=  80",
+          "         Nstep=  1",
+          "       PlotMax=  30",
+          "         Nhorz=  80",
+          "        Nstart=  0",
+          "      MasterOn=  ON",
+          "       DesMode=  ACTIVE",
+          "       FailMax=  0",
+          "       PriceOn=  ON",
+          "    PriceScale=  1",
+          "       IterOpt=  OFF",
+          "   IterNewSens=  OFF",
+          "     IterQpMax=  0",
+          "   IterLineMax=  0",
+          "    DoStdSolve=  ON",
+          "  SteadySolver=  QP",
+          "      MajItLim=  200",
+          "      MajPrint=  0",
+          "   ObjConPrint=  OFF",
+          "   VerifyGrads=  OFF",
+          "      FuncPrec=  9.9999999e-009",
+          "         FeTol=  9.9999997e-006",
+          "      OptimTol=  1e-006",
+          "      FdifIntv=  0.001",
+          "    MaxSeconds=  10",
+          "        LmPrio=  100",
+          "    MaxPrioSQP=  100",
+          "    UnConstrnd=  OFF",
+          "      OpenFlag=  CONSTMVR",
+          "       UpdFilt=  0",
+          "       RelPert=  0.050000001",
+          "       FeasTol=  1e-010",
+          "     EachParam=  OFF",
+          "   LinErrorLim=  1000",
+          "     ColdStart=  OFF",
+          "    SimOptimal=  OFF",
+          "     PrintSens=  0",
+          "     SensLimSS=  1e-006",
+          "    SensLimDyn=  1e-006"
+        ],
+        "description": "SmpcAppl snippet"
+    },
+    "MsgBox": {
+        "prefix": "msgbox",
+        "body": [
+          "  MsgBox:        ${1:MsgBoxTxt}",
+          "            Ix=  34",
+          "        MaxLvl=  4",
+          "        MinLvl=  1",
+          "       PlotGrp=  0000000000000000000000000000000",
+          "           Obj=  ~"
+        ],
+        "description": "MsgBox snippet"
+    },
+    "DisplayGroup": {
+        "prefix": "displaygroup",
+        "body": [
+          "  DisplayGroup:  ${1:DisplayGroupName}",
+          "       GroupNo=  ${2:1}",
+          "        Locked=  OFF",
+          "          Rows=  {$3:2}",
+          "          Cols=  {$4:2}",
+          "         xGrid=  OFF",
+          "         yGrid=  OFF",
+          "         xAxis=  OFF",
+          "         yAxis=  ON",
+          "     Autoscale=  OFF",
+          "     Spanscale=  ON",
+          "      HistSize=  180"
+        ],
+        "description": "DisplayGroup snippet"
+    },
+    "Table": {
+        "prefix": "table",
+        "body": [
+          "  Table:         ${1:TableName}",
+          "           Row=  ${2:-1}",
+          "           Col=  ${3:-1}",
+          "       RowSize=  ${4:-1}",
+          "       ColSize=  ${5:-1}",
+          "   NameColSize=  -1",
+          "   TextColSize=  -1",
+          "  ValueColSize=  -1",
+          " GroupsColSize=  -1"
+        ],
+        "description": "Table snippet"
+    },
+    "Appl": {
+        "prefix": "appl",
+        "body": [
+          "  Appl:          ${1:ApplName}"
+        ],
+        "description": "Appl snippet"
+    },
+    "Spacer": {
+        "prefix": "spacer",
+        "body": [
+          "  Spacer:        ${1:SpacerName}",
+          "          Size=  ${2:1}"
+        ],
+        "description": "Spacer snippet"
+    },
+    "Heading": {
+        "prefix": "heading",
+        "body": [
+          "  Heading:       ${1:HeadingName}",
+          "          Text=  \"${2:Headingtext}\"",
+          "    SizeOffset=  ${3:2}"
+        ],
+        "description": "Heading snippet"
+    },
+    "CvrList": {
+        "prefix": "cvrlist",
+        "body": [
+          "  CvrList:       ${1:CVlist}",
+          "          Text=  \"${2:CV}\"",
+          "          Cvrs=  ${3:3}",
+          "                 \"${0}\"  \"\"  \"\""
+        ],
+        "description": "CvrList snippet"
+    },
+    "DvrList": {
+        "prefix": "dvrlist",
+        "body": [
+          "  DvrList:       ${1:DVlist}",
+          "          Text=  \"${2:DV}\"",
+          "          Dvrs=  ${3:3}",
+          "                 \"${0}\"  \"\"  \"\""
+        ],
+        "description": "MvrList snippet"
+    },
+    "MvrList": {
+        "prefix": "mvrlist",
+        "body": [
+          "  MvrList:       ${1:MVlist}",
+          "          Text=  \"${2:MV}\"",
+          "          Mvrs=  ${3:3}",
+          "                 \"${0}\"  \"\"  \"\""
+        ],
+        "description": "MvrList snippet"
+    },
+    "CalcTable": {
+        "prefix": "calctable",
+        "body": [
+          "  CalcTable:     ${1:SystemCalcs}",
+          "           Row=  ${2:-1}",
+          "           Col=  ${3:-1}",
+          "       RowSize=  ${4:1}",
+          "       ColSize=  ${5:1}"
+        ],
+        "description": "CalcTable snippet"
+    },
+    "XvrPlot": {
+        "prefix": "xvrplot",
+        "body": [
+          "  XvrPlot:       ${1:XvrPlotName}",
+          "           Row=  ${2:-1}",
+          "           Col=  ${3:-1}",
+          "       RowSize=  ${4:1}",
+          "       ColSize=  ${5:1}"
+        ],
+        "description": "XvrPlot snippet"
+    },
+    "ModelMatrix": {
+        "prefix": "modelmatrix",
+        "body": [
+          "  ModelMatrix:   ${1:Models}",
+          "           Row=  ${2:-1}",
+          "           Col=  ${3:-1}",
+          "        CvrIds=  ${4:3}",
+          "                 \"${0}\"  \"\"  \"\"",
+          "     MvrDvrIds=  ${5:3}",
+          "                 \"\"  \"\"  \"\""
+        ],
+        "description": "ModelMatrix snippet"
+    },
+    "Image": {
+        "prefix": "image",
+        "body": [
+          "  Image:         ${1:ImageName}",
+          "           Row=  ${2:-1}",
+          "           Col=  ${3:-1}",
+          "       RowSize=  ${4:1}",
+          "       ColSize=  ${5:1}",
+          "      FileName=  \"${6:FileName}\""
+        ],
+        "description": "Image snippet"
+    },
+    "ImageStatusLabel": {
+        "prefix": "imagestatuslabel",
+        "body": [
+          "  ImageStatusLabel:  ${1:StatusLabelName}",
+          "            X1=  ${2:x, top left}",
+          "            Y1=  ${3:y, top left}",
+          "            X2=  ${4:width}",
+          "            Y2=  ${5:height}",
+          "         Texts=  ${6:2}",
+          "                 \"${0}\"  \"\"",
+          "BackgroundColors=  ${6}",
+          "                 \"#f0f0f0\"  \"#70ad47\"  "
+        ],
+        "description": "ImageStatusLabel snippet"
+      }
+}
