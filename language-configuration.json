@@ -23,15 +23,10 @@
         ["\"", "\""],
     ],
     "folding": {
-        // How to mark end of section?
         "markers": {
-			"start": "SopcProc",
-		    "end": "^dill$"
+        "start": "\\s*\\b\\w+\\b\\:\\s*\\b\\w+\\b",
+        "end": "^\\s*//\\s*End\\b"
         },
-        // // "markers": {
-        //     "start": "^\\s*//\\s*#?region\\b",
-        //     "end": "^\\s*//\\s*#?endregion\\b"
-        // },
         "offSide": false
     }
 }
