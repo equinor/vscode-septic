@@ -2,7 +2,7 @@
     "name": "septic-config",
     "displayName": "Septic Language Basics",
     "description": "Provides syntax highlighting and snippets in Septic config files.",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "engines": {
         "vscode": "^1.39.0"
     },
@@ -28,7 +28,9 @@
         }],
         "configurationDefaults": {
             "[septic]": {
-                "files.encoding": "windows1252"
+                "files.encoding": "windows1252",
+                "editor.wordWrap": "on",
+                "editor.insertSpaces": true
             }
         }
     }
