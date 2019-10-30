@@ -42,31 +42,42 @@ export class TableOfContentsProvider {
 
 		toc.push({
 			start: 0,
-            end: 9,
+            end: 0,
             level: 1
 		});
 		toc.push({
 			start: 4,
-            end: 5,
+            end: 0,
             level: 2
 		});
 		toc.push({
 			start: 7,
-            end: 8,
+            end: 0,
             level: 2
 		});
 		toc.push({
 			start: 10,
-            end: 14,
+            end: 0,
             level: 1
 		});
 		toc.push({
 			start: 13,
-            end: 14,
+            end: 0,
             level: 2
 		});
-        return toc;
-
+        return toc.map((entry, startIndex): TocEntry => {
+			let end: number | undefined = undefined;
+			for (let i = startIndex + 1; i < toc.length; ++i) {
+				if (toc[i].level <= entry.level) {
+					end = toc[i].start - 1;
+					break;
+				}
+			}
+			const endLine = end !== undefined ? end : document.lineCount - 1;
+			return {
+				...entry,
+				end: endLine
+			};
+		});
 	}
-
 }
