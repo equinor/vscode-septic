@@ -4,6 +4,7 @@
     "description": "Provides syntax highlighting and snippets in Septic config files.",
     "publisher": "Equinor",
     "author": "Einar S. Idsø",
+    "license": "",
     "repository": {
         "type": "git",
         "url": "https://github.com/equinor/vscode-septic"
@@ -17,6 +18,10 @@
         "Programming Languages",
         "Snippets"
     ],
+    "activationEvents": [
+        "onLanguage:septic"
+    ],
+    "main": "./out/extension.js",
     "contributes": {
         "languages": [
             {
@@ -50,6 +55,20 @@
                 "editor.insertSpaces": true
             }
         }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/glob": "^7.1.1",
+        "@types/mocha": "^5.2.7",
+        "@types/vscode": "^1.39.0",
+        "typescript": "^3.6.4",
+        "vscode-test": "^1.2.0"
     },
     "dependencies": {}
 }
