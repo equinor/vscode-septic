@@ -4,7 +4,7 @@
     "description": "Provides syntax highlighting and snippets in Septic config files.",
     "publisher": "Equinor",
     "author": "Einar S. Idsø",
-    "license": "",
+    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/equinor/vscode-septic"
