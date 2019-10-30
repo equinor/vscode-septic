@@ -6,7 +6,7 @@ import SepticFoldingProvider from './foldingProvider';
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(registerSepticLanguageFeatures());
-	console.log('Congratulations, your extension is now active!');
+	//console.log('Congratulations, your extension is now active!');
 }
 
 function registerSepticLanguageFeatures(

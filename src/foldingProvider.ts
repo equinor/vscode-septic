@@ -22,7 +22,7 @@ export default class SepticFoldingProvider implements vscode.FoldingRangeProvide
 				endLine = endLine - 1;
 			}
 			const foldingRange = new vscode.FoldingRange(entry.start, endLine)
-			console.log(foldingRange.start, foldingRange.end)
+			//console.log(foldingRange.start, foldingRange.end)
 			return foldingRange;
 		});
 	}

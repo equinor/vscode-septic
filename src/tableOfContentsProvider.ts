@@ -1,9 +1,32 @@
 import * as vscode from 'vscode';
 
+export interface IHash {
+	[id: number]: string[];
+}
+
+const all_keywords : IHash = {
+	1: ['system', 'sopcproc', 'dmmyappl', 'smpcappl', 'displaygroup'
+	],
+	2: ['sopcmvr', 'sopccvr', 'sopctvr', 'sopcevr',
+		'mvr', 'cvr', 'tvr', 'evr', 'dvr', 
+		'calcmodl', 'exprmodl', 
+		'table', 'appl', 'spacer', 'heading', 'mvrlist', 'cvrlist', 'dvrlist',
+		'xvrplot', 'image', 'calctable', 'modelmatrix'
+	],
+	3: ['calcpvr', 'imagestatuslabel'
+    ]
+}
+
 export interface TocEntry {
 	readonly level: number;
     readonly start: number;
     readonly end: number;
+}
+
+export interface Keyword {
+	line: number,
+	keyword: string,
+	value: string,
 }
 
 export interface SkinnyTextLine {
@@ -39,32 +62,22 @@ export class TableOfContentsProvider {
 
     private async buildToc(document: SkinnyTextDocument): Promise<TocEntry[]> {
         const toc: TocEntry[] = [];
-
-		toc.push({
-			start: 0,
-            end: 0,
-            level: 1
-		});
-		toc.push({
-			start: 4,
-            end: 0,
-            level: 2
-		});
-		toc.push({
-			start: 7,
-            end: 0,
-            level: 2
-		});
-		toc.push({
-			start: 10,
-            end: 0,
-            level: 1
-		});
-		toc.push({
-			start: 13,
-            end: 0,
-            level: 2
-		});
+		const keywords = await this.getKeywords(document)
+		// Rather messy but works
+		for (let keyword of keywords) {
+			let level = 99;
+			for (let lvl in all_keywords) {
+				if (all_keywords[lvl].includes(keyword.keyword.toLowerCase())){
+					level = Number(lvl) + 1;
+				}
+			}
+			toc.push({
+				start: keyword.line,
+				end: 0,
+				level: level
+			})
+		}
+		
         return toc.map((entry, startIndex): TocEntry => {
 			let end: number | undefined = undefined;
 			for (let i = startIndex + 1; i < toc.length; ++i) {
@@ -79,5 +92,22 @@ export class TableOfContentsProvider {
 				end: endLine
 			};
 		});
+	}
+
+	public async getKeywords(document: SkinnyTextDocument): Promise<Keyword[]> {
+		const keywords: Keyword[] = [];
+		let i = 0
+		document.getText().split(/\r?\n/).forEach(line => {
+			let res = line.match(/^\s*\b(\w*)\b:\s*([\{\}\ \w\*]*)/)
+			if (res) {
+				keywords.push({
+					line: i,
+					keyword: res[1],
+					value: res[2],
+				})
+			}
+			i++;
+		});
+		return keywords;
 	}
 }
