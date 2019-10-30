@@ -2,7 +2,14 @@
     "name": "septic-config",
     "displayName": "Septic Language Basics",
     "description": "Provides syntax highlighting and snippets in Septic config files.",
-    "version": "0.0.3",
+    "publisher": "Equinor",
+    "author": "Einar S. Idsø",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/equinor/vscode-septic"
+    },
+    "version": "0.1.0",
+    "icon": "images/SEPTIC_logo.jfif",
     "engines": {
         "vscode": "^1.39.0"
     },
@@ -11,21 +18,31 @@
         "Snippets"
     ],
     "contributes": {
-        "languages": [{
-            "id": "septic",
-            "aliases": ["Septic"],
-            "extensions": [".cnfg"],
-            "configuration": "./language-configuration.json"
-        }],
-        "snippets": [{
-            "language": "septic",
-            "path": "snippets/snippets.json"
-        }],
-        "grammars": [{
-            "language": "septic",
-            "scopeName": "source.septic",
-            "path": "./syntaxes/septic.tmLanguage.json"
-        }],
+        "languages": [
+            {
+                "id": "septic",
+                "aliases": [
+                    "Septic"
+                ],
+                "extensions": [
+                    ".cnfg"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "septic",
+                "path": "snippets/snippets.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "septic",
+                "scopeName": "source.septic",
+                "path": "./syntaxes/septic.tmLanguage.json"
+            }
+        ],
         "configurationDefaults": {
             "[septic]": {
                 "files.encoding": "windows1252",
@@ -33,5 +50,6 @@
                 "editor.insertSpaces": true
             }
         }
-    }
+    },
+    "dependencies": {}
 }
