@@ -1,5 +1,6 @@
 
 import * as vscode from 'vscode';
+import { TableOfContentsProvider } from './tableOfContentsProvider';
 
 const rangeLimit = 5000;
 
@@ -8,7 +9,9 @@ function flatten<T>(arr: ReadonlyArray<T>[]): T[] {
 }
 
 export default class SepticFoldingProvider implements vscode.FoldingRangeProvider {
-    
+	
+	constructor( ) { }
+
 	public async provideFoldingRanges(
 		
 		document: vscode.TextDocument,
@@ -22,31 +25,8 @@ export default class SepticFoldingProvider implements vscode.FoldingRangeProvide
 	}
 
 	private async getHeaderFoldingRanges(document: vscode.TextDocument) {
-		//const tocProvider = new TableOfContentsProvider(document);
-		//const toc = await tocProvider.getToc();
-		const toc = []
-
-		toc.push({
-			start: 0,
-			end: 9
-		});
-		toc.push({
-			start: 4,
-			end: 5
-		});
-		toc.push({
-			start: 7,
-			end: 8
-		});
-		toc.push({
-			start: 10,
-			end: 14
-		});
-		toc.push({
-			start: 13,
-			end: 14
-		});
-
+		const tocProvider = new TableOfContentsProvider(document);
+		const toc = await tocProvider.getToc();
 		return toc.map(entry => {
 			let endLine = entry.end;
 			if (document.lineAt(endLine).isEmptyOrWhitespace && endLine >= entry.end + 1) {
