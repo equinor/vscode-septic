@@ -1,5 +1,5 @@
 {
-	"comment": "TODO: Allow scgparameter in section name++",
+	"comment": "",
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "Septic",
 	"scopeName": "source.septic",
@@ -8,7 +8,7 @@
 			"include": "#comment"
 		},
 		{
-			"include": "#section"
+			"include": "#keyword"
 		},
 		{
 			"include": "#tagmap"
@@ -22,10 +22,10 @@
 		}
 	],
 	"repository": {
-		"section": {
+		"keyword": {
 			"patterns": [
 				{
-					"match": "\\b(\\w*)\\b(:)[\\s]*([\\w\\*]*)",
+					"match": "\\b(\\w*)\\b(:)[\\s]*([\\{\\}\\ \\w\\*]*)",
 					"captures": {
 						"1": {
 							"name": "keyword.control.septic"
@@ -34,7 +34,12 @@
 							"name": "punctuation.separator.key-value.mapping.septic"
 						},
 						"3": {
-							"name": "entity.name.class.septic"
+							"name": "entity.name.class.septic",
+							"patterns": [
+								{
+									"include": "#scgparameter"
+								}
+							]
 						}
 					}
 				}
@@ -182,7 +187,7 @@
 					"end": "\\s*\\}\\}",
 					"patterns": [
 						{
-							"name": "variable.other",
+							"name": "variable.parameter.scg.septic",
 							"match": "\\b\\w*\\b"
 						}
 					]
