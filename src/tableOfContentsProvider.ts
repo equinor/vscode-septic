@@ -18,15 +18,16 @@ const all_keywords : IHash = {
 }
 
 export interface TocEntry {
+	readonly text: string;
 	readonly level: number;
-    readonly start: number;
-    readonly end: number;
+    readonly line: number;
+    readonly location: vscode.Location;
 }
 
 export interface Keyword {
-	line: number,
-	keyword: string,
-	value: string,
+	line: number;
+	keyword: string;
+	value: string;
 }
 
 export interface SkinnyTextLine {
@@ -65,6 +66,9 @@ export class TableOfContentsProvider {
 		const keywords = await this.getKeywords(document)
 		// Rather messy but works
 		for (let keyword of keywords) {
+			const lineNumber = keyword.line
+			const line = document.lineAt(lineNumber);
+
 			let level = 99;
 			for (let lvl in all_keywords) {
 				if (all_keywords[lvl].includes(keyword.keyword.toLowerCase())){
@@ -72,9 +76,11 @@ export class TableOfContentsProvider {
 				}
 			}
 			toc.push({
-				start: keyword.line,
-				end: 0,
-				level: level
+				text: line.text,
+				level: level,
+				line: lineNumber,
+				location: new vscode.Location(document.uri,
+					new vscode.Range(lineNumber, 0, lineNumber, line.text.length))
 			})
 		}
 		
@@ -82,14 +88,17 @@ export class TableOfContentsProvider {
 			let end: number | undefined = undefined;
 			for (let i = startIndex + 1; i < toc.length; ++i) {
 				if (toc[i].level <= entry.level) {
-					end = toc[i].start - 1;
+					end = toc[i].line - 1;
 					break;
 				}
 			}
 			const endLine = end !== undefined ? end : document.lineCount - 1;
 			return {
 				...entry,
-				end: endLine
+				location: new vscode.Location(document.uri,
+					new vscode.Range(
+						entry.location.range.start,
+						new vscode.Position(endLine, document.lineAt(endLine).text.length)))
 			};
 		});
 	}

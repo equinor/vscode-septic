@@ -17,11 +17,11 @@ export default class SepticFoldingProvider implements vscode.FoldingRangeProvide
 		const tocProvider = new TableOfContentsProvider(document);
 		const toc = await tocProvider.getToc();
 		return toc.map(entry => {
-			let endLine = entry.end;
-			if (document.lineAt(endLine).isEmptyOrWhitespace && endLine >= entry.end + 1) {
-				endLine = endLine - 1;
-			}
-			const foldingRange = new vscode.FoldingRange(entry.start, endLine)
+			let endLine = entry.location.range.end.line;
+			// if (document.lineAt(endLine).isEmptyOrWhitespace && endLine >= entry.line + 1) {
+			// 	endLine = endLine - 1;
+			// }
+			const foldingRange = new vscode.FoldingRange(entry.line, endLine)
 			//console.log(foldingRange.start, foldingRange.end)
 			return foldingRange;
 		});
