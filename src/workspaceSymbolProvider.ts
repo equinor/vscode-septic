@@ -7,7 +7,6 @@ import { SkinnyTextDocument, SkinnyTextLine } from './tableOfContentsProvider';
 import { flatten } from './util/arrays';
 
 export function isSepticFile(document: vscode.TextDocument) {
-	console.log('isSepticFile')
 	return document.languageId === 'septic';
 }
 
@@ -28,33 +27,27 @@ class VSCodeWorkspaceSepticDocumentProvider extends Disposable implements Worksp
 	private _watcher: vscode.FileSystemWatcher | undefined;
 
 	async getAllSepticDocuments() {
-		console.log('getAllSepticDocuments')
 		const resources = await vscode.workspace.findFiles('**/*.cnfg');
 		const docs = await Promise.all(resources.map(doc => this.getSepticDocument(doc)));
-		console.log(docs);
 		return docs.filter(doc => !!doc) as SkinnyTextDocument[];
 	}
 
 	public get onDidChangeSepticDocument() {
-		console.log('onDidChangeSepticDocument')
 		this.ensureWatcher();
 		return this._onDidChangeSepticDocumentEmitter.event;
 	}
 
 	public get onDidCreateSepticDocument() {
-		console.log('onDidCreateSepticDocument')
 		this.ensureWatcher();
 		return this._onDidCreateSepticDocumentEmitter.event;
 	}
 
 	public get onDidDeleteSepticDocument() {
-		console.log('onDidDeleteSepticDocument')
 		this.ensureWatcher();
 		return this._onDidDeleteSepticDocumentEmitter.event;
 	}
 
 	private ensureWatcher(): void {
-		console.log('ensureWatcher')
 		if (this._watcher) {
 			return;
 		}
@@ -87,7 +80,6 @@ class VSCodeWorkspaceSepticDocumentProvider extends Disposable implements Worksp
 	}
 
 	private async getSepticDocument(resource: vscode.Uri): Promise<SkinnyTextDocument | undefined> {
-		console.log('getSepticDocument: ' + resource)
 		const matchingDocuments = vscode.workspace.textDocuments.filter((doc) => doc.uri.toString() === resource.toString());
 		if (matchingDocuments.length !== 0) {
 			return matchingDocuments[0];
@@ -105,7 +97,6 @@ class VSCodeWorkspaceSepticDocumentProvider extends Disposable implements Worksp
 				text: parts[line * 2]
 			});
 		}
-		console.log(lines);
 		return {
 			uri: resource,
 			version: 0,
@@ -132,7 +123,6 @@ export default class SepticWorkspaceSymbolProvider extends Disposable implements
 	}
 
 	public async provideWorkspaceSymbols(query: string): Promise<vscode.SymbolInformation[]> {
-		console.log('provideWorkspaceSymbols');
 		if (!this._symbolCachePopulated) {
 			await this.populateSymbolCache();
 			this._symbolCachePopulated = true;
@@ -161,12 +151,10 @@ export default class SepticWorkspaceSymbolProvider extends Disposable implements
 	}
 
 	private onDidChangeDocument(document: SkinnyTextDocument) {
-		console.log('onDidChangeDocument');
 		this._symbolCache.set(document.uri.fsPath, this.getSymbols(document));
 	}
 
 	private onDidDeleteDocument(resource: vscode.Uri) {
-		console.log('onDidDeleteDocument')
 		this._symbolCache.delete(resource.fsPath);
 	}
 }
