@@ -96,18 +96,17 @@ export class TableOfContentsProvider {
 
 	public async getKeywords(document: SkinnyTextDocument): Promise<Keyword[]> {
 		const keywords: Keyword[] = [];
-		let i = 0
-		document.getText().split(/\r?\n/).forEach(line => {
-			let res = line.match(/^\s*\b(\w*)\b:\s*([\{\}\ \w\*]*)/)
+		for (let i = 0; i < document.lineCount; i++){
+			let line = document.lineAt(i);
+			let res = line.text.match(/^\s*\b(\w*)\b:\s*([\w\ \{\}\*\-<>]*)/)
 			if (res) {
 				keywords.push({
 					line: i,
 					keyword: res[1],
-					value: res[2],
+					value: res[2]
 				})
 			}
-			i++;
-		});
+		}
 		return keywords;
 	}
 }
