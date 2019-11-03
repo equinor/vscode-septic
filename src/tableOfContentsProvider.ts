@@ -81,6 +81,9 @@ export class TableOfContentsProvider {
 				else if (['mvr', 'cvr', 'tvr', 'evr', 'dvr'].includes(keyword.keyword.toLowerCase())){
 					symbolKind = vscode.SymbolKind.Variable;
 				}
+				else if (['calcpvr'].includes(keyword.keyword.toLowerCase())) {
+					symbolKind = vscode.SymbolKind.Function;
+				}
 				else {
 					symbolKind = vscode.SymbolKind.Object;
 				}
