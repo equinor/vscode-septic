@@ -1,4 +1,4 @@
-System:        TESTAPP
+  System:        TESTAPP
          Text1=  "Dummy applikasjon"
          Text2=  "1: Test æ, 2: Test ø, 3: Test å"
          Nsecs=  10

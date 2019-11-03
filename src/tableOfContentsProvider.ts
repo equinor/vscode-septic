@@ -20,8 +20,9 @@ const all_keywords : IHash = {
 export interface TocEntry {
 	readonly text: string;
 	readonly level: number;
+	readonly symbolKind: vscode.SymbolKind;
     readonly line: number;
-    readonly location: vscode.Location;
+	readonly location: vscode.Location;
 }
 
 export interface Keyword {
@@ -68,16 +69,34 @@ export class TableOfContentsProvider {
 		for (let keyword of keywords) {
 			const lineNumber = keyword.line
 			const line = document.lineAt(lineNumber);
+			let symbolKind = vscode.SymbolKind.String; // Default, should be overwritten below
+
+			if (all_keywords[1].includes(keyword.keyword.toLowerCase())) {
+				symbolKind = vscode.SymbolKind.Namespace;
+			}
+			else {
+				if (['sopcmvr', 'sopccvr', 'sopctvr', 'sopcevr'].includes(keyword.keyword.toLowerCase())) {
+					symbolKind = vscode.SymbolKind.Interface;					
+				}
+				else if (['mvr', 'cvr', 'tvr', 'evr', 'dvr'].includes(keyword.keyword.toLowerCase())){
+					symbolKind = vscode.SymbolKind.Variable;
+				}
+				else {
+					symbolKind = vscode.SymbolKind.Object;
+				}
+			}
 
 			let level = 99;
 			for (let lvl in all_keywords) {
 				if (all_keywords[lvl].includes(keyword.keyword.toLowerCase())){
 					level = Number(lvl) + 1;
+					break;
 				}
 			}
 			toc.push({
 				text: line.text,
 				level: level,
+				symbolKind: symbolKind,
 				line: lineNumber,
 				location: new vscode.Location(document.uri,
 					new vscode.Range(lineNumber, 0, lineNumber, line.text.length))

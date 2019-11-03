@@ -2,8 +2,11 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import SepticFoldingProvider from './foldingProvider';
+import SepticDocumentSymbolProvider from './documentSymbolProvider'
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
+
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(registerSepticLanguageFeatures());
 	//console.log('Congratulations, your extension is now active!');
@@ -18,6 +21,7 @@ function registerSepticLanguageFeatures(
 
 	return vscode.Disposable.from(
 		vscode.languages.registerFoldingRangeProvider(selector, new SepticFoldingProvider()),
+		vscode.languages.registerDocumentSymbolProvider(selector, new SepticDocumentSymbolProvider())
 	);
 }
 
