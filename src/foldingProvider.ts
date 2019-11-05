@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Equinor ASA
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import * as vscode from 'vscode';
 import { TableOfContentsProvider } from './tableOfContentsProvider';
@@ -10,20 +14,15 @@ export default class SepticFoldingProvider implements vscode.FoldingRangeProvide
 		_: vscode.FoldingContext,
 		_token: vscode.CancellationToken
 	): Promise<vscode.FoldingRange[]> {
-		return await this.getHeaderFoldingRanges(document);
+		return await this.getFoldingRanges(document);
 	}
 
-	private async getHeaderFoldingRanges(document: vscode.TextDocument) {
+	private async getFoldingRanges(document: vscode.TextDocument) {
 		const tocProvider = new TableOfContentsProvider(document);
 		const toc = await tocProvider.getToc();
 		return toc.map(entry => {
 			let endLine = entry.location.range.end.line;
-			// if (document.lineAt(endLine).isEmptyOrWhitespace && endLine >= entry.line + 1) {
-			// 	endLine = endLine - 1;
-			// }
-			const foldingRange = new vscode.FoldingRange(entry.line, endLine)
-			//console.log(foldingRange.start, foldingRange.end)
-			return foldingRange;
+			return new vscode.FoldingRange(entry.line, endLine)
 		});
 	}
 }

@@ -1,5 +1,5 @@
-{
-	"comment": "",
+ {
+	"comment": "Copyright (c) Equinor ASA. Licensed under the MIT License. See LICENSE in the project root for license information.",
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "Septic",
 	"scopeName": "source.septic",
