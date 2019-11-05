@@ -1,3 +1,9 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Equinor ASA
+ *  Copyright (c) Microsoft Corporation. All rights reserved. [markdown-language-features as indicated]
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import * as vscode from 'vscode';
 
 export interface IHash {
@@ -105,8 +111,8 @@ export class TableOfContentsProvider {
 					new vscode.Range(lineNumber, 0, lineNumber, line.text.length))
 			})
 		}
-		
-        return toc.map((entry, startIndex): TocEntry => {
+
+		return toc.map((entry, startIndex): TocEntry => {
 			let end: number | undefined = undefined;
 			for (let i = startIndex + 1; i < toc.length; ++i) {
 				if (toc[i].level <= entry.level) {
