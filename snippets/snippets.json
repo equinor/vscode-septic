@@ -53,6 +53,24 @@
         ],
         "description": "System snippet"
     },
+    "mastertcip": {
+        "prefix": "mastertcip",
+        "body": [
+          "  MasterTcip: ${1:Master} \r",
+          "    MasterPort= ${2:12030}\r",
+          "    WriteHosts= 1 \"127.0.0.1\"\r"
+        ],
+        "description": "MasterTcip snippet"
+    },
+    "remotetcip": {
+      "prefix": "remotetcip",
+      "body": [
+        "  RemoteTcip: ${1:Remote} \r",
+        "    MasterPort= ${2:12035}\r",
+        "    WriteHosts= 1 \"127.0.0.1\"\r"
+      ],
+      "description": "RemoteTcip snippet"
+  },  
     "SopcProc": {
         "prefix": "sopcproc",
         "body": [
