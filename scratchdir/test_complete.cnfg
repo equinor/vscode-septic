@@ -132,8 +132,12 @@ WriteGroupPause=  10
          Scale=  1
         Offset=  0
 
-  SopcEvr:       TestEvr
-         Text1=  ""
+  SopcEvr:       {{ TestEvr }}
+  {% if a == 2 %}
+  {{ something }}
+  {% endif %}
+  
+         Text1=  "{{ Jinja but should be hidden since string }}"
          Text2=  ""
         EvrTag=  "TestEvr.StatusText"
        MeasTag=  "TestEvr.StatusText"
@@ -146,7 +150,7 @@ WriteGroupPause=  10
          Nstep=  1
        PlotMax=  25
       MasterOn=  ON
-       DesMode=  ACTIVE
+       DesMode=  {{ ACTIVE }}
 
   Evr:           N
          Text1=  ""
@@ -176,7 +180,7 @@ ValidationLimit=  -1
   CalcPvr:       N
          Text1=  "Num samples run"
          Text2=  ""
-           Alg=  "getappln()"
+           Alg=  "getappln({{ hei }}) {{ hallo }}"
 
   SmpcAppl:      TESTAPPL
          Text1=  ""
@@ -401,7 +405,7 @@ MeasValidation=  OFF
           Dvrs=  1
                  "TestDvr"  
 
-  XvrPlot:       TestCvr
+  XvrPlot:       {{ Wellname }}TestCvr
            Row=  3
            Col=  1
        RowSize=  3
