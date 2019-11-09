@@ -4,6 +4,9 @@
 	"name": "Septic",
 	"scopeName": "source.septic",
 	"patterns": [
+		{ 
+			"include": "source.jinja"
+		},
 		{
 			"include": "#comment"
 		},
@@ -16,9 +19,6 @@
 		{
 			"comment": "Should be removed and fix grps etc explicitly using begin/end instead",
 			"include": "#string" 
-		},
-		{
-			"include": "#scgparameter"
 		}
 	],
 	"repository": {
@@ -28,16 +28,20 @@
 					"match": "\\b(\\w*)\\b(:)[\\s]*([\\w\\ \\{\\}\\*\\-<>]*)",
 					"captures": {
 						"1": {
-							"name": "keyword.control.septic"
+							"name": "entity.name.class.septic"
 						},
 						"2": {
 							"name": "punctuation.separator.key-value.mapping.septic"
 						},
 						"3": {
-							"name": "entity.name.class.septic",
+							"name": "entity.name.variable",
 							"patterns": [
 								{
-									"include": "#scgparameter"
+									"include": "source.jinja"
+								},
+								{
+									"name": "variable.name.septic",
+									"match": "\\b\\w*\\b"
 								}
 							]
 						}
@@ -108,6 +112,9 @@
 						"3": {
 							"name": "variable.parameter.septic",
 							"patterns": [
+								{
+									"include": "source.jinja"
+								},
 								{
 									"include": "#bitfield"
 								},

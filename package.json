@@ -33,12 +33,16 @@
                     ".cnfg"
                 ],
                 "configuration": "./language-configuration.json"
-            }
-        ],
-        "snippets": [
+            },
             {
-                "language": "septic",
-                "path": "snippets/snippets.json"
+                "id": "jinja",
+                "aliases": [
+                    "Jinja Raw",
+                    "jinja-raw"
+                ],
+                "extensions": [
+                ],
+                "configuration": "./language-configuration.json"
             }
         ],
         "grammars": [
@@ -46,6 +50,17 @@
                 "language": "septic",
                 "scopeName": "source.septic",
                 "path": "./syntaxes/septic.tmLanguage.json"
+            },
+            {
+                "language": "jinja",
+                "scopeName": "source.jinja",
+                "path": "./syntaxes/jinja.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "septic",
+                "path": "snippets/snippets.json"
             }
         ],
         "configurationDefaults": {
