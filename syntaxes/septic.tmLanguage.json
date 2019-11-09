@@ -25,7 +25,7 @@
 		"keyword": {
 			"patterns": [
 				{
-					"match": "\\b(\\w*)\\b(:)[\\s]*([\\w\\ \\{\\}\\*\\-<>]*)",
+					"match": "\\b(\\w*)\\b(:)[\\s]*([\\w\\ \\{\\}\\*\\-<>]*)\\b",
 					"captures": {
 						"1": {
 							"name": "entity.name.class.septic"
@@ -34,14 +34,14 @@
 							"name": "punctuation.separator.key-value.mapping.septic"
 						},
 						"3": {
-							"name": "entity.name.variable",
+							"name": "entity.other.variable.septic",
 							"patterns": [
 								{
 									"include": "source.jinja"
 								},
 								{
 									"name": "variable.name.septic",
-									"match": "\\b\\w*\\b"
+									"match": "\\b([\\w\\ \\{\\}\\*\\-<>]*)\\b"
 								}
 							]
 						}
@@ -59,45 +59,6 @@
 				}
 			]
 		},
-		"tagmap_alg": {
-			"comment": "Overrides regular tagmap for the Alg line in CalcPvr",
-			"patterns": [
-				{
-					"match": "^\\s*\\b(Alg)\\b(=)[\\s]*(.*)",
-					"captures": {
-						"1": {
-							"name": "entity.name.tag.septic"
-						},
-						"2": {
-							"name": "punctuation.separator.key-value.mapping.septic"
-						},
-						"3": {
-							"name": "variable.parameter.septic",
-							"patterns": [
-								{
-									"include": "#scgparameter"
-								},
-								{
-									"include": "#calc"
-								},
-								{
-									"include": "#operator"
-								},
-								{
-									"include": "#separator"
-								},
-								{
-									"include": "#numeric"
-								},
-								{
-									"include": "#line_comment"
-								}
-							]
-						}
-					}
-				}
-			]
-		},
 		"tagmap_default": {
 			"patterns": [
 				{
@@ -110,10 +71,13 @@
 							"name": "punctuation.separator.key-value.mapping.septic"
 						},
 						"3": {
-							"name": "variable.parameter.septic",
+							"name": "entity.other.variable.septic",
 							"patterns": [
 								{
 									"include": "source.jinja"
+								},
+								{
+									"include": "#line_comment"
 								},
 								{
 									"include": "#bitfield"
@@ -123,9 +87,6 @@
 								},
 								{
 									"include": "#string"
-								},
-								{
-									"include": "#line_comment"
 								}
 							]
 						}
@@ -133,13 +94,70 @@
 				}
 			]
 		},
-		"calc": {
-			"name": "entity.name.function.septic",
-			"begin": "\\w*\\(",
-			"end": "\\)",
+		"tagmap_alg": {
+			"comment": "Overrides regular tagmap for the Alg line in CalcPvr",
 			"patterns": [
 				{
-					"include": "#scgparameter"
+					"match": "^\\s*\\b(Alg)\\b(=)[\\s]*(\")(.*)(\")",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag.septic"
+						},
+						"2": {
+							"name": "punctuation.separator.key-value.mapping.septic"
+						},
+						"3": {
+							"name": "string.quoted.double.septic"
+						},
+						"4": {
+							"patterns": [
+								{
+									"include": "source.jinja"
+								},
+								{
+									"include": "#calc"
+								},
+								{
+									"include": "#separator"
+								},
+								{
+									"include": "#numeric"
+								},
+								{
+									"include": "#operator"
+								},
+								{
+									"name": "variable.name.septic",
+									"match": "\\b\\w*\\b"
+								}
+							]
+						},
+						"5": {
+							"name": "string.quoted.double.septic"
+						}
+					}
+				}
+			]
+		},
+		"calc": {
+			"begin": "(\\w*)(\\()",
+			"end": "\\)",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.function.septic"
+				},
+				"2": {
+					"name": "entity.other.delimiter.septic"
+				}
+			},
+			"endCaptures": {
+				"0": {
+					"name": "entity.other.delimiter.septic"
+				}
+			},
+			"patterns": [
+				{
+					"include": "source.jinja"
 				},
 				{
 					"include": "#calc"
@@ -154,7 +172,7 @@
 					"include": "#numeric"
 				},
 				{
-					"name": "variable.parameter.function.septic",
+					"name": "variable.name.septic",
 					"match": "\\b\\w*\\b"
 				}
 			]
@@ -238,19 +256,12 @@
 							"name": "constant.numeric.septic",
 							"patterns": [
 								{
-									"include": "#bitfield_one"
-								}
+									"match": "1",
+									"name": "markup.bold.septic"
+								}				
 							]
 						}
 					}
-				}
-			]
-		},
-		"bitfield_one": {
-			"patterns": [
-				{
-					"match": "1",
-					"name": "markup.bold.septic"
 				}
 			]
 		}
