@@ -129,7 +129,7 @@
             "name": "keyword.control.jinja"
           },
           {
-                      "match": "\\b(true|false|none)\\b",
+            "match": "\\b(true|false|none)\\b",
             "name": "constant.language.jinja"
           },
           {
