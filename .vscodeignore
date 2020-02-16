@@ -6,3 +6,4 @@ scratchdir/**
 **/tsconfig.json
 out/test/**
 azure-pipelines.yml
+septic*.vsix

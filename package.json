@@ -2,7 +2,7 @@
     "name": "septic-config",
     "displayName": "Septic Language Basics",
     "description": "Provides snippets, syntax highlighting and multi-level folding in Septic config files.",
-    "publisher": "Equinor",
+    "publisher": "EinarSIdso",
     "author": "Einar S. Idsø",
     "license": "MIT",
     "repository": {
