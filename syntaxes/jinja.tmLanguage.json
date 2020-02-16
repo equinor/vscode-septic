@@ -1,4 +1,5 @@
 {
+    "comment": "Copyright (c) Equinor ASA and Samuel Colvin et al. Licensed under the MIT License. See LICENSE in the project root for license information.",
     "name": "jinja",
     "scopeName": "source.jinja",
     "comment": "Jinja Templates",
@@ -334,4 +335,4 @@
         ]
       }
     }
-  }
+}
