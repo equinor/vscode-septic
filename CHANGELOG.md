@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.4.0] - 2020-02-16
+
+Improved syntax highlighting.
+Added support for Jinja2 grammar.
+Added snippets for mastertcip and remotetcip.
+Added pipeline script for CI.
+
 ## [v0.3.0] - 2019-11-04
 
 Added feature:
