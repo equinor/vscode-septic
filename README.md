@@ -9,12 +9,12 @@
 * Bracket matching
 * Snippets
 * Multi-level folding
-* Ensures correct encoding (Windows 1252) for Septic files
+* Ensures correct encoding (Windows 1252) for SEPTIC files
 
 ## Instructions
 If you don't know what the SEPTIC file format is, then you don't need this extension.
 
-Adding the extension to VS Code allows you to do the following when loading a SEPTIC .cnfg file:
+Adding the SEPTIC Language Basics extension to VS Code allows you to do the following when loading a SEPTIC .cnfg file:
 * Auto-complete commonly used segments of code, called snippets
   * Type e.g. 'sopc' (uncapitalized letters only), and you should see a number of sopcxvr snippet options. Choose the one you want with `arrow up`/`arrow down` and press `Tab` to create a complete sopcxvr section.
   * If you are missing a snippet, let me know and I will add it. Feel free to [make one yourself](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets) and provide me the json.
@@ -29,12 +29,17 @@ Adding the extension to VS Code allows you to do the following when loading a SE
   * More info on folding [here](https://code.visualstudio.com/docs/editor/codebasics#_folding)
 
 ## Feedback and contributions
-Please let me know of any issues, bugs, requests for modification or new features you may have. 
+Please let me know of any issues, bugs or requests for modification or new features you may have. 
 
 Easiest is probably to contact me in person at work, or you can use the [Issue tracker](https://github.com/equinor/vscode-septic/issues).
 
 ## Additional recommended extensions for working with SEPTIC config files
-* SVN: For interfacing directly with Subversion server from within VS Code.
-* Color Highlight: To show color of hex triplets, e.g. "#f0f0f0".
-* Bracket Pair Colorizer 2: Helps with bracket nesting.
-* Easy Snippet Maker: For creating your own snippets.
+* [SVN][svn]: For interfacing directly with Subversion server from within VS Code.
+* [Bracket Pair Colorizer 2][bracket-pair-colorizer-2]: Helps with bracket nesting.
+* [Easy Snippet Maker][easy-snippet-maker]: For creating your own snippets.
+* [Color Highlight][color-highlight]: Handy if you want to experiment with colors since it can display the color of hex triplets, e.g. "#f0f0f0", inside VSCode.
+
+[svn]: https://marketplace.visualstudio.com/items?itemName=johnstoncode.svn-scm
+[bracket-pair-colorizer-2]: https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer-2
+[easy-snippet-maker]: https://marketplace.visualstudio.com/items?itemName=tariky.easy-snippet-maker
+[color-highlight]: https://marketplace.visualstudio.com/items?itemName=naumovs.color-highlight
