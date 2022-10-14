@@ -1,5 +1,4 @@
-node_modules/*
-out/*
-package-lock.json
-septic-config-0.3.0.vsix
-.vscode-test/*
+out
+node_modules
+.vscode-test/
+*.vsix
