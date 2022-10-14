@@ -1,0 +1,8 @@
+name: 🎡 CI
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    uses: Equinor/vscode-septic/.github/workflows/build-workflow.yml@main
