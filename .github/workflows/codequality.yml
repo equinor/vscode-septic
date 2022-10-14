@@ -3,6 +3,9 @@ on:
   workflow_dispatch:
   workflow_call:
 
+env:
+  DISPLAY: ':99:0'
+
 jobs:
   code_quality:
     name: '🛠️ Build & 🧪 Test'
@@ -14,6 +17,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+
+      - name: Start xvfb
+        run: |
+            /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+            echo ">>> Started xvfb"
 
       - name: 📦 Install dependencies
         run: npm ci
