@@ -3,6 +3,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://dev.azure.com/EIIDS/vscode-septic/_apis/build/status/equinor.vscode-septic?branchName=master)](https://dev.azure.com/EIIDS/vscode-septic/_build/latest?definitionId=1&branchName=master)
 
+## New stuff
+* Added lots of snippets, also for multiple SEPTIC versions.
+* Updated recommended extensions below
+
 ## Features
 * Syntax highlighting
 * Symbols for navigation (breadcrumbs)
@@ -34,12 +38,8 @@ Please let me know of any issues, bugs or requests for modification or new featu
 Easiest is probably to contact me in person at work, or you can use the [Issue tracker](https://github.com/equinor/vscode-septic/issues).
 
 ## Additional recommended extensions for working with SEPTIC config files
-* [SVN][svn]: For interfacing directly with Subversion server from within VS Code.
-* [Bracket Pair Colorizer 2][bracket-pair-colorizer-2]: Helps with bracket nesting.
-* [Easy Snippet Maker][easy-snippet-maker]: For creating your own snippets.
+* [Snippet Creator][snippet-creator]: For creating your own snippets.
 * [Color Highlight][color-highlight]: Handy if you want to experiment with colors since it can display the color of hex triplets, e.g. "#f0f0f0", inside VSCode.
 
-[svn]: https://marketplace.visualstudio.com/items?itemName=johnstoncode.svn-scm
-[bracket-pair-colorizer-2]: https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer-2
-[easy-snippet-maker]: https://marketplace.visualstudio.com/items?itemName=tariky.easy-snippet-maker
+[snippet-creator]: https://marketplace.visualstudio.com/items?itemName=wware.snippet-creator
 [color-highlight]: https://marketplace.visualstudio.com/items?itemName=naumovs.color-highlight
