@@ -1,0 +1,23 @@
+name: '💎 Code Quality'
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  code_quality:
+    name: '🛠️ Build & 🧪 Test'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🧪 Run Tests
+        run: npm run test
+
