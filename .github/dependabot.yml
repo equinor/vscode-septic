@@ -6,6 +6,10 @@ updates:
       interval: "daily"
     commit-message:
       prefix: "chore(deps): "
+    ignore:
+      # 16 is current LTS and needed for VS Code extension development
+      # See https://github.com/microsoft/vscode/wiki/How-to-Contribute#prerequisites
+      versions: ["17.x", "18.x"]
 
   - package-ecosystem: 'github-actions'
     directory: '/'
