@@ -11,4 +11,4 @@ concurrency:
 jobs:
   build_test:
     name: "💎 Code Quality"
-      uses: Equinor/vscode-septic/.github/workflows/codequality.yml@github-actions
+    uses: Equinor/vscode-septic/.github/workflows/codequality.yml@github-actions
