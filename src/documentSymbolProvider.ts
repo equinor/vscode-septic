@@ -66,10 +66,10 @@ export default class SepticDocumentSymbolProvider implements vscode.DocumentSymb
 	}
 
 	private getSymbolName(entry: TocEntry): string {
-        let res = entry.text.match(/^\s*\b(\w*)\b:\s*([\w\ \{\}\*\-<>]*)/)
-        if (res) {
-            return res[1] + ': ' + res[2];
-        }
-        return "Unknown - this shouldn't happen"
+		let res = entry.text.match(/^\s*\b(\w*)\b:\s*([\w\ \{\}\*\-<>]*)/);
+		if (res) {
+			return res[1] + ': ' + res[2];
+		}
+		return "Unknown - this shouldn't happen";
 	}
 }

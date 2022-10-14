@@ -6,7 +6,6 @@
 import * as vscode from 'vscode';
 import { TableOfContentsProvider } from './tableOfContentsProvider';
 
-const rangeLimit = 5000;
 export default class SepticFoldingProvider implements vscode.FoldingRangeProvider {
 
 	public async provideFoldingRanges(
@@ -22,7 +21,7 @@ export default class SepticFoldingProvider implements vscode.FoldingRangeProvide
 		const toc = await tocProvider.getToc();
 		return toc.map(entry => {
 			let endLine = entry.location.range.end.line;
-			return new vscode.FoldingRange(entry.line, endLine)
+			return new vscode.FoldingRange(entry.line, endLine);
 		});
 	}
 }
