@@ -21,10 +21,11 @@ jobs:
         run: npm ci
 
       - name: 🖥️ Install Xvfb
-        run: |
-          sudo apt-get install xvfb
-          export DISPLAY=':99:0'
-          /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null &
+        run: sudo apt-get install xvfb
+        
+      - run: export DISPLAY=':99:0'
+      
+      - run: /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 
       - name: 🧪 Run Tests
         run: npm run test
