@@ -1,9 +1,13 @@
 .vscode/**
 .vscode-test/**
+src/**
 .gitignore
-scratchdir/**
-**/*.ts
+.yarnrc
 **/tsconfig.json
+**/.eslintrc.json
+**/*.map
+**/*.ts
+scratchdir/**
 out/test/**
 azure-pipelines.yml
-septic*.vsix
+*.vsix
