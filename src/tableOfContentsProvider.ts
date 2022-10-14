@@ -10,24 +10,24 @@ export interface IHash {
 	[id: number]: string[];
 }
 
-const all_keywords : IHash = {
+const allKeywords: IHash = {
 	1: ['system', 'sopcproc', 'dmmyappl', 'smpcappl', 'displaygroup'
 	],
 	2: ['sopcmvr', 'sopccvr', 'sopctvr', 'sopcevr',
-		'mvr', 'cvr', 'tvr', 'evr', 'dvr', 
-		'calcmodl', 'exprmodl', 
+		'mvr', 'cvr', 'tvr', 'evr', 'dvr',
+		'calcmodl', 'exprmodl',
 		'table', 'appl', 'spacer', 'heading', 'mvrlist', 'cvrlist', 'dvrlist',
 		'xvrplot', 'image', 'calctable', 'modelmatrix'
 	],
 	3: ['calcpvr', 'imagestatuslabel'
-    ]
-}
+	]
+};
 
 export interface TocEntry {
 	readonly text: string;
 	readonly level: number;
 	readonly symbolKind: vscode.SymbolKind;
-    readonly line: number;
+	readonly line: number;
 	readonly location: vscode.Location;
 }
 
@@ -68,23 +68,23 @@ export class TableOfContentsProvider {
 		return this.toc;
 	}
 
-    private async buildToc(document: SkinnyTextDocument): Promise<TocEntry[]> {
-        const toc: TocEntry[] = [];
-		const keywords = await this.getKeywords(document)
+	private async buildToc(document: SkinnyTextDocument): Promise<TocEntry[]> {
+		const toc: TocEntry[] = [];
+		const keywords = await this.getKeywords(document);
 		// Rather messy but works
 		for (let keyword of keywords) {
-			const lineNumber = keyword.line
+			const lineNumber = keyword.line;
 			const line = document.lineAt(lineNumber);
 			let symbolKind = vscode.SymbolKind.String; // Default, should be overwritten below
 
-			if (all_keywords[1].includes(keyword.keyword.toLowerCase())) {
+			if (allKeywords[1].includes(keyword.keyword.toLowerCase())) {
 				symbolKind = vscode.SymbolKind.Namespace;
 			}
 			else {
 				if (['sopcmvr', 'sopccvr', 'sopctvr', 'sopcevr'].includes(keyword.keyword.toLowerCase())) {
-					symbolKind = vscode.SymbolKind.Interface;					
+					symbolKind = vscode.SymbolKind.Interface;
 				}
-				else if (['mvr', 'cvr', 'tvr', 'evr', 'dvr'].includes(keyword.keyword.toLowerCase())){
+				else if (['mvr', 'cvr', 'tvr', 'evr', 'dvr'].includes(keyword.keyword.toLowerCase())) {
 					symbolKind = vscode.SymbolKind.Variable;
 				}
 				else if (['calcpvr'].includes(keyword.keyword.toLowerCase())) {
@@ -96,8 +96,8 @@ export class TableOfContentsProvider {
 			}
 
 			let level = 99;
-			for (let lvl in all_keywords) {
-				if (all_keywords[lvl].includes(keyword.keyword.toLowerCase())){
+			for (let lvl in allKeywords) {
+				if (allKeywords[lvl].includes(keyword.keyword.toLowerCase())) {
 					level = Number(lvl) + 1;
 					break;
 				}
@@ -109,7 +109,7 @@ export class TableOfContentsProvider {
 				line: lineNumber,
 				location: new vscode.Location(document.uri,
 					new vscode.Range(lineNumber, 0, lineNumber, line.text.length))
-			})
+			});
 		}
 
 		return toc.map((entry, startIndex): TocEntry => {
@@ -133,15 +133,15 @@ export class TableOfContentsProvider {
 
 	public async getKeywords(document: SkinnyTextDocument): Promise<Keyword[]> {
 		const keywords: Keyword[] = [];
-		for (let i = 0; i < document.lineCount; i++){
+		for (let i = 0; i < document.lineCount; i++) {
 			let line = document.lineAt(i);
-			let res = line.text.match(/^\s*\b(\w*)\b:\s*([\w\ \{\}\*\-<>]*)/)
+			let res = line.text.match(/^\s*\b(\w*)\b:\s*([\w\ \{\}\*\-<>]*)/);
 			if (res) {
 				keywords.push({
 					line: i,
 					keyword: res[1],
 					value: res[2]
-				})
+				});
 			}
 		}
 		return keywords;
