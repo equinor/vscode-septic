@@ -9,7 +9,7 @@
         "type": "git",
         "url": "https://github.com/equinor/vscode-septic"
     },
-    "version": "0.4.0",
+    "version": "0.5.0",
     "icon": "images/SEPTIC_logo.jfif",
     "engines": {
         "vscode": "^1.72.0"
