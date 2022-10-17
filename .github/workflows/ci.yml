@@ -1,8 +1,15 @@
-name: 🎡 CI
+name: 👷 CI
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build
-    uses: Equinor/vscode-septic/.github/workflows/build-workflow.yml@main
+    name: '🛠️ Build'
+    uses: ./.github/workflows/build-workflow.yml
+
+  deploy:
+    name: '🚀 Publish'
+    needs: [build]
+    uses: ./.github/workflows/deploy-workflow.yml
+    with:
+      artifact: ${{ needs.build.outputs.artifact-name }}
