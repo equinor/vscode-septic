@@ -16,6 +16,6 @@ jobs:
           name: ${{ inputs.artifact }}
 
       - name: Publish
-        run: npx vsce publish --packagePath $(find . -iname *.vsix)
+        run: npx vsce publish --pat $VSCE_PAT --packagePath $(find . -iname *.vsix)
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
