@@ -9,7 +9,10 @@ updates:
     ignore:
       # 16 is current LTS and needed for VS Code extension development
       # See https://github.com/microsoft/vscode/wiki/How-to-Contribute#prerequisites
-      versions: ["17.x", "18.x"]
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: 'github-actions'
     directory: '/'
