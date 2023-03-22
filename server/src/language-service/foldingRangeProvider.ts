@@ -8,19 +8,18 @@ import * as lsp from "vscode-languageserver";
 import { ITextDocument } from "./types/textDocument";
 import { SepticCnfg } from "../parser";
 import { SepticConfigProvider } from "./septicConfigProvider";
-import { SettingsManager } from "../settings";
-import { getHierarchyLevel } from "../util";
+import { SepticMetaInfoProvider } from "./septicMetaInfoProvider";
 
 export class FoldingRangeProvider {
     private readonly cnfgProvider: SepticConfigProvider;
-    private readonly settingsManager: SettingsManager;
+    private readonly metaInfoProvider: SepticMetaInfoProvider;
 
     constructor(
         cnfgProvider: SepticConfigProvider,
-        settingsManager: SettingsManager
+        metaInfoProvider: SepticMetaInfoProvider
     ) {
         this.cnfgProvider = cnfgProvider;
-        this.settingsManager = settingsManager;
+        this.metaInfoProvider = metaInfoProvider;
     }
 
     public provideFoldingRanges(
@@ -32,13 +31,14 @@ export class FoldingRangeProvider {
             return [];
         }
 
-        return getFoldingRanges(doc, cnfg, token);
+        return getFoldingRanges(doc, cnfg, this.metaInfoProvider, token);
     }
 }
 
 export function getFoldingRanges(
     doc: ITextDocument,
     cnfg: SepticCnfg,
+    metaInfoProvider: SepticMetaInfoProvider,
     token: lsp.CancellationToken | undefined = undefined
 ): lsp.FoldingRange[] {
     let ranges: lsp.FoldingRange[] = [];
@@ -46,14 +46,17 @@ export function getFoldingRanges(
     for (let i = 0; i < cnfg.objects.length; i++) {
         let obj = cnfg.objects[i];
         let end = i;
-        let level = getHierarchyLevel(obj);
+        let level = metaInfoProvider.getObjectDefault(obj.type).level;
 
         let j = i + 1;
         while (j < cnfg.objects.length) {
             if (token?.isCancellationRequested) {
                 return [];
             }
-            if (getHierarchyLevel(cnfg.objects[j]) <= level) {
+            let objectLevel = metaInfoProvider.getObjectDefault(
+                cnfg.objects[j].type
+            ).level;
+            if (objectLevel <= level) {
                 break;
             }
             end = j;

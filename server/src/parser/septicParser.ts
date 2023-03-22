@@ -142,8 +142,8 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
 
     identifier(): Identifier {
         let token = super.previous();
-        let variable = new Identifier(token.content, token.start, token.end);
-        return variable;
+        let identifier = new Identifier(token.content, token.start, token.end);
+        return identifier;
     }
 
     attributeValue(): AttributeValue {
@@ -162,10 +162,81 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
 }
 
 export class SepticCnfg {
-    objects: SepticObject[];
+    public objects: SepticObject[];
+    readonly xvrs = new Map<string, SepticObject[]>();
+    private xvrsExtracted = false;
 
     constructor(objects: SepticObject[]) {
         this.objects = objects;
+    }
+
+    public getAlgAttr(): Attribute[] {
+        const objects: Attribute[] = [];
+        this.objects.forEach((obj) => {
+            if (obj.type === "CalcPvr") {
+                let algAttr = obj.attributes.find((el) => {
+                    return el.key === "Alg";
+                });
+                if (algAttr) {
+                    objects.push(algAttr);
+                }
+            }
+        });
+        return objects;
+    }
+
+    public getXvr(name: string): SepticObject[] | undefined {
+        this.extractXvrs();
+        return this.xvrs.get(name);
+    }
+
+    public getAllXvrs(): SepticObject[] {
+        this.extractXvrs();
+        const xvrs: SepticObject[] = [];
+        this.xvrs.forEach((xvr) => {
+            xvrs.push(...xvr);
+        });
+        return xvrs;
+    }
+
+    public offsetInAlg(offset: number): boolean {
+        const algAttr = this.getAlgAttr();
+        for (let alg of algAttr) {
+            if (!alg.values.length) {
+                continue;
+            }
+            let algValue = alg.values[0];
+            if (offset >= algValue.start && offset <= algValue.end) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public getObjectFromOffset(offset: number): SepticObject | undefined {
+        return this.objects.find((obj) => {
+            return offset >= obj.start && offset <= obj.end;
+        });
+    }
+
+    private extractXvrs(): void {
+        if (this.xvrsExtracted) {
+            return;
+        }
+        this.xvrsExtracted = true;
+
+        const regexVariable = /[a-zA-Z]+vr/;
+        this.objects.forEach((obj) => {
+            if (regexVariable.test(obj.type)) {
+                if (obj.identifier) {
+                    if (this.xvrs.has(obj.identifier.name)) {
+                        this.xvrs.get(obj.identifier.name)?.push(obj);
+                    } else {
+                        this.xvrs.set(obj.identifier!.name, [obj]);
+                    }
+                }
+            }
+        });
     }
 }
 

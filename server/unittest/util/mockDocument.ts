@@ -16,6 +16,10 @@ export class MockDocument implements ITextDocument {
     positionAt(offset: number): Position {
         return getPosition(this.text, offset);
     }
+
+    offsetAt(position: Position): number {
+        return -1;
+    }
 }
 
 interface LineInfo {

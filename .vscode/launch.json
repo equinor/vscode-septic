@@ -12,7 +12,7 @@
             "runtimeExecutable": "${execPath}",
             "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
             "outFiles": ["${workspaceRoot}/client/out/**/*.js"],
-            "preLaunchTask": "npm: watch"
+            "preLaunchTask": "npm: compile"
         },
         {
             "name": "Language Server E2E Test",
@@ -30,7 +30,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/server/src/parser/parser.ts",
+            "program": "${workspaceFolder}/server/src/language-service/fileInfoProvider.ts",
             "preLaunchTask": "npm: watch",
             "outFiles": ["${workspaceFolder}/server/out/**/*.js"]
         },
