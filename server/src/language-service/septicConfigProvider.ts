@@ -9,7 +9,7 @@ import {
     CancellationTokenSource,
     URI,
 } from "vscode-languageserver";
-import { SepticCnfg, parseSeptic } from "../parser";
+import { SepticCnfg, parseSeptic } from "../septic";
 import { ResourceMap } from "../util/resourceMap";
 import { IWorkspace } from "../workspace";
 import { ITextDocument } from ".";

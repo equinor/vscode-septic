@@ -6,20 +6,14 @@
 
 import * as lsp from "vscode-languageserver";
 import { ITextDocument } from "./types/textDocument";
-import { SepticCnfg } from "../parser";
+import { SepticCnfg, SepticMetaInfoProvider } from "../septic";
 import { SepticConfigProvider } from "./septicConfigProvider";
-import { SepticMetaInfoProvider } from "./septicMetaInfoProvider";
 
 export class FoldingRangeProvider {
     private readonly cnfgProvider: SepticConfigProvider;
-    private readonly metaInfoProvider: SepticMetaInfoProvider;
 
-    constructor(
-        cnfgProvider: SepticConfigProvider,
-        metaInfoProvider: SepticMetaInfoProvider
-    ) {
+    constructor(cnfgProvider: SepticConfigProvider) {
         this.cnfgProvider = cnfgProvider;
-        this.metaInfoProvider = metaInfoProvider;
     }
 
     public provideFoldingRanges(
@@ -31,16 +25,16 @@ export class FoldingRangeProvider {
             return [];
         }
 
-        return getFoldingRanges(doc, cnfg, this.metaInfoProvider, token);
+        return getFoldingRanges(doc, cnfg, token);
     }
 }
 
 export function getFoldingRanges(
     doc: ITextDocument,
     cnfg: SepticCnfg,
-    metaInfoProvider: SepticMetaInfoProvider,
     token: lsp.CancellationToken | undefined = undefined
 ): lsp.FoldingRange[] {
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     let ranges: lsp.FoldingRange[] = [];
 
     for (let i = 0; i < cnfg.objects.length; i++) {

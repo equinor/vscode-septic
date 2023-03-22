@@ -9,6 +9,8 @@ septicConfig:
     - name: CalcPvr
       level: 3
       symbolKind: Function
+      refs:
+        identifier: True
     - name: CalcTable
       level: 2
     - name: Chart
@@ -19,9 +21,13 @@ septicConfig:
     - name: Cvr
       level: 2
       symbolKind: Variable
+      refs:
+        identifier: True
     - name: CvrList
       level: 2
       symbolKind: Array
+      refs:
+        attrList: [Cvrs]
     - name: DisplayGroup
       level: 1
       symbolKind: Namespace
@@ -31,14 +37,20 @@ septicConfig:
     - name: Dvr
       level: 2
       symbolKind: Variable
+      refs:
+        identifier: True
     - name: DvrList
       level: 2
       symbolKind: Array
+      refs:
+        attrList: [Dvrs]
     - name: DynCurve
     - name: DynPoint
     - name: Evr
       level: 2
       symbolKind: Variable
+      refs:
+        identifier: True
     - name: EvrList
       level: 2
       symbolKind: Array
@@ -67,15 +79,23 @@ septicConfig:
     - name: ModelMatrix
       level: 2
       symbolKind: Array
+      refs:
+        attrList: [CvrIds, MvrDvrIds]
     - name: ModelPlot
     - name: MsgBox
     - name: MultiXvrPlot
+      refs:
+        attrList: [Xvrs]
     - name: Mvr
       level: 2
       symbolKind: Variable
+      refs:
+        identifier: True
     - name: MvrList
       level: 2
       symbolKind: Array
+      refs:
+        attrList: [Mvrs]
     - name: OPCProcPlot
     - name: PriorityTable
       symbolKind: Array
@@ -87,21 +107,31 @@ septicConfig:
     - name: SopcCvr
       level: 2
       symbolKind: Interface
+      refs:
+        identifier: True
     - name: SopcDvr
       level: 2
       symbolKind: Interface
+      refs:
+        identifier: True
     - name: SopcEvr
       level: 2
       symbolKind: Interface
+      refs:
+        identifier: True
     - name: SopcMvr
       level: 2
       symbolKind: Interface
+      refs:
+        identifier: True
     - name: SopcProc
       level: 1
       symbolKind: Interface
     - name: SopcTvr
       level: 2
       symbolKind: Interface
+      refs:
+        identifier: True
     - name: Spacer
     - name: SubrXvr
     - name: System
@@ -114,12 +144,16 @@ septicConfig:
     - name: Tvr
       level: 2
       symbolKind: Variable
+      refs:
+        identifier: True
     - name: TvrList
       level: 2
       symbolKind: Array
     - name: XvrMatrix
     - name: XvrPlot
       level: 2
+      refs:
+        identifier: True
     - name: XYPlot
 
   calcs:

@@ -11,8 +11,7 @@ import {
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
-import { SepticCnfg, SepticObject } from "../parser";
-import { SepticMetaInfoProvider } from "./septicMetaInfoProvider";
+import { SepticCnfg, SepticObject, SepticMetaInfoProvider } from "../septic";
 
 interface SepticSymbol {
     symbol: DocumentSymbol;
@@ -22,14 +21,9 @@ interface SepticSymbol {
 
 export class DocumentSymbolProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
-    private readonly metaInfoProvider: SepticMetaInfoProvider;
 
-    constructor(
-        cnfgProvider: ISepticConfigProvider,
-        metaInfoProvider: SepticMetaInfoProvider
-    ) {
+    constructor(cnfgProvider: ISepticConfigProvider) {
         this.cnfgProvider = cnfgProvider;
-        this.metaInfoProvider = metaInfoProvider;
     }
 
     public provideDocumentSymbols(
@@ -40,15 +34,12 @@ export class DocumentSymbolProvider {
         if (!cnfg) {
             return [];
         }
-        return getDocumentSymbols(document, cnfg, this.metaInfoProvider);
+        return getDocumentSymbols(document, cnfg);
     }
 }
 
-export function getDocumentSymbols(
-    doc: ITextDocument,
-    cnfg: SepticCnfg,
-    metaInfoProvider: SepticMetaInfoProvider
-) {
+export function getDocumentSymbols(doc: ITextDocument, cnfg: SepticCnfg) {
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     let symbols = cnfg.objects.map((obj) => {
         const level = metaInfoProvider.getObjectDefault(obj.type).level;
         const symbolKind = metaInfoProvider.getObjectDefault(

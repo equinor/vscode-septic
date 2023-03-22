@@ -3,11 +3,8 @@ import {
     defaultDiagnosticsSettings,
     toSeverity,
 } from "../src/language-service/diagnosticsProvider";
-import { SepticMetaInfoProvider } from "../src/language-service/septicMetaInfoProvider";
-import { parseSeptic } from "../src/parser";
+import { parseSeptic } from "../src/septic";
 import { MockDocument } from "./util";
-
-const metaInfoProvider = new SepticMetaInfoProvider();
 
 describe("Test algorithm diagnostics", () => {
     test("Missing paranthesis in alg", () => {
@@ -20,12 +17,7 @@ describe("Test algorithm diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(
-            cnfg,
-            doc,
-            defaultDiagnosticsSettings,
-            metaInfoProvider
-        );
+        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings);
         expect(diag.length).toBe(1);
     });
     test("Unexpexted token in alg", () => {
@@ -38,12 +30,7 @@ describe("Test algorithm diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(
-            cnfg,
-            doc,
-            defaultDiagnosticsSettings,
-            metaInfoProvider
-        );
+        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings);
         expect(diag.length).toBe(1);
     });
     test("Missing reference in alg", () => {
@@ -56,12 +43,7 @@ describe("Test algorithm diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(
-            cnfg,
-            doc,
-            defaultDiagnosticsSettings,
-            metaInfoProvider
-        );
+        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings);
         expect(diag.length).toBe(1);
         expect(diag[0].severity).toBe(
             toSeverity(defaultDiagnosticsSettings.algMissingReference)
@@ -77,12 +59,7 @@ describe("Test algorithm diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(
-            cnfg,
-            doc,
-            defaultDiagnosticsSettings,
-            metaInfoProvider
-        );
+        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings);
         expect(diag.length).toBe(1);
         expect(diag[0].severity).toBe(
             toSeverity(defaultDiagnosticsSettings.algCalc)
@@ -102,12 +79,7 @@ describe("Test algorithm diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(
-            cnfg,
-            doc,
-            defaultDiagnosticsSettings,
-            metaInfoProvider
-        );
+        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings);
         expect(diag.length).toBe(0);
     });
 });

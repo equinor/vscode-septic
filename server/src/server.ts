@@ -15,6 +15,8 @@ import {
     DocumentSymbol,
     TextDocumentPositionParams,
     CompletionItem,
+    LocationLink,
+    Location,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -66,6 +68,9 @@ connection.onInitialize((params: InitializeParams) => {
             completionProvider: {
                 resolveProvider: false,
             },
+            definitionProvider: true,
+            referencesProvider: true,
+            declarationProvider: true,
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -143,6 +148,30 @@ connection.onCompletion(
         return langService.provideCompletion(docPos, document);
     }
 );
+
+connection.onDefinition((params, token): LocationLink[] => {
+    const document = documents.get(params.textDocument.uri);
+    if (!document) {
+        return [];
+    }
+    return langService.provideDefinition(params, document);
+});
+
+connection.onDeclaration((params): LocationLink[] => {
+    const document = documents.get(params.textDocument.uri);
+    if (!document) {
+        return [];
+    }
+    return langService.provideDeclaration(params, document);
+});
+
+connection.onReferences((params): Location[] => {
+    const document = documents.get(params.textDocument.uri);
+    if (!document) {
+        return [];
+    }
+    return langService.provideReferences(params, document);
+});
 
 // Make the text document manager listen on the connection
 // for open, change and close text document events
