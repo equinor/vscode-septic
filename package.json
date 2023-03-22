@@ -1,29 +1,53 @@
 {
-    "name": "septic-config",
-    "displayName": "Septic Language Basics",
-    "description": "Provides snippets, syntax highlighting and multi-level folding in Septic config files.",
-    "publisher": "EinarSIdso",
-    "author": "Einar S. Idsø",
-    "license": "MIT",
-    "repository": {
+	"name": "septic-config",
+	"displayName": "Septic Language Basics",
+	"icon": "images/SEPTIC_logo.jfif",
+	"description": "Provides snippets, syntax highlighting and multi-level folding in Septic config files.",
+	"author": "Einar S Idso",
+	"license": "MIT",
+	"version": "0.5.0",
+	"repository": {
         "type": "git",
         "url": "https://github.com/equinor/vscode-septic"
     },
-    "version": "0.5.0",
-    "icon": "images/SEPTIC_logo.jfif",
-    "engines": {
-        "vscode": "^1.72.0"
-    },
-    "categories": [
-        "Programming Languages",
-        "Snippets"
-    ],
-    "activationEvents": [
-        "onLanguage:septic"
-    ],
-    "main": "./out/extension.js",
-    "contributes": {
-        "languages": [
+	"publisher": "EinarSIdso",
+	"categories": [],
+	"keywords": [
+		"multi-root ready"
+	],
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"activationEvents": [
+		"onLanguage:plaintext",
+		"onLanguage:septic"
+	],
+	"main": "./client/out/extension",
+	"contributes": {
+		"configuration": {
+			"type": "object",
+			"title": "Example configuration",
+			"properties": {
+				"languageServerExample.maxNumberOfProblems": {
+					"scope": "resource",
+					"type": "number",
+					"default": 100,
+					"description": "Controls the maximum number of problems produced by the server."
+				},
+				"languageServerExample.trace.server": {
+					"scope": "window",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces the communication between VS Code and the language server."
+				}
+			}
+		},
+		"languages": [
             {
                 "id": "septic",
                 "aliases": [
@@ -56,39 +80,35 @@
                 "path": "./syntaxes/jinja.tmLanguage.json"
             }
         ],
-        "snippets": [
+		"snippets": [
             {
                 "language": "septic",
                 "path": "snippets/snippets.json"
             }
         ],
-        "configurationDefaults": {
+		"configurationDefaults": {
             "[septic]": {
                 "files.encoding": "windows1252",
                 "editor.wordWrap": "on",
                 "editor.insertSpaces": true
             }
         }
-    },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile",
-        "lint": "eslint src --ext ts",
-        "test": "node ./out/test/runTest.js"
-    },
-    "devDependencies": {
-        "@types/glob": "^8.0.0",
-        "@types/mocha": "10.0.0",
-        "@types/node": "16.x",
-        "@types/vscode": "^1.72.0",
-        "@typescript-eslint/eslint-plugin": "^5.59.0",
-        "@typescript-eslint/parser": "^5.59.0",
-        "@vscode/test-electron": "^2.1.5",
-        "eslint": "^8.24.0",
-        "glob": "^8.0.3",
-        "mocha": "^10.0.0",
-        "typescript": "^4.8.4"
-    }
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -b",
+		"watch": "tsc -b -w",
+		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
+		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+		"test": "sh ./scripts/e2e.sh"
+	},
+	"devDependencies": {
+		"@types/mocha": "^10.0.0",
+		"@types/node": "^16.11.7",
+		"@typescript-eslint/eslint-plugin": "^5.59.0",
+		"@typescript-eslint/parser": "^5.59.0",
+		"eslint": "^8.35.0",
+		"mocha": "^10.0.0",
+		"typescript": "^4.9.5"
+	}
 }
