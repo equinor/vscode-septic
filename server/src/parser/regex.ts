@@ -10,3 +10,5 @@ export const SKIP_REGEX = /^[\s]+/;
 export const UNKNOWN_REGEX = /^./;
 export const VARIABLE_REGEX = /^\b([\w\-]+)\b/;
 export const SCG_VARIABLE_REGEX = /^\{{2}\s*([\w\-]+)\s*\}{2}/;
+export const ENUMS_REGEX =
+  /^(ON|OFF|ACTIVE|ADVISORY|TRACKING|STOPPED|FAILED|NOTRANS|DISTLN|FILTER|RAMP|[WR]{4})/;

@@ -34,7 +34,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/server/src/parser/lexer.ts",
+            "program": "${workspaceFolder}/server/src/parser/parser.ts",
             "preLaunchTask": "npm: watch",
             "outFiles": ["${workspaceFolder}/server/out/**/*.js"]
         },

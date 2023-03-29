@@ -1,5 +1,4 @@
-import { tokenize } from "../src/parser/lexer";
-import { TokenType } from "../src/parser/token";
+import { TokenType, tokenize } from "../src/parser";
 
 describe("Basic tests lexer", () => {
   test("Lexing keyword", () => {
