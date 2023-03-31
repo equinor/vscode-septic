@@ -10,14 +10,14 @@ import {
   ProposedFeatures,
   InitializeParams,
   DidChangeConfigurationNotification,
-  CompletionItem,
-  CompletionItemKind,
-  TextDocumentPositionParams,
   TextDocumentSyncKind,
   InitializeResult,
+  FoldingRange,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
+import { tokenize, Parser } from "./parser";
+import { ILanguageService, createLanguageService } from "./language-service";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -29,6 +29,8 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+
+let langService: ILanguageService = createLanguageService();
 
 connection.onInitialize((params: InitializeParams) => {
   const capabilities = params.capabilities;
@@ -49,10 +51,7 @@ connection.onInitialize((params: InitializeParams) => {
   const result: InitializeResult = {
     capabilities: {
       textDocumentSync: TextDocumentSyncKind.Incremental,
-      // Tell the client that this server supports code completion.
-      completionProvider: {
-        resolveProvider: true,
-      },
+      foldingRangeProvider: true,
     },
   };
   if (hasWorkspaceFolderCapability) {
@@ -103,8 +102,6 @@ connection.onDidChangeConfiguration((change) => {
       (change.settings.languageServerExample || defaultSettings)
     );
   }
-
-  // Revalidate all open text documents
   documents.all().forEach(validateTextDocument);
 });
 
@@ -135,50 +132,31 @@ documents.onDidChangeContent((change) => {
 });
 
 async function validateTextDocument(textDocument: TextDocument): Promise<void> {
-  // In this simple example we get the settings for every validate run.
-  const settings = await getDocumentSettings(textDocument.uri);
-
-  // The validator creates diagnostics for all uppercase words length 2 and more
   const text = textDocument.getText();
-  const pattern = /\b[A-Z]{2,}\b/g;
-  let m: RegExpExecArray | null;
 
-  let problems = 0;
+  const tokens = tokenize(text);
+  let parser = new Parser(tokens);
+  let septicCnfg = parser.parse();
+
   const diagnostics: Diagnostic[] = [];
-  while ((m = pattern.exec(text)) && problems < settings.maxNumberOfProblems) {
-    problems++;
+
+  parser.errors.forEach((elem) => {
     const diagnostic: Diagnostic = {
       severity: DiagnosticSeverity.Warning,
       range: {
-        start: textDocument.positionAt(m.index),
-        end: textDocument.positionAt(m.index + m[0].length),
+        start: textDocument.positionAt(elem.token.start),
+        end: textDocument.positionAt(elem.token.end),
       },
-      message: `${m[0]} is all uppercase.`,
-      source: "ex",
+      message: elem.message,
     };
-    if (hasDiagnosticRelatedInformationCapability) {
-      diagnostic.relatedInformation = [
-        {
-          location: {
-            uri: textDocument.uri,
-            range: Object.assign({}, diagnostic.range),
-          },
-          message: "Spelling matters",
-        },
-        {
-          location: {
-            uri: textDocument.uri,
-            range: Object.assign({}, diagnostic.range),
-          },
-          message: "Particularly for names",
-        },
-      ];
-    }
-    diagnostics.push(diagnostic);
-  }
 
-  // Send the computed diagnostics to VSCode.
-  connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+    diagnostics.push(diagnostic);
+  });
+
+  connection.sendDiagnostics({
+    uri: textDocument.uri,
+    diagnostics: diagnostics,
+  });
 }
 
 connection.onDidChangeWatchedFiles((_change) => {
@@ -186,38 +164,12 @@ connection.onDidChangeWatchedFiles((_change) => {
   connection.console.log("We received an file change event");
 });
 
-// This handler provides the initial list of the completion items.
-connection.onCompletion(
-  (_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
-    // The pass parameter contains the position of the text document in
-    // which code complete got requested. For the example we ignore this
-    // info and always provide the same completion items.
-    return [
-      {
-        label: "TypeScript",
-        kind: CompletionItemKind.Text,
-        data: 1,
-      },
-      {
-        label: "JavaScript",
-        kind: CompletionItemKind.Text,
-        data: 2,
-      },
-    ];
+connection.onFoldingRanges((params, token): FoldingRange[] => {
+  const document = documents.get(params.textDocument.uri);
+  if (!document) {
+    return [];
   }
-);
-
-// This handler resolves additional information for the item selected in
-// the completion list.
-connection.onCompletionResolve((item: CompletionItem): CompletionItem => {
-  if (item.data === 1) {
-    item.detail = "TypeScript details";
-    item.documentation = "TypeScript documentation";
-  } else if (item.data === 2) {
-    item.detail = "JavaScript details";
-    item.documentation = "JavaScript documentation";
-  }
-  return item;
+  return langService.getFoldingRanges(document, token);
 });
 
 // Make the text document manager listen on the connection

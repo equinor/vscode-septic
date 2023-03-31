@@ -14,6 +14,7 @@ import {
   ENUMS_REGEX,
 } from "./regex";
 
+import { CancellationToken } from "vscode-languageserver";
 import { Token, TokenType } from "./token";
 
 /* Order in list matter.
@@ -37,10 +38,16 @@ const REGEX_LIST = [
   { type: TokenType.Unknown, regex: UNKNOWN_REGEX },
 ];
 
-export function tokenize(input: string): Token[] {
+export function tokenize(
+  input: string,
+  token: CancellationToken | undefined = undefined
+): Token[] {
   let tokens: Token[] = [];
   let curpos: number = 0;
   while (curpos < input.length) {
+    if (token?.isCancellationRequested) {
+      return [];
+    }
     let temp = input.slice(curpos);
     for (let i = 0; i < REGEX_LIST.length; i++) {
       let element = REGEX_LIST[i];
