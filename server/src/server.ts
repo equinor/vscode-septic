@@ -5,8 +5,6 @@
 import {
   createConnection,
   TextDocuments,
-  Diagnostic,
-  DiagnosticSeverity,
   ProposedFeatures,
   InitializeParams,
   DidChangeConfigurationNotification,
@@ -16,8 +14,8 @@ import {
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { tokenize, Parser } from "./parser";
 import { ILanguageService, createLanguageService } from "./language-service";
+import { SepticWorkspace } from "./workspace";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -26,11 +24,13 @@ const connection = createConnection(ProposedFeatures.all);
 // Create a simple text document manager.
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
+const workspace = new SepticWorkspace(documents);
+
+const langService: ILanguageService = createLanguageService(workspace);
+
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
-
-let langService: ILanguageService = createLanguageService();
 
 connection.onInitialize((params: InitializeParams) => {
   const capabilities = params.capabilities;
@@ -79,89 +79,15 @@ connection.onInitialized(() => {
   }
 });
 
-// The example settings
-interface ExampleSettings {
-  maxNumberOfProblems: number;
-}
-
-// The global settings, used when the `workspace/configuration` request is not supported by the client.
-// Please note that this is not the case when using this server with the client provided in this example
-// but could happen with other clients.
-const defaultSettings: ExampleSettings = { maxNumberOfProblems: 1000 };
-let globalSettings: ExampleSettings = defaultSettings;
-
-// Cache the settings of all open documents
-const documentSettings: Map<string, Thenable<ExampleSettings>> = new Map();
-
-connection.onDidChangeConfiguration((change) => {
-  if (hasConfigurationCapability) {
-    // Reset all cached document settings
-    documentSettings.clear();
-  } else {
-    globalSettings = <ExampleSettings>(
-      (change.settings.languageServerExample || defaultSettings)
-    );
-  }
-  documents.all().forEach(validateTextDocument);
-});
-
-function getDocumentSettings(resource: string): Thenable<ExampleSettings> {
-  if (!hasConfigurationCapability) {
-    return Promise.resolve(globalSettings);
-  }
-  let result = documentSettings.get(resource);
-  if (!result) {
-    result = connection.workspace.getConfiguration({
-      scopeUri: resource,
-      section: "languageServerExample",
-    });
-    documentSettings.set(resource, result);
-  }
-  return result;
-}
-
-// Only keep settings for open documents
-documents.onDidClose((e) => {
-  documentSettings.delete(e.document.uri);
-});
-
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
+
 documents.onDidChangeContent((change) => {
-  validateTextDocument(change.document);
-});
-
-async function validateTextDocument(textDocument: TextDocument): Promise<void> {
-  const text = textDocument.getText();
-
-  const tokens = tokenize(text);
-  let parser = new Parser(tokens);
-  let septicCnfg = parser.parse();
-
-  const diagnostics: Diagnostic[] = [];
-
-  parser.errors.forEach((elem) => {
-    const diagnostic: Diagnostic = {
-      severity: DiagnosticSeverity.Warning,
-      range: {
-        start: textDocument.positionAt(elem.token.start),
-        end: textDocument.positionAt(elem.token.end),
-      },
-      message: elem.message,
-    };
-
-    diagnostics.push(diagnostic);
-  });
-
+  let diagnostics = langService.provideDiagnostics(change.document, undefined);
   connection.sendDiagnostics({
-    uri: textDocument.uri,
+    uri: change.document.uri,
     diagnostics: diagnostics,
   });
-}
-
-connection.onDidChangeWatchedFiles((_change) => {
-  // Monitored files have change in VSCode
-  connection.console.log("We received an file change event");
 });
 
 connection.onFoldingRanges((params, token): FoldingRange[] => {
@@ -169,7 +95,7 @@ connection.onFoldingRanges((params, token): FoldingRange[] => {
   if (!document) {
     return [];
   }
-  return langService.getFoldingRanges(document, token);
+  return langService.provideFoldingRanges(document, token);
 });
 
 // Make the text document manager listen on the connection

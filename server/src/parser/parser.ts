@@ -1,3 +1,4 @@
+import { CancellationToken } from "vscode-languageserver";
 import { Token, TokenType } from "./token";
 
 export interface ParserError {
@@ -26,9 +27,12 @@ export class Parser {
     this.tokens = tokens;
   }
 
-  parse(): SepticCnfg {
+  parse(token: CancellationToken | undefined = undefined): SepticCnfg {
     let septicObjects = [];
     while (!this.isAtEnd()) {
+      if (token?.isCancellationRequested) {
+        return new SepticCnfg([]);
+      }
       if (this.match(TokenType.Object)) {
         let septicObj = this.septicObject();
         septicObjects.push(septicObj);

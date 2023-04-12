@@ -1,17 +1,33 @@
 import * as lsp from "vscode-languageserver";
 import { ITextDocument } from "./types/textDocument";
-import { tokenize, Parser, SepticObject } from "../parser";
+import { SepticCnfg, SepticObject } from "../parser";
+import { SepticConfigProvider } from "./septicConfigProvider";
+
+export class FoldingRangeProvider {
+  private cnfgProvider: SepticConfigProvider;
+
+  constructor(cnfgProvider: SepticConfigProvider) {
+    this.cnfgProvider = cnfgProvider;
+  }
+
+  public provideFoldingRanges(
+    doc: ITextDocument,
+    token: lsp.CancellationToken
+  ): lsp.FoldingRange[] {
+    console.debug("Started providing folding ranges");
+    let cnfg = this.cnfgProvider.get(doc.uri);
+    if (!cnfg) {
+      return [];
+    }
+    return getFoldingRanges(doc, cnfg, token);
+  }
+}
 
 export function getFoldingRanges(
   doc: ITextDocument,
-  token: lsp.CancellationToken | undefined
+  cnfg: SepticCnfg,
+  token: lsp.CancellationToken | undefined = undefined
 ): lsp.FoldingRange[] {
-  let text = doc.getText();
-  let tokens = tokenize(text, token);
-
-  let parser = new Parser(tokens);
-  let cnfg = parser.parse();
-
   let ranges: lsp.FoldingRange[] = [];
 
   for (let i = 0; i < cnfg.objects.length; i++) {
@@ -21,6 +37,9 @@ export function getFoldingRanges(
 
     let j = i + 1;
     while (j < cnfg.objects.length) {
+      if (token?.isCancellationRequested) {
+        return [];
+      }
       if (getLevel(cnfg.objects[j]) <= level) {
         break;
       }
@@ -37,7 +56,7 @@ export function getFoldingRanges(
   return ranges;
 }
 
-let sectionLevelsMap = new Map<string, number>();
+const sectionLevelsMap = new Map<string, number>();
 
 // Level 1
 sectionLevelsMap.set("system", 1);

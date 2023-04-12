@@ -45,8 +45,8 @@ export function activate(context: vscode.ExtensionContext) {
   };
 
   client = new LanguageClient(
-    "languageServerExample",
-    "Language Server Example",
+    "septicLanguageServer",
+    "Septic Language Server",
     serverOptions,
     clientOptions
   );

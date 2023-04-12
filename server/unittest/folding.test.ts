@@ -1,7 +1,10 @@
 import { MockDocument, getLines, getLineNumber, LineInfo } from "./util";
 import { Position } from "vscode-languageserver";
-import { getFoldingRanges, getLevel } from "../src/language-service/folding";
-import { SepticObject } from "../src/parser";
+import {
+  getFoldingRanges,
+  getLevel,
+} from "../src/language-service/foldingRangeProvider";
+import { Parser, SepticObject, tokenize } from "../src/parser";
 
 describe("Test of folding levels", () => {
   test("Test variables", () => {
@@ -36,7 +39,11 @@ describe("Test folding of document", () => {
     });
 
     const doc = new MockDocument(mockGetText, mockPositionAt);
-    let foldingRanges = getFoldingRanges(doc, undefined);
+
+    const tokens = tokenize(doc.getText());
+    const parser = new Parser(tokens);
+    const cnfg = parser.parse();
+    const foldingRanges = getFoldingRanges(doc, cnfg);
 
     expect(foldingRanges.length).toBe(3);
     expect(foldingRanges[0].startLine).toBe(2);
@@ -73,7 +80,12 @@ describe("Test folding of document", () => {
     });
 
     const doc = new MockDocument(mockGetText, mockPositionAt);
-    let foldingRanges = getFoldingRanges(doc, undefined);
+
+    const tokens = tokenize(doc.getText());
+    const parser = new Parser(tokens);
+    const cnfg = parser.parse();
+
+    const foldingRanges = getFoldingRanges(doc, cnfg);
 
     expect(foldingRanges.length).toBe(4);
     expect(foldingRanges[0].startLine).toBe(2);
