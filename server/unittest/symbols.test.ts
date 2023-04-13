@@ -1,6 +1,7 @@
 import { MockDocument } from "./util";
 import { Parser, tokenize } from "../src/parser";
 import { getDocumentSymbols } from "../src/language-service/documentSymbolProvider";
+import { defaultHiearchySettings } from "../src/util";
 
 describe("Test folding of document", () => {
   test("Test folding of increasing levels", () => {
@@ -21,7 +22,11 @@ describe("Test folding of document", () => {
     const tokens = tokenize(doc.getText());
     const parser = new Parser(tokens);
     const cnfg = parser.parse();
-    const documentSymbols = getDocumentSymbols(doc, cnfg);
+    const documentSymbols = getDocumentSymbols(
+      doc,
+      cnfg,
+      defaultHiearchySettings
+    );
 
     expect(documentSymbols.length).toBe(1);
     expect(documentSymbols[0].children?.length).toBe(1);
@@ -49,7 +54,11 @@ describe("Test folding of document", () => {
     const parser = new Parser(tokens);
     const cnfg = parser.parse();
 
-    const documentSymbols = getDocumentSymbols(doc, cnfg);
+    const documentSymbols = getDocumentSymbols(
+      doc,
+      cnfg,
+      defaultHiearchySettings
+    );
 
     expect(documentSymbols.length).toBe(2);
     expect(documentSymbols[0].children?.length).toBe(0);

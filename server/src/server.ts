@@ -17,6 +17,7 @@ import {
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { ILanguageService, createLanguageService } from "./language-service";
 import { SepticWorkspace } from "./workspace";
+import { SettingsManager } from "./settings";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -27,9 +28,14 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
 const workspace = new SepticWorkspace(documents);
 
-const langService: ILanguageService = createLanguageService(workspace);
+const settingsManager = new SettingsManager(connection);
 
-let hasConfigurationCapability = false;
+const langService: ILanguageService = createLanguageService(
+  workspace,
+  settingsManager
+);
+
+let hasConfigurationCapability = true;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
 
@@ -67,6 +73,8 @@ connection.onInitialize((params: InitializeParams) => {
 });
 
 connection.onInitialized(() => {
+  console.debug("Has Configuration Capability");
+  console.debug(hasConfigurationCapability);
   if (hasConfigurationCapability) {
     // Register for all configuration changes.
     connection.client.register(
@@ -89,6 +97,17 @@ documents.onDidChangeContent((change) => {
   connection.sendDiagnostics({
     uri: change.document.uri,
     diagnostics: diagnostics,
+  });
+});
+
+connection.onDidChangeConfiguration((change) => {
+  settingsManager.invalidate();
+  documents.all().forEach((doc) => {
+    let diagnostics = langService.provideDiagnostics(doc, undefined);
+    connection.sendDiagnostics({
+      uri: doc.uri,
+      diagnostics: diagnostics,
+    });
   });
 });
 

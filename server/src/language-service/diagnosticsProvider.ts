@@ -6,25 +6,50 @@ import {
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import { SepticCnfg } from "../parser";
+import { SettingsManager } from "../settings";
 
-export interface IDiagnosticsOptions {
-  missingVariables?: boolean;
+export enum DiagnosticLevel {
+  error = "error",
+  warning = "warning",
+  hint = "hint",
+  ignore = "ignore",
 }
 
-type DiagnosticFn = (cnfg: SepticCnfg, doc: ITextDocument) => Diagnostic[];
+export interface DiagnosticsSettings {
+  readonly enabled: boolean;
+  readonly missingVariable: DiagnosticLevel | undefined;
+}
+
+const defaultDiagnosticsSettings: DiagnosticsSettings = {
+  enabled: true,
+  missingVariable: DiagnosticLevel.error,
+};
+
+function toSeverity(
+  level: DiagnosticLevel | undefined
+): DiagnosticSeverity | undefined {
+  switch (level) {
+    case DiagnosticLevel.error:
+      return DiagnosticSeverity.Error;
+    case DiagnosticLevel.warning:
+      return DiagnosticSeverity.Warning;
+    case DiagnosticLevel.hint:
+      return DiagnosticSeverity.Hint;
+    default:
+      return undefined;
+  }
+}
 
 export class DiagnosticProvider {
   private readonly cnfgProvider: ISepticConfigProvider;
-  private readonly validationFunctions: DiagnosticFn[] = [];
+  private readonly settingsManager: SettingsManager;
 
   constructor(
     cnfgProvider: ISepticConfigProvider,
-    options: IDiagnosticsOptions
+    settingsManager: SettingsManager
   ) {
     this.cnfgProvider = cnfgProvider;
-    if (options.missingVariables) {
-      this.validationFunctions.push(missingVariableDiagnostic);
-    }
+    this.settingsManager = settingsManager;
   }
 
   public provideDiagnostics(
@@ -35,30 +60,46 @@ export class DiagnosticProvider {
     if (cnfg === undefined) {
       return [];
     }
-    const diagnostics: Diagnostic[] = [];
 
-    for (let i = 0; i < this.validationFunctions.length; i++) {
-      if (token?.isCancellationRequested) {
-        return [];
-      }
-      let fn = this.validationFunctions[i];
-      let localDiag = fn(cnfg, doc);
-      diagnostics.push(...localDiag);
+    let settings =
+      this.settingsManager.getSettings()?.diagnostics ??
+      defaultDiagnosticsSettings;
+
+    if (!settings.enabled) {
+      return [];
     }
 
-    return diagnostics;
+    return getDiagnostics(cnfg, doc, settings);
   }
+}
+
+function getDiagnostics(
+  cnfg: SepticCnfg,
+  doc: ITextDocument,
+  settings: DiagnosticsSettings
+) {
+  const diagnostics: Diagnostic[] = [];
+
+  diagnostics.push(...missingVariableDiagnostic(cnfg, doc, settings));
+  return diagnostics;
 }
 
 function missingVariableDiagnostic(
   cnfg: SepticCnfg,
-  doc: ITextDocument
+  doc: ITextDocument,
+  settings: DiagnosticsSettings
 ): Diagnostic[] {
+  const severity = toSeverity(settings.missingVariable);
+
+  if (!severity) {
+    return [];
+  }
   const diagnostics: Diagnostic[] = [];
+
   cnfg.objects.forEach((elem) => {
     if (!elem.variable) {
       const diagnostic: Diagnostic = {
-        severity: DiagnosticSeverity.Error,
+        severity: severity,
         range: {
           start: doc.positionAt(elem.start),
           end: doc.positionAt(elem.start + elem.type.length),

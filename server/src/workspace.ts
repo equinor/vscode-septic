@@ -1,4 +1,10 @@
-import { Emitter, Event, TextDocuments, URI } from "vscode-languageserver";
+import {
+  Connection,
+  Emitter,
+  Event,
+  TextDocuments,
+  URI,
+} from "vscode-languageserver";
 import { ITextDocument } from "./language-service";
 
 export interface IWorkspace {

@@ -1,16 +1,28 @@
 import { MockDocument } from "./util";
-import {
-  getFoldingRanges,
-  getLevel,
-} from "../src/language-service/foldingRangeProvider";
+import { getFoldingRanges } from "../src/language-service/foldingRangeProvider";
 import { Parser, SepticObject, tokenize } from "../src/parser";
+import { defaultHiearchySettings, getHiearchyLevel } from "../src/util";
 
 describe("Test of folding levels", () => {
   test("Test variables", () => {
-    expect(getLevel(new SepticObject("SopcMvr", null))).toBe(2);
-    expect(getLevel(new SepticObject("Evr", null))).toBe(2);
-    expect(getLevel(new SepticObject("Mvr", null))).toBe(2);
-    expect(getLevel(new SepticObject("CalcPvr", null))).toBe(3);
+    expect(
+      getHiearchyLevel(
+        new SepticObject("SopcMvr", null),
+        defaultHiearchySettings
+      )
+    ).toBe(2);
+    expect(
+      getHiearchyLevel(new SepticObject("Evr", null), defaultHiearchySettings)
+    ).toBe(2);
+    expect(
+      getHiearchyLevel(new SepticObject("Mvr", null), defaultHiearchySettings)
+    ).toBe(2);
+    expect(
+      getHiearchyLevel(
+        new SepticObject("CalcPvr", null),
+        defaultHiearchySettings
+      )
+    ).toBe(3);
   });
 });
 
@@ -33,7 +45,7 @@ describe("Test folding of document", () => {
     const tokens = tokenize(doc.getText());
     const parser = new Parser(tokens);
     const cnfg = parser.parse();
-    const foldingRanges = getFoldingRanges(doc, cnfg);
+    const foldingRanges = getFoldingRanges(doc, cnfg, defaultHiearchySettings);
 
     expect(foldingRanges.length).toBe(3);
     expect(foldingRanges[0].startLine).toBe(2);
@@ -66,7 +78,7 @@ describe("Test folding of document", () => {
     const parser = new Parser(tokens);
     const cnfg = parser.parse();
 
-    const foldingRanges = getFoldingRanges(doc, cnfg);
+    const foldingRanges = getFoldingRanges(doc, cnfg, defaultHiearchySettings);
 
     expect(foldingRanges.length).toBe(4);
     expect(foldingRanges[0].startLine).toBe(2);

@@ -6,7 +6,12 @@ import {
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import { SepticCnfg, SepticObject } from "../parser";
-import { getLevel } from "./foldingRangeProvider";
+import { SettingsManager } from "../settings";
+import {
+  HiearchySettings,
+  defaultHiearchySettings,
+  getHiearchyLevel,
+} from "../util";
 
 interface SepticSymbol {
   symbol: DocumentSymbol;
@@ -16,9 +21,14 @@ interface SepticSymbol {
 
 export class DocumentSymbolProvider {
   private readonly cnfgProvider: ISepticConfigProvider;
+  private readonly settingsManager: SettingsManager;
 
-  constructor(cnfgProvider: ISepticConfigProvider) {
+  constructor(
+    cnfgProvider: ISepticConfigProvider,
+    settingsManager: SettingsManager
+  ) {
     this.cnfgProvider = cnfgProvider;
+    this.settingsManager = settingsManager;
   }
 
   public provideDocumentSymbols(
@@ -29,13 +39,19 @@ export class DocumentSymbolProvider {
     if (!cnfg) {
       return [];
     }
-    return getDocumentSymbols(document, cnfg);
+    const settings =
+      this.settingsManager.getSettings()?.hiearchy ?? defaultHiearchySettings;
+    return getDocumentSymbols(document, cnfg, settings);
   }
 }
 
-export function getDocumentSymbols(doc: ITextDocument, cnfg: SepticCnfg) {
+export function getDocumentSymbols(
+  doc: ITextDocument,
+  cnfg: SepticCnfg,
+  settings: HiearchySettings
+) {
   let symbols = cnfg.objects.map((obj) => {
-    return createSepticSymbol(obj, doc);
+    return createSepticSymbol(obj, doc, settings);
   });
 
   let root = {
@@ -68,7 +84,8 @@ function buildTree(parent: SepticSymbol, symbols: SepticSymbol[]) {
 
 function createSepticSymbol(
   obj: SepticObject,
-  doc: ITextDocument
+  doc: ITextDocument,
+  settings: HiearchySettings
 ): SepticSymbol {
   let name = obj.type + ": " + obj.variable?.id();
   let symbolKind = getSymbolKind(obj.type);
@@ -76,8 +93,7 @@ function createSepticSymbol(
     start: doc.positionAt(obj.start),
     end: doc.positionAt(obj.end),
   };
-  let level = getLevel(obj);
-
+  let level = getHiearchyLevel(obj, settings);
   return {
     symbol: DocumentSymbol.create(
       name,

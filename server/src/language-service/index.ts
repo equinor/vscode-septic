@@ -5,6 +5,7 @@ import { IWorkspace } from "../workspace";
 import { SepticConfigProvider } from "./septicConfigProvider";
 import { DiagnosticProvider } from "./diagnosticsProvider";
 import { DocumentSymbolProvider } from "./documentSymbolProvider";
+import { SettingsManager } from "../settings";
 
 export * from "./types/textDocument";
 
@@ -25,13 +26,23 @@ export interface ILanguageService {
   ): lsp.DocumentSymbol[];
 }
 
-export function createLanguageService(workspace: IWorkspace) {
+export function createLanguageService(
+  workspace: IWorkspace,
+  configurationManager: SettingsManager
+) {
   const cnfgProvider = new SepticConfigProvider(workspace);
-  const foldingRangeProvider = new FoldingRangeProvider(cnfgProvider);
-  const diagnosticProvider = new DiagnosticProvider(cnfgProvider, {
-    missingVariables: true,
-  });
-  const documentSymbolProvider = new DocumentSymbolProvider(cnfgProvider);
+  const foldingRangeProvider = new FoldingRangeProvider(
+    cnfgProvider,
+    configurationManager
+  );
+  const diagnosticProvider = new DiagnosticProvider(
+    cnfgProvider,
+    configurationManager
+  );
+  const documentSymbolProvider = new DocumentSymbolProvider(
+    cnfgProvider,
+    configurationManager
+  );
 
   return Object.freeze<ILanguageService>({
     provideFoldingRanges:
