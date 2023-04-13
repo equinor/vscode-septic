@@ -1,5 +1,4 @@
-import { MockDocument, getLines, getLineNumber, LineInfo } from "./util";
-import { Position } from "vscode-languageserver";
+import { MockDocument } from "./util";
 import {
   getFoldingRanges,
   getLevel,
@@ -29,16 +28,7 @@ describe("Test folding of document", () => {
 				Text1= "Test"
 		`;
 
-    const mockGetText = jest.fn(() => {
-      return text;
-    });
-    const lines: LineInfo[] = getLines(text);
-
-    const mockPositionAt = jest.fn((offset): Position => {
-      return { line: getLineNumber(offset, lines), character: 0 };
-    });
-
-    const doc = new MockDocument(mockGetText, mockPositionAt);
+    const doc = new MockDocument(text);
 
     const tokens = tokenize(doc.getText());
     const parser = new Parser(tokens);
@@ -70,16 +60,7 @@ describe("Test folding of document", () => {
         Text1= "Test"
 		`;
 
-    const mockGetText = jest.fn(() => {
-      return text;
-    });
-    const lines: LineInfo[] = getLines(text);
-
-    const mockPositionAt = jest.fn((offset): Position => {
-      return { line: getLineNumber(offset, lines), character: 0 };
-    });
-
-    const doc = new MockDocument(mockGetText, mockPositionAt);
+    const doc = new MockDocument(text);
 
     const tokens = tokenize(doc.getText());
     const parser = new Parser(tokens);

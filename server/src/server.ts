@@ -11,6 +11,7 @@ import {
   TextDocumentSyncKind,
   InitializeResult,
   FoldingRange,
+  DocumentSymbol,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -52,6 +53,7 @@ connection.onInitialize((params: InitializeParams) => {
     capabilities: {
       textDocumentSync: TextDocumentSyncKind.Incremental,
       foldingRangeProvider: true,
+      documentSymbolProvider: true,
     },
   };
   if (hasWorkspaceFolderCapability) {
@@ -98,6 +100,13 @@ connection.onFoldingRanges((params, token): FoldingRange[] => {
   return langService.provideFoldingRanges(document, token);
 });
 
+connection.onDocumentSymbol((params, token): DocumentSymbol[] => {
+  const document = documents.get(params.textDocument.uri);
+  if (!document) {
+    return [];
+  }
+  return langService.provideDocumentSymbols(document, token);
+});
 // Make the text document manager listen on the connection
 // for open, change and close text document events
 documents.listen(connection);

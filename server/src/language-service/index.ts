@@ -4,6 +4,7 @@ import { ITextDocument } from "./types/textDocument";
 import { IWorkspace } from "../workspace";
 import { SepticConfigProvider } from "./septicConfigProvider";
 import { DiagnosticProvider } from "./diagnosticsProvider";
+import { DocumentSymbolProvider } from "./documentSymbolProvider";
 
 export * from "./types/textDocument";
 
@@ -17,6 +18,11 @@ export interface ILanguageService {
     doc: ITextDocument,
     token: lsp.CancellationToken | undefined
   ): lsp.Diagnostic[];
+
+  provideDocumentSymbols(
+    doc: ITextDocument,
+    token: lsp.CancellationToken | undefined
+  ): lsp.DocumentSymbol[];
 }
 
 export function createLanguageService(workspace: IWorkspace) {
@@ -25,11 +31,15 @@ export function createLanguageService(workspace: IWorkspace) {
   const diagnosticProvider = new DiagnosticProvider(cnfgProvider, {
     missingVariables: true,
   });
+  const documentSymbolProvider = new DocumentSymbolProvider(cnfgProvider);
 
   return Object.freeze<ILanguageService>({
     provideFoldingRanges:
       foldingRangeProvider.provideFoldingRanges.bind(foldingRangeProvider),
     provideDiagnostics:
       diagnosticProvider.provideDiagnostics.bind(diagnosticProvider),
+    provideDocumentSymbols: documentSymbolProvider.provideDocumentSymbols.bind(
+      documentSymbolProvider
+    ),
   });
 }
