@@ -55,20 +55,20 @@ describe("Test basic functionality of parser", () => {
       },
 
       {
-        type: TokenType.Groupmask,
+        type: TokenType.Numeric,
         start: 18,
         end: 53,
         content: "00000000000000000000001",
       },
 
       {
-        type: TokenType.Bits,
+        type: TokenType.Numeric,
         start: 55,
         end: 59,
         content: "1000",
       },
       {
-        type: TokenType.Enum,
+        type: TokenType.Variable,
         start: 60,
         end: 63,
         content: "OFF",
@@ -110,72 +110,7 @@ describe("Test basic functionality of parser", () => {
     let parser = new Parser(tokens);
     parser.advance();
     let variable = parser.variable();
-    expect(variable.parts.length).toBe(1);
-    expect(variable.parts[0].name).toBe("Variable");
-  });
-
-  test("Test parsing of variables with multiple parts", () => {
-    let tokens = [
-      {
-        type: TokenType.Variable,
-        start: 0,
-        end: 7,
-        content: "Variable",
-      },
-
-      {
-        type: TokenType.ScgVariable,
-        start: 7,
-        end: 11,
-        content: "Well",
-      },
-
-      {
-        type: TokenType.Variable,
-        start: 11,
-        end: 15,
-        content: "Test",
-      },
-      {
-        type: TokenType.EOF,
-        start: 15,
-        end: 15,
-        content: "",
-      },
-    ];
-    let parser = new Parser(tokens);
-    parser.advance();
-    let variable = parser.variable();
-    expect(variable.parts.length).toBe(3);
-    expect(variable.id()).toBe("VariableWellTest");
-  });
-
-  test("Test that parsing of variables avoid parts that are separated by whitespaces", () => {
-    let tokens = [
-      {
-        type: TokenType.Variable,
-        start: 0,
-        end: 7,
-        content: "Variable",
-      },
-
-      {
-        type: TokenType.ScgVariable,
-        start: 8,
-        end: 11,
-        content: "well",
-      },
-      {
-        type: TokenType.EOF,
-        start: 15,
-        end: 15,
-        content: "",
-      },
-    ];
-    let parser = new Parser(tokens);
-    parser.advance();
-    let variable = parser.variable();
-    expect(variable.parts.length).toBe(1);
+    expect(variable.name).toBe("Variable");
   });
 
   test("Test parsing of septic object with single attribute", () => {
@@ -214,8 +149,7 @@ describe("Test basic functionality of parser", () => {
     let parser = new Parser(tokens);
     parser.advance();
     let obj = parser.septicObject();
-    expect(obj.type).toBe("Test");
-    expect(obj.variable?.id()).toBe("Variable");
+    expect(obj.name).toBe("Test");
     expect(obj.attributes.length).toBe(1);
   });
 });
@@ -339,7 +273,7 @@ describe("Test error handling during parsing", () => {
     parser.advance();
     let obj = parser.septicObject();
     expect(obj.attributes.length).toBe(1);
-    expect(obj.variable).toBeNull();
+    expect(obj.variable).toBeUndefined();
     expect(parser.errors.length).toBe(1);
   });
 });
@@ -359,8 +293,12 @@ describe("Test parsing of valid input", () => {
     expect(cnfg.objects.length).toBe(1);
     expect(cnfg.objects[0].attributes.length).toBe(5);
     let expected = [
-      { name: "Text1", length: 1, values: ["Dummy applikasjon"] },
-      { name: "Text2", length: 1, values: ["1: Test �, 2: Test �, 3: Test �"] },
+      { name: "Text1", length: 1, values: [`"Dummy applikasjon"`] },
+      {
+        name: "Text2",
+        length: 1,
+        values: [`"1: Test �, 2: Test �, 3: Test �"`],
+      },
       { name: "Nsecs", length: 1, values: ["10"] },
       { name: "ClipOn", length: 1, values: ["OFF"] },
       { name: "GrpLock", length: 1, values: ["0000000000000000000000000"] },

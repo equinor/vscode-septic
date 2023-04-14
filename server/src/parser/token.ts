@@ -5,13 +5,9 @@ export enum TokenType {
   LineComment,
   Numeric,
   String,
-  Groupmask,
-  Bits,
   Skip,
   Unknown,
-  Enum,
   Variable,
-  ScgVariable,
   EOF,
 }
 

@@ -4,11 +4,6 @@ export const ATTRIBUTE_REGEX = /^\b([\w\-]*)=\s/;
 export const BLOCK_COMMENT_REGEX = /^\/\*[\s\S]*?\*\//;
 export const LINE_COMMENT_REGEX = /^(\/\/)(.*)[\n\r]?/;
 export const STRING_REGEX = /^"(.*?)"/;
-export const GROUPMASK_REGEX = /^[01]{25,}/;
-export const BITS_REGEX = /^[01]{4,24}/;
 export const SKIP_REGEX = /^[\s]+/;
 export const UNKNOWN_REGEX = /^./;
-export const VARIABLE_REGEX = /^\b([\w\-]+)\b/;
-export const SCG_VARIABLE_REGEX = /^\{{2}\s*([\w\-]+)\s*\}{2}/;
-export const ENUMS_REGEX =
-  /^(ON|OFF|ACTIVE|ADVISORY|TRACKING|STOPPED|FAILED|NOTRANS|DISTLN|FILTER|RAMP|[WR]{4})/;
+export const VARIABLE_REGEX = /^(\{\{\s*[\w\-]+\s*\}\}|[\w\-]+)+/;

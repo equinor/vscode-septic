@@ -9,12 +9,8 @@ export interface ParserError {
 let validAttributeTokens = [
   TokenType.Numeric,
   TokenType.String,
-  TokenType.Bits,
-  TokenType.Groupmask,
-  TokenType.Enum,
+  TokenType.Variable,
 ];
-
-let variableTokens = [TokenType.Variable, TokenType.ScgVariable];
 
 export class Parser {
   tokens: Token[];
@@ -104,19 +100,19 @@ export class Parser {
     let token: Token = this.previous();
     this.synchronize(
       "Unexpected token. Expected variable token",
-      ...variableTokens,
+      TokenType.Variable,
       TokenType.Attribute,
       TokenType.Object
     );
     let variable;
-    if (this.match(TokenType.Variable, TokenType.ScgVariable)) {
+    if (this.match(TokenType.Variable)) {
       variable = this.variable();
     } else {
       this.addError(
         "Expected variable type token after object declaration",
         token
       );
-      variable = null;
+      variable = undefined;
     }
 
     let septicObject: SepticObject = new SepticObject(
@@ -165,31 +161,9 @@ export class Parser {
   }
 
   variable(): Variable {
-    let parVariable = this.partialVariable();
-    let compVariable = new Variable(
-      parVariable,
-      parVariable.start,
-      parVariable.end
-    );
-    while (
-      this.check(TokenType.ScgVariable) ||
-      this.check(TokenType.Variable)
-    ) {
-      let token = this.peek();
-      if (token.start !== parVariable.end) {
-        break;
-      }
-      this.advance();
-      parVariable = this.partialVariable();
-      compVariable.addParVariable(parVariable);
-    }
-    compVariable.updateEnd();
-    return compVariable;
-  }
-
-  partialVariable(): PartialVariable {
     let token = this.previous();
-    return new PartialVariable(token.content, token.start, token.end);
+    let variable = new Variable(token.content, token.start, token.end);
+    return variable;
   }
 
   attributeValue(): AttributeValue {
@@ -226,18 +200,18 @@ export class SepticBase {
 }
 
 export class SepticObject extends SepticBase {
-  type: string;
-  variable: Variable | null;
+  name: string;
+  variable: Variable | undefined;
   attributes: Attribute[];
 
   constructor(
-    objectType: string,
-    variable: Variable | null,
+    name: string,
+    variable: Variable | undefined,
     start: number = -1,
     end: number = -1
   ) {
     super(start, end);
-    this.type = objectType;
+    this.name = name;
     this.variable = variable;
     this.attributes = [];
   }
@@ -271,9 +245,6 @@ export class Attribute extends SepticBase {
     this.values.push(value);
   }
   updateEnd(): void {
-    this.values.forEach((elem) => {
-      elem.updateEnd();
-    });
     if (this.values.length >= 1) {
       this.end = this.values[this.values.length - 1].end;
     }
@@ -281,36 +252,6 @@ export class Attribute extends SepticBase {
 }
 
 export class Variable extends SepticBase {
-  parts: PartialVariable[];
-
-  constructor(variable: PartialVariable, start: number = -1, end: number = -1) {
-    super(start, end);
-    this.parts = [variable];
-  }
-
-  id() {
-    let id: string = "";
-    this.parts.forEach((elem) => {
-      id += elem.name;
-    });
-    return id;
-  }
-
-  addParVariable(variable: PartialVariable) {
-    this.parts.push(variable);
-  }
-
-  updateEnd(): void {
-    this.parts.forEach((elem) => {
-      elem.updateEnd();
-    });
-    if (this.parts.length >= 1) {
-      this.end = this.parts[this.parts.length - 1].end;
-    }
-  }
-}
-
-export class PartialVariable extends SepticBase {
   name: string;
 
   constructor(name: string, start: number = -1, end: number = -1) {
@@ -320,11 +261,11 @@ export class PartialVariable extends SepticBase {
 }
 
 export class AttributeValue extends SepticBase {
-  value: any;
+  value: string;
   type: TokenType;
 
   constructor(
-    value: any,
+    value: string,
     type: TokenType,
     start: number = -1,
     end: number = -1

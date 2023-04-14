@@ -7,19 +7,25 @@ describe("Test of folding levels", () => {
   test("Test variables", () => {
     expect(
       getHiearchyLevel(
-        new SepticObject("SopcMvr", null),
+        new SepticObject("SopcMvr", undefined),
         defaultHiearchySettings
       )
     ).toBe(2);
     expect(
-      getHiearchyLevel(new SepticObject("Evr", null), defaultHiearchySettings)
-    ).toBe(2);
-    expect(
-      getHiearchyLevel(new SepticObject("Mvr", null), defaultHiearchySettings)
+      getHiearchyLevel(
+        new SepticObject("Evr", undefined),
+        defaultHiearchySettings
+      )
     ).toBe(2);
     expect(
       getHiearchyLevel(
-        new SepticObject("CalcPvr", null),
+        new SepticObject("Mvr", undefined),
+        defaultHiearchySettings
+      )
+    ).toBe(2);
+    expect(
+      getHiearchyLevel(
+        new SepticObject("CalcPvr", undefined),
         defaultHiearchySettings
       )
     ).toBe(3);

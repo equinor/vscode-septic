@@ -102,7 +102,7 @@ function missingVariableDiagnostic(
         severity: severity,
         range: {
           start: doc.positionAt(elem.start),
-          end: doc.positionAt(elem.start + elem.type.length),
+          end: doc.positionAt(elem.start + elem.name.length),
         },
         message: "Missing Variable for Septic Object",
       };

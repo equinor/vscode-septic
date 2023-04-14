@@ -14,7 +14,7 @@ describe("Basic tests lexer", () => {
     let tokens = tokenize(input);
     expect(tokens.length).toBe(3);
     expect(tokens[0].type).toBe(TokenType.Object);
-    expect(tokens[1].type).toBe(TokenType.ScgVariable);
+    expect(tokens[1].type).toBe(TokenType.Variable);
   });
 
   test("Lexing tagmap with string value", () => {
@@ -46,7 +46,7 @@ describe("Basic tests lexer", () => {
     let tokens = tokenize(input);
     expect(tokens.length).toBe(3);
     expect(tokens[0].type).toBe(TokenType.Attribute);
-    expect(tokens[1].type).toBe(TokenType.Groupmask);
+    expect(tokens[1].type).toBe(TokenType.Numeric);
   });
 
   test("Lexing tagmap with bits value", () => {
@@ -54,7 +54,7 @@ describe("Basic tests lexer", () => {
     let tokens = tokenize(input);
     expect(tokens.length).toBe(3);
     expect(tokens[0].type).toBe(TokenType.Attribute);
-    expect(tokens[1].type).toBe(TokenType.Bits);
+    expect(tokens[1].type).toBe(TokenType.Numeric);
   });
 
   test("Lexing blocking tagmap", () => {
@@ -195,9 +195,9 @@ UseFactorWeight=  0`;
     ).toBe(3);
     expect(
       tokens.filter((el) => {
-        return el.type === TokenType.Groupmask;
+        return el.type === TokenType.Numeric;
       }).length
-    ).toBe(3);
+    ).toBe(40);
   });
 
   test("Test lexer for plot", () => {
@@ -207,9 +207,8 @@ UseFactorWeight=  0`;
        RowSize=  3
        ColSize=  2`;
     let tokens = tokenize(input);
-    expect(tokens.length).toBe(12);
-    expect(tokens[1].type).toBe(TokenType.ScgVariable);
-    expect(tokens[2].type).toBe(TokenType.Variable);
+    expect(tokens.length).toBe(11);
+    expect(tokens[1].type).toBe(TokenType.Variable);
     expect(
       tokens.filter((el) => {
         return el.type === TokenType.Attribute;

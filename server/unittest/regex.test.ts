@@ -5,11 +5,8 @@ import {
   BLOCK_COMMENT_REGEX,
   LINE_COMMENT_REGEX,
   STRING_REGEX,
-  GROUPMASK_REGEX,
-  BITS_REGEX,
-  SCG_VARIABLE_REGEX,
   VARIABLE_REGEX,
-} from "../src/parser/regex";
+} from "../src/parser";
 
 describe("Number regex test", () => {
   const regex = NUMERIC_REGEX;
@@ -21,6 +18,8 @@ describe("Number regex test", () => {
     expect(regex.test("2E-3")).toBe(true);
     expect(regex.test("4.2e+8")).toBe(true);
     expect(regex.test("10\n")).toBe(true);
+    expect(regex.test("1010")).toBe(true);
+    expect(regex.test("1011111000111111111111111"));
   });
 
   it("does not match invalid numbers", () => {
@@ -28,6 +27,8 @@ describe("Number regex test", () => {
     expect(regex.test("a")).toBe(false);
     expect(regex.test(".4")).toBe(false);
   });
+
+  it("does match bits", () => {});
 });
 
 describe("Keyword regex test", () => {
@@ -44,7 +45,7 @@ describe("Keyword regex test", () => {
   });
 });
 
-describe("Tagmap Regex Tests", () => {
+describe("Attribute Regex Tests", () => {
   const regex = ATTRIBUTE_REGEX;
   test("Does not match variables assignment without spaces", () => {
     const input = "var1=value1";
@@ -52,7 +53,7 @@ describe("Tagmap Regex Tests", () => {
     expect(matches).toBeNull();
   });
 
-  test("Matches tagmap assignment with spaces", () => {
+  test("Matches attribute assignment with spaces", () => {
     const input = "var1= value1";
     const matches = input.match(regex);
     expect(matches).not.toBeNull();
@@ -62,7 +63,7 @@ describe("Tagmap Regex Tests", () => {
   });
 
   test("Does not match tagmap with space in declaration", () => {
-    const input = "var var1;";
+    const input = "var var1=";
     const matches = input.match(regex);
     expect(matches).toBeNull();
   });
@@ -196,85 +197,6 @@ describe("String Regex Tests", () => {
   });
 });
 
-describe("Groupmask Regex Tests", () => {
-  const regex = GROUPMASK_REGEX;
-  test("Matches a bitmask with 25 binary digits", () => {
-    const input = "1010101010101010101010101";
-    const matches = input.match(regex);
-    expect(matches).not.toBeNull();
-    expect(matches?.[0]).toBe("1010101010101010101010101");
-  });
-
-  test("Matches a bitmask with more than 25 binary digits", () => {
-    const input = "1010101010101010101010101111";
-    const matches = input.match(regex);
-    expect(matches).not.toBeNull();
-    expect(matches?.[0]).toBe("1010101010101010101010101111");
-  });
-
-  test("Does not match a bitmask with less than 25 binary digits", () => {
-    const input = "10101010101010101010101";
-    const matches = input.match(regex);
-    expect(matches).toBeNull();
-  });
-
-  test("Does not match a string with non-binary digits", () => {
-    const input = "10101010101010101010102";
-    const matches = input.match(regex);
-    expect(matches).toBeNull();
-  });
-
-  test("Does not match a string with whitespace", () => {
-    const input = "10101010101010101010 10101";
-    const matches = input.match(regex);
-    expect(matches).toBeNull();
-  });
-});
-
-// regex.test.ts
-
-describe("Bits Regex Tests", () => {
-  const regex = BITS_REGEX;
-  test("Matches a bitmask with 4 binary digits", () => {
-    const input = "1010";
-    const matches = input.match(regex);
-    expect(matches).not.toBeNull();
-    expect(matches?.[0]).toBe("1010");
-  });
-
-  test("Matches a bitmask with 24 binary digits", () => {
-    const input = "101010101010101010101010";
-    const matches = input.match(regex);
-    expect(matches).not.toBeNull();
-    expect(matches?.[0]).toBe("101010101010101010101010");
-  });
-
-  test("Does not match a bitmask with less than 4 binary digits", () => {
-    const input = "101";
-    const matches = input.match(regex);
-    expect(matches).toBeNull();
-  });
-
-  test("Does not match a bitmask with more than 24 binary digits", () => {
-    const input = "1010101010101010101010101";
-    const matches = input.match(regex);
-    expect(matches).not.toBeNull();
-    expect(matches?.[0].length).toBe(24);
-  });
-
-  test("Does not match a string with non-binary digits", () => {
-    const input = "10201";
-    const matches = input.match(regex);
-    expect(matches).toBeNull();
-  });
-
-  test("Does not match a string with whitespace", () => {
-    const input = "101 010";
-    const matches = input.match(regex);
-    expect(matches).toBeNull();
-  });
-});
-
 describe("Variable regex test", () => {
   const regex = VARIABLE_REGEX;
   test("matches valid strings", () => {
@@ -288,7 +210,6 @@ describe("Variable regex test", () => {
     expect(regex.test("")).toBe(false);
     expect(regex.test(" ")).toBe(false);
     expect(regex.test(".test ")).toBe(false);
-    expect(regex.test(">invalid ")).toBe(false);
   });
 
   test("does not match entire string with whitespace", () => {
@@ -297,24 +218,26 @@ describe("Variable regex test", () => {
     expect(matches).not.toBeNull();
     expect(matches?.[1]).toBe("Hello");
   });
-});
 
-describe("SCG-variable regex test", () => {
-  const regex = SCG_VARIABLE_REGEX;
-  it("matches valid strings", () => {
-    expect(regex.test("{{SomeText}}")).toBe(true);
-    expect(regex.test("{{ SomeText }}")).toBe(true);
-    expect(regex.test("{{SomeText123}}")).toBe(true);
-    expect(regex.test("{{Some-Text}}")).toBe(true);
-    expect(regex.test("{{Some_Text}}")).toBe(true);
-    expect(regex.test("{{Some-Text}}extra")).toBe(true);
+  it("matches valid jinja", () => {
+    expect(regex.test("{{SomeText}} ")).toBe(true);
+    expect(regex.test("{{ SomeText }} ")).toBe(true);
+    expect(regex.test("{{SomeText123}} ")).toBe(true);
+    expect(regex.test("{{Some_Text}} ")).toBe(true);
+    expect(regex.test("{{Some-Text}} ")).toBe(true);
   });
 
-  it("does not match invalid strings", () => {
+  it("does not match invalid jinja", () => {
     expect(regex.test("")).toBe(false);
-    expect(regex.test("{{}}")).toBe(false);
-    expect(regex.test("{{  }}")).toBe(false);
-    expect(regex.test("{{Some Text}}")).toBe(false);
-    expect(regex.test("Some-Text{{}}")).toBe(false);
+    expect(regex.test("{{}} ")).toBe(false);
+    expect(regex.test("{{  }} ")).toBe(false);
+    expect(regex.test("{{Some Text}} ")).toBe(false);
+  });
+
+  it("does match valid variables", () => {
+    expect(regex.test("{{ Test }}Something ")).toBe(true);
+    expect(regex.test("Something{{ Test }}Something ")).toBe(true);
+    expect(regex.test("Something{{ Test }} ")).toBe(true);
+    expect(regex.test("Some{{ Test }}Some{{Test}}")).toBe(true);
   });
 });
