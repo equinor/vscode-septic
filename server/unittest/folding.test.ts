@@ -1,6 +1,6 @@
 import { MockDocument } from "./util";
 import { getFoldingRanges } from "../src/language-service/foldingRangeProvider";
-import { Parser, SepticObject, tokenize } from "../src/parser";
+import { SepticObject, parseSeptic } from "../src/parser";
 import { defaultHiearchySettings, getHiearchyLevel } from "../src/util";
 
 describe("Test of folding levels", () => {
@@ -48,9 +48,7 @@ describe("Test folding of document", () => {
 
     const doc = new MockDocument(text);
 
-    const tokens = tokenize(doc.getText());
-    const parser = new Parser(tokens);
-    const cnfg = parser.parse();
+    const cnfg = parseSeptic(doc.getText());
     const foldingRanges = getFoldingRanges(doc, cnfg, defaultHiearchySettings);
 
     expect(foldingRanges.length).toBe(3);
@@ -80,9 +78,7 @@ describe("Test folding of document", () => {
 
     const doc = new MockDocument(text);
 
-    const tokens = tokenize(doc.getText());
-    const parser = new Parser(tokens);
-    const cnfg = parser.parse();
+    const cnfg = parseSeptic(doc.getText());
 
     const foldingRanges = getFoldingRanges(doc, cnfg, defaultHiearchySettings);
 

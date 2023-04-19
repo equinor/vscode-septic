@@ -1,67 +1,51 @@
 import { CancellationToken } from "vscode-languageserver";
-import { Token, TokenType } from "./token";
 
-export interface ParserError {
-  message: string;
-  token: Token;
+export interface IToken<T> {
+  type: T;
+  start: number;
+  end: number;
+  content: string;
 }
 
-let validAttributeTokens = [
-  TokenType.Numeric,
-  TokenType.String,
-  TokenType.Variable,
-];
+export class ParserError<T> extends Error {
+  public readonly token: IToken<T>;
 
-export class Parser {
-  tokens: Token[];
-  current: number;
-  errors: ParserError[];
+  constructor(message: string, token: IToken<T>) {
+    super(message);
+    this.token = token;
+  }
+}
 
-  constructor(tokens: Token[]) {
-    this.current = 0;
-    this.errors = [];
+export abstract class Parser<T, RT> {
+  private readonly tokens: IToken<T>[];
+  private current: number = 0;
+
+  constructor(tokens: IToken<T>[]) {
     this.tokens = tokens;
   }
 
-  parse(token: CancellationToken | undefined = undefined): SepticCnfg {
-    let septicObjects = [];
-    while (!this.isAtEnd()) {
-      if (token?.isCancellationRequested) {
-        return new SepticCnfg([]);
-      }
-      if (this.match(TokenType.Object)) {
-        let septicObj = this.septicObject();
-        septicObjects.push(septicObj);
-      } else {
-        this.synchronize(
-          "Unexpected token. Expected septic object",
-          TokenType.Object
-        );
-      }
-    }
-    return new SepticCnfg(septicObjects);
-  }
+  abstract parse(token: CancellationToken | undefined): RT | undefined;
 
-  advance() {
+  public advance() {
     if (!this.isAtEnd()) {
       this.current += 1;
       return this.previous();
     }
   }
 
-  previous(): Token {
+  protected previous(): IToken<T> {
     return this.tokens[this.current - 1];
   }
 
-  peek(): Token {
+  protected peek(): IToken<T> {
     return this.tokens[this.current];
   }
 
-  isAtEnd(): boolean {
-    return this.peek().type === TokenType.EOF;
+  protected isAtEnd(): boolean {
+    return this.peek().type === "eof";
   }
 
-  match(...tokenTypes: TokenType[]): boolean {
+  protected match(...tokenTypes: T[]): boolean {
     for (let i = 0; i < tokenTypes.length; i++) {
       if (this.check(tokenTypes[i])) {
         this.advance();
@@ -71,16 +55,16 @@ export class Parser {
     return false;
   }
 
-  check(tokenType: TokenType): boolean {
+  protected check(tokenType: T): boolean {
     if (this.isAtEnd()) {
       return false;
     }
     return this.peek().type === tokenType;
   }
 
-  synchronize(
+  protected synchronize(
     errorMsg: string = "Unexpected token",
-    ...tokenTypes: TokenType[]
+    ...tokenTypes: T[]
   ) {
     while (!this.isAtEnd()) {
       for (let i = 0; i < tokenTypes.length; i++) {
@@ -88,190 +72,17 @@ export class Parser {
           return;
         }
       }
-      this.addError(errorMsg, this.peek());
+      this.error(errorMsg, this.peek());
       this.advance();
     }
   }
 
-  addError(message: string, token: Token) {
-    this.errors.push({ message: message, token: token });
-  }
-  septicObject(): SepticObject {
-    let token: Token = this.previous();
-    this.synchronize(
-      "Unexpected token. Expected variable token",
-      TokenType.Variable,
-      TokenType.Attribute,
-      TokenType.Object
-    );
-    let variable;
-    if (this.match(TokenType.Variable)) {
-      variable = this.variable();
-    } else {
-      this.addError(
-        "Expected variable type token after object declaration",
-        token
-      );
-      variable = undefined;
+  protected consume(type: T, str: string) {
+    if (this.check(type)) {
+      return this.advance();
     }
-
-    let septicObject: SepticObject = new SepticObject(
-      token.content,
-      variable,
-      token.start,
-      token.end
-    );
-
-    this.synchronize(
-      "Unexpected token! Expected attribute or object types",
-      TokenType.Attribute,
-      TokenType.Object
-    );
-
-    while (this.match(TokenType.Attribute)) {
-      let attr = this.attribute();
-      septicObject.addAttribute(attr);
-    }
-    septicObject.updateEnd();
-    return septicObject;
+    this.error(str, this.previous());
   }
 
-  attribute(): Attribute {
-    let token: Token = this.previous();
-    let attr = new Attribute(token.content, token.start, token.end);
-    while (!this.isAtEnd()) {
-      if (this.match(...validAttributeTokens)) {
-        let value = this.attributeValue();
-        attr.addValue(value);
-        continue;
-      }
-      this.synchronize(
-        "Unexpected token during parsing of value",
-        TokenType.Attribute,
-        TokenType.Object,
-        ...validAttributeTokens
-      );
-      if (this.check(TokenType.Attribute) || this.check(TokenType.Object)) {
-        break;
-      }
-    }
-
-    attr.updateEnd();
-    return attr;
-  }
-
-  variable(): Variable {
-    let token = this.previous();
-    let variable = new Variable(token.content, token.start, token.end);
-    return variable;
-  }
-
-  attributeValue(): AttributeValue {
-    let token = this.previous();
-    return new AttributeValue(
-      token.content,
-      token.type,
-      token.start,
-      token.end
-    );
-  }
-}
-
-export class SepticCnfg {
-  objects: SepticObject[];
-
-  constructor(objects: SepticObject[]) {
-    this.objects = objects;
-  }
-}
-
-export class SepticBase {
-  start: number;
-  end: number;
-
-  constructor(start: number = -1, end: number = -1) {
-    this.start = start;
-    this.end = end;
-  }
-
-  updateEnd(): void {
-    return;
-  }
-}
-
-export class SepticObject extends SepticBase {
-  name: string;
-  variable: Variable | undefined;
-  attributes: Attribute[];
-
-  constructor(
-    name: string,
-    variable: Variable | undefined,
-    start: number = -1,
-    end: number = -1
-  ) {
-    super(start, end);
-    this.name = name;
-    this.variable = variable;
-    this.attributes = [];
-  }
-
-  addAttribute(attr: Attribute) {
-    this.attributes.push(attr);
-  }
-
-  updateEnd(): void {
-    this.variable?.updateEnd();
-    this.attributes.forEach((elem) => {
-      elem.updateEnd();
-    });
-    if (this.attributes.length >= 1) {
-      this.end = this.attributes[this.attributes.length - 1].end;
-    }
-  }
-}
-
-export class Attribute extends SepticBase {
-  values: AttributeValue[];
-  name: string;
-
-  constructor(name: string, start: number = -1, end: number = -1) {
-    super(start, end);
-    this.values = [];
-    this.name = name;
-  }
-
-  addValue(value: AttributeValue) {
-    this.values.push(value);
-  }
-  updateEnd(): void {
-    if (this.values.length >= 1) {
-      this.end = this.values[this.values.length - 1].end;
-    }
-  }
-}
-
-export class Variable extends SepticBase {
-  name: string;
-
-  constructor(name: string, start: number = -1, end: number = -1) {
-    super(start, end);
-    this.name = name;
-  }
-}
-
-export class AttributeValue extends SepticBase {
-  value: string;
-  type: TokenType;
-
-  constructor(
-    value: string,
-    type: TokenType,
-    start: number = -1,
-    end: number = -1
-  ) {
-    super(start, end);
-    this.value = value;
-    this.type = type;
-  }
+  abstract error(message: string, token: IToken<T>): void;
 }

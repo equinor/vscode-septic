@@ -5,7 +5,7 @@ import {
   BLOCK_COMMENT_REGEX,
   LINE_COMMENT_REGEX,
   STRING_REGEX,
-  VARIABLE_REGEX,
+  IDENTIFIER_REGEX,
 } from "../src/parser";
 
 describe("Number regex test", () => {
@@ -198,7 +198,7 @@ describe("String Regex Tests", () => {
 });
 
 describe("Variable regex test", () => {
-  const regex = VARIABLE_REGEX;
+  const regex = IDENTIFIER_REGEX;
   test("matches valid strings", () => {
     expect(regex.test("abc123 ")).toBe(true);
     expect(regex.test("some-tag ")).toBe(true);

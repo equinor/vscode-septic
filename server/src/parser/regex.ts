@@ -6,4 +6,4 @@ export const LINE_COMMENT_REGEX = /^(\/\/)(.*)[\n\r]?/;
 export const STRING_REGEX = /^"(.*?)"/;
 export const SKIP_REGEX = /^[\s]+/;
 export const UNKNOWN_REGEX = /^./;
-export const VARIABLE_REGEX = /^(\{\{\s*[\w\-]+\s*\}\}|[\w\-]+)+/;
+export const IDENTIFIER_REGEX = /^(\{\{\s*[\w\-]+\s*\}\}|[\w\-]+)+/;

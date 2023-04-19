@@ -1,5 +1,5 @@
 import { MockDocument } from "./util";
-import { Parser, tokenize } from "../src/parser";
+import { parseSeptic } from "../src/parser";
 import { getDocumentSymbols } from "../src/language-service/documentSymbolProvider";
 import { defaultHiearchySettings } from "../src/util";
 
@@ -19,9 +19,7 @@ describe("Test folding of document", () => {
 
     const doc = new MockDocument(text);
 
-    const tokens = tokenize(doc.getText());
-    const parser = new Parser(tokens);
-    const cnfg = parser.parse();
+    const cnfg = parseSeptic(doc.getText());
     const documentSymbols = getDocumentSymbols(
       doc,
       cnfg,
@@ -50,9 +48,7 @@ describe("Test folding of document", () => {
 
     const doc = new MockDocument(text);
 
-    const tokens = tokenize(doc.getText());
-    const parser = new Parser(tokens);
-    const cnfg = parser.parse();
+    const cnfg = parseSeptic(doc.getText());
 
     const documentSymbols = getDocumentSymbols(
       doc,

@@ -3,7 +3,7 @@ import {
   CancellationTokenSource,
   URI,
 } from "vscode-languageserver";
-import { Parser, SepticCnfg, tokenize } from "../parser";
+import { SepticCnfg, parseSeptic } from "../parser";
 import { ResourceMap } from "../util/resourceMap";
 import { IWorkspace } from "../workspace";
 import { ITextDocument } from ".";
@@ -23,10 +23,8 @@ function getValueCnfg(
   token: CancellationToken
 ): SepticCnfg {
   const text = document.getText();
-  const tokens = tokenize(text, token);
-  const parser = new Parser(tokens);
 
-  return parser.parse(token);
+  return parseSeptic(text, token);
 }
 
 export class SepticConfigProvider implements ISepticConfigProvider {
