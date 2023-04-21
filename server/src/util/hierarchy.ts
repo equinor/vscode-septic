@@ -1,6 +1,6 @@
 import { SepticObject } from "../parser";
 
-export interface HiearchySettings {
+export interface HierarchySettings {
   readonly defaultLevel: number;
   readonly defaultVariableLevel: number;
   readonly level1: string[];
@@ -8,10 +8,10 @@ export interface HiearchySettings {
   readonly level3: string[];
 }
 
-export const defaultHiearchySettings: HiearchySettings = {
+export const defaultHierarchySettings: HierarchySettings = {
   defaultLevel: 3,
   defaultVariableLevel: 2,
-  level1: ["system", "sopcproc", "dummyappl", "smpcappl", "displaygroup"],
+  level1: ["system", "sopcproc", "dmmyappl", "smpcappl", "displaygroup"],
   level2: [
     "exprmodl",
     "calcmodl",
@@ -30,9 +30,9 @@ export const defaultHiearchySettings: HiearchySettings = {
   level3: ["imagestatuslabel", "calcpvr"],
 };
 
-export function getHiearchyLevel(
+export function getHierarchyLevel(
   obj: SepticObject,
-  settings: HiearchySettings
+  settings: HierarchySettings
 ): number {
   let type: string = obj.name.toLowerCase();
 

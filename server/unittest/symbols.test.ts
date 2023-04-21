@@ -1,7 +1,7 @@
 import { MockDocument } from "./util";
 import { parseSeptic } from "../src/parser";
 import { getDocumentSymbols } from "../src/language-service/documentSymbolProvider";
-import { defaultHiearchySettings } from "../src/util";
+import { defaultHierarchySettings } from "../src/util";
 
 describe("Test folding of document", () => {
   test("Test folding of increasing levels", () => {
@@ -23,7 +23,7 @@ describe("Test folding of document", () => {
     const documentSymbols = getDocumentSymbols(
       doc,
       cnfg,
-      defaultHiearchySettings
+      defaultHierarchySettings
     );
 
     expect(documentSymbols.length).toBe(1);
@@ -53,7 +53,7 @@ describe("Test folding of document", () => {
     const documentSymbols = getDocumentSymbols(
       doc,
       cnfg,
-      defaultHiearchySettings
+      defaultHierarchySettings
     );
 
     expect(documentSymbols.length).toBe(2);

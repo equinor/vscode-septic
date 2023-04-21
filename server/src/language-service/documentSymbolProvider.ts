@@ -8,9 +8,9 @@ import { ITextDocument } from "./types/textDocument";
 import { SepticCnfg, SepticObject } from "../parser";
 import { SettingsManager } from "../settings";
 import {
-  HiearchySettings,
-  defaultHiearchySettings,
-  getHiearchyLevel,
+  HierarchySettings,
+  defaultHierarchySettings,
+  getHierarchyLevel,
 } from "../util";
 
 interface SepticSymbol {
@@ -40,7 +40,7 @@ export class DocumentSymbolProvider {
       return [];
     }
     const settings =
-      this.settingsManager.getSettings()?.hiearchy ?? defaultHiearchySettings;
+      this.settingsManager.getSettings()?.hierarchy ?? defaultHierarchySettings;
     return getDocumentSymbols(document, cnfg, settings);
   }
 }
@@ -48,7 +48,7 @@ export class DocumentSymbolProvider {
 export function getDocumentSymbols(
   doc: ITextDocument,
   cnfg: SepticCnfg,
-  settings: HiearchySettings
+  settings: HierarchySettings
 ) {
   let symbols = cnfg.objects.map((obj) => {
     return createSepticSymbol(obj, doc, settings);
@@ -85,7 +85,7 @@ function buildTree(parent: SepticSymbol, symbols: SepticSymbol[]) {
 function createSepticSymbol(
   obj: SepticObject,
   doc: ITextDocument,
-  settings: HiearchySettings
+  settings: HierarchySettings
 ): SepticSymbol {
   let name = obj.name + ": " + obj.variable?.name;
   let symbolKind = getSymbolKind(obj.name);
@@ -93,7 +93,7 @@ function createSepticSymbol(
     start: doc.positionAt(obj.start),
     end: doc.positionAt(obj.end),
   };
-  let level = getHiearchyLevel(obj, settings);
+  let level = getHierarchyLevel(obj, settings);
   return {
     symbol: DocumentSymbol.create(
       name,

@@ -56,35 +56,35 @@
 					"default": "true",
 					"description": "Controls the publishing of diagnostics reports"
 				},
-				"septic.hiearchy.defaultLevel": {
+				"septic.hierarchy.defaultLevel": {
 					"scope": "resource",
 					"type": "integer",
-					"description": "Default hiearchy level for septic objects that are not included in any level lists and not a variable. Value: 1-3",
+					"description": "Default hierarchy level for septic objects that are not included in any level lists and not a variable. Value: 1-3",
 					"default": 3
 				},
-				"septic.hiearchy.defaultVariableLevel": {
+				"septic.hierarchy.defaultVariableLevel": {
 					"scope": "resource",
 					"type": "integer",
-					"description": "Deafualt hiearchy level for variable septic objects (*vr) that are not included in the level lists. Value: 1-3",
+					"description": "Deafualt hierarchy level for variable septic objects (*vr) that are not included in the level lists. Value: 1-3",
 					"default": 2
 				},
-				"septic.hiearchy.level1": {
+				"septic.hierarchy.level1": {
 					"scope": "resource",
 					"type": "array",
-					"description": "List of septic objects belonging to level 1 in the hiearchy.",
+					"description": "List of septic objects belonging to level 1 in the hierarchy.",
 					"uniqueItems": true,
 					"default": [
 						"system",
 						"sopcproc",
-						"dummyappl",
+						"dmmyappl",
 						"smpcappl",
 						"displaygroup"
 					]
 				},
-				"septic.hiearchy.level2": {
+				"septic.hierarchy.level2": {
 					"scope": "resource",
 					"type": "array",
-					"description": "List of septic objects belonging to level 2 in the hiearchy.",
+					"description": "List of septic objects belonging to level 2 in the hierarchy.",
 					"uniqueItems": true,
 					"default": [
 						"exprmodl",
@@ -102,10 +102,10 @@
 						"modelmatrix"
 					]
 				},
-				"septic.hiearchy.level3": {
+				"septic.hierarchy.level3": {
 					"scope": "resource",
 					"type": "array",
-					"description": "List of septic objects belonging to level 3 in the hiearchy.",
+					"description": "List of septic objects belonging to level 3 in the hierarchy.",
 					"uniqueItems": true,
 					"default": [
 						"imagestatuslabel",

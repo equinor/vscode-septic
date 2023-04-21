@@ -4,9 +4,9 @@ import { SepticCnfg, SepticObject } from "../parser";
 import { SepticConfigProvider } from "./septicConfigProvider";
 import { SettingsManager } from "../settings";
 import {
-  HiearchySettings,
-  defaultHiearchySettings,
-  getHiearchyLevel,
+  HierarchySettings,
+  defaultHierarchySettings,
+  getHierarchyLevel,
 } from "../util";
 
 export class FoldingRangeProvider {
@@ -32,7 +32,7 @@ export class FoldingRangeProvider {
     }
 
     let settings =
-      this.settingsManager.getSettings()?.hiearchy ?? defaultHiearchySettings;
+      this.settingsManager.getSettings()?.hierarchy ?? defaultHierarchySettings;
 
     return getFoldingRanges(doc, cnfg, settings, token);
   }
@@ -41,7 +41,7 @@ export class FoldingRangeProvider {
 export function getFoldingRanges(
   doc: ITextDocument,
   cnfg: SepticCnfg,
-  settings: HiearchySettings,
+  settings: HierarchySettings,
   token: lsp.CancellationToken | undefined = undefined
 ): lsp.FoldingRange[] {
   let ranges: lsp.FoldingRange[] = [];
@@ -49,14 +49,14 @@ export function getFoldingRanges(
   for (let i = 0; i < cnfg.objects.length; i++) {
     let obj = cnfg.objects[i];
     let end = obj.end;
-    let level = getHiearchyLevel(obj, settings);
+    let level = getHierarchyLevel(obj, settings);
 
     let j = i + 1;
     while (j < cnfg.objects.length) {
       if (token?.isCancellationRequested) {
         return [];
       }
-      if (getHiearchyLevel(cnfg.objects[j], settings) <= level) {
+      if (getHierarchyLevel(cnfg.objects[j], settings) <= level) {
         break;
       }
       end = cnfg.objects[j].end;

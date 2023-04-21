@@ -1,10 +1,10 @@
 import { Connection } from "vscode-languageserver";
 import { DiagnosticsSettings } from "./language-service/diagnosticsProvider";
-import { HiearchySettings } from "./util";
+import { HierarchySettings } from "./util";
 
 export interface Settings {
   readonly diagnostics: DiagnosticsSettings;
-  readonly hiearchy: HiearchySettings;
+  readonly hierarchy: HierarchySettings;
 }
 
 export class SettingsManager {
