@@ -4,6 +4,7 @@ import {
   ATTRIBUTE_REGEX,
   BLOCK_COMMENT_REGEX,
   IDENTIFIER_REGEX,
+  JINJA_COMMENT_REGEX,
   LINE_COMMENT_REGEX,
   NUMERIC_REGEX,
   OBJECT_REGEX,
@@ -26,6 +27,7 @@ export enum SepticTokenType {
   Attribute,
   BlockComment,
   LineComment,
+  JinjaComment,
   Numeric,
   String,
   Skip,
@@ -258,6 +260,7 @@ export class AttributeValue extends SepticBase {
 const REGEX_LIST = [
   { type: SepticTokenType.LineComment, regex: LINE_COMMENT_REGEX },
   { type: SepticTokenType.BlockComment, regex: BLOCK_COMMENT_REGEX },
+  { type: SepticTokenType.JinjaComment, regex: JINJA_COMMENT_REGEX },
   { type: SepticTokenType.Attribute, regex: ATTRIBUTE_REGEX },
   { type: SepticTokenType.Object, regex: OBJECT_REGEX },
   { type: SepticTokenType.String, regex: STRING_REGEX },
@@ -288,7 +291,8 @@ export function tokenize(
       if (
         element.type === SepticTokenType.Skip ||
         element.type === SepticTokenType.LineComment ||
-        element.type === SepticTokenType.BlockComment
+        element.type === SepticTokenType.BlockComment ||
+        element.type === SepticTokenType.JinjaComment
       ) {
         curpos += lengthMatch;
         break;

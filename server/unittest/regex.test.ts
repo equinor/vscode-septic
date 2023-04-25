@@ -6,6 +6,7 @@ import {
   LINE_COMMENT_REGEX,
   STRING_REGEX,
   IDENTIFIER_REGEX,
+  JINJA_COMMENT_REGEX,
 } from "../src/parser";
 
 describe("Number regex test", () => {
@@ -100,6 +101,35 @@ describe("Block comment Regex Tests", () => {
 
   test("Does not match invalid input", () => {
     const input = "This is not a comment";
+    const matches = input.match(regex);
+    expect(matches).toBeNull();
+  });
+});
+
+describe("Line Comment Regex Tests", () => {
+  const regex = JINJA_COMMENT_REGEX;
+  test("Matches jinja comment with text", () => {
+    const input = "{# This is a jinja comment #}";
+    const matches = input.match(regex);
+    expect(matches).not.toBeNull();
+  });
+  test("Matches jinja comment without text", () => {
+    const input = "{##}";
+    const matches = input.match(regex);
+    expect(matches).not.toBeNull();
+  });
+  test("Matches jinja comment with jinja", () => {
+    const input = "{# {{ Test }} #}";
+    const matches = input.match(regex);
+    expect(matches).not.toBeNull();
+  });
+  test("Does not match invalid jinja comment", () => {
+    const input = "{# Test }";
+    const matches = input.match(regex);
+    expect(matches).toBeNull();
+  });
+  test("Does not match invalid jinja comment", () => {
+    const input = "# Test #";
     const matches = input.match(regex);
     expect(matches).toBeNull();
   });

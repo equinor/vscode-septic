@@ -85,6 +85,14 @@ describe("Basic tests lexer", () => {
     expect(tokens[1].type).toBe(SepticTokenType.String);
   });
 
+  test("Lexing jinja comment", () => {
+    const input = '{# Bits2=  0001 #} Test1= "Dummy"';
+    let tokens = tokenize(input);
+    expect(tokens.length).toBe(3);
+    expect(tokens[0].type).toBe(SepticTokenType.Attribute);
+    expect(tokens[1].type).toBe(SepticTokenType.String);
+  });
+
   test("Lexing with unknown character", () => {
     const input = 'Test1= ?"Dummy"';
     let tokens = tokenize(input);
