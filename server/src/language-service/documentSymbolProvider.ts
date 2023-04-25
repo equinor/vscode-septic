@@ -62,6 +62,10 @@ export function getDocumentSymbols(
 
   buildTree(root, symbols);
 
+  root.symbol.children?.forEach((child) => {
+    updateRange(child);
+  });
+
   return root.symbol.children!;
 }
 
@@ -80,6 +84,19 @@ function buildTree(parent: SepticSymbol, symbols: SepticSymbol[]) {
   symbol.parent = parent;
 
   buildTree(symbol, symbols.slice(1));
+}
+
+function updateRange(parent: DocumentSymbol) {
+  if (!parent.children?.length) {
+    return;
+  }
+  parent.children?.forEach((child) => {
+    updateRange(child);
+  });
+
+  let end = parent.children[parent.children.length - 1].range.end;
+  parent.range.end = end;
+  parent.selectionRange.end = end;
 }
 
 function createSepticSymbol(
