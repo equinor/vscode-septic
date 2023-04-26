@@ -110,8 +110,8 @@ function createSepticSymbol(
 	doc: ITextDocument,
 	settings: HierarchySettings
 ): SepticSymbol {
-	let name = obj.name + ": " + obj.variable?.name;
-	let symbolKind = getSymbolKind(obj.name);
+	let name = obj.type + ": " + obj.identifier?.name;
+	let symbolKind = getSymbolKind(obj.type);
 	let range = {
 		start: doc.positionAt(obj.start),
 		end: doc.positionAt(obj.end),

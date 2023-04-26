@@ -86,11 +86,11 @@ function getDiagnostics(
 ) {
 	const diagnostics: Diagnostic[] = [];
 
-	diagnostics.push(...missingVariableDiagnostic(cnfg, doc, settings));
+	diagnostics.push(...missingIdentifierDiagnostic(cnfg, doc, settings));
 	return diagnostics;
 }
 
-function missingVariableDiagnostic(
+function missingIdentifierDiagnostic(
 	cnfg: SepticCnfg,
 	doc: ITextDocument,
 	settings: DiagnosticsSettings
@@ -103,14 +103,14 @@ function missingVariableDiagnostic(
 	const diagnostics: Diagnostic[] = [];
 
 	cnfg.objects.forEach((elem) => {
-		if (!elem.variable) {
+		if (!elem.identifier) {
 			const diagnostic: Diagnostic = {
 				severity: severity,
 				range: {
 					start: doc.positionAt(elem.start),
-					end: doc.positionAt(elem.start + elem.name.length),
+					end: doc.positionAt(elem.start + elem.type.length),
 				},
-				message: "Missing Variable for Septic Object",
+				message: `Missing identifier for object of type ${elem.type}`,
 			};
 			diagnostics.push(diagnostic);
 		}

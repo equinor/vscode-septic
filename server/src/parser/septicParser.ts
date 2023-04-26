@@ -76,25 +76,25 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
 	septicObject(): SepticObject {
 		let token: SepticToken = this.previous();
 		this.synchronize(
-			"Unexpected token. Expected variable token",
+			"Unexpected token. Expected idenifier token",
 			SepticTokenType.Identifier,
 			SepticTokenType.Attribute,
 			SepticTokenType.Object
 		);
-		let variable;
+		let identifier;
 		if (this.match(SepticTokenType.Identifier)) {
-			variable = this.variable();
+			identifier = this.identifier();
 		} else {
 			this.error(
-				"Expected variable type token after object declaration",
+				"Expected identifier type token after object declaration",
 				token
 			);
-			variable = undefined;
+			identifier = undefined;
 		}
 
 		let septicObject: SepticObject = new SepticObject(
 			token.content,
-			variable,
+			identifier,
 			token.start,
 			token.end
 		);
@@ -140,9 +140,9 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
 		return attr;
 	}
 
-	variable(): Variable {
+	identifier(): Identifier {
 		let token = super.previous();
-		let variable = new Variable(token.content, token.start, token.end);
+		let variable = new Identifier(token.content, token.start, token.end);
 		return variable;
 	}
 
@@ -184,19 +184,19 @@ export class SepticBase {
 }
 
 export class SepticObject extends SepticBase {
-	name: string;
-	variable: Variable | undefined;
+	type: string;
+	identifier: Identifier | undefined;
 	attributes: Attribute[];
 
 	constructor(
-		name: string,
-		variable: Variable | undefined,
+		type: string,
+		identifier: Identifier | undefined,
 		start: number = -1,
 		end: number = -1
 	) {
 		super(start, end);
-		this.name = name;
-		this.variable = variable;
+		this.type = type;
+		this.identifier = identifier;
 		this.attributes = [];
 	}
 
@@ -205,7 +205,7 @@ export class SepticObject extends SepticBase {
 	}
 
 	updateEnd(): void {
-		this.variable?.updateEnd();
+		this.identifier?.updateEnd();
 		this.attributes.forEach((elem) => {
 			elem.updateEnd();
 		});
@@ -217,12 +217,12 @@ export class SepticObject extends SepticBase {
 
 export class Attribute extends SepticBase {
 	values: AttributeValue[];
-	name: string;
+	key: string;
 
-	constructor(name: string, start: number = -1, end: number = -1) {
+	constructor(key: string, start: number = -1, end: number = -1) {
 		super(start, end);
 		this.values = [];
-		this.name = name;
+		this.key = key;
 	}
 
 	addValue(value: AttributeValue) {
@@ -235,7 +235,7 @@ export class Attribute extends SepticBase {
 	}
 }
 
-export class Variable extends SepticBase {
+export class Identifier extends SepticBase {
 	name: string;
 
 	constructor(name: string, start: number = -1, end: number = -1) {

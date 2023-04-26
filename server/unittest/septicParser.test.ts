@@ -264,7 +264,7 @@ describe("Test basic functionality of parser", () => {
 		let parser = new SepticParser(tokens);
 		parser.advance();
 		let attr = parser.attribute();
-		expect(attr.name).toBe("Test");
+		expect(attr.key).toBe("Test");
 		expect(attr.values.length).toBe(1);
 		expect(attr.values[0].value).toBe("Test");
 	});
@@ -321,7 +321,7 @@ describe("Test basic functionality of parser", () => {
 		let parser = new SepticParser(tokens);
 		parser.advance();
 		let attr = parser.attribute();
-		expect(attr.name).toBe("Test");
+		expect(attr.key).toBe("Test");
 		expect(attr.values.length).toBe(5);
 		expect(attr.values[0].value).toBe("Test");
 		expect(attr.values[1].value).toBe("77");
@@ -347,7 +347,7 @@ describe("Test basic functionality of parser", () => {
 		];
 		let parser = new SepticParser(tokens);
 		parser.advance();
-		let variable = parser.variable();
+		let variable = parser.identifier();
 		expect(variable.name).toBe("Variable");
 	});
 
@@ -387,7 +387,7 @@ describe("Test basic functionality of parser", () => {
 		let parser = new SepticParser(tokens);
 		parser.advance();
 		let obj = parser.septicObject();
-		expect(obj.name).toBe("Test");
+		expect(obj.type).toBe("Test");
 		expect(obj.attributes.length).toBe(1);
 	});
 });
@@ -476,7 +476,7 @@ describe("Test error handling during parsing", () => {
 		parser.advance();
 		let obj = parser.septicObject();
 		expect(obj.attributes.length).toBe(1);
-		expect(obj.variable).not.toBeNull();
+		expect(obj.identifier).not.toBeNull();
 		expect(parser.errors.length).toBe(1);
 	});
 
@@ -511,7 +511,7 @@ describe("Test error handling during parsing", () => {
 		parser.advance();
 		let obj = parser.septicObject();
 		expect(obj.attributes.length).toBe(1);
-		expect(obj.variable).toBeUndefined();
+		expect(obj.identifier).toBeUndefined();
 		expect(parser.errors.length).toBe(1);
 	});
 });
@@ -541,7 +541,7 @@ describe("Test parsing of valid input", () => {
 		];
 		let object = cnfg.objects[0];
 		for (let i = 0; i < expected.length; i++) {
-			expect(object.attributes[i].name).toBe(expected[i].name);
+			expect(object.attributes[i].key).toBe(expected[i].name);
 			expect(object.attributes[i].values.length).toBe(expected[i].length);
 			let values: any[] = [];
 			object.attributes[i].values.forEach((elem) => {

@@ -39,7 +39,7 @@ export function getHierarchyLevel(
 	obj: SepticObject,
 	settings: HierarchySettings
 ): number {
-	let type: string = obj.name.toLowerCase();
+	let type: string = obj.type.toLowerCase();
 
 	if (settings.level1.includes(type)) {
 		return 1;
