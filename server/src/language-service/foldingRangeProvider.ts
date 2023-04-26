@@ -54,7 +54,7 @@ export function getFoldingRanges(
 
 	for (let i = 0; i < cnfg.objects.length; i++) {
 		let obj = cnfg.objects[i];
-		let end = obj.end;
+		let end = i;
 		let level = getHierarchyLevel(obj, settings);
 
 		let j = i + 1;
@@ -65,13 +65,16 @@ export function getFoldingRanges(
 			if (getHierarchyLevel(cnfg.objects[j], settings) <= level) {
 				break;
 			}
-			end = cnfg.objects[j].end;
+			end = j;
 			j += 1;
 		}
-
+		let lastObject = end < cnfg.objects.length - 1;
+		let endLine = lastObject
+			? doc.positionAt(cnfg.objects[end + 1].start).line - 1
+			: doc.positionAt(cnfg.objects[end].end).line;
 		ranges.push({
 			startLine: doc.positionAt(obj.start).line,
-			endLine: doc.positionAt(end).line,
+			endLine: endLine,
 		});
 	}
 
