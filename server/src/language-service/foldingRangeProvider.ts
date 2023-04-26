@@ -1,3 +1,9 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Equinor ASA
+ *  Copyright (c) Microsoft Corporation. All rights reserved. [markdown-language-features as indicated]
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import * as lsp from "vscode-languageserver";
 import { ITextDocument } from "./types/textDocument";
 import { SepticCnfg, SepticObject } from "../parser";

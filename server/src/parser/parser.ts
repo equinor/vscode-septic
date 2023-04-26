@@ -1,3 +1,9 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Equinor ASA
+ *  Copyright (c) 2015 Robert Nystrom [CraftingInterpreters]
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import { CancellationToken } from "vscode-languageserver";
 
 export interface IToken<T> {
