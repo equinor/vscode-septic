@@ -9,10 +9,10 @@ import * as vscode from "vscode";
 import * as path from "path";
 
 import {
-  LanguageClient,
-  LanguageClientOptions,
-  ServerOptions,
-  TransportKind,
+	LanguageClient,
+	LanguageClientOptions,
+	ServerOptions,
+	TransportKind,
 } from "vscode-languageclient/node";
 
 // this method is called when your extension is activated
@@ -20,40 +20,40 @@ import {
 let client: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext) {
-  const serverModule = context.asAbsolutePath(
-    path.join("server", "out", "server.js")
-  );
+	const serverModule = context.asAbsolutePath(
+		path.join("server", "out", "server.js")
+	);
 
-  // If the extension is launched in debug mode then the debug server options are used
-  // Otherwise the run options are used
-  const serverOptions: ServerOptions = {
-    run: { module: serverModule, transport: TransportKind.ipc },
-    debug: {
-      module: serverModule,
-      transport: TransportKind.ipc,
-    },
-  };
+	// If the extension is launched in debug mode then the debug server options are used
+	// Otherwise the run options are used
+	const serverOptions: ServerOptions = {
+		run: { module: serverModule, transport: TransportKind.ipc },
+		debug: {
+			module: serverModule,
+			transport: TransportKind.ipc,
+		},
+	};
 
-  // Options to control the language client
-  const clientOptions: LanguageClientOptions = {
-    // Register the server for plain text documents
-    documentSelector: [{ scheme: "file", language: "septic" }],
-    synchronize: {
-      // Notify the server about file changes to '.clientrc files contained in the workspace
-      fileEvents: vscode.workspace.createFileSystemWatcher("**/.clientrc"),
-    },
-  };
+	// Options to control the language client
+	const clientOptions: LanguageClientOptions = {
+		// Register the server for plain text documents
+		documentSelector: [{ scheme: "file", language: "septic" }],
+		synchronize: {
+			// Notify the server about file changes to '.clientrc files contained in the workspace
+			fileEvents: vscode.workspace.createFileSystemWatcher("**/.clientrc"),
+		},
+	};
 
-  client = new LanguageClient("septic", "Septic", serverOptions, clientOptions);
+	client = new LanguageClient("septic", "Septic", serverOptions, clientOptions);
 
-  // Start the client. This will also launch the server
-  client.start();
-  //console.log('Congratulations, your extension is now active!');
+	// Start the client. This will also launch the server
+	client.start();
+	//console.log('Congratulations, your extension is now active!');
 }
 // this method is called when your extension is deactivated
 export function deactivate(): Thenable<void> | undefined {
-  if (!client) {
-    return undefined;
-  }
-  return client.stop();
+	if (!client) {
+		return undefined;
+	}
+	return client.stop();
 }

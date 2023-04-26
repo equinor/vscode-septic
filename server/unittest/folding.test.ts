@@ -4,37 +4,37 @@ import { SepticObject, parseSeptic } from "../src/parser";
 import { defaultHierarchySettings, getHierarchyLevel } from "../src/util";
 
 describe("Test of folding levels", () => {
-  test("Test variables", () => {
-    expect(
-      getHierarchyLevel(
-        new SepticObject("SopcMvr", undefined),
-        defaultHierarchySettings
-      )
-    ).toBe(2);
-    expect(
-      getHierarchyLevel(
-        new SepticObject("Evr", undefined),
-        defaultHierarchySettings
-      )
-    ).toBe(2);
-    expect(
-      getHierarchyLevel(
-        new SepticObject("Mvr", undefined),
-        defaultHierarchySettings
-      )
-    ).toBe(2);
-    expect(
-      getHierarchyLevel(
-        new SepticObject("CalcPvr", undefined),
-        defaultHierarchySettings
-      )
-    ).toBe(3);
-  });
+	test("Test variables", () => {
+		expect(
+			getHierarchyLevel(
+				new SepticObject("SopcMvr", undefined),
+				defaultHierarchySettings
+			)
+		).toBe(2);
+		expect(
+			getHierarchyLevel(
+				new SepticObject("Evr", undefined),
+				defaultHierarchySettings
+			)
+		).toBe(2);
+		expect(
+			getHierarchyLevel(
+				new SepticObject("Mvr", undefined),
+				defaultHierarchySettings
+			)
+		).toBe(2);
+		expect(
+			getHierarchyLevel(
+				new SepticObject("CalcPvr", undefined),
+				defaultHierarchySettings
+			)
+		).toBe(3);
+	});
 });
 
 describe("Test folding of document", () => {
-  test("Test folding of increasing levels", () => {
-    const text = `
+	test("Test folding of increasing levels", () => {
+		const text = `
 		  System:        TESTAPP
          Text1=  "Dummy applikasjon"
          Text2=  "1: Test æ, 2: Test ø, 3: Test å"
@@ -46,22 +46,22 @@ describe("Test folding of document", () => {
 				Text1= "Test"
 		`;
 
-    const doc = new MockDocument(text);
+		const doc = new MockDocument(text);
 
-    const cnfg = parseSeptic(doc.getText());
-    const foldingRanges = getFoldingRanges(doc, cnfg, defaultHierarchySettings);
+		const cnfg = parseSeptic(doc.getText());
+		const foldingRanges = getFoldingRanges(doc, cnfg, defaultHierarchySettings);
 
-    expect(foldingRanges.length).toBe(3);
-    expect(foldingRanges[0].startLine).toBe(2);
-    expect(foldingRanges[0].endLine).toBe(11);
-    expect(foldingRanges[1].startLine).toBe(6);
-    expect(foldingRanges[1].endLine).toBe(11);
-    expect(foldingRanges[2].startLine).toBe(9);
-    expect(foldingRanges[2].endLine).toBe(11);
-  });
+		expect(foldingRanges.length).toBe(3);
+		expect(foldingRanges[0].startLine).toBe(2);
+		expect(foldingRanges[0].endLine).toBe(11);
+		expect(foldingRanges[1].startLine).toBe(6);
+		expect(foldingRanges[1].endLine).toBe(11);
+		expect(foldingRanges[2].startLine).toBe(9);
+		expect(foldingRanges[2].endLine).toBe(11);
+	});
 
-  test("Test folding of same levels", () => {
-    const text = `
+	test("Test folding of same levels", () => {
+		const text = `
 		  System:        TESTAPP
          Text1=  "Dummy applikasjon"
          Text2=  "1: Test æ, 2: Test ø, 3: Test å"
@@ -76,20 +76,20 @@ describe("Test folding of document", () => {
         Text1= "Test"
 		`;
 
-    const doc = new MockDocument(text);
+		const doc = new MockDocument(text);
 
-    const cnfg = parseSeptic(doc.getText());
+		const cnfg = parseSeptic(doc.getText());
 
-    const foldingRanges = getFoldingRanges(doc, cnfg, defaultHierarchySettings);
+		const foldingRanges = getFoldingRanges(doc, cnfg, defaultHierarchySettings);
 
-    expect(foldingRanges.length).toBe(4);
-    expect(foldingRanges[0].startLine).toBe(2);
-    expect(foldingRanges[0].endLine).toBe(5);
-    expect(foldingRanges[1].startLine).toBe(6);
-    expect(foldingRanges[1].endLine).toBe(14);
-    expect(foldingRanges[2].startLine).toBe(9);
-    expect(foldingRanges[2].endLine).toBe(11);
-    expect(foldingRanges[3].startLine).toBe(12);
-    expect(foldingRanges[3].endLine).toBe(14);
-  });
+		expect(foldingRanges.length).toBe(4);
+		expect(foldingRanges[0].startLine).toBe(2);
+		expect(foldingRanges[0].endLine).toBe(5);
+		expect(foldingRanges[1].startLine).toBe(6);
+		expect(foldingRanges[1].endLine).toBe(14);
+		expect(foldingRanges[2].startLine).toBe(9);
+		expect(foldingRanges[2].endLine).toBe(11);
+		expect(foldingRanges[3].startLine).toBe(12);
+		expect(foldingRanges[3].endLine).toBe(14);
+	});
 });

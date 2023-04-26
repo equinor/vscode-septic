@@ -11,9 +11,7 @@
 				"panel": "dedicated",
 				"reveal": "never"
 			},
-			"problemMatcher": [
-				"$tsc"
-			]
+			"problemMatcher": ["$tsc"]
 		},
 		{
 			"type": "npm",
@@ -22,7 +20,7 @@
 			"isBackground": true,
 			"presentation": {
 				"reveal": "never",
-				"panel": "dedicated",
+				"panel": "dedicated"
 			},
 			"group": {
 				"kind": "build",

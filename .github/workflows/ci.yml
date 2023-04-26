@@ -4,11 +4,11 @@ on:
 
 jobs:
   build:
-    name: '🛠️ Build'
+    name: "🛠️ Build"
     uses: ./.github/workflows/build-workflow.yml
 
   deploy:
-    name: '🚀 Publish'
+    name: "🚀 Publish"
     needs: [build]
     uses: ./.github/workflows/deploy-workflow.yml
     with:

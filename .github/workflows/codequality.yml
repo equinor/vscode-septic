@@ -1,11 +1,11 @@
-name: '💎 Code Quality'
+name: "💎 Code Quality"
 on:
   workflow_dispatch:
   workflow_call:
 
 jobs:
   code_quality:
-    name: '🛠️ Build & 🧪 Test'
+    name: "🛠️ Build & 🧪 Test"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,4 +20,3 @@ jobs:
 
       - name: 🧪 Run Unittests
         run: xvfb-run --auto-servernum npm run unittest
-

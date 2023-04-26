@@ -3,33 +3,33 @@ import { DiagnosticsSettings } from "./language-service/diagnosticsProvider";
 import { HierarchySettings } from "./util";
 
 export interface Settings {
-  readonly diagnostics: DiagnosticsSettings;
-  readonly hierarchy: HierarchySettings;
+	readonly diagnostics: DiagnosticsSettings;
+	readonly hierarchy: HierarchySettings;
 }
 
 export class SettingsManager {
-  private settings: Settings | undefined;
+	private settings: Settings | undefined;
 
-  private readonly connection: Connection;
+	private readonly connection: Connection;
 
-  constructor(connection: Connection) {
-    this.connection = connection;
-  }
+	constructor(connection: Connection) {
+		this.connection = connection;
+	}
 
-  public getSettings(): Settings | undefined {
-    if (!this.settings) {
-      this.updateSettings();
-    }
-    return this.settings;
-  }
+	public getSettings(): Settings | undefined {
+		if (!this.settings) {
+			this.updateSettings();
+		}
+		return this.settings;
+	}
 
-  public invalidate(): void {
-    this.settings = undefined;
-  }
+	public invalidate(): void {
+		this.settings = undefined;
+	}
 
-  public updateSettings(): void {
-    this.connection.workspace.getConfiguration("septic").then((value) => {
-      this.settings = value;
-    });
-  }
+	public updateSettings(): void {
+		this.connection.workspace.getConfiguration("septic").then((value) => {
+			this.settings = value;
+		});
+	}
 }

@@ -1,10 +1,10 @@
- {
+{
 	"comment": "Copyright (c) Equinor ASA. Licensed under the MIT License. See LICENSE in the project root for license information.",
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "Septic",
 	"scopeName": "source.septic",
 	"patterns": [
-		{ 
+		{
 			"include": "source.jinja"
 		},
 		{
@@ -18,7 +18,7 @@
 		},
 		{
 			"comment": "Should be removed and fix grps etc explicitly using begin/end instead",
-			"include": "#string" 
+			"include": "#string"
 		}
 	],
 	"repository": {
@@ -190,10 +190,10 @@
 		"line_comment": {
 			"patterns": [
 				{
-					"name": "comment.line.septic", 
+					"name": "comment.line.septic",
 					"match": "//.*$"
 				}
-			]	
+			]
 		},
 		"block_comment": {
 			"patterns": [
@@ -237,7 +237,7 @@
 		"separator": {
 			"name": "punctuation.separator.parameters.septic",
 			"match": "[, ]"
-		},		
+		},
 		"numeric": {
 			"patterns": [
 				{
@@ -258,7 +258,7 @@
 								{
 									"match": "1",
 									"name": "markup.bold.septic"
-								}				
+								}
 							]
 						}
 					}
