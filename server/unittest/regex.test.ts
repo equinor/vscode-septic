@@ -7,6 +7,7 @@ import {
 	STRING_REGEX,
 	IDENTIFIER_REGEX,
 	JINJA_COMMENT_REGEX,
+	JINJA_EXPRESSION_REGEX,
 } from "../src/parser";
 
 describe("Number regex test", () => {
@@ -106,7 +107,7 @@ describe("Block comment Regex Tests", () => {
 	});
 });
 
-describe("Line Comment Regex Tests", () => {
+describe("Jinja Comment Regex Tests", () => {
 	const regex = JINJA_COMMENT_REGEX;
 	test("Matches jinja comment with text", () => {
 		const input = "{# This is a jinja comment #}";
@@ -130,6 +131,35 @@ describe("Line Comment Regex Tests", () => {
 	});
 	test("Does not match invalid jinja comment", () => {
 		const input = "# Test #";
+		const matches = input.match(regex);
+		expect(matches).toBeNull();
+	});
+});
+
+describe("Jinja Expression Regex Tests", () => {
+	const regex = JINJA_EXPRESSION_REGEX;
+	test("Matches jinja expression", () => {
+		const input = "{%- if final|default(false) %}";
+		const matches = input.match(regex);
+		expect(matches).not.toBeNull();
+	});
+	test("Matches jinja expression", () => {
+		const input = "{% {# #} %}";
+		const matches = input.match(regex);
+		expect(matches).not.toBeNull();
+	});
+	test("Matches jinja expression", () => {
+		const input = "{%%}";
+		const matches = input.match(regex);
+		expect(matches).not.toBeNull();
+	});
+	test("Does not match invalid jinja expression", () => {
+		const input = "{% Test }";
+		const matches = input.match(regex);
+		expect(matches).toBeNull();
+	});
+	test("Does not match invalid jinja expression", () => {
+		const input = "% Test %";
 		const matches = input.match(regex);
 		expect(matches).toBeNull();
 	});

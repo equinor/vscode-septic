@@ -9,6 +9,7 @@ export const ATTRIBUTE_REGEX = /^\b([\w\-]*)=\s/;
 export const BLOCK_COMMENT_REGEX = /^\/\*[\s\S]*?\*\//;
 export const LINE_COMMENT_REGEX = /^(\/\/)(.*)[\n\r]?/;
 export const JINJA_COMMENT_REGEX = /^\{#[\s\S]*?#\}/;
+export const JINJA_EXPRESSION_REGEX = /^\{%[\s\S]*?%\}/;
 export const STRING_REGEX = /^"(.*?)"/;
 export const SKIP_REGEX = /^[\s]+/;
 export const UNKNOWN_REGEX = /^./;
