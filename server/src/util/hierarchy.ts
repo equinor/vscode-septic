@@ -5,55 +5,43 @@
 
 import { SepticObject } from "../parser";
 
-export interface HierarchySettings {
-	readonly defaultLevel: number;
-	readonly defaultVariableLevel: number;
-	readonly level1: string[];
-	readonly level2: string[];
-	readonly level3: string[];
-}
+const defaultLevel = 3;
+const defaultVariableLevel = 2;
 
-export const defaultHierarchySettings: HierarchySettings = {
-	defaultLevel: 3,
-	defaultVariableLevel: 2,
-	level1: ["system", "sopcproc", "dmmyappl", "smpcappl", "displaygroup"],
-	level2: [
-		"exprmodl",
-		"calcmodl",
-		"table",
-		"appl",
-		"spacer",
-		"heading",
-		"mvrlist",
-		"cvrlist",
-		"dvrlist",
-		"xvrplot",
-		"image",
-		"calctable",
-		"modelmatrix",
-	],
-	level3: ["imagestatuslabel", "calcpvr"],
-};
+const level1 = ["system", "sopcproc", "dmmyappl", "smpcappl", "displaygroup"];
+const level2 = [
+    "exprmodl",
+    "calcmodl",
+    "table",
+    "appl",
+    "spacer",
+    "heading",
+    "mvrlist",
+    "cvrlist",
+    "dvrlist",
+    "xvrplot",
+    "image",
+    "calctable",
+    "modelmatrix",
+];
+const level3 = ["imagestatuslabel", "calcpvr"];
 
-export function getHierarchyLevel(
-	obj: SepticObject,
-	settings: HierarchySettings
-): number {
-	let type: string = obj.type.toLowerCase();
+export function getHierarchyLevel(obj: SepticObject): number {
+    let type: string = obj.type.toLowerCase();
 
-	if (settings.level1.includes(type)) {
-		return 1;
-	} else if (settings.level2.includes(type)) {
-		return 2;
-	} else if (settings.level3.includes(type)) {
-		return 3;
-	}
+    if (level1.includes(type)) {
+        return 1;
+    } else if (level2.includes(type)) {
+        return 2;
+    } else if (level3.includes(type)) {
+        return 3;
+    }
 
-	const regexVariable = /[a-zA-Z]+vr/;
+    const regexVariable = /[a-zA-Z]+vr/;
 
-	if (regexVariable.test(type)) {
-		return settings.defaultVariableLevel;
-	}
+    if (regexVariable.test(type)) {
+        return defaultVariableLevel;
+    }
 
-	return settings.defaultLevel;
+    return defaultLevel;
 }

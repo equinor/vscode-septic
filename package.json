@@ -1,6 +1,6 @@
 {
   "name": "septic-config",
-  "displayName": "Septic Config",
+  "displayName": "SEPTIC",
   "icon": "images/SEPTIC_logo.jfif",
   "description": "Provides snippets, syntax highlighting and multi-level folding in Septic config files.",
   "author": "Equinor ASA",
@@ -48,69 +48,13 @@
             "ignore"
           ],
           "default": "error",
-          "description": "Sets the severity level for objects with missing variables. Ignore implies no validation."
+          "description": "Sets the severity level for objects with missing identifier. Ignore implies no validation."
         },
         "septic.diagnostics.enabled": {
           "scope": "window",
           "type": "boolean",
           "default": "true",
           "description": "Controls the publishing of diagnostics reports"
-        },
-        "septic.hierarchy.defaultLevel": {
-          "scope": "resource",
-          "type": "integer",
-          "description": "Default hierarchy level for septic objects that are not included in any level lists and not a variable. Value: 1-3",
-          "default": 3
-        },
-        "septic.hierarchy.defaultVariableLevel": {
-          "scope": "resource",
-          "type": "integer",
-          "description": "Deafualt hierarchy level for variable septic objects (*vr) that are not included in the level lists. Value: 1-3",
-          "default": 2
-        },
-        "septic.hierarchy.level1": {
-          "scope": "resource",
-          "type": "array",
-          "description": "List of septic objects belonging to level 1 in the hierarchy.",
-          "uniqueItems": true,
-          "default": [
-            "system",
-            "sopcproc",
-            "dmmyappl",
-            "smpcappl",
-            "displaygroup"
-          ]
-        },
-        "septic.hierarchy.level2": {
-          "scope": "resource",
-          "type": "array",
-          "description": "List of septic objects belonging to level 2 in the hierarchy.",
-          "uniqueItems": true,
-          "default": [
-            "exprmodl",
-            "calcmodl",
-            "table",
-            "appl",
-            "spacer",
-            "heading",
-            "mvrlist",
-            "cvrlist",
-            "dvrlist",
-            "xvrplot",
-            "image",
-            "calctable",
-            "modelmatrix"
-          ]
-        },
-        "septic.hierarchy.level3": {
-          "scope": "resource",
-          "type": "array",
-          "description": "List of septic objects belonging to level 3 in the hierarchy.",
-          "uniqueItems": true,
-          "default": [
-            "imagestatuslabel",
-            "calcpvr"
-          ]
         }
       }
     },

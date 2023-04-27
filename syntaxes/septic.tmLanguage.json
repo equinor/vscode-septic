@@ -1,269 +1,269 @@
 {
-	"comment": "Copyright (c) Equinor ASA. Licensed under the MIT License. See LICENSE in the project root for license information.",
-	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "Septic",
-	"scopeName": "source.septic",
-	"patterns": [
-		{
-			"include": "source.jinja"
-		},
-		{
-			"include": "#comment"
-		},
-		{
-			"include": "#keyword"
-		},
-		{
-			"include": "#tagmap"
-		},
-		{
-			"comment": "Should be removed and fix grps etc explicitly using begin/end instead",
-			"include": "#string"
-		}
-	],
-	"repository": {
-		"keyword": {
-			"patterns": [
-				{
-					"match": "\\b(\\w*)\\b(:)[\\s]*([\\w\\ \\{\\}\\*\\-<>]*)\\b",
-					"captures": {
-						"1": {
-							"name": "entity.name.class.septic"
-						},
-						"2": {
-							"name": "punctuation.separator.key-value.mapping.septic"
-						},
-						"3": {
-							"name": "entity.other.variable.septic",
-							"patterns": [
-								{
-									"include": "source.jinja"
-								},
-								{
-									"name": "variable.name.septic",
-									"match": "\\b([\\w\\ \\{\\}\\*\\-<>]*)\\b"
-								}
-							]
-						}
-					}
-				}
-			]
-		},
-		"tagmap": {
-			"patterns": [
-				{
-					"include": "#tagmap_alg"
-				},
-				{
-					"include": "#tagmap_default"
-				}
-			]
-		},
-		"tagmap_default": {
-			"patterns": [
-				{
-					"match": "\\b(\\w*)\\b(=)[\\s]*(.*)$",
-					"captures": {
-						"1": {
-							"name": "entity.name.tag.septic"
-						},
-						"2": {
-							"name": "punctuation.separator.key-value.mapping.septic"
-						},
-						"3": {
-							"name": "entity.other.variable.septic",
-							"patterns": [
-								{
-									"include": "source.jinja"
-								},
-								{
-									"include": "#line_comment"
-								},
-								{
-									"include": "#bitfield"
-								},
-								{
-									"include": "#numeric"
-								},
-								{
-									"include": "#string"
-								}
-							]
-						}
-					}
-				}
-			]
-		},
-		"tagmap_alg": {
-			"comment": "Overrides regular tagmap for the Alg line in CalcPvr",
-			"patterns": [
-				{
-					"match": "^\\s*\\b(Alg)\\b(=)[\\s]*(\")(.*)(\")",
-					"captures": {
-						"1": {
-							"name": "entity.name.tag.septic"
-						},
-						"2": {
-							"name": "punctuation.separator.key-value.mapping.septic"
-						},
-						"3": {
-							"name": "string.quoted.double.septic"
-						},
-						"4": {
-							"patterns": [
-								{
-									"include": "source.jinja"
-								},
-								{
-									"include": "#calc"
-								},
-								{
-									"include": "#separator"
-								},
-								{
-									"include": "#numeric"
-								},
-								{
-									"include": "#operator"
-								},
-								{
-									"name": "variable.name.septic",
-									"match": "\\b\\w*\\b"
-								}
-							]
-						},
-						"5": {
-							"name": "string.quoted.double.septic"
-						}
-					}
-				}
-			]
-		},
-		"calc": {
-			"begin": "(\\w*)(\\()",
-			"end": "\\)",
-			"beginCaptures": {
-				"1": {
-					"name": "entity.name.function.septic"
-				},
-				"2": {
-					"name": "entity.other.delimiter.septic"
-				}
-			},
-			"endCaptures": {
-				"0": {
-					"name": "entity.other.delimiter.septic"
-				}
-			},
-			"patterns": [
-				{
-					"include": "source.jinja"
-				},
-				{
-					"include": "#calc"
-				},
-				{
-					"include": "#operator"
-				},
-				{
-					"include": "#separator"
-				},
-				{
-					"include": "#numeric"
-				},
-				{
-					"name": "variable.name.septic",
-					"match": "\\b\\w*\\b"
-				}
-			]
-		},
-		"comment": {
-			"patterns": [
-				{
-					"include": "#block_comment"
-				},
-				{
-					"include": "#line_comment"
-				}
-			]
-		},
-		"line_comment": {
-			"patterns": [
-				{
-					"name": "comment.line.septic",
-					"match": "//.*$"
-				}
-			]
-		},
-		"block_comment": {
-			"patterns": [
-				{
-					"name": "comment.block.septic",
-					"begin": "\\/\\*",
-					"end": "\\*\\/"
-				}
-			]
-		},
-		"scgparameter": {
-			"patterns": [
-				{
-					"name": "support.type",
-					"begin": "\\{\\{\\s*",
-					"end": "\\s*\\}\\}",
-					"patterns": [
-						{
-							"name": "variable.parameter.scg.septic",
-							"match": "\\b\\w*\\b"
-						}
-					]
-				}
-			]
-		},
-		"string": {
-			"name": "string.quoted.double.septic",
-			"begin": "\"",
-			"end": "\"",
-			"patterns": [
-				{
-					"name": "constant.character.escape.septic",
-					"match": "\\\\."
-				}
-			]
-		},
-		"operator": {
-			"name": "keyword.operator.septic",
-			"match": "[+-/*<>]"
-		},
-		"separator": {
-			"name": "punctuation.separator.parameters.septic",
-			"match": "[, ]"
-		},
-		"numeric": {
-			"patterns": [
-				{
-					"match": "[+-]?\\b\\d*\\.*\\d+([eE][-+]?\\d+)*\\b",
-					"name": "constant.numeric.septic"
-				}
-			]
-		},
-		"bitfield": {
-			"patterns": [
-				{
-					"match": "([01]{25,})",
-					"name": "constant.numeric.bitfield.septic",
-					"captures": {
-						"0": {
-							"name": "constant.numeric.septic",
-							"patterns": [
-								{
-									"match": "1",
-									"name": "markup.bold.septic"
-								}
-							]
-						}
-					}
-				}
-			]
-		}
-	}
+    "comment": "Copyright (c) Equinor ASA. Licensed under the MIT License. See LICENSE in the project root for license information.",
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Septic",
+    "scopeName": "source.septic",
+    "patterns": [
+        {
+            "include": "source.jinja"
+        },
+        {
+            "include": "#comment"
+        },
+        {
+            "include": "#keyword"
+        },
+        {
+            "include": "#tagmap"
+        },
+        {
+            "comment": "Should be removed and fix grps etc explicitly using begin/end instead",
+            "include": "#string"
+        }
+    ],
+    "repository": {
+        "keyword": {
+            "patterns": [
+                {
+                    "match": "\\b(\\w*)\\b(:)[\\s]*([\\w\\ \\{\\}\\*\\-<>]*)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.class.septic"
+                        },
+                        "2": {
+                            "name": "punctuation.separator.key-value.mapping.septic"
+                        },
+                        "3": {
+                            "name": "entity.other.variable.septic",
+                            "patterns": [
+                                {
+                                    "include": "source.jinja"
+                                },
+                                {
+                                    "name": "variable.name.septic",
+                                    "match": "\\b([\\w\\ \\{\\}\\*\\-<>]*)\\b"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "tagmap": {
+            "patterns": [
+                {
+                    "include": "#tagmap_alg"
+                },
+                {
+                    "include": "#tagmap_default"
+                }
+            ]
+        },
+        "tagmap_default": {
+            "patterns": [
+                {
+                    "match": "\\b(\\w*)\\b(=)[\\s]*(.*)$",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.tag.septic"
+                        },
+                        "2": {
+                            "name": "punctuation.separator.key-value.mapping.septic"
+                        },
+                        "3": {
+                            "name": "entity.other.variable.septic",
+                            "patterns": [
+                                {
+                                    "include": "source.jinja"
+                                },
+                                {
+                                    "include": "#line_comment"
+                                },
+                                {
+                                    "include": "#bitfield"
+                                },
+                                {
+                                    "include": "#numeric"
+                                },
+                                {
+                                    "include": "#string"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "tagmap_alg": {
+            "comment": "Overrides regular tagmap for the Alg line in CalcPvr",
+            "patterns": [
+                {
+                    "match": "^\\s*\\b(Alg)\\b(=)[\\s]*(\")(.*)(\")",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.tag.septic"
+                        },
+                        "2": {
+                            "name": "punctuation.separator.key-value.mapping.septic"
+                        },
+                        "3": {
+                            "name": "string.quoted.double.septic"
+                        },
+                        "4": {
+                            "patterns": [
+                                {
+                                    "include": "source.jinja"
+                                },
+                                {
+                                    "include": "#calc"
+                                },
+                                {
+                                    "include": "#separator"
+                                },
+                                {
+                                    "include": "#numeric"
+                                },
+                                {
+                                    "include": "#operator"
+                                },
+                                {
+                                    "name": "variable.name.septic",
+                                    "match": "\\b\\w*\\b"
+                                }
+                            ]
+                        },
+                        "5": {
+                            "name": "string.quoted.double.septic"
+                        }
+                    }
+                }
+            ]
+        },
+        "calc": {
+            "begin": "(\\w*)(\\()",
+            "end": "\\)",
+            "beginCaptures": {
+                "1": {
+                    "name": "entity.name.function.septic"
+                },
+                "2": {
+                    "name": "entity.other.delimiter.septic"
+                }
+            },
+            "endCaptures": {
+                "0": {
+                    "name": "entity.other.delimiter.septic"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "source.jinja"
+                },
+                {
+                    "include": "#calc"
+                },
+                {
+                    "include": "#operator"
+                },
+                {
+                    "include": "#separator"
+                },
+                {
+                    "include": "#numeric"
+                },
+                {
+                    "name": "variable.name.septic",
+                    "match": "\\b\\w*\\b"
+                }
+            ]
+        },
+        "comment": {
+            "patterns": [
+                {
+                    "include": "#block_comment"
+                },
+                {
+                    "include": "#line_comment"
+                }
+            ]
+        },
+        "line_comment": {
+            "patterns": [
+                {
+                    "name": "comment.line.septic",
+                    "match": "//.*$"
+                }
+            ]
+        },
+        "block_comment": {
+            "patterns": [
+                {
+                    "name": "comment.block.septic",
+                    "begin": "\\/\\*",
+                    "end": "\\*\\/"
+                }
+            ]
+        },
+        "scgparameter": {
+            "patterns": [
+                {
+                    "name": "support.type",
+                    "begin": "\\{\\{\\s*",
+                    "end": "\\s*\\}\\}",
+                    "patterns": [
+                        {
+                            "name": "variable.parameter.scg.septic",
+                            "match": "\\b\\w*\\b"
+                        }
+                    ]
+                }
+            ]
+        },
+        "string": {
+            "name": "string.quoted.double.septic",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.septic",
+                    "match": "\\\\."
+                }
+            ]
+        },
+        "operator": {
+            "name": "keyword.operator.septic",
+            "match": "[+-/*<>]"
+        },
+        "separator": {
+            "name": "punctuation.separator.parameters.septic",
+            "match": "[, ]"
+        },
+        "numeric": {
+            "patterns": [
+                {
+                    "match": "[+-]?\\b\\d*\\.*\\d+([eE][-+]?\\d+)*\\b",
+                    "name": "constant.numeric.septic"
+                }
+            ]
+        },
+        "bitfield": {
+            "patterns": [
+                {
+                    "match": "([01]{25,})",
+                    "name": "constant.numeric.bitfield.septic",
+                    "captures": {
+                        "0": {
+                            "name": "constant.numeric.septic",
+                            "patterns": [
+                                {
+                                    "match": "1",
+                                    "name": "markup.bold.septic"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
 }

@@ -1,1541 +1,1541 @@
 {
-	"System": {
-		"prefix": "system",
-		"body": [
-			"  System:        ${1:ApplicationName}",
-			"         Text1=  \"${3}\"",
-			"         Text2=  \"\"",
-			"         Nsecs=  10",
-			"       PlotMax=  10",
-			"         Nhist=  1440",
-			"         Npred=  80",
-			"         Nmodl=  80",
-			"     ChngLogOn=  ON",
-			"          Grps=  1",
-			"                 \"${2:Free}\"  ",
-			"       GrpLock=  0",
-			"      MaxLogon=  ROOT",
-			"       RootPwd=  \"\"",
-			"       MngrPwd=  \"\"",
-			"       OperPwd=  \"\"",
-			"       UserPwd=  \"\"",
-			"          Terr=  0",
-			"       DebugNR=  1000",
-			"       DebugOn=  00000000",
-			"      FontSize=  -1",
-			"  InitialGroup=  -1",
-			"ShowText1WithName=  OFF",
-			"       MinXPos=  0",
-			"       MinYPos=  0",
-			"       MaxXPos=  0",
-			"       MaxYPos=  0",
-			"    InitScreen=  -1",
-			"      InitXPos=  -1",
-			"      InitYPos=  -1",
-			"     InitWidth=  -1",
-			"    InitHeight=  -1",
-			"MinimizeByHide=  OFF",
-			"HideCloseButton=  OFF",
-			"OPCSampleTimeOffset=  0\r"
-		],
-		"description": "For SEPTIC >= v2.82"
-	},
-	"System_v2.81": {
-		"prefix": "system281",
-		"body": [
-			"  System:        ${1:ApplicationName}",
-			"         Text1=  \"${3}\"",
-			"         Text2=  \"\"",
-			"         Nsecs=  10",
-			"       PlotMax=  10",
-			"         Nhist=  1440",
-			"         Npred=  80",
-			"         Nmodl=  80",
-			"         Nxupd=  1",
-			"        ClipOn=  OFF",
-			"     ChngLogOn=  ON",
-			"         WdwDx=  600",
-			"         WdwDy=  600",
-			"         Xline=  0",
-			"         Xback=  0.5",
-			"          Grps=  1",
-			"                 \"${2:Free}\"  ",
-			"       GrpLock=  0",
-			"        Xgroup=  1",
-			"      MaxLogon=  ROOT",
-			"       RootPwd=  \"\"",
-			"       MngrPwd=  \"\"",
-			"       OperPwd=  \"\"",
-			"       UserPwd=  \"\"",
-			"          Terr=  0",
-			"       DebugNR=  1000",
-			"       DebugOn=  00000000",
-			"         Zname=  225",
-			"         Zhilo=  275",
-			"        Zstate=  225",
-			"         Zopen=  225",
-			"         Zfont=  275",
-			"         Zline=  275",
-			"      FontSize=  -1",
-			"  InitialGroup=  -1",
-			"ShowText1WithName=  OFF",
-			"       MinXPos=  0",
-			"       MinYPos=  0",
-			"       MaxXPos=  0",
-			"       MaxYPos=  0",
-			"    InitScreen=  -1",
-			"      InitXPos=  -1",
-			"      InitYPos=  -1",
-			"     InitWidth=  -1",
-			"    InitHeight=  -1",
-			"MinimizeByHide=  OFF",
-			"HideCloseButton=  OFF",
-			"OPCSampleTimeOffset=  0\r"
-		],
-		"description": "For SEPTIC <= v2.81"
-	},
-	"SopcProc": {
-		"prefix": "sopcproc",
-		"body": [
-			"  SopcProc:      ${1:ApplicationName}",
-			"         Text1=  \"${6}\"",
-			"         Text2=  \"\"",
-			"          Site=  ${2|AIM_AIMGUI,AIM,OPCSIMUL,SIEMENS_APC,SITENONE,HARMONYOPC|}",
-			"      ServName=  \"${3:Statoil.OPC.Server}\"",
-			"      ServNode=  \"SERVNODE\"",
-			"   RealTimeFac=  1",
-			"       ProcTag=  \"\"",
-			"AllowActiveTag=  \"${4:AllowActiveTag}\"",
-			"     StatusTag=  \"NotUsed\"",
-			"    DesModeTag=  \"DUMMY_TAG\"",
-			"       PulsTag=  \"${5:PulsTag}\"",
-			"LoopcheckWriteTag=  \"DUMMY_TAG\"",
-			"LoopcheckReadTag=  \"DUMMY_TAG\"",
-			" ServFactorTag=  \"DUMMY_TAG\"",
-			"    CPUTimeTag=  \"DUMMY_TAG\"",
-			"         IdTag=  \"\"",
-			"   ScheduleTag=  \"DUMMY_TAG\"",
-			"        RunSec=  -1",
-			"   RequestRate=  -1",
-			" BadCountLimit=  0",
-			"SampleAgeLimit=  -1",
-			"BlockWritingIfBad=  OFF",
-			"   WriteGroups=  1",
-			"WriteGroupPause=  1000",
-			"  UseDCOMAUTHN=  ON\r"
-		],
-		"description": "For SEPTIC >= v2.82"
-	},
-	"SopcProc_v2.81": {
-		"prefix": "sopcproc281",
-		"body": [
-			"  SopcProc:      ${1:ApplicationName}",
-			"         Text1=  \"${6}\"",
-			"         Text2=  \"\"",
-			"          Site=  ${2|AIM_AIMGUI,AIM,OPCSIMUL,SIEMENS_APC,SITENONE,HARMONYOPC|}",
-			"      ServName=  \"${3:Statoil.OPC.Server}\"",
-			"      ServNode=  \"SERVNODE\"",
-			"   RealTimeFac=  1",
-			"       ProcTag=  \"MyApplication\"",
-			"AllowActiveTag=  \"${4:AllowActiveTag}\"",
-			"     StatusTag=  \"NotUsed\"",
-			"    DesModeTag=  \"DUMMY_TAG\"",
-			"       PulsTag=  \"${5:PulsTag}\"",
-			"LoopcheckWriteTag=  \"DUMMY_TAG\"",
-			"LoopcheckReadTag=  \"DUMMY_TAG\"",
-			" ServFactorTag=  \"DUMMY_TAG\"",
-			"    CPUTimeTag=  \"DUMMY_TAG\"",
-			"         IdTag=  \"\"",
-			"   ScheduleTag=  \"DUMMY_TAG\"",
-			"        RunSec=  -1",
-			"   RequestRate=  -1",
-			" BadCountLimit=  0",
-			"SampleAgeLimit=  -1",
-			"BlockWritingIfBad=  OFF",
-			"   WriteGroups=  1",
-			"WriteGroupPause=  1000\r"
-		],
-		"description": "For SEPTIC <= v2.81"
-	},
-	"SopcMvr": {
-		"prefix": "sopcmvr",
-		"body": [
-			"  SopcMvr:       ${1:MvrName}",
-			"         Text1=  \"${3}\"",
-			"         Text2=  \"\"",
-			"        MvrTag=  \"\"",
-			"       MeasTag=  \"${2}.YXSP\"",
-			"         PVTag=  \"${2}.YX\"",
-			"         IdTag=  \"\"",
-			"   NotValidTag=  \"${2}.YXF\"",
-			"     SpCalcTag=  \"${2}.XOUT\"",
-			"         HiTag=  \"${2}.XWRH|NotUsed\"",
-			"         LoTag=  \"${2}.XWRL|NotUsed\"",
-			"         IvTag=  \"${2}.YR\"",
-			"      MvLowTag=  \"DUMMY_TAG\"",
-			"     MvHighTag=  \"DUMMY_TAG\"",
-			"       MvIvTag=  \"DUMMY_TAG\"",
-			"      MaxUpTag=  \"${2}.YWCU\"",
-			"    MaxDownTag=  \"${2}.YWCD\"",
-			"       AutoTag=  \"${2}.YBA\"",
-			"        WhiTag=  \"${2}.YXWH|NotUsed\"",
-			"        WloTag=  \"${2}.YXWL|NotUsed\"",
-			"       CompTag=  \"${2}.YADA\"",
-			"       CaraTag=  \"DUMMY_TAG\"",
-			"       TrakTag=  \"DUMMY_TAG\"",
-			"     ToCompTag=  \"DUMMY_TAG\"",
-			"    ToLocalTag=  \"DUMMY_TAG\"",
-			"   MvActiveTag=  \"${2}.XAPC\"",
-			"   MvSwitchTag=  \"DUMMY_TAG\"",
-			" CompStatusTag=  \"DUMMY_TAG\"",
-			"         Scale=  1",
-			"        Offset=  0\r"
-		],
-		"description": "FB variant for SEPTIC >= 2.79. Use DUMMY_TAG to disable connections where NotUsed is not indicated."
-	},
-	"SopcMvr_v2.75": {
-		"prefix": "sopcmvr275",
-		"body": [
-			"  SopcMvr:       ${1:MvrName}",
-			"         Text1=  \"${3}\"",
-			"         Text2=  \"\"",
-			"        MvrTag=  \"\"",
-			"       MeasTag=  \"${2}.YXSP\"",
-			"         PVTag=  \"${2}.YX\"",
-			"         IdTag=  \"\"",
-			"   NotValidTag=  \"${2}.YXF\"",
-			"     SpCalcTag=  \"${2}.XOUT\"",
-			"         HiTag=  \"${2}.XWRH|NotUsed\"",
-			"         LoTag=  \"${2}.XWRL|NotUsed\"",
-			"         IvTag=  \"${2}.YR\"",
-			"      MvLowTag=  \"DUMMY_TAG\"",
-			"     MvHighTag=  \"DUMMY_TAG\"",
-			"       MvIvTag=  \"DUMMY_TAG\"",
-			"      MaxUpTag=  \"${2}.YWCU\"",
-			"    MaxDownTag=  \"${2}.YWCD\"",
-			"       AutoTag=  \"${2}.YBA\"",
-			"        WhiTag=  \"${2}.YXWH|NotUsed\"",
-			"        WloTag=  \"${2}.YXWL|Notused\"",
-			"       CompTag=  \"${2}.YADA\"",
-			"       CaraTag=  \"DUMMY_TAG\"",
-			"       TrakTag=  \"DUMMY_TAG\"",
-			"     ToCompTag=  \"DUMMY_TAG\"",
-			"    ToLocalTag=  \"DUMMY_TAG\"",
-			"   MvActiveTag=  \"${2}.XAPC\"",
-			"   MvSwitchTag=  \"DUMMY_TAG\"",
-			"         Scale=  1",
-			"        Offset=  0\r"
-		],
-		"description": "FB variant for SEPTIC <= v2.75. Use DUMMY_TAG to disable connections where NotUsed is not indicated."
-	},
-	"SopcCvr": {
-		"prefix": "sopccvr",
-		"body": [
-			"  SopcCvr:       ${1:CvrName}",
-			"         Text1=  \"${3}\"",
-			"         Text2=  \"\"",
-			"        CvrTag=  \"\"",
-			"       MeasTag=  \"${2}.YX\"",
-			"         IdTag=  \"\"",
-			"         SpTag=  \"${2}.YR\"",
-			"      CvLowTag=  \"DUMMY_TAG\"",
-			"     CvHighTag=  \"DUMMY_TAG\"",
-			" CvSetpointTag=  \"DUMMY_TAG\"",
-			"   NotValidTag=  \"${2}.YXF\"",
-			"   CvSwitchTag=  \"${2}.YADA\"",
-			"   CvActiveTag=  \"${2}.XAPC\"",
-			"         LoTag=  \"${2}.YWRL\"",
-			"         HiTag=  \"${2}.YWRH\"",
-			"         Scale=  1",
-			"        Offset=  0\r"
-		],
-		"description": "FB variant"
-	},
-	"SopcDvr": {
-		"prefix": "sopcdvr",
-		"body": [
-			"  SopcDvr:       ${1:DvrName}",
-			"         Text1=  \"${3}\"",
-			"         Text2=  \"\"",
-			"        DvrTag=  \"\"",
-			"       MeasTag=  \"${2}.YX\"",
-			"         IdTag=  \"\"",
-			"   NotValidTag=  \"${2}.YXF\"",
-			"   DvSwitchTag=  \"DUMMY_TAG\"",
-			"    DvTrackTag=  \"DUMMY_TAG\"",
-			"         Scale=  1",
-			"        Offset=  0\r"
-		],
-		"description": "FB variant. Use DUMMY_TAG to disable DvSwitchTag/DvTrackTag."
-	},
-	"SopcEvr": {
-		"prefix": "sopcevr",
-		"body": [
-			"  SopcEvr:       ${1:EvrName}",
-			"         Text1=  \"${3}\"",
-			"         Text2=  \"\"",
-			"        EvrTag=  \"\"",
-			"       MeasTag=  \"${2}.YX\"",
-			"         IdTag=  \"\"",
-			"   NotValidTag=  \"\"\r"
-		],
-		"description": "FB variant"
-	},
-	"SopcTvr": {
-		"prefix": "sopctvr",
-		"body": [
-			"  SopcTvr:       ${1:TvrName}",
-			"         Text1=  \"${3}\"",
-			"         Text2=  \"\"",
-			"        TvrTag=  \"\"",
-			"       MeasTag=  \"${2}.YX\"",
-			"   NotValidTag=  \"${2}.YXF\"",
-			"      Text1Tag=  \"\"",
-			"         Scale=  1",
-			"        Offset=  0\r"
-		],
-		"description": "FB variant"
-	},
-	"SmpcAppl": {
-		"prefix": "smpcappl",
-		"body": [
-			"  SmpcAppl:      ${1:ApplicationName}",
-			"         Text1=  \"${2}\"",
-			"         Text2=  \"\"",
-			"         Npred=  80",
-			"         Nstep=  1",
-			"       PlotMax=  25",
-			"         Nhorz=  80",
-			"        Nstart=  0",
-			"      MasterOn=  ON",
-			"       DesMode=  ADVISORY",
-			"       FailMax=  0",
-			"       PriceOn=  ON",
-			"    PriceScale=  1",
-			"       IterOpt=  OFF",
-			"   IterNewSens=  OFF",
-			"     IterQpMax=  0",
-			"   IterLineMax=  0",
-			"    DoStdSolve=  ON",
-			"  SteadySolver=  QP",
-			"      MajItLim=  200",
-			"      MajPrint=  0",
-			"   ObjConPrint=  OFF",
-			"   VerifyGrads=  OFF",
-			"      FuncPrec=  9.9999999e-09",
-			"         FeTol=  9.9999997e-06",
-			"      OptimTol=  1e-06",
-			"      FdifIntv=  0.001",
-			"    MaxSeconds=  10",
-			"        LmPrio=  100",
-			"    MaxPrioSQP=  100",
-			"    UnConstrnd=  OFF",
-			"      OpenFlag=  CONSTMVR",
-			"       UpdFilt=  0",
-			"       RelPert=  0.050000001",
-			"       FeasTol=  1e-10",
-			"     EachParam=  OFF",
-			"   LinErrorLim=  1000",
-			"     ColdStart=  ON",
-			"    SimOptimal=  OFF",
-			"     PrintSens=  0",
-			"     SensLimSS=  1e-06",
-			"    SensLimDyn=  1e-06\r"
-		],
-		"description": "For SEPTIC >= v2.82 "
-	},
-	"SmpcAppl_v2.81": {
-		"prefix": "smpcappl281",
-		"body": [
-			"  SmpcAppl:      ${1:ApplicationName}",
-			"         Text1=  \"${2}\"",
-			"         Text2=  \"\"",
-			"         Npred=  80",
-			"         Nstep=  1",
-			"       PlotMax=  25",
-			"         Nhorz=  80",
-			"        Nstart=  0",
-			"      MasterOn=  ON",
-			"       DesMode=  ADVISORY",
-			"       FailMax=  0",
-			"       PriceOn=  ON",
-			"    PriceScale=  1",
-			"       IterOpt=  OFF",
-			"   IterNewSens=  OFF",
-			"     IterQpMax=  0",
-			"   IterLineMax=  0",
-			"    DoStdSolve=  ON",
-			"  SteadySolver=  QP",
-			"      MajItLim=  200",
-			"      MajPrint=  0",
-			"   ObjConPrint=  OFF",
-			"   VerifyGrads=  OFF",
-			"      FuncPrec=  9.9999999e-009",
-			"         FeTol=  9.9999997e-006",
-			"      OptimTol=  1e-006",
-			"      FdifIntv=  0.001",
-			"    MaxSeconds=  10",
-			"        LmPrio=  100",
-			"    MaxPrioSQP=  100",
-			"    UnConstrnd=  OFF",
-			"      OpenFlag=  CONSTMVR",
-			"       UpdFilt=  0",
-			"       RelPert=  0.050000001",
-			"       FeasTol=  1e-010",
-			"     EachParam=  OFF",
-			"   LinErrorLim=  1000",
-			"     ColdStart=  OFF",
-			"    SimOptimal=  OFF",
-			"     PrintSens=  0",
-			"     SensLimSS=  1e-006",
-			"    SensLimDyn=  1e-006\r"
-		],
-		"description": "For SEPTIC <= v2.81"
-	},
-	"Mvr": {
-		"prefix": "mvr",
-		"body": [
-			"  Mvr:           ${1:MvrName}",
-			"         Text1=  \"${4}\"",
-			"         Text2=  \"\"",
-			"          Mode=  STOPPED",
-			"          Auto=  OFF",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"          Nfix=  ${2:1}",
-			"        MaxChg=  -1",
-			"          Unit=  \"${3}\"",
-			"          Meas=  0",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"        HighOn=  1e+10",
-			"         LowOn=  -1e+10",
-			"  ProcessValue=  0",
-			"         IvOff=  0",
-			"         MaxUp=  10",
-			"         MaxDn=  -10",
-			"     MovePnlty=  1",
-			"         IvRoc=  -1",
-			"        IvPrio=  99",
-			"          Fulf=  1",
-			"   FulfReScale=  0",
-			"         Price=  0",
-			"      Blocking=  6    2     4     7    11    16    22 ",
-			"MeasValidation=  OFF",
-			" MeasHighLimit=  1e+10",
-			"  MeasLowLimit=  -1e+10",
-			"        LockHL=  OFF",
-			"        LockIV=  OFF",
-			"        LockLL=  OFF",
-			"UseFactorWeight=  0\r"
-		],
-		"description": "For SEPTIC >= v2.82"
-	},
-	"Mvr_v2.81": {
-		"prefix": "mvr281",
-		"body": [
-			"  Mvr:           ${1:MvrName}",
-			"         Text1=  \"${4}\"",
-			"         Text2=  \"\"",
-			"          Mode=  STOPPED",
-			"          Auto=  OFF",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"       PlotGrp=  0000000000000000000000000000000",
-			"          Nfix=  ${2:1}",
-			"        MaxChg=  -1",
-			"          Unit=  \"${3}\"",
-			"          Meas=  0",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"        HighOn=  1e+010",
-			"         LowOn=  -1e+010",
-			"  ProcessValue=  0",
-			"         IvOff=  0",
-			"         MaxUp=  10",
-			"         MaxDn=  -10",
-			"     MovePnlty=  1",
-			"         IvRoc=  -1",
-			"        IvPrio=  99",
-			"          Fulf=  1",
-			"   FulfReScale=  0",
-			"         Price=  0",
-			"      Blocking=  6    2     4     7    11    16    22 ",
-			"MeasValidation=  OFF",
-			" MeasHighLimit=  1e+010",
-			"  MeasLowLimit=  -1e+010",
-			"        LockHL=  OFF",
-			"        LockIV=  OFF",
-			"        LockLL=  OFF",
-			"UseFactorWeight=  0\r"
-		],
-		"description": "For SEPTIC <=2.81"
-	},
-	"Cvr": {
-		"prefix": "cvr",
-		"body": [
-			"  Cvr:           ${1:CvrName}",
-			"         Text1=  \"${4}\"",
-			"         Text2=  \"\"",
-			"          Mode=  STOPPED",
-			"          Auto=  OFF",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"          Nfix=  ${2:1}",
-			"        MaxChg=  -1",
-			"          Unit=  \"${3}\"",
-			"          Meas=  0",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"     SetPntOff=  0",
-			"       HighOff=  100",
-			"        LowOff=  0",
-			"    SetPntPrio=  1",
-			"      HighPrio=  1",
-			"       LowPrio=  1",
-			"   HighBackOff=  0",
-			"    LowBackOff=  0",
-			"          Fulf=  1",
-			"     HighPnlty=  1",
-			"      LowPnlty=  1",
-			"     HighLimit=  1000",
-			"      LowLimit=  1000",
-			"     RelxParam=  3    1    30    80 ",
-			"   FulfReScale=  0.001",
-			"  FulfUniScale=  1",
-			"SetPntChangeMode=  FILTER",
-			"      SetpTref=  0",
-			"   SetPntRocUp=  1",
-			"   SetPntRocDn=  -1",
-			"     BiasTfilt=  0",
-			"     BiasTpred=  0",
-			"     ConsTfilt=  -1",
-			"         Integ=  0",
-			" TransformType=  NOTRANS",
-			"     BadCntLim=  0",
-			"       DesHorz=  0",
-			"         Neval=  5",
-			"        EvalDT=  0",
-			"   KeepTargets=  OFF",
-			"MeasValidation=  OFF",
-			" MeasHighLimit=  1e+10",
-			"  MeasLowLimit=  -1e+10",
-			"        LockHL=  OFF",
-			"        LockSP=  OFF",
-			"        LockLL=  OFF",
-			"UseFactorWeight=  0\r"
-		],
-		"description": "For SEPTIC >= v2.82"
-	},
-	"Cvr_v2.81": {
-		"prefix": "cvr281",
-		"body": [
-			"  Cvr:           ${1:CvrName}",
-			"         Text1=  \"${4}\"",
-			"         Text2=  \"\"",
-			"          Mode=  STOPPED",
-			"          Auto=  OFF",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"       PlotGrp=  0000000000000000000000000000000",
-			"          Nfix=  ${2:1}",
-			"        MaxChg=  -1",
-			"          Unit=  \"${3}\"",
-			"          Meas=  0",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"     SetPntOff=  0",
-			"       HighOff=  100",
-			"        LowOff=  0",
-			"    SetPntPrio=  1",
-			"      HighPrio=  1",
-			"       LowPrio=  1",
-			"   HighBackOff=  0",
-			"    LowBackOff=  0",
-			"          Fulf=  1",
-			"     HighPnlty=  -1",
-			"      LowPnlty=  -1",
-			"     HighLimit=  -1",
-			"      LowLimit=  -1",
-			"     RelxParam=  3    1    30    80 ",
-			"   FulfReScale=  0.001",
-			"  FulfUniScale=  1",
-			"SetPntChangeMode=  FILTER",
-			"      SetpTref=  0",
-			"   SetPntRocUp=  1",
-			"   SetPntRocDn=  -1",
-			"     BiasTfilt=  0",
-			"     BiasTpred=  0",
-			"     ConsTfilt=  -1",
-			"         Integ=  0",
-			" TransformType=  NOTRANS",
-			"     BadCntLim=  0",
-			"       DesHorz=  0",
-			"         Neval=  5",
-			"        EvalDT=  0",
-			"   KeepTargets=  OFF",
-			"MeasValidation=  OFF",
-			" MeasHighLimit=  1e+010",
-			"  MeasLowLimit=  -1e+010",
-			"        LockHL=  OFF",
-			"        LockSP=  OFF",
-			"        LockLL=  OFF",
-			"UseFactorWeight=  0\r"
-		],
-		"description": "For SEPTIC v2.80-2.81"
-	},
-	"Cvr_v2.79": {
-		"prefix": "cvr279",
-		"body": [
-			"  Cvr:           ${1:CvrName}",
-			"         Text1=  \"${4}\"",
-			"         Text2=  \"\"",
-			"          Mode=  STOPPED",
-			"          Auto=  OFF",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"       PlotGrp=  0000000000000000000000000000000",
-			"          Nfix=  ${2:1}",
-			"        MaxChg=  -1",
-			"          Unit=  \"${3}\"",
-			"          Meas=  0",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"     SetPntOff=  0",
-			"       HighOff=  100",
-			"        LowOff=  0",
-			"    SetPntPrio=  1",
-			"      HighPrio=  1",
-			"       LowPrio=  1",
-			"   HighBackOff=  0",
-			"    LowBackOff=  0",
-			"          Fulf=  1",
-			"     HighPnlty=  -1",
-			"      LowPnlty=  -1",
-			"     HighLimit=  -1",
-			"      LowLimit=  -1",
-			"     RelxParam=  3    1    30    80 ",
-			"   FulfReScale=  0.001",
-			"  FulfUniScale=  1",
-			"SetPntChangeMode=  FILTER",
-			"      SetpTref=  0",
-			"   SetPntRocUp=  1",
-			"   SetPntRocDn=  1",
-			"     BiasTfilt=  0",
-			"     BiasTpred=  0",
-			"     ConsTfilt=  -1",
-			"         Integ=  0",
-			" TransformType=  NOTRANS",
-			"     BadCntLim=  0",
-			"       DesHorz=  0",
-			"         Neval=  5",
-			"        EvalDT=  0",
-			"   KeepTargets=  OFF",
-			"MeasValidation=  OFF",
-			" MeasHighLimit=  1e+010",
-			"  MeasLowLimit=  -1e+010",
-			"        LockHL=  OFF",
-			"        LockSP=  OFF",
-			"        LockLL=  OFF",
-			"UseFactorWeight=  0\r"
-		],
-		"description": "For SEPTIC v2.79"
-	},
-	"Cvr_v2.75": {
-		"prefix": "cvr275",
-		"body": [
-			"  Cvr:           ${1:CvrName}",
-			"         Text1=  \"${4}\"",
-			"         Text2=  \"\"",
-			"          Mode=  STOPPED",
-			"          Auto=  OFF",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"       PlotGrp=  0000000000000000000000000000000",
-			"          Nfix=  ${2:1}",
-			"        MaxChg=  -1",
-			"          Unit=  \"${3}\"",
-			"          Meas=  0",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"     SetPntOff=  0",
-			"       HighOff=  100",
-			"        LowOff=  0",
-			"    SetPntPrio=  1",
-			"      HighPrio=  1",
-			"       LowPrio=  1",
-			"   HighBackOff=  0",
-			"    LowBackOff=  0",
-			"          Fulf=  1",
-			"     HighPnlty=  1",
-			"      LowPnlty=  1",
-			"     HighLimit=  1000",
-			"      LowLimit=  1000",
-			"     RelxParam=  3    1    30    80 ",
-			"   FulfReScale=  0.001",
-			"      SetpTref=  0",
-			"     BiasTfilt=  0",
-			"     BiasTpred=  0",
-			"     ConsTfilt=  -1",
-			"         Integ=  0",
-			" TransformType=  NOTRANS",
-			"     BadCntLim=  0",
-			"       DesHorz=  0",
-			"         Neval=  5",
-			"        EvalDT=  0",
-			"   KeepTargets=  OFF",
-			"MeasValidation=  OFF",
-			" MeasHighLimit=  1e+010",
-			"  MeasLowLimit=  -1e+010",
-			"        LockHL=  OFF",
-			"        LockSP=  OFF",
-			"        LockLL=  OFF",
-			"UseFactorWeight=  0\r"
-		],
-		"description": "For SEPTIC <= v2.75"
-	},
-	"Dvr": {
-		"prefix": "dvr",
-		"body": [
-			"  Dvr:           ${1:DvrName}",
-			"         Text1=  \"${4}\"",
-			"         Text2=  \"\"",
-			"          Mode=  STOPPED",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"          Nfix=  ${2:1}",
-			"          Unit=  \"${3}\"",
-			"          Meas=  0",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"MeasValidation=  OFF",
-			" MeasHighLimit=  1e+10",
-			"  MeasLowLimit=  -1e+10\r"
-		],
-		"description": "For SEPTIC >= v2.82"
-	},
-	"Dvr_v2.81": {
-		"prefix": "dvr281",
-		"body": [
-			"  Dvr:           ${1:DvrName}",
-			"         Text1=  \"${4}\"",
-			"         Text2=  \"\"",
-			"          Mode=  STOPPED",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"       PlotGrp=  0000000000000000000000000000000",
-			"          Nfix=  ${2:1}",
-			"          Unit=  \"${3}\"",
-			"          Meas=  0",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"MeasValidation=  OFF",
-			" MeasHighLimit=  1e+010",
-			"  MeasLowLimit=  -1e+010\r"
-		],
-		"description": "For SEPTIC <= v2.81"
-	},
-	"Tvr": {
-		"prefix": "tvr",
-		"body": [
-			"  Tvr:           ${1:TvrName}",
-			"         Text1=  \"${4}\"",
-			"         Text2=  \"\"",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"          Nfix=  ${2:1}",
-			"          Unit=  \"${3}\"",
-			"          Meas=  0",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"MeasValidation=  OFF",
-			" MeasHighLimit=  1e+10",
-			"  MeasLowLimit=  -1e+10",
-			"         Color=  BLACK\r"
-		],
-		"description": ""
-	},
-	"Tvr_v2.81": {
-		"prefix": "tvr281",
-		"body": [
-			"  Tvr:           ${1:TvrName}",
-			"         Text1=  \"${4}\"",
-			"         Text2=  \"\"",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"       PlotGrp=  0000000000000000000000000000000",
-			"          Nfix=  ${2:1}",
-			"          Unit=  \"${3}\"",
-			"          Meas=  0",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"MeasValidation=  OFF",
-			" MeasHighLimit=  1e+010",
-			"  MeasLowLimit=  -1e+010",
-			"         Color=  BLACK\r"
-		],
-		"description": "For SEPTIC <= v2.81"
-	},
-	"ExprModl": {
-		"prefix": "exprmodl",
-		"body": "  ExprModl:      ${1:ExprModlName}",
-		"description": ""
-	},
-	"DmmyAppl": {
-		"prefix": "dmmyappl",
-		"body": [
-			"  DmmyAppl:      ${1:DmmyApplname}",
-			"         Text1=  \"${2}\"",
-			"         Text2=  \"\"",
-			"         Nstep=  1",
-			"       PlotMax=  25",
-			"      MasterOn=  ON",
-			"       DesMode=  ACTIVE\r"
-		],
-		"description": ""
-	},
-	"Evr": {
-		"prefix": "evr",
-		"body": [
-			"  Evr:           ${1:EvrName}",
-			"         Text1=  \"${6}\"",
-			"         Text2=  \"\"",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"          Nfix=  ${2:1}",
-			"          Unit=  \"${3}\"",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"       MeasBad=  0",
-			"     UserInput=  ${4|OFF,BOOL,ENUM,INT,DOUBLE,ON|}",
-			"    UserAccess=  WRRR",
-			"      MinInput=  0",
-			"      MaxInput=  ${5:0}",
-			"ValidationLimit=  -1",
-			"         Color=  BLACK\r"
-		],
-		"description": "For SEPTIC >= v2.82"
-	},
-	"Evr_v2.81": {
-		"prefix": "evr281",
-		"body": [
-			"  Evr:           ${1:EvrName}",
-			"         Text1=  \"${6}\"",
-			"         Text2=  \"\"",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"       PlotGrp=  0000000000000000000000000000000",
-			"          Nfix=  ${2:1}",
-			"          Unit=  \"${3}\"",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"       MeasBad=  0",
-			"     UserInput=  ${4|OFF,BOOL,ENUM,INT,DOUBLE,ON|}",
-			"    UserAccess=  WRRR",
-			"      MinInput=  0",
-			"      MaxInput=  ${5:0}",
-			"ValidationLimit=  -1",
-			"         Color=  BLACK\r"
-		],
-		"description": "For SEPTIC v2.80-2.81"
-	},
-	"Evr_v2.79": {
-		"prefix": "evr279",
-		"body": [
-			"  Evr:           ${1:EvrName}",
-			"         Text1=  \"${6}\"",
-			"         Text2=  \"\"",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"      PlotSpan=  -1",
-			"       PlotGrp=  0000000000000000000000000000000",
-			"          Nfix=  ${2:1}",
-			"          Unit=  \"${3}\"",
-			"       MeasBad=  0",
-			"       GrpMask=  0000000000000000000000000000001",
-			"       GrpType=  0000000000000000000000000000000",
-			"          Span=  10",
-			"     UserInput=  ${4|OFF,BOOL,ENUM,INT,DOUBLE,ON|}",
-			"    UserAccess=  WRRR",
-			"      UserMeas=  0",
-			"      MinInput=  0",
-			"      MaxInput=  ${5:0}",
-			"ValidationLimit=  -1",
-			"         Color=  BLACK\r"
-		],
-		"description": "For SEPTIC <= v2.79"
-	},
-	"CalcModl": {
-		"prefix": "calcmodl",
-		"body": [
-			"  CalcModl:      ${1:CalcModlName}",
-			"         Text1=  \"${2}\"",
-			"         Text2=  \"\"\r"
-		],
-		"description": ""
-	},
-	"CalcPvr": {
-		"prefix": "calcpvr",
-		"body": [
-			"  CalcPvr:       ${1:CalcPvrName}",
-			"         Text1=  \"${3}\"",
-			"         Text2=  \"\"",
-			"           Alg=  \"${2}\"\r"
-		],
-		"description": ""
-	},
-	"MasterTcip": {
-		"prefix": "mastertcip",
-		"body": [
-			"  MasterTcip:    ${1:MasterTcip}",
-			"    MasterPort=  ${2:12030}",
-			"        InitOn=  ON",
-			"        HistOn=  ON",
-			"        ModlOn=  ON",
-			"    BufferSize=  64512",
-			"    WriteHosts=  1",
-			"                 \"${3:127.0.0.1}\"  \r"
-		],
-		"description": ""
-	},
-	"RemoteTcip": {
-		"prefix": "remotetcip",
-		"body": [
-			"  RemoteTcip:    ${1:RemoteTcip}",
-			"    MasterPort=  ${2:12035}",
-			"    MasterAddr=  \"${3:127.0.0.1}\"",
-			"      HistSize=  -1",
-			"       FillMsg=  ON",
-			"    BufferSize=  64512",
-			"MasterBufferSize=  -1\r"
-		],
-		"description": ""
-	},
-	"MsgBox": {
-		"prefix": "msgbox",
-		"body": [
-			"  MsgBox:        ${1:ApplicationName}",
-			"        MaxLvl=  4",
-			"        MinLvl=  1",
-			"           Obj=  ~\r"
-		],
-		"description": "For SEPTIC >= v2.82"
-	},
-	"MsgBox_v2.81": {
-		"prefix": "msgbox281",
-		"body": [
-			"  MsgBox:        ${1:ApplicationName}",
-			"        MaxLvl=  4",
-			"        MinLvl=  1",
-			"       PlotGrp=  0000000000000000000000000000000",
-			"           Obj=  ~\r"
-		],
-		"description": "For SEPTIC <= v2.81"
-	},
-	"DisplayGroup": {
-		"prefix": "displaygroup",
-		"body": [
-			"  DisplayGroup:  ${1:DisplayGroupName}",
-			"       GroupNo=  ${2:1}",
-			"        Locked=  OFF",
-			"          Rows=  -1",
-			"          Cols=  -1",
-			"         xGrid=  OFF",
-			"         yGrid=  OFF",
-			"         xAxis=  OFF",
-			"         yAxis=  ON",
-			"     Autoscale=  OFF",
-			"     Spanscale=  OFF",
-			"      HistSize=  -1",
-			"      PredSize=  -1\r"
-		],
-		"description": "For SEPTIC >= v2.81"
-	},
-	"DisplayGroup_v2.80": {
-		"prefix": "displaygroup280",
-		"body": [
-			"  DisplayGroup:  ${1:DisplayGroupName}",
-			"       GroupNo=  ${2:1}",
-			"        Locked=  OFF",
-			"          Rows=  -1",
-			"          Cols=  -1",
-			"         xGrid=  OFF",
-			"         yGrid=  OFF",
-			"         xAxis=  OFF",
-			"         yAxis=  ON",
-			"     Autoscale=  OFF",
-			"     Spanscale=  OFF",
-			"      HistSize=  -1\r"
-		],
-		"description": "For SEPTIC <= v2.80"
-	},
-	"BadXvrList": {
-		"prefix": "badxvrlist",
-		"body": [
-			"  BadXvrList:    ${1:BadXvrListName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1\r"
-		],
-		"description": ""
-	},
-	"CalcTable": {
-		"prefix": "calctable",
-		"body": [
-			"  CalcTable:     ${1:CalcTableName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1\r"
-		],
-		"description": ""
-	},
-	"Image": {
-		"prefix": "image",
-		"body": [
-			"  Image:         ${1:ImageName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1",
-			"      FileName=  \"${2}\"\r"
-		],
-		"description": ""
-	},
-	"ImageStatusLabel": {
-		"prefix": "imagestatuslabel",
-		"body": [
-			"  ImageStatusLabel:  ${1:XvrName}",
-			"            X1=  -1",
-			"            Y1=  -1",
-			"            X2=  -1",
-			"            Y2=  -1",
-			"         Texts=  1",
-			"                 \"${2}\"  ",
-			"BackgroundColors=  1",
-			"                 \"${3}\"  \r"
-		],
-		"description": ""
-	},
-	"ImageXvr": {
-		"prefix": "imagexvr",
-		"body": [
-			"  ImageXvr:      ${1:XvrName}",
-			"BackgroundColor=  \"${2:white}\"",
-			"            X1=  -1",
-			"            Y1=  -1",
-			"            X2=  -1",
-			"            Y2=  -1\r"
-		],
-		"description": ""
-	},
-	"ImageXvrCollection": {
-		"prefix": "imagexvrcollection",
-		"body": [
-			"  ImageXvrCollection:  ${1:CollectionName}",
-			"            X1=  -1",
-			"            Y1=  -1",
-			"            X2=  -1",
-			"            Y2=  -1",
-			"       Heading=  \"\"",
-			"     StatusXvr=  \"\"",
-			"BackgroundColor=  \"\"",
-			"          Xvrs=  1",
-			"                 \"${2}\"  ",
-			"         Texts=  1",
-			"                 \"${3}\"  \r"
-		],
-		"description": ""
-	},
-	"MessageView": {
-		"prefix": "messageview",
-		"body": [
-			"  MessageView:   ${1:MsgBoxName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1\r"
-		],
-		"description": ""
-	},
-	"ModelMatrix": {
-		"prefix": "modelmatrix",
-		"body": [
-			"  ModelMatrix:   ${1:ModelMatrixName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1",
-			"        CvrIds=  1",
-			"                 \"${2}\"  ",
-			"     MvrDvrIds=  1",
-			"                 \"${3}\" \r"
-		],
-		"description": "For SEPTIC >= v2.75"
-	},
-	"ModelMatrix_v2.73": {
-		"prefix": "modelmatrix273",
-		"body": [
-			"  ModelMatrix:   ${1:ModelMatrixName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"        CvrIds=  1",
-			"                 \"${2}\"  ",
-			"     MvrDvrIds=  1",
-			"                 \"${3}\" \r"
-		],
-		"description": "For SEPTIC <= v2.73"
-	},
-	"MultiXvrPlot": {
-		"prefix": "multixvrplot",
-		"body": [
-			"  MultiXvrPlot:  ${1:MyMultiXvrPlot1}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1",
-			"         Title=  \"\"",
-			"       PlotMax=  100",
-			"       PlotMin=  0",
-			"          Xvrs=  1",
-			"                 \"${2}\"  ",
-			"        Colors=  1",
-			"                 \"${3}\"  \r"
-		],
-		"description": "description for MultiXvrPlot"
-	},
-	"PriorityTable": {
-		"prefix": "prioritytable",
-		"body": [
-			"  PriorityTable:  ${1:ApplicationName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1\r"
-		],
-		"description": ""
-	},
-	"Table": {
-		"prefix": "table",
-		"body": [
-			"  Table:         ${1:TableName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1",
-			"   NameColSize=  -1",
-			"   TextColSize=  -1",
-			"  ValueColSize=  -1",
-			" GroupsColSize=  -1\r"
-		],
-		"description": ""
-	},
-	"TableAppl": {
-		"prefix": "appl",
-		"body": "  Appl:          ${1:ApplicationName}\r",
-		"description": ""
-	},
-	"Heading": {
-		"prefix": "heading",
-		"body": [
-			"  Heading:       ${1:HeadingName}",
-			"          Text=  \"${2}\"",
-			"    SizeOffset=  0\r"
-		],
-		"description": ""
-	},
-	"Spacer": {
-		"prefix": "spacer",
-		"body": ["  Spacer:        ${1:SpacerName}", "          Size=  0\r"],
-		"description": ""
-	},
-	"CvrList": {
-		"prefix": "cvrlist",
-		"body": [
-			"  CvrList:       ${1:CvrListName}",
-			"          Text=  \"${2}\"",
-			"          Cvrs=  1",
-			"                 \"${3}\"  \r"
-		],
-		"description": ""
-	},
-	"MvrList": {
-		"prefix": "mvrlist",
-		"body": [
-			"  MvrList:       ${1:MvrListName}",
-			"          Text=  \"${2}\"",
-			"          Mvrs=  1",
-			"                 \"${3}\"  \r"
-		],
-		"description": ""
-	},
-	"DvrList": {
-		"prefix": "dvrlist",
-		"body": [
-			"  DvrList:       ${1:DvrListName}",
-			"          Text=  \"${2}\"",
-			"          Dvrs=  1",
-			"                 \"${3}\"  \r"
-		],
-		"description": ""
-	},
-	"EvrList": {
-		"prefix": "evrlist",
-		"body": [
-			"  EvrList:       ${1:EvrListName}",
-			"          Text=  \"${2}\"",
-			"          Evrs=  1",
-			"                 \"${3}\"  \r"
-		],
-		"description": ""
-	},
-	"TvrList": {
-		"prefix": "tvrlist",
-		"body": [
-			"  TvrList:       ${1:TvrListName}",
-			"          Text=  \"${2}\"",
-			"          Tvrs=  1",
-			"                 \"${3}\"  \r"
-		],
-		"description": ""
-	},
-	"ColumnList": {
-		"prefix": "columnlist",
-		"body": [
-			"  ColumnList:    ${1:ColumnListName}",
-			"       Heading=  \"${2}\"",
-			"       Tooltip=  \"\"",
-			"          Xvrs=  1",
-			"                 \"${3}\"  ",
-			"    StatusXvrs=  1",
-			"                 \"${4}\"  \r"
-		],
-		"description": ""
-	},
-	"ListMeas": {
-		"prefix": "listmeas",
-		"body": [
-			"  ListMeas:      ${1:ListMeasName}",
-			"        ColPos=  -1",
-			"       Heading=  \"${2}\"",
-			"     StatusXvr=  \"${3}\"\r"
-		],
-		"description": ""
-	},
-	"XvrMatrix": {
-		"prefix": "xvrmatrix",
-		"body": [
-			"  XvrMatrix:     ${1:XvrMatrixName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1",
-			"       Heading=  \"${2}\"",
-			"        ColIds=  1",
-			"                 \"${3}\"  ",
-			"       ColTips=  1",
-			"                 \"\"  ",
-			"        RowIds=  1",
-			"                 \"${4}\"  ",
-			"       RowTips=  1",
-			"                 \"\"  ",
-			"      RowUnits=  1",
-			"                 \"${5}\"  ",
-			"          Xvrs=  1",
-			"                 \"${6}\" \r"
-		],
-		"description": ""
-	},
-	"XvrPlot": {
-		"prefix": "xvrplot",
-		"body": [
-			"  XvrPlot:       ${1:XvrPlotName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1\r"
-		],
-		"description": ""
-	},
-	"XYPlot": {
-		"prefix": "xyplot",
-		"body": [
-			"  XYPlot:        ${1:XYPlotName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1",
-			"         Title=  \"${2}\"",
-			"        Legend=  OFF",
-			"     SpanScale=  OFF",
-			"        xTitle=  \"${3}\"",
-			"        yTitle=  \"${4}\"",
-			"          xMin=  -100",
-			"          xMax=  100",
-			"          yMin=  -100",
-			"          yMax=  100",
-			"         xSpan=  100",
-			"         ySpan=  100\r"
-		],
-		"description": ""
-	},
-	"Curve": {
-		"prefix": "curve",
-		"body": [
-			"  Curve:         ${1:CurveName}",
-			"         Color=  \"${2:black}\"",
-			"          Text=  \"${3}\"",
-			"         Width=  1",
-			"       xPoints=  2",
-			"           ${5:-10             10} ",
-			"       yPoints=  2",
-			"           ${6:-10             10} ",
-			"         Style=  ${4|Solid,Dash,Dot,DashDot|}\r"
-		],
-		"description": ""
-	},
-	"DynCurve": {
-		"prefix": "dyncurve",
-		"body": [
-			"  DynCurve:      ${1:DynCurveName}",
-			"         ObjId=  \"\"",
-			"         Color=  \"${2:black}\"",
-			"          Text=  \"${3}\"",
-			"         Width=  1",
-			"          Type=  0",
-			"         Style=  ${4|Solid,Dash,Dot,DashDot|}",
-			"         xXvrs=  1",
-			"                 \"${5}\"  ",
-			"         yXvrs=  1",
-			"                 \"${6}\" \r"
-		],
-		"description": ""
-	},
-	"DynPoint": {
-		"prefix": "dynpoint",
-		"body": [
-			"  DynPoint:      ${1:DynPointName}",
-			"         Color=  \"${2:black}\"",
-			"          Text=  \"${3}\"",
-			"         Width=  1",
-			"      HistSize=  -1",
-			"          xXvr=  \"${4}\"",
-			"          yXvr=  \"${5}\"\r"
-		],
-		"description": ""
-	},
-	"ApplPlot": {
-		"prefix": "applplot",
-		"body": [
-			"  ApplPlot:      ${1:ApplicationName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1\r"
-		],
-		"description": ""
-	},
-	"SystemPlot": {
-		"prefix": "systemplot",
-		"body": [
-			"  SystemPlot:    ${1:SystemName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1\r"
-		],
-		"description": "For SEPTIC >= v2.75"
-	},
-	"SystemPlot_v2.73": {
-		"prefix": "systemplot273",
-		"body": [
-			"  SystemPlot:    ${1:SystemName}",
-			"           Row=  -1",
-			"           Col=  -1\r"
-		],
-		"description": "For SEPTIC <= v2.73"
-	},
-	"OPCProcPlot": {
-		"prefix": "opcprocplot",
-		"body": [
-			"  OPCProcPlot:   ${1:OpcProcPlotName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1\r"
-		],
-		"description": ""
-	},
-	"ModelPlot": {
-		"prefix": "modelplot",
-		"body": [
-			"ModelPlot:     ${1:CvrName_MvrDvrName}",
-			"         Row=  -1",
-			"         Col=  -1",
-			"     RowSize=  1",
-			"     ColSize=  1\r"
-		],
-		"description": "For SEPTIC >= v2.75"
-	},
-	"ModelPlot_v2.73": {
-		"prefix": "modelplot273",
-		"body": [
-			"ModelPlot:     ${1:CvrName_MvrDvrName}",
-			"         Row=  -1",
-			"         Col=  -1\r"
-		],
-		"description": "For SEPTIC <= v2.73"
-	},
-	"ImageTextXvr": {
-		"prefix": "imagetextxvr",
-		"body": [
-			"  ImageTextXvr:  ${1:XvrName}",
-			"     TextColor=  \"${2:black}\"",
-			"BackgroundColor=  \"${3:white}\"",
-			"            X1=  -1",
-			"            Y1=  -1",
-			"            X2=  -1",
-			"            Y2=  -1\r"
-		],
-		"description": ""
-	},
-	"ImageArea": {
-		"prefix": "imagearea",
-		"body": [
-			"  ImageArea:     ${1:ImageAreaName}",
-			"   TargetGroup=  1",
-			"     LineWidth=  1",
-			"         Color=  \"${2:black}\"",
-			"       xPoints=  4",
-			"             ${3:0             10             10              0} ",
-			"      yPoints=  4",
-			"            ${4:20             20             40             40} \r"
-		],
-		"description": ""
-	},
-	"Chart": {
-		"prefix": "chart",
-		"body": [
-			"  Chart:         ${1:ChartName}",
-			"           Row=  -1",
-			"           Col=  -1",
-			"       RowSize=  1",
-			"       ColSize=  1",
-			"         Title=  \"${2}\"",
-			"        xTitle=  \"${3}\"",
-			"        yTitle=  \"${4}\"",
-			"     Autoscale=  OFF",
-			"          yMin=  -100",
-			"          yMax=  100",
-			"    LegendPosX=  -1",
-			"    LegendPosY=  100",
-			"         Types=  1",
-			"                 \"${5}\"  \r"
-		],
-		"description": ""
-	},
-	"ChartSerie": {
-		"prefix": "chartserie",
-		"body": [
-			"  ChartSerie:    ${1:ChartSerieName}",
-			"         Color=  \"${2:black}\"",
-			"          Text=  \"\"",
-			"         Width=  1",
-			"         Style=  ${3|Solid,Dash,Dot,DashDot|}",
-			"        Marker=  ${4|Cross,XCross,Diamond,Triangle,UpTriangle,Circle,Rect,NoMarker|}",
-			"        Values=  1",
-			"                 \"${5}\"  \r"
-		],
-		"description": ""
-	},
-	"FreeText": {
-		"prefix": "freetext",
-		"body": [
-			"  FreeText:      ${1:FreeTextName}",
-			"       Heading=  \"${2}\"",
-			"        TextNo=  1",
-			"        ColPos=  -1",
-			"    SizeOffset=  0\r"
-		],
-		"description": ""
-	},
-	"FreeMeas": {
-		"prefix": "freemeas",
-		"body": [
-			"  FreeMeas:      ${1:XvrName}",
-			"       Heading=  \"${2}\"",
-			"     StatusXvr=  \"${3}\"",
-			"        ColPos=  -1",
-			"    SizeOffset=  0\r"
-		],
-		"description": ""
-	},
-	"FMUProc": {
-		"prefix": "fmuproc",
-		"body": [
-			"  FMUProc:       ${1:FMUProcName}",
-			"         Text1=  \"${3}\"",
-			"         Text2=  \"\"",
-			"       FMUname=  \"${2}.fmu\"\r"
-		],
-		"description": ""
-	},
-	"FMUModl": {
-		"prefix": "fmumodl",
-		"body": [
-			"  FMUModl:       ${1:FMUModlName}",
-			"         Text1=  \"${3}\"",
-			"         Text2=  \"\"",
-			"       FMUname=  \"${2}.fmu\"\r"
-		],
-		"description": ""
-	},
-	"SubrXvr": {
-		"prefix": "subrxvr",
-		"body": [
-			"  SubrXvr:       ${1:XvrName}",
-			"         Text1=  \"${3}\"",
-			"         Text2=  \"\"",
-			"         DtaIx=  \"${2}\"",
-			"          Init=  0\r"
-		],
-		"description": ""
-	},
-	"FdtaProc": {
-		"prefix": "fdtaproc",
-		"body": [
-			"  FdtaProc:      ${1:Filename}.dta",
-			"         Text1=  \"\"",
-			"         Text2=  \"\"",
-			"     Separator=  \".\"",
-			"          Mode=  ${2|Playback,PlayBack_nomode,BaseCase|",
-			"         Nstep=  1\r"
-		],
-		"description": "description for FdtaProc"
-	}
+    "System": {
+        "prefix": "system",
+        "body": [
+            "  System:        ${1:ApplicationName}",
+            "         Text1=  \"${3}\"",
+            "         Text2=  \"\"",
+            "         Nsecs=  10",
+            "       PlotMax=  10",
+            "         Nhist=  1440",
+            "         Npred=  80",
+            "         Nmodl=  80",
+            "     ChngLogOn=  ON",
+            "          Grps=  1",
+            "                 \"${2:Free}\"  ",
+            "       GrpLock=  0",
+            "      MaxLogon=  ROOT",
+            "       RootPwd=  \"\"",
+            "       MngrPwd=  \"\"",
+            "       OperPwd=  \"\"",
+            "       UserPwd=  \"\"",
+            "          Terr=  0",
+            "       DebugNR=  1000",
+            "       DebugOn=  00000000",
+            "      FontSize=  -1",
+            "  InitialGroup=  -1",
+            "ShowText1WithName=  OFF",
+            "       MinXPos=  0",
+            "       MinYPos=  0",
+            "       MaxXPos=  0",
+            "       MaxYPos=  0",
+            "    InitScreen=  -1",
+            "      InitXPos=  -1",
+            "      InitYPos=  -1",
+            "     InitWidth=  -1",
+            "    InitHeight=  -1",
+            "MinimizeByHide=  OFF",
+            "HideCloseButton=  OFF",
+            "OPCSampleTimeOffset=  0\r"
+        ],
+        "description": "For SEPTIC >= v2.82"
+    },
+    "System_v2.81": {
+        "prefix": "system281",
+        "body": [
+            "  System:        ${1:ApplicationName}",
+            "         Text1=  \"${3}\"",
+            "         Text2=  \"\"",
+            "         Nsecs=  10",
+            "       PlotMax=  10",
+            "         Nhist=  1440",
+            "         Npred=  80",
+            "         Nmodl=  80",
+            "         Nxupd=  1",
+            "        ClipOn=  OFF",
+            "     ChngLogOn=  ON",
+            "         WdwDx=  600",
+            "         WdwDy=  600",
+            "         Xline=  0",
+            "         Xback=  0.5",
+            "          Grps=  1",
+            "                 \"${2:Free}\"  ",
+            "       GrpLock=  0",
+            "        Xgroup=  1",
+            "      MaxLogon=  ROOT",
+            "       RootPwd=  \"\"",
+            "       MngrPwd=  \"\"",
+            "       OperPwd=  \"\"",
+            "       UserPwd=  \"\"",
+            "          Terr=  0",
+            "       DebugNR=  1000",
+            "       DebugOn=  00000000",
+            "         Zname=  225",
+            "         Zhilo=  275",
+            "        Zstate=  225",
+            "         Zopen=  225",
+            "         Zfont=  275",
+            "         Zline=  275",
+            "      FontSize=  -1",
+            "  InitialGroup=  -1",
+            "ShowText1WithName=  OFF",
+            "       MinXPos=  0",
+            "       MinYPos=  0",
+            "       MaxXPos=  0",
+            "       MaxYPos=  0",
+            "    InitScreen=  -1",
+            "      InitXPos=  -1",
+            "      InitYPos=  -1",
+            "     InitWidth=  -1",
+            "    InitHeight=  -1",
+            "MinimizeByHide=  OFF",
+            "HideCloseButton=  OFF",
+            "OPCSampleTimeOffset=  0\r"
+        ],
+        "description": "For SEPTIC <= v2.81"
+    },
+    "SopcProc": {
+        "prefix": "sopcproc",
+        "body": [
+            "  SopcProc:      ${1:ApplicationName}",
+            "         Text1=  \"${6}\"",
+            "         Text2=  \"\"",
+            "          Site=  ${2|AIM_AIMGUI,AIM,OPCSIMUL,SIEMENS_APC,SITENONE,HARMONYOPC|}",
+            "      ServName=  \"${3:Statoil.OPC.Server}\"",
+            "      ServNode=  \"SERVNODE\"",
+            "   RealTimeFac=  1",
+            "       ProcTag=  \"\"",
+            "AllowActiveTag=  \"${4:AllowActiveTag}\"",
+            "     StatusTag=  \"NotUsed\"",
+            "    DesModeTag=  \"DUMMY_TAG\"",
+            "       PulsTag=  \"${5:PulsTag}\"",
+            "LoopcheckWriteTag=  \"DUMMY_TAG\"",
+            "LoopcheckReadTag=  \"DUMMY_TAG\"",
+            " ServFactorTag=  \"DUMMY_TAG\"",
+            "    CPUTimeTag=  \"DUMMY_TAG\"",
+            "         IdTag=  \"\"",
+            "   ScheduleTag=  \"DUMMY_TAG\"",
+            "        RunSec=  -1",
+            "   RequestRate=  -1",
+            " BadCountLimit=  0",
+            "SampleAgeLimit=  -1",
+            "BlockWritingIfBad=  OFF",
+            "   WriteGroups=  1",
+            "WriteGroupPause=  1000",
+            "  UseDCOMAUTHN=  ON\r"
+        ],
+        "description": "For SEPTIC >= v2.82"
+    },
+    "SopcProc_v2.81": {
+        "prefix": "sopcproc281",
+        "body": [
+            "  SopcProc:      ${1:ApplicationName}",
+            "         Text1=  \"${6}\"",
+            "         Text2=  \"\"",
+            "          Site=  ${2|AIM_AIMGUI,AIM,OPCSIMUL,SIEMENS_APC,SITENONE,HARMONYOPC|}",
+            "      ServName=  \"${3:Statoil.OPC.Server}\"",
+            "      ServNode=  \"SERVNODE\"",
+            "   RealTimeFac=  1",
+            "       ProcTag=  \"MyApplication\"",
+            "AllowActiveTag=  \"${4:AllowActiveTag}\"",
+            "     StatusTag=  \"NotUsed\"",
+            "    DesModeTag=  \"DUMMY_TAG\"",
+            "       PulsTag=  \"${5:PulsTag}\"",
+            "LoopcheckWriteTag=  \"DUMMY_TAG\"",
+            "LoopcheckReadTag=  \"DUMMY_TAG\"",
+            " ServFactorTag=  \"DUMMY_TAG\"",
+            "    CPUTimeTag=  \"DUMMY_TAG\"",
+            "         IdTag=  \"\"",
+            "   ScheduleTag=  \"DUMMY_TAG\"",
+            "        RunSec=  -1",
+            "   RequestRate=  -1",
+            " BadCountLimit=  0",
+            "SampleAgeLimit=  -1",
+            "BlockWritingIfBad=  OFF",
+            "   WriteGroups=  1",
+            "WriteGroupPause=  1000\r"
+        ],
+        "description": "For SEPTIC <= v2.81"
+    },
+    "SopcMvr": {
+        "prefix": "sopcmvr",
+        "body": [
+            "  SopcMvr:       ${1:MvrName}",
+            "         Text1=  \"${3}\"",
+            "         Text2=  \"\"",
+            "        MvrTag=  \"\"",
+            "       MeasTag=  \"${2}.YXSP\"",
+            "         PVTag=  \"${2}.YX\"",
+            "         IdTag=  \"\"",
+            "   NotValidTag=  \"${2}.YXF\"",
+            "     SpCalcTag=  \"${2}.XOUT\"",
+            "         HiTag=  \"${2}.XWRH|NotUsed\"",
+            "         LoTag=  \"${2}.XWRL|NotUsed\"",
+            "         IvTag=  \"${2}.YR\"",
+            "      MvLowTag=  \"DUMMY_TAG\"",
+            "     MvHighTag=  \"DUMMY_TAG\"",
+            "       MvIvTag=  \"DUMMY_TAG\"",
+            "      MaxUpTag=  \"${2}.YWCU\"",
+            "    MaxDownTag=  \"${2}.YWCD\"",
+            "       AutoTag=  \"${2}.YBA\"",
+            "        WhiTag=  \"${2}.YXWH|NotUsed\"",
+            "        WloTag=  \"${2}.YXWL|NotUsed\"",
+            "       CompTag=  \"${2}.YADA\"",
+            "       CaraTag=  \"DUMMY_TAG\"",
+            "       TrakTag=  \"DUMMY_TAG\"",
+            "     ToCompTag=  \"DUMMY_TAG\"",
+            "    ToLocalTag=  \"DUMMY_TAG\"",
+            "   MvActiveTag=  \"${2}.XAPC\"",
+            "   MvSwitchTag=  \"DUMMY_TAG\"",
+            " CompStatusTag=  \"DUMMY_TAG\"",
+            "         Scale=  1",
+            "        Offset=  0\r"
+        ],
+        "description": "FB variant for SEPTIC >= 2.79. Use DUMMY_TAG to disable connections where NotUsed is not indicated."
+    },
+    "SopcMvr_v2.75": {
+        "prefix": "sopcmvr275",
+        "body": [
+            "  SopcMvr:       ${1:MvrName}",
+            "         Text1=  \"${3}\"",
+            "         Text2=  \"\"",
+            "        MvrTag=  \"\"",
+            "       MeasTag=  \"${2}.YXSP\"",
+            "         PVTag=  \"${2}.YX\"",
+            "         IdTag=  \"\"",
+            "   NotValidTag=  \"${2}.YXF\"",
+            "     SpCalcTag=  \"${2}.XOUT\"",
+            "         HiTag=  \"${2}.XWRH|NotUsed\"",
+            "         LoTag=  \"${2}.XWRL|NotUsed\"",
+            "         IvTag=  \"${2}.YR\"",
+            "      MvLowTag=  \"DUMMY_TAG\"",
+            "     MvHighTag=  \"DUMMY_TAG\"",
+            "       MvIvTag=  \"DUMMY_TAG\"",
+            "      MaxUpTag=  \"${2}.YWCU\"",
+            "    MaxDownTag=  \"${2}.YWCD\"",
+            "       AutoTag=  \"${2}.YBA\"",
+            "        WhiTag=  \"${2}.YXWH|NotUsed\"",
+            "        WloTag=  \"${2}.YXWL|Notused\"",
+            "       CompTag=  \"${2}.YADA\"",
+            "       CaraTag=  \"DUMMY_TAG\"",
+            "       TrakTag=  \"DUMMY_TAG\"",
+            "     ToCompTag=  \"DUMMY_TAG\"",
+            "    ToLocalTag=  \"DUMMY_TAG\"",
+            "   MvActiveTag=  \"${2}.XAPC\"",
+            "   MvSwitchTag=  \"DUMMY_TAG\"",
+            "         Scale=  1",
+            "        Offset=  0\r"
+        ],
+        "description": "FB variant for SEPTIC <= v2.75. Use DUMMY_TAG to disable connections where NotUsed is not indicated."
+    },
+    "SopcCvr": {
+        "prefix": "sopccvr",
+        "body": [
+            "  SopcCvr:       ${1:CvrName}",
+            "         Text1=  \"${3}\"",
+            "         Text2=  \"\"",
+            "        CvrTag=  \"\"",
+            "       MeasTag=  \"${2}.YX\"",
+            "         IdTag=  \"\"",
+            "         SpTag=  \"${2}.YR\"",
+            "      CvLowTag=  \"DUMMY_TAG\"",
+            "     CvHighTag=  \"DUMMY_TAG\"",
+            " CvSetpointTag=  \"DUMMY_TAG\"",
+            "   NotValidTag=  \"${2}.YXF\"",
+            "   CvSwitchTag=  \"${2}.YADA\"",
+            "   CvActiveTag=  \"${2}.XAPC\"",
+            "         LoTag=  \"${2}.YWRL\"",
+            "         HiTag=  \"${2}.YWRH\"",
+            "         Scale=  1",
+            "        Offset=  0\r"
+        ],
+        "description": "FB variant"
+    },
+    "SopcDvr": {
+        "prefix": "sopcdvr",
+        "body": [
+            "  SopcDvr:       ${1:DvrName}",
+            "         Text1=  \"${3}\"",
+            "         Text2=  \"\"",
+            "        DvrTag=  \"\"",
+            "       MeasTag=  \"${2}.YX\"",
+            "         IdTag=  \"\"",
+            "   NotValidTag=  \"${2}.YXF\"",
+            "   DvSwitchTag=  \"DUMMY_TAG\"",
+            "    DvTrackTag=  \"DUMMY_TAG\"",
+            "         Scale=  1",
+            "        Offset=  0\r"
+        ],
+        "description": "FB variant. Use DUMMY_TAG to disable DvSwitchTag/DvTrackTag."
+    },
+    "SopcEvr": {
+        "prefix": "sopcevr",
+        "body": [
+            "  SopcEvr:       ${1:EvrName}",
+            "         Text1=  \"${3}\"",
+            "         Text2=  \"\"",
+            "        EvrTag=  \"\"",
+            "       MeasTag=  \"${2}.YX\"",
+            "         IdTag=  \"\"",
+            "   NotValidTag=  \"\"\r"
+        ],
+        "description": "FB variant"
+    },
+    "SopcTvr": {
+        "prefix": "sopctvr",
+        "body": [
+            "  SopcTvr:       ${1:TvrName}",
+            "         Text1=  \"${3}\"",
+            "         Text2=  \"\"",
+            "        TvrTag=  \"\"",
+            "       MeasTag=  \"${2}.YX\"",
+            "   NotValidTag=  \"${2}.YXF\"",
+            "      Text1Tag=  \"\"",
+            "         Scale=  1",
+            "        Offset=  0\r"
+        ],
+        "description": "FB variant"
+    },
+    "SmpcAppl": {
+        "prefix": "smpcappl",
+        "body": [
+            "  SmpcAppl:      ${1:ApplicationName}",
+            "         Text1=  \"${2}\"",
+            "         Text2=  \"\"",
+            "         Npred=  80",
+            "         Nstep=  1",
+            "       PlotMax=  25",
+            "         Nhorz=  80",
+            "        Nstart=  0",
+            "      MasterOn=  ON",
+            "       DesMode=  ADVISORY",
+            "       FailMax=  0",
+            "       PriceOn=  ON",
+            "    PriceScale=  1",
+            "       IterOpt=  OFF",
+            "   IterNewSens=  OFF",
+            "     IterQpMax=  0",
+            "   IterLineMax=  0",
+            "    DoStdSolve=  ON",
+            "  SteadySolver=  QP",
+            "      MajItLim=  200",
+            "      MajPrint=  0",
+            "   ObjConPrint=  OFF",
+            "   VerifyGrads=  OFF",
+            "      FuncPrec=  9.9999999e-09",
+            "         FeTol=  9.9999997e-06",
+            "      OptimTol=  1e-06",
+            "      FdifIntv=  0.001",
+            "    MaxSeconds=  10",
+            "        LmPrio=  100",
+            "    MaxPrioSQP=  100",
+            "    UnConstrnd=  OFF",
+            "      OpenFlag=  CONSTMVR",
+            "       UpdFilt=  0",
+            "       RelPert=  0.050000001",
+            "       FeasTol=  1e-10",
+            "     EachParam=  OFF",
+            "   LinErrorLim=  1000",
+            "     ColdStart=  ON",
+            "    SimOptimal=  OFF",
+            "     PrintSens=  0",
+            "     SensLimSS=  1e-06",
+            "    SensLimDyn=  1e-06\r"
+        ],
+        "description": "For SEPTIC >= v2.82 "
+    },
+    "SmpcAppl_v2.81": {
+        "prefix": "smpcappl281",
+        "body": [
+            "  SmpcAppl:      ${1:ApplicationName}",
+            "         Text1=  \"${2}\"",
+            "         Text2=  \"\"",
+            "         Npred=  80",
+            "         Nstep=  1",
+            "       PlotMax=  25",
+            "         Nhorz=  80",
+            "        Nstart=  0",
+            "      MasterOn=  ON",
+            "       DesMode=  ADVISORY",
+            "       FailMax=  0",
+            "       PriceOn=  ON",
+            "    PriceScale=  1",
+            "       IterOpt=  OFF",
+            "   IterNewSens=  OFF",
+            "     IterQpMax=  0",
+            "   IterLineMax=  0",
+            "    DoStdSolve=  ON",
+            "  SteadySolver=  QP",
+            "      MajItLim=  200",
+            "      MajPrint=  0",
+            "   ObjConPrint=  OFF",
+            "   VerifyGrads=  OFF",
+            "      FuncPrec=  9.9999999e-009",
+            "         FeTol=  9.9999997e-006",
+            "      OptimTol=  1e-006",
+            "      FdifIntv=  0.001",
+            "    MaxSeconds=  10",
+            "        LmPrio=  100",
+            "    MaxPrioSQP=  100",
+            "    UnConstrnd=  OFF",
+            "      OpenFlag=  CONSTMVR",
+            "       UpdFilt=  0",
+            "       RelPert=  0.050000001",
+            "       FeasTol=  1e-010",
+            "     EachParam=  OFF",
+            "   LinErrorLim=  1000",
+            "     ColdStart=  OFF",
+            "    SimOptimal=  OFF",
+            "     PrintSens=  0",
+            "     SensLimSS=  1e-006",
+            "    SensLimDyn=  1e-006\r"
+        ],
+        "description": "For SEPTIC <= v2.81"
+    },
+    "Mvr": {
+        "prefix": "mvr",
+        "body": [
+            "  Mvr:           ${1:MvrName}",
+            "         Text1=  \"${4}\"",
+            "         Text2=  \"\"",
+            "          Mode=  STOPPED",
+            "          Auto=  OFF",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "          Nfix=  ${2:1}",
+            "        MaxChg=  -1",
+            "          Unit=  \"${3}\"",
+            "          Meas=  0",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "        HighOn=  1e+10",
+            "         LowOn=  -1e+10",
+            "  ProcessValue=  0",
+            "         IvOff=  0",
+            "         MaxUp=  10",
+            "         MaxDn=  -10",
+            "     MovePnlty=  1",
+            "         IvRoc=  -1",
+            "        IvPrio=  99",
+            "          Fulf=  1",
+            "   FulfReScale=  0",
+            "         Price=  0",
+            "      Blocking=  6    2     4     7    11    16    22 ",
+            "MeasValidation=  OFF",
+            " MeasHighLimit=  1e+10",
+            "  MeasLowLimit=  -1e+10",
+            "        LockHL=  OFF",
+            "        LockIV=  OFF",
+            "        LockLL=  OFF",
+            "UseFactorWeight=  0\r"
+        ],
+        "description": "For SEPTIC >= v2.82"
+    },
+    "Mvr_v2.81": {
+        "prefix": "mvr281",
+        "body": [
+            "  Mvr:           ${1:MvrName}",
+            "         Text1=  \"${4}\"",
+            "         Text2=  \"\"",
+            "          Mode=  STOPPED",
+            "          Auto=  OFF",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "       PlotGrp=  0000000000000000000000000000000",
+            "          Nfix=  ${2:1}",
+            "        MaxChg=  -1",
+            "          Unit=  \"${3}\"",
+            "          Meas=  0",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "        HighOn=  1e+010",
+            "         LowOn=  -1e+010",
+            "  ProcessValue=  0",
+            "         IvOff=  0",
+            "         MaxUp=  10",
+            "         MaxDn=  -10",
+            "     MovePnlty=  1",
+            "         IvRoc=  -1",
+            "        IvPrio=  99",
+            "          Fulf=  1",
+            "   FulfReScale=  0",
+            "         Price=  0",
+            "      Blocking=  6    2     4     7    11    16    22 ",
+            "MeasValidation=  OFF",
+            " MeasHighLimit=  1e+010",
+            "  MeasLowLimit=  -1e+010",
+            "        LockHL=  OFF",
+            "        LockIV=  OFF",
+            "        LockLL=  OFF",
+            "UseFactorWeight=  0\r"
+        ],
+        "description": "For SEPTIC <=2.81"
+    },
+    "Cvr": {
+        "prefix": "cvr",
+        "body": [
+            "  Cvr:           ${1:CvrName}",
+            "         Text1=  \"${4}\"",
+            "         Text2=  \"\"",
+            "          Mode=  STOPPED",
+            "          Auto=  OFF",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "          Nfix=  ${2:1}",
+            "        MaxChg=  -1",
+            "          Unit=  \"${3}\"",
+            "          Meas=  0",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "     SetPntOff=  0",
+            "       HighOff=  100",
+            "        LowOff=  0",
+            "    SetPntPrio=  1",
+            "      HighPrio=  1",
+            "       LowPrio=  1",
+            "   HighBackOff=  0",
+            "    LowBackOff=  0",
+            "          Fulf=  1",
+            "     HighPnlty=  1",
+            "      LowPnlty=  1",
+            "     HighLimit=  1000",
+            "      LowLimit=  1000",
+            "     RelxParam=  3    1    30    80 ",
+            "   FulfReScale=  0.001",
+            "  FulfUniScale=  1",
+            "SetPntChangeMode=  FILTER",
+            "      SetpTref=  0",
+            "   SetPntRocUp=  1",
+            "   SetPntRocDn=  -1",
+            "     BiasTfilt=  0",
+            "     BiasTpred=  0",
+            "     ConsTfilt=  -1",
+            "         Integ=  0",
+            " TransformType=  NOTRANS",
+            "     BadCntLim=  0",
+            "       DesHorz=  0",
+            "         Neval=  5",
+            "        EvalDT=  0",
+            "   KeepTargets=  OFF",
+            "MeasValidation=  OFF",
+            " MeasHighLimit=  1e+10",
+            "  MeasLowLimit=  -1e+10",
+            "        LockHL=  OFF",
+            "        LockSP=  OFF",
+            "        LockLL=  OFF",
+            "UseFactorWeight=  0\r"
+        ],
+        "description": "For SEPTIC >= v2.82"
+    },
+    "Cvr_v2.81": {
+        "prefix": "cvr281",
+        "body": [
+            "  Cvr:           ${1:CvrName}",
+            "         Text1=  \"${4}\"",
+            "         Text2=  \"\"",
+            "          Mode=  STOPPED",
+            "          Auto=  OFF",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "       PlotGrp=  0000000000000000000000000000000",
+            "          Nfix=  ${2:1}",
+            "        MaxChg=  -1",
+            "          Unit=  \"${3}\"",
+            "          Meas=  0",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "     SetPntOff=  0",
+            "       HighOff=  100",
+            "        LowOff=  0",
+            "    SetPntPrio=  1",
+            "      HighPrio=  1",
+            "       LowPrio=  1",
+            "   HighBackOff=  0",
+            "    LowBackOff=  0",
+            "          Fulf=  1",
+            "     HighPnlty=  -1",
+            "      LowPnlty=  -1",
+            "     HighLimit=  -1",
+            "      LowLimit=  -1",
+            "     RelxParam=  3    1    30    80 ",
+            "   FulfReScale=  0.001",
+            "  FulfUniScale=  1",
+            "SetPntChangeMode=  FILTER",
+            "      SetpTref=  0",
+            "   SetPntRocUp=  1",
+            "   SetPntRocDn=  -1",
+            "     BiasTfilt=  0",
+            "     BiasTpred=  0",
+            "     ConsTfilt=  -1",
+            "         Integ=  0",
+            " TransformType=  NOTRANS",
+            "     BadCntLim=  0",
+            "       DesHorz=  0",
+            "         Neval=  5",
+            "        EvalDT=  0",
+            "   KeepTargets=  OFF",
+            "MeasValidation=  OFF",
+            " MeasHighLimit=  1e+010",
+            "  MeasLowLimit=  -1e+010",
+            "        LockHL=  OFF",
+            "        LockSP=  OFF",
+            "        LockLL=  OFF",
+            "UseFactorWeight=  0\r"
+        ],
+        "description": "For SEPTIC v2.80-2.81"
+    },
+    "Cvr_v2.79": {
+        "prefix": "cvr279",
+        "body": [
+            "  Cvr:           ${1:CvrName}",
+            "         Text1=  \"${4}\"",
+            "         Text2=  \"\"",
+            "          Mode=  STOPPED",
+            "          Auto=  OFF",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "       PlotGrp=  0000000000000000000000000000000",
+            "          Nfix=  ${2:1}",
+            "        MaxChg=  -1",
+            "          Unit=  \"${3}\"",
+            "          Meas=  0",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "     SetPntOff=  0",
+            "       HighOff=  100",
+            "        LowOff=  0",
+            "    SetPntPrio=  1",
+            "      HighPrio=  1",
+            "       LowPrio=  1",
+            "   HighBackOff=  0",
+            "    LowBackOff=  0",
+            "          Fulf=  1",
+            "     HighPnlty=  -1",
+            "      LowPnlty=  -1",
+            "     HighLimit=  -1",
+            "      LowLimit=  -1",
+            "     RelxParam=  3    1    30    80 ",
+            "   FulfReScale=  0.001",
+            "  FulfUniScale=  1",
+            "SetPntChangeMode=  FILTER",
+            "      SetpTref=  0",
+            "   SetPntRocUp=  1",
+            "   SetPntRocDn=  1",
+            "     BiasTfilt=  0",
+            "     BiasTpred=  0",
+            "     ConsTfilt=  -1",
+            "         Integ=  0",
+            " TransformType=  NOTRANS",
+            "     BadCntLim=  0",
+            "       DesHorz=  0",
+            "         Neval=  5",
+            "        EvalDT=  0",
+            "   KeepTargets=  OFF",
+            "MeasValidation=  OFF",
+            " MeasHighLimit=  1e+010",
+            "  MeasLowLimit=  -1e+010",
+            "        LockHL=  OFF",
+            "        LockSP=  OFF",
+            "        LockLL=  OFF",
+            "UseFactorWeight=  0\r"
+        ],
+        "description": "For SEPTIC v2.79"
+    },
+    "Cvr_v2.75": {
+        "prefix": "cvr275",
+        "body": [
+            "  Cvr:           ${1:CvrName}",
+            "         Text1=  \"${4}\"",
+            "         Text2=  \"\"",
+            "          Mode=  STOPPED",
+            "          Auto=  OFF",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "       PlotGrp=  0000000000000000000000000000000",
+            "          Nfix=  ${2:1}",
+            "        MaxChg=  -1",
+            "          Unit=  \"${3}\"",
+            "          Meas=  0",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "     SetPntOff=  0",
+            "       HighOff=  100",
+            "        LowOff=  0",
+            "    SetPntPrio=  1",
+            "      HighPrio=  1",
+            "       LowPrio=  1",
+            "   HighBackOff=  0",
+            "    LowBackOff=  0",
+            "          Fulf=  1",
+            "     HighPnlty=  1",
+            "      LowPnlty=  1",
+            "     HighLimit=  1000",
+            "      LowLimit=  1000",
+            "     RelxParam=  3    1    30    80 ",
+            "   FulfReScale=  0.001",
+            "      SetpTref=  0",
+            "     BiasTfilt=  0",
+            "     BiasTpred=  0",
+            "     ConsTfilt=  -1",
+            "         Integ=  0",
+            " TransformType=  NOTRANS",
+            "     BadCntLim=  0",
+            "       DesHorz=  0",
+            "         Neval=  5",
+            "        EvalDT=  0",
+            "   KeepTargets=  OFF",
+            "MeasValidation=  OFF",
+            " MeasHighLimit=  1e+010",
+            "  MeasLowLimit=  -1e+010",
+            "        LockHL=  OFF",
+            "        LockSP=  OFF",
+            "        LockLL=  OFF",
+            "UseFactorWeight=  0\r"
+        ],
+        "description": "For SEPTIC <= v2.75"
+    },
+    "Dvr": {
+        "prefix": "dvr",
+        "body": [
+            "  Dvr:           ${1:DvrName}",
+            "         Text1=  \"${4}\"",
+            "         Text2=  \"\"",
+            "          Mode=  STOPPED",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "          Nfix=  ${2:1}",
+            "          Unit=  \"${3}\"",
+            "          Meas=  0",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "MeasValidation=  OFF",
+            " MeasHighLimit=  1e+10",
+            "  MeasLowLimit=  -1e+10\r"
+        ],
+        "description": "For SEPTIC >= v2.82"
+    },
+    "Dvr_v2.81": {
+        "prefix": "dvr281",
+        "body": [
+            "  Dvr:           ${1:DvrName}",
+            "         Text1=  \"${4}\"",
+            "         Text2=  \"\"",
+            "          Mode=  STOPPED",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "       PlotGrp=  0000000000000000000000000000000",
+            "          Nfix=  ${2:1}",
+            "          Unit=  \"${3}\"",
+            "          Meas=  0",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "MeasValidation=  OFF",
+            " MeasHighLimit=  1e+010",
+            "  MeasLowLimit=  -1e+010\r"
+        ],
+        "description": "For SEPTIC <= v2.81"
+    },
+    "Tvr": {
+        "prefix": "tvr",
+        "body": [
+            "  Tvr:           ${1:TvrName}",
+            "         Text1=  \"${4}\"",
+            "         Text2=  \"\"",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "          Nfix=  ${2:1}",
+            "          Unit=  \"${3}\"",
+            "          Meas=  0",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "MeasValidation=  OFF",
+            " MeasHighLimit=  1e+10",
+            "  MeasLowLimit=  -1e+10",
+            "         Color=  BLACK\r"
+        ],
+        "description": ""
+    },
+    "Tvr_v2.81": {
+        "prefix": "tvr281",
+        "body": [
+            "  Tvr:           ${1:TvrName}",
+            "         Text1=  \"${4}\"",
+            "         Text2=  \"\"",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "       PlotGrp=  0000000000000000000000000000000",
+            "          Nfix=  ${2:1}",
+            "          Unit=  \"${3}\"",
+            "          Meas=  0",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "MeasValidation=  OFF",
+            " MeasHighLimit=  1e+010",
+            "  MeasLowLimit=  -1e+010",
+            "         Color=  BLACK\r"
+        ],
+        "description": "For SEPTIC <= v2.81"
+    },
+    "ExprModl": {
+        "prefix": "exprmodl",
+        "body": "  ExprModl:      ${1:ExprModlName}",
+        "description": ""
+    },
+    "DmmyAppl": {
+        "prefix": "dmmyappl",
+        "body": [
+            "  DmmyAppl:      ${1:DmmyApplname}",
+            "         Text1=  \"${2}\"",
+            "         Text2=  \"\"",
+            "         Nstep=  1",
+            "       PlotMax=  25",
+            "      MasterOn=  ON",
+            "       DesMode=  ACTIVE\r"
+        ],
+        "description": ""
+    },
+    "Evr": {
+        "prefix": "evr",
+        "body": [
+            "  Evr:           ${1:EvrName}",
+            "         Text1=  \"${6}\"",
+            "         Text2=  \"\"",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "          Nfix=  ${2:1}",
+            "          Unit=  \"${3}\"",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "       MeasBad=  0",
+            "     UserInput=  ${4|OFF,BOOL,ENUM,INT,DOUBLE,ON|}",
+            "    UserAccess=  WRRR",
+            "      MinInput=  0",
+            "      MaxInput=  ${5:0}",
+            "ValidationLimit=  -1",
+            "         Color=  BLACK\r"
+        ],
+        "description": "For SEPTIC >= v2.82"
+    },
+    "Evr_v2.81": {
+        "prefix": "evr281",
+        "body": [
+            "  Evr:           ${1:EvrName}",
+            "         Text1=  \"${6}\"",
+            "         Text2=  \"\"",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "       PlotGrp=  0000000000000000000000000000000",
+            "          Nfix=  ${2:1}",
+            "          Unit=  \"${3}\"",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "       MeasBad=  0",
+            "     UserInput=  ${4|OFF,BOOL,ENUM,INT,DOUBLE,ON|}",
+            "    UserAccess=  WRRR",
+            "      MinInput=  0",
+            "      MaxInput=  ${5:0}",
+            "ValidationLimit=  -1",
+            "         Color=  BLACK\r"
+        ],
+        "description": "For SEPTIC v2.80-2.81"
+    },
+    "Evr_v2.79": {
+        "prefix": "evr279",
+        "body": [
+            "  Evr:           ${1:EvrName}",
+            "         Text1=  \"${6}\"",
+            "         Text2=  \"\"",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "      PlotSpan=  -1",
+            "       PlotGrp=  0000000000000000000000000000000",
+            "          Nfix=  ${2:1}",
+            "          Unit=  \"${3}\"",
+            "       MeasBad=  0",
+            "       GrpMask=  0000000000000000000000000000001",
+            "       GrpType=  0000000000000000000000000000000",
+            "          Span=  10",
+            "     UserInput=  ${4|OFF,BOOL,ENUM,INT,DOUBLE,ON|}",
+            "    UserAccess=  WRRR",
+            "      UserMeas=  0",
+            "      MinInput=  0",
+            "      MaxInput=  ${5:0}",
+            "ValidationLimit=  -1",
+            "         Color=  BLACK\r"
+        ],
+        "description": "For SEPTIC <= v2.79"
+    },
+    "CalcModl": {
+        "prefix": "calcmodl",
+        "body": [
+            "  CalcModl:      ${1:CalcModlName}",
+            "         Text1=  \"${2}\"",
+            "         Text2=  \"\"\r"
+        ],
+        "description": ""
+    },
+    "CalcPvr": {
+        "prefix": "calcpvr",
+        "body": [
+            "  CalcPvr:       ${1:CalcPvrName}",
+            "         Text1=  \"${3}\"",
+            "         Text2=  \"\"",
+            "           Alg=  \"${2}\"\r"
+        ],
+        "description": ""
+    },
+    "MasterTcip": {
+        "prefix": "mastertcip",
+        "body": [
+            "  MasterTcip:    ${1:MasterTcip}",
+            "    MasterPort=  ${2:12030}",
+            "        InitOn=  ON",
+            "        HistOn=  ON",
+            "        ModlOn=  ON",
+            "    BufferSize=  64512",
+            "    WriteHosts=  1",
+            "                 \"${3:127.0.0.1}\"  \r"
+        ],
+        "description": ""
+    },
+    "RemoteTcip": {
+        "prefix": "remotetcip",
+        "body": [
+            "  RemoteTcip:    ${1:RemoteTcip}",
+            "    MasterPort=  ${2:12035}",
+            "    MasterAddr=  \"${3:127.0.0.1}\"",
+            "      HistSize=  -1",
+            "       FillMsg=  ON",
+            "    BufferSize=  64512",
+            "MasterBufferSize=  -1\r"
+        ],
+        "description": ""
+    },
+    "MsgBox": {
+        "prefix": "msgbox",
+        "body": [
+            "  MsgBox:        ${1:ApplicationName}",
+            "        MaxLvl=  4",
+            "        MinLvl=  1",
+            "           Obj=  ~\r"
+        ],
+        "description": "For SEPTIC >= v2.82"
+    },
+    "MsgBox_v2.81": {
+        "prefix": "msgbox281",
+        "body": [
+            "  MsgBox:        ${1:ApplicationName}",
+            "        MaxLvl=  4",
+            "        MinLvl=  1",
+            "       PlotGrp=  0000000000000000000000000000000",
+            "           Obj=  ~\r"
+        ],
+        "description": "For SEPTIC <= v2.81"
+    },
+    "DisplayGroup": {
+        "prefix": "displaygroup",
+        "body": [
+            "  DisplayGroup:  ${1:DisplayGroupName}",
+            "       GroupNo=  ${2:1}",
+            "        Locked=  OFF",
+            "          Rows=  -1",
+            "          Cols=  -1",
+            "         xGrid=  OFF",
+            "         yGrid=  OFF",
+            "         xAxis=  OFF",
+            "         yAxis=  ON",
+            "     Autoscale=  OFF",
+            "     Spanscale=  OFF",
+            "      HistSize=  -1",
+            "      PredSize=  -1\r"
+        ],
+        "description": "For SEPTIC >= v2.81"
+    },
+    "DisplayGroup_v2.80": {
+        "prefix": "displaygroup280",
+        "body": [
+            "  DisplayGroup:  ${1:DisplayGroupName}",
+            "       GroupNo=  ${2:1}",
+            "        Locked=  OFF",
+            "          Rows=  -1",
+            "          Cols=  -1",
+            "         xGrid=  OFF",
+            "         yGrid=  OFF",
+            "         xAxis=  OFF",
+            "         yAxis=  ON",
+            "     Autoscale=  OFF",
+            "     Spanscale=  OFF",
+            "      HistSize=  -1\r"
+        ],
+        "description": "For SEPTIC <= v2.80"
+    },
+    "BadXvrList": {
+        "prefix": "badxvrlist",
+        "body": [
+            "  BadXvrList:    ${1:BadXvrListName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1\r"
+        ],
+        "description": ""
+    },
+    "CalcTable": {
+        "prefix": "calctable",
+        "body": [
+            "  CalcTable:     ${1:CalcTableName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1\r"
+        ],
+        "description": ""
+    },
+    "Image": {
+        "prefix": "image",
+        "body": [
+            "  Image:         ${1:ImageName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1",
+            "      FileName=  \"${2}\"\r"
+        ],
+        "description": ""
+    },
+    "ImageStatusLabel": {
+        "prefix": "imagestatuslabel",
+        "body": [
+            "  ImageStatusLabel:  ${1:XvrName}",
+            "            X1=  -1",
+            "            Y1=  -1",
+            "            X2=  -1",
+            "            Y2=  -1",
+            "         Texts=  1",
+            "                 \"${2}\"  ",
+            "BackgroundColors=  1",
+            "                 \"${3}\"  \r"
+        ],
+        "description": ""
+    },
+    "ImageXvr": {
+        "prefix": "imagexvr",
+        "body": [
+            "  ImageXvr:      ${1:XvrName}",
+            "BackgroundColor=  \"${2:white}\"",
+            "            X1=  -1",
+            "            Y1=  -1",
+            "            X2=  -1",
+            "            Y2=  -1\r"
+        ],
+        "description": ""
+    },
+    "ImageXvrCollection": {
+        "prefix": "imagexvrcollection",
+        "body": [
+            "  ImageXvrCollection:  ${1:CollectionName}",
+            "            X1=  -1",
+            "            Y1=  -1",
+            "            X2=  -1",
+            "            Y2=  -1",
+            "       Heading=  \"\"",
+            "     StatusXvr=  \"\"",
+            "BackgroundColor=  \"\"",
+            "          Xvrs=  1",
+            "                 \"${2}\"  ",
+            "         Texts=  1",
+            "                 \"${3}\"  \r"
+        ],
+        "description": ""
+    },
+    "MessageView": {
+        "prefix": "messageview",
+        "body": [
+            "  MessageView:   ${1:MsgBoxName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1\r"
+        ],
+        "description": ""
+    },
+    "ModelMatrix": {
+        "prefix": "modelmatrix",
+        "body": [
+            "  ModelMatrix:   ${1:ModelMatrixName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1",
+            "        CvrIds=  1",
+            "                 \"${2}\"  ",
+            "     MvrDvrIds=  1",
+            "                 \"${3}\" \r"
+        ],
+        "description": "For SEPTIC >= v2.75"
+    },
+    "ModelMatrix_v2.73": {
+        "prefix": "modelmatrix273",
+        "body": [
+            "  ModelMatrix:   ${1:ModelMatrixName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "        CvrIds=  1",
+            "                 \"${2}\"  ",
+            "     MvrDvrIds=  1",
+            "                 \"${3}\" \r"
+        ],
+        "description": "For SEPTIC <= v2.73"
+    },
+    "MultiXvrPlot": {
+        "prefix": "multixvrplot",
+        "body": [
+            "  MultiXvrPlot:  ${1:MyMultiXvrPlot1}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1",
+            "         Title=  \"\"",
+            "       PlotMax=  100",
+            "       PlotMin=  0",
+            "          Xvrs=  1",
+            "                 \"${2}\"  ",
+            "        Colors=  1",
+            "                 \"${3}\"  \r"
+        ],
+        "description": "description for MultiXvrPlot"
+    },
+    "PriorityTable": {
+        "prefix": "prioritytable",
+        "body": [
+            "  PriorityTable:  ${1:ApplicationName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1\r"
+        ],
+        "description": ""
+    },
+    "Table": {
+        "prefix": "table",
+        "body": [
+            "  Table:         ${1:TableName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1",
+            "   NameColSize=  -1",
+            "   TextColSize=  -1",
+            "  ValueColSize=  -1",
+            " GroupsColSize=  -1\r"
+        ],
+        "description": ""
+    },
+    "TableAppl": {
+        "prefix": "appl",
+        "body": "  Appl:          ${1:ApplicationName}\r",
+        "description": ""
+    },
+    "Heading": {
+        "prefix": "heading",
+        "body": [
+            "  Heading:       ${1:HeadingName}",
+            "          Text=  \"${2}\"",
+            "    SizeOffset=  0\r"
+        ],
+        "description": ""
+    },
+    "Spacer": {
+        "prefix": "spacer",
+        "body": ["  Spacer:        ${1:SpacerName}", "          Size=  0\r"],
+        "description": ""
+    },
+    "CvrList": {
+        "prefix": "cvrlist",
+        "body": [
+            "  CvrList:       ${1:CvrListName}",
+            "          Text=  \"${2}\"",
+            "          Cvrs=  1",
+            "                 \"${3}\"  \r"
+        ],
+        "description": ""
+    },
+    "MvrList": {
+        "prefix": "mvrlist",
+        "body": [
+            "  MvrList:       ${1:MvrListName}",
+            "          Text=  \"${2}\"",
+            "          Mvrs=  1",
+            "                 \"${3}\"  \r"
+        ],
+        "description": ""
+    },
+    "DvrList": {
+        "prefix": "dvrlist",
+        "body": [
+            "  DvrList:       ${1:DvrListName}",
+            "          Text=  \"${2}\"",
+            "          Dvrs=  1",
+            "                 \"${3}\"  \r"
+        ],
+        "description": ""
+    },
+    "EvrList": {
+        "prefix": "evrlist",
+        "body": [
+            "  EvrList:       ${1:EvrListName}",
+            "          Text=  \"${2}\"",
+            "          Evrs=  1",
+            "                 \"${3}\"  \r"
+        ],
+        "description": ""
+    },
+    "TvrList": {
+        "prefix": "tvrlist",
+        "body": [
+            "  TvrList:       ${1:TvrListName}",
+            "          Text=  \"${2}\"",
+            "          Tvrs=  1",
+            "                 \"${3}\"  \r"
+        ],
+        "description": ""
+    },
+    "ColumnList": {
+        "prefix": "columnlist",
+        "body": [
+            "  ColumnList:    ${1:ColumnListName}",
+            "       Heading=  \"${2}\"",
+            "       Tooltip=  \"\"",
+            "          Xvrs=  1",
+            "                 \"${3}\"  ",
+            "    StatusXvrs=  1",
+            "                 \"${4}\"  \r"
+        ],
+        "description": ""
+    },
+    "ListMeas": {
+        "prefix": "listmeas",
+        "body": [
+            "  ListMeas:      ${1:ListMeasName}",
+            "        ColPos=  -1",
+            "       Heading=  \"${2}\"",
+            "     StatusXvr=  \"${3}\"\r"
+        ],
+        "description": ""
+    },
+    "XvrMatrix": {
+        "prefix": "xvrmatrix",
+        "body": [
+            "  XvrMatrix:     ${1:XvrMatrixName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1",
+            "       Heading=  \"${2}\"",
+            "        ColIds=  1",
+            "                 \"${3}\"  ",
+            "       ColTips=  1",
+            "                 \"\"  ",
+            "        RowIds=  1",
+            "                 \"${4}\"  ",
+            "       RowTips=  1",
+            "                 \"\"  ",
+            "      RowUnits=  1",
+            "                 \"${5}\"  ",
+            "          Xvrs=  1",
+            "                 \"${6}\" \r"
+        ],
+        "description": ""
+    },
+    "XvrPlot": {
+        "prefix": "xvrplot",
+        "body": [
+            "  XvrPlot:       ${1:XvrPlotName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1\r"
+        ],
+        "description": ""
+    },
+    "XYPlot": {
+        "prefix": "xyplot",
+        "body": [
+            "  XYPlot:        ${1:XYPlotName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1",
+            "         Title=  \"${2}\"",
+            "        Legend=  OFF",
+            "     SpanScale=  OFF",
+            "        xTitle=  \"${3}\"",
+            "        yTitle=  \"${4}\"",
+            "          xMin=  -100",
+            "          xMax=  100",
+            "          yMin=  -100",
+            "          yMax=  100",
+            "         xSpan=  100",
+            "         ySpan=  100\r"
+        ],
+        "description": ""
+    },
+    "Curve": {
+        "prefix": "curve",
+        "body": [
+            "  Curve:         ${1:CurveName}",
+            "         Color=  \"${2:black}\"",
+            "          Text=  \"${3}\"",
+            "         Width=  1",
+            "       xPoints=  2",
+            "           ${5:-10             10} ",
+            "       yPoints=  2",
+            "           ${6:-10             10} ",
+            "         Style=  ${4|Solid,Dash,Dot,DashDot|}\r"
+        ],
+        "description": ""
+    },
+    "DynCurve": {
+        "prefix": "dyncurve",
+        "body": [
+            "  DynCurve:      ${1:DynCurveName}",
+            "         ObjId=  \"\"",
+            "         Color=  \"${2:black}\"",
+            "          Text=  \"${3}\"",
+            "         Width=  1",
+            "          Type=  0",
+            "         Style=  ${4|Solid,Dash,Dot,DashDot|}",
+            "         xXvrs=  1",
+            "                 \"${5}\"  ",
+            "         yXvrs=  1",
+            "                 \"${6}\" \r"
+        ],
+        "description": ""
+    },
+    "DynPoint": {
+        "prefix": "dynpoint",
+        "body": [
+            "  DynPoint:      ${1:DynPointName}",
+            "         Color=  \"${2:black}\"",
+            "          Text=  \"${3}\"",
+            "         Width=  1",
+            "      HistSize=  -1",
+            "          xXvr=  \"${4}\"",
+            "          yXvr=  \"${5}\"\r"
+        ],
+        "description": ""
+    },
+    "ApplPlot": {
+        "prefix": "applplot",
+        "body": [
+            "  ApplPlot:      ${1:ApplicationName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1\r"
+        ],
+        "description": ""
+    },
+    "SystemPlot": {
+        "prefix": "systemplot",
+        "body": [
+            "  SystemPlot:    ${1:SystemName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1\r"
+        ],
+        "description": "For SEPTIC >= v2.75"
+    },
+    "SystemPlot_v2.73": {
+        "prefix": "systemplot273",
+        "body": [
+            "  SystemPlot:    ${1:SystemName}",
+            "           Row=  -1",
+            "           Col=  -1\r"
+        ],
+        "description": "For SEPTIC <= v2.73"
+    },
+    "OPCProcPlot": {
+        "prefix": "opcprocplot",
+        "body": [
+            "  OPCProcPlot:   ${1:OpcProcPlotName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1\r"
+        ],
+        "description": ""
+    },
+    "ModelPlot": {
+        "prefix": "modelplot",
+        "body": [
+            "ModelPlot:     ${1:CvrName_MvrDvrName}",
+            "         Row=  -1",
+            "         Col=  -1",
+            "     RowSize=  1",
+            "     ColSize=  1\r"
+        ],
+        "description": "For SEPTIC >= v2.75"
+    },
+    "ModelPlot_v2.73": {
+        "prefix": "modelplot273",
+        "body": [
+            "ModelPlot:     ${1:CvrName_MvrDvrName}",
+            "         Row=  -1",
+            "         Col=  -1\r"
+        ],
+        "description": "For SEPTIC <= v2.73"
+    },
+    "ImageTextXvr": {
+        "prefix": "imagetextxvr",
+        "body": [
+            "  ImageTextXvr:  ${1:XvrName}",
+            "     TextColor=  \"${2:black}\"",
+            "BackgroundColor=  \"${3:white}\"",
+            "            X1=  -1",
+            "            Y1=  -1",
+            "            X2=  -1",
+            "            Y2=  -1\r"
+        ],
+        "description": ""
+    },
+    "ImageArea": {
+        "prefix": "imagearea",
+        "body": [
+            "  ImageArea:     ${1:ImageAreaName}",
+            "   TargetGroup=  1",
+            "     LineWidth=  1",
+            "         Color=  \"${2:black}\"",
+            "       xPoints=  4",
+            "             ${3:0             10             10              0} ",
+            "      yPoints=  4",
+            "            ${4:20             20             40             40} \r"
+        ],
+        "description": ""
+    },
+    "Chart": {
+        "prefix": "chart",
+        "body": [
+            "  Chart:         ${1:ChartName}",
+            "           Row=  -1",
+            "           Col=  -1",
+            "       RowSize=  1",
+            "       ColSize=  1",
+            "         Title=  \"${2}\"",
+            "        xTitle=  \"${3}\"",
+            "        yTitle=  \"${4}\"",
+            "     Autoscale=  OFF",
+            "          yMin=  -100",
+            "          yMax=  100",
+            "    LegendPosX=  -1",
+            "    LegendPosY=  100",
+            "         Types=  1",
+            "                 \"${5}\"  \r"
+        ],
+        "description": ""
+    },
+    "ChartSerie": {
+        "prefix": "chartserie",
+        "body": [
+            "  ChartSerie:    ${1:ChartSerieName}",
+            "         Color=  \"${2:black}\"",
+            "          Text=  \"\"",
+            "         Width=  1",
+            "         Style=  ${3|Solid,Dash,Dot,DashDot|}",
+            "        Marker=  ${4|Cross,XCross,Diamond,Triangle,UpTriangle,Circle,Rect,NoMarker|}",
+            "        Values=  1",
+            "                 \"${5}\"  \r"
+        ],
+        "description": ""
+    },
+    "FreeText": {
+        "prefix": "freetext",
+        "body": [
+            "  FreeText:      ${1:FreeTextName}",
+            "       Heading=  \"${2}\"",
+            "        TextNo=  1",
+            "        ColPos=  -1",
+            "    SizeOffset=  0\r"
+        ],
+        "description": ""
+    },
+    "FreeMeas": {
+        "prefix": "freemeas",
+        "body": [
+            "  FreeMeas:      ${1:XvrName}",
+            "       Heading=  \"${2}\"",
+            "     StatusXvr=  \"${3}\"",
+            "        ColPos=  -1",
+            "    SizeOffset=  0\r"
+        ],
+        "description": ""
+    },
+    "FMUProc": {
+        "prefix": "fmuproc",
+        "body": [
+            "  FMUProc:       ${1:FMUProcName}",
+            "         Text1=  \"${3}\"",
+            "         Text2=  \"\"",
+            "       FMUname=  \"${2}.fmu\"\r"
+        ],
+        "description": ""
+    },
+    "FMUModl": {
+        "prefix": "fmumodl",
+        "body": [
+            "  FMUModl:       ${1:FMUModlName}",
+            "         Text1=  \"${3}\"",
+            "         Text2=  \"\"",
+            "       FMUname=  \"${2}.fmu\"\r"
+        ],
+        "description": ""
+    },
+    "SubrXvr": {
+        "prefix": "subrxvr",
+        "body": [
+            "  SubrXvr:       ${1:XvrName}",
+            "         Text1=  \"${3}\"",
+            "         Text2=  \"\"",
+            "         DtaIx=  \"${2}\"",
+            "          Init=  0\r"
+        ],
+        "description": ""
+    },
+    "FdtaProc": {
+        "prefix": "fdtaproc",
+        "body": [
+            "  FdtaProc:      ${1:Filename}.dta",
+            "         Text1=  \"\"",
+            "         Text2=  \"\"",
+            "     Separator=  \".\"",
+            "          Mode=  ${2|Playback,PlayBack_nomode,BaseCase|",
+            "         Nstep=  1\r"
+        ],
+        "description": "description for FdtaProc"
+    }
 }
