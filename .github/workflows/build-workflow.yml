@@ -1,35 +1,35 @@
-name: '🛠️ Build Artifact'
+name: "🛠️ Build Artifact"
 on:
   workflow_call:
     outputs:
-      artifact-name: 
+      artifact-name:
         value: ${{ jobs.build.outputs.artifact-name }}
 
 jobs:
   build:
-    name: '🛠️ Build'
+    name: "🛠️ Build"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: 'Setup Node.js'
+      - name: "Setup Node.js"
         uses: actions/setup-node@v3
         with:
           node-version: 16
 
-      - name: 'Install dependencies'
+      - name: "Install dependencies"
         run: npm ci
-      
-      - name: 'Create Artifact'
+
+      - name: "Create Artifact"
         run: npx vsce package
 
-      - name: 'Resolve build version'
+      - name: "Resolve build version"
         run: echo "BUILD_VERSION=$GITHUB_SHA" >> $GITHUB_ENV
 
-      - name: 'Set artifact name'
+      - name: "Set artifact name"
         run: echo "ARTIFACT_NAME=$(echo vscode-septic-${{ env.BUILD_VERSION }}.vsix)" >> $GITHUB_ENV
 
-      - name: 'Upload artifact'
+      - name: "Upload artifact"
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ARTIFACT_NAME }}

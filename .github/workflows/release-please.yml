@@ -31,11 +31,11 @@ jobs:
       release_created: ${{ steps.release.outputs.release_created }}
 
   build:
-    name: '🛠️ Build'
+    name: "🛠️ Build"
     if: ${{ needs.release_please.outputs.release_created }}
     needs: [release_please]
     uses: ./.github/workflows/build-workflow.yml
-    
+
   deploy:
     name: "🚀 Publish"
     needs: [build]

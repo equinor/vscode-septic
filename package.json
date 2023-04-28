@@ -1,94 +1,127 @@
 {
-    "name": "septic-config",
-    "displayName": "Septic Language Basics",
-    "description": "Provides snippets, syntax highlighting and multi-level folding in Septic config files.",
-    "publisher": "EinarSIdso",
-    "author": "Einar S. Idsø",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/equinor/vscode-septic"
-    },
-    "version": "0.5.0",
-    "icon": "images/SEPTIC_logo.jfif",
-    "engines": {
-        "vscode": "^1.72.0"
-    },
-    "categories": [
-        "Programming Languages",
-        "Snippets"
-    ],
-    "activationEvents": [
-        "onLanguage:septic"
-    ],
-    "main": "./out/extension.js",
-    "contributes": {
-        "languages": [
-            {
-                "id": "septic",
-                "aliases": [
-                    "Septic"
-                ],
-                "extensions": [
-                    ".cnfg"
-                ],
-                "configuration": "./language-configuration.json"
-            },
-            {
-                "id": "jinja",
-                "aliases": [
-                    "Jinja Raw",
-                    "jinja-raw"
-                ],
-                "extensions": [],
-                "configuration": "./language-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "septic",
-                "scopeName": "source.septic",
-                "path": "./syntaxes/septic.tmLanguage.json"
-            },
-            {
-                "language": "jinja",
-                "scopeName": "source.jinja",
-                "path": "./syntaxes/jinja.tmLanguage.json"
-            }
-        ],
-        "snippets": [
-            {
-                "language": "septic",
-                "path": "snippets/snippets.json"
-            }
-        ],
-        "configurationDefaults": {
-            "[septic]": {
-                "files.encoding": "windows1252",
-                "editor.wordWrap": "on",
-                "editor.insertSpaces": true
-            }
+  "name": "septic-config",
+  "displayName": "SEPTIC",
+  "icon": "images/SEPTIC_logo.jfif",
+  "description": "Provides snippets, syntax highlighting and multi-level folding in Septic config files.",
+  "author": "Equinor ASA",
+  "license": "MIT",
+  "version": "0.5.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/equinor/vscode-septic"
+  },
+  "publisher": "EinarSIdso",
+  "categories": [],
+  "keywords": [
+    "multi-root ready"
+  ],
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "activationEvents": [
+    "onLanguage:septic"
+  ],
+  "main": "./client/out/extension",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Septic",
+      "properties": {
+        "septic.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the language server."
+        },
+        "septic.diagnostics.missingVariable": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "hint",
+            "ignore"
+          ],
+          "default": "error",
+          "description": "Sets the severity level for objects with missing identifier. Ignore implies no validation."
+        },
+        "septic.diagnostics.enabled": {
+          "scope": "window",
+          "type": "boolean",
+          "default": "true",
+          "description": "Controls the publishing of diagnostics reports"
         }
+      }
     },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile",
-        "lint": "eslint src --ext ts",
-        "test": "node ./out/test/runTest.js"
-    },
-    "devDependencies": {
-        "@types/glob": "^8.0.0",
-        "@types/mocha": "10.0.0",
-        "@types/node": "16.x",
-        "@types/vscode": "^1.72.0",
-        "@typescript-eslint/eslint-plugin": "^5.59.0",
-        "@typescript-eslint/parser": "^5.59.0",
-        "@vscode/test-electron": "^2.1.5",
-        "eslint": "^8.24.0",
-        "glob": "^8.0.3",
-        "mocha": "^10.0.0",
-        "typescript": "^4.8.4"
+    "languages": [
+      {
+        "id": "septic",
+        "aliases": [
+          "Septic"
+        ],
+        "extensions": [
+          ".cnfg"
+        ],
+        "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "jinja",
+        "aliases": [
+          "Jinja Raw",
+          "jinja-raw"
+        ],
+        "extensions": [],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "septic",
+        "scopeName": "source.septic",
+        "path": "./syntaxes/septic.tmLanguage.json"
+      },
+      {
+        "language": "jinja",
+        "scopeName": "source.jinja",
+        "path": "./syntaxes/jinja.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "septic",
+        "path": "snippets/snippets.json"
+      }
+    ],
+    "configurationDefaults": {
+      "[septic]": {
+        "files.encoding": "windows1252",
+        "editor.wordWrap": "on",
+        "editor.insertSpaces": true
+      }
     }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -b",
+    "watch": "tsc -b -w",
+    "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+    "integrationtest": "sh ./scripts/e2e.sh",
+    "unittest": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^16.11.7",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.0.5",
+    "typescript": "^4.9.5"
+  }
 }
