@@ -5,8 +5,7 @@
 
 ## New stuff
 
--   Added lots of snippets, also for multiple SEPTIC versions.
--   Updated recommended extensions below
+-   Check [releases](https://github.com/equinor/vscode-septic/releases) for change log between the different versions.
 
 ## Features
 
@@ -15,17 +14,27 @@
 -   Bracket matching
 -   Snippets
 -   Multi-level folding
+-   Completion
+    -   Suggest Xvrs when creating identifier for SopcXvrs (vice versa)
+    -   Suggest Xvrs when creating identifier for CalcPvr
+    -   Suggest Xvrs and Calcs when editing CalcPvr Algs
+-   Diagnostics for CalcPvr Algs
+    -   Report errors if unable to parse calc (missing parenthesis, incomplete expression, unexpected tokens etc.)
+    -   Verify that the used calcs are valid SEPTIC calcs
+    -   Verify that referenced Xvrs exist in the file
 -   Ensures correct encoding (Windows 1252) for SEPTIC files
 
 ## Instructions
 
 If you don't know what the SEPTIC file format is, then you don't need this extension.
 
-Adding the SEPTIC Language Basics extension to VS Code allows you to do the following when loading a SEPTIC .cnfg file:
+Adding the SEPTIC extension to VS Code allows you to do the following when loading a SEPTIC .cnfg file:
 
+-   Auto-complete (Sopc)Xvr names and Calcs.
+-   Diagnose certain fault modes (missing parenthesis in calcs, mistyped Calc or Xvr names etc.)
 -   Auto-complete commonly used segments of code, called snippets
     -   Type e.g. 'sopc' (uncapitalized letters only), and you should see a number of sopcxvr snippet options. Choose the one you want with `arrow up`/`arrow down` and press `Tab` to create a complete sopcxvr section.
-    -   If you are missing a snippet, let me know and I will add it. Feel free to [make one yourself](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets) and provide me the json.
+    -   If you are missing a snippet, let us know and we will add it. Feel free to [make one yourself](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets) and provide us the json.
     -   More info on snippets [here](https://code.visualstudio.com/docs/editor/userdefinedsnippets)
 -   Fold sections of the config file. Either click the small downward-pointing arrows in the gutter to fold a specific section and all its lower-level sections, or use the following shortcuts to fold and unfold sections at different levels:
     -   `ctrl-k` `ctrl-0` folds everything.
@@ -35,12 +44,13 @@ Adding the SEPTIC Language Basics extension to VS Code allows you to do the foll
     -   `ctrl-k` `ctrl-2` folds all level 2 sections (e.g. `SopcMvr` and `CalcModl`) and lower except the level 2 section at the cursor.
     -   `ctrl-k` `ctrl-3` folds all level 3 sections (e.g. `CalcPvr`) and lower except the level 3 section at the cursor.
     -   More info on folding [here](https://code.visualstudio.com/docs/editor/codebasics#_folding)
+-   Settings for diagnostics can be updated using the standard settings manager for VsCode (`ctrl+,`). Search for Septic in the search field and update the relevant settings. Important to note that the settings for the workspace usually overwrite the settings for the user, thus make sure you update both if the settings are not applied properly.
 
 ## Feedback and contributions
 
-Please let me know of any issues, bugs or requests for modification or new features you may have.
+Please let us know of any issues, bugs or requests for modification or new features you may have.
 
-Easiest is probably to contact me in person at work, or you can use the [Issue tracker](https://github.com/equinor/vscode-septic/issues).
+Use the [Issue tracker](https://github.com/equinor/vscode-septic/issues).
 
 ## Additional recommended extensions for working with SEPTIC config files
 
