@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.1](https://github.com/equinor/vscode-septic/compare/v1.0.0...v1.0.1) (2023-05-02)
+
+
+### 📚 Documentation
+
+* update readme to reflect latest version ([#110](https://github.com/equinor/vscode-septic/issues/110)) ([d4fd928](https://github.com/equinor/vscode-septic/commit/d4fd928e20721bff828def2226cc89ae3031e296))
+
+
+### 🐛 Bug Fixes
+
+* bug with exceeding callstack in symbolProvider ([#111](https://github.com/equinor/vscode-septic/issues/111)) ([46bc452](https://github.com/equinor/vscode-septic/commit/46bc452051c12901cfc6c24d70ee078273926971))
+
 ## [1.0.0](https://github.com/equinor/vscode-septic/compare/v0.5.0...v1.0.0) (2023-05-02)
 
 
