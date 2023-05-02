@@ -5,8 +5,7 @@
 
 ## New stuff
 
--   Added lots of snippets, also for multiple SEPTIC versions.
--   Updated recommended extensions below
+-   Check [releases](https://github.com/equinor/vscode-septic/releases) for change log between the different versions.
 
 ## Features
 
@@ -15,6 +14,14 @@
 -   Bracket matching
 -   Snippets
 -   Multi-level folding
+-   Completion
+    -   Suggest Xvrs when creating identifier for SopcXvrs (vice versa)
+    -   Suggest Xvrs when creating identifier for CalcPvr
+    -   Suggest Xvrs and Calcs when writting in CalcPvr.Alg
+-   Diagnostics for CalcPvr.Alg
+    -   Reporting errors if unable to parse calc (missing parenthesis, uncomplete expression, unexpected tokens etc.)
+    -   Verify that the used calcs are valid Septic calcs
+    -   Verify that referenced Xvrs exist in the file
 -   Ensures correct encoding (Windows 1252) for SEPTIC files
 
 ## Instructions
@@ -35,12 +42,13 @@ Adding the SEPTIC Language Basics extension to VS Code allows you to do the foll
     -   `ctrl-k` `ctrl-2` folds all level 2 sections (e.g. `SopcMvr` and `CalcModl`) and lower except the level 2 section at the cursor.
     -   `ctrl-k` `ctrl-3` folds all level 3 sections (e.g. `CalcPvr`) and lower except the level 3 section at the cursor.
     -   More info on folding [here](https://code.visualstudio.com/docs/editor/codebasics#_folding)
+-   Settings for diagnostics can be updated using the standard settings manager for VsCode (`ctrl+,`). Search for Septic in the search field and update the relevant settings. Important to note that the settings for the workspace usually overwrite the settings for the user, thus make sure you update both if the settings are not applied properly.
 
 ## Feedback and contributions
 
-Please let me know of any issues, bugs or requests for modification or new features you may have.
+Please let us know of any issues, bugs or requests for modification or new features you may have.
 
-Easiest is probably to contact me in person at work, or you can use the [Issue tracker](https://github.com/equinor/vscode-septic/issues).
+Use the [Issue tracker](https://github.com/equinor/vscode-septic/issues).
 
 ## Additional recommended extensions for working with SEPTIC config files
 
