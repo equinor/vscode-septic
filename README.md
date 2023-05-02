@@ -17,10 +17,10 @@
 -   Completion
     -   Suggest Xvrs when creating identifier for SopcXvrs (vice versa)
     -   Suggest Xvrs when creating identifier for CalcPvr
-    -   Suggest Xvrs and Calcs when writting in CalcPvr.Alg
--   Diagnostics for CalcPvr.Alg
-    -   Reporting errors if unable to parse calc (missing parenthesis, uncomplete expression, unexpected tokens etc.)
-    -   Verify that the used calcs are valid Septic calcs
+    -   Suggest Xvrs and Calcs when editing CalcPvr Algs
+-   Diagnostics for CalcPvr Algs
+    -   Report errors if unable to parse calc (missing parenthesis, incomplete expression, unexpected tokens etc.)
+    -   Verify that the used calcs are valid SEPTIC calcs
     -   Verify that referenced Xvrs exist in the file
 -   Ensures correct encoding (Windows 1252) for SEPTIC files
 
@@ -28,11 +28,13 @@
 
 If you don't know what the SEPTIC file format is, then you don't need this extension.
 
-Adding the SEPTIC Language Basics extension to VS Code allows you to do the following when loading a SEPTIC .cnfg file:
+Adding the SEPTIC extension to VS Code allows you to do the following when loading a SEPTIC .cnfg file:
 
+-   Auto-complete (Sopc)Xvr names and Calcs.
+-   Diagnose certain fault modes (missing parenthesis in calcs, mistyped Calc or Xvr names etc.)
 -   Auto-complete commonly used segments of code, called snippets
     -   Type e.g. 'sopc' (uncapitalized letters only), and you should see a number of sopcxvr snippet options. Choose the one you want with `arrow up`/`arrow down` and press `Tab` to create a complete sopcxvr section.
-    -   If you are missing a snippet, let me know and I will add it. Feel free to [make one yourself](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets) and provide me the json.
+    -   If you are missing a snippet, let us know and we will add it. Feel free to [make one yourself](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets) and provide us the json.
     -   More info on snippets [here](https://code.visualstudio.com/docs/editor/userdefinedsnippets)
 -   Fold sections of the config file. Either click the small downward-pointing arrows in the gutter to fold a specific section and all its lower-level sections, or use the following shortcuts to fold and unfold sections at different levels:
     -   `ctrl-k` `ctrl-0` folds everything.
