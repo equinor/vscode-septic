@@ -62,8 +62,14 @@ export function getDocumentSymbols(
         parent: undefined,
         symbol: dummySymbol(),
     };
-
-    buildTree(root, symbols);
+    let parent;
+    for (let symbol of symbols) {
+        if (!parent) {
+            parent = updateParent(root, symbol);
+        } else {
+            parent = updateParent(parent, symbol);
+        }
+    }
 
     root.symbol.children?.forEach((child) => {
         updateRange(child);
@@ -72,13 +78,10 @@ export function getDocumentSymbols(
     return root.symbol.children!;
 }
 
-function buildTree(parent: SepticSymbol, symbols: SepticSymbol[]) {
-    if (!symbols.length) {
-        return;
-    }
-
-    let symbol = symbols[0];
-
+function updateParent(
+    parent: SepticSymbol,
+    symbol: SepticSymbol
+): SepticSymbol {
     while (parent && symbol.level <= parent.level) {
         parent = parent.parent!;
     }
@@ -86,7 +89,7 @@ function buildTree(parent: SepticSymbol, symbols: SepticSymbol[]) {
     parent.symbol.children?.push(symbol.symbol);
     symbol.parent = parent;
 
-    buildTree(symbol, symbols.slice(1));
+    return symbol;
 }
 
 function updateRange(parent: DocumentSymbol) {
