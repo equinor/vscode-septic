@@ -5,7 +5,7 @@
   "description": "Provides snippets, syntax highlighting and multi-level folding in Septic config files.",
   "author": "Equinor ASA",
   "license": "MIT",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/equinor/vscode-septic"
@@ -49,42 +49,43 @@
           ],
           "default": "error",
           "description": "Sets the severity level for objects with missing identifier. Ignore implies no validation."
-        },"septic.diagnostics.alg": {
-					"scope": "window",
-					"type": "string",
-					"enum": [
-						"error",
-						"warning",
-						"hint",
-						"ignore"
-					],
-					"default": "error",
-					"description": "Sets the severity level for unparsable expressions in CalcPvr.Alg. Ignore implies no checks for CalcPvr.Alg at all."
-				},
-				"septic.diagnostics.algCalc": {
-					"scope": "window",
-					"type": "string",
-					"enum": [
-						"error",
-						"warning",
-						"hint",
-						"ignore"
-					],
-					"default": "warning",
-					"description": "Sets the severity level for unknown function names in CalcPvr.Alg. Ignore implies no check."
-				},
-				"septic.diagnostics.algMissingReference": {
-					"scope": "window",
-					"type": "string",
-					"enum": [
-						"error",
-						"warning",
-						"hint",
-						"ignore"
-					],
-					"default": "warning",
-					"description": "Sets the severity level for references to missing Xvrs in CalcPvr.Alg. Ignore implies no check."
-				},
+        },
+        "septic.diagnostics.alg": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "hint",
+            "ignore"
+          ],
+          "default": "error",
+          "description": "Sets the severity level for unparsable expressions in CalcPvr.Alg. Ignore implies no checks for CalcPvr.Alg at all."
+        },
+        "septic.diagnostics.algCalc": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "hint",
+            "ignore"
+          ],
+          "default": "warning",
+          "description": "Sets the severity level for unknown function names in CalcPvr.Alg. Ignore implies no check."
+        },
+        "septic.diagnostics.algMissingReference": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "hint",
+            "ignore"
+          ],
+          "default": "warning",
+          "description": "Sets the severity level for references to missing Xvrs in CalcPvr.Alg. Ignore implies no check."
+        },
         "septic.diagnostics.enabled": {
           "scope": "window",
           "type": "boolean",
