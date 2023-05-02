@@ -12,6 +12,8 @@ import { SepticConfigProvider } from "./septicConfigProvider";
 import { DiagnosticProvider } from "./diagnosticsProvider";
 import { DocumentSymbolProvider } from "./documentSymbolProvider";
 import { SettingsManager } from "../settings";
+import { CompletionProvider } from "./completionProvider";
+import { SepticMetaInfoProvider } from "./septicMetaInfoProvider";
 
 export * from "./types/textDocument";
 
@@ -30,24 +32,36 @@ export interface ILanguageService {
         doc: ITextDocument,
         token: lsp.CancellationToken | undefined
     ): lsp.DocumentSymbol[];
+
+    provideCompletion(
+        pos: lsp.TextDocumentPositionParams,
+        doc: ITextDocument
+    ): lsp.CompletionItem[];
 }
 
 export function createLanguageService(
     workspace: IWorkspace,
     configurationManager: SettingsManager
 ) {
+    const metaInfoProvider = new SepticMetaInfoProvider();
     const cnfgProvider = new SepticConfigProvider(workspace);
     const foldingRangeProvider = new FoldingRangeProvider(
         cnfgProvider,
-        configurationManager
+        metaInfoProvider
     );
     const diagnosticProvider = new DiagnosticProvider(
         cnfgProvider,
-        configurationManager
+        configurationManager,
+        metaInfoProvider
     );
     const documentSymbolProvider = new DocumentSymbolProvider(
         cnfgProvider,
-        configurationManager
+        metaInfoProvider
+    );
+
+    const completionProvider = new CompletionProvider(
+        cnfgProvider,
+        metaInfoProvider
     );
 
     return Object.freeze<ILanguageService>({
@@ -61,5 +75,7 @@ export function createLanguageService(
             documentSymbolProvider.provideDocumentSymbols.bind(
                 documentSymbolProvider
             ),
+        provideCompletion:
+            completionProvider.provideCompletion.bind(completionProvider),
     });
 }

@@ -38,4 +38,6 @@ export interface ITextDocument {
      * Converts an offset in the document into a {@link Position position}.
      */
     positionAt(offset: number): Position;
+
+    offsetAt(position: Position): number;
 }

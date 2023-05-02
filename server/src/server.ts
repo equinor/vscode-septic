@@ -13,6 +13,8 @@ import {
     InitializeResult,
     FoldingRange,
     DocumentSymbol,
+    TextDocumentPositionParams,
+    CompletionItem,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -61,6 +63,9 @@ connection.onInitialize((params: InitializeParams) => {
             textDocumentSync: TextDocumentSyncKind.Incremental,
             foldingRangeProvider: true,
             documentSymbolProvider: true,
+            completionProvider: {
+                resolveProvider: false,
+            },
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -128,6 +133,17 @@ connection.onDocumentSymbol((params, token): DocumentSymbol[] => {
     }
     return langService.provideDocumentSymbols(document, token);
 });
+
+connection.onCompletion(
+    (docPos: TextDocumentPositionParams): CompletionItem[] => {
+        const document = documents.get(docPos.textDocument.uri);
+        if (!document) {
+            return [];
+        }
+        return langService.provideCompletion(docPos, document);
+    }
+);
+
 // Make the text document manager listen on the connection
 // for open, change and close text document events
 documents.listen(connection);

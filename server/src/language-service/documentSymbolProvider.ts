@@ -12,8 +12,7 @@ import {
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import { SepticCnfg, SepticObject } from "../parser";
-import { SettingsManager } from "../settings";
-import { getHierarchyLevel } from "../util";
+import { SepticMetaInfoProvider } from "./septicMetaInfoProvider";
 
 interface SepticSymbol {
     symbol: DocumentSymbol;
@@ -23,14 +22,14 @@ interface SepticSymbol {
 
 export class DocumentSymbolProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
-    private readonly settingsManager: SettingsManager;
+    private readonly metaInfoProvider: SepticMetaInfoProvider;
 
     constructor(
         cnfgProvider: ISepticConfigProvider,
-        settingsManager: SettingsManager
+        metaInfoProvider: SepticMetaInfoProvider
     ) {
         this.cnfgProvider = cnfgProvider;
-        this.settingsManager = settingsManager;
+        this.metaInfoProvider = metaInfoProvider;
     }
 
     public provideDocumentSymbols(
@@ -41,13 +40,21 @@ export class DocumentSymbolProvider {
         if (!cnfg) {
             return [];
         }
-        return getDocumentSymbols(document, cnfg);
+        return getDocumentSymbols(document, cnfg, this.metaInfoProvider);
     }
 }
 
-export function getDocumentSymbols(doc: ITextDocument, cnfg: SepticCnfg) {
+export function getDocumentSymbols(
+    doc: ITextDocument,
+    cnfg: SepticCnfg,
+    metaInfoProvider: SepticMetaInfoProvider
+) {
     let symbols = cnfg.objects.map((obj) => {
-        return createSepticSymbol(obj, doc);
+        const level = metaInfoProvider.getObjectDefault(obj.type).level;
+        const symbolKind = metaInfoProvider.getObjectDefault(
+            obj.type
+        ).symbolKind;
+        return createSepticSymbol(obj, doc, symbolKind, level);
     });
 
     let root = {
@@ -97,15 +104,15 @@ function updateRange(parent: DocumentSymbol) {
 
 function createSepticSymbol(
     obj: SepticObject,
-    doc: ITextDocument
+    doc: ITextDocument,
+    symbolKind: SymbolKind,
+    level: number
 ): SepticSymbol {
     let name = obj.type + ": " + obj.identifier?.name;
-    let symbolKind = getSymbolKind(obj.type);
     let range = {
         start: doc.positionAt(obj.start),
         end: doc.positionAt(obj.end),
     };
-    let level = getHierarchyLevel(obj);
     return {
         symbol: DocumentSymbol.create(
             name,
@@ -133,22 +140,4 @@ function dummySymbol(): DocumentSymbol {
         range,
         []
     );
-}
-
-function getSymbolKind(type: string) {
-    if (
-        ["sopcmvr", "sopccvr", "sopctvr", "sopcevr"].includes(
-            type.toLowerCase()
-        )
-    ) {
-        return SymbolKind.Interface;
-    } else if (
-        ["mvr", "cvr", "tvr", "evr", "dvr"].includes(type.toLowerCase())
-    ) {
-        return SymbolKind.Variable;
-    } else if (["calcpvr"].includes(type.toLowerCase())) {
-        return SymbolKind.Function;
-    } else {
-        return SymbolKind.Object;
-    }
 }

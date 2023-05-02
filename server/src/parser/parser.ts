@@ -23,8 +23,8 @@ export class ParserError<T> extends Error {
 }
 
 export abstract class Parser<T, RT> {
-    private readonly tokens: IToken<T>[];
-    private current: number = 0;
+    protected readonly tokens: IToken<T>[];
+    protected current: number = 0;
 
     constructor(tokens: IToken<T>[]) {
         this.tokens = tokens;
