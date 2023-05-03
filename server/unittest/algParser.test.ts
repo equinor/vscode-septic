@@ -7,7 +7,7 @@ import {
     AlgLiteral,
     parseAlg,
     AlgUnary,
-} from "../src/parser";
+} from "../src/septic";
 
 describe("Test scanning of operators", () => {
     test("Scanning of plus", () => {
@@ -308,19 +308,19 @@ describe("Test parsing of variables", () => {
         const input = "{{ Test }}";
         const expr = parseAlg(input);
         expect(expr).toBeInstanceOf(AlgLiteral);
-        expect((<AlgLiteral>expr).value).toBe("{{ Test }}");
+        expect((<AlgLiteral>expr).value).toBe("{{Test}}");
     });
     test("Parsing of combined variable", () => {
         const input = "var1{{ Test }}";
         const expr = parseAlg(input);
         expect(expr).toBeInstanceOf(AlgLiteral);
-        expect((<AlgLiteral>expr).value).toBe("var1{{ Test }}");
+        expect((<AlgLiteral>expr).value).toBe("var1{{Test}}");
     });
     test("Parsing of combined variable", () => {
         const input = "var1{{ Test1 }}var2{{ Test2 }}";
         const expr = parseAlg(input);
         expect(expr).toBeInstanceOf(AlgLiteral);
-        expect((<AlgLiteral>expr).value).toBe("var1{{ Test1 }}var2{{ Test2 }}");
+        expect((<AlgLiteral>expr).value).toBe("var1{{Test1}}var2{{Test2}}");
     });
     test("Parsing of variable with subvariable", () => {
         const input = "test.first";

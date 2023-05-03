@@ -1,9 +1,7 @@
 import { MockDocument } from "./util";
 import { getFoldingRanges } from "../src/language-service/foldingRangeProvider";
-import { parseSeptic } from "../src/parser";
-import { SepticMetaInfoProvider } from "../src/language-service/septicMetaInfoProvider";
+import { parseSeptic } from "../src/septic";
 
-const metaInfoProvider = new SepticMetaInfoProvider();
 describe("Test folding of document", () => {
     test("Test folding of increasing levels", () => {
         const text = `
@@ -21,7 +19,7 @@ describe("Test folding of document", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        const foldingRanges = getFoldingRanges(doc, cnfg, metaInfoProvider);
+        const foldingRanges = getFoldingRanges(doc, cnfg);
 
         expect(foldingRanges.length).toBe(3);
         expect(foldingRanges[0].startLine).toBe(2);
@@ -52,7 +50,7 @@ describe("Test folding of document", () => {
 
         const cnfg = parseSeptic(doc.getText());
 
-        const foldingRanges = getFoldingRanges(doc, cnfg, metaInfoProvider);
+        const foldingRanges = getFoldingRanges(doc, cnfg);
 
         expect(foldingRanges.length).toBe(4);
         expect(foldingRanges[0].startLine).toBe(2);

@@ -11,19 +11,13 @@ import {
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
-import { SepticObject } from "../parser";
-import { SepticMetaInfoProvider } from "./septicMetaInfoProvider";
+import { SepticMetaInfoProvider, SepticObject } from "../septic";
 
 export class CompletionProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
-    private readonly metaInfoProvider: SepticMetaInfoProvider;
 
-    constructor(
-        cnfgProvider: ISepticConfigProvider,
-        metaInfoProvider: SepticMetaInfoProvider
-    ) {
+    constructor(cnfgProvider: ISepticConfigProvider) {
         this.cnfgProvider = cnfgProvider;
-        this.metaInfoProvider = metaInfoProvider;
     }
 
     public provideCompletion(
@@ -43,7 +37,7 @@ export class CompletionProvider {
             return [];
         }
 
-        const xvrs: SepticObject[] = cnfg.getAllXvrs();
+        const xvrs: SepticObject[] = cnfg.getAllXvrObjects();
 
         const relevantXvrs = getRelevantXvrs(obj, xvrs);
 
@@ -58,8 +52,9 @@ export class CompletionProvider {
     }
 
     private getCalcCompletion(): CompletionItem[] {
+        const metaInfoProvider = SepticMetaInfoProvider.getInstance();
         const compItems: CompletionItem[] = [];
-        let calcs = this.metaInfoProvider.getCalcs();
+        let calcs = metaInfoProvider.getCalcs();
         for (let calc of calcs) {
             compItems.push({
                 label: calc.name + "()",

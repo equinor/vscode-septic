@@ -13,7 +13,7 @@ import { DiagnosticProvider } from "./diagnosticsProvider";
 import { DocumentSymbolProvider } from "./documentSymbolProvider";
 import { SettingsManager } from "../settings";
 import { CompletionProvider } from "./completionProvider";
-import { SepticMetaInfoProvider } from "./septicMetaInfoProvider";
+import { ReferenceProvider } from "./referenceProvider";
 
 export * from "./types/textDocument";
 
@@ -37,32 +37,39 @@ export interface ILanguageService {
         pos: lsp.TextDocumentPositionParams,
         doc: ITextDocument
     ): lsp.CompletionItem[];
+
+    provideDefinition(
+        params: lsp.DefinitionParams,
+        doc: ITextDocument
+    ): lsp.LocationLink[];
+
+    provideReferences(
+        params: lsp.ReferenceParams,
+        doc: ITextDocument
+    ): lsp.Location[];
+
+    provideDeclaration(
+        params: lsp.DeclarationParams,
+        doc: ITextDocument
+    ): lsp.LocationLink[];
 }
 
 export function createLanguageService(
     workspace: IWorkspace,
     configurationManager: SettingsManager
 ) {
-    const metaInfoProvider = new SepticMetaInfoProvider();
     const cnfgProvider = new SepticConfigProvider(workspace);
-    const foldingRangeProvider = new FoldingRangeProvider(
-        cnfgProvider,
-        metaInfoProvider
-    );
+    const foldingRangeProvider = new FoldingRangeProvider(cnfgProvider);
     const diagnosticProvider = new DiagnosticProvider(
         cnfgProvider,
-        configurationManager,
-        metaInfoProvider
-    );
-    const documentSymbolProvider = new DocumentSymbolProvider(
-        cnfgProvider,
-        metaInfoProvider
+        configurationManager
     );
 
-    const completionProvider = new CompletionProvider(
-        cnfgProvider,
-        metaInfoProvider
-    );
+    const documentSymbolProvider = new DocumentSymbolProvider(cnfgProvider);
+
+    const completionProvider = new CompletionProvider(cnfgProvider);
+
+    const referenceProvider = new ReferenceProvider(cnfgProvider);
 
     return Object.freeze<ILanguageService>({
         provideFoldingRanges:
@@ -77,5 +84,11 @@ export function createLanguageService(
             ),
         provideCompletion:
             completionProvider.provideCompletion.bind(completionProvider),
+        provideDefinition:
+            referenceProvider.provideDefinition.bind(referenceProvider),
+        provideReferences:
+            referenceProvider.provideReferences.bind(referenceProvider),
+        provideDeclaration:
+            referenceProvider.provideDeclaration.bind(referenceProvider),
     });
 }

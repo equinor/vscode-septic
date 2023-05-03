@@ -11,9 +11,14 @@ import {
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
-import { AlgVisitor, SepticCnfg, parseAlg } from "../parser";
+import {
+    AlgVisitor,
+    SepticCnfg,
+    SepticReference,
+    SepticMetaInfoProvider,
+    parseAlg,
+} from "../septic";
 import { SettingsManager } from "../settings";
-import { SepticMetaInfoProvider } from "./septicMetaInfoProvider";
 
 export enum DiagnosticLevel {
     error = "error",
@@ -56,16 +61,13 @@ export function toSeverity(
 export class DiagnosticProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
     private readonly settingsManager: SettingsManager;
-    private readonly metaInfoProvider: SepticMetaInfoProvider;
 
     constructor(
         cnfgProvider: ISepticConfigProvider,
-        settingsManager: SettingsManager,
-        metaInfoProvider: SepticMetaInfoProvider
+        settingsManager: SettingsManager
     ) {
         this.cnfgProvider = cnfgProvider;
         this.settingsManager = settingsManager;
-        this.metaInfoProvider = metaInfoProvider;
     }
 
     public provideDiagnostics(
@@ -85,21 +87,18 @@ export class DiagnosticProvider {
             return [];
         }
 
-        return getDiagnostics(cnfg, doc, settings, this.metaInfoProvider);
+        return getDiagnostics(cnfg, doc, settings);
     }
 }
 
 function getDiagnostics(
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    settings: DiagnosticsSettings,
-    septicMetaInfoProvider: SepticMetaInfoProvider
+    settings: DiagnosticsSettings
 ) {
     const diagnostics: Diagnostic[] = [];
     diagnostics.push(...missingIdentifierDiagnostic(cnfg, doc, settings));
-    diagnostics.push(
-        ...algDiagnostic(cnfg, doc, settings, septicMetaInfoProvider)
-    );
+    diagnostics.push(...algDiagnostic(cnfg, doc, settings));
     return diagnostics;
 }
 
@@ -135,18 +134,19 @@ function missingIdentifierDiagnostic(
 export function algDiagnostic(
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    settings: DiagnosticsSettings,
-    metaInfoProvider: SepticMetaInfoProvider
+    settings: DiagnosticsSettings
 ): Diagnostic[] {
     const severityAlg = toSeverity(settings.alg);
     const severityMissingReference = toSeverity(settings.algMissingReference);
     const severityCalc = toSeverity(settings.algCalc);
 
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
+
     if (!severityAlg) {
         return [];
     }
     const diagnostics: Diagnostic[] = [];
-    let algAttrs = cnfg.getAlgAttr();
+    let algAttrs = cnfg.getAlgAttrs();
 
     for (let i = 0; i < algAttrs.length; i++) {
         let alg = algAttrs[i];
@@ -194,8 +194,8 @@ export function algDiagnostic(
         //Check that all references to Xvrs exist in the config
         if (severityMissingReference) {
             visitor.variables.forEach((variable) => {
-                let reference = cnfg.getXvr(variable.value);
-                if (!reference) {
+                let refs = cnfg.getXvrRefs(variable.value.split(".")[0]);
+                if (!refs || !validateRefs(refs!)) {
                     diagnostics.push({
                         severity: severityMissingReference,
                         range: {
@@ -213,4 +213,13 @@ export function algDiagnostic(
         }
     }
     return diagnostics;
+}
+
+function validateRefs(refs: SepticReference[]) {
+    for (const ref of refs) {
+        if (ref.obj) {
+            return true;
+        }
+    }
+    return false;
 }

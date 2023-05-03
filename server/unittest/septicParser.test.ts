@@ -3,72 +3,72 @@ import {
     SepticTokenType,
     parseSeptic,
     tokenize,
-} from "../src/parser";
+} from "../src/septic";
 
 describe("Basic tests lexer", () => {
     test("Lexing keyword", () => {
         const input = "System:  FirstTest";
         let tokens = tokenize(input);
         expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.Object);
-        expect(tokens[1].type).toBe(SepticTokenType.Identifier);
+        expect(tokens[0].type).toBe(SepticTokenType.object);
+        expect(tokens[1].type).toBe(SepticTokenType.identifier);
     });
 
     test("Lexing keyword with scg variable", () => {
         const input = "SopcEvr:  {{ TestEvr }}";
         let tokens = tokenize(input);
         expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.Object);
-        expect(tokens[1].type).toBe(SepticTokenType.Identifier);
+        expect(tokens[0].type).toBe(SepticTokenType.object);
+        expect(tokens[1].type).toBe(SepticTokenType.identifier);
     });
 
     test("Lexing tagmap with string value", () => {
         const input = 'Test1= "Dummy"';
         let tokens = tokenize(input);
         expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.Attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.String);
+        expect(tokens[0].type).toBe(SepticTokenType.attribute);
+        expect(tokens[1].type).toBe(SepticTokenType.string);
     });
 
     test("Lexing tagmap with scg in string value", () => {
         const input = 'Text1= "{{ Jinja but should be hidden since string }}"';
         let tokens = tokenize(input);
         expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.Attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.String);
+        expect(tokens[0].type).toBe(SepticTokenType.attribute);
+        expect(tokens[1].type).toBe(SepticTokenType.string);
     });
 
     test("Lexing tagmap with number value", () => {
         const input = "Test2= 3.14";
         let tokens = tokenize(input);
         expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.Attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.Numeric);
+        expect(tokens[0].type).toBe(SepticTokenType.attribute);
+        expect(tokens[1].type).toBe(SepticTokenType.numeric);
     });
 
     test("Lexing tagmap with groupmask value", () => {
         const input = "GrpLock=  0000000000000000000000000";
         let tokens = tokenize(input);
         expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.Attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.Numeric);
+        expect(tokens[0].type).toBe(SepticTokenType.attribute);
+        expect(tokens[1].type).toBe(SepticTokenType.numeric);
     });
 
     test("Lexing tagmap with bits value", () => {
         const input = "Bits2=  0001";
         let tokens = tokenize(input);
         expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.Attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.Numeric);
+        expect(tokens[0].type).toBe(SepticTokenType.attribute);
+        expect(tokens[1].type).toBe(SepticTokenType.numeric);
     });
 
     test("Lexing blocking tagmap", () => {
         const input = "Blocking=  8    1    2    4    8   16   32   64   96";
         let tokens = tokenize(input);
         expect(tokens.length).toBe(11);
-        expect(tokens[0].type).toBe(SepticTokenType.Attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.Numeric);
-        expect(tokens[2].type).toBe(SepticTokenType.Numeric);
+        expect(tokens[0].type).toBe(SepticTokenType.attribute);
+        expect(tokens[1].type).toBe(SepticTokenType.numeric);
+        expect(tokens[2].type).toBe(SepticTokenType.numeric);
     });
 
     test("Lexing line comment", () => {
@@ -81,33 +81,33 @@ describe("Basic tests lexer", () => {
         const input = '/* Bits2=  0001 */ Test1= "Dummy"';
         let tokens = tokenize(input);
         expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.Attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.String);
+        expect(tokens[0].type).toBe(SepticTokenType.attribute);
+        expect(tokens[1].type).toBe(SepticTokenType.string);
     });
 
     test("Lexing jinja comment", () => {
         const input = '{# Bits2=  0001 #} Test1= "Dummy"';
         let tokens = tokenize(input);
         expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.Attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.String);
+        expect(tokens[0].type).toBe(SepticTokenType.attribute);
+        expect(tokens[1].type).toBe(SepticTokenType.string);
     });
 
     test("Lexing jinja epression", () => {
         const input = '{%- if final|default(false) %} Test1= "Dummy"';
         let tokens = tokenize(input);
         expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.Attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.String);
+        expect(tokens[0].type).toBe(SepticTokenType.attribute);
+        expect(tokens[1].type).toBe(SepticTokenType.string);
     });
 
     test("Lexing with unknown character", () => {
         const input = 'Test1= ?"Dummy"';
         let tokens = tokenize(input);
         expect(tokens.length).toBe(4);
-        expect(tokens[0].type).toBe(SepticTokenType.Attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.Unknown);
-        expect(tokens[2].type).toBe(SepticTokenType.String);
+        expect(tokens[0].type).toBe(SepticTokenType.attribute);
+        expect(tokens[1].type).toBe(SepticTokenType.unknown);
+        expect(tokens[2].type).toBe(SepticTokenType.string);
     });
 
     test("Lexing group tag", () => {
@@ -116,10 +116,10 @@ describe("Basic tests lexer", () => {
                  "Tables6"  "Tables7"`;
         let tokens = tokenize(input);
         expect(tokens.length).toBe(10);
-        expect(tokens[0].type).toBe(SepticTokenType.Attribute);
+        expect(tokens[0].type).toBe(SepticTokenType.attribute);
         expect(
             tokens.filter((el) => {
-                return el.type === SepticTokenType.String;
+                return el.type === SepticTokenType.string;
             }).length
         ).toBe(7);
     });
@@ -134,20 +134,20 @@ describe("Test lexing of blocks", () => {
        PlotMax=  10`;
         let tokens = tokenize(input);
         expect(tokens.length).toBe(11);
-        expect(tokens[0].type).toBe(SepticTokenType.Object);
+        expect(tokens[0].type).toBe(SepticTokenType.object);
         expect(
             tokens.filter((el) => {
-                return el.type === SepticTokenType.Attribute;
+                return el.type === SepticTokenType.attribute;
             }).length
         ).toBe(4);
         expect(
             tokens.filter((el) => {
-                return el.type === SepticTokenType.Numeric;
+                return el.type === SepticTokenType.numeric;
             }).length
         ).toBe(2);
         expect(
             tokens.filter((el) => {
-                return el.type === SepticTokenType.String;
+                return el.type === SepticTokenType.string;
             }).length
         ).toBe(2);
     });
@@ -206,17 +206,17 @@ UseFactorWeight=  0`;
         let tokens = tokenize(input);
         expect(
             tokens.filter((el) => {
-                return el.type === SepticTokenType.Attribute;
+                return el.type === SepticTokenType.attribute;
             }).length
         ).toBe(46);
         expect(
             tokens.filter((el) => {
-                return el.type === SepticTokenType.String;
+                return el.type === SepticTokenType.string;
             }).length
         ).toBe(3);
         expect(
             tokens.filter((el) => {
-                return el.type === SepticTokenType.Numeric;
+                return el.type === SepticTokenType.numeric;
             }).length
         ).toBe(40);
     });
@@ -229,10 +229,10 @@ UseFactorWeight=  0`;
        ColSize=  2`;
         let tokens = tokenize(input);
         expect(tokens.length).toBe(11);
-        expect(tokens[1].type).toBe(SepticTokenType.Identifier);
+        expect(tokens[1].type).toBe(SepticTokenType.identifier);
         expect(
             tokens.filter((el) => {
-                return el.type === SepticTokenType.Attribute;
+                return el.type === SepticTokenType.attribute;
             }).length
         ).toBe(4);
     });
@@ -242,20 +242,20 @@ describe("Test basic functionality of parser", () => {
     test("Test parsing of attribute with single value", () => {
         let tokens = [
             {
-                type: SepticTokenType.Attribute,
+                type: SepticTokenType.attribute,
                 start: 0,
                 end: 7,
                 content: "Test",
             },
 
             {
-                type: SepticTokenType.String,
+                type: SepticTokenType.string,
                 start: 10,
                 end: 14,
                 content: "Test",
             },
             {
-                type: SepticTokenType.EOF,
+                type: SepticTokenType.eof,
                 start: 15,
                 end: 15,
                 content: "",
@@ -272,47 +272,47 @@ describe("Test basic functionality of parser", () => {
     test("Test parsing of attribute with multiple values", () => {
         let tokens = [
             {
-                type: SepticTokenType.Attribute,
+                type: SepticTokenType.attribute,
                 start: 0,
                 end: 7,
                 content: "Test",
             },
 
             {
-                type: SepticTokenType.String,
+                type: SepticTokenType.string,
                 start: 10,
                 end: 14,
                 content: "Test",
             },
 
             {
-                type: SepticTokenType.Numeric,
+                type: SepticTokenType.numeric,
                 start: 15,
                 end: 17,
                 content: "77",
             },
 
             {
-                type: SepticTokenType.Numeric,
+                type: SepticTokenType.numeric,
                 start: 18,
                 end: 53,
                 content: "00000000000000000000001",
             },
 
             {
-                type: SepticTokenType.Numeric,
+                type: SepticTokenType.numeric,
                 start: 55,
                 end: 59,
                 content: "1000",
             },
             {
-                type: SepticTokenType.Identifier,
+                type: SepticTokenType.identifier,
                 start: 60,
                 end: 63,
                 content: "OFF",
             },
             {
-                type: SepticTokenType.EOF,
+                type: SepticTokenType.eof,
                 start: 100,
                 end: 100,
                 content: "",
@@ -333,13 +333,13 @@ describe("Test basic functionality of parser", () => {
     test("Test parsing of variables with one part", () => {
         let tokens = [
             {
-                type: SepticTokenType.Identifier,
+                type: SepticTokenType.identifier,
                 start: 0,
                 end: 7,
                 content: "Variable",
             },
             {
-                type: SepticTokenType.EOF,
+                type: SepticTokenType.eof,
                 start: 15,
                 end: 15,
                 content: "",
@@ -354,31 +354,31 @@ describe("Test basic functionality of parser", () => {
     test("Test parsing of septic object with single attribute", () => {
         let tokens = [
             {
-                type: SepticTokenType.Object,
+                type: SepticTokenType.object,
                 start: 0,
                 end: 7,
                 content: "Test",
             },
             {
-                type: SepticTokenType.Identifier,
+                type: SepticTokenType.identifier,
                 start: 0,
                 end: 7,
                 content: "Variable",
             },
             {
-                type: SepticTokenType.Attribute,
+                type: SepticTokenType.attribute,
                 start: 0,
                 end: 7,
                 content: "Test",
             },
             {
-                type: SepticTokenType.String,
+                type: SepticTokenType.string,
                 start: 10,
                 end: 14,
                 content: "Test",
             },
             {
-                type: SepticTokenType.EOF,
+                type: SepticTokenType.eof,
                 start: 15,
                 end: 15,
                 content: "",
@@ -396,31 +396,31 @@ describe("Test error handling during parsing", () => {
     test("Parsing of attribute with unknown tokens", () => {
         let tokens = [
             {
-                type: SepticTokenType.Attribute,
+                type: SepticTokenType.attribute,
                 start: 0,
                 end: 7,
                 content: "Test",
             },
             {
-                type: SepticTokenType.String,
+                type: SepticTokenType.string,
                 start: 10,
                 end: 14,
                 content: "Test",
             },
             {
-                type: SepticTokenType.Unknown,
+                type: SepticTokenType.unknown,
                 start: 15,
                 end: 16,
                 content: "?",
             },
             {
-                type: SepticTokenType.Numeric,
+                type: SepticTokenType.numeric,
                 start: 17,
                 end: 19,
                 content: "10",
             },
             {
-                type: SepticTokenType.EOF,
+                type: SepticTokenType.eof,
                 start: 15,
                 end: 15,
                 content: "",
@@ -436,37 +436,37 @@ describe("Test error handling during parsing", () => {
     test("Parsing of septic object with unknown tokens ", () => {
         let tokens = [
             {
-                type: SepticTokenType.Object,
+                type: SepticTokenType.object,
                 start: 0,
                 end: 7,
                 content: "System",
             },
             {
-                type: SepticTokenType.Unknown,
+                type: SepticTokenType.unknown,
                 start: 10,
                 end: 14,
                 content: "?",
             },
             {
-                type: SepticTokenType.Identifier,
+                type: SepticTokenType.identifier,
                 start: 15,
                 end: 16,
                 content: "Variable",
             },
             {
-                type: SepticTokenType.Attribute,
+                type: SepticTokenType.attribute,
                 start: 17,
                 end: 19,
                 content: "Text1",
             },
             {
-                type: SepticTokenType.String,
+                type: SepticTokenType.string,
                 start: 17,
                 end: 19,
                 content: "Here!",
             },
             {
-                type: SepticTokenType.EOF,
+                type: SepticTokenType.eof,
                 start: 15,
                 end: 15,
                 content: "",
@@ -483,25 +483,25 @@ describe("Test error handling during parsing", () => {
     test("Parsing of septic object without variable ", () => {
         let tokens = [
             {
-                type: SepticTokenType.Object,
+                type: SepticTokenType.object,
                 start: 0,
                 end: 7,
                 content: "System",
             },
             {
-                type: SepticTokenType.Attribute,
+                type: SepticTokenType.attribute,
                 start: 17,
                 end: 19,
                 content: "Text1",
             },
             {
-                type: SepticTokenType.String,
+                type: SepticTokenType.string,
                 start: 17,
                 end: 19,
                 content: "Here!",
             },
             {
-                type: SepticTokenType.EOF,
+                type: SepticTokenType.eof,
                 start: 15,
                 end: 15,
                 content: "",

@@ -1,9 +1,6 @@
 import { MockDocument } from "./util";
-import { parseSeptic } from "../src/parser";
+import { parseSeptic } from "../src/septic";
 import { getDocumentSymbols } from "../src/language-service/documentSymbolProvider";
-import { SepticMetaInfoProvider } from "../src/language-service/septicMetaInfoProvider";
-
-const metaInfoProvider = new SepticMetaInfoProvider();
 
 describe("Test folding of document", () => {
     test("Test folding of increasing levels", () => {
@@ -22,7 +19,7 @@ describe("Test folding of document", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        const documentSymbols = getDocumentSymbols(doc, cnfg, metaInfoProvider);
+        const documentSymbols = getDocumentSymbols(doc, cnfg);
 
         expect(documentSymbols.length).toBe(1);
         expect(documentSymbols[0].children?.length).toBe(1);
@@ -46,7 +43,7 @@ describe("Test folding of document", () => {
 
         const cnfg = parseSeptic(doc.getText());
 
-        const documentSymbols = getDocumentSymbols(doc, cnfg, metaInfoProvider);
+        const documentSymbols = getDocumentSymbols(doc, cnfg);
 
         expect(documentSymbols.length).toBe(2);
         expect(documentSymbols[0].children?.length).toBe(0);

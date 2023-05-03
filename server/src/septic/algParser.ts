@@ -277,6 +277,9 @@ export class AlgLiteral extends AlgExpr {
         super(token.start, token.end);
         this.value = token.content;
         this.type = token.type;
+        if (token.type === AlgTokenType.identifier) {
+            this.value = this.value.replace(/\s/g, "");
+        }
     }
 
     accept(visitor: IAlgVisitor): any {

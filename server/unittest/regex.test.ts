@@ -8,7 +8,7 @@ import {
     IDENTIFIER_REGEX,
     JINJA_COMMENT_REGEX,
     JINJA_EXPRESSION_REGEX,
-} from "../src/parser";
+} from "../src/septic";
 
 describe("Number regex test", () => {
     const regex = NUMERIC_REGEX;
