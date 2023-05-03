@@ -3,10 +3,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://dev.azure.com/EIIDS/vscode-septic/_apis/build/status/equinor.vscode-septic?branchName=master)](https://dev.azure.com/EIIDS/vscode-septic/_build/latest?definitionId=1&branchName=master)
 
-## New stuff
-
--   Check [releases](https://github.com/equinor/vscode-septic/releases) for change log between the different versions.
-
 ## Features
 
 -   Syntax highlighting
@@ -23,6 +19,9 @@
     -   Verify that the used calcs are valid SEPTIC calcs
     -   Verify that referenced Xvrs exist in the file
 -   Ensures correct encoding (Windows 1252) for SEPTIC files
+-   Go-To Declaration: Goes to the SopcXvr when hovering over a reference to a (Sopc)Xvr
+-   Go-To Definition: Goes to the Xvr when hovering over a reference to a (Sopc)Xvr
+-   Find Referencess: Provides a list of all references to an (Sopc)Xvr (in attributes, object definition, calcs etc.)
 
 ## Instructions
 
