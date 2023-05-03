@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.0](https://github.com/equinor/vscode-septic/compare/v1.0.1...v1.1.0) (2023-05-03)
+
+
+### 🧹 Chores
+
+* **deps:** bump @types/jest from 29.5.0 to 29.5.1 ([#108](https://github.com/equinor/vscode-septic/issues/108)) ([411db6c](https://github.com/equinor/vscode-septic/commit/411db6c7159f3a5c17432500c09add2caa5c103b))
+* **deps:** bump @types/node from 16.11.65 to 16.18.25 ([#107](https://github.com/equinor/vscode-septic/issues/107)) ([935e367](https://github.com/equinor/vscode-septic/commit/935e367e34f706296cada01dcd82a2eb98d2653b))
+* **deps:** bump typescript from 4.8.4 to 5.0.4 ([#104](https://github.com/equinor/vscode-septic/issues/104)) ([bcd8b6c](https://github.com/equinor/vscode-septic/commit/bcd8b6c31313d275c51528f935ea6f4703f93b78))
+
+
+### ✨ Features
+
+* add find references ([#106](https://github.com/equinor/vscode-septic/issues/106)) ([395f28d](https://github.com/equinor/vscode-septic/commit/395f28d3def2f9ce493811a1fa8116926cdfecf6))
+* add go-to declaration ([#106](https://github.com/equinor/vscode-septic/issues/106)) ([395f28d](https://github.com/equinor/vscode-septic/commit/395f28d3def2f9ce493811a1fa8116926cdfecf6))
+* add go-to definition ([#106](https://github.com/equinor/vscode-septic/issues/106)) ([395f28d](https://github.com/equinor/vscode-septic/commit/395f28d3def2f9ce493811a1fa8116926cdfecf6))
+
 ## [1.0.1](https://github.com/equinor/vscode-septic/compare/v1.0.0...v1.0.1) (2023-05-02)
 
 
