@@ -4,7 +4,13 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Emitter, Event, TextDocuments, URI } from "vscode-languageserver";
+import {
+    Connection,
+    Emitter,
+    Event,
+    TextDocuments,
+    URI,
+} from "vscode-languageserver";
 import { ITextDocument } from "./language-service";
 
 export interface IWorkspace {
@@ -13,6 +19,8 @@ export interface IWorkspace {
     readonly onDidOpenCnfg: Event<ITextDocument>;
 
     readonly onDidCloseCnfg: Event<URI>;
+
+    readonly onDidChangeYaml: Event<URI>;
 }
 
 export class SepticWorkspace implements IWorkspace {
@@ -27,6 +35,10 @@ export class SepticWorkspace implements IWorkspace {
     readonly _onDidCloseCnfg = new Emitter<URI>();
 
     readonly onDidCloseCnfg = this._onDidCloseCnfg.event;
+
+    readonly _onDidChangeYaml = new Emitter<URI>();
+
+    readonly onDidChangeYaml = this._onDidChangeYaml.event;
 
     constructor(documents: TextDocuments<ITextDocument>) {
         documents.onDidChangeContent((e) => {

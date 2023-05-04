@@ -7,6 +7,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import * as path from "path";
+import * as protocol from "./protocol";
 
 import {
     LanguageClient,
@@ -18,6 +19,8 @@ import {
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 let client: LanguageClient;
+
+let watcher = vscode.workspace.createFileSystemWatcher("**/*");
 
 export function activate(context: vscode.ExtensionContext) {
     const serverModule = context.asAbsolutePath(
@@ -51,6 +54,30 @@ export function activate(context: vscode.ExtensionContext) {
         serverOptions,
         clientOptions
     );
+
+    client.onRequest(protocol.findCnfgFilesInWorkspace, async () => {
+        return (await vscode.workspace.findFiles(`**/*.cnfg`)).map((f) =>
+            f.toString()
+        );
+    });
+
+    watcher.onDidChange(async (e) => {
+        client.sendRequest(protocol.fsWatcherUpdate, { uri: e.toString() });
+    });
+
+    client.onRequest(
+        protocol.fsReadFile,
+        async (e, token): Promise<number[]> => {
+            const uri = vscode.Uri.parse(e.uri);
+            return Array.from(await vscode.workspace.fs.readFile(uri));
+        }
+    );
+
+    client.onRequest(protocol.findYamlFiles, async () => {
+        return (await vscode.workspace.findFiles(`**/*.yaml`)).map((f) =>
+            f.toString()
+        );
+    });
 
     // Start the client. This will also launch the server
     client.start();

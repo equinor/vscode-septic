@@ -17,13 +17,17 @@ import {
     CompletionItem,
     LocationLink,
     Location,
+    RequestType,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { ILanguageService, createLanguageService } from "./language-service";
 import { SepticWorkspace } from "./workspace";
 import { SettingsManager } from "./settings";
+import * as protocol from "./protocol";
+import { TextDecoder } from "util";
 
+import * as YAML from "yaml";
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
@@ -101,7 +105,7 @@ connection.onInitialized(() => {
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
 
-documents.onDidChangeContent((change) => {
+documents.onDidChangeContent(async (change) => {
     let diagnostics = langService.provideDiagnostics(
         change.document,
         undefined
@@ -110,6 +114,18 @@ documents.onDidChangeContent((change) => {
         uri: change.document.uri,
         diagnostics: diagnostics,
     });
+});
+
+async function getContent(file: string): Promise<string> {
+    let content = await connection.sendRequest(protocol.fsReadFile, {
+        uri: file,
+    });
+    let contentStr = String.fromCharCode.apply(null, content);
+    return contentStr;
+}
+
+connection.onRequest(protocol.fsWatcherUpdate, async (e) => {
+    console.log(await getContent(e.uri));
 });
 
 connection.onDidChangeConfiguration((change) => {
