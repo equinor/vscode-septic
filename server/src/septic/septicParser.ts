@@ -18,14 +18,14 @@ import {
     STRING_REGEX,
     UNKNOWN_REGEX,
 } from "./regex";
+import { SepticCnfg } from "./septicCnfg";
+import { SepticToken, SepticTokenType } from "./septicTokens";
 import {
     Attribute,
     AttributeValue,
-    SepticCnfg,
-    SepticObject,
     Identifier,
-} from "./septicCnfg";
-import { SepticToken, SepticTokenType } from "./septicTokens";
+    SepticObject,
+} from "./septicElements";
 
 export function parseSeptic(
     input: string,
