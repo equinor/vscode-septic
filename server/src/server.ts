@@ -25,7 +25,9 @@ import { ILanguageService, createLanguageService } from "./language-service";
 import { SettingsManager } from "./settings";
 import { DocumentProvider } from "./documentProvider";
 import * as protocol from "./protocol";
-import { ContextManager } from "./context";
+import { ContextManager } from "./contextManager";
+import { offsetToPositionRange } from "./util/converter";
+import { SepticReferenceProvider } from "./septic";
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
@@ -42,7 +44,11 @@ const langService: ILanguageService = createLanguageService(
     documentProvider
 );
 
-const contextManager = new ContextManager(documentProvider, connection);
+const contextManager = new ContextManager(
+    documentProvider,
+    langService.cnfgProvider,
+    connection
+);
 
 let hasConfigurationCapability = true;
 let hasWorkspaceFolderCapability = false;
@@ -111,25 +117,26 @@ connection.onInitialized(async () => {
 // when the text document first opened or when its content has changed.
 
 documents.onDidChangeContent(async (change) => {
-    let diagnostics = langService.provideDiagnostics(
-        change.document,
-        undefined
-    );
-    connection.sendDiagnostics({
-        uri: change.document.uri,
-        diagnostics: diagnostics,
-    });
+    let context: SepticReferenceProvider | undefined =
+        contextManager.getContext(change.document.uri);
+    if (!context) {
+        context = langService.cnfgProvider.get(change.document.uri);
+    }
+
+    if (context) {
+        let diagnostics = langService.provideDiagnostics(
+            change.document,
+            context
+        );
+        connection.sendDiagnostics({
+            uri: change.document.uri,
+            diagnostics: diagnostics,
+        });
+    }
 });
 
 connection.onDidChangeConfiguration((change) => {
     settingsManager.invalidate();
-    documents.all().forEach((doc) => {
-        let diagnostics = langService.provideDiagnostics(doc, undefined);
-        connection.sendDiagnostics({
-            uri: doc.uri,
-            diagnostics: diagnostics,
-        });
-    });
 });
 
 connection.onFoldingRanges((params, token): FoldingRange[] => {
@@ -154,32 +161,120 @@ connection.onCompletion(
         if (!document) {
             return [];
         }
-        return langService.provideCompletion(docPos, document);
+        let context: SepticReferenceProvider | undefined =
+            contextManager.getContext(docPos.textDocument.uri);
+        if (!context) {
+            console.log(
+                `Document ${docPos.textDocument.uri} not in any context.`
+            );
+            context = langService.cnfgProvider.get(docPos.textDocument.uri);
+        }
+
+        if (!context) {
+            return [];
+        }
+        return langService.provideCompletion(docPos, document, context);
     }
 );
 
-connection.onDefinition((params, token): LocationLink[] => {
+connection.onDefinition(async (params, token) => {
     const document = documents.get(params.textDocument.uri);
     if (!document) {
         return [];
     }
-    return langService.provideDefinition(params, document);
+    let context: SepticReferenceProvider | undefined =
+        contextManager.getContext(params.textDocument.uri);
+    if (!context) {
+        console.log(`Document ${params.textDocument.uri} not in any context.`);
+        context = langService.cnfgProvider.get(params.textDocument.uri);
+    }
+
+    if (!context) {
+        return [];
+    }
+
+    let refsOffset = langService.provideDefinition(params, document, context);
+    const refs: LocationLink[] = [];
+    for (let ref of refsOffset) {
+        let doc = await documentProvider.getDocument(ref.targetUri);
+        if (!doc) {
+            continue;
+        }
+        refs.push({
+            targetUri: ref.targetUri,
+            targetRange: offsetToPositionRange(ref.targetRange, doc),
+            targetSelectionRange: offsetToPositionRange(
+                ref.targetSelectionRange,
+                doc
+            ),
+        });
+    }
+    return refs;
 });
 
-connection.onDeclaration((params): LocationLink[] => {
+connection.onDeclaration(async (params) => {
     const document = documents.get(params.textDocument.uri);
     if (!document) {
         return [];
     }
-    return langService.provideDeclaration(params, document);
+    let context: SepticReferenceProvider | undefined =
+        contextManager.getContext(params.textDocument.uri);
+    if (!context) {
+        console.log(`Document ${params.textDocument.uri} not in any context.`);
+        context = langService.cnfgProvider.get(params.textDocument.uri);
+    }
+
+    if (!context) {
+        return [];
+    }
+    let refsOffset = langService.provideDeclaration(params, document, context);
+    const refs: LocationLink[] = [];
+    for (let ref of refsOffset) {
+        let doc = await documentProvider.getDocument(ref.targetUri);
+        if (!doc) {
+            continue;
+        }
+        refs.push({
+            targetUri: ref.targetUri,
+            targetRange: offsetToPositionRange(ref.targetRange, doc),
+            targetSelectionRange: offsetToPositionRange(
+                ref.targetSelectionRange,
+                doc
+            ),
+        });
+    }
+    return refs;
 });
 
-connection.onReferences((params): Location[] => {
+connection.onReferences(async (params) => {
     const document = documents.get(params.textDocument.uri);
     if (!document) {
         return [];
     }
-    return langService.provideReferences(params, document);
+    let context: SepticReferenceProvider | undefined =
+        contextManager.getContext(params.textDocument.uri);
+    if (!context) {
+        console.log(`Document ${params.textDocument.uri} not in any context.`);
+        context = langService.cnfgProvider.get(params.textDocument.uri);
+    }
+
+    if (!context) {
+        return [];
+    }
+    let refsOffset = langService.provideReferences(params, document, context);
+
+    const refs: Location[] = [];
+    for (let ref of refsOffset) {
+        let doc = await documentProvider.getDocument(ref.uri);
+        if (!doc) {
+            continue;
+        }
+        refs.push({
+            uri: ref.uri,
+            range: offsetToPositionRange(ref.range, doc),
+        });
+    }
+    return refs;
 });
 
 // Make the text document manager listen on the connection

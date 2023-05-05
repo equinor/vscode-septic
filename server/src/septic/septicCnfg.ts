@@ -7,15 +7,20 @@ import { AlgVisitor, parseAlg } from "./algParser";
 import { SepticTokenType } from "./septicTokens";
 import { SepticMetaInfoProvider } from "./septicMetaInfo";
 import { Attribute, SepticObject } from "./septicElements";
-import { SepticReference } from "./reference";
+import { SepticReference, SepticReferenceProvider } from "./reference";
 
-export class SepticCnfg {
+export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];
-    readonly xvrRefs = new Map<string, SepticReference[]>();
+    private xvrRefs = new Map<string, SepticReference[]>();
     private xvrRefsExtracted = false;
+    public uri: string = "";
 
     constructor(objects: SepticObject[]) {
         this.objects = objects;
+    }
+
+    public setUri(uri: string) {
+        this.uri = uri;
     }
 
     public getAlgAttrs(): Attribute[] {
@@ -96,6 +101,7 @@ export class SepticCnfg {
         this.xvrRefsExtracted = true;
         this.objects.forEach((obj) => {
             extractXvrRefs(obj).forEach((xvr) => {
+                xvr.location.uri = this.uri;
                 this.addXvrRef(xvr);
             });
         });
@@ -123,6 +129,7 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
             let ref: SepticReference = {
                 identifier: obj.identifier.name,
                 location: {
+                    uri: "",
                     start: obj.identifier.start,
                     end: obj.identifier.end,
                 },
@@ -168,6 +175,7 @@ function calcPvrXvrRefs(obj: SepticObject): SepticReference[] {
         const ref: SepticReference = {
             identifier: identifier,
             location: {
+                uri: "",
                 start: alg!.values[0].start + xvr.start + 1,
                 end: alg!.values[0].start + xvr.start + identifier.length + 1,
             },
@@ -192,6 +200,7 @@ function xvrRefsAttrList(
         return {
             identifier: ref.value.substring(1, ref.value.length - 1),
             location: {
+                uri: "",
                 start: ref.start + 1,
                 end: ref.end - 1,
             },
@@ -211,6 +220,7 @@ function xvrRefAttr(obj: SepticObject, attrName: string): SepticReference[] {
                 attr.values[0].value.length - 1
             ),
             location: {
+                uri: "",
                 start: attr.values[0].start + 1,
                 end: attr.values[0].end - 1,
             },

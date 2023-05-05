@@ -17,6 +17,7 @@ import {
     SepticReference,
     SepticMetaInfoProvider,
     parseAlg,
+    SepticReferenceProvider,
 } from "../septic";
 import { SettingsManager } from "../settings";
 
@@ -72,7 +73,7 @@ export class DiagnosticProvider {
 
     public provideDiagnostics(
         doc: ITextDocument,
-        token: CancellationToken | undefined = undefined
+        refProvider: SepticReferenceProvider
     ): Diagnostic[] {
         const cnfg = this.cnfgProvider.get(doc.uri);
         if (cnfg === undefined) {
@@ -87,18 +88,19 @@ export class DiagnosticProvider {
             return [];
         }
 
-        return getDiagnostics(cnfg, doc, settings);
+        return getDiagnostics(cnfg, doc, settings, refProvider);
     }
 }
 
 function getDiagnostics(
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    settings: DiagnosticsSettings
+    settings: DiagnosticsSettings,
+    refProvider: SepticReferenceProvider
 ) {
     const diagnostics: Diagnostic[] = [];
     diagnostics.push(...missingIdentifierDiagnostic(cnfg, doc, settings));
-    diagnostics.push(...algDiagnostic(cnfg, doc, settings));
+    diagnostics.push(...algDiagnostic(cnfg, doc, settings, refProvider));
     return diagnostics;
 }
 
@@ -134,7 +136,8 @@ function missingIdentifierDiagnostic(
 export function algDiagnostic(
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    settings: DiagnosticsSettings
+    settings: DiagnosticsSettings,
+    refProvider: SepticReferenceProvider
 ): Diagnostic[] {
     const severityAlg = toSeverity(settings.alg);
     const severityMissingReference = toSeverity(settings.algMissingReference);
@@ -194,7 +197,7 @@ export function algDiagnostic(
         //Check that all references to Xvrs exist in the config
         if (severityMissingReference) {
             visitor.variables.forEach((variable) => {
-                let refs = cnfg.getXvrRefs(variable.value.split(".")[0]);
+                let refs = refProvider.getXvrRefs(variable.value.split(".")[0]);
                 if (!refs || !validateRefs(refs!)) {
                     diagnostics.push({
                         severity: severityMissingReference,

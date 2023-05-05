@@ -107,6 +107,10 @@ export class DocumentProvider {
 
     readonly onDidDeleteDoc = this._onDidDeleteDoc.event;
 
+    readonly _onDidLoadDoc = new Emitter<URI>();
+
+    readonly onDidLoadDoc = this._onDidLoadDoc.event;
+
     constructor(
         connection: Connection,
         documents: TextDocuments<TextDocument>
@@ -218,9 +222,20 @@ export class DocumentProvider {
         return this.openDocumentFromFs(uri);
     }
 
+    public async loadDocument(uri: string) {
+        if (this.cache.has(uri)) {
+            return;
+        }
+        let doc = await this.openDocumentFromFs(uri);
+        if (doc) {
+            this._onDidLoadDoc.fire(uri);
+        }
+    }
+
     private async openDocumentFromFs(
         uri: string
     ): Promise<Document | undefined> {
+        console.log(`Opening document ${uri} from fs.`);
         try {
             const content = await this.connection.sendRequest(
                 protocol.fsReadFile,

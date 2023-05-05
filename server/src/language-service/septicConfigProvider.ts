@@ -11,10 +11,10 @@ import {
 } from "vscode-languageserver";
 import { SepticCnfg, parseSeptic } from "../septic";
 import { ResourceMap } from "../util/resourceMap";
-import { IWorkspace } from "../workspace";
 import { ITextDocument } from ".";
 import { Lazy, lazy } from "../util/lazy";
 import { DocumentProvider } from "../documentProvider";
+import * as path from "path";
 
 export interface ISepticConfigProvider {
     get(resource: URI): SepticCnfg | undefined;
@@ -31,7 +31,9 @@ function getValueCnfg(
 ): SepticCnfg {
     const text = document.getText();
 
-    return parseSeptic(text, token);
+    let cnfg = parseSeptic(text, token);
+    cnfg.setUri(document.uri);
+    return cnfg;
 }
 
 export class SepticConfigProvider implements ISepticConfigProvider {
@@ -53,6 +55,7 @@ export class SepticConfigProvider implements ISepticConfigProvider {
 
         docProvider.onDidChangeDoc(async (uri) => this.update(uri));
         docProvider.onDidCreateDoc(async (uri) => this.update(uri));
+        docProvider.onDidLoadDoc(async (uri) => this.update(uri));
         docProvider.onDidDeleteDoc((uri) => this.onDidDelete(uri));
     }
 
@@ -65,6 +68,9 @@ export class SepticConfigProvider implements ISepticConfigProvider {
     }
 
     private async update(uri: string) {
+        if (path.extname(uri) !== ".cnfg") {
+            return;
+        }
         const existing = this.cache.get(uri);
         if (existing) {
             existing.cts.cancel();

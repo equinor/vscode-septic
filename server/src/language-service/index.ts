@@ -7,18 +7,23 @@
 import * as lsp from "vscode-languageserver";
 import { FoldingRangeProvider } from "./foldingRangeProvider";
 import { ITextDocument } from "./types/textDocument";
-import { IWorkspace } from "../workspace";
 import { SepticConfigProvider } from "./septicConfigProvider";
 import { DiagnosticProvider } from "./diagnosticsProvider";
 import { DocumentSymbolProvider } from "./documentSymbolProvider";
 import { SettingsManager } from "../settings";
 import { CompletionProvider } from "./completionProvider";
-import { ReferenceProvider } from "./referenceProvider";
+import {
+    LocationLinkOffset,
+    LocationOffset,
+    ReferenceProvider,
+} from "./referenceProvider";
 import { DocumentProvider } from "../documentProvider";
+import { SepticReferenceProvider } from "../septic";
 
 export * from "./types/textDocument";
 
 export interface ILanguageService {
+    cnfgProvider: SepticConfigProvider;
     provideFoldingRanges(
         doc: ITextDocument,
         token: lsp.CancellationToken | undefined
@@ -26,7 +31,7 @@ export interface ILanguageService {
 
     provideDiagnostics(
         doc: ITextDocument,
-        token: lsp.CancellationToken | undefined
+        refProvider: SepticReferenceProvider
     ): lsp.Diagnostic[];
 
     provideDocumentSymbols(
@@ -36,23 +41,27 @@ export interface ILanguageService {
 
     provideCompletion(
         pos: lsp.TextDocumentPositionParams,
-        doc: ITextDocument
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
     ): lsp.CompletionItem[];
 
     provideDefinition(
         params: lsp.DefinitionParams,
-        doc: ITextDocument
-    ): lsp.LocationLink[];
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): LocationLinkOffset[];
 
     provideReferences(
         params: lsp.ReferenceParams,
-        doc: ITextDocument
-    ): lsp.Location[];
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): LocationOffset[];
 
     provideDeclaration(
         params: lsp.DeclarationParams,
-        doc: ITextDocument
-    ): lsp.LocationLink[];
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): LocationLinkOffset[];
 }
 
 export function createLanguageService(
@@ -73,6 +82,7 @@ export function createLanguageService(
     const referenceProvider = new ReferenceProvider(cnfgProvider);
 
     return Object.freeze<ILanguageService>({
+        cnfgProvider,
         provideFoldingRanges:
             foldingRangeProvider.provideFoldingRanges.bind(
                 foldingRangeProvider

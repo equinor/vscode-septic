@@ -3,68 +3,25 @@ import { DocumentProvider } from "./documentProvider";
 import * as YAML from "js-yaml";
 import * as path from "path";
 import * as protocol from "./protocol";
-
-export interface IContext {
-    name: string;
-    filePath: string;
-
-    fileInContext(file: string): boolean;
-}
-
-class ScgContext implements IContext {
-    public name: string;
-    public filePath: string;
-
-    public files: string[];
-    constructor(
-        name: string,
-        filePath: string,
-        config: ScgConfig,
-        filesInTemplateDir: string[]
-    ) {
-        this.name = name;
-        this.filePath = filePath;
-
-        this.files = this.getFiles(config, filesInTemplateDir);
-    }
-
-    fileInContext(file: string): boolean {
-        return this.files.includes(file);
-    }
-
-    private getFiles(
-        scgConfig: ScgConfig,
-        filesInTemplateDir: string[]
-    ): string[] {
-        const files = [];
-        for (const template of scgConfig.layout) {
-            let found = false;
-            for (const file of filesInTemplateDir) {
-                if (template.name === path.basename(file)) {
-                    files.push(file);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                console.log(
-                    `Could not find template: ${template.name} in template dir for context ${this.name}`
-                );
-            }
-        }
-        return files;
-    }
-}
+import { ScgConfig, ScgContext } from "./septic";
+import { SepticConfigProvider } from "./language-service/septicConfigProvider";
 
 export class ContextManager {
     private docProvider: DocumentProvider;
 
-    private contexts: Map<string, IContext> = new Map<string, IContext>();
+    private contexts: Map<string, ScgContext> = new Map<string, ScgContext>();
 
     private connection: Connection;
 
-    constructor(docProvider: DocumentProvider, connection: Connection) {
+    private cnfgProvider: SepticConfigProvider;
+
+    constructor(
+        docProvider: DocumentProvider,
+        cnfgProvider: SepticConfigProvider,
+        connection: Connection
+    ) {
         this.docProvider = docProvider;
+        this.cnfgProvider = cnfgProvider;
         this.connection = connection;
         this.docProvider.onDidChangeDoc(async (uri) => {
             this.onDidChangeDoc(uri);
@@ -75,7 +32,7 @@ export class ContextManager {
         this.docProvider.onDidDeleteDoc((uri) => this.onDidDeleteDoc(uri));
     }
 
-    public getContext(uri: string): IContext | undefined {
+    public getContext(uri: string): ScgContext | undefined {
         for (let context of this.contexts.values()) {
             if (context.fileInContext(uri)) {
                 return context;
@@ -121,7 +78,6 @@ export class ContextManager {
     public async createScgContext(uri: string): Promise<void> {
         try {
             await this.updateScgContext(uri);
-            console.log(`Created context: ${uri}`);
         } catch (e) {
             return;
         }
@@ -141,34 +97,19 @@ export class ContextManager {
             uri,
             uri,
             scgConfig,
-            filesInTemplatePath
+            filesInTemplatePath,
+            this.cnfgProvider
         );
         this.contexts.set(scgContext.name, scgContext);
+
+        let loadDocuments = scgContext.files.map((f) => {
+            this.docProvider.loadDocument(f);
+        });
+
+        await Promise.all(loadDocuments);
+        console.log(`Updated context: ${uri}`);
+        console.log(
+            `Files in context: ${scgContext.files.map((f) => "\n" + f)}`
+        );
     }
-}
-
-export interface ScgConfig {
-    outputfile?: string;
-
-    templatepath: string;
-
-    verifycontent: boolean;
-
-    adjustsspacing: boolean;
-
-    sources: ScgSource[];
-
-    layout: ScgTemplate[];
-}
-
-export interface ScgSource {
-    filename: string;
-    id: string;
-    sheet: string;
-}
-
-export interface ScgTemplate {
-    name: string;
-    source?: string;
-    include?: string[];
 }
