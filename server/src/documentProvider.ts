@@ -1,27 +1,245 @@
-import { CancellationToken } from "vscode-jsonrpc";
+import { Emitter } from "vscode-jsonrpc";
 import { ITextDocument } from "./language-service";
-import { ResourceMap, Lazy } from "./util";
-import { IWorkspace } from "./workspace";
-import { Connection } from "vscode-languageserver";
+import { ResourceMap } from "./util";
+import {
+    Connection,
+    FileChangeType,
+    TextDocuments,
+    URI,
+} from "vscode-languageserver";
 import * as protocol from "./protocol";
+import {
+    Position,
+    Range,
+    TextDocument,
+} from "vscode-languageserver-textdocument";
+import * as path from "path";
 
-export class DocumentProvider {
-    private readonly cache = new ResourceMap<{
-        value: Lazy<ITextDocument>;
-        cts: CancellationToken;
-    }>();
+class Document implements ITextDocument {
+    private inMemoryDoc?: ITextDocument;
+    private onDiskDoc?: ITextDocument;
 
-    private readonly connection: Connection;
+    readonly uri: string;
+    readonly version: number = 0;
+    readonly lineCount: number = 0;
 
-    constructor(workspace: IWorkspace, connection: Connection) {
-        this.connection = connection;
+    constructor(uri: string, init: { inMemoryDoc: ITextDocument });
+    constructor(uri: string, init: { onDiskDoc: ITextDocument });
+    constructor(
+        uri: string,
+        init: {
+            inMemoryDoc: ITextDocument;
+            onDiskDoc: ITextDocument;
+        }
+    ) {
+        this.uri = uri;
+        this.inMemoryDoc = init?.inMemoryDoc;
+        this.onDiskDoc = init?.onDiskDoc;
     }
 
-    public getDocument(uri: string) {
+    getText(range?: Range): string {
+        if (this.inMemoryDoc) {
+            return this.inMemoryDoc.getText(range);
+        }
+
+        if (this.onDiskDoc) {
+            return this.onDiskDoc.getText(range);
+        }
+
+        throw new Error("Document has been closed");
+    }
+
+    positionAt(offset: number): Position {
+        if (this.inMemoryDoc) {
+            return this.inMemoryDoc.positionAt(offset);
+        }
+
+        if (this.onDiskDoc) {
+            return this.onDiskDoc.positionAt(offset);
+        }
+
+        throw new Error("Document has been closed");
+    }
+
+    offsetAt(position: Position): number {
+        if (this.inMemoryDoc) {
+            return this.inMemoryDoc.offsetAt(position);
+        }
+
+        if (this.onDiskDoc) {
+            return this.onDiskDoc.offsetAt(position);
+        }
+
+        throw new Error("Document has been closed");
+    }
+
+    hasInMemoryDoc(): boolean {
+        return !!this.inMemoryDoc;
+    }
+
+    isDetached(): boolean {
+        return !this.onDiskDoc && !this.inMemoryDoc;
+    }
+
+    setInMemoryDoc(doc: TextDocument | undefined) {
+        this.inMemoryDoc = doc;
+    }
+
+    setOnDiskDoc(doc: TextDocument | undefined) {
+        this.onDiskDoc = doc;
+    }
+}
+
+export class DocumentProvider {
+    private readonly cache = new ResourceMap<Document>();
+    private readonly documents: TextDocuments<TextDocument>;
+    private readonly connection: Connection;
+
+    readonly _onDidChangeDoc = new Emitter<URI>();
+
+    readonly onDidChangeDoc = this._onDidChangeDoc.event;
+
+    readonly _onDidCreateDoc = new Emitter<URI>();
+
+    readonly onDidCreateDoc = this._onDidCreateDoc.event;
+
+    readonly _onDidDeleteDoc = new Emitter<URI>();
+
+    readonly onDidDeleteDoc = this._onDidDeleteDoc.event;
+
+    constructor(
+        connection: Connection,
+        documents: TextDocuments<TextDocument>
+    ) {
+        this.connection = connection;
+        this.documents = documents;
+
+        this.documents.onDidOpen((e) => {
+            console.log(`Opened doc: ${e.document.uri}`);
+            if (!this.isRelevantFile(e.document.uri)) {
+                return;
+            }
+            const doc = this.cache.get(e.document.uri);
+            if (doc) {
+                doc.setInMemoryDoc(e.document);
+            } else {
+                const doc = new Document(e.document.uri, {
+                    inMemoryDoc: e.document,
+                });
+                this.cache.set(doc.uri, doc);
+                this._onDidCreateDoc.fire(doc.uri);
+            }
+        });
+
+        this.documents.onDidChangeContent((e) => {
+            console.log(`Updated doc: ${e.document.uri}`);
+            if (!this.isRelevantFile(e.document.uri)) {
+                return;
+            }
+            const doc = this.cache.get(e.document.uri);
+            if (doc) {
+                doc.setInMemoryDoc(e.document);
+                this._onDidChangeDoc.fire(e.document.uri);
+            }
+        });
+
+        this.documents.onDidClose((e) => {
+            console.log(`Closed doc: ${e.document.uri}`);
+            if (!this.isRelevantFile(e.document.uri)) {
+                return;
+            }
+            const doc = this.cache.get(e.document.uri);
+            if (!doc) {
+                return;
+            }
+
+            doc.setInMemoryDoc(undefined);
+            if (doc.isDetached()) {
+                this.cache.delete(doc.uri);
+                this._onDidDeleteDoc.fire(doc.uri);
+            }
+        });
+
+        connection.onDidChangeWatchedFiles(async (parms) => {
+            for (const change of parms.changes) {
+                console.log(`Change: ${change.uri}`);
+                if (!this.isRelevantFile(change.uri)) {
+                    continue;
+                }
+                switch (change.type) {
+                    case FileChangeType.Created: {
+                        const doc = this.cache.get(change.uri);
+                        if (doc) {
+                            await this.openDocumentFromFs(change.uri);
+                        }
+                        this._onDidCreateDoc.fire(change.uri);
+                        break;
+                    }
+                    case FileChangeType.Changed: {
+                        const doc = this.cache.get(change.uri);
+                        if (doc) {
+                            await this.openDocumentFromFs(change.uri);
+                        }
+                        this._onDidChangeDoc.fire(change.uri);
+                        break;
+                    }
+                    case FileChangeType.Deleted: {
+                        const doc = this.cache.get(change.uri);
+                        if (doc) {
+                            doc.setOnDiskDoc(undefined);
+                            if (doc.isDetached()) {
+                                this.cache.delete(doc.uri);
+                                this._onDidDeleteDoc.fire(doc.uri);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+    public async getDocument(uri: string) {
         const doc = this.cache.get(uri);
         if (doc) {
             return doc;
         }
-        this.connection.sendRequest(pr);
+        const matchingDoc = this.documents.get(uri);
+        if (matchingDoc) {
+            let entry = this.cache.get(uri);
+            if (entry) {
+                entry.setInMemoryDoc(matchingDoc);
+            } else {
+                entry = new Document(uri, { inMemoryDoc: matchingDoc });
+                this.cache.set(uri, entry);
+            }
+            return entry;
+        }
+        return this.openDocumentFromFs(uri);
+    }
+
+    private async openDocumentFromFs(
+        uri: string
+    ): Promise<Document | undefined> {
+        try {
+            const content = await this.connection.sendRequest(
+                protocol.fsReadFile,
+                {
+                    uri: uri,
+                }
+            );
+            const contentString = String.fromCharCode.apply(null, content);
+            const doc = new Document(uri, {
+                onDiskDoc: TextDocument.create(uri, "septic", 0, contentString),
+            });
+            this.cache.set(uri, doc);
+            return doc;
+        } catch (e) {
+            return undefined;
+        }
+    }
+
+    private isRelevantFile(uri: string) {
+        return path.extname(uri) === ".cnfg" || path.extname(uri) === ".yaml";
     }
 }

@@ -14,6 +14,7 @@ import { DocumentSymbolProvider } from "./documentSymbolProvider";
 import { SettingsManager } from "../settings";
 import { CompletionProvider } from "./completionProvider";
 import { ReferenceProvider } from "./referenceProvider";
+import { DocumentProvider } from "../documentProvider";
 
 export * from "./types/textDocument";
 
@@ -55,10 +56,10 @@ export interface ILanguageService {
 }
 
 export function createLanguageService(
-    workspace: IWorkspace,
-    configurationManager: SettingsManager
+    configurationManager: SettingsManager,
+    documentProvider: DocumentProvider
 ) {
-    const cnfgProvider = new SepticConfigProvider(workspace);
+    const cnfgProvider = new SepticConfigProvider(documentProvider);
     const foldingRangeProvider = new FoldingRangeProvider(cnfgProvider);
     const diagnosticProvider = new DiagnosticProvider(
         cnfgProvider,

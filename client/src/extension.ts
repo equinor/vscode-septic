@@ -20,8 +20,6 @@ import {
 // your extension is activated the very first time the command is executed
 let client: LanguageClient;
 
-let watcher = vscode.workspace.createFileSystemWatcher("**/*");
-
 export function activate(context: vscode.ExtensionContext) {
     const serverModule = context.asAbsolutePath(
         path.join("server", "out", "server.js")
@@ -43,8 +41,11 @@ export function activate(context: vscode.ExtensionContext) {
         documentSelector: [{ scheme: "file", language: "septic" }],
         synchronize: {
             // Notify the server about file changes to '.clientrc files contained in the workspace
-            fileEvents:
+            fileEvents: [
                 vscode.workspace.createFileSystemWatcher("**/.clientrc"),
+                vscode.workspace.createFileSystemWatcher("**/*.cnfg"),
+                vscode.workspace.createFileSystemWatcher("**/*.yaml"),
+            ],
         },
     };
 
@@ -54,15 +55,16 @@ export function activate(context: vscode.ExtensionContext) {
         serverOptions,
         clientOptions
     );
+    client.onRequest(protocol.globFiles, async (params, cts) => {
+        return (
+            await vscode.workspace.findFiles("**/" + params.uri + "/**")
+        ).map((f) => f.toString());
+    });
 
     client.onRequest(protocol.findCnfgFilesInWorkspace, async () => {
         return (await vscode.workspace.findFiles(`**/*.cnfg`)).map((f) =>
             f.toString()
         );
-    });
-
-    watcher.onDidChange(async (e) => {
-        client.sendRequest(protocol.fsWatcherUpdate, { uri: e.toString() });
     });
 
     client.onRequest(

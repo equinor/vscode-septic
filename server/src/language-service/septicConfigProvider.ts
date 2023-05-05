@@ -14,6 +14,7 @@ import { ResourceMap } from "../util/resourceMap";
 import { IWorkspace } from "../workspace";
 import { ITextDocument } from ".";
 import { Lazy, lazy } from "../util/lazy";
+import { DocumentProvider } from "../documentProvider";
 
 export interface ISepticConfigProvider {
     get(resource: URI): SepticCnfg | undefined;
@@ -41,12 +42,18 @@ export class SepticConfigProvider implements ISepticConfigProvider {
 
     readonly getValue;
 
-    constructor(workspace: IWorkspace, getValue: GetValueFn = getValueCnfg) {
-        this.getValue = getValue;
+    private readonly docProvider: DocumentProvider;
 
-        workspace.onDidChangeCnfg((doc) => this.update(doc));
-        workspace.onDidOpenCnfg((doc) => this.update(doc));
-        workspace.onDidCloseCnfg((uri) => this.onDidClose(uri));
+    constructor(
+        docProvider: DocumentProvider,
+        getValue: GetValueFn = getValueCnfg
+    ) {
+        this.getValue = getValue;
+        this.docProvider = docProvider;
+
+        docProvider.onDidChangeDoc(async (uri) => this.update(uri));
+        docProvider.onDidCreateDoc(async (uri) => this.update(uri));
+        docProvider.onDidDeleteDoc((uri) => this.onDidDelete(uri));
     }
 
     public get(resource: URI): SepticCnfg | undefined {
@@ -57,8 +64,8 @@ export class SepticConfigProvider implements ISepticConfigProvider {
         return undefined;
     }
 
-    private update(document: ITextDocument) {
-        const existing = this.cache.get(document.uri);
+    private async update(uri: string) {
+        const existing = this.cache.get(uri);
         if (existing) {
             existing.cts.cancel();
             existing.cts.dispose();
@@ -66,13 +73,18 @@ export class SepticConfigProvider implements ISepticConfigProvider {
 
         let cts = new CancellationTokenSource();
 
-        this.cache.set(document.uri, {
-            value: lazy<SepticCnfg>(() => this.getValue(document, cts.token)),
+        const doc = await this.docProvider.getDocument(uri);
+
+        if (!doc) {
+            return;
+        }
+        this.cache.set(doc.uri, {
+            value: lazy<SepticCnfg>(() => this.getValue(doc, cts.token)),
             cts: cts,
         });
     }
 
-    private onDidClose(resource: URI) {
+    private onDidDelete(resource: URI) {
         const entry = this.cache.get(resource);
         if (entry) {
             entry.cts.cancel();

@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as YAML from "yaml";
+import * as YAML from "js-yaml";
 import * as fs from "fs";
 import * as path from "path";
 import { SymbolKind } from "vscode-languageserver-types";
@@ -99,7 +99,9 @@ export class SepticMetaInfoProvider {
     private loadMetaInfo(): SepticMetaInfo {
         const filePath = path.join(__dirname, "../public/septicMetaInfo.yaml");
         const file = fs.readFileSync(filePath, "utf-8");
-        const metaInfo: SepticMetaInfoInput = YAML.parse(file);
+        const metaInfo: SepticMetaInfoInput = YAML.load(
+            file
+        ) as SepticMetaInfoInput;
         return this.setDefaultValues(metaInfo);
     }
 

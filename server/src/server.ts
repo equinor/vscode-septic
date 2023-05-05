@@ -17,17 +17,14 @@ import {
     CompletionItem,
     LocationLink,
     Location,
-    RequestType,
+    DidChangeWatchedFilesNotification,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { ILanguageService, createLanguageService } from "./language-service";
-import { SepticWorkspace } from "./workspace";
 import { SettingsManager } from "./settings";
+import { DocumentProvider } from "./documentProvider";
 import * as protocol from "./protocol";
-import { TextDecoder } from "util";
-
-import * as YAML from "yaml";
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
@@ -35,13 +32,13 @@ const connection = createConnection(ProposedFeatures.all);
 // Create a simple text document manager.
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
-const workspace = new SepticWorkspace(documents);
-
 const settingsManager = new SettingsManager(connection);
 
+const documentProvider = new DocumentProvider(connection, documents);
+
 const langService: ILanguageService = createLanguageService(
-    workspace,
-    settingsManager
+    settingsManager,
+    documentProvider
 );
 
 let hasConfigurationCapability = true;
@@ -87,13 +84,14 @@ connection.onInitialize((params: InitializeParams) => {
     return result;
 });
 
-connection.onInitialized(() => {
+connection.onInitialized(async () => {
     if (hasConfigurationCapability) {
         // Register for all configuration changes.
         connection.client.register(
             DidChangeConfigurationNotification.type,
             undefined
         );
+        connection.client.register(DidChangeWatchedFilesNotification.type);
     }
     if (hasWorkspaceFolderCapability) {
         connection.workspace.onDidChangeWorkspaceFolders((_event) => {
@@ -114,18 +112,6 @@ documents.onDidChangeContent(async (change) => {
         uri: change.document.uri,
         diagnostics: diagnostics,
     });
-});
-
-async function getContent(file: string): Promise<string> {
-    let content = await connection.sendRequest(protocol.fsReadFile, {
-        uri: file,
-    });
-    let contentStr = String.fromCharCode.apply(null, content);
-    return contentStr;
-}
-
-connection.onRequest(protocol.fsWatcherUpdate, async (e) => {
-    console.log(await getContent(e.uri));
 });
 
 connection.onDidChangeConfiguration((change) => {

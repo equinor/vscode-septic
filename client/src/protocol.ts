@@ -12,6 +12,6 @@ export const findYamlFiles = new RequestType<{}, string[], any>(
     "septic/findYamlFiles"
 );
 
-export const fsWatcherUpdate = new RequestType<{ uri: string }, void, any>(
-    "septic/fsWatcherUpdate"
+export const globFiles = new RequestType<{ uri: string }, string[], any>(
+    "septic/globFiles"
 );
