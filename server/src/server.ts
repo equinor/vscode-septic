@@ -25,6 +25,7 @@ import { ILanguageService, createLanguageService } from "./language-service";
 import { SettingsManager } from "./settings";
 import { DocumentProvider } from "./documentProvider";
 import * as protocol from "./protocol";
+import { ContextManager } from "./context";
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
@@ -40,6 +41,8 @@ const langService: ILanguageService = createLanguageService(
     settingsManager,
     documentProvider
 );
+
+const contextManager = new ContextManager(documentProvider, connection);
 
 let hasConfigurationCapability = true;
 let hasWorkspaceFolderCapability = false;
@@ -97,6 +100,10 @@ connection.onInitialized(async () => {
         connection.workspace.onDidChangeWorkspaceFolders((_event) => {
             connection.console.log("Workspace folder change event received.");
         });
+    }
+    const yamlFiles = await connection.sendRequest(protocol.findYamlFiles, {});
+    for (const file of yamlFiles) {
+        contextManager.createScgContext(file);
     }
 });
 
