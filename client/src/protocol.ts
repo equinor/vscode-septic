@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Equinor ASA
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import { RequestType } from "vscode-languageclient";
 
 export const findCnfgFilesInWorkspace = new RequestType<{}, string[], any>(

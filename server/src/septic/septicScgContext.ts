@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Equinor ASA
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import * as path from "path";
 import { SepticReference, SepticReferenceProvider } from "./reference";
 import { SepticObject } from "./septicElements";

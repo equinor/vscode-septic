@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Equinor ASA
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import { Connection } from "vscode-languageserver";
 import { DocumentProvider } from "./documentProvider";
 import * as YAML from "js-yaml";
