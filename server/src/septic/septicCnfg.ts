@@ -202,7 +202,9 @@ function xvrRefsAttrList(
     });
     return refs.map((ref) => {
         return {
-            identifier: ref.value.substring(1, ref.value.length - 1),
+            identifier: ref.value
+                .substring(1, ref.value.length - 1)
+                .replace(/\s/, ""),
             location: {
                 uri: "",
                 start: ref.start + 1,
@@ -219,10 +221,9 @@ function xvrRefAttr(obj: SepticObject, attrName: string): SepticReference[] {
     }
     return [
         {
-            identifier: attr.values[0].value.substring(
-                1,
-                attr.values[0].value.length - 1
-            ),
+            identifier: attr.values[0].value
+                .substring(1, attr.values[0].value.length - 1)
+                .replace(/\s/, ""),
             location: {
                 uri: "",
                 start: attr.values[0].start + 1,
