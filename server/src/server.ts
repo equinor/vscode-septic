@@ -119,6 +119,7 @@ connection.onInitialize((params: InitializeParams) => {
             definitionProvider: true,
             referencesProvider: true,
             declarationProvider: true,
+            renameProvider: true,
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -317,6 +318,22 @@ connection.onReferences(async (params) => {
         });
     }
     return refs;
+});
+
+connection.onRenameRequest((params) => {
+    const document = documents.get(params.textDocument.uri);
+    if (!document) {
+        return undefined;
+    }
+    return langService.provideRename(params, document);
+});
+
+connection.onPrepareRename((params) => {
+    const document = documents.get(params.textDocument.uri);
+    if (!document) {
+        return null;
+    }
+    return langService.providePrepareRename(params, document);
 });
 
 // Make the text document manager listen on the connection
