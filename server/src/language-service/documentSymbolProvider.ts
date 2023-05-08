@@ -26,11 +26,11 @@ export class DocumentSymbolProvider {
         this.cnfgProvider = cnfgProvider;
     }
 
-    public provideDocumentSymbols(
+    public async provideDocumentSymbols(
         document: ITextDocument,
         token: CancellationToken | undefined
-    ): DocumentSymbol[] {
-        const cnfg = this.cnfgProvider.get(document.uri);
+    ): Promise<DocumentSymbol[]> {
+        const cnfg = await this.cnfgProvider.get(document.uri);
         if (!cnfg) {
             return [];
         }

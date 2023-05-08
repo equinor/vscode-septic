@@ -19,6 +19,10 @@ export class SepticCnfg implements SepticReferenceProvider {
         this.objects = objects;
     }
 
+    public async load(): Promise<void> {
+        return Promise.resolve();
+    }
+
     public setUri(uri: string) {
         this.uri = uri;
     }

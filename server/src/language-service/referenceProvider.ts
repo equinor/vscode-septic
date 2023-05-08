@@ -24,42 +24,45 @@ export class ReferenceProvider {
         this.cnfgProvider = cnfgProvider;
     }
 
-    public provideDefinition(
+    public async provideDefinition(
         params: DefinitionParams,
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
-    ): LocationLinkOffset[] {
+    ): Promise<LocationLinkOffset[]> {
         const offset = doc.offsetAt(params.position);
-        const cnfg = this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(doc.uri);
         if (!cnfg) {
             return [];
         }
+        await refProvider.load();
         return getDefinition(offset, cnfg, doc, refProvider);
     }
 
-    public provideReferences(
+    public async provideReferences(
         params: ReferenceParams,
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
-    ): LocationOffset[] {
+    ): Promise<LocationOffset[]> {
         const offset = doc.offsetAt(params.position);
-        const cnfg = this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(doc.uri);
         if (!cnfg) {
             return [];
         }
+        await refProvider.load();
         return getReferences(offset, cnfg, refProvider);
     }
 
-    public provideDeclaration(
+    public async provideDeclaration(
         params: DeclarationParams,
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
-    ): LocationLinkOffset[] {
+    ): Promise<LocationLinkOffset[]> {
         const offset = doc.offsetAt(params.position);
-        const cnfg = this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(doc.uri);
         if (!cnfg) {
             return [];
         }
+        await refProvider.load();
         return getDeclaration(offset, cnfg, doc, refProvider);
     }
 }

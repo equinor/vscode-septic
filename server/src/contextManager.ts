@@ -32,7 +32,7 @@ export class ContextManager {
         this.docProvider.onDidDeleteDoc((uri) => this.onDidDeleteDoc(uri));
     }
 
-    public getContext(uri: string): ScgContext | undefined {
+    public async getContext(uri: string): Promise<ScgContext | undefined> {
         for (let context of this.contexts.values()) {
             if (context.fileInContext(uri)) {
                 return context;
@@ -108,8 +108,5 @@ export class ContextManager {
 
         await Promise.all(loadDocuments);
         console.log(`Updated context: ${uri}`);
-        console.log(
-            `Files in context: ${scgContext.files.map((f) => "\n" + f)}`
-        );
     }
 }

@@ -11,6 +11,7 @@ export interface SepticReference {
 }
 
 export interface SepticReferenceProvider {
+    load(): Promise<void>;
     getXvrRefs(name: string): SepticReference[] | undefined;
     getAllXvrObjects(): SepticObject[];
 }

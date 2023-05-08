@@ -2,6 +2,7 @@ import * as path from "path";
 import { SepticReference, SepticReferenceProvider } from "./reference";
 import { SepticObject } from "./septicElements";
 import { SepticConfigProvider } from "../language-service/septicConfigProvider";
+import { SepticCnfg } from "./septicCnfg";
 
 export interface ScgConfig {
     outputfile?: string;
@@ -34,6 +35,7 @@ export class ScgContext implements SepticReferenceProvider {
     public filePath: string;
 
     private cnfgProvider: SepticConfigProvider;
+    private cnfgCache = new Map<string, SepticCnfg | undefined>();
 
     public files: string[];
     constructor(
@@ -77,10 +79,19 @@ export class ScgContext implements SepticReferenceProvider {
         return files;
     }
 
+    public async load(): Promise<void> {
+        await Promise.all(
+            this.files.map(async (file) => {
+                let cnfg = await this.cnfgProvider.get(file);
+                this.cnfgCache.set(cnfg!.uri, cnfg);
+            })
+        );
+    }
+
     public getXvrRefs(name: string): SepticReference[] | undefined {
         let xvrRefs: SepticReference[] = [];
         for (const file of this.files) {
-            let cnfg = this.cnfgProvider.get(file);
+            let cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
                 console.log(
                     `Could not get config for ${file} in context ${this.name}`
@@ -101,7 +112,7 @@ export class ScgContext implements SepticReferenceProvider {
     public getAllXvrObjects(): SepticObject[] {
         let xvrObjs: SepticObject[] = [];
         for (const file of this.files) {
-            let cnfg = this.cnfgProvider.get(file);
+            let cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
                 continue;
             }

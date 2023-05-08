@@ -118,13 +118,13 @@ connection.onInitialized(async () => {
 
 documents.onDidChangeContent(async (change) => {
     let context: SepticReferenceProvider | undefined =
-        contextManager.getContext(change.document.uri);
+        await contextManager.getContext(change.document.uri);
     if (!context) {
-        context = langService.cnfgProvider.get(change.document.uri);
+        context = await langService.cnfgProvider.get(change.document.uri);
     }
 
     if (context) {
-        let diagnostics = langService.provideDiagnostics(
+        let diagnostics = await langService.provideDiagnostics(
             change.document,
             context
         );
@@ -139,7 +139,7 @@ connection.onDidChangeConfiguration((change) => {
     settingsManager.invalidate();
 });
 
-connection.onFoldingRanges((params, token): FoldingRange[] => {
+connection.onFoldingRanges(async (params, token): Promise<FoldingRange[]> => {
     const document = documents.get(params.textDocument.uri);
     if (!document) {
         return [];
@@ -147,27 +147,28 @@ connection.onFoldingRanges((params, token): FoldingRange[] => {
     return langService.provideFoldingRanges(document, token);
 });
 
-connection.onDocumentSymbol((params, token): DocumentSymbol[] => {
-    const document = documents.get(params.textDocument.uri);
-    if (!document) {
-        return [];
+connection.onDocumentSymbol(
+    async (params, token): Promise<DocumentSymbol[]> => {
+        const document = documents.get(params.textDocument.uri);
+        if (!document) {
+            return [];
+        }
+        return langService.provideDocumentSymbols(document, token);
     }
-    return langService.provideDocumentSymbols(document, token);
-});
+);
 
 connection.onCompletion(
-    (docPos: TextDocumentPositionParams): CompletionItem[] => {
+    async (docPos: TextDocumentPositionParams): Promise<CompletionItem[]> => {
         const document = documents.get(docPos.textDocument.uri);
         if (!document) {
             return [];
         }
         let context: SepticReferenceProvider | undefined =
-            contextManager.getContext(docPos.textDocument.uri);
+            await contextManager.getContext(docPos.textDocument.uri);
         if (!context) {
-            console.log(
-                `Document ${docPos.textDocument.uri} not in any context.`
+            context = await langService.cnfgProvider.get(
+                docPos.textDocument.uri
             );
-            context = langService.cnfgProvider.get(docPos.textDocument.uri);
         }
 
         if (!context) {
@@ -183,17 +184,20 @@ connection.onDefinition(async (params, token) => {
         return [];
     }
     let context: SepticReferenceProvider | undefined =
-        contextManager.getContext(params.textDocument.uri);
+        await contextManager.getContext(params.textDocument.uri);
     if (!context) {
-        console.log(`Document ${params.textDocument.uri} not in any context.`);
-        context = langService.cnfgProvider.get(params.textDocument.uri);
+        context = await langService.cnfgProvider.get(params.textDocument.uri);
     }
 
     if (!context) {
         return [];
     }
 
-    let refsOffset = langService.provideDefinition(params, document, context);
+    let refsOffset = await langService.provideDefinition(
+        params,
+        document,
+        context
+    );
     const refs: LocationLink[] = [];
     for (let ref of refsOffset) {
         let doc = await documentProvider.getDocument(ref.targetUri);
@@ -218,16 +222,19 @@ connection.onDeclaration(async (params) => {
         return [];
     }
     let context: SepticReferenceProvider | undefined =
-        contextManager.getContext(params.textDocument.uri);
+        await contextManager.getContext(params.textDocument.uri);
     if (!context) {
-        console.log(`Document ${params.textDocument.uri} not in any context.`);
-        context = langService.cnfgProvider.get(params.textDocument.uri);
+        context = await langService.cnfgProvider.get(params.textDocument.uri);
     }
 
     if (!context) {
         return [];
     }
-    let refsOffset = langService.provideDeclaration(params, document, context);
+    let refsOffset = await langService.provideDeclaration(
+        params,
+        document,
+        context
+    );
     const refs: LocationLink[] = [];
     for (let ref of refsOffset) {
         let doc = await documentProvider.getDocument(ref.targetUri);
@@ -252,16 +259,19 @@ connection.onReferences(async (params) => {
         return [];
     }
     let context: SepticReferenceProvider | undefined =
-        contextManager.getContext(params.textDocument.uri);
+        await contextManager.getContext(params.textDocument.uri);
     if (!context) {
-        console.log(`Document ${params.textDocument.uri} not in any context.`);
-        context = langService.cnfgProvider.get(params.textDocument.uri);
+        context = await langService.cnfgProvider.get(params.textDocument.uri);
     }
 
     if (!context) {
         return [];
     }
-    let refsOffset = langService.provideReferences(params, document, context);
+    let refsOffset = await langService.provideReferences(
+        params,
+        document,
+        context
+    );
 
     const refs: Location[] = [];
     for (let ref of refsOffset) {

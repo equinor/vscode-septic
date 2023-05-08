@@ -16,11 +16,11 @@ export class FoldingRangeProvider {
         this.cnfgProvider = cnfgProvider;
     }
 
-    public provideFoldingRanges(
+    public async provideFoldingRanges(
         doc: ITextDocument,
         token: lsp.CancellationToken
-    ): lsp.FoldingRange[] {
-        let cnfg = this.cnfgProvider.get(doc.uri);
+    ): Promise<lsp.FoldingRange[]> {
+        let cnfg = await this.cnfgProvider.get(doc.uri);
         if (!cnfg) {
             return [];
         }

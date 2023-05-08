@@ -24,15 +24,14 @@ export class CompletionProvider {
         this.cnfgProvider = cnfgProvider;
     }
 
-    public provideCompletion(
+    public async provideCompletion(
         pos: TextDocumentPositionParams,
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
-    ): CompletionItem[] {
+    ): Promise<CompletionItem[]> {
         const compItems: CompletionItem[] = [];
         const offset = doc.offsetAt(pos.position);
-
-        const cnfg = this.cnfgProvider.get(pos.textDocument.uri);
+        const cnfg = await this.cnfgProvider.get(pos.textDocument.uri);
         if (!cnfg) {
             return [];
         }
@@ -41,7 +40,7 @@ export class CompletionProvider {
         if (!obj) {
             return [];
         }
-
+        await refProvider.load();
         const xvrs: SepticObject[] = refProvider.getAllXvrObjects();
 
         const relevantXvrs = getRelevantXvrs(obj, xvrs);

@@ -71,11 +71,11 @@ export class DiagnosticProvider {
         this.settingsManager = settingsManager;
     }
 
-    public provideDiagnostics(
+    public async provideDiagnostics(
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
-    ): Diagnostic[] {
-        const cnfg = this.cnfgProvider.get(doc.uri);
+    ): Promise<Diagnostic[]> {
+        const cnfg = await this.cnfgProvider.get(doc.uri);
         if (cnfg === undefined) {
             return [];
         }
@@ -87,7 +87,7 @@ export class DiagnosticProvider {
         if (!settings.enabled) {
             return [];
         }
-
+        await refProvider.load();
         return getDiagnostics(cnfg, doc, settings, refProvider);
     }
 }

@@ -14,6 +14,7 @@ import {
     TextDocument,
 } from "vscode-languageserver-textdocument";
 import * as path from "path";
+import { TextDecoder } from "util";
 
 class Document implements ITextDocument {
     private inMemoryDoc?: ITextDocument;
@@ -94,6 +95,7 @@ export class DocumentProvider {
     private readonly cache = new ResourceMap<Document>();
     private readonly documents: TextDocuments<TextDocument>;
     private readonly connection: Connection;
+    private decoder = new TextDecoder("utf-8");
 
     readonly _onDidChangeDoc = new Emitter<URI>();
 
@@ -117,23 +119,6 @@ export class DocumentProvider {
     ) {
         this.connection = connection;
         this.documents = documents;
-
-        this.documents.onDidOpen((e) => {
-            console.log(`Opened doc: ${e.document.uri}`);
-            if (!this.isRelevantFile(e.document.uri)) {
-                return;
-            }
-            const doc = this.cache.get(e.document.uri);
-            if (doc) {
-                doc.setInMemoryDoc(e.document);
-            } else {
-                const doc = new Document(e.document.uri, {
-                    inMemoryDoc: e.document,
-                });
-                this.cache.set(doc.uri, doc);
-                this._onDidCreateDoc.fire(doc.uri);
-            }
-        });
 
         this.documents.onDidChangeContent((e) => {
             console.log(`Updated doc: ${e.document.uri}`);
@@ -166,7 +151,9 @@ export class DocumentProvider {
 
         connection.onDidChangeWatchedFiles(async (parms) => {
             for (const change of parms.changes) {
-                console.log(`Change: ${change.uri}`);
+                console.log(
+                    `Change: ${change.uri} with change type ${change.type}`
+                );
                 if (!this.isRelevantFile(change.uri)) {
                     continue;
                 }
@@ -203,26 +190,21 @@ export class DocumentProvider {
         });
     }
 
-    public async getDocument(uri: string) {
+    public async getDocument(uri: string): Promise<ITextDocument | undefined> {
         const doc = this.cache.get(uri);
         if (doc) {
             return doc;
         }
         const matchingDoc = this.documents.get(uri);
         if (matchingDoc) {
-            let entry = this.cache.get(uri);
-            if (entry) {
-                entry.setInMemoryDoc(matchingDoc);
-            } else {
-                entry = new Document(uri, { inMemoryDoc: matchingDoc });
-                this.cache.set(uri, entry);
-            }
-            return entry;
+            let doc = new Document(uri, { inMemoryDoc: matchingDoc });
+            this.cache.set(uri, doc);
+            return doc;
         }
         return this.openDocumentFromFs(uri);
     }
 
-    public async loadDocument(uri: string) {
+    public async loadDocument(uri: string): Promise<void> {
         if (this.cache.has(uri)) {
             return;
         }
@@ -243,7 +225,8 @@ export class DocumentProvider {
                     uri: uri,
                 }
             );
-            const contentString = String.fromCharCode.apply(null, content);
+            const utf8bytes = new Uint8Array(content);
+            const contentString = this.decoder.decode(utf8bytes);
             const doc = new Document(uri, {
                 onDiskDoc: TextDocument.create(uri, "septic", 0, contentString),
             });
@@ -254,7 +237,7 @@ export class DocumentProvider {
         }
     }
 
-    private isRelevantFile(uri: string) {
+    private isRelevantFile(uri: string): boolean {
         return path.extname(uri) === ".cnfg" || path.extname(uri) === ".yaml";
     }
 }

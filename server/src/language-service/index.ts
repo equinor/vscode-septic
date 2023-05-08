@@ -27,41 +27,41 @@ export interface ILanguageService {
     provideFoldingRanges(
         doc: ITextDocument,
         token: lsp.CancellationToken | undefined
-    ): lsp.FoldingRange[];
+    ): Promise<lsp.FoldingRange[]>;
 
     provideDiagnostics(
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
-    ): lsp.Diagnostic[];
+    ): Promise<lsp.Diagnostic[]>;
 
     provideDocumentSymbols(
         doc: ITextDocument,
         token: lsp.CancellationToken | undefined
-    ): lsp.DocumentSymbol[];
+    ): Promise<lsp.DocumentSymbol[]>;
 
     provideCompletion(
         pos: lsp.TextDocumentPositionParams,
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
-    ): lsp.CompletionItem[];
+    ): Promise<lsp.CompletionItem[]>;
 
     provideDefinition(
         params: lsp.DefinitionParams,
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
-    ): LocationLinkOffset[];
+    ): Promise<LocationLinkOffset[]>;
 
     provideReferences(
         params: lsp.ReferenceParams,
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
-    ): LocationOffset[];
+    ): Promise<LocationOffset[]>;
 
     provideDeclaration(
         params: lsp.DeclarationParams,
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
-    ): LocationLinkOffset[];
+    ): Promise<LocationLinkOffset[]>;
 }
 
 export function createLanguageService(

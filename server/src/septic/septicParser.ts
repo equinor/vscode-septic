@@ -32,6 +32,9 @@ export function parseSeptic(
     token: CancellationToken | undefined = undefined
 ): SepticCnfg {
     const tokens = tokenize(input, token);
+    if (!tokens.length) {
+        return new SepticCnfg([]);
+    }
     const parser = new SepticParser(tokens);
     return parser.parse(token);
 }
