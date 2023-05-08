@@ -54,12 +54,6 @@ export function activate(context: vscode.ExtensionContext) {
         ).map((f) => f.toString());
     });
 
-    client.onRequest(protocol.findCnfgFilesInWorkspace, async () => {
-        return (await vscode.workspace.findFiles(`**/*.cnfg`)).map((f) =>
-            f.toString()
-        );
-    });
-
     client.onRequest(
         protocol.fsReadFile,
         async (e, token): Promise<number[]> => {
