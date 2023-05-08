@@ -119,7 +119,9 @@ connection.onInitialize((params: InitializeParams) => {
             definitionProvider: true,
             referencesProvider: true,
             declarationProvider: true,
-            renameProvider: true,
+            renameProvider: {
+                prepareProvider: true,
+            },
         },
     };
     if (hasWorkspaceFolderCapability) {
