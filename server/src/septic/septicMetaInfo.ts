@@ -124,6 +124,7 @@ export class SepticMetaInfoProvider {
         });
         return {
             septicConfig: {
+                maxLengthAlg: metaInfoInput.septicConfig.maxLengthAlg,
                 objects: objects,
                 calcs: metaInfoInput.septicConfig.calcs,
             },
@@ -151,6 +152,7 @@ function toSymbolKind(name: string) {
 
 export interface SepticMetaInfo {
     septicConfig: {
+        maxLengthAlg: number;
         objects: SepticObjectInfo[];
         calcs: SepticCalcInfo[];
     };
@@ -175,6 +177,7 @@ export interface SepticRefs {
 
 export interface SepticMetaInfoInput {
     septicConfig: {
+        maxLengthAlg: number;
         objects: SepticObjectsInfoInput[];
         calcs: SepticCalcInfo[];
     };

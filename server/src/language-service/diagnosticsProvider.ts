@@ -168,6 +168,17 @@ export function algDiagnostic(
             });
             continue;
         }
+        const algLength = alg.values[0].value.length - 2;
+        if (algLength > metaInfoProvider.metaInfo.septicConfig.maxLengthAlg) {
+            diagnostics.push({
+                severity: severityAlg,
+                range: {
+                    start: doc.positionAt(alg.values[0].start + 1),
+                    end: doc.positionAt(alg.values[0].end - 1),
+                },
+                message: `Max length of alg exceeded. Alg is ${algLength} chars while max length is ${metaInfoProvider.metaInfo.septicConfig.maxLengthAlg} chars`,
+            });
+        }
         const visitor = new AlgVisitor();
         visitor.visit(expr);
 

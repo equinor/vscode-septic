@@ -1,6 +1,7 @@
 %YAML 1.2
 ---
 septicConfig:
+  maxLengthAlg: 250
   objects:
     - name: ApplPlot
     - name: BadXvrList
