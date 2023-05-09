@@ -180,7 +180,7 @@ function calcPvrXvrRefs(obj: SepticObject): SepticReference[] {
             location: {
                 uri: "",
                 start: alg!.values[0].start + xvr.start + 1,
-                end: alg!.values[0].start + xvr.start + identifier.length + 1,
+                end: alg!.values[0].start + xvr.end + 1,
             },
         };
         xvrs.push(ref);
