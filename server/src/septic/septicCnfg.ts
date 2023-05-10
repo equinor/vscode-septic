@@ -128,19 +128,18 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
         return [];
     }
 
-    if (objectDef.refs.identifier) {
-        if (obj.identifier) {
-            let ref: SepticReference = {
-                identifier: obj.identifier.name,
-                location: {
-                    uri: "",
-                    start: obj.identifier.start,
-                    end: obj.identifier.end,
-                },
-                obj: obj,
-            };
-            xvrRefs.push(ref);
-        }
+    if (objectDef.refs.identifier && obj.identifier) {
+        let isXvr = /^(?:Sopc)?[TMECD]vr$/.test(obj.type);
+        let ref: SepticReference = {
+            identifier: obj.identifier.name,
+            location: {
+                uri: "",
+                start: obj.identifier.start,
+                end: obj.identifier.end,
+            },
+            obj: isXvr ? obj : undefined,
+        };
+        xvrRefs.push(ref);
     }
 
     objectDef.refs.attrList.forEach((attr) => {

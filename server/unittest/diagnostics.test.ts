@@ -67,6 +67,9 @@ describe("Test algorithm diagnostics", () => {
     });
     test("No errors for valid expression", () => {
         const text = `
+        Evr: Var1
+            Text1= "Test"
+            
       CalcPvr: Var1
         Text1= "Test"
         Alg= "1"
