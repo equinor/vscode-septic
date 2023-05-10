@@ -18,6 +18,7 @@ import {
     LocationLink,
     Location,
     DidChangeWatchedFilesNotification,
+    Diagnostic,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -27,7 +28,7 @@ import { DocumentProvider } from "./documentProvider";
 import * as protocol from "./protocol";
 import { ContextManager } from "./contextManager";
 import { offsetToPositionRange } from "./util/converter";
-import { SepticReferenceProvider } from "./septic";
+import { ScgContext, SepticCnfg, SepticReferenceProvider } from "./septic";
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
@@ -53,6 +54,43 @@ const contextManager = new ContextManager(
 let hasConfigurationCapability = true;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+
+async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
+    await context.load();
+    const diagnosticsPromises = context.files.map(async (file) => {
+        let doc = await documentProvider.getDocument(file);
+        if (!doc) {
+            return null;
+        }
+        const diagnostics = await langService.provideDiagnostics(doc, context!);
+        connection.sendDiagnostics({ uri: file, diagnostics: diagnostics });
+    });
+
+    await Promise.all(diagnosticsPromises);
+}
+
+async function publishDiagnosticsCnfg(cnfg: SepticCnfg): Promise<void> {
+    let doc = await documentProvider.getDocument(cnfg.uri);
+    if (!doc) {
+        return;
+    }
+    let diagnostics = await langService.provideDiagnostics(doc, cnfg);
+    connection.sendDiagnostics({ uri: doc.uri, diagnostics: diagnostics });
+}
+
+async function publishDiagnostics(uri: string) {
+    let context: ScgContext | undefined = await contextManager.getContext(uri);
+    if (context) {
+        publishDiagnosticsContext(context);
+        return;
+    }
+
+    let cnfg = await langService.cnfgProvider.get(uri);
+    if (!cnfg) {
+        return;
+    }
+    publishDiagnosticsCnfg(cnfg);
+}
 
 connection.onInitialize((params: InitializeParams) => {
     const capabilities = params.capabilities;
@@ -113,26 +151,20 @@ connection.onInitialized(async () => {
     }
 });
 
-// The content of a text document has changed. This event is emitted
-// when the text document first opened or when its content has changed.
+documentProvider.onDidChangeDoc(async (uri) => {
+    publishDiagnostics(uri);
+});
 
-documents.onDidChangeContent(async (change) => {
-    let context: SepticReferenceProvider | undefined =
-        await contextManager.getContext(change.document.uri);
+documentProvider.onDidCreateDoc(async (uri) => {
+    publishDiagnostics(uri);
+});
+
+contextManager.onDidUpdateContext(async (uri) => {
+    let context = contextManager.getContextByName(uri);
     if (!context) {
-        context = await langService.cnfgProvider.get(change.document.uri);
+        return;
     }
-
-    if (context) {
-        let diagnostics = await langService.provideDiagnostics(
-            change.document,
-            context
-        );
-        connection.sendDiagnostics({
-            uri: change.document.uri,
-            diagnostics: diagnostics,
-        });
-    }
+    publishDiagnosticsContext(context);
 });
 
 connection.onDidChangeConfiguration((change) => {

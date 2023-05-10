@@ -127,7 +127,6 @@ export class DocumentProvider {
         this.documents = documents;
 
         this.documents.onDidChangeContent((e) => {
-            console.log(`Updated doc: ${e.document.uri}`);
             if (!this.isRelevantFile(e.document.uri)) {
                 return;
             }
@@ -139,7 +138,6 @@ export class DocumentProvider {
         });
 
         this.documents.onDidClose((e) => {
-            console.log(`Closed doc: ${e.document.uri}`);
             if (!this.isRelevantFile(e.document.uri)) {
                 return;
             }
@@ -157,16 +155,13 @@ export class DocumentProvider {
 
         connection.onDidChangeWatchedFiles(async (parms) => {
             for (const change of parms.changes) {
-                console.log(
-                    `Change: ${change.uri} with change type ${change.type}`
-                );
                 if (!this.isRelevantFile(change.uri)) {
                     continue;
                 }
                 switch (change.type) {
                     case FileChangeType.Created: {
                         const doc = this.cache.get(change.uri);
-                        if (doc) {
+                        if (!doc) {
                             await this.openDocumentFromFs(change.uri);
                         }
                         this._onDidCreateDoc.fire(change.uri);
@@ -223,7 +218,6 @@ export class DocumentProvider {
     private async openDocumentFromFs(
         uri: string
     ): Promise<Document | undefined> {
-        console.log(`Opening document ${uri} from fs.`);
         try {
             const content = await this.connection.sendRequest(
                 protocol.fsReadFile,

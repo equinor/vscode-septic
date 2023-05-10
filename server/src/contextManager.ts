@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Connection } from "vscode-languageserver";
+import { Connection, Emitter, Event } from "vscode-languageserver";
 import { DocumentProvider } from "./documentProvider";
 import * as YAML from "js-yaml";
 import * as path from "path";
@@ -19,6 +19,10 @@ export class ContextManager {
     private connection: Connection;
 
     private cnfgProvider: SepticConfigProvider;
+
+    private _onDidUpdateContext: Emitter<string> = new Emitter<string>();
+
+    public onDidUpdateContext: Event<string> = this._onDidUpdateContext.event;
 
     constructor(
         docProvider: DocumentProvider,
@@ -46,29 +50,35 @@ export class ContextManager {
         return undefined;
     }
 
-    private async onDidChangeDoc(uri: string) {
-        const context = this.contexts.get(uri);
-        if (context) {
-            const doc = await this.docProvider.getDocument(uri);
-            if (!doc) {
-                return;
-            }
-            console.log(`Starting update of context: ${context.name}`);
-            try {
-                await this.updateScgContext(uri);
-            } catch (e) {
-                console.log(
-                    `Error updating context ${context.name}. Removing context from manager!`
-                );
-                this.contexts.delete(context.name);
-            }
-            return;
-        }
+    public getContextByName(uri: string): ScgContext | undefined {
+        return this.contexts.get(uri);
+    }
 
+    private async onDidChangeDoc(uri: string) {
         if (path.extname(uri) !== ".yaml") {
             return;
         }
-        await this.createScgContext(uri);
+        const context = this.contexts.get(uri);
+        if (!context) {
+            this.createScgContext(uri);
+            return;
+        }
+
+        const doc = await this.docProvider.getDocument(uri);
+        if (!doc) {
+            return;
+        }
+        console.log(`Starting update of context: ${context.name}`);
+
+        try {
+            await this.updateScgContext(uri);
+        } catch (e) {
+            console.log(
+                `Error updating context ${context.name}. Removing context from manager!`
+            );
+            this.contexts.delete(context.name);
+        }
+        return;
     }
 
     private onDidDeleteDoc(uri: string) {
@@ -113,5 +123,6 @@ export class ContextManager {
 
         await Promise.all(loadDocuments);
         console.log(`Updated context: ${uri}`);
+        this._onDidUpdateContext.fire(scgContext.name);
     }
 }
