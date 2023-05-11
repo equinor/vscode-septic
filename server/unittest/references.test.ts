@@ -124,27 +124,27 @@ describe("Test getDefinition", () => {
     const cnfg = parseSeptic(doc.getText());
     test("Get Definition SopcXvr", () => {
         const offset = 15;
-        let result = getDefinition(offset, cnfg, doc);
+        let result = getDefinition(offset, cnfg, doc, cnfg);
         expect(result.length).toBe(1);
     });
     test("Get Definition Xvr", () => {
         const offset = 29;
-        let result = getDefinition(offset, cnfg, doc);
+        let result = getDefinition(offset, cnfg, doc, cnfg);
         expect(result.length).toBe(0);
     });
     test("Get Definition Xvr", () => {
         const offset = 46;
-        let result = getDefinition(offset, cnfg, doc);
+        let result = getDefinition(offset, cnfg, doc, cnfg);
         expect(result.length).toBe(0);
     });
     test("Get Definition CalcPvr", () => {
         const offset = 158;
-        let result = getDefinition(offset, cnfg, doc);
+        let result = getDefinition(offset, cnfg, doc, cnfg);
         expect(result.length).toBe(1);
     });
     test("Get Definition Xvr", () => {
         const offset = 190;
-        let result = getDefinition(offset, cnfg, doc);
+        let result = getDefinition(offset, cnfg, doc, cnfg);
         expect(result.length).toBe(1);
     });
 });
@@ -173,22 +173,22 @@ describe("Test getDeclaration", () => {
     const cnfg = parseSeptic(doc.getText());
     test("Get Declaration SopcXvr", () => {
         const offset = 15;
-        let result = getDeclaration(offset, cnfg, doc);
+        let result = getDeclaration(offset, cnfg, doc, cnfg);
         expect(result.length).toBe(0);
     });
     test("Get Declaration Xvr", () => {
         const offset = 29;
-        let result = getDeclaration(offset, cnfg, doc);
+        let result = getDeclaration(offset, cnfg, doc, cnfg);
         expect(result.length).toBe(1);
     });
     test("Get Declaration CalcPvr", () => {
         const offset = 158;
-        let result = getDeclaration(offset, cnfg, doc);
+        let result = getDeclaration(offset, cnfg, doc, cnfg);
         expect(result.length).toBe(0);
     });
     test("Get Declaration Alg", () => {
         const offset = 190;
-        let result = getDeclaration(offset, cnfg, doc);
+        let result = getDeclaration(offset, cnfg, doc, cnfg);
         expect(result.length).toBe(1);
     });
 });
@@ -217,27 +217,27 @@ describe("Test getReferences", () => {
     const cnfg = parseSeptic(doc.getText());
     test("Get References SopcXvr", () => {
         const offset = 15;
-        let result = getReferences(offset, cnfg, doc);
+        let result = getReferences(offset, cnfg, cnfg);
         expect(result.length).toBe(4);
     });
     test("Get References Xvr", () => {
         const offset = 29;
-        let result = getReferences(offset, cnfg, doc);
+        let result = getReferences(offset, cnfg, cnfg);
         expect(result.length).toBe(4);
     });
     test("Get References Xvr", () => {
         const offset = 46;
-        let result = getReferences(offset, cnfg, doc);
+        let result = getReferences(offset, cnfg, cnfg);
         expect(result.length).toBe(3);
     });
     test("Get References CalcPvr", () => {
         const offset = 158;
-        let result = getReferences(offset, cnfg, doc);
+        let result = getReferences(offset, cnfg, cnfg);
         expect(result.length).toBe(3);
     });
     test("Get References Alg", () => {
         const offset = 190;
-        let result = getReferences(offset, cnfg, doc);
+        let result = getReferences(offset, cnfg, cnfg);
         expect(result.length).toBe(4);
     });
 });

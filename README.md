@@ -46,6 +46,8 @@ Adding the SEPTIC extension to VS Code allows you to do the following when loadi
     -   More info on folding [here](https://code.visualstudio.com/docs/editor/codebasics#_folding)
 -   Settings for diagnostics can be updated using the standard settings manager for VsCode (`ctrl+,`). Search for Septic in the search field and update the relevant settings. Important to note that the settings for the workspace usually overwrite the settings for the user, thus make sure you update both if the settings are not applied properly.
 
+The extension supports SEPTIC projects that uses the SEPTIC Config Generator (SCG). The SCG-config file for the project is loaded and the relevant `.cnfg` files (required to be in the templates folder) listed in the layout section are loaded into a common context that shares references etc.
+
 ## Feedback and contributions
 
 Please let us know of any issues, bugs or requests for modification or new features you may have.

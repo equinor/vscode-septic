@@ -7,58 +7,68 @@
 import * as lsp from "vscode-languageserver";
 import { FoldingRangeProvider } from "./foldingRangeProvider";
 import { ITextDocument } from "./types/textDocument";
-import { IWorkspace } from "../workspace";
 import { SepticConfigProvider } from "./septicConfigProvider";
 import { DiagnosticProvider } from "./diagnosticsProvider";
 import { DocumentSymbolProvider } from "./documentSymbolProvider";
 import { SettingsManager } from "../settings";
 import { CompletionProvider } from "./completionProvider";
-import { ReferenceProvider } from "./referenceProvider";
+import {
+    LocationLinkOffset,
+    LocationOffset,
+    ReferenceProvider,
+} from "./referenceProvider";
+import { DocumentProvider } from "../documentProvider";
+import { SepticReferenceProvider } from "../septic";
 
 export * from "./types/textDocument";
 
 export interface ILanguageService {
+    cnfgProvider: SepticConfigProvider;
     provideFoldingRanges(
         doc: ITextDocument,
         token: lsp.CancellationToken | undefined
-    ): lsp.FoldingRange[];
+    ): Promise<lsp.FoldingRange[]>;
 
     provideDiagnostics(
         doc: ITextDocument,
-        token: lsp.CancellationToken | undefined
-    ): lsp.Diagnostic[];
+        refProvider: SepticReferenceProvider
+    ): Promise<lsp.Diagnostic[]>;
 
     provideDocumentSymbols(
         doc: ITextDocument,
         token: lsp.CancellationToken | undefined
-    ): lsp.DocumentSymbol[];
+    ): Promise<lsp.DocumentSymbol[]>;
 
     provideCompletion(
         pos: lsp.TextDocumentPositionParams,
-        doc: ITextDocument
-    ): lsp.CompletionItem[];
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): Promise<lsp.CompletionItem[]>;
 
     provideDefinition(
         params: lsp.DefinitionParams,
-        doc: ITextDocument
-    ): lsp.LocationLink[];
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): Promise<LocationLinkOffset[]>;
 
     provideReferences(
         params: lsp.ReferenceParams,
-        doc: ITextDocument
-    ): lsp.Location[];
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): Promise<LocationOffset[]>;
 
     provideDeclaration(
         params: lsp.DeclarationParams,
-        doc: ITextDocument
-    ): lsp.LocationLink[];
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): Promise<LocationLinkOffset[]>;
 }
 
 export function createLanguageService(
-    workspace: IWorkspace,
-    configurationManager: SettingsManager
+    configurationManager: SettingsManager,
+    documentProvider: DocumentProvider
 ) {
-    const cnfgProvider = new SepticConfigProvider(workspace);
+    const cnfgProvider = new SepticConfigProvider(documentProvider);
     const foldingRangeProvider = new FoldingRangeProvider(cnfgProvider);
     const diagnosticProvider = new DiagnosticProvider(
         cnfgProvider,
@@ -72,6 +82,7 @@ export function createLanguageService(
     const referenceProvider = new ReferenceProvider(cnfgProvider);
 
     return Object.freeze<ILanguageService>({
+        cnfgProvider,
         provideFoldingRanges:
             foldingRangeProvider.provideFoldingRanges.bind(
                 foldingRangeProvider

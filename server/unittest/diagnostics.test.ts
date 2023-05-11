@@ -17,7 +17,7 @@ describe("Test algorithm diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings);
+        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
         expect(diag.length).toBe(1);
     });
     test("Unexpexted token in alg", () => {
@@ -30,7 +30,7 @@ describe("Test algorithm diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings);
+        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
         expect(diag.length).toBe(1);
     });
     test("Missing reference in alg", () => {
@@ -43,7 +43,7 @@ describe("Test algorithm diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings);
+        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
         expect(diag.length).toBe(1);
         expect(diag[0].severity).toBe(
             toSeverity(defaultDiagnosticsSettings.algMissingReference)
@@ -59,7 +59,7 @@ describe("Test algorithm diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings);
+        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
         expect(diag.length).toBe(1);
         expect(diag[0].severity).toBe(
             toSeverity(defaultDiagnosticsSettings.algCalc)
@@ -67,6 +67,9 @@ describe("Test algorithm diagnostics", () => {
     });
     test("No errors for valid expression", () => {
         const text = `
+        Evr: Var1
+            Text1= "Test"
+            
       CalcPvr: Var1
         Text1= "Test"
         Alg= "1"
@@ -79,7 +82,7 @@ describe("Test algorithm diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings);
+        let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
         expect(diag.length).toBe(0);
     });
 });

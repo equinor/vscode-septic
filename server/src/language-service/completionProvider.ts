@@ -11,7 +11,11 @@ import {
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
-import { SepticMetaInfoProvider, SepticObject } from "../septic";
+import {
+    SepticMetaInfoProvider,
+    SepticObject,
+    SepticReferenceProvider,
+} from "../septic";
 
 export class CompletionProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
@@ -20,14 +24,14 @@ export class CompletionProvider {
         this.cnfgProvider = cnfgProvider;
     }
 
-    public provideCompletion(
+    public async provideCompletion(
         pos: TextDocumentPositionParams,
-        doc: ITextDocument
-    ): CompletionItem[] {
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): Promise<CompletionItem[]> {
         const compItems: CompletionItem[] = [];
         const offset = doc.offsetAt(pos.position);
-
-        const cnfg = this.cnfgProvider.get(pos.textDocument.uri);
+        const cnfg = await this.cnfgProvider.get(pos.textDocument.uri);
         if (!cnfg) {
             return [];
         }
@@ -36,8 +40,8 @@ export class CompletionProvider {
         if (!obj) {
             return [];
         }
-
-        const xvrs: SepticObject[] = cnfg.getAllXvrObjects();
+        await refProvider.load();
+        const xvrs: SepticObject[] = refProvider.getAllXvrObjects();
 
         const relevantXvrs = getRelevantXvrs(obj, xvrs);
 

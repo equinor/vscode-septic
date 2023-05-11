@@ -7,13 +7,15 @@
 import {
     DeclarationParams,
     DefinitionParams,
-    Location,
-    LocationLink,
     ReferenceParams,
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
-import { SepticCnfg, SepticObject } from "../septic";
+import {
+    SepticCnfg,
+    SepticReference,
+    SepticReferenceProvider,
+} from "../septic";
 
 export class ReferenceProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
@@ -22,45 +24,55 @@ export class ReferenceProvider {
         this.cnfgProvider = cnfgProvider;
     }
 
-    public provideDefinition(
+    public async provideDefinition(
         params: DefinitionParams,
-        doc: ITextDocument
-    ): LocationLink[] {
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): Promise<LocationLinkOffset[]> {
         const offset = doc.offsetAt(params.position);
-        const cnfg = this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(doc.uri);
         if (!cnfg) {
             return [];
         }
-        return getDefinition(offset, cnfg, doc);
+        await refProvider.load();
+        return getDefinition(offset, cnfg, doc, refProvider);
     }
 
-    public provideReferences(
+    public async provideReferences(
         params: ReferenceParams,
-        doc: ITextDocument
-    ): Location[] {
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): Promise<LocationOffset[]> {
         const offset = doc.offsetAt(params.position);
-        const cnfg = this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(doc.uri);
         if (!cnfg) {
             return [];
         }
-        return getReferences(offset, cnfg, doc);
+        await refProvider.load();
+        return getReferences(offset, cnfg, refProvider);
     }
 
-    public provideDeclaration(params: DeclarationParams, doc: ITextDocument) {
+    public async provideDeclaration(
+        params: DeclarationParams,
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): Promise<LocationLinkOffset[]> {
         const offset = doc.offsetAt(params.position);
-        const cnfg = this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(doc.uri);
         if (!cnfg) {
             return [];
         }
-        return getDeclaration(offset, cnfg, doc);
+        await refProvider.load();
+        return getDeclaration(offset, cnfg, doc, refProvider);
     }
 }
 
 export function getDefinition(
     offset: number,
     cnfg: SepticCnfg,
-    doc: ITextDocument
-): LocationLink[] {
+    doc: ITextDocument,
+    refProvider: SepticReferenceProvider
+): LocationLinkOffset[] {
     const ref = cnfg.getXvrRefFromOffset(offset);
     if (!ref) {
         return [];
@@ -70,7 +82,7 @@ export function getDefinition(
         return [];
     }
 
-    const xvrRefs = cnfg.getXvrRefs(ref.identifier);
+    const xvrRefs = refProvider.getXvrRefs(ref.identifier);
     if (!xvrRefs) {
         return [];
     }
@@ -78,30 +90,30 @@ export function getDefinition(
         return xvrRef.obj && /^[TMECD]vr/.test(xvrRef.obj.type);
     });
 
-    return definitions.map((dec) => {
-        return objToLocationLink(dec.obj!, doc);
+    return definitions.map((def) => {
+        return refToLocationLinkOffset(def, doc);
     });
 }
 
 export function getReferences(
     offset: number,
     cnfg: SepticCnfg,
-    doc: ITextDocument
-): Location[] {
+    refProvider: SepticReferenceProvider
+): LocationOffset[] {
     const ref = cnfg.getXvrRefFromOffset(offset);
     if (!ref) {
         return [];
     }
-    const xvrRefs = cnfg.getXvrRefs(ref.identifier);
+    const xvrRefs = refProvider.getXvrRefs(ref.identifier);
     if (!xvrRefs) {
         return [];
     }
     return xvrRefs.map((xvr) => {
         return {
-            uri: doc.uri,
+            uri: xvr.location.uri,
             range: {
-                start: doc.positionAt(xvr.location.start),
-                end: doc.positionAt(xvr.location.end),
+                start: xvr.location.start,
+                end: xvr.location.end,
             },
         };
     });
@@ -110,8 +122,9 @@ export function getReferences(
 export function getDeclaration(
     offset: number,
     cnfg: SepticCnfg,
-    doc: ITextDocument
-): LocationLink[] {
+    doc: ITextDocument,
+    refProvider: SepticReferenceProvider
+): LocationLinkOffset[] {
     const ref = cnfg.getXvrRefFromOffset(offset);
     if (!ref) {
         return [];
@@ -120,28 +133,48 @@ export function getDeclaration(
     if (ref.obj && /^Sopc[TMECD]vr/.test(ref.obj.type)) {
         return [];
     }
-    const xvrRefs = cnfg.getXvrRefs(ref.identifier);
+    const xvrRefs = refProvider.getXvrRefs(ref.identifier);
     if (!xvrRefs) {
         return [];
     }
     let declarations = xvrRefs.filter((xvrRef) => {
         return xvrRef.obj && /^Sopc[TMECD]vr/.test(xvrRef.obj.type);
     });
-    return declarations.map((dec) => {
-        return objToLocationLink(dec.obj!, doc);
+    return declarations.map((ref) => {
+        return refToLocationLinkOffset(ref, doc);
     });
 }
 
-function objToLocationLink(obj: SepticObject, doc: ITextDocument) {
+function refToLocationLinkOffset(ref: SepticReference, doc: ITextDocument) {
     return {
-        targetUri: doc.uri,
+        targetUri: ref.location.uri,
         targetRange: {
-            start: doc.positionAt(obj.start),
-            end: doc.positionAt(obj.end),
+            start: ref.obj!.start,
+            end: ref.obj!.end,
         },
         targetSelectionRange: {
-            start: doc.positionAt(obj.identifier!.start),
-            end: doc.positionAt(obj.identifier!.end),
+            start: ref.obj!.identifier!.start,
+            end: ref.obj!.identifier!.end,
         },
+    };
+}
+
+export interface LocationLinkOffset {
+    targetUri: string;
+    targetRange: {
+        start: number;
+        end: number;
+    };
+    targetSelectionRange: {
+        start: number;
+        end: number;
+    };
+}
+
+export interface LocationOffset {
+    uri: string;
+    range: {
+        start: number;
+        end: number;
     };
 }

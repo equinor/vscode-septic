@@ -6,24 +6,25 @@
 import { AlgVisitor, parseAlg } from "./algParser";
 import { SepticTokenType } from "./septicTokens";
 import { SepticMetaInfoProvider } from "./septicMetaInfo";
-import { identifier } from "@babel/types";
+import { Attribute, SepticObject } from "./septicElements";
+import { SepticReference, SepticReferenceProvider } from "./reference";
 
-export interface SepticReference {
-    identifier: string;
-    location: {
-        start: number;
-        end: number;
-    };
-    obj?: SepticObject;
-}
-
-export class SepticCnfg {
+export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];
-    readonly xvrRefs = new Map<string, SepticReference[]>();
+    private xvrRefs = new Map<string, SepticReference[]>();
     private xvrRefsExtracted = false;
+    public uri: string = "";
 
     constructor(objects: SepticObject[]) {
         this.objects = objects;
+    }
+
+    public async load(): Promise<void> {
+        return Promise.resolve();
+    }
+
+    public setUri(uri: string) {
+        this.uri = uri;
     }
 
     public getAlgAttrs(): Attribute[] {
@@ -104,6 +105,7 @@ export class SepticCnfg {
         this.xvrRefsExtracted = true;
         this.objects.forEach((obj) => {
             extractXvrRefs(obj).forEach((xvr) => {
+                xvr.location.uri = this.uri;
                 this.addXvrRef(xvr);
             });
         });
@@ -118,106 +120,6 @@ export class SepticCnfg {
     }
 }
 
-export class SepticBase {
-    start: number;
-    end: number;
-
-    constructor(start: number = -1, end: number = -1) {
-        this.start = start;
-        this.end = end;
-    }
-
-    updateEnd(): void {
-        return;
-    }
-}
-
-export class SepticObject extends SepticBase {
-    type: string;
-    identifier: Identifier | undefined;
-    attributes: Attribute[];
-
-    constructor(
-        type: string,
-        variable: Identifier | undefined,
-        start: number = -1,
-        end: number = -1
-    ) {
-        super(start, end);
-        this.type = type;
-        this.identifier = variable;
-        this.attributes = [];
-    }
-
-    addAttribute(attr: Attribute) {
-        this.attributes.push(attr);
-    }
-
-    updateEnd(): void {
-        this.identifier?.updateEnd();
-        this.attributes.forEach((elem) => {
-            elem.updateEnd();
-        });
-        if (this.attributes.length) {
-            this.end = this.attributes[this.attributes.length - 1].end;
-        } else if (this.identifier) {
-            this.end = this.identifier.end;
-        }
-    }
-
-    getAttribute(name: string): Attribute | undefined {
-        return this.attributes.find((attr) => {
-            return attr.key === name;
-        });
-    }
-}
-
-export class Attribute extends SepticBase {
-    values: AttributeValue[];
-    key: string;
-
-    constructor(key: string, start: number = -1, end: number = -1) {
-        super(start, end);
-        this.values = [];
-        this.key = key;
-    }
-
-    addValue(value: AttributeValue) {
-        this.values.push(value);
-    }
-
-    updateEnd(): void {
-        if (this.values.length) {
-            this.end = this.values[this.values.length - 1].end;
-        }
-    }
-}
-
-export class Identifier extends SepticBase {
-    name: string;
-
-    constructor(name: string, start: number = -1, end: number = -1) {
-        super(start, end);
-        this.name = name.replace(/\s/g, "");
-    }
-}
-
-export class AttributeValue extends SepticBase {
-    value: string;
-    type: SepticTokenType;
-
-    constructor(
-        value: string,
-        type: SepticTokenType,
-        start: number = -1,
-        end: number = -1
-    ) {
-        super(start, end);
-        this.value = value;
-        this.type = type;
-    }
-}
-
 export function extractXvrRefs(obj: SepticObject): SepticReference[] {
     const xvrRefs: SepticReference[] = [];
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
@@ -226,18 +128,18 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
         return [];
     }
 
-    if (objectDef.refs.identifier) {
-        if (obj.identifier) {
-            let ref: SepticReference = {
-                identifier: obj.identifier.name,
-                location: {
-                    start: obj.identifier.start,
-                    end: obj.identifier.end,
-                },
-                obj: obj,
-            };
-            xvrRefs.push(ref);
-        }
+    if (objectDef.refs.identifier && obj.identifier) {
+        let isXvr = /^(?:Sopc)?[TMECD]vr$/.test(obj.type);
+        let ref: SepticReference = {
+            identifier: obj.identifier.name,
+            location: {
+                uri: "",
+                start: obj.identifier.start,
+                end: obj.identifier.end,
+            },
+            obj: isXvr ? obj : undefined,
+        };
+        xvrRefs.push(ref);
     }
 
     objectDef.refs.attrList.forEach((attr) => {
@@ -276,6 +178,7 @@ function calcPvrXvrRefs(obj: SepticObject): SepticReference[] {
         const ref: SepticReference = {
             identifier: identifier,
             location: {
+                uri: "",
                 start: alg!.values[0].start + xvr.start + 1,
                 end: alg!.values[0].start + xvr.start + identifier.length + 1,
             },
@@ -298,8 +201,11 @@ function xvrRefsAttrList(
     });
     return refs.map((ref) => {
         return {
-            identifier: ref.value.substring(1, ref.value.length - 1),
+            identifier: ref.value
+                .substring(1, ref.value.length - 1)
+                .replace(/\s/, ""),
             location: {
+                uri: "",
                 start: ref.start + 1,
                 end: ref.end - 1,
             },
@@ -314,11 +220,11 @@ function xvrRefAttr(obj: SepticObject, attrName: string): SepticReference[] {
     }
     return [
         {
-            identifier: attr.values[0].value.substring(
-                1,
-                attr.values[0].value.length - 1
-            ),
+            identifier: attr.values[0].value
+                .substring(1, attr.values[0].value.length - 1)
+                .replace(/\s/, ""),
             location: {
+                uri: "",
                 start: attr.values[0].start + 1,
                 end: attr.values[0].end - 1,
             },

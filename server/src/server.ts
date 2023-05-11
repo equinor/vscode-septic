@@ -17,13 +17,18 @@ import {
     CompletionItem,
     LocationLink,
     Location,
+    DidChangeWatchedFilesNotification,
+    Diagnostic,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { ILanguageService, createLanguageService } from "./language-service";
-import { SepticWorkspace } from "./workspace";
 import { SettingsManager } from "./settings";
-
+import { DocumentProvider } from "./documentProvider";
+import * as protocol from "./protocol";
+import { ContextManager } from "./contextManager";
+import { offsetToPositionRange } from "./util/converter";
+import { ScgContext, SepticCnfg, SepticReferenceProvider } from "./septic";
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
@@ -31,18 +36,61 @@ const connection = createConnection(ProposedFeatures.all);
 // Create a simple text document manager.
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
-const workspace = new SepticWorkspace(documents);
-
 const settingsManager = new SettingsManager(connection);
 
+const documentProvider = new DocumentProvider(connection, documents);
+
 const langService: ILanguageService = createLanguageService(
-    workspace,
-    settingsManager
+    settingsManager,
+    documentProvider
+);
+
+const contextManager = new ContextManager(
+    documentProvider,
+    langService.cnfgProvider,
+    connection
 );
 
 let hasConfigurationCapability = true;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+
+async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
+    await context.load();
+    const diagnosticsPromises = context.files.map(async (file) => {
+        let doc = await documentProvider.getDocument(file);
+        if (!doc) {
+            return null;
+        }
+        const diagnostics = await langService.provideDiagnostics(doc, context!);
+        connection.sendDiagnostics({ uri: file, diagnostics: diagnostics });
+    });
+
+    await Promise.all(diagnosticsPromises);
+}
+
+async function publishDiagnosticsCnfg(cnfg: SepticCnfg): Promise<void> {
+    let doc = await documentProvider.getDocument(cnfg.uri);
+    if (!doc) {
+        return;
+    }
+    let diagnostics = await langService.provideDiagnostics(doc, cnfg);
+    connection.sendDiagnostics({ uri: doc.uri, diagnostics: diagnostics });
+}
+
+async function publishDiagnostics(uri: string) {
+    let context: ScgContext | undefined = await contextManager.getContext(uri);
+    if (context) {
+        publishDiagnosticsContext(context);
+        return;
+    }
+
+    let cnfg = await langService.cnfgProvider.get(uri);
+    if (!cnfg) {
+        return;
+    }
+    publishDiagnosticsCnfg(cnfg);
+}
 
 connection.onInitialize((params: InitializeParams) => {
     const capabilities = params.capabilities;
@@ -83,47 +131,47 @@ connection.onInitialize((params: InitializeParams) => {
     return result;
 });
 
-connection.onInitialized(() => {
+connection.onInitialized(async () => {
     if (hasConfigurationCapability) {
         // Register for all configuration changes.
         connection.client.register(
             DidChangeConfigurationNotification.type,
             undefined
         );
+        connection.client.register(DidChangeWatchedFilesNotification.type);
     }
     if (hasWorkspaceFolderCapability) {
         connection.workspace.onDidChangeWorkspaceFolders((_event) => {
             connection.console.log("Workspace folder change event received.");
         });
     }
+    const yamlFiles = await connection.sendRequest(protocol.findYamlFiles, {});
+    for (const file of yamlFiles) {
+        contextManager.createScgContext(file);
+    }
 });
 
-// The content of a text document has changed. This event is emitted
-// when the text document first opened or when its content has changed.
+documentProvider.onDidChangeDoc(async (uri) => {
+    publishDiagnostics(uri);
+});
 
-documents.onDidChangeContent((change) => {
-    let diagnostics = langService.provideDiagnostics(
-        change.document,
-        undefined
-    );
-    connection.sendDiagnostics({
-        uri: change.document.uri,
-        diagnostics: diagnostics,
-    });
+documentProvider.onDidCreateDoc(async (uri) => {
+    publishDiagnostics(uri);
+});
+
+contextManager.onDidUpdateContext(async (uri) => {
+    let context = contextManager.getContextByName(uri);
+    if (!context) {
+        return;
+    }
+    publishDiagnosticsContext(context);
 });
 
 connection.onDidChangeConfiguration((change) => {
     settingsManager.invalidate();
-    documents.all().forEach((doc) => {
-        let diagnostics = langService.provideDiagnostics(doc, undefined);
-        connection.sendDiagnostics({
-            uri: doc.uri,
-            diagnostics: diagnostics,
-        });
-    });
 });
 
-connection.onFoldingRanges((params, token): FoldingRange[] => {
+connection.onFoldingRanges(async (params, token): Promise<FoldingRange[]> => {
     const document = documents.get(params.textDocument.uri);
     if (!document) {
         return [];
@@ -131,46 +179,144 @@ connection.onFoldingRanges((params, token): FoldingRange[] => {
     return langService.provideFoldingRanges(document, token);
 });
 
-connection.onDocumentSymbol((params, token): DocumentSymbol[] => {
-    const document = documents.get(params.textDocument.uri);
-    if (!document) {
-        return [];
+connection.onDocumentSymbol(
+    async (params, token): Promise<DocumentSymbol[]> => {
+        const document = documents.get(params.textDocument.uri);
+        if (!document) {
+            return [];
+        }
+        return langService.provideDocumentSymbols(document, token);
     }
-    return langService.provideDocumentSymbols(document, token);
-});
+);
 
 connection.onCompletion(
-    (docPos: TextDocumentPositionParams): CompletionItem[] => {
+    async (docPos: TextDocumentPositionParams): Promise<CompletionItem[]> => {
         const document = documents.get(docPos.textDocument.uri);
         if (!document) {
             return [];
         }
-        return langService.provideCompletion(docPos, document);
+        let context: SepticReferenceProvider | undefined =
+            await contextManager.getContext(docPos.textDocument.uri);
+        if (!context) {
+            context = await langService.cnfgProvider.get(
+                docPos.textDocument.uri
+            );
+        }
+
+        if (!context) {
+            return [];
+        }
+        return langService.provideCompletion(docPos, document, context);
     }
 );
 
-connection.onDefinition((params, token): LocationLink[] => {
+connection.onDefinition(async (params, token) => {
     const document = documents.get(params.textDocument.uri);
     if (!document) {
         return [];
     }
-    return langService.provideDefinition(params, document);
+    let context: SepticReferenceProvider | undefined =
+        await contextManager.getContext(params.textDocument.uri);
+    if (!context) {
+        context = await langService.cnfgProvider.get(params.textDocument.uri);
+    }
+
+    if (!context) {
+        return [];
+    }
+
+    let refsOffset = await langService.provideDefinition(
+        params,
+        document,
+        context
+    );
+    const refs: LocationLink[] = [];
+    for (let ref of refsOffset) {
+        let doc = await documentProvider.getDocument(ref.targetUri);
+        if (!doc) {
+            continue;
+        }
+        refs.push({
+            targetUri: ref.targetUri,
+            targetRange: offsetToPositionRange(ref.targetRange, doc),
+            targetSelectionRange: offsetToPositionRange(
+                ref.targetSelectionRange,
+                doc
+            ),
+        });
+    }
+    return refs;
 });
 
-connection.onDeclaration((params): LocationLink[] => {
+connection.onDeclaration(async (params) => {
     const document = documents.get(params.textDocument.uri);
     if (!document) {
         return [];
     }
-    return langService.provideDeclaration(params, document);
+    let context: SepticReferenceProvider | undefined =
+        await contextManager.getContext(params.textDocument.uri);
+    if (!context) {
+        context = await langService.cnfgProvider.get(params.textDocument.uri);
+    }
+
+    if (!context) {
+        return [];
+    }
+    let refsOffset = await langService.provideDeclaration(
+        params,
+        document,
+        context
+    );
+    const refs: LocationLink[] = [];
+    for (let ref of refsOffset) {
+        let doc = await documentProvider.getDocument(ref.targetUri);
+        if (!doc) {
+            continue;
+        }
+        refs.push({
+            targetUri: ref.targetUri,
+            targetRange: offsetToPositionRange(ref.targetRange, doc),
+            targetSelectionRange: offsetToPositionRange(
+                ref.targetSelectionRange,
+                doc
+            ),
+        });
+    }
+    return refs;
 });
 
-connection.onReferences((params): Location[] => {
+connection.onReferences(async (params) => {
     const document = documents.get(params.textDocument.uri);
     if (!document) {
         return [];
     }
-    return langService.provideReferences(params, document);
+    let context: SepticReferenceProvider | undefined =
+        await contextManager.getContext(params.textDocument.uri);
+    if (!context) {
+        context = await langService.cnfgProvider.get(params.textDocument.uri);
+    }
+
+    if (!context) {
+        return [];
+    }
+    let refsOffset = await langService.provideReferences(
+        params,
+        document,
+        context
+    );
+
+    const refs: Location[] = [];
+    for (let ref of refsOffset) {
+        let doc = await documentProvider.getDocument(ref.uri);
+        if (!doc) {
+            continue;
+        }
+        refs.push({
+            uri: ref.uri,
+            range: offsetToPositionRange(ref.range, doc),
+        });
+    }
+    return refs;
 });
 
 // Make the text document manager listen on the connection
