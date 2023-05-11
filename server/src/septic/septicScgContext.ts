@@ -67,6 +67,9 @@ export class ScgContext implements SepticReferenceProvider {
     ): string[] {
         const files = [];
         for (const template of scgConfig.layout) {
+            if (path.extname(template.name) !== ".cnfg") {
+                continue;
+            }
             let found = false;
             for (const file of filesInTemplateDir) {
                 if (template.name === path.basename(file)) {
@@ -88,6 +91,9 @@ export class ScgContext implements SepticReferenceProvider {
         await Promise.all(
             this.files.map(async (file) => {
                 let cnfg = await this.cnfgProvider.get(file);
+                if (!cnfg) {
+                    return;
+                }
                 this.cnfgCache.set(cnfg!.uri, cnfg);
             })
         );
