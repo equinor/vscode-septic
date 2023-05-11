@@ -209,7 +209,7 @@ export function algDiagnostic(
                                 alg.values[0].start + 1 + variable.end
                             ),
                         },
-                        message: `Reference to Xvr that don't exist: ${variable.value} .`,
+                        message: `Undefined Xvr '${variable.value}'`,
                     });
                 }
             });
