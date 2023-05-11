@@ -19,7 +19,6 @@ import {
 } from "./referenceProvider";
 import { DocumentProvider } from "../documentProvider";
 import { SepticReferenceProvider } from "../septic";
-import { ReferenceProvider } from "./referenceProvider";
 import { RenameProvider } from "./renameProvider";
 
 export * from "./types/textDocument";
@@ -67,13 +66,14 @@ export interface ILanguageService {
 
     provideRename(
         params: lsp.RenameParams,
-        doc: ITextDocument
-    ): lsp.WorkspaceEdit | undefined;
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): Promise<lsp.WorkspaceEdit | undefined>;
 
     providePrepareRename(
         params: lsp.PrepareRenameParams,
         doc: ITextDocument
-    ): lsp.Range | null;
+    ): Promise<lsp.Range | null>;
 }
 
 export function createLanguageService(
@@ -93,7 +93,7 @@ export function createLanguageService(
 
     const referenceProvider = new ReferenceProvider(cnfgProvider);
 
-    const renameProvider = new RenameProvider(cnfgProvider);
+    const renameProvider = new RenameProvider(cnfgProvider, documentProvider);
 
     return Object.freeze<ILanguageService>({
         cnfgProvider,

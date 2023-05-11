@@ -13,18 +13,27 @@ import {
 import { SepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
+import { SepticReferenceProvider } from "../septic";
+import { DocumentProvider } from "../documentProvider";
 
 export class RenameProvider {
     private cnfgProvider: SepticConfigProvider;
-    constructor(cnfgProvider: SepticConfigProvider) {
+    private docProvider: DocumentProvider;
+
+    constructor(
+        cnfgProvider: SepticConfigProvider,
+        docProvider: DocumentProvider
+    ) {
         this.cnfgProvider = cnfgProvider;
+        this.docProvider = docProvider;
     }
 
-    provideRename(
+    async provideRename(
         params: RenameParams,
-        doc: ITextDocument
-    ): WorkspaceEdit | undefined {
-        const cnfg = this.cnfgProvider.get(params.textDocument.uri);
+        doc: ITextDocument,
+        refProvider: SepticReferenceProvider
+    ): Promise<WorkspaceEdit | undefined> {
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return undefined;
         }
@@ -34,7 +43,7 @@ export class RenameProvider {
             return undefined;
         }
 
-        const refs = cnfg.getXvrRefs(ref.identifier);
+        const refs = refProvider.getXvrRefs(ref.identifier);
 
         if (!refs) {
             return undefined;
@@ -42,11 +51,15 @@ export class RenameProvider {
 
         const builder = new WorkspaceEditBuilder();
         for (const ref of refs) {
+            let docRef = await this.docProvider.getDocument(ref.location.uri);
+            if (!docRef) {
+                continue;
+            }
             builder.replace(
-                params.textDocument.uri,
+                ref.location.uri,
                 Range.create(
-                    doc.positionAt(ref.location.start),
-                    doc.positionAt(ref.location.end)
+                    docRef.positionAt(ref.location.start),
+                    docRef.positionAt(ref.location.end)
                 ),
                 params.newName
             );
@@ -55,11 +68,11 @@ export class RenameProvider {
         return builder.getEdit();
     }
 
-    providePrepareRename(
+    async providePrepareRename(
         params: PrepareRenameParams,
         doc: ITextDocument
-    ): Range | null {
-        const cnfg = this.cnfgProvider.get(params.textDocument.uri);
+    ): Promise<Range | null> {
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return null;
         }

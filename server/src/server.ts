@@ -19,6 +19,7 @@ import {
     Location,
     DidChangeWatchedFilesNotification,
     Diagnostic,
+    WorkspaceEdit,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -322,12 +323,22 @@ connection.onReferences(async (params) => {
     return refs;
 });
 
-connection.onRenameRequest((params) => {
+connection.onRenameRequest(async (params) => {
     const document = documents.get(params.textDocument.uri);
     if (!document) {
         return undefined;
     }
-    return langService.provideRename(params, document);
+
+    let context: SepticReferenceProvider | undefined =
+        await contextManager.getContext(params.textDocument.uri);
+    if (!context) {
+        context = await langService.cnfgProvider.get(params.textDocument.uri);
+    }
+
+    if (!context) {
+        return undefined;
+    }
+    return await langService.provideRename(params, document, context);
 });
 
 connection.onPrepareRename((params) => {
