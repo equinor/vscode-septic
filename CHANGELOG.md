@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/equinor/vscode-septic/compare/v1.2.0...v1.2.1) (2023-05-11)
+
+
+### 🐛 Bug Fixes
+
+* bug in scgcontext that crashes server  ([#139](https://github.com/equinor/vscode-septic/issues/139)) ([b8345de](https://github.com/equinor/vscode-septic/commit/b8345de5ecbe87dfec209623edf211eace1148db))
+
 ## [1.2.0](https://github.com/equinor/vscode-septic/compare/v1.1.0...v1.2.0) (2023-05-11)
 
 
