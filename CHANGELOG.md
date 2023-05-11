@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.2.0](https://github.com/equinor/vscode-septic/compare/v1.1.0...v1.2.0) (2023-05-11)
+
+
+### ✨ Features
+
+* support references across different config files for scg ([#127](https://github.com/equinor/vscode-septic/issues/127)) ([4be02d2](https://github.com/equinor/vscode-septic/commit/4be02d2647a8d1fac8886f25484e6b5a940c9375))
+
+
+### 🐛 Bug Fixes
+
+* typo in error message ([#117](https://github.com/equinor/vscode-septic/issues/117)) ([ccd6187](https://github.com/equinor/vscode-septic/commit/ccd618796d3fad8f21ff5f99654bf36435954944))
+
+
+### 🧹 Chores
+
+* **deps:** bump eslint from 8.36.0 to 8.40.0 ([#128](https://github.com/equinor/vscode-septic/issues/128)) ([77be3cf](https://github.com/equinor/vscode-septic/commit/77be3cf19720bd3f183eaea27b03ae58a8a8fe88))
+
 ## [1.1.0](https://github.com/equinor/vscode-septic/compare/v1.0.1...v1.1.0) (2023-05-03)
 
 
