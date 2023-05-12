@@ -18,6 +18,8 @@ import {
     SepticMetaInfoProvider,
     parseAlg,
     SepticReferenceProvider,
+    AlgParsingError,
+    AlgParsingErrorType,
 } from "../septic";
 import { SettingsManager } from "../settings";
 
@@ -158,16 +160,23 @@ export function algDiagnostic(
             expr = parseAlg(
                 alg.values[0].value.substring(1, alg.values[0].value.length - 1)
             );
-        } catch (e: any) {
+        } catch (error: any) {
+            let severity: DiagnosticSeverity = severityAlg;
+            if (
+                error instanceof AlgParsingError &&
+                error.type === AlgParsingErrorType.unsupportedJinja
+            ) {
+                severity = DiagnosticSeverity.Hint;
+            }
             diagnostics.push({
-                severity: severityAlg,
+                severity: severity,
                 range: {
                     start: doc.positionAt(
-                        alg.values[0].start + 1 + e.token.start
+                        alg.values[0].start + 1 + error.token.start
                     ),
                     end: doc.positionAt(alg.values[0].end),
                 },
-                message: e.message,
+                message: error.message,
             });
             continue;
         }

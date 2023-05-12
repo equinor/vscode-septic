@@ -6,6 +6,7 @@
 
 import { CancellationToken } from "vscode-languageserver";
 import { IToken, Parser, ParserError } from "./parser";
+import { error } from "console";
 
 export function parseAlg(input: string): AlgExpr {
     const scanner = new AlgScanner(input);
@@ -38,6 +39,24 @@ export enum AlgTokenType {
 }
 
 export type AlgToken = IToken<AlgTokenType>;
+
+export class AlgParsingError extends ParserError<AlgTokenType> {
+    public readonly type: AlgParsingErrorType;
+
+    constructor(
+        message: string,
+        token: AlgToken,
+        type: AlgParsingErrorType = AlgParsingErrorType.default
+    ) {
+        super(message, token);
+        this.type = type;
+    }
+}
+
+export enum AlgParsingErrorType {
+    unsupportedJinja,
+    default,
+}
 
 export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
     parse(token: CancellationToken | undefined = undefined): AlgExpr {
@@ -441,8 +460,13 @@ export class AlgScanner {
                 if (this.peek() === "{") {
                     this.jinja();
                     break;
+                } else if (this.peek() === "#" || this.peek() === "%") {
+                    this.error(
+                        "Parsing of Algs containing jinja expressions/comments are not supported.",
+                        AlgParsingErrorType.unsupportedJinja
+                    );
                 } else {
-                    this.error("Invalid jinja");
+                    this.error(`Unexpected token: ${c}`);
                 }
             default:
                 if (this.isAlphaNumeric(c)) {
@@ -547,12 +571,19 @@ export class AlgScanner {
         this.addToken(AlgTokenType.jinja);
     }
 
-    private error(message: string): never {
-        throw new ParserError<AlgTokenType>(message, {
-            start: this.current - 1,
-            end: this.current,
-            content: "",
-            type: AlgTokenType.error,
-        });
+    private error(
+        message: string,
+        type: AlgParsingErrorType = AlgParsingErrorType.default
+    ): never {
+        throw new AlgParsingError(
+            message,
+            {
+                start: this.current - 1,
+                end: this.current,
+                content: "",
+                type: AlgTokenType.error,
+            },
+            type
+        );
     }
 }
