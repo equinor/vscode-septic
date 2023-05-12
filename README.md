@@ -23,6 +23,7 @@
     -   Report errors if unable to parse calc (missing parenthesis, incomplete expression, unexpected tokens etc.)
     -   Verify that the used calcs are valid SEPTIC calcs
     -   Verify that referenced Xvrs exist in the file
+-   Hover: Display the Text1 and Text2 if non empty from the associated xvr when hovering over an (Sopc)Xvr reference.
 -   Ensures correct encoding (Windows 1252) for SEPTIC files
 
 ## Instructions
