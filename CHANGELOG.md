@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0](https://github.com/equinor/vscode-septic/compare/v1.2.1...v1.3.0) (2023-05-12)
+
+
+### ✨ Features
+
+* add hover information on xvr-refs ([#143](https://github.com/equinor/vscode-septic/issues/143)) ([be863b5](https://github.com/equinor/vscode-septic/commit/be863b50a726b79fd14bb0bfb127d6e691818460))
+* add support for renaming (sopc)xvrs ([#132](https://github.com/equinor/vscode-septic/issues/132)) ([3694425](https://github.com/equinor/vscode-septic/commit/3694425b0ad6f147ee2dbda842354b2764bfb818))
+
+
+### 🐛 Bug Fixes
+
+* bug with parsing of jinja-variables in alg ([#144](https://github.com/equinor/vscode-septic/issues/144)) ([5e6767d](https://github.com/equinor/vscode-septic/commit/5e6767d14d025e55492405d832d53ad7f39b755e))
+
 ## [1.2.1](https://github.com/equinor/vscode-septic/compare/v1.2.0...v1.2.1) (2023-05-11)
 
 
