@@ -14,6 +14,7 @@
 -   Bracket matching
 -   Snippets
 -   Multi-level folding
+-   Renaming of (Sopc)Xvrs
 -   Completion
     -   Suggest Xvrs when creating identifier for SopcXvrs (vice versa)
     -   Suggest Xvrs when creating identifier for CalcPvr

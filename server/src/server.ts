@@ -19,6 +19,7 @@ import {
     Location,
     DidChangeWatchedFilesNotification,
     Diagnostic,
+    WorkspaceEdit,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -119,6 +120,9 @@ connection.onInitialize((params: InitializeParams) => {
             definitionProvider: true,
             referencesProvider: true,
             declarationProvider: true,
+            renameProvider: {
+                prepareProvider: true,
+            },
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -317,6 +321,32 @@ connection.onReferences(async (params) => {
         });
     }
     return refs;
+});
+
+connection.onRenameRequest(async (params) => {
+    const document = documents.get(params.textDocument.uri);
+    if (!document) {
+        return undefined;
+    }
+
+    let context: SepticReferenceProvider | undefined =
+        await contextManager.getContext(params.textDocument.uri);
+    if (!context) {
+        context = await langService.cnfgProvider.get(params.textDocument.uri);
+    }
+
+    if (!context) {
+        return undefined;
+    }
+    return await langService.provideRename(params, document, context);
+});
+
+connection.onPrepareRename((params) => {
+    const document = documents.get(params.textDocument.uri);
+    if (!document) {
+        return null;
+    }
+    return langService.providePrepareRename(params, document);
 });
 
 // Make the text document manager listen on the connection
