@@ -22,6 +22,14 @@ describe("Basic tests lexer", () => {
         expect(tokens[1].type).toBe(SepticTokenType.identifier);
     });
 
+    test("Lexing keyword with asterixs", () => {
+        const input = "CalcPvr:  ************";
+        let tokens = tokenize(input);
+        expect(tokens.length).toBe(3);
+        expect(tokens[0].type).toBe(SepticTokenType.object);
+        expect(tokens[1].type).toBe(SepticTokenType.identifier);
+    });
+
     test("Lexing tagmap with string value", () => {
         const input = 'Test1= "Dummy"';
         let tokens = tokenize(input);
