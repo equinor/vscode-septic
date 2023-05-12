@@ -223,6 +223,26 @@ describe("Test scanning of identifiers", () => {
         expect(tokens.length).toBe(2);
         expect(tokens[0].type).toBe(AlgTokenType.jinja);
     });
+    test("Scanning of identifier starting with jinja followed by identifier", () => {
+        const input = "{{ Wellname }}Test";
+        const scanner = new AlgScanner(input);
+        const tokens = scanner.scanTokens();
+        expect(tokens.length).toBe(3);
+        expect(tokens[0].type).toBe(AlgTokenType.jinja);
+        expect(tokens[0].content).toBe("{{ Wellname }}");
+        expect(tokens[1].type).toBe(AlgTokenType.identifier);
+        expect(tokens[1].content).toBe("Test");
+    });
+    test("Scanning of multiple identifiers with jinja", () => {
+        const input = "{{ Wellname }} Test";
+        const scanner = new AlgScanner(input);
+        const tokens = scanner.scanTokens();
+        expect(tokens.length).toBe(3);
+        expect(tokens[0].type).toBe(AlgTokenType.jinja);
+        expect(tokens[0].content).toBe("{{ Wellname }}");
+        expect(tokens[1].type).toBe(AlgTokenType.identifier);
+        expect(tokens[1].content).toBe("Test");
+    });
 });
 
 describe("Test parsing of basic expressions", () => {
@@ -337,6 +357,7 @@ describe("Test parsing of functions", () => {
         expect(expr).toBeInstanceOf(AlgFunction);
         expect((<AlgFunction>expr).args.length).toBe(0);
     });
+
     test("Parsing of function with multiple arguments", () => {
         const input = "add(1,2)";
         const expr = parseAlg(input);
@@ -353,6 +374,15 @@ describe("Test parsing of functions", () => {
         expect((<AlgFunction>expr).args.length).toBe(2);
         expect((<AlgFunction>expr).identifier).toBe("and");
         expect((<AlgFunction>expr).args[0]).toBeInstanceOf(AlgFunction);
+        expect((<AlgFunction>expr).args[1]).toBeInstanceOf(AlgLiteral);
+    });
+    test("Parsing of trublesome function", () => {
+        const input = "intpoltype1({{ Wellname }}Zpc_Y, {{ Cv_curve_well }})";
+        const expr = parseAlg(input);
+        expect(expr).toBeInstanceOf(AlgFunction);
+        expect((<AlgFunction>expr).args.length).toBe(2);
+        expect((<AlgFunction>expr).identifier).toBe("intpoltype1");
+        expect((<AlgFunction>expr).args[0]).toBeInstanceOf(AlgLiteral);
         expect((<AlgFunction>expr).args[1]).toBeInstanceOf(AlgLiteral);
     });
 });

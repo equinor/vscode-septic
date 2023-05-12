@@ -544,7 +544,6 @@ export class AlgScanner {
         if (!this.match("}")) {
             this.error("Invalid jinja expression");
         }
-        this.advance();
         this.addToken(AlgTokenType.jinja);
     }
 
