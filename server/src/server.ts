@@ -18,8 +18,6 @@ import {
     LocationLink,
     Location,
     DidChangeWatchedFilesNotification,
-    Diagnostic,
-    WorkspaceEdit,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -123,6 +121,7 @@ connection.onInitialize((params: InitializeParams) => {
             renameProvider: {
                 prepareProvider: true,
             },
+            hoverProvider: true,
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -347,6 +346,24 @@ connection.onPrepareRename((params) => {
         return null;
     }
     return langService.providePrepareRename(params, document);
+});
+
+connection.onHover(async (params) => {
+    let doc = await documentProvider.getDocument(params.textDocument.uri);
+    if (!doc) {
+        return undefined;
+    }
+
+    let context: SepticReferenceProvider | undefined =
+        await contextManager.getContext(params.textDocument.uri);
+    if (!context) {
+        context = await langService.cnfgProvider.get(params.textDocument.uri);
+    }
+
+    if (!context) {
+        return undefined;
+    }
+    return langService.provideHover(params, doc, context);
 });
 
 // Make the text document manager listen on the connection
