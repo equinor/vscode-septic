@@ -1,4 +1,4 @@
-import { ITextDocument } from "../../src/language-service";
+import { ITextDocument } from "../../language-service";
 import { Position, Range, URI } from "vscode-languageserver";
 
 export class MockDocument implements ITextDocument {

@@ -1,13 +1,15 @@
+import { expect } from "chai";
+
 import {
     algDiagnostic,
     defaultDiagnosticsSettings,
     toSeverity,
-} from "../src/language-service/diagnosticsProvider";
-import { parseSeptic } from "../src/septic";
+} from "../language-service/diagnosticsProvider";
+import { parseSeptic } from "../septic";
 import { MockDocument } from "./util";
 
 describe("Test algorithm diagnostics", () => {
-    test("Missing paranthesis in alg", () => {
+    it("Missing paranthesis in alg", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -18,9 +20,9 @@ describe("Test algorithm diagnostics", () => {
 
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
-        expect(diag.length).toBe(1);
+        expect(diag.length).to.equal(1);
     });
-    test("Unexpexted token in alg", () => {
+    it("Unexpexted token in alg", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -31,9 +33,9 @@ describe("Test algorithm diagnostics", () => {
 
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
-        expect(diag.length).toBe(1);
+        expect(diag.length).to.equal(1);
     });
-    test("Missing reference in alg", () => {
+    it("Missing reference in alg", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -44,12 +46,12 @@ describe("Test algorithm diagnostics", () => {
 
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
-        expect(diag.length).toBe(1);
-        expect(diag[0].severity).toBe(
+        expect(diag.length).to.equal(1);
+        expect(diag[0].severity).to.equal(
             toSeverity(defaultDiagnosticsSettings.algMissingReference)
         );
     });
-    test("Unknown function in alg", () => {
+    it("Unknown function in alg", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -60,12 +62,12 @@ describe("Test algorithm diagnostics", () => {
 
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
-        expect(diag.length).toBe(1);
-        expect(diag[0].severity).toBe(
+        expect(diag.length).to.equal(1);
+        expect(diag[0].severity).to.equal(
             toSeverity(defaultDiagnosticsSettings.algCalc)
         );
     });
-    test("No errors for valid expression", () => {
+    it("No errors for valid expression", () => {
         const text = `
         Evr: Var1
             Text1= "Test"
@@ -83,6 +85,6 @@ describe("Test algorithm diagnostics", () => {
 
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
-        expect(diag.length).toBe(0);
+        expect(diag.length).to.equal(0);
     });
 });

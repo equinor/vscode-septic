@@ -1,158 +1,159 @@
+import { expect } from "chai";
 import {
     SepticParser,
     SepticTokenType,
     parseSeptic,
     tokenize,
-} from "../src/septic";
+} from "../septic";
 
 describe("Basic tests lexer", () => {
-    test("Lexing keyword", () => {
+    it("Lexing keyword", () => {
         const input = "System:  FirstTest";
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.object);
-        expect(tokens[1].type).toBe(SepticTokenType.identifier);
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
     });
 
-    test("Lexing keyword with scg variable", () => {
+    it("Lexing keyword with scg variable", () => {
         const input = "SopcEvr:  {{ TestEvr }}";
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.object);
-        expect(tokens[1].type).toBe(SepticTokenType.identifier);
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
     });
 
-    test("Lexing tagmap with string value", () => {
+    it("Lexing tagmap with string value", () => {
         const input = 'Test1= "Dummy"';
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.string);
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.string);
     });
 
-    test("Lexing tagmap with scg in string value", () => {
+    it("Lexing tagmap with scg in string value", () => {
         const input = 'Text1= "{{ Jinja but should be hidden since string }}"';
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.string);
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.string);
     });
 
-    test("Lexing tagmap with number value", () => {
+    it("Lexing tagmap with number value", () => {
         const input = "Test2= 3.14";
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.numeric);
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.numeric);
     });
 
-    test("Lexing tagmap with groupmask value", () => {
+    it("Lexing tagmap with groupmask value", () => {
         const input = "GrpLock=  0000000000000000000000000";
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.numeric);
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.numeric);
     });
 
-    test("Lexing tagmap with bits value", () => {
+    it("Lexing tagmap with bits value", () => {
         const input = "Bits2=  0001";
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.numeric);
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.numeric);
     });
 
-    test("Lexing blocking tagmap", () => {
+    it("Lexing blocking tagmap", () => {
         const input = "Blocking=  8    1    2    4    8   16   32   64   96";
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(11);
-        expect(tokens[0].type).toBe(SepticTokenType.attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.numeric);
-        expect(tokens[2].type).toBe(SepticTokenType.numeric);
+        expect(tokens.length).to.equal(11);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.numeric);
+        expect(tokens[2].type).to.equal(SepticTokenType.numeric);
     });
 
-    test("Lexing line comment", () => {
+    it("Lexing line comment", () => {
         const input = '// Test1=  "Dummy"';
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(1);
+        expect(tokens.length).to.equal(1);
     });
 
-    test("Lexing block comment", () => {
+    it("Lexing block comment", () => {
         const input = '/* Bits2=  0001 */ Test1= "Dummy"';
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.string);
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.string);
     });
 
-    test("Lexing jinja comment", () => {
+    it("Lexing jinja comment", () => {
         const input = '{# Bits2=  0001 #} Test1= "Dummy"';
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.string);
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.string);
     });
 
-    test("Lexing jinja epression", () => {
+    it("Lexing jinja epression", () => {
         const input = '{%- if final|default(false) %} Test1= "Dummy"';
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(3);
-        expect(tokens[0].type).toBe(SepticTokenType.attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.string);
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.string);
     });
 
-    test("Lexing with unknown character", () => {
+    it("Lexing with unknown character", () => {
         const input = 'Test1= ?"Dummy"';
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(4);
-        expect(tokens[0].type).toBe(SepticTokenType.attribute);
-        expect(tokens[1].type).toBe(SepticTokenType.unknown);
-        expect(tokens[2].type).toBe(SepticTokenType.string);
+        expect(tokens.length).to.equal(4);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.unknown);
+        expect(tokens[2].type).to.equal(SepticTokenType.string);
     });
 
-    test("Lexing group tag", () => {
+    it("Lexing group tag", () => {
         const input = `Grps=  7
                  "Tables1"  "Tables2"  "Tables3"  "Tables4"  "Tables5"
                  "Tables6"  "Tables7"`;
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(10);
-        expect(tokens[0].type).toBe(SepticTokenType.attribute);
+        expect(tokens.length).to.equal(10);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
         expect(
             tokens.filter((el) => {
                 return el.type === SepticTokenType.string;
             }).length
-        ).toBe(7);
+        ).to.equal(7);
     });
 });
 
 describe("Test lexing of blocks", () => {
-    test("Test lexing of small system block", () => {
+    it("Test lexing of small system block", () => {
         const input = `  System:        TESTAPP
          Text1=  "Dummy applikasjon"
          Text2=  "1: Test �, 2: Test �, 3: Test �"
          Nsecs=  10
        PlotMax=  10`;
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(11);
-        expect(tokens[0].type).toBe(SepticTokenType.object);
+        expect(tokens.length).to.equal(11);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
         expect(
             tokens.filter((el) => {
                 return el.type === SepticTokenType.attribute;
             }).length
-        ).toBe(4);
+        ).to.equal(4);
         expect(
             tokens.filter((el) => {
                 return el.type === SepticTokenType.numeric;
             }).length
-        ).toBe(2);
+        ).to.equal(2);
         expect(
             tokens.filter((el) => {
                 return el.type === SepticTokenType.string;
             }).length
-        ).toBe(2);
+        ).to.equal(2);
     });
 
-    test("Test lexing of Cvr", () => {
+    it("Test lexing of Cvr", () => {
         const input = `  Cvr:           TestCvr
          Text1=  "Test Cvr"
          Text2=  ""
@@ -208,38 +209,38 @@ UseFactorWeight=  0`;
             tokens.filter((el) => {
                 return el.type === SepticTokenType.attribute;
             }).length
-        ).toBe(46);
+        ).to.equal(46);
         expect(
             tokens.filter((el) => {
                 return el.type === SepticTokenType.string;
             }).length
-        ).toBe(3);
+        ).to.equal(3);
         expect(
             tokens.filter((el) => {
                 return el.type === SepticTokenType.numeric;
             }).length
-        ).toBe(40);
+        ).to.equal(40);
     });
 
-    test("Test lexer for plot", () => {
+    it("Test lexer for plot", () => {
         const input = `XvrPlot:       {{ Wellname }}TestCvr
            Row=  3
            Col=  1
        RowSize=  3
        ColSize=  2`;
         let tokens = tokenize(input);
-        expect(tokens.length).toBe(11);
-        expect(tokens[1].type).toBe(SepticTokenType.identifier);
+        expect(tokens.length).to.equal(11);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
         expect(
             tokens.filter((el) => {
                 return el.type === SepticTokenType.attribute;
             }).length
-        ).toBe(4);
+        ).to.equal(4);
     });
 });
 
 describe("Test basic functionality of parser", () => {
-    test("Test parsing of attribute with single value", () => {
+    it("Test parsing of attribute with single value", () => {
         let tokens = [
             {
                 type: SepticTokenType.attribute,
@@ -264,12 +265,12 @@ describe("Test basic functionality of parser", () => {
         let parser = new SepticParser(tokens);
         parser.advance();
         let attr = parser.attribute();
-        expect(attr.key).toBe("Test");
-        expect(attr.values.length).toBe(1);
-        expect(attr.values[0].value).toBe("Test");
+        expect(attr.key).to.equal("Test");
+        expect(attr.values.length).to.equal(1);
+        expect(attr.values[0].value).to.equal("Test");
     });
 
-    test("Test parsing of attribute with multiple values", () => {
+    it("Test parsing of attribute with multiple values", () => {
         let tokens = [
             {
                 type: SepticTokenType.attribute,
@@ -321,16 +322,16 @@ describe("Test basic functionality of parser", () => {
         let parser = new SepticParser(tokens);
         parser.advance();
         let attr = parser.attribute();
-        expect(attr.key).toBe("Test");
-        expect(attr.values.length).toBe(5);
-        expect(attr.values[0].value).toBe("Test");
-        expect(attr.values[1].value).toBe("77");
-        expect(attr.values[2].value).toBe("00000000000000000000001");
-        expect(attr.values[3].value).toBe("1000");
-        expect(attr.values[4].value).toBe("OFF");
+        expect(attr.key).to.equal("Test");
+        expect(attr.values.length).to.equal(5);
+        expect(attr.values[0].value).to.equal("Test");
+        expect(attr.values[1].value).to.equal("77");
+        expect(attr.values[2].value).to.equal("00000000000000000000001");
+        expect(attr.values[3].value).to.equal("1000");
+        expect(attr.values[4].value).to.equal("OFF");
     });
 
-    test("Test parsing of variables with one part", () => {
+    it("Test parsing of variables with one part", () => {
         let tokens = [
             {
                 type: SepticTokenType.identifier,
@@ -348,10 +349,10 @@ describe("Test basic functionality of parser", () => {
         let parser = new SepticParser(tokens);
         parser.advance();
         let variable = parser.identifier();
-        expect(variable.name).toBe("Variable");
+        expect(variable.name).to.equal("Variable");
     });
 
-    test("Test parsing of septic object with single attribute", () => {
+    it("Test parsing of septic object with single attribute", () => {
         let tokens = [
             {
                 type: SepticTokenType.object,
@@ -387,13 +388,13 @@ describe("Test basic functionality of parser", () => {
         let parser = new SepticParser(tokens);
         parser.advance();
         let obj = parser.septicObject();
-        expect(obj.type).toBe("Test");
-        expect(obj.attributes.length).toBe(1);
+        expect(obj.type).to.equal("Test");
+        expect(obj.attributes.length).to.equal(1);
     });
 });
 
 describe("Test error handling during parsing", () => {
-    test("Parsing of attribute with unknown tokens", () => {
+    it("Parsing of attribute with unknown tokens", () => {
         let tokens = [
             {
                 type: SepticTokenType.attribute,
@@ -429,11 +430,11 @@ describe("Test error handling during parsing", () => {
         let parser = new SepticParser(tokens);
         parser.advance();
         let attr = parser.attribute();
-        expect(attr.values.length).toBe(2);
-        expect(parser.errors.length).toBe(1);
+        expect(attr.values.length).to.equal(2);
+        expect(parser.errors.length).to.equal(1);
     });
 
-    test("Parsing of septic object with unknown tokens ", () => {
+    it("Parsing of septic object with unknown tokens ", () => {
         let tokens = [
             {
                 type: SepticTokenType.object,
@@ -475,12 +476,12 @@ describe("Test error handling during parsing", () => {
         let parser = new SepticParser(tokens);
         parser.advance();
         let obj = parser.septicObject();
-        expect(obj.attributes.length).toBe(1);
-        expect(obj.identifier).not.toBeNull();
-        expect(parser.errors.length).toBe(1);
+        expect(obj.attributes.length).to.equal(1);
+        expect(obj.identifier).not.to.equal(null);
+        expect(parser.errors.length).to.equal(1);
     });
 
-    test("Parsing of septic object without variable ", () => {
+    it("Parsing of septic object without variable ", () => {
         let tokens = [
             {
                 type: SepticTokenType.object,
@@ -510,14 +511,14 @@ describe("Test error handling during parsing", () => {
         let parser = new SepticParser(tokens);
         parser.advance();
         let obj = parser.septicObject();
-        expect(obj.attributes.length).toBe(1);
-        expect(obj.identifier).toBeUndefined();
-        expect(parser.errors.length).toBe(1);
+        expect(obj.attributes.length).to.equal(1);
+        expect(obj.identifier).to.equal(undefined);
+        expect(parser.errors.length).to.equal(1);
     });
 });
 
 describe("Test parsing of valid input", () => {
-    test("Parsing of small object block", () => {
+    it("Parsing of small object block", () => {
         const input = `System:        TESTAPP
          Text1=  "Dummy applikasjon"
          Text2=  "1: Test �, 2: Test �, 3: Test �"
@@ -526,8 +527,8 @@ describe("Test parsing of valid input", () => {
 			 GrpLock=  0000000000000000000000000
 				`;
         let cnfg = parseSeptic(input);
-        expect(cnfg.objects.length).toBe(1);
-        expect(cnfg.objects[0].attributes.length).toBe(5);
+        expect(cnfg.objects.length).to.equal(1);
+        expect(cnfg.objects[0].attributes.length).to.equal(5);
         let expected = [
             { name: "Text1", length: 1, values: [`"Dummy applikasjon"`] },
             {
@@ -545,13 +546,15 @@ describe("Test parsing of valid input", () => {
         ];
         let object = cnfg.objects[0];
         for (let i = 0; i < expected.length; i++) {
-            expect(object.attributes[i].key).toBe(expected[i].name);
-            expect(object.attributes[i].values.length).toBe(expected[i].length);
+            expect(object.attributes[i].key).to.equal(expected[i].name);
+            expect(object.attributes[i].values.length).to.equal(
+                expected[i].length
+            );
             let values: any[] = [];
             object.attributes[i].values.forEach((elem) => {
                 values.push(elem.value);
             });
-            expect(values).toStrictEqual(expected[i].values);
+            expect(values).to.deep.equal(expected[i].values);
         }
     });
 });
