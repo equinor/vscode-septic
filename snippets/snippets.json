@@ -810,7 +810,8 @@
             "         Nstep=  1",
             "       PlotMax=  25",
             "      MasterOn=  ON",
-            "       DesMode=  ACTIVE\r"
+            "       DesMode=  ACTIVE",
+            "       IterEachN=  1/n"
         ],
         "description": ""
     },
