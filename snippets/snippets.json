@@ -811,7 +811,7 @@
             "       PlotMax=  25",
             "      MasterOn=  ON",
             "       DesMode=  ACTIVE",
-            "       IterEachN=  1/n"
+            "       IterEachN=  1\r"
         ],
         "description": ""
     },
