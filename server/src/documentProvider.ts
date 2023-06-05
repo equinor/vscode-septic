@@ -153,6 +153,22 @@ export class DocumentProvider {
             }
         });
 
+        this.documents.onDidOpen((e) => {
+            if (!this.isRelevantFile(e.document.uri)) {
+                return;
+            }
+            const doc = this.cache.get(e.document.uri);
+            if (doc) {
+                doc.setInMemoryDoc(e.document);
+            } else {
+                this.cache.set(
+                    e.document.uri,
+                    new Document(e.document.uri, { inMemoryDoc: e.document })
+                );
+            }
+            this._onDidChangeDoc.fire(e.document.uri);
+        });
+
         connection.onDidChangeWatchedFiles(async (parms) => {
             for (const change of parms.changes) {
                 if (!this.isRelevantFile(change.uri)) {
