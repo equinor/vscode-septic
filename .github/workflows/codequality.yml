@@ -20,3 +20,6 @@ jobs:
 
       - name: 🧪 Run Unittests
         run: xvfb-run --auto-servernum npm run unittest
+
+      - name: 🧪 Run Integrationtests
+        run: xvfb-run --auto-servernum npm run integrationtest
