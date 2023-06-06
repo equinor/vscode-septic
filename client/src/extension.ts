@@ -6,6 +6,7 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as protocol from "./protocol";
+import { getSearchPattern } from "./util";
 
 import {
     LanguageClient,
@@ -49,9 +50,14 @@ export function activate(context: vscode.ExtensionContext) {
         clientOptions
     );
     client.onRequest(protocol.globFiles, async (params, cts) => {
-        return (
-            await vscode.workspace.findFiles("**/" + params.uri + "/**")
-        ).map((f) => f.toString());
+        let folder = vscode.workspace.workspaceFolders?.[0];
+        if (!folder) {
+            return [];
+        }
+        let pattern = getSearchPattern(folder.uri.path, params.uri);
+        return (await vscode.workspace.findFiles(pattern)).map((f) =>
+            f.toString()
+        );
     });
 
     client.onRequest(

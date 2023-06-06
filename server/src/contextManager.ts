@@ -106,7 +106,9 @@ export class ContextManager {
         const scgConfig = YAML.load(doc.getText()) as ScgConfig;
         const filesInTemplatePath = await this.connection.sendRequest(
             protocol.globFiles,
-            { uri: scgConfig.templatepath }
+            {
+                uri: path.join(path.dirname(doc.uri), scgConfig.templatepath),
+            }
         );
         const scgContext = new ScgContext(
             uri,
