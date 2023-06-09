@@ -1,9 +1,10 @@
+import { parseSeptic } from "../septic";
+import { getDocumentSymbols } from "../language-service/documentSymbolProvider";
 import { MockDocument } from "./util";
-import { parseSeptic } from "../src/septic";
-import { getDocumentSymbols } from "../src/language-service/documentSymbolProvider";
+import { expect } from "chai";
 
 describe("Test folding of document", () => {
-    test("Test folding of increasing levels", () => {
+    it("Test folding of increasing levels", () => {
         const text = `
 		  System:        TESTAPP
          Text1=  "Dummy applikasjon"
@@ -21,11 +22,11 @@ describe("Test folding of document", () => {
         const cnfg = parseSeptic(doc.getText());
         const documentSymbols = getDocumentSymbols(doc, cnfg);
 
-        expect(documentSymbols.length).toBe(1);
-        expect(documentSymbols[0].children?.length).toBe(1);
+        expect(documentSymbols.length).to.equal(1);
+        expect(documentSymbols[0].children?.length).to.equal(1);
     });
 
-    test("Test folding of same levels", () => {
+    it("Test folding of same levels", () => {
         const text = `
 		  System:        TESTAPP
          Text1=  "Dummy applikasjon"
@@ -45,8 +46,8 @@ describe("Test folding of document", () => {
 
         const documentSymbols = getDocumentSymbols(doc, cnfg);
 
-        expect(documentSymbols.length).toBe(2);
-        expect(documentSymbols[0].children?.length).toBe(0);
-        expect(documentSymbols[1].children?.length).toBe(1);
+        expect(documentSymbols.length).to.equal(2);
+        expect(documentSymbols[0].children?.length).to.equal(0);
+        expect(documentSymbols[1].children?.length).to.equal(1);
     });
 });
