@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/equinor/vscode-septic/compare/v1.4.0...v1.5.0) (2023-06-09)
+
+
+### ✨ Features
+
+* add OPCUA objects and snippets ([#183](https://github.com/equinor/vscode-septic/issues/183)) ([4fdb5e7](https://github.com/equinor/vscode-septic/commit/4fdb5e7cc7e096861047d6a99cd254dd644dca50))
+
 ## [1.4.0](https://github.com/equinor/vscode-septic/compare/v1.3.0...v1.4.0) (2023-06-09)
 
 
