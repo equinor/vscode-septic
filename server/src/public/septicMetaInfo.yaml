@@ -132,15 +132,27 @@ septicConfig:
       symbolKind: Interface
       refs:
         identifier: True
+    - name: Spacer
+    - name: SubrXvr
+    - name: System
+      level: 1
+      symbolKind: Namespace
+    - name: SystemPlot
+    - name: Table
+      level: 2
+      symbolKind: Array
+    - name: Tvr
+      level: 2
+      symbolKind: Variable
+      refs:
+        identifier: True
+    - name: TvrList
+      level: 2
+      symbolKind: Array
     - name: UAProc
       level: 1
       symbolKind: Interface
     - name: UAAppl
-      level: 2
-      symbolKind: Interface
-      refs:
-        identifier: True
-          - name: UAMvr
       level: 2
       symbolKind: Interface
       refs:
@@ -160,28 +172,16 @@ septicConfig:
       symbolKind: Interface
       refs:
         identifier: True
+    - name: UAMvr
+      level: 2
+      symbolKind: Interface
+      refs:
+        identifier: True
     - name: UATvr
       level: 2
       symbolKind: Interface
       refs:
         identifier: True
-    - name: Spacer
-    - name: SubrXvr
-    - name: System
-      level: 1
-      symbolKind: Namespace
-    - name: SystemPlot
-    - name: Table
-      level: 2
-      symbolKind: Array
-    - name: Tvr
-      level: 2
-      symbolKind: Variable
-      refs:
-        identifier: True
-    - name: TvrList
-      level: 2
-      symbolKind: Array
     - name: XvrMatrix
     - name: XvrPlot
       level: 2
