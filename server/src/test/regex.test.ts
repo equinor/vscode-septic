@@ -29,6 +29,7 @@ describe("Number regex test", () => {
         expect(regex.test("")).to.equal(false);
         expect(regex.test("a")).to.equal(false);
         expect(regex.test(".4")).to.equal(false);
+        expect(regex.test("18PST")).to.equal(false);
     });
 
     it("does match bits", () => {});
