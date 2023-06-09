@@ -6,14 +6,6 @@
 
 import { CancellationToken } from "vscode-languageserver";
 import { IToken, Parser, ParserError } from "./parser";
-import { error } from "console";
-
-export function parseAlg(input: string): AlgExpr {
-    const scanner = new AlgScanner(input);
-    const tokens = scanner.scanTokens();
-    const parser = new AlgParser(tokens);
-    return parser.parse();
-}
 
 export enum AlgTokenType {
     leftParen,
@@ -56,6 +48,21 @@ export class AlgParsingError extends ParserError<AlgTokenType> {
 export enum AlgParsingErrorType {
     unsupportedJinja,
     default,
+}
+
+export function parseAlg(input: string): AlgExpr {
+    if (!input.length) {
+        throw new AlgParsingError("Missing alg expression for CalcPvr", {
+            start: 0,
+            end: 0,
+            type: AlgTokenType.error,
+            content: "",
+        });
+    }
+    const scanner = new AlgScanner(input);
+    const tokens = scanner.scanTokens();
+    const parser = new AlgParser(tokens);
+    return parser.parse();
 }
 
 export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
