@@ -1,7 +1,7 @@
 import * as path from "path";
 
-export function getSearchPattern(worskspacePath: string, templatePath: string) {
-    let baseWorkspace = path.basename(worskspacePath);
+export function getSearchPattern(workspacePath: string, templatePath: string) {
+    let baseWorkspace = path.basename(workspacePath);
     let parts: string[] = [];
     let temp = templatePath;
     while (path.basename(temp) !== baseWorkspace) {
