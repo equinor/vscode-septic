@@ -296,6 +296,100 @@
         ],
         "description": "FB variant"
     },
+    "UAProc": {
+        "prefix": "uaproc",
+        "body": [
+            "  UAProc:        ${1:ApplicationName}",
+            "     ServerURL=  \"opc.tcp://127.0.0.1:4840\"",
+            "  SecurityMode=  ${2|UA_MESSAGESECURITYMODE_NONE,UA_MESSAGESECURITYMODE_SIGN,UA_MESSAGESECURITYMODE_SIGNANDENCRYPT|}",
+            "        yPulse=  \"\""
+        ],
+        "description": "For OPCUA (in beta)"
+    },
+    "UAAppl": {
+        "prefix": "uaappl",
+        "body": [
+            "  UAAppl:        ${1:ApplicationName}",
+            "  xAllowActive=  \"AllowActiveTag\"",
+            "  xDesiredMode=  \"\"",
+            "       yStatus=  \"\""
+        ],
+        "description": "Needs to have the same name as your SmpAppl (OPCUA beta)"
+    },
+    "UAMvr": {
+        "prefix": "uamvr",
+        "body": [
+            "  UAMvr:       ${1:MvrName}",
+            "         xMeas=  \"\"",
+            "     xNotValid=  \"\"",
+            " xProcessValue=  \"\"",
+            " yCalcSetpoint=  \"\"",
+            "xDesiredActive=  \"\"",
+            "       yActive=  \"\"",
+            "         xAuto=  \"\"",
+            "       xExtern=  \"\"",
+            "   xIdealValue=  \"\"",
+            "    xHighLimit=  \"\"",
+            "     xLowLimit=  \"\"",
+            "   yIdealValue=  \"\"",
+            "    yHighLimit=  \"\"",
+            "     yLowLimit=  \"\"",
+            "    xMaxMoveUp=  \"\"",
+            "  xMaxMoveDown=  \"\"",
+            "   xWindupHigh=  \"\"",
+            "    xWindupLow=  \"\"",
+            "        xTrack=  \"\"",
+            "       yToComp=  \"\"",
+            "      yToLocal=  \"\""
+        ],
+        "description": "OPCUA "
+    },
+    "UACvr": {
+        "prefix": "uacvr",
+        "body": [
+            "  UACvr:       ${1:MvrName}",
+            "     xNotValid=  \"\"",
+            "xDesiredActive=  \"\"",
+            "       yActive=  \"\"",
+            "     xSetpoint=  \"\"",
+            "         xMeas=  \"\"",
+            "    xHighLimit=  \"\"",
+            "     xLowLimit=  \"\"",
+            "     ySetpoint=  \"\"",
+            "     yLowLimit=  \"\"",
+            "    yHighLimit=  \"\""
+        ],
+        "description": "OPCUA"
+    },
+    "UADvr": {
+        "prefix": "uadvr",
+        "body": [
+            "  UADvr:       ${1:DvrName}",
+            "         xMeas=  \"\"",    
+            "     xNotValid=  \"\"",   
+            "xDesiredTracking=\"\"",
+            "     yTracking=  \"\""
+        ],
+        "description": "OPCUA"
+    },
+    "UATvr": {
+        "prefix": "uatvr",
+        "body": [
+            "  UATvr:       ${1:TvrName}",
+            "         xMeas=  \"\"",    
+            "     xNotValid=  \"\""
+        ],
+        "description": "OPCUA"
+    },
+    "UAEvr": {
+        "prefix": "uaevr",
+        "body": [
+            "  UAEvr:       ${1:EvrName}",
+            "         xMeas=  \"\"",    
+            "     xNotValid=  \"\""
+        ],
+        "description": "OPCUA"
+    },
     "SmpcAppl": {
         "prefix": "smpcappl",
         "body": [
