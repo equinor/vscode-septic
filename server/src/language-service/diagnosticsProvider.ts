@@ -82,9 +82,9 @@ export class DiagnosticProvider {
             return [];
         }
 
+        let settingsWorkspace = await this.settingsManager.getSettings();
         let settings =
-            this.settingsManager.getSettings()?.diagnostics ??
-            defaultDiagnosticsSettings;
+            settingsWorkspace?.diagnostics ?? defaultDiagnosticsSettings;
 
         if (!settings.enabled) {
             return [];

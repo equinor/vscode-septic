@@ -5,9 +5,18 @@
 
 import { Connection } from "vscode-languageserver";
 import { DiagnosticsSettings } from "./language-service/diagnosticsProvider";
+import { SepticMetaInfoProvider } from "./septic";
+
+const updatedFoldingLevel = 1;
+const defaultFoldingLevelCalcModl = 2;
+
+interface FoldingSettings {
+    readonly calcModl: boolean;
+}
 
 export interface Settings {
     readonly diagnostics: DiagnosticsSettings;
+    readonly folding: FoldingSettings;
 }
 
 export class SettingsManager {
@@ -15,24 +24,48 @@ export class SettingsManager {
 
     private readonly connection: Connection;
 
+    private updateSettingsPromise: Promise<void | undefined> | undefined;
+
     constructor(connection: Connection) {
         this.connection = connection;
     }
 
-    public getSettings(): Settings | undefined {
+    public async getSettings(): Promise<Settings | undefined> {
         if (!this.settings) {
-            this.updateSettings();
+            await this.update();
         }
         return this.settings;
     }
 
-    public invalidate(): void {
+    public async invalidate(): Promise<void> {
         this.settings = undefined;
     }
 
-    public updateSettings(): void {
-        this.connection.workspace.getConfiguration("septic").then((value) => {
-            this.settings = value;
+    private async updateSettings(): Promise<void> {
+        const settings = await this.connection.workspace.getConfiguration(
+            "septic"
+        );
+        this.settings = settings;
+        this.updateMetaInfo();
+    }
+
+    public update(): Promise<void | undefined> {
+        if (this.updateSettingsPromise) {
+            return this.updateSettingsPromise;
+        }
+        const prom = this.updateSettings();
+        prom.finally(() => {
+            this.updateSettingsPromise = undefined;
         });
+        this.updateSettingsPromise = prom;
+        return prom;
+    }
+
+    private updateMetaInfo(): void {
+        let level = this.settings?.folding.calcModl ? updatedFoldingLevel : defaultFoldingLevelCalcModl;
+
+        let metaInfoProvider = SepticMetaInfoProvider.getInstance();
+
+        metaInfoProvider.updateObjectLevel("CalcModl", level);
     }
 }

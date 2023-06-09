@@ -179,6 +179,7 @@ connection.onFoldingRanges(async (params, token): Promise<FoldingRange[]> => {
     if (!document) {
         return [];
     }
+    await settingsManager.getSettings();
     return langService.provideFoldingRanges(document, token);
 });
 

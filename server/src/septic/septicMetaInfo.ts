@@ -76,6 +76,14 @@ export class SepticMetaInfoProvider {
         return this.getObjectsMap().has(objectType);
     }
 
+    public updateObjectLevel(objectType: string, level: number): void {
+        let obj = this.getObjectsMap().get(objectType);
+        if (!obj) {
+            return;
+        }
+        obj.level = level;
+    }
+
     private getCalcMap(): Map<string, SepticCalcInfo> {
         if (!this.calcsMapFlag) {
             for (let calc of this.metaInfo.septicConfig.calcs) {
