@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.4.0](https://github.com/equinor/vscode-septic/compare/v1.3.0...v1.4.0) (2023-06-09)
+
+
+### 🐛 Bug Fixes
+
+* bug with wrong files in context ([#178](https://github.com/equinor/vscode-septic/issues/178)) ([2d554c9](https://github.com/equinor/vscode-septic/commit/2d554c97ddef5e40041e74c73285a41bc933d603))
+* parsing of variable starting with num ([#180](https://github.com/equinor/vscode-septic/issues/180)) ([a6dd4ed](https://github.com/equinor/vscode-septic/commit/a6dd4ed8ed9441c67c4e247e3c75590eb398137d))
+* update error message for empty alg ([#174](https://github.com/equinor/vscode-septic/issues/174)) ([864fc91](https://github.com/equinor/vscode-septic/commit/864fc91b7001dac6ffc41cf52a792cdf3b194ffb))
+* update error message for parsing of jinja in alg ([#130](https://github.com/equinor/vscode-septic/issues/130)) ([12badb9](https://github.com/equinor/vscode-septic/commit/12badb9453ff0f0cec2dbbe1347873facb9d2995))
+* use Meas instead of MeasBad for Evr snippet ([#152](https://github.com/equinor/vscode-septic/issues/152)) ([f6f63b8](https://github.com/equinor/vscode-septic/commit/f6f63b81f79869d7722b1b9e5a89b64f9324ca77))
+
+
+### ✨ Features
+
+* add setting for updating level of calcModl ([#175](https://github.com/equinor/vscode-septic/issues/175)) ([1bb8c39](https://github.com/equinor/vscode-septic/commit/1bb8c39d1eb51df28cb8bcefc70ab78e00ff4d12))
+* Integration test ([#171](https://github.com/equinor/vscode-septic/issues/171)) ([ff5b9e7](https://github.com/equinor/vscode-septic/commit/ff5b9e73a79ee0cf2fce1c79c189a62a96d7f8bd))
+
+
+### 🧹 Chores
+
+* **deps:** bump @types/node from 16.18.25 to 16.18.34 ([#166](https://github.com/equinor/vscode-septic/issues/166)) ([15fa8e5](https://github.com/equinor/vscode-septic/commit/15fa8e5c18c2787f69d14d40fb4aa1812ad026af))
+* **deps:** bump @typescript-eslint/eslint-plugin from 5.56.0 to 5.59.9 ([#173](https://github.com/equinor/vscode-septic/issues/173)) ([e3a4438](https://github.com/equinor/vscode-septic/commit/e3a4438cf94c824e3c8fec168a1b8bf7f8018cb8))
+* **deps:** bump @typescript-eslint/parser from 5.56.0 to 5.59.9 ([#172](https://github.com/equinor/vscode-septic/issues/172)) ([c5099c8](https://github.com/equinor/vscode-septic/commit/c5099c8a109810f1fb584aa4705c201e325865ac))
+* **deps:** bump rimraf from 5.0.0 to 5.0.1 ([#161](https://github.com/equinor/vscode-septic/issues/161)) ([b4d0249](https://github.com/equinor/vscode-septic/commit/b4d0249d6e4c3f110b9bf148f9fb718b8f03b2f2))
+
 ## [1.3.0](https://github.com/equinor/vscode-septic/compare/v1.2.1...v1.3.0) (2023-05-12)
 
 
