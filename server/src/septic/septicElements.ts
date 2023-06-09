@@ -19,6 +19,15 @@ export class SepticBase {
     }
 }
 
+export class SepticComment extends SepticBase {
+    content: string;
+
+    constructor(content: string, start: number = -1, end: number = -1) {
+        super(start, end);
+        this.content = content;
+    }
+}
+
 export class SepticObject extends SepticBase {
     type: string;
     identifier: Identifier | undefined;

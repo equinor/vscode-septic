@@ -24,6 +24,7 @@ import {
     Attribute,
     AttributeValue,
     Identifier,
+    SepticComment,
     SepticObject,
 } from "./septicElements";
 
@@ -32,11 +33,16 @@ export function parseSeptic(
     token: CancellationToken | undefined = undefined
 ): SepticCnfg {
     const tokens = tokenize(input, token);
-    if (!tokens.length) {
+    if (!tokens.tokens.length) {
         return new SepticCnfg([]);
     }
-    const parser = new SepticParser(tokens);
-    return parser.parse(token);
+    const parser = new SepticParser(tokens.tokens);
+
+    let cnfg = parser.parse(token);
+    cnfg.comments = tokens.comments.map((comment) => {
+        return new SepticComment(comment.content, comment.start, comment.end);
+    });
+    return cnfg;
 }
 
 let validAttributeTokens = [
@@ -173,15 +179,21 @@ const REGEX_LIST = [
     { type: SepticTokenType.unknown, regex: UNKNOWN_REGEX },
 ];
 
+interface ITokenize {
+    tokens: IToken<SepticTokenType>[];
+    comments: IToken<SepticTokenType>[];
+}
+
 export function tokenize(
     input: string,
     token: CancellationToken | undefined = undefined
-): IToken<SepticTokenType>[] {
+): ITokenize {
+    let commentTokens: IToken<SepticTokenType>[] = [];
     let tokens: IToken<SepticTokenType>[] = [];
     let curpos: number = 0;
     while (curpos < input.length) {
         if (token?.isCancellationRequested) {
-            return [];
+            return { tokens: [], comments: [] };
         }
         let temp = input.slice(curpos);
         for (let i = 0; i < REGEX_LIST.length; i++) {
@@ -191,13 +203,23 @@ export function tokenize(
                 continue;
             }
             let lengthMatch = match[0].length;
+            if (element.type === SepticTokenType.skip) {
+                curpos += lengthMatch;
+                break;
+            }
+
             if (
-                element.type === SepticTokenType.skip ||
                 element.type === SepticTokenType.lineComment ||
                 element.type === SepticTokenType.blockComment ||
                 element.type === SepticTokenType.jinjaComment ||
                 element.type === SepticTokenType.jinjaExpression
             ) {
+                commentTokens.push({
+                    type: element.type,
+                    start: curpos,
+                    end: curpos + lengthMatch,
+                    content: match[0],
+                });
                 curpos += lengthMatch;
                 break;
             }
@@ -231,5 +253,5 @@ export function tokenize(
         end: curpos,
         content: "\0",
     });
-    return tokens;
+    return { tokens: tokens, comments: commentTokens };
 }

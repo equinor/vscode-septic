@@ -6,17 +6,19 @@
 import { AlgVisitor, parseAlg } from "./algParser";
 import { SepticTokenType } from "./septicTokens";
 import { SepticMetaInfoProvider } from "./septicMetaInfo";
-import { Attribute, SepticObject } from "./septicElements";
+import { Attribute, SepticComment, SepticObject } from "./septicElements";
 import { SepticReference, SepticReferenceProvider } from "./reference";
 
 export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];
+    public comments: SepticComment[];
     private xvrRefs = new Map<string, SepticReference[]>();
     private xvrRefsExtracted = false;
     public uri: string = "";
 
-    constructor(objects: SepticObject[]) {
+    constructor(objects: SepticObject[], comments: SepticComment[] = []) {
         this.objects = objects;
+        this.comments = comments;
     }
 
     public async load(): Promise<void> {
