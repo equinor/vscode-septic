@@ -40,7 +40,12 @@ export function parseSeptic(
 
     let cnfg = parser.parse(token);
     cnfg.comments = tokens.comments.map((comment) => {
-        return new SepticComment(comment.content, comment.start, comment.end);
+        return new SepticComment(
+            comment.content,
+            comment.type,
+            comment.start,
+            comment.end
+        );
     });
     return cnfg;
 }
