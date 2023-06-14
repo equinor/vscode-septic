@@ -385,8 +385,8 @@
         "prefix": "uaevr",
         "body": [
             "  UAEvr:       ${1:EvrName}",
-            "         xMeas=  \"\"",    
-            "     xNotValid=  \"\""
+            "         yMeas=  \"\"",    
+            "     yNotValid=  \"\""
         ],
         "description": "OPCUA"
     },
