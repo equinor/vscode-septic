@@ -347,7 +347,7 @@
     "UACvr": {
         "prefix": "uacvr",
         "body": [
-            "  UACvr:       ${1:MvrName}",
+            "  UACvr:       ${1:CvrName}",
             "     xNotValid=  \"\"",
             "xDesiredActive=  \"\"",
             "       yActive=  \"\"",
