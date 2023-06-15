@@ -25,7 +25,7 @@ export const jinjaForEndRegex = /\{%-?\s+endfor\s+%}$/;
 export const jinjaIfEndRegex = /\{%-?\s+endif\s+%}$/;
 export const stopFormattingRegex = /^\{#\s+format:off\s+#}$/;
 export const startFormattingRegex = /^\{#\s+format:on\s+#}$/;
-export const lineCommentRegex = /^\s*\/\/\s|\*\/\s*$/;
+export const lineCommentRegex = /^\s*\/\/\s|\*\/\s*$|#}\s*$/;
 
 export class FormattingProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
@@ -131,8 +131,10 @@ class SepticCnfgFormatter {
             " ".repeat(indentsDeclaration) + object?.type + ":";
         this.currentLine += objectTypeFormatted;
 
-        let indentsName =
-            startObjectName - objectTypeFormatted.length - existingWhitespaces;
+        let indentsName = Math.max(
+            startObjectName - objectTypeFormatted.length - existingWhitespaces,
+            2
+        );
 
         if (
             !this.synchronize((elem) => {

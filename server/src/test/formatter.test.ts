@@ -103,10 +103,12 @@ describe("line comment regex test", () => {
         expect(regex.test("// Test")).to.equal(true);
         expect(regex.test("/*\nTest\n*/")).to.equal(true);
         expect(regex.test("/*\nTest\n*/ ")).to.equal(true);
+        expect(regex.test("{#\nTest\n#} ")).to.equal(true);
     });
 
     it("does not match invalid", () => {
         expect(regex.test("//Test")).to.equal(false);
         expect(regex.test("/* Test */bs")).to.equal(false);
+        expect(regex.test("{# Test #}bs")).to.equal(false);
     });
 });
