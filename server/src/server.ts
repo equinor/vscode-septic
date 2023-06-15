@@ -369,6 +369,10 @@ connection.onHover(async (params) => {
 });
 
 connection.onDocumentFormatting(async (params) => {
+    let settings = await settingsManager.getSettings();
+    if (!settings?.formatting.enabled) {
+        return [];
+    }
     let doc = documents.get(params.textDocument.uri);
     if (!doc) {
         return [];

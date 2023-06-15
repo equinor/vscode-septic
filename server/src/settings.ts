@@ -13,10 +13,14 @@ const defaultFoldingLevelCalcModl = 2;
 interface FoldingSettings {
     readonly calcModl: boolean;
 }
+interface FormattingSettings {
+    readonly enabled: boolean;
+}
 
 export interface Settings {
     readonly diagnostics: DiagnosticsSettings;
     readonly folding: FoldingSettings;
+    readonly formatting: FormattingSettings;
 }
 
 export class SettingsManager {
@@ -62,7 +66,9 @@ export class SettingsManager {
     }
 
     private updateMetaInfo(): void {
-        let level = this.settings?.folding.calcModl ? updatedFoldingLevel : defaultFoldingLevelCalcModl;
+        let level = this.settings?.folding.calcModl
+            ? updatedFoldingLevel
+            : defaultFoldingLevelCalcModl;
 
         let metaInfoProvider = SepticMetaInfoProvider.getInstance();
 
