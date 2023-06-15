@@ -1537,5 +1537,19 @@
             "         Nstep=  1\r"
         ],
         "description": "description for FdtaProc"
+    },
+    "FormattingOff": {
+        "prefix": "formatoff",
+        "body": [
+            "{# format:off #}"
+        ],
+        "description": ""
+    },
+    "FormattingOn": {
+        "prefix": "formaton",
+        "body": [
+            "{# format:on #}"
+        ],
+        "description": ""
     }
 }
