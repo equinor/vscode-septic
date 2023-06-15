@@ -347,7 +347,7 @@
     "UACvr": {
         "prefix": "uacvr",
         "body": [
-            "  UACvr:       ${1:MvrName}",
+            "  UACvr:       ${1:CvrName}",
             "     xNotValid=  \"\"",
             "xDesiredActive=  \"\"",
             "       yActive=  \"\"",
@@ -385,8 +385,8 @@
         "prefix": "uaevr",
         "body": [
             "  UAEvr:       ${1:EvrName}",
-            "         xMeas=  \"\"",    
-            "     xNotValid=  \"\""
+            "         yMeas=  \"\"",    
+            "     yNotValid=  \"\""
         ],
         "description": "OPCUA"
     },
