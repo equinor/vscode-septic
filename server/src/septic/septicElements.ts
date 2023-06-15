@@ -17,6 +17,30 @@ export class SepticBase {
     updateEnd(): void {
         return;
     }
+
+    getElements(): SepticBase[] {
+        return [];
+    }
+}
+
+export class SepticComment extends SepticBase {
+    content: string;
+    type: SepticTokenType;
+
+    constructor(
+        content: string,
+        type: SepticTokenType,
+        start: number = -1,
+        end: number = -1
+    ) {
+        super(start, end);
+        this.content = content;
+        this.type = type;
+    }
+
+    getElements(): SepticBase[] {
+        return [this];
+    }
 }
 
 export class SepticObject extends SepticBase {
@@ -57,6 +81,17 @@ export class SepticObject extends SepticBase {
             return attr.key === name;
         });
     }
+
+    getElements(): SepticBase[] {
+        let elements: SepticBase[] = [this];
+        if (this.identifier) {
+            elements.push(...this.identifier.getElements());
+        }
+        this.attributes.forEach((attr) => {
+            elements.push(...attr.getElements());
+        });
+        return elements;
+    }
 }
 
 export class Attribute extends SepticBase {
@@ -78,6 +113,14 @@ export class Attribute extends SepticBase {
             this.end = this.values[this.values.length - 1].end;
         }
     }
+
+    getElements(): SepticBase[] {
+        let elements: SepticBase[] = [this];
+        this.values.forEach((attrValue) => {
+            elements.push(...attrValue.getElements());
+        });
+        return elements;
+    }
 }
 
 export class Identifier extends SepticBase {
@@ -86,6 +129,10 @@ export class Identifier extends SepticBase {
     constructor(name: string, start: number = -1, end: number = -1) {
         super(start, end);
         this.name = name.replace(/\s/g, "");
+    }
+
+    getElements(): SepticBase[] {
+        return [this];
     }
 }
 
@@ -102,5 +149,9 @@ export class AttributeValue extends SepticBase {
         super(start, end);
         this.value = value;
         this.type = type;
+    }
+
+    getElements(): SepticBase[] {
+        return [this];
     }
 }

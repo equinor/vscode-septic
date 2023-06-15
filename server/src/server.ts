@@ -122,6 +122,7 @@ connection.onInitialize((params: InitializeParams) => {
                 prepareProvider: true,
             },
             hoverProvider: true,
+            documentFormattingProvider: true,
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -365,6 +366,18 @@ connection.onHover(async (params) => {
         return undefined;
     }
     return langService.provideHover(params, doc, context);
+});
+
+connection.onDocumentFormatting(async (params) => {
+    let settings = await settingsManager.getSettings();
+    if (!settings?.formatting.enabled) {
+        return [];
+    }
+    let doc = documents.get(params.textDocument.uri);
+    if (!doc) {
+        return [];
+    }
+    return langService.provideFormatting(doc);
 });
 
 // Make the text document manager listen on the connection

@@ -3,10 +3,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://dev.azure.com/EIIDS/vscode-septic/_apis/build/status/equinor.vscode-septic?branchName=master)](https://dev.azure.com/EIIDS/vscode-septic/_build/latest?definitionId=1&branchName=master)
 
-## New stuff
-
--   Check [releases](https://github.com/equinor/vscode-septic/releases) for change log between the different versions.
-
 ## Features
 
 -   Syntax highlighting
@@ -25,6 +21,10 @@
     -   Verify that referenced Xvrs exist in the file
 -   Hover: Display the Text1 and Text2 if non empty from the associated xvr when hovering over an (Sopc)Xvr reference.
 -   Ensures correct encoding (Windows 1252) for SEPTIC files
+-   Formatting: Formates files similar to formatting done by SEPTIC. See instructions for more info,
+-   GoToDefinition: Goes to the declaration of the connected Xvr when referenced (e.g. in calcs, SopcXvr etc.)
+-   GoToDeclaration: Goes to the declaration of the connected SopcXvr when referenced (e.g. in calcs, Xvr etc.)
+-   Find References: Finds all references to a (Sopc)Xvr (e.g. in calcs, object declaration, XvrPlot etc.)
 
 ## Instructions
 
@@ -47,6 +47,8 @@ Adding the SEPTIC extension to VS Code allows you to do the following when loadi
     -   `ctrl-k` `ctrl-3` folds all level 3 sections (e.g. `CalcPvr`) and lower except the level 3 section at the cursor.
     -   More info on folding [here](https://code.visualstudio.com/docs/editor/codebasics#_folding)
 -   Settings for diagnostics can be updated using the standard settings manager for VsCode (`ctrl+,`). Search for Septic in the search field and update the relevant settings. Important to note that the settings for the workspace usually overwrite the settings for the user, thus make sure you update both if the settings are not applied properly.
+
+-   Formatting of cnfg files can be enabled by setting `septic.formatting.enabled = True` in the settings. Comments `// or /* */` and jinja-comments `{#   #}` are not formatted. Everything between the jinja expressions `{% for w %}` ... `{% endfor %}` and `{% if %}` ... `{% endif %}` are not formatted. To avoid formatting certain sections of the file the flags `{# format:off}` and `{# format:on #}` can be used to turn off and on again formatting (Tip: snippets available by writting `formaton/off`).
 
 The extension supports SEPTIC projects that uses the SEPTIC Config Generator (SCG). The SCG-config file for the project is loaded and the relevant `.cnfg` files (required to be in the templates folder) listed in the layout section are loaded into a common context that shares references etc.
 

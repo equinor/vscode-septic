@@ -21,6 +21,7 @@ import { DocumentProvider } from "../documentProvider";
 import { SepticReferenceProvider } from "../septic";
 import { RenameProvider } from "./renameProvider";
 import { HoverProvider } from "./hoverProvider";
+import { FormattingProvider } from "./formatProvider";
 
 export * from "./types/textDocument";
 
@@ -80,6 +81,8 @@ export interface ILanguageService {
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
     ): Promise<lsp.Hover | undefined>;
+
+    provideFormatting(doc: ITextDocument): Promise<lsp.TextEdit[]>;
 }
 
 export function createLanguageService(
@@ -102,6 +105,8 @@ export function createLanguageService(
     const renameProvider = new RenameProvider(cnfgProvider, documentProvider);
 
     const hoverProvider = new HoverProvider(cnfgProvider);
+
+    const formattingProvider = new FormattingProvider(cnfgProvider);
 
     return Object.freeze<ILanguageService>({
         cnfgProvider,
@@ -127,5 +132,7 @@ export function createLanguageService(
         providePrepareRename:
             renameProvider.providePrepareRename.bind(renameProvider),
         provideHover: hoverProvider.provideHover.bind(hoverProvider),
+        provideFormatting:
+            formattingProvider.provideFormatting.bind(formattingProvider),
     });
 }
