@@ -18,13 +18,13 @@ const startObjectName = 17;
 const indentsToValueAttr = 2;
 const indentsAttributeValuesStart = 17;
 
-const jinjaForRegex = /^\{%-?\s+for.+%}$/;
-const jinjaIfRegex = /^\{%-?\s+if.+%}$/;
-const jinjaForEndRegex = /\{%-?\s+endfor\s+%}$/;
-const jinjaIfEndRegex = /\{%-?\s+endif\s+%}$/;
-const stopFormattingRegex = /^\{#\s+format:off\s+#}$/;
-const startFormattingRegex = /^\{#\s+format:on\s+#}$/;
-const lineCommentRegex = /^\s*\/\/|\*\/\s*$/;
+export const jinjaForRegex = /^\{%-?\s+for\b.+%}$/;
+export const jinjaIfRegex = /^\{%-?\s+if\b.+%}$/;
+export const jinjaForEndRegex = /\{%-?\s+endfor\s+%}$/;
+export const jinjaIfEndRegex = /\{%-?\s+endif\s+%}$/;
+export const stopFormattingRegex = /^\{#\s+format:off\s+#}$/;
+export const startFormattingRegex = /^\{#\s+format:on\s+#}$/;
+export const lineCommentRegex = /^\s*\/\/\s|\*\/\s*$/;
 
 export class FormattingProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
