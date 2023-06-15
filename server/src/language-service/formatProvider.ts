@@ -17,6 +17,7 @@ const indentsAttributesDelimiter = 14;
 const startObjectName = 17;
 const indentsToValueAttr = 2;
 const indentsAttributeValuesStart = 17;
+const maxNumberAttrValuesPerLine = 5;
 
 export const jinjaForRegex = /^\{%-?\s+for\b.+%}$/;
 export const jinjaIfRegex = /^\{%-?\s+if\b.+%}$/;
@@ -59,6 +60,8 @@ class SepticCnfgFormatter {
 
     private editAddedFlag = false;
 
+    private attrValueCounter = 0;
+
     constructor(cnfg: SepticCnfg, doc: ITextDocument) {
         cnfg.objects.forEach((obj) => {
             this.elements.push(...obj.getElements());
@@ -99,10 +102,6 @@ class SepticCnfgFormatter {
             let currentLineText = this.doc.getText({
                 start: Position.create(pos.line, 0),
                 end: pos,
-            });
-            let prevLineText = this.doc.getText({
-                start: Position.create(pos.line - 1, 0),
-                end: Position.create(pos.line, 0),
             });
             let onlyWhitespaces = currentLineText.trim().length === 0;
             if (onlyWhitespaces) {
@@ -178,15 +177,21 @@ class SepticCnfgFormatter {
             "=" +
             " ".repeat(indentsToValueAttr - 1);
         this.currentLine += attrDefFormatted;
+        this.attrValueCounter = 0;
     }
 
     private formatAttrValue(attrValue: AttributeValue) {
         let editedFlag = this.getEditedFlag();
         if (!editedFlag) {
+            if (this.attrValueCounter >= maxNumberAttrValuesPerLine) {
+                this.addLine();
+                this.attrValueCounter = 0;
+            }
             let spaces = !this.currentLine.length
                 ? indentsAttributeValuesStart
                 : 1;
             this.currentLine += " ".repeat(spaces) + attrValue.value;
+            this.attrValueCounter += 1;
             return;
         }
 
@@ -209,6 +214,7 @@ class SepticCnfgFormatter {
         this.currentLine +=
             " ".repeat(indentsAttributeValuesStart - existingWhitespaces) +
             attrValue.value;
+        this.attrValueCounter += 1;
     }
 
     private formatComment(comment: SepticComment) {
@@ -363,6 +369,7 @@ class SepticCnfgFormatter {
         this.lines = [];
         this.edits.push(edit);
         this.setEditedFlag();
+        this.attrValueCounter = 0;
         return;
     }
 
