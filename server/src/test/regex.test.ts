@@ -302,4 +302,17 @@ describe("Variable regex test", () => {
         expect(regex.test("Something{{ Test }} ")).to.equal(true);
         expect(regex.test("Some{{ Test }}Some{{Test}}")).to.equal(true);
     });
+
+    it("does match valid seperators", () => {
+        expect(regex.test("*****_Test_Something__***** ")).to.equal(true);
+        expect(regex.test("Something*******")).to.equal(true);
+        expect(regex.test("*****Something{{ Test }}******")).to.equal(true);
+        expect(regex.test("********{{Test}}*********")).to.equal(true);
+    });
+
+    it("does match invalid seperators", () => {
+        expect(regex.test("********** ")).to.equal(false);
+        expect(regex.test("*****{ Test }}******")).to.equal(false);
+        expect(regex.test("********//***")).to.equal(false);
+    });
 });
