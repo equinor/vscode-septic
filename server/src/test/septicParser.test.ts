@@ -103,7 +103,7 @@ describe("Basic tests lexer", () => {
     });
 
     it("Lexing with unknown character", () => {
-        const input = 'Test1= ?"Dummy"';
+        const input = 'Test1= %"Dummy"';
         let tokens = tokenize(input).tokens;
         expect(tokens.length).to.equal(4);
         expect(tokens[0].type).to.equal(SepticTokenType.attribute);

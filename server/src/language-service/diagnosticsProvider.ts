@@ -4,11 +4,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import {
-    CancellationToken,
-    Diagnostic,
-    DiagnosticSeverity,
-} from "vscode-languageserver";
+import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
@@ -32,7 +28,7 @@ export enum DiagnosticLevel {
 
 export interface DiagnosticsSettings {
     readonly enabled: boolean;
-    readonly missingVariable: DiagnosticLevel | undefined;
+    readonly identifier: DiagnosticLevel | undefined;
     readonly alg: DiagnosticLevel | undefined;
     readonly algMissingReference: DiagnosticLevel | undefined;
     readonly algCalc: DiagnosticLevel | undefined;
@@ -40,7 +36,7 @@ export interface DiagnosticsSettings {
 
 export const defaultDiagnosticsSettings: DiagnosticsSettings = {
     enabled: true,
-    missingVariable: DiagnosticLevel.error,
+    identifier: DiagnosticLevel.error,
     alg: DiagnosticLevel.error,
     algMissingReference: DiagnosticLevel.warning,
     algCalc: DiagnosticLevel.warning,
@@ -101,36 +97,52 @@ function getDiagnostics(
     refProvider: SepticReferenceProvider
 ) {
     const diagnostics: Diagnostic[] = [];
-    diagnostics.push(...missingIdentifierDiagnostic(cnfg, doc, settings));
+    diagnostics.push(...identifierDiagnostics(cnfg, doc, settings));
     diagnostics.push(...algDiagnostic(cnfg, doc, settings, refProvider));
     return diagnostics;
 }
 
-function missingIdentifierDiagnostic(
+function identifierDiagnostics(
     cnfg: SepticCnfg,
     doc: ITextDocument,
     settings: DiagnosticsSettings
 ): Diagnostic[] {
-    const severity = toSeverity(settings.missingVariable);
-
+    const severity = toSeverity(settings.identifier);
     if (!severity) {
         return [];
     }
     const diagnostics: Diagnostic[] = [];
-
-    cnfg.objects.forEach((elem) => {
-        if (!elem.identifier) {
+    for (let obj of cnfg.objects) {
+        if (!obj.identifier) {
             const diagnostic: Diagnostic = {
                 severity: severity,
                 range: {
-                    start: doc.positionAt(elem.start),
-                    end: doc.positionAt(elem.start + elem.type.length),
+                    start: doc.positionAt(obj.start),
+                    end: doc.positionAt(obj.start + obj.type.length),
                 },
-                message: `Missing identifier for object of type ${elem.type}`,
+                message: `Missing identifier for object of type ${obj.type}`,
             };
             diagnostics.push(diagnostic);
+            continue;
         }
-    });
+
+        let report = validateIdentifier(obj.identifier.name);
+        if (report.valid) {
+            continue;
+        }
+        let message = report.invalidChars.length
+            ? `Identfier contains the following invalid chars: ${report.invalidChars}`
+            : "Identifier needs to contain minimum one letter";
+        const diagnostic: Diagnostic = {
+            severity: severity,
+            range: {
+                start: doc.positionAt(obj.identifier.start),
+                end: doc.positionAt(obj.identifier.end),
+            },
+            message: message,
+        };
+        diagnostics.push(diagnostic);
+    }
 
     return diagnostics;
 }
@@ -234,4 +246,30 @@ function validateRefs(refs: SepticReference[]) {
         }
     }
     return false;
+}
+
+interface IdentifierReport {
+    invalidChars: string[];
+    valid: boolean;
+}
+
+export function validateIdentifier(identifier: string): IdentifierReport {
+    const ignoredPattern = /\{\{\s*[\w\-]+\s*\}\}/g;
+    const validPattern = /^[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9_]*$/;
+
+    const filteredIdentifier = identifier.replace(ignoredPattern, "");
+
+    const valid = validPattern.test(filteredIdentifier);
+
+    if (valid) {
+        return { invalidChars: [], valid: true };
+    }
+
+    return { invalidChars: getInvalidChars(filteredIdentifier), valid: false };
+}
+
+function getInvalidChars(str: string): string[] {
+    const invalidCharsRegex = /[^a-zA-Z0-9_]/g;
+    const invalidChars = str.match(invalidCharsRegex) || [];
+    return [...new Set(invalidChars)];
 }

@@ -38,7 +38,7 @@
           "default": "off",
           "description": "Traces the communication between VS Code and the language server."
         },
-        "septic.diagnostics.missingVariable": {
+        "septic.diagnostics.identifier": {
           "scope": "window",
           "type": "string",
           "enum": [
@@ -48,7 +48,7 @@
             "ignore"
           ],
           "default": "error",
-          "description": "Sets the severity level for objects with missing identifier. Ignore implies no validation."
+          "description": "Sets the severity level for objects with invalid identifiers. Ignore implies no validation."
         },
         "septic.diagnostics.alg": {
           "scope": "window",

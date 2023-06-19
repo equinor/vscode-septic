@@ -83,11 +83,12 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
         this.synchronize(
             "Unexpected token. Expected idenifier token",
             SepticTokenType.identifier,
+            SepticTokenType.numeric,
             SepticTokenType.attribute,
             SepticTokenType.object
         );
         let identifier;
-        if (this.match(SepticTokenType.identifier)) {
+        if (this.match(SepticTokenType.identifier, SepticTokenType.numeric)) {
             identifier = this.identifier();
         } else {
             this.error(
