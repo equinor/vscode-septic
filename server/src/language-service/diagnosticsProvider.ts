@@ -102,7 +102,7 @@ function getDiagnostics(
     return diagnostics;
 }
 
-function identifierDiagnostics(
+export function identifierDiagnostics(
     cnfg: SepticCnfg,
     doc: ITextDocument,
     settings: DiagnosticsSettings
@@ -130,18 +130,30 @@ function identifierDiagnostics(
         if (report.valid) {
             continue;
         }
-        let message = report.invalidChars.length
-            ? `Identfier contains the following invalid chars: ${report.invalidChars}`
-            : "Identifier needs to contain minimum one letter";
-        const diagnostic: Diagnostic = {
-            severity: severity,
-            range: {
-                start: doc.positionAt(obj.identifier.start),
-                end: doc.positionAt(obj.identifier.end),
-            },
-            message: message,
-        };
-        diagnostics.push(diagnostic);
+
+        if (!report.containsLetter) {
+            const diagnostic: Diagnostic = {
+                severity: severity,
+                range: {
+                    start: doc.positionAt(obj.identifier.start),
+                    end: doc.positionAt(obj.identifier.end),
+                },
+                message: "Identifier needs to contain minimum one letter",
+            };
+            diagnostics.push(diagnostic);
+        }
+
+        if (report.invalidChars.length) {
+            const diagnostic: Diagnostic = {
+                severity: severity,
+                range: {
+                    start: doc.positionAt(obj.identifier.start),
+                    end: doc.positionAt(obj.identifier.end),
+                },
+                message: `Identfier contains the following invalid chars: ${report.invalidChars}`,
+            };
+            diagnostics.push(diagnostic);
+        }
     }
 
     return diagnostics;
@@ -249,23 +261,27 @@ function validateRefs(refs: SepticReference[]) {
 }
 
 interface IdentifierReport {
+    containsLetter: boolean;
     invalidChars: string[];
     valid: boolean;
 }
 
 export function validateIdentifier(identifier: string): IdentifierReport {
     const ignoredPattern = /\{\{\s*[\w\-]+\s*\}\}/g;
-    const validPattern = /^[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9_]*$/;
 
     const filteredIdentifier = identifier.replace(ignoredPattern, "");
 
-    const valid = validPattern.test(filteredIdentifier);
+    const containsLetter =
+        /[a-zA-Z]/.test(filteredIdentifier) ||
+        identifier.length !== filteredIdentifier.length;
 
-    if (valid) {
-        return { invalidChars: [], valid: true };
-    }
+    const invalidChars = getInvalidChars(filteredIdentifier);
 
-    return { invalidChars: getInvalidChars(filteredIdentifier), valid: false };
+    return {
+        valid: containsLetter && !invalidChars.length,
+        invalidChars: invalidChars,
+        containsLetter: containsLetter,
+    };
 }
 
 function getInvalidChars(str: string): string[] {

@@ -2,6 +2,7 @@ import { expect } from "chai";
 
 import {
     algDiagnostic,
+    identifierDiagnostics,
     defaultDiagnosticsSettings,
     toSeverity,
 } from "../language-service/diagnosticsProvider";
@@ -85,6 +86,53 @@ describe("Test algorithm diagnostics", () => {
 
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
+        expect(diag.length).to.equal(0);
+    });
+});
+
+describe("Test identifier diagnostics", () => {
+    it("Error for identifier without letter", () => {
+        const text = `
+        Evr: 1234
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = identifierDiagnostics(cnfg, doc, defaultDiagnosticsSettings);
+        expect(diag.length).to.equal(1);
+    });
+    it("Error for identifier with invalid char", () => {
+        const text = `
+        Evr: Test***
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = identifierDiagnostics(cnfg, doc, defaultDiagnosticsSettings);
+        expect(diag.length).to.equal(1);
+    });
+    it("No error for identifier with only jinja", () => {
+        const text = `
+        Evr: {{ Test }}
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = identifierDiagnostics(cnfg, doc, defaultDiagnosticsSettings);
+        expect(diag.length).to.equal(0);
+    });
+    it("No error for valid identifier", () => {
+        const text = `
+        Evr: Something___123
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = identifierDiagnostics(cnfg, doc, defaultDiagnosticsSettings);
         expect(diag.length).to.equal(0);
     });
 });
