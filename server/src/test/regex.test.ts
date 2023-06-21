@@ -266,6 +266,7 @@ describe("Variable regex test", () => {
         expect(regex.test("some-tag ")).to.equal(true);
         expect(regex.test("some_tag ")).to.equal(true);
         expect(regex.test("some-other-tag ")).to.equal(true);
+        expect(regex.test("12423 ")).to.equal(true);
     });
 
     it("does not match invalid strings", () => {
