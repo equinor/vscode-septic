@@ -150,7 +150,7 @@ export function identifierDiagnostics(
                     start: doc.positionAt(obj.identifier.start),
                     end: doc.positionAt(obj.identifier.end),
                 },
-                message: `Identfier contains the following invalid chars: ${report.invalidChars}`,
+                message: `Identifier contains the following invalid chars: ${report.invalidChars}`,
             };
             diagnostics.push(diagnostic);
         }
@@ -273,7 +273,7 @@ export function validateIdentifier(identifier: string): IdentifierReport {
 
     const containsLetter =
         /[a-zA-Z]/.test(filteredIdentifier) ||
-        identifier.length !== filteredIdentifier.length;
+        filteredIdentifier.length < identifier.length;
 
     const invalidChars = getInvalidChars(filteredIdentifier);
 
