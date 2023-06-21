@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.6.0](https://github.com/equinor/vscode-septic/compare/v1.5.0...v1.6.0) (2023-06-21)
+
+
+### 🐛 Bug Fixes
+
+* UAEvr snippet ([#192](https://github.com/equinor/vscode-septic/issues/192)) ([c0ac179](https://github.com/equinor/vscode-septic/commit/c0ac179475fdfa1d2d7b639afd9e16f939ddd9b4))
+
+
+### ✨ Features
+
+* add diagnostics for object identifiers ([#200](https://github.com/equinor/vscode-septic/issues/200)) ([00d2e55](https://github.com/equinor/vscode-septic/commit/00d2e556f710359ff9e0637b4c09f446e8b389be))
+* add formatting of files ([#196](https://github.com/equinor/vscode-septic/issues/196)) ([55834b2](https://github.com/equinor/vscode-septic/commit/55834b262e37921090208720ef3025ae82c1d97d))
+
 ## [1.5.0](https://github.com/equinor/vscode-septic/compare/v1.4.0...v1.5.0) (2023-06-09)
 
 
