@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/equinor/vscode-septic/compare/v1.6.0...v1.6.1) (2023-06-22)
+
+
+### 🐛 Bug Fixes
+
+* formatter removing identifiers at end of file ([#206](https://github.com/equinor/vscode-septic/issues/206)) ([f7026e3](https://github.com/equinor/vscode-septic/commit/f7026e3ece6ed716d82cfd34deb7a8e22baf4ace))
+
 ## [1.6.0](https://github.com/equinor/vscode-septic/compare/v1.5.0...v1.6.0) (2023-06-21)
 
 
