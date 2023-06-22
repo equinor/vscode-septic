@@ -394,7 +394,7 @@ class SepticCnfgFormatter {
     }
 
     private peek(): SepticBase | undefined {
-        if (this.iterElements >= this.elements.length - 1) {
+        if (this.iterElements >= this.elements.length) {
             return undefined;
         }
         return this.elements[this.iterElements];
