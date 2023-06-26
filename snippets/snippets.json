@@ -1645,5 +1645,19 @@
             "{# format:on #}"
         ],
         "description": ""
+    },
+    "DiagnosticsOffLine": {
+        "prefix": "noqa-line",
+        "body": [
+            "// NoQA "
+        ],
+        "description": ""
+    },
+    "DiagnosticsOffJinja": {
+        "prefix": "noqa-jinja",
+        "body": [
+            "{# NoQA #}"
+        ],
+        "description": ""
     }
 }
