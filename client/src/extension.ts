@@ -50,14 +50,17 @@ export function activate(context: vscode.ExtensionContext) {
         clientOptions
     );
     client.onRequest(protocol.globFiles, async (params, cts) => {
-        let folder = vscode.workspace.workspaceFolders?.[0];
+        let folder = vscode.workspace.getWorkspaceFolder(
+            vscode.Uri.parse(params.uri)
+        );
         if (!folder) {
             return [];
         }
         let pattern = getSearchPattern(folder.uri.path, params.uri);
-        return (await vscode.workspace.findFiles(pattern)).map((f) =>
-            f.toString()
-        );
+        let files = await vscode.workspace.findFiles(pattern);
+        return files
+            .filter((f) => f.fsPath.includes(folder.uri.fsPath))
+            .map((f) => f.toString());
     });
 
     client.onRequest(
