@@ -7,7 +7,12 @@ import { AlgVisitor, parseAlg } from "./algParser";
 import { SepticTokenType } from "./septicTokens";
 import { SepticMetaInfoProvider } from "./septicMetaInfo";
 import { Attribute, SepticComment, SepticObject } from "./septicElements";
-import { SepticReference, SepticReferenceProvider } from "./reference";
+import {
+    SepticReference,
+    SepticReferenceProvider,
+    RefValidationFunction,
+    defaultRefValidationFunction,
+} from "./reference";
 
 export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];
@@ -45,6 +50,17 @@ export class SepticCnfg implements SepticReferenceProvider {
     public getXvrRefs(name: string): SepticReference[] | undefined {
         this.extractXvrRefs();
         return this.xvrRefs.get(name);
+    }
+
+    public validateRef(
+        name: string,
+        validationFunction: RefValidationFunction = defaultRefValidationFunction
+    ): boolean {
+        let xvrRefs = this.getXvrRefs(name);
+        if (!xvrRefs) {
+            return false;
+        }
+        return validationFunction(xvrRefs);
     }
 
     public getAllXvrObjects(): SepticObject[] {

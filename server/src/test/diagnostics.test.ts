@@ -93,7 +93,7 @@ describe("Test identifier diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = identifierDiagnostics(cnfg, doc);
+        let diag = identifierDiagnostics(cnfg.objects[0], doc);
         expect(diag.length).to.equal(1);
     });
     it("Error for identifier with invalid char", () => {
@@ -104,7 +104,7 @@ describe("Test identifier diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = identifierDiagnostics(cnfg, doc);
+        let diag = identifierDiagnostics(cnfg.objects[0], doc);
         expect(diag.length).to.equal(1);
     });
     it("No error for identifier with only jinja", () => {
@@ -115,7 +115,7 @@ describe("Test identifier diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = identifierDiagnostics(cnfg, doc);
+        let diag = identifierDiagnostics(cnfg.objects[0], doc);
         expect(diag.length).to.equal(0);
     });
     it("No error for valid identifier", () => {
@@ -126,7 +126,7 @@ describe("Test identifier diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = identifierDiagnostics(cnfg, doc);
+        let diag = identifierDiagnostics(cnfg.objects[0], doc);
         expect(diag.length).to.equal(0);
     });
 });
@@ -219,18 +219,18 @@ describe("Test disabling of diagnostics", () => {
 
         const cnfg = parseSeptic(doc.getText());
         let diag = getDiagnostics(cnfg, doc, cnfg);
-        expect(diag.length).to.equal(1);
+        expect(diag.length).to.equal(2);
     });
     it("Using multiple codes for sameline", () => {
         const text = `
         CalcPvr:  Test
-            Alg=  "something(tes)" // noqa: E202,E203
+            Alg=  "something(tes)" // noqa: E202, W101
 		`;
 
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
         let diag = getDiagnostics(cnfg, doc, cnfg);
-        expect(diag.length).to.equal(0);
+        expect(diag.length).to.equal(1);
     });
 });

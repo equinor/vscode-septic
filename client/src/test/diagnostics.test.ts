@@ -19,6 +19,12 @@ suite("Should get diagnostics", () => {
                 severity: vscode.DiagnosticSeverity.Warning,
                 source: "",
             },
+            {
+                message: "",
+                range: toRange(0, 0, 0, 3),
+                severity: vscode.DiagnosticSeverity.Warning,
+                source: "",
+            },
         ]);
     });
 });
