@@ -52,7 +52,7 @@ export enum AlgParsingErrorType {
 
 export function parseAlg(input: string): AlgExpr {
     if (!input.length) {
-        throw new AlgParsingError("Missing alg expression for CalcPvr", {
+        throw new AlgParsingError("Missing alg expression for CalcPvr.", {
             start: 0,
             end: 0,
             type: AlgTokenType.error,
@@ -473,13 +473,13 @@ export class AlgScanner {
                         AlgParsingErrorType.unsupportedJinja
                     );
                 } else {
-                    this.error(`Unexpected token: ${c}`);
+                    this.error(`Unexpected token: ${c}.`);
                 }
             default:
                 if (this.isAlphaNumeric(c)) {
                     this.alphaNumeric();
                 } else {
-                    this.error(`Unexpected token: ${c}`);
+                    this.error(`Unexpected token: ${c}.`);
                 }
         }
     }
@@ -573,7 +573,7 @@ export class AlgScanner {
             this.advance();
         }
         if (!this.match("}")) {
-            this.error("Invalid jinja expression");
+            this.error("Invalid jinja expression.");
         }
         this.addToken(AlgTokenType.jinja);
     }

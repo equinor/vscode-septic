@@ -16,8 +16,25 @@ import {
     SepticReferenceProvider,
     AlgParsingError,
     AlgParsingErrorType,
+    SepticComment,
 } from "../septic";
 import { SettingsManager } from "../settings";
+
+export const disableDiagnosticRegex =
+    /\/\/\s+NoQA(\s[\s\w,]+)?|\{#\s+NoQA(\s[\s\w,]+)?\s*#\}/;
+export const diagnosticCodeRegex = /E[0-9]{3}/;
+
+export enum DiagnosticCode {
+    E101 = "E101", // Identifier
+    E201 = "E201", // Unable to parse alg
+    E202 = "E202", // Unknown xvr in alg
+    E203 = "E203", // Unknown calc in alg
+}
+
+export interface SepticDiagnostic {
+    diagnostic: Diagnostic;
+    code: DiagnosticCode;
+}
 
 export enum DiagnosticLevel {
     error = "error",
@@ -90,28 +107,46 @@ export class DiagnosticProvider {
     }
 }
 
-function getDiagnostics(
+export function getDiagnostics(
     cnfg: SepticCnfg,
     doc: ITextDocument,
     settings: DiagnosticsSettings,
     refProvider: SepticReferenceProvider
 ) {
-    const diagnostics: Diagnostic[] = [];
+    const diagnostics: SepticDiagnostic[] = [];
     diagnostics.push(...identifierDiagnostics(cnfg, doc, settings));
     diagnostics.push(...algDiagnostic(cnfg, doc, settings, refProvider));
-    return diagnostics;
+    let disabledLines = getDisabledLines(cnfg.comments, doc);
+    let filteredDiags = diagnostics.filter((diag) => {
+        let disabledLine = disabledLines.get(diag.diagnostic.range.start.line);
+        if (!disabledLine) {
+            return true;
+        }
+        if (!disabledLine.diagnosticCodes.length) {
+            return false;
+        }
+        for (let code of disabledLine.diagnosticCodes) {
+            if (code === diag.code) {
+                return false;
+            }
+        }
+        return true;
+    });
+    return filteredDiags.map((diag) => {
+        return diag.diagnostic;
+    });
 }
 
 export function identifierDiagnostics(
     cnfg: SepticCnfg,
     doc: ITextDocument,
     settings: DiagnosticsSettings
-): Diagnostic[] {
+): SepticDiagnostic[] {
     const severity = toSeverity(settings.identifier);
     if (!severity) {
         return [];
     }
-    const diagnostics: Diagnostic[] = [];
+    const diagnostics: SepticDiagnostic[] = [];
     for (let obj of cnfg.objects) {
         if (!obj.identifier) {
             const diagnostic: Diagnostic = {
@@ -120,9 +155,12 @@ export function identifierDiagnostics(
                     start: doc.positionAt(obj.start),
                     end: doc.positionAt(obj.start + obj.type.length),
                 },
-                message: `Missing identifier for object of type ${obj.type}`,
+                message: `Missing identifier for object of type ${obj.type}. ${DiagnosticCode.E101}`,
             };
-            diagnostics.push(diagnostic);
+            diagnostics.push({
+                diagnostic: diagnostic,
+                code: DiagnosticCode.E101,
+            });
             continue;
         }
 
@@ -138,9 +176,12 @@ export function identifierDiagnostics(
                     start: doc.positionAt(obj.identifier.start),
                     end: doc.positionAt(obj.identifier.end),
                 },
-                message: "Identifier needs to contain minimum one letter",
+                message: `Identifier needs to contain minimum one letter. ${DiagnosticCode.E101}`,
             };
-            diagnostics.push(diagnostic);
+            diagnostics.push({
+                diagnostic: diagnostic,
+                code: DiagnosticCode.E101,
+            });
         }
 
         if (report.invalidChars.length) {
@@ -150,9 +191,12 @@ export function identifierDiagnostics(
                     start: doc.positionAt(obj.identifier.start),
                     end: doc.positionAt(obj.identifier.end),
                 },
-                message: `Identifier contains the following invalid chars: ${report.invalidChars}`,
+                message: `Identifier contains the following invalid chars: ${report.invalidChars}. ${DiagnosticCode.E101}`,
             };
-            diagnostics.push(diagnostic);
+            diagnostics.push({
+                diagnostic: diagnostic,
+                code: DiagnosticCode.E101,
+            });
         }
     }
 
@@ -164,7 +208,7 @@ export function algDiagnostic(
     doc: ITextDocument,
     settings: DiagnosticsSettings,
     refProvider: SepticReferenceProvider
-): Diagnostic[] {
+): SepticDiagnostic[] {
     const severityAlg = toSeverity(settings.alg);
     const severityMissingReference = toSeverity(settings.algMissingReference);
     const severityCalc = toSeverity(settings.algCalc);
@@ -174,7 +218,7 @@ export function algDiagnostic(
     if (!severityAlg) {
         return [];
     }
-    const diagnostics: Diagnostic[] = [];
+    const diagnostics: SepticDiagnostic[] = [];
     let algAttrs = cnfg.getAlgAttrs();
 
     for (let i = 0; i < algAttrs.length; i++) {
@@ -193,14 +237,17 @@ export function algDiagnostic(
                 severity = DiagnosticSeverity.Hint;
             }
             diagnostics.push({
-                severity: severity,
-                range: {
-                    start: doc.positionAt(
-                        alg.values[0].start + 1 + error.token.start
-                    ),
-                    end: doc.positionAt(alg.values[0].end),
+                diagnostic: {
+                    severity: severity,
+                    range: {
+                        start: doc.positionAt(
+                            alg.values[0].start + 1 + error.token.start
+                        ),
+                        end: doc.positionAt(alg.values[0].end),
+                    },
+                    message: error.message + ` ${DiagnosticCode.E201}`,
                 },
-                message: error.message,
+                code: DiagnosticCode.E201,
             });
             continue;
         }
@@ -212,16 +259,19 @@ export function algDiagnostic(
             visitor.calcs.forEach((calc) => {
                 if (!metaInfoProvider.hasCalc(calc.identifier)) {
                     diagnostics.push({
-                        severity: severityCalc,
-                        range: {
-                            start: doc.positionAt(
-                                alg.values[0].start + 1 + calc.start
-                            ),
-                            end: doc.positionAt(
-                                alg.values[0].start + 1 + calc.start
-                            ),
+                        diagnostic: {
+                            severity: severityCalc,
+                            range: {
+                                start: doc.positionAt(
+                                    alg.values[0].start + 1 + calc.start
+                                ),
+                                end: doc.positionAt(
+                                    alg.values[0].start + 1 + calc.start
+                                ),
+                            },
+                            message: `Calc with unknown indentifier: ${calc.identifier}. ${DiagnosticCode.E203}`,
                         },
-                        message: `Calc with unknown indentifier: ${calc.identifier}.`,
+                        code: DiagnosticCode.E203,
                     });
                 }
             });
@@ -234,21 +284,23 @@ export function algDiagnostic(
                     continue;
                 }
                 let refs = refProvider.getXvrRefs(variable.value.split(".")[0]);
-                if (refs && validateRefs(refs)) {
-                    continue;
+                if (!refs || !validateRefs(refs!)) {
+                    diagnostics.push({
+                        diagnostic: {
+                            severity: severityMissingReference,
+                            range: {
+                                start: doc.positionAt(
+                                    alg.values[0].start + 1 + variable.start
+                                ),
+                                end: doc.positionAt(
+                                    alg.values[0].start + 1 + variable.end
+                                ),
+                            },
+                            message: `Undefined Xvr '${variable.value}'. ${DiagnosticCode.E202}`,
+                        },
+                        code: DiagnosticCode.E202,
+                    });
                 }
-                diagnostics.push({
-                    severity: severityMissingReference,
-                    range: {
-                        start: doc.positionAt(
-                            alg.values[0].start + 1 + variable.start
-                        ),
-                        end: doc.positionAt(
-                            alg.values[0].start + 1 + variable.end
-                        ),
-                    },
-                    message: `Undefined Xvr '${variable.value}'`,
-                });
             }
         }
     }
@@ -292,4 +344,49 @@ function getInvalidChars(str: string): string[] {
     const invalidCharsRegex = /[^a-zA-Z0-9_]/g;
     const invalidChars = str.match(invalidCharsRegex) || [];
     return [...new Set(invalidChars)];
+}
+
+export interface DisabledLine {
+    line: number;
+    diagnosticCodes: string[];
+}
+
+function getDisabledLines(
+    comments: SepticComment[],
+    doc: ITextDocument
+): Map<number, { diagnosticCodes: string[] }> {
+    let disabledLinesMap = new Map<number, { diagnosticCodes: string[] }>();
+    for (let comment of comments) {
+        let match = comment.content.match(disableDiagnosticRegex);
+        if (!match) {
+            continue;
+        }
+        let line = doc.positionAt(comment.start).line;
+        if (match[1]) {
+            disabledLinesMap.set(line, {
+                diagnosticCodes: getDiagnosticCodes(match[1]),
+            });
+            continue;
+        }
+        if (match[2]) {
+            disabledLinesMap.set(line, {
+                diagnosticCodes: getDiagnosticCodes(match[2]),
+            });
+            continue;
+        }
+        disabledLinesMap.set(line, { diagnosticCodes: [] });
+    }
+    return disabledLinesMap;
+}
+
+function getDiagnosticCodes(codes: string): string[] {
+    let splitCodes = codes.split(",");
+    let diagnosticCodes: string[] = [];
+    splitCodes.forEach((code) => {
+        let trimedCode = code.trim();
+        if (diagnosticCodeRegex.test(trimedCode)) {
+            diagnosticCodes.push(trimedCode);
+        }
+    });
+    return diagnosticCodes;
 }

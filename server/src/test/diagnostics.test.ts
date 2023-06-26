@@ -5,6 +5,8 @@ import {
     identifierDiagnostics,
     defaultDiagnosticsSettings,
     toSeverity,
+    getDiagnostics,
+    disableDiagnosticRegex,
 } from "../language-service/diagnosticsProvider";
 import { parseSeptic } from "../septic";
 import { MockDocument } from "./util";
@@ -48,7 +50,7 @@ describe("Test algorithm diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].severity).to.equal(
+        expect(diag[0].diagnostic.severity).to.equal(
             toSeverity(defaultDiagnosticsSettings.algMissingReference)
         );
     });
@@ -64,7 +66,7 @@ describe("Test algorithm diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].severity).to.equal(
+        expect(diag[0].diagnostic.severity).to.equal(
             toSeverity(defaultDiagnosticsSettings.algCalc)
         );
     });
@@ -133,6 +135,106 @@ describe("Test identifier diagnostics", () => {
 
         const cnfg = parseSeptic(doc.getText());
         let diag = identifierDiagnostics(cnfg, doc, defaultDiagnosticsSettings);
+        expect(diag.length).to.equal(0);
+    });
+});
+
+describe("Test regex for disabling diagnostics", () => {
+    it("Test disable regex for valid expressions", () => {
+        expect(disableDiagnosticRegex.test("// NoQA ")).to.equal(true);
+        expect(disableDiagnosticRegex.test("// NoQA E102")).to.equal(true);
+        expect(disableDiagnosticRegex.test("// NoQA E101, E201 ")).to.equal(
+            true
+        );
+        expect(disableDiagnosticRegex.test("{# NoQA #}")).to.equal(true);
+        expect(disableDiagnosticRegex.test("{# NoQA E102 #}")).to.equal(true);
+        expect(disableDiagnosticRegex.test("{# NoQA E102, E201 #}")).to.equal(
+            true
+        );
+    });
+    it("Test disable regex for invalid expressions", () => {
+        expect(disableDiagnosticRegex.test("// NoQ ")).to.equal(false);
+        expect(disableDiagnosticRegex.test("// NQA E102")).to.equal(false);
+        expect(disableDiagnosticRegex.test("// NoQA E101;E201 ")).to.equal(
+            true
+        );
+        expect(disableDiagnosticRegex.test("{# NoQ #}")).to.equal(false);
+        expect(disableDiagnosticRegex.test("{# NoQA E102;E201 #}")).to.equal(
+            false
+        );
+    });
+});
+
+describe("Test disabling of diagnostics", () => {
+    it("Disabling diagnostics using line comment", () => {
+        const text = `
+        Evr: 1234 // NoQA
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = getDiagnostics(cnfg, doc, defaultDiagnosticsSettings, cnfg);
+        expect(diag.length).to.equal(0);
+    });
+
+    it("Disabling diagnostics using jinja comment", () => {
+        const text = `
+        Evr: 1234 {# NoQA #}
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = getDiagnostics(cnfg, doc, defaultDiagnosticsSettings, cnfg);
+        expect(diag.length).to.equal(0);
+    });
+
+    it("Disabling diagnostics using code", () => {
+        const text = `
+        Evr: 1234 {# NoQA E101 #}
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = getDiagnostics(cnfg, doc, defaultDiagnosticsSettings, cnfg);
+        expect(diag.length).to.equal(0);
+    });
+
+    it("Not disabling diagnostics using wrong code", () => {
+        const text = `
+        Evr: 1234 {# NoQA E201 #}
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = getDiagnostics(cnfg, doc, defaultDiagnosticsSettings, cnfg);
+        expect(diag.length).to.equal(1);
+    });
+    it("Not disabling diagnostics using wrong code", () => {
+        const text = `
+        CalcPvr:  Test
+            Alg=  "something" // NoQA E203
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = getDiagnostics(cnfg, doc, defaultDiagnosticsSettings, cnfg);
+        expect(diag.length).to.equal(1);
+    });
+    it("Using multiple codes for sameline", () => {
+        const text = `
+        CalcPvr:  Test
+            Alg=  "something(tes)" // NoQA E202,E203
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = getDiagnostics(cnfg, doc, defaultDiagnosticsSettings, cnfg);
         expect(diag.length).to.equal(0);
     });
 });
