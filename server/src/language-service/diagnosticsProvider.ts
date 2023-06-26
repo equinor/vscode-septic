@@ -229,23 +229,27 @@ export function algDiagnostic(
 
         //Check that all references to Xvrs exist in the config
         if (severityMissingReference) {
-            visitor.variables.forEach((variable) => {
-                let refs = refProvider.getXvrRefs(variable.value.split(".")[0]);
-                if (!refs || !validateRefs(refs!)) {
-                    diagnostics.push({
-                        severity: severityMissingReference,
-                        range: {
-                            start: doc.positionAt(
-                                alg.values[0].start + 1 + variable.start
-                            ),
-                            end: doc.positionAt(
-                                alg.values[0].start + 1 + variable.end
-                            ),
-                        },
-                        message: `Undefined Xvr '${variable.value}'`,
-                    });
+            for (let variable of visitor.variables) {
+                if (/^\{\{.*\}\}$/.test(variable.value)) {
+                    continue;
                 }
-            });
+                let refs = refProvider.getXvrRefs(variable.value.split(".")[0]);
+                if (refs && validateRefs(refs)) {
+                    continue;
+                }
+                diagnostics.push({
+                    severity: severityMissingReference,
+                    range: {
+                        start: doc.positionAt(
+                            alg.values[0].start + 1 + variable.start
+                        ),
+                        end: doc.positionAt(
+                            alg.values[0].start + 1 + variable.end
+                        ),
+                    },
+                    message: `Undefined Xvr '${variable.value}'`,
+                });
+            }
         }
     }
     return diagnostics;
