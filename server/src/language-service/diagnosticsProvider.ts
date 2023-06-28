@@ -21,7 +21,7 @@ import {
 import { SettingsManager } from "../settings";
 
 export const disableDiagnosticRegex =
-    /\/\/\s+noqa\b(\s[\s\w,]+)?|\{#\s+noqa\b(\s[\s\w,]+)?\s*#\}/i;
+    /\/\/\s+noqa\b(?::([ \w,]*))?|\{#\s+noqa\b(?::([ \w,]*))?\s*#\}/i;
 export const diagnosticCodeRegex = /E[0-9]{3}/;
 
 export enum DiagnosticCode {
@@ -80,7 +80,7 @@ function createDiagnostic(
         range: range,
         message: message,
         code: code,
-        source: "SEPTIC",
+        source: "septic",
     };
 }
 
@@ -132,7 +132,7 @@ export function getDiagnostics(
         if (!disabledLine) {
             return true;
         }
-        if (!disabledLine.diagnosticCodes.length) {
+        if (disabledLine.all) {
             return false;
         }
         for (let code of disabledLine.diagnosticCodes) {
@@ -163,7 +163,7 @@ export function identifierDiagnostics(
                     start: doc.positionAt(obj.start),
                     end: doc.positionAt(obj.start + obj.type.length),
                 },
-                `Missing identifier for object of type ${obj.type}.`,
+                `Missing identifier for object of type ${obj.type}`,
                 DiagnosticCode.E101
             );
             diagnostics.push(diagnostic);
@@ -182,7 +182,7 @@ export function identifierDiagnostics(
                     start: doc.positionAt(obj.identifier.start),
                     end: doc.positionAt(obj.identifier.end),
                 },
-                `Identifier needs to contain minimum one letter.`,
+                `Identifier needs to contain minimum one letter`,
                 DiagnosticCode.E101
             );
             diagnostics.push(diagnostic);
@@ -195,7 +195,7 @@ export function identifierDiagnostics(
                     start: doc.positionAt(obj.identifier.start),
                     end: doc.positionAt(obj.identifier.end),
                 },
-                `Identifier contains the following invalid chars: ${report.invalidChars}.`,
+                `Identifier contains the following invalid chars: ${report.invalidChars}`,
                 DiagnosticCode.E101
             );
             diagnostics.push(diagnostic);
@@ -269,7 +269,7 @@ export function algDiagnostic(
                                 alg.values[0].start + 1 + calc.start
                             ),
                         },
-                        `Calc with unknown indentifier: ${calc.identifier}.`,
+                        `Calc with unknown indentifier: ${calc.identifier}`,
                         DiagnosticCode.E203
                     );
                     diagnostics.push(diagnostic);
@@ -295,7 +295,7 @@ export function algDiagnostic(
                                 alg.values[0].start + 1 + variable.end
                             ),
                         },
-                        `Undefined Xvr '${variable.value}'.`,
+                        `Undefined Xvr '${variable.value}'`,
                         DiagnosticCode.E202
                     );
                     diagnostics.push(diagnostic);
@@ -345,35 +345,29 @@ function getInvalidChars(str: string): string[] {
     return [...new Set(invalidChars)];
 }
 
-export interface DisabledLine {
-    line: number;
-    diagnosticCodes: string[];
-}
-
 function getDisabledLines(
     comments: SepticComment[],
     doc: ITextDocument
-): Map<number, { diagnosticCodes: string[] }> {
-    let disabledLinesMap = new Map<number, { diagnosticCodes: string[] }>();
+): Map<number, { all: boolean; diagnosticCodes: string[] }> {
+    let disabledLinesMap = new Map<
+        number,
+        { all: boolean; diagnosticCodes: string[] }
+    >();
     for (let comment of comments) {
         let match = comment.content.match(disableDiagnosticRegex);
         if (!match) {
             continue;
         }
         let line = doc.positionAt(comment.start).line;
-        if (match[1]) {
+        let matchCode = match[1] ?? match[2];
+        if (matchCode) {
             disabledLinesMap.set(line, {
-                diagnosticCodes: getDiagnosticCodes(match[1]),
+                all: false,
+                diagnosticCodes: getDiagnosticCodes(matchCode),
             });
             continue;
         }
-        if (match[2]) {
-            disabledLinesMap.set(line, {
-                diagnosticCodes: getDiagnosticCodes(match[2]),
-            });
-            continue;
-        }
-        disabledLinesMap.set(line, { diagnosticCodes: [] });
+        disabledLinesMap.set(line, { all: true, diagnosticCodes: [] });
     }
     return disabledLinesMap;
 }
