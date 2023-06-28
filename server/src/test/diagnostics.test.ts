@@ -73,13 +73,13 @@ describe("Test algorithm diagnostics", () => {
         Evr: Var1
             Text1= "Test"
             
-      CalcPvr: Var1
-        Text1= "Test"
-        Alg= "1"
+        CalcPvr: Var1
+            Text1= "Test"
+            Alg= "1"
 
-			CalcPvr:  TestCalcPvr 
-				Text1= "Test"
-				Alg= "abs(Var1)"
+		CalcPvr:  TestCalcPvr 
+			Text1= "Test"
+			Alg= "abs(Var1)*{{Test}}"
 		`;
 
         const doc = new MockDocument(text);
