@@ -40,34 +40,11 @@ export enum DiagnosticLevel {
 
 export interface DiagnosticsSettings {
     readonly enabled: boolean;
-    readonly identifier: DiagnosticLevel | undefined;
-    readonly alg: DiagnosticLevel | undefined;
-    readonly algMissingReference: DiagnosticLevel | undefined;
-    readonly algCalc: DiagnosticLevel | undefined;
 }
 
 export const defaultDiagnosticsSettings: DiagnosticsSettings = {
     enabled: true,
-    identifier: DiagnosticLevel.error,
-    alg: DiagnosticLevel.error,
-    algMissingReference: DiagnosticLevel.warning,
-    algCalc: DiagnosticLevel.warning,
 };
-
-export function toSeverity(
-    level: DiagnosticLevel | undefined
-): DiagnosticSeverity | undefined {
-    switch (level) {
-        case DiagnosticLevel.error:
-            return DiagnosticSeverity.Error;
-        case DiagnosticLevel.warning:
-            return DiagnosticSeverity.Warning;
-        case DiagnosticLevel.hint:
-            return DiagnosticSeverity.Hint;
-        default:
-            return undefined;
-    }
-}
 
 function createDiagnostic(
     severity: DiagnosticSeverity,
@@ -113,19 +90,18 @@ export class DiagnosticProvider {
             return [];
         }
         await refProvider.load();
-        return getDiagnostics(cnfg, doc, settings, refProvider);
+        return getDiagnostics(cnfg, doc, refProvider);
     }
 }
 
 export function getDiagnostics(
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    settings: DiagnosticsSettings,
     refProvider: SepticReferenceProvider
 ) {
     const diagnostics: Diagnostic[] = [];
-    diagnostics.push(...identifierDiagnostics(cnfg, doc, settings));
-    diagnostics.push(...algDiagnostic(cnfg, doc, settings, refProvider));
+    diagnostics.push(...identifierDiagnostics(cnfg, doc));
+    diagnostics.push(...algDiagnostic(cnfg, doc, refProvider));
     let disabledLines = getDisabledLines(cnfg.comments, doc);
     let filteredDiags = diagnostics.filter((diag) => {
         let disabledLine = disabledLines.get(diag.range.start.line);
@@ -147,18 +123,13 @@ export function getDiagnostics(
 
 export function identifierDiagnostics(
     cnfg: SepticCnfg,
-    doc: ITextDocument,
-    settings: DiagnosticsSettings
+    doc: ITextDocument
 ): Diagnostic[] {
-    const severity = toSeverity(settings.identifier);
-    if (!severity) {
-        return [];
-    }
     const diagnostics: Diagnostic[] = [];
     for (let obj of cnfg.objects) {
         if (!obj.identifier) {
             const diagnostic: Diagnostic = createDiagnostic(
-                severity,
+                DiagnosticSeverity.Error,
                 {
                     start: doc.positionAt(obj.start),
                     end: doc.positionAt(obj.start + obj.type.length),
@@ -177,7 +148,7 @@ export function identifierDiagnostics(
 
         if (!report.containsLetter) {
             const diagnostic: Diagnostic = createDiagnostic(
-                severity,
+                DiagnosticSeverity.Error,
                 {
                     start: doc.positionAt(obj.identifier.start),
                     end: doc.positionAt(obj.identifier.end),
@@ -190,7 +161,7 @@ export function identifierDiagnostics(
 
         if (report.invalidChars.length) {
             const diagnostic: Diagnostic = createDiagnostic(
-                severity,
+                DiagnosticSeverity.Error,
                 {
                     start: doc.positionAt(obj.identifier.start),
                     end: doc.positionAt(obj.identifier.end),
@@ -208,18 +179,9 @@ export function identifierDiagnostics(
 export function algDiagnostic(
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    settings: DiagnosticsSettings,
     refProvider: SepticReferenceProvider
 ): Diagnostic[] {
-    const severityAlg = toSeverity(settings.alg);
-    const severityMissingReference = toSeverity(settings.algMissingReference);
-    const severityCalc = toSeverity(settings.algCalc);
-
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
-
-    if (!severityAlg) {
-        return [];
-    }
     const diagnostics: Diagnostic[] = [];
     let algAttrs = cnfg.getAlgAttrs();
 
@@ -231,7 +193,7 @@ export function algDiagnostic(
                 alg.values[0].value.substring(1, alg.values[0].value.length - 1)
             );
         } catch (error: any) {
-            let severity: DiagnosticSeverity = severityAlg;
+            let severity: DiagnosticSeverity = DiagnosticSeverity.Error;
             if (
                 error instanceof AlgParsingError &&
                 error.type === AlgParsingErrorType.unsupportedJinja
@@ -256,50 +218,46 @@ export function algDiagnostic(
         visitor.visit(expr);
 
         //Check that all calcs are valid
-        if (severityCalc) {
-            visitor.calcs.forEach((calc) => {
-                if (!metaInfoProvider.hasCalc(calc.identifier)) {
-                    const diagnostic = createDiagnostic(
-                        severityCalc,
-                        {
-                            start: doc.positionAt(
-                                alg.values[0].start + 1 + calc.start
-                            ),
-                            end: doc.positionAt(
-                                alg.values[0].start + 1 + calc.start
-                            ),
-                        },
-                        `Calc with unknown indentifier: ${calc.identifier}`,
-                        DiagnosticCode.E203
-                    );
-                    diagnostics.push(diagnostic);
-                }
-            });
-        }
+        visitor.calcs.forEach((calc) => {
+            if (!metaInfoProvider.hasCalc(calc.identifier)) {
+                const diagnostic = createDiagnostic(
+                    DiagnosticSeverity.Error,
+                    {
+                        start: doc.positionAt(
+                            alg.values[0].start + 1 + calc.start
+                        ),
+                        end: doc.positionAt(
+                            alg.values[0].start + 1 + calc.start
+                        ),
+                    },
+                    `Calc with unknown indentifier: ${calc.identifier}`,
+                    DiagnosticCode.E203
+                );
+                diagnostics.push(diagnostic);
+            }
+        });
 
         //Check that all references to Xvrs exist in the config
-        if (severityMissingReference) {
-            for (let variable of visitor.variables) {
-                if (/^\{\{.*\}\}$/.test(variable.value)) {
-                    continue;
-                }
-                let refs = refProvider.getXvrRefs(variable.value.split(".")[0]);
-                if (!refs || !validateRefs(refs!)) {
-                    const diagnostic = createDiagnostic(
-                        severityMissingReference,
-                        {
-                            start: doc.positionAt(
-                                alg.values[0].start + 1 + variable.start
-                            ),
-                            end: doc.positionAt(
-                                alg.values[0].start + 1 + variable.end
-                            ),
-                        },
-                        `Undefined Xvr '${variable.value}'`,
-                        DiagnosticCode.E202
-                    );
-                    diagnostics.push(diagnostic);
-                }
+        for (let variable of visitor.variables) {
+            if (/^\{\{.*\}\}$/.test(variable.value)) {
+                continue;
+            }
+            let refs = refProvider.getXvrRefs(variable.value.split(".")[0]);
+            if (!refs || !validateRefs(refs!)) {
+                const diagnostic = createDiagnostic(
+                    DiagnosticSeverity.Error,
+                    {
+                        start: doc.positionAt(
+                            alg.values[0].start + 1 + variable.start
+                        ),
+                        end: doc.positionAt(
+                            alg.values[0].start + 1 + variable.end
+                        ),
+                    },
+                    `Undefined Xvr '${variable.value}'`,
+                    DiagnosticCode.E202
+                );
+                diagnostics.push(diagnostic);
             }
         }
     }
