@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.2](https://github.com/equinor/vscode-septic/compare/v1.6.1...v1.6.2) (2023-06-28)
+
+
+### 🐛 Bug Fixes
+
+* remove diagnostics on pure jinja in alg ([#211](https://github.com/equinor/vscode-septic/issues/211)) ([9718828](https://github.com/equinor/vscode-septic/commit/9718828bfd96d6118d05e41006a9a2fcb1c08022))
+* server crashing when multiple workspacefolders open ([#210](https://github.com/equinor/vscode-septic/issues/210)) ([cccdbde](https://github.com/equinor/vscode-septic/commit/cccdbde1ef87d83f0e04f414c354c05600ef1945))
+
 ## [1.6.1](https://github.com/equinor/vscode-septic/compare/v1.6.0...v1.6.1) (2023-06-22)
 
 
