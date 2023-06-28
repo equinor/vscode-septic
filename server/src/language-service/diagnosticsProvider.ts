@@ -4,7 +4,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
+import { Diagnostic, DiagnosticSeverity, Range } from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
@@ -29,11 +29,6 @@ export enum DiagnosticCode {
     E201 = "E201", // Unable to parse alg
     E202 = "E202", // Unknown xvr in alg
     E203 = "E203", // Unknown calc in alg
-}
-
-export interface SepticDiagnostic {
-    diagnostic: Diagnostic;
-    code: DiagnosticCode;
 }
 
 export enum DiagnosticLevel {
@@ -72,6 +67,21 @@ export function toSeverity(
         default:
             return undefined;
     }
+}
+
+function createDiagnostic(
+    severity: DiagnosticSeverity,
+    range: Range,
+    message: string,
+    code: DiagnosticCode
+): Diagnostic {
+    return {
+        severity: severity,
+        range: range,
+        message: message,
+        code: code,
+        source: "SEPTIC",
+    };
 }
 
 export class DiagnosticProvider {
@@ -113,12 +123,12 @@ export function getDiagnostics(
     settings: DiagnosticsSettings,
     refProvider: SepticReferenceProvider
 ) {
-    const diagnostics: SepticDiagnostic[] = [];
+    const diagnostics: Diagnostic[] = [];
     diagnostics.push(...identifierDiagnostics(cnfg, doc, settings));
     diagnostics.push(...algDiagnostic(cnfg, doc, settings, refProvider));
     let disabledLines = getDisabledLines(cnfg.comments, doc);
     let filteredDiags = diagnostics.filter((diag) => {
-        let disabledLine = disabledLines.get(diag.diagnostic.range.start.line);
+        let disabledLine = disabledLines.get(diag.range.start.line);
         if (!disabledLine) {
             return true;
         }
@@ -132,35 +142,31 @@ export function getDiagnostics(
         }
         return true;
     });
-    return filteredDiags.map((diag) => {
-        return diag.diagnostic;
-    });
+    return filteredDiags;
 }
 
 export function identifierDiagnostics(
     cnfg: SepticCnfg,
     doc: ITextDocument,
     settings: DiagnosticsSettings
-): SepticDiagnostic[] {
+): Diagnostic[] {
     const severity = toSeverity(settings.identifier);
     if (!severity) {
         return [];
     }
-    const diagnostics: SepticDiagnostic[] = [];
+    const diagnostics: Diagnostic[] = [];
     for (let obj of cnfg.objects) {
         if (!obj.identifier) {
-            const diagnostic: Diagnostic = {
-                severity: severity,
-                range: {
+            const diagnostic: Diagnostic = createDiagnostic(
+                severity,
+                {
                     start: doc.positionAt(obj.start),
                     end: doc.positionAt(obj.start + obj.type.length),
                 },
-                message: `Missing identifier for object of type ${obj.type}. ${DiagnosticCode.E101}`,
-            };
-            diagnostics.push({
-                diagnostic: diagnostic,
-                code: DiagnosticCode.E101,
-            });
+                `Missing identifier for object of type ${obj.type}.`,
+                DiagnosticCode.E101
+            );
+            diagnostics.push(diagnostic);
             continue;
         }
 
@@ -170,33 +176,29 @@ export function identifierDiagnostics(
         }
 
         if (!report.containsLetter) {
-            const diagnostic: Diagnostic = {
-                severity: severity,
-                range: {
+            const diagnostic: Diagnostic = createDiagnostic(
+                severity,
+                {
                     start: doc.positionAt(obj.identifier.start),
                     end: doc.positionAt(obj.identifier.end),
                 },
-                message: `Identifier needs to contain minimum one letter. ${DiagnosticCode.E101}`,
-            };
-            diagnostics.push({
-                diagnostic: diagnostic,
-                code: DiagnosticCode.E101,
-            });
+                `Identifier needs to contain minimum one letter.`,
+                DiagnosticCode.E101
+            );
+            diagnostics.push(diagnostic);
         }
 
         if (report.invalidChars.length) {
-            const diagnostic: Diagnostic = {
-                severity: severity,
-                range: {
+            const diagnostic: Diagnostic = createDiagnostic(
+                severity,
+                {
                     start: doc.positionAt(obj.identifier.start),
                     end: doc.positionAt(obj.identifier.end),
                 },
-                message: `Identifier contains the following invalid chars: ${report.invalidChars}. ${DiagnosticCode.E101}`,
-            };
-            diagnostics.push({
-                diagnostic: diagnostic,
-                code: DiagnosticCode.E101,
-            });
+                `Identifier contains the following invalid chars: ${report.invalidChars}.`,
+                DiagnosticCode.E101
+            );
+            diagnostics.push(diagnostic);
         }
     }
 
@@ -208,7 +210,7 @@ export function algDiagnostic(
     doc: ITextDocument,
     settings: DiagnosticsSettings,
     refProvider: SepticReferenceProvider
-): SepticDiagnostic[] {
+): Diagnostic[] {
     const severityAlg = toSeverity(settings.alg);
     const severityMissingReference = toSeverity(settings.algMissingReference);
     const severityCalc = toSeverity(settings.algCalc);
@@ -218,7 +220,7 @@ export function algDiagnostic(
     if (!severityAlg) {
         return [];
     }
-    const diagnostics: SepticDiagnostic[] = [];
+    const diagnostics: Diagnostic[] = [];
     let algAttrs = cnfg.getAlgAttrs();
 
     for (let i = 0; i < algAttrs.length; i++) {
@@ -236,19 +238,18 @@ export function algDiagnostic(
             ) {
                 severity = DiagnosticSeverity.Hint;
             }
-            diagnostics.push({
-                diagnostic: {
-                    severity: severity,
-                    range: {
-                        start: doc.positionAt(
-                            alg.values[0].start + 1 + error.token.start
-                        ),
-                        end: doc.positionAt(alg.values[0].end),
-                    },
-                    message: error.message + ` ${DiagnosticCode.E201}`,
+            const diagnostic = createDiagnostic(
+                severity,
+                {
+                    start: doc.positionAt(
+                        alg.values[0].start + 1 + error.token.start
+                    ),
+                    end: doc.positionAt(alg.values[0].end),
                 },
-                code: DiagnosticCode.E201,
-            });
+                error.message,
+                DiagnosticCode.E201
+            );
+            diagnostics.push(diagnostic);
             continue;
         }
         const visitor = new AlgVisitor();
@@ -258,21 +259,20 @@ export function algDiagnostic(
         if (severityCalc) {
             visitor.calcs.forEach((calc) => {
                 if (!metaInfoProvider.hasCalc(calc.identifier)) {
-                    diagnostics.push({
-                        diagnostic: {
-                            severity: severityCalc,
-                            range: {
-                                start: doc.positionAt(
-                                    alg.values[0].start + 1 + calc.start
-                                ),
-                                end: doc.positionAt(
-                                    alg.values[0].start + 1 + calc.start
-                                ),
-                            },
-                            message: `Calc with unknown indentifier: ${calc.identifier}. ${DiagnosticCode.E203}`,
+                    const diagnostic = createDiagnostic(
+                        severityCalc,
+                        {
+                            start: doc.positionAt(
+                                alg.values[0].start + 1 + calc.start
+                            ),
+                            end: doc.positionAt(
+                                alg.values[0].start + 1 + calc.start
+                            ),
                         },
-                        code: DiagnosticCode.E203,
-                    });
+                        `Calc with unknown indentifier: ${calc.identifier}.`,
+                        DiagnosticCode.E203
+                    );
+                    diagnostics.push(diagnostic);
                 }
             });
         }
@@ -285,21 +285,20 @@ export function algDiagnostic(
                 }
                 let refs = refProvider.getXvrRefs(variable.value.split(".")[0]);
                 if (!refs || !validateRefs(refs!)) {
-                    diagnostics.push({
-                        diagnostic: {
-                            severity: severityMissingReference,
-                            range: {
-                                start: doc.positionAt(
-                                    alg.values[0].start + 1 + variable.start
-                                ),
-                                end: doc.positionAt(
-                                    alg.values[0].start + 1 + variable.end
-                                ),
-                            },
-                            message: `Undefined Xvr '${variable.value}'. ${DiagnosticCode.E202}`,
+                    const diagnostic = createDiagnostic(
+                        severityMissingReference,
+                        {
+                            start: doc.positionAt(
+                                alg.values[0].start + 1 + variable.start
+                            ),
+                            end: doc.positionAt(
+                                alg.values[0].start + 1 + variable.end
+                            ),
                         },
-                        code: DiagnosticCode.E202,
-                    });
+                        `Undefined Xvr '${variable.value}'.`,
+                        DiagnosticCode.E202
+                    );
+                    diagnostics.push(diagnostic);
                 }
             }
         }

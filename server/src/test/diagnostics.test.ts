@@ -50,7 +50,7 @@ describe("Test algorithm diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].diagnostic.severity).to.equal(
+        expect(diag[0].severity).to.equal(
             toSeverity(defaultDiagnosticsSettings.algMissingReference)
         );
     });
@@ -66,7 +66,7 @@ describe("Test algorithm diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, defaultDiagnosticsSettings, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].diagnostic.severity).to.equal(
+        expect(diag[0].severity).to.equal(
             toSeverity(defaultDiagnosticsSettings.algCalc)
         );
     });
