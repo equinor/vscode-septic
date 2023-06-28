@@ -107,7 +107,7 @@ export class ContextManager {
         const filesInTemplatePath = await this.connection.sendRequest(
             protocol.globFiles,
             {
-                uri: path.join(path.dirname(doc.uri), scgConfig.templatepath),
+                uri: path.parse(uri).dir + "/" + scgConfig.templatepath,
             }
         );
         const scgContext = new ScgContext(
