@@ -1649,14 +1649,14 @@
     "DiagnosticsOffLine": {
         "prefix": "noqa-line",
         "body": [
-            "// NoQA "
+            "// noqa "
         ],
         "description": ""
     },
     "DiagnosticsOffJinja": {
         "prefix": "noqa-jinja",
         "body": [
-            "{# NoQA #}"
+            "{# noqa #}"
         ],
         "description": ""
     }

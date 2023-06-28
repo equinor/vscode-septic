@@ -21,7 +21,7 @@ import {
 import { SettingsManager } from "../settings";
 
 export const disableDiagnosticRegex =
-    /\/\/\s+NoQA(\s[\s\w,]+)?|\{#\s+NoQA(\s[\s\w,]+)?\s*#\}/;
+    /\/\/\s+noqa\b(\s[\s\w,]+)?|\{#\s+noqa\b(\s[\s\w,]+)?\s*#\}/i;
 export const diagnosticCodeRegex = /E[0-9]{3}/;
 
 export enum DiagnosticCode {
