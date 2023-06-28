@@ -13,4 +13,4 @@ export const JINJA_EXPRESSION_REGEX = /^\{%[\s\S]*?%\}/;
 export const STRING_REGEX = /^"(.*?)"/;
 export const SKIP_REGEX = /^[\s]+/;
 export const UNKNOWN_REGEX = /^./;
-export const IDENTIFIER_REGEX = /^(\{\{\s*[\w\-]+\s*\}\}|[\w\-\*\!\?]+)+/;
+export const IDENTIFIER_REGEX = /^(?:\{\{[\S\s]+?\}\}|[\w\-\*\!\?]+)+/;

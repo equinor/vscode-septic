@@ -133,7 +133,7 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
     if (objectDef.refs.identifier && obj.identifier) {
         let isXvr = /^(?:Sopc)?[TMECD]vr$/.test(obj.type);
         let ref: SepticReference = {
-            identifier: obj.identifier.name,
+            identifier: obj.identifier.getId(),
             location: {
                 uri: "",
                 start: obj.identifier.start,
