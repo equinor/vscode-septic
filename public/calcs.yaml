@@ -1,0 +1,242 @@
+- documentation:
+    "/*!\r\n  \\class CalcIntpolType1\r\n\r\n  \\fn intpoltype1(x,X1,Y1,X2,Y2,...,XN,YN)\r\
+    \n\r\n  \\param[in] x Actual x-value (Value)\r\n  \\param[in] NN Values defining\
+    \ the curve to be interpolated. Values comes in X,Y-pairs. (Value) [even]\r\n\r\
+    \n  \\return Interpolated value (Value)\r\n\r\n  \\brief Function calculates y\
+    \ by linear interpolation of the X,Y pairs.\r\n  Assumes that the sequence of\
+    \ X1, X2, ..., XN values are monotonically increasing.\r\n  An input value x <\
+    \ X1 will give y = Y1, and x > XN gives y = YN.\r\n\r\n  \\par Output value and\
+    \ quality:\r\n    - Q = GOOD only if ALL arguments are GOOD and an odd number\
+    \ (5,7,9 ...) of parameters are specified, else Q = BAD\r\n    - V = 0 when Q\
+    \ = BAD, Y1 when x <= X1, YN when x >= XN, Y(n-1) + (x - X(n-1))*(Y(n)-Y(n-1))/(X(n)-X(n-1))\
+    \ when\r\n  X(n-1)<= x <= X(n)\r\n*/"
+  name: intpoltype1
+  parameters:
+    - arity: null
+      description: Actual x-value
+      direction: in
+      name: x
+      type: Value
+    - arity: even
+      description: Values defining the curve to be interpolated. Values comes in X,Y-pairs.
+      direction: in
+      name: NN
+      type: Value
+  retr: Interpolated value (Value)
+  signatur: intpoltype1(x,X1,Y1,X2,Y2,...,XN,YN)
+- documentation:
+    "/*!\r\n  \\class CalcLabUpdt\r\n\r\n  \\fn labupdt(SAMPLETVR, MODEL?,\
+    \ STDDEV?)\r\n\r\n  \\param[in] SAMPLETVR Tvr to perform validation of high/low\
+    \ limit etc. (Tvr)\r\n  \\param[in] STDDEV Acceptable standard deviation for samples\
+    \ (Value) [?]\r\n  \\param[in] MODEL Description of model (DataTypeModel) [?]\r\
+    \n\r\n  \\return Description of return value (Value)\r\n\r\n  \\brief Purpose:\
+    \ Perform checks for validity of SAMPLETVR, high limit, low limit etc <br>\r\n\
+    \  Logging: The calc reports accepted and rejected sampled to the file 'labupdates.log'\
+    \ <br>\r\n  Also, it searches for an Xvr for reporting of rejected samples. First\
+    \ it searches\r\n  for Xvr with name of CalcModl+\"_LABREJECT\", if not found\
+    \ it searches for Xvr named \"LABREJECT\".\r\n  If any of these are found, this\
+    \ Xvr is incremented for each rejected sample. The Xvr value is\r\n  reset to\
+    \ 0 when it reached 100, ie loops on 100.  This can be used for alarm/info. <br>\r\
+    \n\r\n  To use STDDEV without MODEL, write \"labupdt(SAMPLETVR, ,STDDEV)\"\r\n\
+    \  In steps with no new sample (or sample is rejected), V = 0, Q = GOOD <br>\r\
+    \n\r\n\r\n  \\par Output value and quality:\r\n  If STDDEV is configured, the\
+    \ STDDEV value on sampletime is checked, and the sample is rejected if STDDEV\
+    \ > SdevMax.\r\n\r\n  Without MODEL: The SAMPLETVR value is checked for GOOD Status,\
+    \ High and Low limit\r\n  If accepted, V = SAMPLETVR, Q = GOOD <br>\r\n\r\n  With\
+    \ MODEL: Additional checks for MODEL status, sample within historical buffer and\
+    \ difference\r\n  If accepted, V = (SAMPLETVR - MODELVALUE)*Fraction/RampTime,\
+    \ Q = GOOD\r\n  If RampTime>1, V holds the same value in RampTime steps, enabling\
+    \ another calc to change gradually\r\n*/"
+  name: labupdt
+  parameters:
+    - arity: null
+      description: Tvr to perform validation of high
+      direction: in
+      name: SAMPLETVR
+      type: null
+    - arity: "?"
+      description: Acceptable standard deviation for samples
+      direction: in
+      name: STDDEV
+      type: Value
+    - arity: "?"
+      description: Description of model
+      direction: in
+      name: MODEL
+      type: DataTypeModel
+  retr: Description of return value (Value)
+  signatur: labupdt(SAMPLETVR, MODEL?, STDDEV?)
+- name: abs
+- name: acos
+- name: act
+- name: actchk
+- name: anaupdt
+- name: and
+- name: asin
+- name: avgselection
+- name: badcount
+- name: calcdiluentrate2meas
+- name: ceil
+- name: checkbinint
+- name: cloudindex
+- name: cloudmix
+- name: cos
+- name: cvdynkpistate
+- name: cvhighdevavg
+- name: cvhighdevstd
+- name: cvlowdevavg
+- name: cvlowdevstd
+- name: cvmodeldevstd
+- name: cvopenloop
+- name: cvpo
+- name: cvpred
+- name: cvspdevavg
+- name: cvspdevstd
+- name: datadebug
+- name: delta
+- name: distmix
+- name: dumpXvrs
+- name: escgrad
+- name: exp
+- name: exprprocmodset
+- name: filt
+- name: filtkeep
+- name: filtopti
+- name: flashindex
+- name: flashmix
+- name: flashMPM
+- name: floor
+- name: fouriergrad
+- name: gasrateChoke
+- name: gasrateChokeAdap
+- name: gasrateChokeTau
+- name: gasrateChokeWell
+- name: gasrateVenturi
+- name: getappldeltatime
+- name: getappldesmode
+- name: getapplfinalstatus
+- name: getappln
+- name: getapplnsecs
+- name: getapplufwsum
+- name: getapplusefactor
+- name: getbias
+- name: getDay
+- name: getfinalstatus
+- name: gethist
+- name: getHour
+- name: getMinute
+- name: getmode
+- name: getMonth
+- name: getOPCreadtime
+- name: getOPCwritetime
+- name: getSecond
+- name: getssval
+- name: getUnixtime
+- name: getwindup
+- name: getYear
+- name: good
+- name: highon
+- name: hliq
+- name: hvap
+- name: hvapw
+- name: ibpmix
+- name: if
+- name: indexcloud
+- name: indexflash
+- name: indexvisc
+- name: isequal
+- name: isgood
+- name: leakdetect
+- name: linmix
+- name: ln
+- name: lockHL
+- name: lockIV
+- name: lockLL
+- name: lockSP
+- name: log10
+- name: lowon
+- name: lpopt
+- name: lsqfit
+- name: lsqfit2
+- name: lsqperiod
+- name: max
+- name: maxselection
+- name: mean
+- name: min
+- name: minselection
+- name: modechk
+- name: modgain
+- name: modget
+- name: modsched
+- name: modset
+- name: moveavg
+- name: movestd
+- name: mvmget
+- name: mvpred
+- name: neg
+- name: not
+- name: ok
+- name: or
+- name: pfmw
+- name: phaseshift
+- name: picon
+- name: pow
+- name: pulseon
+- name: round
+- name: savedata
+- name: selectvalue
+- name: sendMail
+- name: setactivemodifier
+- name: setappldesmode
+- name: setbad
+- name: setbiastfilt
+- name: setbiastpred
+- name: setdeas
+- name: setfulf
+- name: setfulfrescale
+- name: setgood
+- name: sethigh
+- name: sethighbackoff
+- name: sethighpnlty
+- name: sethighprio
+- name: setiv
+- name: setivprio
+- name: setivroc
+- name: setkeeptargets
+- name: setlow
+- name: setlowbackoff
+- name: setlowpnlty
+- name: setlowprio
+- name: setmaxdn
+- name: setmaxup
+- name: setmeas
+- name: setmeashighlimit
+- name: setmeaslowlimit
+- name: setmeasvalidation
+- name: setmode
+- name: setmovepnlty
+- name: setPlotSpan
+- name: setprocessvalue
+- name: setsetpnt
+- name: setsetpntfilt
+- name: setsetpntprio
+- name: setsetpntrocdn
+- name: setsetpntrocup
+- name: setsetptref
+- name: setspan
+- name: setwinduphigh
+- name: setwinduplow
+- name: sign
+- name: sin
+- name: sleep
+- name: spivon
+- name: sqrt
+- name: subrmpcgain
+- name: subrzerosens
+- name: tanh
+- name: timeron
+- name: trk
+- name: viscindex
+- name: viscmix
+- name: windup
+- name: xvrtext1tosystemtext2

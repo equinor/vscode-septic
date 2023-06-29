@@ -50,7 +50,7 @@ export class SepticMetaInfoProvider {
     }
 
     public getCalcs(): SepticCalcInfo[] {
-        return this.metaInfo.septicConfig.calcs;
+        return this.metaInfo.calcs;
     }
 
     public getCalc(name: string): SepticCalcInfo | undefined {
@@ -87,7 +87,7 @@ export class SepticMetaInfoProvider {
 
     private getCalcMap(): Map<string, SepticCalcInfo> {
         if (!this.calcsMapFlag) {
-            for (let calc of this.metaInfo.septicConfig.calcs) {
+            for (let calc of this.metaInfo.calcs) {
                 this.calcsMap.set(calc.name, calc);
             }
             this.calcsMapFlag = true;
@@ -97,7 +97,7 @@ export class SepticMetaInfoProvider {
 
     private getObjectsMap(): Map<string, SepticObjectInfo> {
         if (!this.objectsMapFlag) {
-            for (let func of this.metaInfo.septicConfig.objects) {
+            for (let func of this.metaInfo.objects) {
                 this.objectsMap.set(func.name, func);
             }
             this.objectsMapFlag = true;
@@ -105,42 +105,67 @@ export class SepticMetaInfoProvider {
         return this.objectsMap;
     }
 
-    private loadMetaInfo(): SepticMetaInfo {
-        const filePath = path.join(__dirname, "../public/septicMetaInfo.yaml");
+    private loadCalcsInfo(): SepticCalcInfoInput[] {
+        const filePath = path.join(__dirname, "../../../public/calcs.yaml");
         const file = fs.readFileSync(filePath, "utf-8");
-        const metaInfo: SepticMetaInfoInput = YAML.load(
+        const calcInfo: SepticCalcInfoInput[] = YAML.load(
             file
-        ) as SepticMetaInfoInput;
+        ) as SepticCalcInfoInput[];
+        return calcInfo;
+    }
+
+    private loadObjectsInfo(): SepticObjectsInfoInput[] {
+        const filePath = path.join(__dirname, "../../../public/objects.yaml");
+        const file = fs.readFileSync(filePath, "utf-8");
+        const objectsInfo: SepticObjectsInfoInput[] = YAML.load(
+            file
+        ) as SepticObjectsInfoInput[];
+        return objectsInfo;
+    }
+    private loadMetaInfo(): SepticMetaInfo {
+        let calcInfo = this.loadCalcsInfo();
+        let objectsInfo = this.loadObjectsInfo();
+        const metaInfo: SepticMetaInfoInput = {
+            objects: objectsInfo,
+            calcs: calcInfo,
+        };
         return this.setDefaultValues(metaInfo);
     }
 
     private setDefaultValues(
         metaInfoInput: SepticMetaInfoInput
     ): SepticMetaInfo {
-        const objects: SepticObjectInfo[] =
-            metaInfoInput.septicConfig.objects.map((obj) => {
-                return {
-                    name: obj.name,
-                    level: obj.level ? obj.level : defaultObjectLevel,
-                    symbolKind: obj.symbolKind
-                        ? toSymbolKind(obj.symbolKind)
-                        : defaultObjectSymbolKind,
-                    refs: {
-                        identifier: obj.refs?.identifier
-                            ? obj.refs.identifier
-                            : false,
-                        identifierOptional:
-                            obj.refs?.identifierOptional ?? false,
-                        attrList: obj.refs?.attrList ? obj.refs.attrList : [],
-                        attr: obj.refs?.attr ? obj.refs.attr : [],
-                    },
-                };
-            });
+        const objects: SepticObjectInfo[] = metaInfoInput.objects.map((obj) => {
+            return {
+                name: obj.name,
+                level: obj.level ? obj.level : defaultObjectLevel,
+                symbolKind: obj.symbolKind
+                    ? toSymbolKind(obj.symbolKind)
+                    : defaultObjectSymbolKind,
+                refs: {
+                    identifier: obj.refs?.identifier
+                        ? obj.refs.identifier
+                        : false,
+                    identifierOptional: obj.refs?.identifierOptional
+                        ? obj.refs.identifierOptional
+                        : false,
+                    attrList: obj.refs?.attrList ? obj.refs.attrList : [],
+                    attr: obj.refs?.attr ? obj.refs.attr : [],
+                },
+            };
+        });
+        const calcs: SepticCalcInfo[] = metaInfoInput.calcs.map((calc) => {
+            return {
+                name: calc.name,
+                documentation: calc.documentation ?? "Calc Documentation",
+                signature: calc.signature ?? calc.name + "()",
+                retr: calc.retr ?? "Value",
+                parameters: calc.parameters ?? [],
+            };
+        });
         return {
-            septicConfig: {
-                objects: objects,
-                calcs: metaInfoInput.septicConfig.calcs,
-            },
+            objects: objects,
+            calcs: calcs,
         };
     }
 }
@@ -164,10 +189,8 @@ function toSymbolKind(name: string) {
 }
 
 export interface SepticMetaInfo {
-    septicConfig: {
-        objects: SepticObjectInfo[];
-        calcs: SepticCalcInfo[];
-    };
+    objects: SepticObjectInfo[];
+    calcs: SepticCalcInfo[];
 }
 
 export interface SepticObjectInfo {
@@ -177,8 +200,28 @@ export interface SepticObjectInfo {
     refs: SepticRefs;
 }
 
+export interface SepticCalcInfoInput {
+    name: string;
+    signature?: string;
+    parameters?: SepticCalcParameterInfo[];
+    retr?: string;
+    documentation?: string;
+}
+
 export interface SepticCalcInfo {
     name: string;
+    signature: string;
+    parameters: SepticCalcParameterInfo[];
+    retr: string;
+    documentation: string;
+}
+
+export interface SepticCalcParameterInfo {
+    name: string;
+    description: string;
+    direction: string;
+    type: string;
+    arity: string;
 }
 
 export interface SepticRefs {
@@ -189,10 +232,8 @@ export interface SepticRefs {
 }
 
 export interface SepticMetaInfoInput {
-    septicConfig: {
-        objects: SepticObjectsInfoInput[];
-        calcs: SepticCalcInfo[];
-    };
+    objects: SepticObjectsInfoInput[];
+    calcs: SepticCalcInfoInput[];
 }
 
 export interface SepticRefsInput {
