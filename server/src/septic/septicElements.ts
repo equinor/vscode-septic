@@ -133,6 +133,22 @@ export class Attribute extends SepticBase {
         });
         return elements;
     }
+
+    getAttrValue(): AttributeValue | undefined {
+        return this.values?.[0];
+    }
+
+    getAttrValues(): AttributeValue[] {
+        return this.values;
+    }
+
+    getValue(): string | undefined {
+        return this.values?.[0].getValue();
+    }
+
+    getValues(): string[] {
+        return this.values.map((val) => val.getValue());
+    }
 }
 
 export class Identifier extends SepticBase {
@@ -165,5 +181,12 @@ export class AttributeValue extends SepticBase {
 
     getElements(): SepticBase[] {
         return [this];
+    }
+
+    getValue(): string {
+        if (this.type === SepticTokenType.string) {
+            return this.value.substring(1, this.value.length - 1);
+        }
+        return this.value;
     }
 }

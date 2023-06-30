@@ -190,12 +190,14 @@ export function algDiagnostic(
     let algAttrs = cnfg.getAlgAttrs();
 
     for (let i = 0; i < algAttrs.length; i++) {
-        let alg = algAttrs[i];
+        let algAttrValue = algAttrs[i].getAttrValue();
+        if (!algAttrValue) {
+            continue;
+        }
+
         let expr;
         try {
-            expr = parseAlg(
-                alg.values[0].value.substring(1, alg.values[0].value.length - 1)
-            );
+            expr = parseAlg(algAttrValue.getValue() ?? "");
         } catch (error: any) {
             let severity: DiagnosticSeverity = DiagnosticSeverity.Error;
             if (
@@ -208,9 +210,9 @@ export function algDiagnostic(
                 severity,
                 {
                     start: doc.positionAt(
-                        alg.values[0].start + 1 + error.token.start
+                        algAttrValue.start + 1 + error.token.start
                     ),
-                    end: doc.positionAt(alg.values[0].end),
+                    end: doc.positionAt(algAttrValue.end),
                 },
                 error.message,
                 DiagnosticCode.E201
@@ -227,10 +229,10 @@ export function algDiagnostic(
                     DiagnosticSeverity.Error,
                     {
                         start: doc.positionAt(
-                            alg.values[0].start + 1 + calc.start
+                            algAttrValue!.start + 1 + calc.start
                         ),
                         end: doc.positionAt(
-                            alg.values[0].start + 1 + calc.start
+                            algAttrValue!.start + 1 + calc.start
                         ),
                     },
                     `Calc with unknown indentifier: ${calc.identifier}`,
@@ -254,10 +256,10 @@ export function algDiagnostic(
                     DiagnosticSeverity.Warning,
                     {
                         start: doc.positionAt(
-                            alg.values[0].start + 1 + variable.start
+                            algAttrValue.start + 1 + variable.start
                         ),
                         end: doc.positionAt(
-                            alg.values[0].start + 1 + variable.end
+                            algAttrValue.start + 1 + variable.end
                         ),
                     },
                     `Undefined Xvr '${variable.value}'`,
@@ -333,7 +335,7 @@ function objRefDiagnostics(
             continue;
         }
         let validRef = refProvider.validateRef(
-            attr.values[0].value,
+            attr.getValue() ?? "",
             defaultRefValidationFunction
         );
         if (!validRef) {
@@ -352,41 +354,37 @@ function objRefDiagnostics(
     }
 
     for (let attrRefsList of objectMetaInfo.refs.attrList) {
-        let attr = obj.getAttribute(attrRefsList);
-        if (!attr) {
+        let attrValues = obj.getAttribute(attrRefsList)?.getAttrValues();
+        if (!attrValues || attrValues.length < 2) {
             continue;
         }
-        if (attr.values.length < 2) {
-            continue;
-        }
-        for (let attrValue of attr.values.splice(1)) {
+        for (let attrValue of attrValues.splice(1)) {
             let validRef = refProvider.validateRef(
-                attrValue.value.substring(1, attrValue.value.length - 1),
+                attrValue.getValue(),
                 defaultRefValidationFunction
             );
-            if (!validRef) {
-                diagnostics.push(
-                    createDiagnostic(
-                        DiagnosticSeverity.Warning,
-                        {
-                            start: doc.positionAt(attrValue.start),
-                            end: doc.positionAt(attrValue.end),
-                        },
-                        `Reference to undefined Xvr ${attrValue.value.substring(
-                            1,
-                            attrValue.value.length - 1
-                        )}`,
-                        DiagnosticCode.W101
-                    )
-                );
+            if (validRef) {
+                continue;
             }
+            diagnostics.push(
+                createDiagnostic(
+                    DiagnosticSeverity.Warning,
+                    {
+                        start: doc.positionAt(attrValue.start),
+                        end: doc.positionAt(attrValue.end),
+                    },
+                    `Reference to undefined Xvr ${attrValue.getValue()}`,
+                    DiagnosticCode.W101
+                )
+            );
         }
     }
     return diagnostics;
 }
 
 function attrDiagnostics(attr: Attribute, doc: ITextDocument): Diagnostic[] {
-    if (!attr.values.length) {
+    let attrValues = attr.getAttrValues();
+    if (!attrValues.length) {
         return [
             createDiagnostic(
                 DiagnosticSeverity.Error,
@@ -400,10 +398,10 @@ function attrDiagnostics(attr: Attribute, doc: ITextDocument): Diagnostic[] {
         ];
     }
 
-    if (attr.values.length === 1) {
+    if (attrValues.length === 1) {
         return [];
     }
-    let numValues = parseInt(attr.values[0].value);
+    let numValues = parseInt(attrValues[0].value);
     if (isNaN(numValues)) {
         return [
             createDiagnostic(
@@ -418,7 +416,7 @@ function attrDiagnostics(attr: Attribute, doc: ITextDocument): Diagnostic[] {
         ];
     }
 
-    if (numValues !== attr.values.length - 1) {
+    if (numValues !== attrValues.length - 1) {
         return [
             createDiagnostic(
                 DiagnosticSeverity.Error,
@@ -427,7 +425,7 @@ function attrDiagnostics(attr: Attribute, doc: ITextDocument): Diagnostic[] {
                     end: doc.positionAt(attr.start + attr.key.length),
                 },
                 `Incorrect number of values given. Expected: ${numValues} Actual: ${
-                    attr.values.length - 1
+                    attrValues.length - 1
                 }.`,
                 DiagnosticCode.E302
             ),

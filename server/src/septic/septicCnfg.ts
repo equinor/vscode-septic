@@ -39,7 +39,7 @@ export class SepticCnfg implements SepticReferenceProvider {
     public getAlgAttrs(): Attribute[] {
         const objects: Attribute[] = [];
         this.objects.forEach((obj) => {
-            if (obj.type === "CalcPvr") {
+            if (obj.isType("CalcPvr")) {
                 let algAttr = obj.getAttribute("Alg");
                 if (algAttr) {
                     objects.push(algAttr);
@@ -75,13 +75,11 @@ export class SepticCnfg implements SepticReferenceProvider {
             return false;
         }
         const alg = obj.getAttribute("Alg");
-        if (!alg) {
+        let algValue = alg?.getAttrValue();
+        if (!algValue) {
             return false;
         }
-        if (!alg.values.length) {
-            return false;
-        }
-        let algValue = alg.values[0];
+
         if (offset >= algValue.start && offset <= algValue.end) {
             return true;
         }
@@ -175,9 +173,7 @@ function calcPvrXvrRefs(obj: SepticObject): SepticReference[] {
     }
     let expr;
     try {
-        expr = parseAlg(
-            alg.values[0].value.substring(1, alg.values[0].value.length - 1)
-        );
+        expr = parseAlg(alg.getValue() ?? "");
     } catch (e: any) {
         return [];
     }
@@ -188,8 +184,8 @@ function calcPvrXvrRefs(obj: SepticObject): SepticReference[] {
         let identifier = xvr.value.split(".")[0];
         const ref: SepticReference = createSepticReference(identifier, {
             uri: "",
-            start: alg!.values[0].start + xvr.start + 1,
-            end: alg!.values[0].start + xvr.end + 1,
+            start: alg!.getAttrValue()!.start + xvr.start + 1,
+            end: alg!.getAttrValue()!.start + xvr.end + 1,
         });
         xvrs.push(ref);
     });
@@ -208,30 +204,24 @@ function xvrRefsAttrList(
         return val.type === SepticTokenType.string;
     });
     return refs.map((ref) => {
-        return createSepticReference(
-            ref.value.substring(1, ref.value.length - 1),
-            {
-                uri: "",
-                start: ref.start + 1,
-                end: ref.end - 1,
-            }
-        );
+        return createSepticReference(ref.getValue(), {
+            uri: "",
+            start: ref.start + 1,
+            end: ref.end - 1,
+        });
     });
 }
 
 function xvrRefAttr(obj: SepticObject, attrName: string): SepticReference[] {
-    let attr = obj.getAttribute(attrName);
-    if (!attr || !attr.values.length) {
+    let attrValue = obj.getAttribute(attrName)?.getAttrValue();
+    if (!attrValue) {
         return [];
     }
     return [
-        createSepticReference(
-            attr.values[0].value.substring(1, attr.values[0].value.length - 1),
-            {
-                uri: "",
-                start: attr.values[0].start + 1,
-                end: attr.values[0].end - 1,
-            }
-        ),
+        createSepticReference(attrValue.getValue(), {
+            uri: "",
+            start: attrValue.start + 1,
+            end: attrValue.end - 1,
+        }),
     ];
 }

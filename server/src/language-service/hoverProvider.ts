@@ -75,16 +75,6 @@ function getTextXvr(obj: SepticObject) {
 }
 
 function getTextAttr(attrId: string, obj: SepticObject) {
-    const attr = obj.getAttribute(attrId);
-    if (!attr) {
-        return "";
-    }
-    try {
-        return attr.values[0].value.substring(
-            1,
-            attr.values[0].value.length - 1
-        );
-    } catch {
-        return "";
-    }
+    const attrValue = obj.getAttribute(attrId)?.getValue();
+    return attrValue ?? "";
 }
