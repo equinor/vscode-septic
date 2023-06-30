@@ -69,7 +69,7 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
     parse(token: CancellationToken | undefined = undefined): AlgExpr {
         let expr = this.comparison();
         if (!this.isAtEnd()) {
-            this.error("Alg can only contain a single expression.", {
+            this.error("Alg can only contain a single expression", {
                 start: this.tokens[0].start,
                 end: this.tokens[this.tokens.length - 1].end,
                 type: AlgTokenType.error,
@@ -144,7 +144,7 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             let variable = this.variable();
             return new AlgLiteral(variable);
         }
-        this.error(`Unexpected token: ${this.peek().content}.`, this.peek());
+        this.error(`Unexpected token: ${this.peek().content}`, this.peek());
     }
 
     private variable(): AlgToken {
@@ -170,7 +170,7 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
                     this.check(AlgTokenType.jinja)
                 )
             ) {
-                this.error("Missing specifier after dot.", {
+                this.error("Missing specifier after dot", {
                     start: token.start,
                     end: this.previous().end,
                     content: content,
@@ -180,7 +180,7 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             this.advance();
             let nextToken = this.variable();
             if (nextToken.start !== end) {
-                this.error("Missing specifier after dot.", {
+                this.error("Missing specifier after dot", {
                     start: token.start,
                     end: this.previous().end,
                     content: content,
@@ -210,7 +210,7 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             if (this.match(AlgTokenType.comma)) {
                 if (this.check(AlgTokenType.rightParen)) {
                     this.error(
-                        `Missing argument in calc: ${identifierToken.content} .`,
+                        `Missing argument in calc: ${identifierToken.content}`,
                         {
                             start: identifierToken.start,
                             end: this.previous().end,
@@ -469,7 +469,7 @@ export class AlgScanner {
                     break;
                 } else if (this.peek() === "#" || this.peek() === "%") {
                     this.error(
-                        "Parsing of Algs containing jinja expressions/comments are not supported.",
+                        "Parsing of Algs containing jinja expressions/comments are not supported",
                         AlgParsingErrorType.unsupportedJinja
                     );
                 } else {

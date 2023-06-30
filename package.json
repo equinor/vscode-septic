@@ -38,54 +38,6 @@
           "default": "off",
           "description": "Traces the communication between VS Code and the language server."
         },
-        "septic.diagnostics.identifier": {
-          "scope": "window",
-          "type": "string",
-          "enum": [
-            "error",
-            "warning",
-            "hint",
-            "ignore"
-          ],
-          "default": "error",
-          "description": "Sets the severity level for objects with invalid identifiers. Ignore implies no validation."
-        },
-        "septic.diagnostics.alg": {
-          "scope": "window",
-          "type": "string",
-          "enum": [
-            "error",
-            "warning",
-            "hint",
-            "ignore"
-          ],
-          "default": "error",
-          "description": "Sets the severity level for unparsable expressions in CalcPvr.Alg. Ignore implies no checks for CalcPvr.Alg at all."
-        },
-        "septic.diagnostics.algCalc": {
-          "scope": "window",
-          "type": "string",
-          "enum": [
-            "error",
-            "warning",
-            "hint",
-            "ignore"
-          ],
-          "default": "warning",
-          "description": "Sets the severity level for unknown function names in CalcPvr.Alg. Ignore implies no check."
-        },
-        "septic.diagnostics.algMissingReference": {
-          "scope": "window",
-          "type": "string",
-          "enum": [
-            "error",
-            "warning",
-            "hint",
-            "ignore"
-          ],
-          "default": "warning",
-          "description": "Sets the severity level for references to missing Xvrs in CalcPvr.Alg. Ignore implies no check."
-        },
         "septic.diagnostics.enabled": {
           "scope": "window",
           "type": "boolean",
