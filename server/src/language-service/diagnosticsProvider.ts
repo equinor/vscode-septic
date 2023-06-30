@@ -10,25 +10,32 @@ import { ITextDocument } from "./types/textDocument";
 import {
     AlgVisitor,
     SepticCnfg,
-    SepticReference,
     SepticMetaInfoProvider,
     parseAlg,
     SepticReferenceProvider,
     AlgParsingError,
     AlgParsingErrorType,
     SepticComment,
+    Attribute,
+    SepticObject,
+    defaultRefValidationFunction,
 } from "../septic";
 import { SettingsManager } from "../settings";
+import { isPureJinja } from "../util";
 
 export const disableDiagnosticRegex =
     /\/\/\s+noqa\b(?::([ \w,]*))?|\{#\s+noqa\b(?::([ \w,]*))?\s*#\}/i;
-export const diagnosticCodeRegex = /E[0-9]{3}/;
+export const diagnosticCodeRegex = /(E|W)[0-9]{3}/;
 
 export enum DiagnosticCode {
     E101 = "E101", // Identifier
     E201 = "E201", // Unable to parse alg
-    E202 = "E202", // Unknown xvr in alg
-    E203 = "E203", // Unknown calc in alg
+    E202 = "E202", // Unknown calc in alg
+    E301 = "E301", // Missing list length
+    E302 = "E302", // Mismatch length of list
+    E303 = "E303", // Unknown object type
+    E304 = "E304", // Missing attribute
+    W101 = "W101", // Missing reference
 }
 
 export enum DiagnosticLevel {
@@ -100,7 +107,7 @@ export function getDiagnostics(
     refProvider: SepticReferenceProvider
 ) {
     const diagnostics: Diagnostic[] = [];
-    diagnostics.push(...identifierDiagnostics(cnfg, doc));
+    diagnostics.push(...objDiagnostics(cnfg, doc, refProvider));
     diagnostics.push(...algDiagnostic(cnfg, doc, refProvider));
     let disabledLines = getDisabledLines(cnfg.comments, doc);
     let filteredDiags = diagnostics.filter((diag) => {
@@ -122,57 +129,54 @@ export function getDiagnostics(
 }
 
 export function identifierDiagnostics(
-    cnfg: SepticCnfg,
+    obj: SepticObject,
     doc: ITextDocument
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    for (let obj of cnfg.objects) {
-        if (!obj.identifier) {
-            const diagnostic: Diagnostic = createDiagnostic(
-                DiagnosticSeverity.Error,
-                {
-                    start: doc.positionAt(obj.start),
-                    end: doc.positionAt(obj.start + obj.type.length),
-                },
-                `Missing identifier for object of type ${obj.type}`,
-                DiagnosticCode.E101
-            );
-            diagnostics.push(diagnostic);
-            continue;
-        }
-
-        let report = validateIdentifier(obj.identifier.name);
-        if (report.valid) {
-            continue;
-        }
-
-        if (!report.containsLetter) {
-            const diagnostic: Diagnostic = createDiagnostic(
-                DiagnosticSeverity.Error,
-                {
-                    start: doc.positionAt(obj.identifier.start),
-                    end: doc.positionAt(obj.identifier.end),
-                },
-                `Identifier needs to contain minimum one letter`,
-                DiagnosticCode.E101
-            );
-            diagnostics.push(diagnostic);
-        }
-
-        if (report.invalidChars.length) {
-            const diagnostic: Diagnostic = createDiagnostic(
-                DiagnosticSeverity.Error,
-                {
-                    start: doc.positionAt(obj.identifier.start),
-                    end: doc.positionAt(obj.identifier.end),
-                },
-                `Identifier contains the following invalid chars: ${report.invalidChars}`,
-                DiagnosticCode.E101
-            );
-            diagnostics.push(diagnostic);
-        }
+    if (!obj.identifier) {
+        const diagnostic: Diagnostic = createDiagnostic(
+            DiagnosticSeverity.Error,
+            {
+                start: doc.positionAt(obj.start),
+                end: doc.positionAt(obj.start + obj.type.length),
+            },
+            `Missing identifier for object of type ${obj.type}`,
+            DiagnosticCode.E101
+        );
+        diagnostics.push(diagnostic);
+        return diagnostics;
     }
 
+    let report = validateIdentifier(obj.identifier.name);
+    if (report.valid) {
+        return [];
+    }
+
+    if (!report.containsLetter) {
+        const diagnostic: Diagnostic = createDiagnostic(
+            DiagnosticSeverity.Error,
+            {
+                start: doc.positionAt(obj.identifier.start),
+                end: doc.positionAt(obj.identifier.end),
+            },
+            `Identifier needs to contain minimum one letter`,
+            DiagnosticCode.E101
+        );
+        diagnostics.push(diagnostic);
+    }
+
+    if (report.invalidChars.length) {
+        const diagnostic: Diagnostic = createDiagnostic(
+            DiagnosticSeverity.Error,
+            {
+                start: doc.positionAt(obj.identifier.start),
+                end: doc.positionAt(obj.identifier.end),
+            },
+            `Identifier contains the following invalid chars: ${report.invalidChars}`,
+            DiagnosticCode.E101
+        );
+        diagnostics.push(diagnostic);
+    }
     return diagnostics;
 }
 
@@ -186,12 +190,14 @@ export function algDiagnostic(
     let algAttrs = cnfg.getAlgAttrs();
 
     for (let i = 0; i < algAttrs.length; i++) {
-        let alg = algAttrs[i];
+        let algAttrValue = algAttrs[i].getAttrValue();
+        if (!algAttrValue) {
+            continue;
+        }
+
         let expr;
         try {
-            expr = parseAlg(
-                alg.values[0].value.substring(1, alg.values[0].value.length - 1)
-            );
+            expr = parseAlg(algAttrValue.getValue() ?? "");
         } catch (error: any) {
             let severity: DiagnosticSeverity = DiagnosticSeverity.Error;
             if (
@@ -204,9 +210,9 @@ export function algDiagnostic(
                 severity,
                 {
                     start: doc.positionAt(
-                        alg.values[0].start + 1 + error.token.start
+                        algAttrValue.start + 1 + error.token.start
                     ),
-                    end: doc.positionAt(alg.values[0].end),
+                    end: doc.positionAt(algAttrValue.end),
                 },
                 error.message,
                 DiagnosticCode.E201
@@ -217,45 +223,47 @@ export function algDiagnostic(
         const visitor = new AlgVisitor();
         visitor.visit(expr);
 
-        //Check that all calcs are valid
         visitor.calcs.forEach((calc) => {
             if (!metaInfoProvider.hasCalc(calc.identifier)) {
                 const diagnostic = createDiagnostic(
                     DiagnosticSeverity.Error,
                     {
                         start: doc.positionAt(
-                            alg.values[0].start + 1 + calc.start
+                            algAttrValue!.start + 1 + calc.start
                         ),
                         end: doc.positionAt(
-                            alg.values[0].start + 1 + calc.start
+                            algAttrValue!.start + 1 + calc.start
                         ),
                     },
                     `Calc with unknown indentifier: ${calc.identifier}`,
-                    DiagnosticCode.E203
+                    DiagnosticCode.E202
                 );
                 diagnostics.push(diagnostic);
             }
         });
 
-        //Check that all references to Xvrs exist in the config
         for (let variable of visitor.variables) {
-            if (/^\{\{.*\}\}$/.test(variable.value)) {
+            if (isPureJinja(variable.value)) {
                 continue;
             }
-            let refs = refProvider.getXvrRefs(variable.value.split(".")[0]);
-            if (!refs || !validateRefs(refs!)) {
+            if (
+                !refProvider.validateRef(
+                    variable.value.split(".")[0],
+                    defaultRefValidationFunction
+                )
+            ) {
                 const diagnostic = createDiagnostic(
-                    DiagnosticSeverity.Error,
+                    DiagnosticSeverity.Warning,
                     {
                         start: doc.positionAt(
-                            alg.values[0].start + 1 + variable.start
+                            algAttrValue.start + 1 + variable.start
                         ),
                         end: doc.positionAt(
-                            alg.values[0].start + 1 + variable.end
+                            algAttrValue.start + 1 + variable.end
                         ),
                     },
                     `Undefined Xvr '${variable.value}'`,
-                    DiagnosticCode.E202
+                    DiagnosticCode.W101
                 );
                 diagnostics.push(diagnostic);
             }
@@ -264,13 +272,168 @@ export function algDiagnostic(
     return diagnostics;
 }
 
-function validateRefs(refs: SepticReference[]) {
-    for (const ref of refs) {
-        if (ref.obj) {
-            return true;
+export function objDiagnostics(
+    cnfg: SepticCnfg,
+    doc: ITextDocument,
+    refProvider: SepticReferenceProvider
+): Diagnostic[] {
+    let diagnostics: Diagnostic[] = [];
+    for (let obj of cnfg.objects) {
+        diagnostics.push(...identifierDiagnostics(obj, doc));
+        diagnostics.push(...objRefDiagnostics(obj, doc, refProvider));
+        for (let attr of obj.attributes) {
+            diagnostics.push(...attrDiagnostics(attr, doc));
         }
     }
-    return false;
+    return diagnostics;
+}
+
+function objRefDiagnostics(
+    obj: SepticObject,
+    doc: ITextDocument,
+    refProvider: SepticReferenceProvider
+): Diagnostic[] {
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
+    const objectMetaInfo = metaInfoProvider.getObject(obj.type);
+    if (!objectMetaInfo) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Error,
+                {
+                    start: doc.positionAt(obj.start),
+                    end: doc.positionAt(obj.start + obj.type.length),
+                },
+                `Unknown object type ${obj.type}`,
+                DiagnosticCode.E303
+            ),
+        ];
+    }
+    const diagnostics: Diagnostic[] = [];
+    if (objectMetaInfo.refs.identifier && obj.identifier && !obj.isXvr()) {
+        let validRef = refProvider.validateRef(
+            obj.identifier.name,
+            defaultRefValidationFunction
+        );
+        if (!validRef) {
+            diagnostics.push(
+                createDiagnostic(
+                    objectMetaInfo.refs.identifierOptional
+                        ? DiagnosticSeverity.Hint
+                        : DiagnosticSeverity.Warning,
+                    {
+                        start: doc.positionAt(obj.identifier.start),
+                        end: doc.positionAt(obj.identifier.end),
+                    },
+                    `Reference to undefined Xvr ${obj.identifier.name}`,
+                    DiagnosticCode.W101
+                )
+            );
+        }
+    }
+
+    for (let attrRefs of objectMetaInfo.refs.attr) {
+        let attr = obj.getAttribute(attrRefs);
+        if (!attr) {
+            continue;
+        }
+        let validRef = refProvider.validateRef(
+            attr.getValue() ?? "",
+            defaultRefValidationFunction
+        );
+        if (!validRef) {
+            diagnostics.push(
+                createDiagnostic(
+                    DiagnosticSeverity.Warning,
+                    {
+                        start: doc.positionAt(attr.start),
+                        end: doc.positionAt(attr.start + attr.key.length),
+                    },
+                    `Reference to undefined Xvr ${attr.key}`,
+                    DiagnosticCode.W101
+                )
+            );
+        }
+    }
+
+    for (let attrRefsList of objectMetaInfo.refs.attrList) {
+        let attrValues = obj.getAttribute(attrRefsList)?.getAttrValues();
+        if (!attrValues || attrValues.length < 2) {
+            continue;
+        }
+        for (let attrValue of attrValues.slice(1)) {
+            let validRef = refProvider.validateRef(
+                attrValue.getValue(),
+                defaultRefValidationFunction
+            );
+            if (validRef) {
+                continue;
+            }
+            diagnostics.push(
+                createDiagnostic(
+                    DiagnosticSeverity.Warning,
+                    {
+                        start: doc.positionAt(attrValue.start),
+                        end: doc.positionAt(attrValue.end),
+                    },
+                    `Reference to undefined Xvr ${attrValue.getValue()}`,
+                    DiagnosticCode.W101
+                )
+            );
+        }
+    }
+    return diagnostics;
+}
+
+function attrDiagnostics(attr: Attribute, doc: ITextDocument): Diagnostic[] {
+    let attrValues = attr.getAttrValues();
+    if (!attrValues.length) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Error,
+                {
+                    start: doc.positionAt(attr.start),
+                    end: doc.positionAt(attr.start + attr.key.length),
+                },
+                `Missing value for attribute`,
+                DiagnosticCode.E304
+            ),
+        ];
+    }
+
+    if (attrValues.length === 1) {
+        return [];
+    }
+    let numValues = parseInt(attrValues[0].value);
+    if (isNaN(numValues)) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Error,
+                {
+                    start: doc.positionAt(attr.start),
+                    end: doc.positionAt(attr.start + attr.key.length),
+                },
+                `First value needs to be int when multiple values are provided for attribute`,
+                DiagnosticCode.E301
+            ),
+        ];
+    }
+
+    if (numValues !== attrValues.length - 1) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Error,
+                {
+                    start: doc.positionAt(attr.start),
+                    end: doc.positionAt(attr.start + attr.key.length),
+                },
+                `Incorrect number of values given. Expected: ${numValues} Actual: ${
+                    attrValues.length - 1
+                }.`,
+                DiagnosticCode.E302
+            ),
+        ];
+    }
+    return [];
 }
 
 interface IdentifierReport {

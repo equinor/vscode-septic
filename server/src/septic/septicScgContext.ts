@@ -4,7 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as path from "path";
-import { SepticReference, SepticReferenceProvider } from "./reference";
+import {
+    RefValidationFunction,
+    SepticReference,
+    SepticReferenceProvider,
+    defaultRefValidationFunction,
+} from "./reference";
 import { SepticObject } from "./septicElements";
 import { SepticConfigProvider } from "../language-service/septicConfigProvider";
 import { SepticCnfg } from "./septicCnfg";
@@ -118,6 +123,17 @@ export class ScgContext implements SepticReferenceProvider {
             return undefined;
         }
         return xvrRefs;
+    }
+
+    public validateRef(
+        name: string,
+        validationFunction: RefValidationFunction = defaultRefValidationFunction
+    ): boolean {
+        let xvrRefs = this.getXvrRefs(name);
+        if (!xvrRefs) {
+            return false;
+        }
+        return validationFunction(xvrRefs);
     }
 
     public getAllXvrObjects(): SepticObject[] {

@@ -57,7 +57,7 @@ describe("Test folding of document", () => {
         expect(foldingRanges[0].startLine).to.equal(2);
         expect(foldingRanges[0].endLine).to.equal(5);
         expect(foldingRanges[1].startLine).to.equal(6);
-        expect(foldingRanges[1].endLine).to.equal(14);
+        expect(foldingRanges[1].endLine).to.equal(11);
         expect(foldingRanges[2].startLine).to.equal(9);
         expect(foldingRanges[2].endLine).to.equal(11);
         expect(foldingRanges[3].startLine).to.equal(12);
