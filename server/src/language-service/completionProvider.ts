@@ -85,9 +85,11 @@ function getRelevantXvrs(
     xvrs: SepticObject[]
 ): SepticObject[] {
     if (obj.isXvr()) {
-        return xvrs.filter((xvr) => xvr.isSopcXvr());
+        return xvrs.filter((xvr) => {
+            return xvr.isType("Sopc" + obj.type);
+        });
     } else if (obj.isSopcXvr()) {
-        return xvrs.filter((xvr) => xvr.isXvr());
+        return xvrs.filter((xvr) => xvr.isType(obj.type.slice(4)));
     } else if (obj.isType("CalcPvr")) {
         return xvrs.filter((xvr) => xvr.isXvr());
     } else {

@@ -317,7 +317,9 @@ function objRefDiagnostics(
         if (!validRef) {
             diagnostics.push(
                 createDiagnostic(
-                    DiagnosticSeverity.Warning,
+                    objectMetaInfo.refs.identifierOptional
+                        ? DiagnosticSeverity.Hint
+                        : DiagnosticSeverity.Warning,
                     {
                         start: doc.positionAt(obj.identifier.start),
                         end: doc.positionAt(obj.identifier.end),
@@ -358,7 +360,7 @@ function objRefDiagnostics(
         if (!attrValues || attrValues.length < 2) {
             continue;
         }
-        for (let attrValue of attrValues.splice(1)) {
+        for (let attrValue of attrValues.slice(1)) {
             let validRef = refProvider.validateRef(
                 attrValue.getValue(),
                 defaultRefValidationFunction
@@ -392,7 +394,7 @@ function attrDiagnostics(attr: Attribute, doc: ITextDocument): Diagnostic[] {
                     start: doc.positionAt(attr.start),
                     end: doc.positionAt(attr.start + attr.key.length),
                 },
-                `Missing value for attribute ${attr.key}`,
+                `Missing value for attribute`,
                 DiagnosticCode.E304
             ),
         ];
@@ -410,7 +412,7 @@ function attrDiagnostics(attr: Attribute, doc: ITextDocument): Diagnostic[] {
                     start: doc.positionAt(attr.start),
                     end: doc.positionAt(attr.start + attr.key.length),
                 },
-                `First value needs to be int when multiple values are provided for attribute ${attr.key}`,
+                `First value needs to be int when multiple values are provided for attribute`,
                 DiagnosticCode.E301
             ),
         ];

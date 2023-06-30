@@ -17,6 +17,7 @@ const defaultObject: SepticObjectInfo = {
     symbolKind: defaultObjectSymbolKind,
     refs: {
         identifier: false,
+        identifierOptional: false,
         attr: [],
         attrList: [],
     },
@@ -116,22 +117,25 @@ export class SepticMetaInfoProvider {
     private setDefaultValues(
         metaInfoInput: SepticMetaInfoInput
     ): SepticMetaInfo {
-        const objects = metaInfoInput.septicConfig.objects.map((obj) => {
-            return {
-                name: obj.name,
-                level: obj.level ? obj.level : defaultObjectLevel,
-                symbolKind: obj.symbolKind
-                    ? toSymbolKind(obj.symbolKind)
-                    : defaultObjectSymbolKind,
-                refs: {
-                    identifier: obj.refs?.identifier
-                        ? obj.refs.identifier
-                        : false,
-                    attrList: obj.refs?.attrList ? obj.refs.attrList : [],
-                    attr: obj.refs?.attr ? obj.refs.attr : [],
-                },
-            };
-        });
+        const objects: SepticObjectInfo[] =
+            metaInfoInput.septicConfig.objects.map((obj) => {
+                return {
+                    name: obj.name,
+                    level: obj.level ? obj.level : defaultObjectLevel,
+                    symbolKind: obj.symbolKind
+                        ? toSymbolKind(obj.symbolKind)
+                        : defaultObjectSymbolKind,
+                    refs: {
+                        identifier: obj.refs?.identifier
+                            ? obj.refs.identifier
+                            : false,
+                        identifierOptional:
+                            obj.refs?.identifierOptional ?? false,
+                        attrList: obj.refs?.attrList ? obj.refs.attrList : [],
+                        attr: obj.refs?.attr ? obj.refs.attr : [],
+                    },
+                };
+            });
         return {
             septicConfig: {
                 objects: objects,
@@ -179,6 +183,7 @@ export interface SepticCalcInfo {
 
 export interface SepticRefs {
     identifier: boolean;
+    identifierOptional: boolean;
     attrList: string[];
     attr: string[];
 }
@@ -192,6 +197,7 @@ export interface SepticMetaInfoInput {
 
 export interface SepticRefsInput {
     identifier?: boolean;
+    identifierOptional?: boolean;
     attrList?: string[];
     attr?: string[];
 }
