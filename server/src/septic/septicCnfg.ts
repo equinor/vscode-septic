@@ -12,7 +12,9 @@ import {
     SepticReferenceProvider,
     RefValidationFunction,
     defaultRefValidationFunction,
+    createSepticReference,
 } from "./reference";
+import { removeSpaces } from "../util";
 
 export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];
@@ -49,7 +51,7 @@ export class SepticCnfg implements SepticReferenceProvider {
 
     public getXvrRefs(name: string): SepticReference[] | undefined {
         this.extractXvrRefs();
-        return this.xvrRefs.get(name);
+        return this.xvrRefs.get(removeSpaces(name));
     }
 
     public validateRef(
@@ -64,16 +66,7 @@ export class SepticCnfg implements SepticReferenceProvider {
     }
 
     public getAllXvrObjects(): SepticObject[] {
-        this.extractXvrRefs();
-        const xvrs: SepticObject[] = [];
-        this.xvrRefs.forEach((xvr) => {
-            xvr.forEach((ref) => {
-                if (ref.obj) {
-                    xvrs.push(ref.obj);
-                }
-            });
-        });
-        return xvrs;
+        return this.objects.filter((obj) => obj.isXvr() || obj.isSopcXvr());
     }
 
     public offsetInAlg(offset: number): boolean {
@@ -147,16 +140,16 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
     }
 
     if (objectDef.refs.identifier && obj.identifier) {
-        let isXvr = /^(?:Sopc)?[TMECD]vr$/.test(obj.type);
-        let ref: SepticReference = {
-            identifier: obj.identifier.getId(),
-            location: {
+        let isObjRef = obj.isXvr() || obj.isSopcXvr();
+        let ref: SepticReference = createSepticReference(
+            obj.identifier.name,
+            {
                 uri: "",
                 start: obj.identifier.start,
                 end: obj.identifier.end,
             },
-            obj: isXvr ? obj : undefined,
-        };
+            isObjRef ? obj : undefined
+        );
         xvrRefs.push(ref);
     }
 
@@ -168,7 +161,7 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
         xvrRefs.push(...xvrRefAttr(obj, attr));
     });
 
-    if (obj.type === "CalcPvr") {
+    if (obj.isType("CalcPvr")) {
         xvrRefs.push(...calcPvrXvrRefs(obj));
     }
     return xvrRefs;
@@ -193,14 +186,11 @@ function calcPvrXvrRefs(obj: SepticObject): SepticReference[] {
 
     visitor.variables.forEach((xvr) => {
         let identifier = xvr.value.split(".")[0];
-        const ref: SepticReference = {
-            identifier: identifier,
-            location: {
-                uri: "",
-                start: alg!.values[0].start + xvr.start + 1,
-                end: alg!.values[0].start + xvr.end + 1,
-            },
-        };
+        const ref: SepticReference = createSepticReference(identifier, {
+            uri: "",
+            start: alg!.values[0].start + xvr.start + 1,
+            end: alg!.values[0].start + xvr.end + 1,
+        });
         xvrs.push(ref);
     });
     return xvrs;
@@ -218,16 +208,14 @@ function xvrRefsAttrList(
         return val.type === SepticTokenType.string;
     });
     return refs.map((ref) => {
-        return {
-            identifier: ref.value
-                .substring(1, ref.value.length - 1)
-                .replace(/\s/, ""),
-            location: {
+        return createSepticReference(
+            ref.value.substring(1, ref.value.length - 1),
+            {
                 uri: "",
                 start: ref.start + 1,
                 end: ref.end - 1,
-            },
-        };
+            }
+        );
     });
 }
 
@@ -237,15 +225,13 @@ function xvrRefAttr(obj: SepticObject, attrName: string): SepticReference[] {
         return [];
     }
     return [
-        {
-            identifier: attr.values[0].value
-                .substring(1, attr.values[0].value.length - 1)
-                .replace(/\s/, ""),
-            location: {
+        createSepticReference(
+            attr.values[0].value.substring(1, attr.values[0].value.length - 1),
+            {
                 uri: "",
                 start: attr.values[0].start + 1,
                 end: attr.values[0].end - 1,
-            },
-        },
+            }
+        ),
     ];
 }

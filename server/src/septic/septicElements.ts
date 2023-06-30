@@ -92,6 +92,18 @@ export class SepticObject extends SepticBase {
         });
         return elements;
     }
+
+    isXvr(): boolean {
+        return /^[CDEMT]vr$/.test(this.type);
+    }
+
+    isSopcXvr(): boolean {
+        return /^Sopc[CDEMT]vr$/.test(this.type);
+    }
+
+    isType(...type: string[]) {
+        return type.includes(this.type);
+    }
 }
 
 export class Attribute extends SepticBase {
@@ -129,10 +141,6 @@ export class Identifier extends SepticBase {
     constructor(name: string, start: number = -1, end: number = -1) {
         super(start, end);
         this.name = name;
-    }
-
-    getId() {
-        return this.name.replace(/\s/g, "");
     }
 
     getElements(): SepticBase[] {

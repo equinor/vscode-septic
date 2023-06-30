@@ -29,10 +29,10 @@ export class HoverProvider {
             return undefined;
         }
         const xvr = allRefs.filter((value) => {
-            return value.obj && /^[TEMCD]vr$/.test(value.obj.type);
+            return value.obj?.isXvr();
         });
         const sopcXvr = allRefs.filter((value) => {
-            return value.obj && /^(?:Sopc)[TEMCD]vr$/.test(value.obj.type);
+            return value.obj?.isSopcXvr();
         });
 
         if (xvr.length) {

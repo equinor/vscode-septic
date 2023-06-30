@@ -35,7 +35,7 @@ export class ReferenceProvider {
             return [];
         }
         await refProvider.load();
-        return getDefinition(offset, cnfg, doc, refProvider);
+        return getDefinition(offset, cnfg, refProvider);
     }
 
     public async provideReferences(
@@ -63,14 +63,13 @@ export class ReferenceProvider {
             return [];
         }
         await refProvider.load();
-        return getDeclaration(offset, cnfg, doc, refProvider);
+        return getDeclaration(offset, cnfg, refProvider);
     }
 }
 
 export function getDefinition(
     offset: number,
     cnfg: SepticCnfg,
-    doc: ITextDocument,
     refProvider: SepticReferenceProvider
 ): LocationLinkOffset[] {
     const ref = cnfg.getXvrRefFromOffset(offset);
@@ -78,7 +77,7 @@ export function getDefinition(
         return [];
     }
 
-    if (ref.obj && /^[TMECD]vr/.test(ref.obj.type)) {
+    if (ref.obj?.isXvr()) {
         return [];
     }
 
@@ -87,11 +86,11 @@ export function getDefinition(
         return [];
     }
     let definitions = xvrRefs.filter((xvrRef) => {
-        return xvrRef.obj && /^[TMECD]vr/.test(xvrRef.obj.type);
+        return xvrRef.obj?.isXvr();
     });
 
     return definitions.map((def) => {
-        return refToLocationLinkOffset(def, doc);
+        return refToLocationLinkOffset(def);
     });
 }
 
@@ -122,7 +121,6 @@ export function getReferences(
 export function getDeclaration(
     offset: number,
     cnfg: SepticCnfg,
-    doc: ITextDocument,
     refProvider: SepticReferenceProvider
 ): LocationLinkOffset[] {
     const ref = cnfg.getXvrRefFromOffset(offset);
@@ -130,7 +128,7 @@ export function getDeclaration(
         return [];
     }
 
-    if (ref.obj && /^Sopc[TMECD]vr/.test(ref.obj.type)) {
+    if (ref.obj?.isSopcXvr()) {
         return [];
     }
     const xvrRefs = refProvider.getXvrRefs(ref.identifier);
@@ -138,14 +136,14 @@ export function getDeclaration(
         return [];
     }
     let declarations = xvrRefs.filter((xvrRef) => {
-        return xvrRef.obj && /^Sopc[TMECD]vr/.test(xvrRef.obj.type);
+        return xvrRef.obj?.isSopcXvr();
     });
     return declarations.map((ref) => {
-        return refToLocationLinkOffset(ref, doc);
+        return refToLocationLinkOffset(ref);
     });
 }
 
-function refToLocationLinkOffset(ref: SepticReference, doc: ITextDocument) {
+function refToLocationLinkOffset(ref: SepticReference) {
     return {
         targetUri: ref.location.uri,
         targetRange: {

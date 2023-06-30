@@ -81,23 +81,16 @@ function xvrToCompletionItem(obj: SepticObject): CompletionItem {
 }
 
 function getRelevantXvrs(
-    curObj: SepticObject,
+    obj: SepticObject,
     xvrs: SepticObject[]
 ): SepticObject[] {
-    let regex;
-    if (["Mvr", "Tvr", "Evr", "Cvr", "Dvr"].includes(curObj.type)) {
-        regex = `^Sopc${curObj.type.charAt(0)}vr`;
-    } else if (
-        ["SopcMvr", "SopcTvr", "SopcCvr", "SopcDvr", "SopcEvr"].includes(
-            curObj.type
-        )
-    ) {
-        regex = "^" + curObj.type.slice(4);
-    } else if (curObj.type === "CalcPvr") {
-        regex = "^[MTECD]vr";
+    if (obj.isXvr()) {
+        return xvrs.filter((xvr) => xvr.isSopcXvr());
+    } else if (obj.isSopcXvr()) {
+        return xvrs.filter((xvr) => xvr.isXvr());
+    } else if (obj.isType("CalcPvr")) {
+        return xvrs.filter((xvr) => xvr.isXvr());
     } else {
         return [];
     }
-    let re = new RegExp(regex);
-    return xvrs.filter((xvr) => re.test(xvr.type));
 }

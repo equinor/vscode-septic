@@ -70,6 +70,7 @@ septicConfig:
     - name: ImageTextXvr
     - name: ImageXvr
     - name: ImageXvrCollection
+    - name: ImageXvrPlot
     - name: ListMeas
       symbolKind: Array
     - name: MasterTcip

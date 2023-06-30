@@ -21,6 +21,7 @@ import {
     defaultRefValidationFunction,
 } from "../septic";
 import { SettingsManager } from "../settings";
+import { isPureJinja } from "../util";
 
 export const disableDiagnosticRegex =
     /\/\/\s+noqa\b(?::([ \w,]*))?|\{#\s+noqa\b(?::([ \w,]*))?\s*#\}/i;
@@ -240,7 +241,7 @@ export function algDiagnostic(
         });
 
         for (let variable of visitor.variables) {
-            if (/^\{\{.*\}\}$/.test(variable.value)) {
+            if (isPureJinja(variable.value)) {
                 continue;
             }
             if (
@@ -306,7 +307,7 @@ function objRefDiagnostics(
         ];
     }
     const diagnostics: Diagnostic[] = [];
-    if (objectMetaInfo.refs.identifier && obj.identifier) {
+    if (objectMetaInfo.refs.identifier && obj.identifier && !obj.isXvr()) {
         let validRef = refProvider.validateRef(
             obj.identifier.name,
             defaultRefValidationFunction

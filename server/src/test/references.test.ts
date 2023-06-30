@@ -125,27 +125,27 @@ describe("Test getDefinition", () => {
     const cnfg = parseSeptic(doc.getText());
     it("Get Definition SopcXvr", () => {
         const offset = 15;
-        let result = getDefinition(offset, cnfg, doc, cnfg);
+        let result = getDefinition(offset, cnfg, cnfg);
         expect(result.length).to.equal(1);
     });
     it("Get Definition Xvr", () => {
         const offset = 29;
-        let result = getDefinition(offset, cnfg, doc, cnfg);
+        let result = getDefinition(offset, cnfg, cnfg);
         expect(result.length).to.equal(0);
     });
     it("Get Definition Xvr", () => {
         const offset = 46;
-        let result = getDefinition(offset, cnfg, doc, cnfg);
+        let result = getDefinition(offset, cnfg, cnfg);
         expect(result.length).to.equal(0);
     });
     it("Get Definition CalcPvr", () => {
         const offset = 158;
-        let result = getDefinition(offset, cnfg, doc, cnfg);
+        let result = getDefinition(offset, cnfg, cnfg);
         expect(result.length).to.equal(1);
     });
     it("Get Definition Xvr", () => {
         const offset = 190;
-        let result = getDefinition(offset, cnfg, doc, cnfg);
+        let result = getDefinition(offset, cnfg, cnfg);
         expect(result.length).to.equal(1);
     });
 });
@@ -174,22 +174,22 @@ describe("Test getDeclaration", () => {
     const cnfg = parseSeptic(doc.getText());
     it("Get Declaration SopcXvr", () => {
         const offset = 15;
-        let result = getDeclaration(offset, cnfg, doc, cnfg);
+        let result = getDeclaration(offset, cnfg, cnfg);
         expect(result.length).to.equal(0);
     });
     it("Get Declaration Xvr", () => {
         const offset = 29;
-        let result = getDeclaration(offset, cnfg, doc, cnfg);
+        let result = getDeclaration(offset, cnfg, cnfg);
         expect(result.length).to.equal(1);
     });
     it("Get Declaration CalcPvr", () => {
         const offset = 158;
-        let result = getDeclaration(offset, cnfg, doc, cnfg);
+        let result = getDeclaration(offset, cnfg, cnfg);
         expect(result.length).to.equal(0);
     });
     it("Get Declaration Alg", () => {
         const offset = 190;
-        let result = getDeclaration(offset, cnfg, doc, cnfg);
+        let result = getDeclaration(offset, cnfg, cnfg);
         expect(result.length).to.equal(1);
     });
 });
