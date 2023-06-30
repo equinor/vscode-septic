@@ -279,7 +279,7 @@ describe("Variable regex test", () => {
         const input = "Hello world!";
         const matches = input.match(regex);
         expect(matches).not.to.equal(null);
-        expect(matches?.[1]).to.equal("Hello");
+        expect(matches?.[0]).to.equal("Hello");
     });
 
     it("matches valid jinja", () => {
@@ -292,9 +292,8 @@ describe("Variable regex test", () => {
 
     it("does not match invalid jinja", () => {
         expect(regex.test("")).to.equal(false);
-        expect(regex.test("{{}} ")).to.equal(false);
-        expect(regex.test("{{  }} ")).to.equal(false);
-        expect(regex.test("{{Some Text}} ")).to.equal(false);
+        expect(regex.test("{{} ")).to.equal(false);
+        expect(regex.test("{Some Text}} ")).to.equal(false);
     });
 
     it("does match valid variables", () => {

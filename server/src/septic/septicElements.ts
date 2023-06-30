@@ -128,7 +128,11 @@ export class Identifier extends SepticBase {
 
     constructor(name: string, start: number = -1, end: number = -1) {
         super(start, end);
-        this.name = name.replace(/\s/g, "");
+        this.name = name;
+    }
+
+    getId() {
+        return this.name.replace(/\s/g, "");
     }
 
     getElements(): SepticBase[] {
