@@ -157,7 +157,9 @@ export class SepticMetaInfoProvider {
         const calcs: SepticCalcInfo[] = metaInfoInput.calcs.map((calc) => {
             return {
                 name: calc.name,
-                documentation: calc.documentation ?? "Calc Documentation",
+                briefDescription: calc.briefDescription ?? "Brief description",
+                detailedDescription:
+                    calc.detailedDescription ?? "Detailed description",
                 signature: calc.signature ?? calc.name + "()",
                 retr: calc.retr ?? "Value",
                 parameters: calc.parameters ?? [],
@@ -205,7 +207,8 @@ export interface SepticCalcInfoInput {
     signature?: string;
     parameters?: SepticCalcParameterInfo[];
     retr?: string;
-    documentation?: string;
+    briefDescription?: string;
+    detailedDescription?: string;
 }
 
 export interface SepticCalcInfo {
@@ -213,7 +216,8 @@ export interface SepticCalcInfo {
     signature: string;
     parameters: SepticCalcParameterInfo[];
     retr: string;
-    documentation: string;
+    briefDescription: string;
+    detailedDescription: string;
 }
 
 export interface SepticCalcParameterInfo {

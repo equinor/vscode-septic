@@ -1,5 +1,5 @@
 import yaml
-from src.github import getCalcFile
+from src.github import getCalcFile, getCommitId
 from src.parse_doxygen import parseCalcDocumentation
 from dataclasses import asdict
 
@@ -9,7 +9,9 @@ def main():
     branch = "calc_documentation"
     calc_file = getCalcFile(branch)
     calcs = parseCalcDocumentation(calc_file)
+    commit = getCommitId(branch)
     with open(output_path, "w") as file:
+        file.write(f"# Commit: {commit}\n")
         yaml.dump([asdict(calc) for calc in calcs], file)
 
 

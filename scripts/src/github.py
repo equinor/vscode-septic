@@ -26,6 +26,14 @@ def decodeBas64(base64_str: str):
     return decoded_bytes.decode("utf-8")
 
 
+def getCommitId(branch: str):
+    owner = "equinor"
+    repo = "SEPTIC"
+    endpoint = f"/repos/{owner}/{repo}/branches/{branch}"
+    response = sendRequestGithub(endpoint)
+    return response["commit"]["sha"][0:7]
+
+
 def getCalcFile(branch: str):
     owner = "equinor"
     repo = "SEPTIC"
@@ -37,5 +45,6 @@ def getCalcFile(branch: str):
 
 if __name__ == "__main__":
     calc_file = getCalcFile("calc_documentation")
+    commit_hash = getCommitId("calc_documentation")
     with open("calc.cpp", "w", encoding="utf-8", newline="") as file:
         file.write(calc_file)

@@ -18,7 +18,8 @@ class Calc:
     signature: str
     parameters: Parameter
     retr: str
-    documentation: str
+    briefDescription: str
+    detailedDescription: str
 
 
 def getCalcDoxygenFromFile(file: str) -> List[str]:
@@ -51,12 +52,25 @@ def parseCalcDoxygenDoc(calc: str) -> Optional[dict]:
             parameters.append(parsedParam)
     returnMatch = re.search(r"\\return([\S ]+)", calc)
     retr = returnMatch.group(1).strip() if returnMatch else ""
+    brief_description_match = re.search(
+        r"\\brief([\s\S]*?)(?:(?=(?:\r?\n){3})|(?=\\par|\*\/))", calc
+    )
+    brief_description = (
+        brief_description_match.group(1).strip() if brief_description_match else ""
+    )
+    detailed_description_match = re.search(r"\\par\b([\s\S]*?)(?:\*\/)", calc)
+    detailed_description = (
+        detailed_description_match.group(1).strip()
+        if detailed_description_match
+        else ""
+    )
     return Calc(
         name=name,
         signature=signature,
         parameters=parameters,
         retr=retr,
-        documentation=calc,
+        briefDescription=brief_description,
+        detailedDescription=detailed_description,
     )
 
 
@@ -69,9 +83,9 @@ def parseParameter(param: str) -> Optional[dict]:
     name = paramMatch.group(2) if paramMatch else None
     if not direction or not name:
         return None
-    description = paramMatch.group(3).strip() if paramMatch else ""
-    type = paramMatch.group(4) if paramMatch else "Value"
-    arity = paramMatch.group(5) if paramMatch else ""
+    description = paramMatch.group(3).strip() if paramMatch.group(3) else ""
+    type = paramMatch.group(4) if paramMatch.group(4) else "Value"
+    arity = paramMatch.group(5) if paramMatch.group(5) else ""
     return Parameter(
         name=name, description=description, direction=direction, type=type, arity=arity
     )
