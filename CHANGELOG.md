@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.7.0](https://github.com/equinor/vscode-septic/compare/v1.6.2...v1.7.0) (2023-06-30)
+
+
+### 🐛 Bug Fixes
+
+* support arbitrary content for jinja variable ([#224](https://github.com/equinor/vscode-septic/issues/224)) ([36fc3ff](https://github.com/equinor/vscode-septic/commit/36fc3fffe9895eebe45b89307ba9155a30a08baf))
+
+
+### ✨ Features
+
+* add diagnostics for object attributes ([#213](https://github.com/equinor/vscode-septic/issues/213)) ([5709d35](https://github.com/equinor/vscode-septic/commit/5709d354b984ecaa34fa63407f254af1e016dd1e))
+* disable diagnostics for line ([#209](https://github.com/equinor/vscode-septic/issues/209)) ([d3a3511](https://github.com/equinor/vscode-septic/commit/d3a35111a0d422bdd04bb719ef0b3d8ec4780337))
+
 ## [1.6.2](https://github.com/equinor/vscode-septic/compare/v1.6.1...v1.6.2) (2023-06-28)
 
 
