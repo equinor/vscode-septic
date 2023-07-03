@@ -10,12 +10,14 @@ import {
     SepticComment,
     SepticObject,
     SepticTokenType,
+    ValueTypes,
 } from "../septic";
 
 const indentsObjectDeclaration = 2;
 const indentsAttributesDelimiter = 14;
 const startObjectName = 17;
-const indentsToValueAttr = 2;
+const spacesBetweenValues = 2;
+const spacesBetweenIntValues = 6;
 const indentsAttributeValuesStart = 17;
 const maxNumberAttrValuesPerLine = 5;
 
@@ -60,7 +62,16 @@ class SepticCnfgFormatter {
 
     private editAddedFlag = false;
 
-    private attrValueCounter = 0;
+    private object: SepticObject | undefined;
+
+    private attr: Attribute | undefined;
+
+    private attrValueState: AttrValueFormattingState = {
+        type: ValueTypes.default,
+        first: false,
+        second: true,
+        counter: 0,
+    };
 
     constructor(cnfg: SepticCnfg, doc: ITextDocument) {
         cnfg.objects.forEach((obj) => {
@@ -90,11 +101,13 @@ class SepticCnfgFormatter {
             }
             this.advance();
         }
+        this.addEmptyLineEndOfFile();
         this.addEdit();
         return this.edits;
     }
 
     private formatObject(object: SepticObject) {
+        this.setCurrentObject(object);
         let editedFlag = this.getEditedFlag();
         let existingWhitespaces = 0;
         if (editedFlag) {
@@ -148,6 +161,7 @@ class SepticCnfgFormatter {
     }
 
     private formatAttribute(attr: Attribute) {
+        this.setCurrentAttribute(attr);
         this.addLine();
         let editedFlag = this.getEditedFlag();
         let existingWhitespaces = 0;
@@ -173,29 +187,59 @@ class SepticCnfgFormatter {
             indentsAttributesDelimiter - attr.key.length - existingWhitespaces,
             0
         );
-        let attrDefFormatted =
-            " ".repeat(indentsStart) +
-            attr.key +
-            "=" +
-            " ".repeat(indentsToValueAttr - 1);
+        let attrDefFormatted = " ".repeat(indentsStart) + attr.key + "=";
         this.currentLine += attrDefFormatted;
-        this.attrValueCounter = 0;
+        this.setAttrValueFormattingState(attr);
     }
 
     private formatAttrValue(attrValue: AttributeValue) {
         let editedFlag = this.getEditedFlag();
         if (!editedFlag) {
-            if (this.attrValueCounter >= maxNumberAttrValuesPerLine) {
+            if (this.attrValueState.first) {
+                this.currentLine +=
+                    " ".repeat(
+                        indentsAttributeValuesStart -
+                            (indentsAttributesDelimiter + 1)
+                    ) + attrValue.value;
+                this.attrValueState.first = false;
+                if (this.attrValueState.type === ValueTypes.stringList) {
+                    this.addLine();
+                }
+                return;
+            }
+
+            if (
+                this.attrValueState.counter >=
+                this.getMaxNumberOfAttrValuesLine()
+            ) {
                 this.addLine();
-                this.attrValueCounter = 0;
+                this.resetAttrValueCounter();
             }
             let spaces = !this.currentLine.length
                 ? indentsAttributeValuesStart
-                : 1;
+                : spacesBetweenValues;
+
+            if (
+                this.attrValueState.type === ValueTypes.numericList &&
+                spaces === spacesBetweenValues
+            ) {
+                spaces = Math.max(
+                    1,
+                    spacesBetweenIntValues - attrValue.value.length
+                );
+                if (this.attrValueState.second) {
+                    this.attrValueState.second = false;
+                    spaces -= 1;
+                }
+            }
             this.currentLine += " ".repeat(spaces) + attrValue.value;
-            this.attrValueCounter += 1;
+            this.incrementAttrValueCounter();
             return;
         }
+
+        this.resetAttrValueCounter();
+        this.attrValueState.first = false;
+        this.attrValueState.second = false;
 
         let pos = this.doc.positionAt(this.start);
         let lineText = this.doc.getText({
@@ -216,7 +260,7 @@ class SepticCnfgFormatter {
         this.currentLine +=
             " ".repeat(indentsAttributeValuesStart - existingWhitespaces) +
             attrValue.value;
-        this.attrValueCounter += 1;
+        this.incrementAttrValueCounter();
     }
 
     private formatComment(comment: SepticComment) {
@@ -343,7 +387,6 @@ class SepticCnfgFormatter {
         if (!this.currentLine.length) {
             return;
         }
-
         this.lines.push(this.currentLine);
         this.currentLine = "";
     }
@@ -371,7 +414,6 @@ class SepticCnfgFormatter {
         this.lines = [];
         this.edits.push(edit);
         this.setEditedFlag();
-        this.attrValueCounter = 0;
         return;
     }
 
@@ -421,7 +463,7 @@ class SepticCnfgFormatter {
         return false;
     }
 
-    private getEditedFlag() {
+    private getEditedFlag(): boolean {
         if (this.editAddedFlag) {
             this.editAddedFlag = false;
             return true;
@@ -429,7 +471,93 @@ class SepticCnfgFormatter {
         return false;
     }
 
-    private setEditedFlag() {
+    private setEditedFlag(): void {
         this.editAddedFlag = true;
     }
+
+    private addEmptyLineEndOfFile(): void {
+        this.addLine();
+        const edited = this.getEditedFlag();
+        if (!edited) {
+            const prevLine = this.lines[this.lines.length - 1];
+            if (prevLine.length) {
+                this.addEmptyLine();
+            }
+            return;
+        }
+
+        let pos = this.doc.positionAt(this.start);
+        let lineText = this.doc.getText({
+            start: Position.create(pos.line, 0),
+            end: pos,
+        });
+
+        if (lineText.length) {
+            this.lines.push("\n");
+        }
+    }
+
+    private incrementAttrValueCounter(): void {
+        if (this.attrValueState.type === ValueTypes.stringList) {
+            this.attrValueState.counter += 1;
+        }
+    }
+
+    private resetAttrValueCounter() {
+        this.attrValueState.counter = 0;
+    }
+
+    private setAttrValueFormattingState(attr: Attribute) {
+        const type = attr.getType();
+        if (!type) {
+            this.attrValueState = {
+                type: ValueTypes.default,
+                first: true,
+                second: true,
+                counter: 0,
+            };
+            return;
+        }
+        this.attrValueState = {
+            type: type,
+            first: true,
+            second: true,
+            counter: 0,
+        };
+    }
+
+    private setCurrentObject(object: SepticObject) {
+        this.object = object;
+    }
+
+    private setCurrentAttribute(attr: Attribute) {
+        this.attr = attr;
+    }
+
+    private getMaxNumberOfAttrValuesLine() {
+        if (!this.object?.isType("XvrMatrix") || !this.attr?.isKey("Xvrs")) {
+            return maxNumberAttrValuesPerLine;
+        }
+
+        let cols = this.object!.getAttribute("ColIds");
+        if (!cols) {
+            return maxNumberAttrValuesPerLine;
+        }
+        let numCols = cols.getValue();
+        if (!numCols) {
+            return maxNumberAttrValuesPerLine;
+        }
+        let numColsInt = parseInt(numCols);
+        if (isNaN(numColsInt)) {
+            return maxNumberAttrValuesPerLine;
+        }
+        return numColsInt;
+    }
+}
+
+interface AttrValueFormattingState {
+    type: ValueTypes;
+    first: boolean;
+    second: boolean;
+    counter: number;
 }
