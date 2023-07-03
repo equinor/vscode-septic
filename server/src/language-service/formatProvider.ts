@@ -96,6 +96,7 @@ class SepticCnfgFormatter {
             }
             this.advance();
         }
+        this.addEmptyLineEndOfFile();
         this.addEdit();
         return this.edits;
     }
@@ -371,7 +372,6 @@ class SepticCnfgFormatter {
         if (!this.currentLine.length) {
             return;
         }
-
         this.lines.push(this.currentLine);
         this.currentLine = "";
     }
@@ -448,7 +448,7 @@ class SepticCnfgFormatter {
         return false;
     }
 
-    private getEditedFlag() {
+    private getEditedFlag(): boolean {
         if (this.editAddedFlag) {
             this.editAddedFlag = false;
             return true;
@@ -456,11 +456,33 @@ class SepticCnfgFormatter {
         return false;
     }
 
-    private setEditedFlag() {
+    private setEditedFlag(): void {
         this.editAddedFlag = true;
     }
 
-    private incrementAttrValueCounter() {
+    private addEmptyLineEndOfFile(): void {
+        this.addLine();
+        const edited = this.getEditedFlag();
+        if (!edited) {
+            const prevLine = this.lines[this.lines.length - 1];
+            if (prevLine.length) {
+                this.addEmptyLine();
+            }
+            return;
+        }
+
+        let pos = this.doc.positionAt(this.start);
+        let lineText = this.doc.getText({
+            start: Position.create(pos.line, 0),
+            end: pos,
+        });
+
+        if (lineText.length) {
+            this.lines.push("\n");
+        }
+    }
+
+    private incrementAttrValueCounter(): void {
         if (this.attrValueState.type === ValueTypes.stringList) {
             this.attrValueState.counter += 1;
         }
