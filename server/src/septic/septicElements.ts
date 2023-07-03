@@ -169,6 +169,10 @@ export class Attribute extends SepticBase {
                 return ValueTypes.default;
         }
     }
+
+    isKey(key: string) {
+        return key === this.key;
+    }
 }
 
 export class Identifier extends SepticBase {

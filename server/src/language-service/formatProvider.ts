@@ -17,7 +17,7 @@ const indentsObjectDeclaration = 2;
 const indentsAttributesDelimiter = 14;
 const startObjectName = 17;
 const spacesBetweenValues = 2;
-const spacesBetweenIntValues = 5;
+const spacesBetweenIntValues = 6;
 const indentsAttributeValuesStart = 17;
 const maxNumberAttrValuesPerLine = 5;
 
@@ -62,9 +62,14 @@ class SepticCnfgFormatter {
 
     private editAddedFlag = false;
 
+    private object: SepticObject | undefined;
+
+    private attr: Attribute | undefined;
+
     private attrValueState: AttrValueFormattingState = {
         type: ValueTypes.default,
         first: false,
+        second: true,
         counter: 0,
     };
 
@@ -102,6 +107,7 @@ class SepticCnfgFormatter {
     }
 
     private formatObject(object: SepticObject) {
+        this.setCurrentObject(object);
         let editedFlag = this.getEditedFlag();
         let existingWhitespaces = 0;
         if (editedFlag) {
@@ -155,6 +161,7 @@ class SepticCnfgFormatter {
     }
 
     private formatAttribute(attr: Attribute) {
+        this.setCurrentAttribute(attr);
         this.addLine();
         let editedFlag = this.getEditedFlag();
         let existingWhitespaces = 0;
@@ -201,7 +208,10 @@ class SepticCnfgFormatter {
                 return;
             }
 
-            if (this.attrValueState.counter >= maxNumberAttrValuesPerLine) {
+            if (
+                this.attrValueState.counter >=
+                this.getMaxNumberOfAttrValuesLine()
+            ) {
                 this.addLine();
                 this.resetAttrValueCounter();
             }
@@ -217,6 +227,10 @@ class SepticCnfgFormatter {
                     1,
                     spacesBetweenIntValues - attrValue.value.length
                 );
+                if (this.attrValueState.second) {
+                    this.attrValueState.second = false;
+                    spaces -= 1;
+                }
             }
             this.currentLine += " ".repeat(spaces) + attrValue.value;
             this.incrementAttrValueCounter();
@@ -225,6 +239,7 @@ class SepticCnfgFormatter {
 
         this.resetAttrValueCounter();
         this.attrValueState.first = false;
+        this.attrValueState.second = false;
 
         let pos = this.doc.positionAt(this.start);
         let lineText = this.doc.getText({
@@ -498,6 +513,7 @@ class SepticCnfgFormatter {
             this.attrValueState = {
                 type: ValueTypes.default,
                 first: true,
+                second: true,
                 counter: 0,
             };
             return;
@@ -505,13 +521,43 @@ class SepticCnfgFormatter {
         this.attrValueState = {
             type: type,
             first: true,
+            second: true,
             counter: 0,
         };
+    }
+
+    private setCurrentObject(object: SepticObject) {
+        this.object = object;
+    }
+
+    private setCurrentAttribute(attr: Attribute) {
+        this.attr = attr;
+    }
+
+    private getMaxNumberOfAttrValuesLine() {
+        if (!this.object?.isType("XvrMatrix") || !this.attr?.isKey("Xvrs")) {
+            return maxNumberAttrValuesPerLine;
+        }
+
+        let cols = this.object!.getAttribute("ColIds");
+        if (!cols) {
+            return maxNumberAttrValuesPerLine;
+        }
+        let numCols = cols.getValue();
+        if (!numCols) {
+            return maxNumberAttrValuesPerLine;
+        }
+        let numColsInt = parseInt(numCols);
+        if (isNaN(numColsInt)) {
+            return maxNumberAttrValuesPerLine;
+        }
+        return numColsInt;
     }
 }
 
 interface AttrValueFormattingState {
     type: ValueTypes;
     first: boolean;
+    second: boolean;
     counter: number;
 }
