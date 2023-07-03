@@ -207,23 +207,24 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             !this.isAtEnd() &&
             this.peek().type !== AlgTokenType.rightParen
         ) {
-            if (this.match(AlgTokenType.comma)) {
-                if (this.check(AlgTokenType.rightParen)) {
-                    this.error(
-                        `Missing argument in calc: ${identifierToken.content}`,
-                        {
-                            start: identifierToken.start,
-                            end: this.previous().end,
+            if (this.check(AlgTokenType.comma)) {
+                if (this.previous().type === AlgTokenType.comma) {
+                    args.push(
+                        new AlgLiteral({
+                            type: AlgTokenType.string,
                             content: "",
-                            type: AlgTokenType.error,
-                        }
+                            start: this.previous().end,
+                            end: this.peek().start,
+                        })
                     );
                 }
+                this.advance();
                 continue;
             }
-            args.push(this.comparison());
+            let arg = this.comparison();
+            args.push(arg);
         }
-        if (!this.match(AlgTokenType.rightParen)) {
+        if (!this.check(AlgTokenType.rightParen)) {
             this.error(
                 `Missing closing parenthesis for calc: ${identifierToken.content}`,
                 {
@@ -234,7 +235,18 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
                 }
             );
         }
-        return new AlgFunction(identifierToken, args);
+        if (this.previous().type === AlgTokenType.comma) {
+            args.push(
+                new AlgLiteral({
+                    type: AlgTokenType.string,
+                    content: "",
+                    start: this.previous().end,
+                    end: this.peek().start,
+                })
+            );
+        }
+        this.advance();
+        return new AlgFunction(identifierToken, this.previous(), args);
     }
 
     error(message: string, token: IToken<AlgTokenType>): never {
@@ -318,14 +330,12 @@ export class AlgFunction extends AlgExpr {
     public args: AlgExpr[];
     public identifier: string;
 
-    constructor(identifierToken: AlgToken, args: AlgExpr[]) {
-        let end;
-        if (args.length) {
-            end = args[args.length - 1].end + 1;
-        } else {
-            end = identifierToken.end + 2;
-        }
-        super(identifierToken.start, end);
+    constructor(
+        identifierToken: AlgToken,
+        rightParenToken: AlgToken,
+        args: AlgExpr[]
+    ) {
+        super(identifierToken.start, rightParenToken.end);
         this.identifier = identifierToken.content;
         this.args = args;
     }

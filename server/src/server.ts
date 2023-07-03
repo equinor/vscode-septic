@@ -149,6 +149,9 @@ connection.onInitialize((params: InitializeParams) => {
             },
             hoverProvider: true,
             documentFormattingProvider: true,
+            signatureHelpProvider: {
+                triggerCharacters: [",", "("],
+            },
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -405,6 +408,14 @@ connection.onDocumentFormatting(async (params) => {
         return [];
     }
     return langService.provideFormatting(doc);
+});
+
+connection.onSignatureHelp(async (params) => {
+    let doc = await documentProvider.getDocument(params.textDocument.uri);
+    if (!doc) {
+        return undefined;
+    }
+    return langService.provideSignatureHelp(params, doc);
 });
 
 // Make the text document manager listen on the connection

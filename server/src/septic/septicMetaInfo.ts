@@ -253,3 +253,35 @@ export interface SepticObjectsInfoInput {
     symbolKind?: string;
     refs?: SepticRefsInput;
 }
+
+export function formatCalcMarkdown(
+    calc: SepticCalcInfo,
+    short: boolean = false
+) {
+    let formattedParameters = calc.parameters.map((param) => {
+        return formatCalcParameter(param);
+    });
+    let markdown = [
+        `*${calc.signature}*`,
+        `${calc.briefDescription}`,
+        ...formattedParameters,
+        `*@return* - ${calc.retr}`,
+    ];
+
+    if (!short) {
+        markdown.push(calc.detailedDescription);
+    }
+
+    return markdown.join("\n\n");
+}
+
+export function formatCalcParameter(param: SepticCalcParameterInfo) {
+    let formattedParam = `*@param[${param.direction}]: ${param.name}* - ${param.description}`;
+    if (param.type.length) {
+        formattedParam += ` - (${param.type})`;
+    }
+    if (param.arity.length) {
+        formattedParam += ` - ${param.arity}`;
+    }
+    return formattedParam;
+}

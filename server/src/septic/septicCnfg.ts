@@ -86,6 +86,23 @@ export class SepticCnfg implements SepticReferenceProvider {
         return false;
     }
 
+    public getAlgFromOffset(offset: number): Attribute | undefined {
+        const obj = this.getObjectFromOffset(offset);
+        if (!obj) {
+            return undefined;
+        }
+        const alg = obj.getAttribute("Alg");
+        let algValue = alg?.getAttrValue();
+        if (!algValue) {
+            return undefined;
+        }
+
+        if (offset >= algValue.start && offset <= algValue.end) {
+            return alg;
+        }
+        return undefined;
+    }
+
     public getObjectFromOffset(offset: number): SepticObject | undefined {
         return this.objects.find((obj) => {
             return offset >= obj.start && offset <= obj.end;

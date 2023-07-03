@@ -15,11 +15,11 @@ import {
     SepticMetaInfoProvider,
     SepticObject,
     SepticReferenceProvider,
+    formatCalcMarkdown,
 } from "../septic";
 
 export class CompletionProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
-
     constructor(cnfgProvider: ISepticConfigProvider) {
         this.cnfgProvider = cnfgProvider;
     }
@@ -61,10 +61,12 @@ export class CompletionProvider {
         let calcs = metaInfoProvider.getCalcs();
         for (let calc of calcs) {
             compItems.push({
-                label: calc.name + "()",
+                label: calc.name,
                 kind: CompletionItemKind.Function,
                 detail: "SepticCalc",
                 data: calc,
+                documentation: formatCalcMarkdown(calc, true),
+                commitCharacters: ["("],
             });
         }
         return compItems;
@@ -81,18 +83,23 @@ function xvrToCompletionItem(obj: SepticObject): CompletionItem {
 }
 
 function getRelevantXvrs(
-    obj: SepticObject,
+    curObj: SepticObject,
     xvrs: SepticObject[]
 ): SepticObject[] {
-    if (obj.isXvr()) {
-        return xvrs.filter((xvr) => {
-            return xvr.isType("Sopc" + obj.type);
-        });
-    } else if (obj.isSopcXvr()) {
-        return xvrs.filter((xvr) => xvr.isType(obj.type.slice(4)));
-    } else if (obj.isType("CalcPvr")) {
-        return xvrs.filter((xvr) => xvr.isXvr());
+    let regex;
+    if (["Mvr", "Tvr", "Evr", "Cvr", "Dvr"].includes(curObj.type)) {
+        regex = `^Sopc${curObj.type.charAt(0)}vr`;
+    } else if (
+        ["SopcMvr", "SopcTvr", "SopcCvr", "SopcDvr", "SopcEvr"].includes(
+            curObj.type
+        )
+    ) {
+        regex = "^" + curObj.type.slice(4);
+    } else if (curObj.type === "CalcPvr") {
+        regex = "^[MTECD]vr";
     } else {
         return [];
     }
+    let re = new RegExp(regex);
+    return xvrs.filter((xvr) => re.test(xvr.type));
 }

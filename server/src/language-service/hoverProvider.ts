@@ -11,6 +11,7 @@ import {
     SepticObject,
     SepticReferenceProvider,
     defaultObjectSymbolKind,
+    formatCalcMarkdown,
     parseAlg,
 } from "../septic";
 
@@ -104,12 +105,21 @@ function getCalcHover(cnfg: SepticCnfg, offset: number, doc: ITextDocument) {
     visitor.visit(alg);
 
     let startAlg = algAttr.values[0].start + 1;
+    let currentCalc;
     for (let calc of visitor.calcs) {
         let startCalc = startAlg + calc.start;
         let endCalc = startAlg + calc.end;
         if (offset <= endCalc && offset >= startCalc) {
-            return getCalc(calc.identifier, startCalc, endCalc, doc);
+            currentCalc = calc;
         }
+    }
+    if (currentCalc) {
+        return getCalc(
+            currentCalc.identifier,
+            startAlg + currentCalc.start,
+            startAlg + currentCalc.end,
+            doc
+        );
     }
     return undefined;
 }
@@ -127,7 +137,7 @@ function getCalc(
     }
     return {
         contents: {
-            value: formatCalcDocumentation(calcInfo),
+            value: formatCalcMarkdown(calcInfo),
             kind: MarkupKind.Markdown,
         },
         range: {
@@ -135,31 +145,6 @@ function getCalc(
             end: doc.positionAt(end),
         },
     };
-}
-
-function formatCalcDocumentation(calcInfo: SepticCalcInfo) {
-    let formattedParameters = calcInfo.parameters.map((param) => {
-        return formatCalcParameter(param);
-    });
-    let markdown = [
-        `*${calcInfo.signature}*`,
-        `${calcInfo.briefDescription}`,
-        ...formattedParameters,
-        `*@return* - ${calcInfo.retr}`,
-    ];
-
-    return markdown.join("\n\n");
-}
-
-function formatCalcParameter(param: SepticCalcParameterInfo) {
-    let formattedParam = `*@param[${param.direction}]: ${param.name}* - ${param.description}`;
-    if (param.type.length) {
-        formattedParam += ` - (${param.type})`;
-    }
-    if (param.arity.length) {
-        formattedParam += ` - ${param.arity}`;
-    }
-    return formattedParam;
 }
 
 function getTextXvr(obj: SepticObject) {
