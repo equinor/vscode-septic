@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.1](https://github.com/equinor/vscode-septic/compare/v1.7.0...v1.7.1) (2023-07-03)
+
+
+### 🐛 Bug Fixes
+
+* missing diagnostics for xvrmatrix ([#232](https://github.com/equinor/vscode-septic/issues/232)) ([5a36142](https://github.com/equinor/vscode-septic/commit/5a36142991142fc96ea0bfef60660b278861c961))
+* update formatting of lists ([#230](https://github.com/equinor/vscode-septic/issues/230)) ([3fc5880](https://github.com/equinor/vscode-septic/commit/3fc58803d846c6119d3d0364c118e17bd00f24c0))
+
 ## [1.7.0](https://github.com/equinor/vscode-septic/compare/v1.6.2...v1.7.0) (2023-06-30)
 
 
