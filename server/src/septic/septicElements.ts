@@ -149,6 +149,26 @@ export class Attribute extends SepticBase {
     getValues(): string[] {
         return this.values.map((val) => val.getValue());
     }
+
+    getType(): ValueTypes | undefined {
+        if (!this.values.length) {
+            return undefined;
+        }
+
+        const list = this.values.length > 1;
+        const type: SepticTokenType = list
+            ? this.values[1].type
+            : this.values[0].type;
+
+        switch (type) {
+            case SepticTokenType.numeric:
+                return list ? ValueTypes.numericList : ValueTypes.numeric;
+            case SepticTokenType.string:
+                return list ? ValueTypes.stringList : ValueTypes.string;
+            default:
+                return ValueTypes.default;
+        }
+    }
 }
 
 export class Identifier extends SepticBase {
@@ -189,4 +209,12 @@ export class AttributeValue extends SepticBase {
         }
         return this.value;
     }
+}
+
+export enum ValueTypes {
+    string = 1,
+    numeric = 3,
+    stringList = 4,
+    numericList = 5,
+    default = 6,
 }

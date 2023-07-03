@@ -10,12 +10,14 @@ import {
     SepticComment,
     SepticObject,
     SepticTokenType,
+    ValueTypes,
 } from "../septic";
 
 const indentsObjectDeclaration = 2;
 const indentsAttributesDelimiter = 14;
 const startObjectName = 17;
-const indentsToValueAttr = 2;
+const spacesBetweenValues = 2;
+const spacesBetweenIntValues = 5;
 const indentsAttributeValuesStart = 17;
 const maxNumberAttrValuesPerLine = 5;
 
@@ -60,7 +62,11 @@ class SepticCnfgFormatter {
 
     private editAddedFlag = false;
 
-    private attrValueCounter = 0;
+    private attrValueState: AttrValueFormattingState = {
+        type: ValueTypes.default,
+        first: false,
+        counter: 0,
+    };
 
     constructor(cnfg: SepticCnfg, doc: ITextDocument) {
         cnfg.objects.forEach((obj) => {
@@ -173,29 +179,51 @@ class SepticCnfgFormatter {
             indentsAttributesDelimiter - attr.key.length - existingWhitespaces,
             0
         );
-        let attrDefFormatted =
-            " ".repeat(indentsStart) +
-            attr.key +
-            "=" +
-            " ".repeat(indentsToValueAttr - 1);
+        let attrDefFormatted = " ".repeat(indentsStart) + attr.key + "=";
         this.currentLine += attrDefFormatted;
-        this.attrValueCounter = 0;
+        this.setAttrValueFormattingState(attr);
     }
 
     private formatAttrValue(attrValue: AttributeValue) {
         let editedFlag = this.getEditedFlag();
         if (!editedFlag) {
-            if (this.attrValueCounter >= maxNumberAttrValuesPerLine) {
+            if (this.attrValueState.first) {
+                this.currentLine +=
+                    " ".repeat(
+                        indentsAttributeValuesStart -
+                            (indentsAttributesDelimiter + 1)
+                    ) + attrValue.value;
+                this.attrValueState.first = false;
+                if (this.attrValueState.type === ValueTypes.stringList) {
+                    this.addLine();
+                }
+                return;
+            }
+
+            if (this.attrValueState.counter >= maxNumberAttrValuesPerLine) {
                 this.addLine();
-                this.attrValueCounter = 0;
+                this.resetAttrValueCounter();
             }
             let spaces = !this.currentLine.length
                 ? indentsAttributeValuesStart
-                : 1;
+                : spacesBetweenValues;
+
+            if (
+                this.attrValueState.type === ValueTypes.numericList &&
+                spaces === spacesBetweenValues
+            ) {
+                spaces = Math.max(
+                    1,
+                    spacesBetweenIntValues - attrValue.value.length
+                );
+            }
             this.currentLine += " ".repeat(spaces) + attrValue.value;
-            this.attrValueCounter += 1;
+            this.incrementAttrValueCounter();
             return;
         }
+
+        this.resetAttrValueCounter();
+        this.attrValueState.first = false;
 
         let pos = this.doc.positionAt(this.start);
         let lineText = this.doc.getText({
@@ -216,7 +244,7 @@ class SepticCnfgFormatter {
         this.currentLine +=
             " ".repeat(indentsAttributeValuesStart - existingWhitespaces) +
             attrValue.value;
-        this.attrValueCounter += 1;
+        this.incrementAttrValueCounter();
     }
 
     private formatComment(comment: SepticComment) {
@@ -371,7 +399,6 @@ class SepticCnfgFormatter {
         this.lines = [];
         this.edits.push(edit);
         this.setEditedFlag();
-        this.attrValueCounter = 0;
         return;
     }
 
@@ -432,4 +459,37 @@ class SepticCnfgFormatter {
     private setEditedFlag() {
         this.editAddedFlag = true;
     }
+
+    private incrementAttrValueCounter() {
+        if (this.attrValueState.type === ValueTypes.stringList) {
+            this.attrValueState.counter += 1;
+        }
+    }
+
+    private resetAttrValueCounter() {
+        this.attrValueState.counter = 0;
+    }
+
+    private setAttrValueFormattingState(attr: Attribute) {
+        const type = attr.getType();
+        if (!type) {
+            this.attrValueState = {
+                type: ValueTypes.default,
+                first: true,
+                counter: 0,
+            };
+            return;
+        }
+        this.attrValueState = {
+            type: type,
+            first: true,
+            counter: 0,
+        };
+    }
+}
+
+interface AttrValueFormattingState {
+    type: ValueTypes;
+    first: boolean;
+    counter: number;
 }
