@@ -1,5 +1,3 @@
-%YAML 1.2
----
 - name: Appl
       level: 1
     - name: ApplPlot
