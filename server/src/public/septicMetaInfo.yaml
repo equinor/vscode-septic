@@ -102,6 +102,10 @@ septicConfig:
       symbolKind: Array
       refs:
         attrList: [Mvrs]
+    - name: NoisProc
+    - name: NoisXvr
+      refs:
+        identifier: True
     - name: OPCProcPlot
     - name: PriorityTable
       symbolKind: Array
