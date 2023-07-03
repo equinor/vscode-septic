@@ -191,6 +191,8 @@ septicConfig:
       refs:
         identifier: True
     - name: XvrMatrix
+      refs:
+        attrList: [Xvrs]
     - name: XvrPlot
       level: 2
       refs:
