@@ -82,7 +82,10 @@ function paramMetaInfoToParameterInformation(
 ): ParameterInformation {
     return {
         label: paramInfo.name,
-        documentation: formatCalcParameter(paramInfo),
+        documentation: {
+            value: formatCalcParameter(paramInfo),
+            kind: "markdown",
+        },
     };
 }
 
