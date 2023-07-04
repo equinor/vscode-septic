@@ -76,7 +76,7 @@ def parseCalcDoxygenDoc(calc: str) -> Optional[dict]:
 
 def parseParameter(param: str) -> Optional[dict]:
     paramMatch = re.search(
-        r"\\param\[([\w]+)\]\s+([\w]+)\s+([\w\s.,-\/]+)(?:\(([\w]+)\))?(?:\s*\[([\w\?\+]+)\])?",
+        r"\\param\[([\w]+)\]\s+([\w]+)\s+([\w\s.,-\/]+)(?:\(([\w]+)\))?(?:\s*\[([\w\+]+)\])?",
         param,
     )
     direction = paramMatch.group(1) if paramMatch else None
@@ -85,7 +85,7 @@ def parseParameter(param: str) -> Optional[dict]:
         return None
     description = paramMatch.group(3).strip() if paramMatch.group(3) else ""
     type = paramMatch.group(4) if paramMatch.group(4) else "Value"
-    arity = paramMatch.group(5) if paramMatch.group(5) else ""
+    arity = paramMatch.group(5) if paramMatch.group(5) else "1"
     return Parameter(
         name=name, description=description, direction=direction, type=type, arity=arity
     )

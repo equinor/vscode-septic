@@ -1,4 +1,4 @@
-# Commit: b2d6626
+# Commit: 4f2803c
 - briefDescription: "Function calculates y by linear interpolation of the X,Y pairs.\r\
     \n  Assumes that the sequence of X1, X2, ..., XN values are monotonically increasing.\r\
     \n  An input value x < X1 will give y = Y1, and x > XN gives y = YN."
@@ -8,18 +8,18 @@
     \ (x - X(n-1))*(Y(n)-Y(n-1))/(X(n)-X(n-1)) when\r\n  X(n-1)<= x <= X(n)"
   name: intpoltype1
   parameters:
-  - arity: ''
+  - arity: '1'
     description: Actual x-value
     direction: in
     name: x
     type: Value
   - arity: even
-    description: Values defining the curve to be interpolated. Values comes in X,Y-pairs.
+    description: Values defining the curve to be interpolated. Values comes in X,Y-pairs
     direction: in
-    name: nn
+    name: xy
     type: Value
   retr: Interpolated value
-  signature: intpoltype1(x,x1,y1,x2,y2,...,xn,yn)
+  signature: intpoltype1(x, ...xy)
 - briefDescription: Evaluates the logical condition and returns the coresponding evaluated
     expression
   detailedDescription: "V = (condition) ? exprTrue : exprFalse\r\n  Q = quality of\
@@ -27,28 +27,28 @@
     \ that both exprTrue and exprFalse are always evaluated."
   name: if
   parameters:
-  - arity: ''
+  - arity: '1'
     description: Logical condition to test
     direction: in
     name: condition
     type: Value
-  - arity: ''
+  - arity: '1'
     description: The evaluated expression returned when condition is true
     direction: inout
     name: exprTrue
     type: Value
-  - arity: ''
+  - arity: '1'
     description: The evaluated expression returned when condition is false
     direction: inout
     name: exprFalse
     type: Value
-  - arity: ''
+  - arity: optional
     description: 1/0, debug of calc ERROR or first param BAD to out-file if 1
     direction: in
     name: debug
     type: Value
   retr: Evaluated expr given by the logical condition
-  signature: if(condition,exprTrue,exprFalse,debug?)
+  signature: if(condition, exprTrue, exprFalse, debug?)
 - briefDescription: "Purpose: Perform checks for validity of SAMPLETVR, high limit,\
     \ low limit etc\r\n  Logging: The calc reports accepted and rejected sampled to\
     \ the file 'labupdates.log'\r\n  Also, it searches for an Xvr for reporting of\
@@ -68,17 +68,17 @@
     \ to change gradually"
   name: labupdt
   parameters:
-  - arity: ''
+  - arity: '1'
     description: Tvr to perform validation of high/low limit etc.
     direction: in
     name: sampletvr
     type: Tvr
-  - arity: '?'
+  - arity: optional
     description: Description of model
     direction: in
     name: model
-    type: DataTypeModel
-  - arity: '?'
+    type: Value
+  - arity: optional
     description: Acceptable standard deviation for samples
     direction: in
     name: stddev
@@ -91,7 +91,7 @@
   name: and
   parameters:
   - arity: +
-    description: The logical elements.
+    description: The logical elements
     direction: in
     name: x
     type: Value
