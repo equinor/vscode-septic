@@ -69,6 +69,18 @@ export class SepticCnfg implements SepticReferenceProvider {
         return this.objects.filter((obj) => obj.isXvr() || obj.isSopcXvr());
     }
 
+    public getObjectsByIdentifier(identifier: string): SepticObject[] {
+        let identifierSpacesRemoved = removeSpaces(identifier);
+        return this.objects.filter((obj) => {
+            if (!obj.identifier) {
+                return false;
+            }
+            return (
+                removeSpaces(obj.identifier.name) === identifierSpacesRemoved
+            );
+        });
+    }
+
     public offsetInAlg(offset: number): boolean {
         const obj = this.getObjectFromOffset(offset);
         if (!obj) {
