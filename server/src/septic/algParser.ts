@@ -246,7 +246,7 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             );
         }
         this.advance();
-        return new AlgFunction(identifierToken, this.previous(), args);
+        return new AlgCalc(identifierToken, this.previous(), args);
     }
 
     error(message: string, token: IToken<AlgTokenType>): never {
@@ -326,21 +326,21 @@ export class AlgLiteral extends AlgExpr {
     }
 }
 
-export class AlgFunction extends AlgExpr {
-    public args: AlgExpr[];
+export class AlgCalc extends AlgExpr {
+    public params: AlgExpr[];
     public identifier: string;
 
     constructor(
         identifierToken: AlgToken,
         rightParenToken: AlgToken,
-        args: AlgExpr[]
+        params: AlgExpr[]
     ) {
         super(identifierToken.start, rightParenToken.end);
         this.identifier = identifierToken.content;
-        this.args = args;
+        this.params = params;
     }
     accept(visitor: IAlgVisitor): any {
-        return visitor.visitFunction(this);
+        return visitor.visitCalc(this);
     }
 }
 
@@ -360,12 +360,12 @@ export interface IAlgVisitor {
     visitBinary(expr: AlgBinary): void;
     visitLiteral(expr: AlgLiteral): void;
     visitGrouping(expr: AlgGrouping): void;
-    visitFunction(expr: AlgFunction): void;
+    visitCalc(expr: AlgCalc): void;
     visitUnary(expr: AlgUnary): void;
 }
 
 export class AlgVisitor implements IAlgVisitor {
-    calcs: AlgFunction[] = [];
+    calcs: AlgCalc[] = [];
     variables: AlgLiteral[] = [];
 
     visit(expr: AlgExpr) {
@@ -387,9 +387,9 @@ export class AlgVisitor implements IAlgVisitor {
         expr.expr.accept(this);
     }
 
-    visitFunction(expr: AlgFunction): void {
+    visitCalc(expr: AlgCalc): void {
         this.calcs.push(expr);
-        expr.args.forEach((arg) => {
+        expr.params.forEach((arg) => {
             arg.accept(this);
         });
     }

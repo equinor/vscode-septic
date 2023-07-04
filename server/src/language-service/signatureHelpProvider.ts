@@ -7,7 +7,7 @@ import { SepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
     AlgExpr,
-    AlgFunction,
+    AlgCalc,
     AlgVisitor,
     SepticCalcInfo,
     SepticCalcParameterInfo,
@@ -44,7 +44,7 @@ export class SignatureHelpProvider {
         let algVisitor = new AlgVisitor();
         algVisitor.visit(parsedAlg);
         let offsetAlg = offset - (alg.getAttrValue()!.start + 1);
-        let currentCalc: AlgFunction | undefined = undefined;
+        let currentCalc: AlgCalc | undefined = undefined;
         for (let calc of algVisitor.calcs) {
             let start = calc.start + calc.identifier.length + 1;
             if (offsetAlg >= start && offsetAlg <= calc.end) {
@@ -89,9 +89,9 @@ function paramMetaInfoToParameterInformation(
     };
 }
 
-function getIndexParamCalc(calc: AlgFunction, offset: number) {
+function getIndexParamCalc(calc: AlgCalc, offset: number) {
     let index = 0;
-    for (let param of calc.args) {
+    for (let param of calc.params) {
         if (param.end < offset) {
             index += 1;
         } else {
@@ -117,10 +117,7 @@ function indexToParamIndexDocumentation(
                 return indexParam;
             case "+":
                 return indexParam;
-            case "?":
-                indexParam += 1;
-                break;
-            case "":
+            case "optional":
                 indexParam += 1;
                 break;
             default:

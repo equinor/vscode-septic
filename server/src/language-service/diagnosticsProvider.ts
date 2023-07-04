@@ -19,7 +19,7 @@ import {
     Attribute,
     SepticObject,
     defaultRefValidationFunction,
-    AlgFunction,
+    AlgCalc,
     AttributeValue,
     SepticCalcParameterInfo,
     AlgExpr,
@@ -274,7 +274,7 @@ export function algDiagnostic(
 }
 
 export function calcDiagnostics(
-    calc: AlgFunction,
+    calc: AlgCalc,
     doc: ITextDocument,
     cnfg: SepticCnfg,
     algAttrValue: AttributeValue
@@ -298,20 +298,20 @@ export function calcDiagnostics(
     let indexCalcParams = 0;
     let indexParamInfo = 0;
     for (let param of calcMetaInfo.parameters) {
-        if (indexCalcParams >= calc.args.length) {
+        if (indexCalcParams >= calc.params.length) {
             break;
         }
 
         indexParamInfo += arityParamToNum(param);
         while (
             indexCalcParams < indexParamInfo &&
-            indexCalcParams < calc.args.length
+            indexCalcParams < calc.params.length
         ) {
             if (
                 param.arity !== "?" &&
-                calc.args[indexCalcParams] instanceof AlgLiteral
+                calc.params[indexCalcParams] instanceof AlgLiteral
             ) {
-                let paramCalc = calc.args[indexCalcParams] as AlgLiteral;
+                let paramCalc = calc.params[indexCalcParams] as AlgLiteral;
                 if (!paramCalc.value.length) {
                     diagnostics.push(
                         createDiagnostic(
@@ -320,12 +320,12 @@ export function calcDiagnostics(
                                 start: doc.positionAt(
                                     algAttrValue!.start +
                                         1 +
-                                        calc.args[indexCalcParams].start
+                                        calc.params[indexCalcParams].start
                                 ),
                                 end: doc.positionAt(
                                     algAttrValue!.start +
                                         1 +
-                                        calc.args[indexCalcParams].end
+                                        calc.params[indexCalcParams].end
                                 ),
                             },
                             `Missing value for non-optional parameter`,
@@ -340,7 +340,7 @@ export function calcDiagnostics(
             }
 
             if (
-                checkParamType(calc.args[indexCalcParams], [param.type], cnfg)
+                checkParamType(calc.params[indexCalcParams], [param.type], cnfg)
             ) {
                 indexCalcParams += 1;
                 continue;
@@ -352,12 +352,12 @@ export function calcDiagnostics(
                         start: doc.positionAt(
                             algAttrValue!.start +
                                 1 +
-                                calc.args[indexCalcParams].start
+                                calc.params[indexCalcParams].start
                         ),
                         end: doc.positionAt(
                             algAttrValue!.start +
                                 1 +
-                                calc.args[indexCalcParams].end
+                                calc.params[indexCalcParams].end
                         ),
                     },
                     `Wrong data type for parameter. Expected data type: ${param.type}`,
@@ -370,7 +370,7 @@ export function calcDiagnostics(
 
     let numberParamsConditions: NumberParamConditions[] =
         getNumberOfParamsConditions(calcMetaInfo);
-    let numberParamsCalc = calc.args.length;
+    let numberParamsCalc = calc.params.length;
     numberParamsConditions.forEach((cond) => {
         let condEval = cond(numberParamsCalc);
         if (!condEval.condition) {
@@ -416,14 +416,10 @@ function getNumberOfParamsConditions(
                 parity = false;
                 minNumber += 1;
                 break;
-            case "":
-                minNumber += 1;
-                maxNumber += 1;
-                break;
-            case "?":
+            case "optional":
                 let restIsOptional = true;
                 for (let j = i + 1; j < calcInfo.parameters.length; j++) {
-                    if (calcInfo.parameters[j].arity !== "?") {
+                    if (calcInfo.parameters[j].arity !== "optional") {
                         restIsOptional = false;
                         break;
                     }
@@ -510,8 +506,7 @@ function arityParamToNum(paramInfo: SepticCalcParameterInfo): number {
         case "odd":
         case "+":
             return 100000;
-        case "":
-        case "?":
+        case "optional":
             return 1;
         default:
             return parseInt(paramInfo.arity);
