@@ -2,15 +2,11 @@ import { Hover, HoverParams, MarkupKind } from "vscode-languageserver";
 import { SepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
-    AlgParser,
     AlgVisitor,
-    SepticCalcInfo,
-    SepticCalcParameterInfo,
     SepticCnfg,
     SepticMetaInfoProvider,
     SepticObject,
     SepticReferenceProvider,
-    defaultObjectSymbolKind,
     formatCalcMarkdown,
     parseAlg,
 } from "../septic";
@@ -33,47 +29,66 @@ export class HoverProvider {
         }
         const offset = doc.offsetAt(params.position);
         let calcHover = getCalcHover(cnfg, offset, doc);
-        if (calcHover) {
+        let refHover = getReferenceHover(cnfg, offset, doc, refProvider);
+
+        if (!calcHover) {
+            return refHover;
+        }
+        if (!refHover) {
             return calcHover;
         }
-        const ref = cnfg.getXvrRefFromOffset(offset);
-        if (!ref) {
-            return undefined;
-        }
-        const allRefs = refProvider.getXvrRefs(ref.identifier);
-        if (!allRefs) {
-            return undefined;
-        }
-        const xvr = allRefs.filter((value) => {
-            return value.obj?.isXvr();
-        });
-        const sopcXvr = allRefs.filter((value) => {
-            return value.obj?.isSopcXvr();
-        });
 
-        if (xvr.length) {
-            let text = getTextXvr(xvr[0].obj!);
-            return {
-                contents: text,
-                range: {
-                    start: doc.positionAt(ref.location.start),
-                    end: doc.positionAt(ref.location.end),
-                },
-            };
+        if (
+            calcHover.range!.start.character < refHover.range!.start.character
+        ) {
+            return refHover;
+        } else {
+            return calcHover;
         }
+    }
+}
 
-        if (sopcXvr.length) {
-            let text = getTextXvr(sopcXvr[0].obj!);
-            return {
-                contents: text,
-                range: {
-                    start: doc.positionAt(ref.location.start),
-                    end: doc.positionAt(ref.location.end),
-                },
-            };
-        }
-
+function getReferenceHover(
+    cnfg: SepticCnfg,
+    offset: number,
+    doc: ITextDocument,
+    refProvider: SepticReferenceProvider
+): Hover | undefined {
+    const ref = cnfg.getXvrRefFromOffset(offset);
+    if (!ref) {
         return undefined;
+    }
+    const allRefs = refProvider.getXvrRefs(ref.identifier);
+    if (!allRefs) {
+        return undefined;
+    }
+    const xvr = allRefs.filter((value) => {
+        return value.obj?.isXvr();
+    });
+    const sopcXvr = allRefs.filter((value) => {
+        return value.obj?.isSopcXvr();
+    });
+
+    if (xvr.length) {
+        let text = getTextXvr(xvr[0].obj!);
+        return {
+            contents: text,
+            range: {
+                start: doc.positionAt(ref.location.start),
+                end: doc.positionAt(ref.location.end),
+            },
+        };
+    }
+
+    if (sopcXvr.length) {
+        let text = getTextXvr(sopcXvr[0].obj!);
+        return {
+            contents: text,
+            range: {
+                start: doc.positionAt(ref.location.start),
+                end: doc.positionAt(ref.location.end),
+            },
+        };
     }
 }
 

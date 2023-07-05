@@ -65,7 +65,10 @@ export class CompletionProvider {
                 kind: CompletionItemKind.Function,
                 detail: "SepticCalc",
                 data: calc,
-                documentation: formatCalcMarkdown(calc, true),
+                documentation: {
+                    value: formatCalcMarkdown(calc, true),
+                    kind: "markdown",
+                },
                 commitCharacters: ["("],
             });
         }

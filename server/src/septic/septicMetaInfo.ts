@@ -161,7 +161,7 @@ export class SepticMetaInfoProvider {
                 detailedDescription:
                     calc.detailedDescription ?? "Detailed description",
                 signature: calc.signature ?? calc.name + "()",
-                retr: calc.retr ?? "Value",
+                retr: calc.retr ?? "",
                 parameters: calc.parameters ?? [],
             };
         });
@@ -262,14 +262,20 @@ export function formatCalcMarkdown(
         return formatCalcParameter(param);
     });
     let markdown = [
-        `*${calc.signature}*`,
-        `${calc.briefDescription}`,
-        ...formattedParameters,
-        `*@return* - ${calc.retr}`,
+        "`" + `${calc.signature}` + "`",
+        `${calc.briefDescription.replace(/\r\n/g, "\n")}`,
     ];
 
+    if (formattedParameters.length) {
+        markdown.push(
+            "\n```\n" + formattedParameters[0],
+            ...formattedParameters.slice(1),
+            `@return - ${calc.retr}` + "\n```\n"
+        );
+    }
+
     if (!short) {
-        markdown.push(calc.detailedDescription);
+        markdown.push(calc.detailedDescription.replace(/\r\n/g, "\n"));
     }
 
     return markdown.join("\n\n");
