@@ -38,7 +38,7 @@ def resolve(name: str, dict: dict):
 
 
 def updateObjects():
-    output_path = "./public/objectsTest.yaml"
+    output_path = "./public/objectsDoc.yaml"
     branch = "object_documentation"
     files = getObjectFiles(branch)
     objects: List[SepticObject] = []
