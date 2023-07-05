@@ -35,9 +35,24 @@ def getCommitId(branch: str):
 
 
 def getCalcFile(branch: str):
+    path = "src/Calc.cpp"
+    return getFile(branch, path)
+
+
+def getObjectFiles(branch: str):
+    paths = ["src/Xvrs.cpp"]
+    files = []
+    for path in paths:
+        try:
+            files.append(getFile(branch, path))
+        except:
+            continue
+    return files
+
+
+def getFile(branch: str, path: str):
     owner = "equinor"
     repo = "SEPTIC"
-    path = "src/Calc.cpp"
     endpoint = f"/repos/{owner}/{repo}/contents/{path}?ref={branch}"
     response = sendRequestGithub(endpoint)
     return decodeBas64(response["content"])

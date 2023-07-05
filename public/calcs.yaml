@@ -1,25 +1,16 @@
-# Commit: 4f2803c
-- briefDescription: "Function calculates y by linear interpolation of the X,Y pairs.\r\
-    \n  Assumes that the sequence of X1, X2, ..., XN values are monotonically increasing.\r\
-    \n  An input value x < X1 will give y = Y1, and x > XN gives y = YN."
-  detailedDescription: "Output value and quality:\r\n    - Q = GOOD only if ALL arguments\
-    \ are GOOD and an odd number (5,7,9 ...) of parameters are specified, else Q =\
-    \ BAD\r\n    - V = 0 when Q = BAD, Y1 when x <= X1, YN when x >= XN, Y(n-1) +\
-    \ (x - X(n-1))*(Y(n)-Y(n-1))/(X(n)-X(n-1)) when\r\n  X(n-1)<= x <= X(n)"
-  name: intpoltype1
+# Commit: 3fe935a
+- briefDescription: Computes the logical and operation for all the provided elements
+  detailedDescription: "If n>0:\r\n    V = and(a,b,..)\r\n    Q = GOOD only if ALL\
+    \ arguments are GOOD, else Q = BAD\r\n\r\n  If n=0:\r\n    V = 0\r\n    Q = BAD"
+  name: and
   parameters:
-  - arity: '1'
-    description: Actual x-value
+  - arity: +
+    description: The logical elements
     direction: in
     name: x
     type: Value
-  - arity: even
-    description: Values defining the curve to be interpolated. Values comes in X,Y-pairs
-    direction: in
-    name: xy
-    type: Value
-  retr: Interpolated value
-  signature: intpoltype1(x, ...xy)
+  retr: The logical and of all given elements
+  signature: and(...x)
 - briefDescription: Evaluates the logical condition and returns the coresponding evaluated
     expression
   detailedDescription: "V = (condition) ? exprTrue : exprFalse\r\n  Q = quality of\
@@ -49,22 +40,44 @@
     type: Value
   retr: Evaluated expr given by the logical condition
   signature: if(condition, exprTrue, exprFalse, debug?)
-- briefDescription: "Purpose: Perform checks for validity of SAMPLETVR, high limit,\
-    \ low limit etc\r\n  Logging: The calc reports accepted and rejected sampled to\
-    \ the file 'labupdates.log'\r\n  Also, it searches for an Xvr for reporting of\
-    \ rejected samples. First it searches\r\n  for Xvr with name of CalcModl+\"_LABREJECT\"\
-    , if not found it searches for Xvr named \"LABREJECT\".\r\n  If any of these are\
-    \ found, this Xvr is incremented for each rejected sample. The Xvr value is\r\n\
-    \  reset to 0 when it reached 100, ie loops on 100.  This can be used for alarm/info.\r\
-    \n\r\n  To use stddev without model, write \"labupdt(SAMPLETVR, ,stddev)\"\r\n\
-    \  In steps with no new sample (or sample is rejected), V = 0, Q = GOOD"
-  detailedDescription: "Output value and quality:\r\n  If stddev is configured, the\
-    \ stddev value on sampletime is checked, and the sample is rejected if stddev\
-    \ > SdevMax.\r\n\r\n  Without model: The SAMPLETVR value is checked for GOOD Status,\
-    \ High and Low limit\r\n  If accepted, V = SAMPLETVR, Q = GOOD\r\n\r\n  With model:\
-    \ Additional checks for model status, sample within historical buffer and difference\r\
-    \n  If accepted, V = (sampletvr - modelvalue)*Fraction/RampTime, Q = GOOD\r\n\
-    \  If RampTime>1, V holds the same value in RampTime steps, enabling another calc\
+- briefDescription: "Function calculates y by linear interpolation of the X,Y pairs.\r\
+    \n  Assumes that the sequence of X1, X2, ..., XN values are monotonically increasing.\r\
+    \n  An input value x < X1 will give y = Y1, and x > XN gives y = YN."
+  detailedDescription: "Output value and quality:\r\n    - Q = GOOD only if ALL arguments\
+    \ are GOOD and an odd number (5,7,9 ...) of parameters are specified, else Q =\
+    \ BAD\r\n    - V = 0 when Q = BAD, Y1 when x <= X1, YN when x >= XN, Y(n-1) +\
+    \ (x - X(n-1))*(Y(n)-Y(n-1))/(X(n)-X(n-1)) when\r\n  X(n-1)<= x <= X(n)"
+  name: intpoltype1
+  parameters:
+  - arity: '1'
+    description: Actual x-value
+    direction: in
+    name: x
+    type: Value
+  - arity: even
+    description: Values defining the curve to be interpolated. Values comes in X,Y-pairs
+    direction: in
+    name: xy
+    type: Value
+  retr: Interpolated value
+  signature: intpoltype1(x, ...xy)
+- briefDescription: "Perform checks for validity of SAMPLETVR, high limit, low limit\
+    \ etc\r\n  Logging: The calc reports accepted and rejected sampled to the file\
+    \ 'labupdates.log'\r\n\r\n  To use stddev without model, write \"labupdt(SAMPLETVR,\
+    \ ,stddev)\""
+  detailedDescription: "It searches for an Xvr for reporting of rejected samples.\
+    \ First it searches\r\n  for Xvr with name of CalcModl+\"_LABREJECT\", if not\
+    \ found it searches for Xvr named \"LABREJECT\".\r\n  If any of these are found,\
+    \ this Xvr is incremented for each rejected sample. The Xvr value is\r\n  reset\
+    \ to 0 when it reached 100, ie loops on 100.  This can be used for alarm/info.\r\
+    \n\r\n  In steps with no new sample (or sample is rejected), V = 0, Q = GOOD\r\
+    \n\r\n  Output value and quality:\r\n  If stddev is configured, the stddev value\
+    \ on sampletime is checked, and the sample is rejected if stddev > SdevMax.\r\n\
+    \r\n  Without model: The SAMPLETVR value is checked for GOOD Status, High and\
+    \ Low limit\r\n  If accepted, V = SAMPLETVR, Q = GOOD\r\n\r\n  With model: Additional\
+    \ checks for model status, sample within historical buffer and difference\r\n\
+    \  If accepted, V = (sampletvr - modelvalue)*Fraction/RampTime, Q = GOOD\r\n \
+    \ If RampTime>1, V holds the same value in RampTime steps, enabling another calc\
     \ to change gradually"
   name: labupdt
   parameters:
@@ -85,18 +98,6 @@
     type: Value
   retr: Description of return value
   signature: labupdt(sampletvr, model?, stddev?)
-- briefDescription: Computes the logical and operation for all the provided elements
-  detailedDescription: "If n>0:\r\n    V = and(a,b,..)\r\n    Q = GOOD only if ALL\
-    \ arguments are GOOD, else Q = BAD\r\n\r\n  If n=0:\r\n    V = 0\r\n    Q = BAD"
-  name: and
-  parameters:
-  - arity: +
-    description: The logical elements
-    direction: in
-    name: x
-    type: Value
-  retr: The logical and of all given elements
-  signature: and(...x)
 - briefDescription: Computes the logical or operation on all elements
   detailedDescription: "If n>0:\r\n    V = or(a,b,..)\r\n    Q = GOOD only if ALL\
     \ arguments are GOOD, else Q = BAD\r\n\r\n  If n=0:\r\n    V = 0\r\n    Q = BAD"
