@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.7.2](https://github.com/equinor/vscode-septic/compare/v1.7.1...v1.7.2) (2023-07-06)
+
+
+### 🐛 Bug Fixes
+
+* formatting merging first items in list ([#236](https://github.com/equinor/vscode-septic/issues/236)) ([304ce0c](https://github.com/equinor/vscode-septic/commit/304ce0c5f4dc9413352e3d5873f6c374e0691a0d))
+
+
+### 🧹 Chores
+
+* **deps:** bump @types/node from 16.18.34 to 16.18.38 ([#229](https://github.com/equinor/vscode-septic/issues/229)) ([26dbeba](https://github.com/equinor/vscode-septic/commit/26dbebaeb4d6c7fd405c2912e3a577ef53674c6e))
+* **deps:** bump @types/vscode from 1.78.1 to 1.79.1 ([#193](https://github.com/equinor/vscode-septic/issues/193)) ([aabfdc6](https://github.com/equinor/vscode-septic/commit/aabfdc636a11d695c71930b43e883f409d32cb8c))
+* **deps:** bump @typescript-eslint/parser from 5.59.9 to 5.61.0 ([#234](https://github.com/equinor/vscode-septic/issues/234)) ([b6b10a6](https://github.com/equinor/vscode-septic/commit/b6b10a631e1cd953723202692207e85003cf5088))
+* **deps:** bump eslint from 8.40.0 to 8.44.0 ([#228](https://github.com/equinor/vscode-septic/issues/228)) ([7535ccc](https://github.com/equinor/vscode-septic/commit/7535cccdcd0f6657668bbbf1dee0f1bb8a305e18))
+* **deps:** bump semver from 7.3.8 to 7.5.3 in /client ([#223](https://github.com/equinor/vscode-septic/issues/223)) ([649b6d3](https://github.com/equinor/vscode-septic/commit/649b6d35efece210634bdcff69ec0ab6c9f9c61a))
+
 ## [1.7.1](https://github.com/equinor/vscode-septic/compare/v1.7.0...v1.7.1) (2023-07-03)
 
 
