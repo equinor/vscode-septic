@@ -5,12 +5,13 @@ import {
     identifierDiagnostics,
     getDiagnostics,
     disableDiagnosticRegex,
+    DiagnosticCode,
 } from "../language-service/diagnosticsProvider";
 import { parseSeptic } from "../septic";
 import { MockDocument } from "./util";
 
-describe("Test algorithm diagnostics", () => {
-    it("Missing paranthesis in alg", () => {
+describe("Test alg diagnostics", () => {
+    it("Missing parenthesis in alg", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -22,8 +23,9 @@ describe("Test algorithm diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.E201);
     });
-    it("Unexpexted token in alg", () => {
+    it("Unexpected token in alg", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -35,6 +37,7 @@ describe("Test algorithm diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.E201);
     });
     it("Missing reference in alg", () => {
         const text = `
@@ -48,6 +51,7 @@ describe("Test algorithm diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.W101);
     });
     it("Unknown function in alg", () => {
         const text = `
@@ -61,19 +65,16 @@ describe("Test algorithm diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.E202);
     });
-    it("No errors for valid expression", () => {
-        const text = `
-        Evr: Var1
-            Text1= "Test"
-            
-        CalcPvr: Var1
-            Text1= "Test"
-            Alg= "1"
+});
 
-		CalcPvr:  TestCalcPvr 
-			Text1= "Test"
-			Alg= "abs(Var1)*{{Test}}"
+describe("Test parameter diagnostics in alg", () => {
+    it("No diagnostics for correct number of params", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "intpoltype1(2.4,1,2,3,6)"
 		`;
 
         const doc = new MockDocument(text);
@@ -81,6 +82,162 @@ describe("Test algorithm diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = algDiagnostic(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
+    });
+    it("No diagnostics for correct number of params", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "if(1 < 2, 1, 0)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = algDiagnostic(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(0);
+    });
+    it("No diagnostics for correct datatype", () => {
+        const text = `
+            Tvr: Test
+                Text1= "Test"
+        
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "labupdt(Test, 1, 1)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = algDiagnostic(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(0);
+    });
+
+    it("Diagnostics for incorrect datatype", () => {
+        const text = `
+            Mvr: Test
+                Text1= "Test"
+        
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "labupdt(Test, 1, 1)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = algDiagnostic(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.E203);
+    });
+    it("No diagnostics for empty optional param", () => {
+        const text = `
+            Tvr: Test
+                Text1= "Test"
+        
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "labupdt(Test, , 1)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = algDiagnostic(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(0);
+    });
+    it("Diagnostics for empty non-optional param", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "if(1 < 2, , 0)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = algDiagnostic(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.E205);
+    });
+
+    it("Diagnostics for incorrect parity of arguments", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "intpoltype1(1,2,3,4)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = algDiagnostic(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.E204);
+    });
+
+    it("No diagnostics for not using optional params", () => {
+        const text = `
+            Tvr: Test
+                Text1= "Test"
+
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "labupdt(Test)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = algDiagnostic(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(0);
+    });
+
+    it("Diagnostics for exceeding number of params", () => {
+        const text = `
+            Tvr: Test
+                Text1= "Test"
+
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "labupdt(Test,1,2,3)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = algDiagnostic(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.E204);
+    });
+    it("Diagnostics for fewer number of params", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "and()"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = algDiagnostic(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.E204);
+    });
+    it("Multiple diagnostics for calc", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "if(1<2, ,2, ,1)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = algDiagnostic(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(2);
+        expect(diag[0].code).to.equal(DiagnosticCode.E205);
+        expect(diag[1].code).to.equal(DiagnosticCode.E204);
     });
 });
 
@@ -95,6 +252,7 @@ describe("Test identifier diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = identifierDiagnostics(cnfg.objects[0], doc);
         expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.E101);
     });
     it("Error for identifier with invalid char", () => {
         const text = `
@@ -106,6 +264,7 @@ describe("Test identifier diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = identifierDiagnostics(cnfg.objects[0], doc);
         expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.E101);
     });
     it("No error for identifier with only jinja", () => {
         const text = `

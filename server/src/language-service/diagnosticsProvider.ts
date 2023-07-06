@@ -289,7 +289,7 @@ export function calcDiagnostics(
                 start: doc.positionAt(algAttrValue.start + 1 + calc.start),
                 end: doc.positionAt(algAttrValue.start + 1 + calc.end),
             },
-            `Calc with unknown indentifier: ${calc.identifier}`,
+            `Calc with unknown identifier: ${calc.identifier}`,
             DiagnosticCode.E202
         );
         return [diagnostic];
@@ -308,7 +308,7 @@ export function calcDiagnostics(
             indexCalcParams < calc.params.length
         ) {
             if (
-                param.arity !== "?" &&
+                param.arity !== "optional" &&
                 calc.params[indexCalcParams] instanceof AlgLiteral
             ) {
                 let paramCalc = calc.params[indexCalcParams] as AlgLiteral;

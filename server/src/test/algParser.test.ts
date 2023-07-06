@@ -454,6 +454,6 @@ describe("Test parsing of invalid algs", () => {
         const parse = () => {
             parseAlg(input);
         };
-        expect(parse).to.throw();
+        expect(parse).to.not.throw();
     });
 });
