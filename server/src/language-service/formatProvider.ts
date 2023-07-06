@@ -229,7 +229,7 @@ class SepticCnfgFormatter {
                 );
                 if (this.attrValueState.second) {
                     this.attrValueState.second = false;
-                    spaces -= 1;
+                    spaces = Math.max(1, spaces - 1);
                 }
             }
             this.currentLine += " ".repeat(spaces) + attrValue.value;
