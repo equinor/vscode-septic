@@ -4,7 +4,12 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Diagnostic, DiagnosticSeverity, Range } from "vscode-languageserver";
+import {
+    CancellationToken,
+    Diagnostic,
+    DiagnosticSeverity,
+    Range,
+} from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
@@ -82,7 +87,8 @@ export class DiagnosticProvider {
 
     public async provideDiagnostics(
         doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        refProvider: SepticReferenceProvider,
+        token: CancellationToken | undefined = undefined
     ): Promise<Diagnostic[]> {
         const cnfg = await this.cnfgProvider.get(doc.uri);
         if (cnfg === undefined) {
@@ -97,18 +103,19 @@ export class DiagnosticProvider {
             return [];
         }
         await refProvider.load();
-        return getDiagnostics(cnfg, doc, refProvider);
+        return getDiagnostics(cnfg, doc, refProvider, token);
     }
 }
 
 export function getDiagnostics(
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    refProvider: SepticReferenceProvider,
+    token: CancellationToken | undefined = undefined
 ) {
     const diagnostics: Diagnostic[] = [];
-    diagnostics.push(...objDiagnostics(cnfg, doc, refProvider));
-    diagnostics.push(...algDiagnostic(cnfg, doc, refProvider));
+    diagnostics.push(...objDiagnostics(cnfg, doc, refProvider, token));
+    diagnostics.push(...algDiagnostic(cnfg, doc, refProvider, token));
     let disabledLines = getDisabledLines(cnfg.comments, doc);
     let filteredDiags = diagnostics.filter((diag) => {
         let disabledLine = disabledLines.get(diag.range.start.line);
@@ -183,13 +190,17 @@ export function identifierDiagnostics(
 export function algDiagnostic(
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    refProvider: SepticReferenceProvider,
+    token: CancellationToken | undefined = undefined
 ): Diagnostic[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const diagnostics: Diagnostic[] = [];
     let algAttrs = cnfg.getAlgAttrs();
 
     for (let i = 0; i < algAttrs.length; i++) {
+        if (token?.isCancellationRequested) {
+            return [];
+        }
         let algAttrValue = algAttrs[i].getAttrValue();
         if (!algAttrValue) {
             continue;
@@ -275,10 +286,14 @@ export function algDiagnostic(
 export function objDiagnostics(
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    refProvider: SepticReferenceProvider,
+    token: CancellationToken | undefined = undefined
 ): Diagnostic[] {
     let diagnostics: Diagnostic[] = [];
     for (let obj of cnfg.objects) {
+        if (token?.isCancellationRequested) {
+            return [];
+        }
         diagnostics.push(...identifierDiagnostics(obj, doc));
         diagnostics.push(...objRefDiagnostics(obj, doc, refProvider));
         for (let attr of obj.attributes) {

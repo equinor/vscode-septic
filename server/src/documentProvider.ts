@@ -8,6 +8,7 @@ import { Emitter } from "vscode-jsonrpc";
 import { ITextDocument } from "./language-service";
 import { ResourceMap } from "./util";
 import {
+    CancellationToken,
     Connection,
     FileChangeType,
     TextDocuments,
@@ -21,6 +22,7 @@ import {
 } from "vscode-languageserver-textdocument";
 import * as path from "path";
 import { TextDecoder } from "util";
+import { CancellationTokenManager } from "./cancellationManager";
 
 class Document implements ITextDocument {
     private inMemoryDoc?: ITextDocument;
@@ -102,20 +104,34 @@ export class DocumentProvider {
     private readonly documents: TextDocuments<TextDocument>;
     private readonly connection: Connection;
     private decoder = new TextDecoder("utf-8");
+    private tokenManager: CancellationTokenManager =
+        new CancellationTokenManager();
 
-    readonly _onDidChangeDoc = new Emitter<URI>();
+    readonly _onDidChangeDoc = new Emitter<{
+        uri: URI;
+        token: CancellationToken;
+    }>();
 
     readonly onDidChangeDoc = this._onDidChangeDoc.event;
 
-    readonly _onDidCreateDoc = new Emitter<URI>();
+    readonly _onDidCreateDoc = new Emitter<{
+        uri: URI;
+        token: CancellationToken;
+    }>();
 
     readonly onDidCreateDoc = this._onDidCreateDoc.event;
 
-    readonly _onDidDeleteDoc = new Emitter<URI>();
+    readonly _onDidDeleteDoc = new Emitter<{
+        uri: URI;
+        token: CancellationToken;
+    }>();
 
     readonly onDidDeleteDoc = this._onDidDeleteDoc.event;
 
-    readonly _onDidLoadDoc = new Emitter<URI>();
+    readonly _onDidLoadDoc = new Emitter<{
+        uri: URI;
+        token: CancellationToken;
+    }>();
 
     readonly onDidLoadDoc = this._onDidLoadDoc.event;
 
@@ -133,7 +149,7 @@ export class DocumentProvider {
             const doc = this.cache.get(e.document.uri);
             if (doc) {
                 doc.setInMemoryDoc(e.document);
-                this._onDidChangeDoc.fire(e.document.uri);
+                this.fireOnDidChangeDoc(e.document.uri);
             }
         });
 
@@ -149,7 +165,7 @@ export class DocumentProvider {
             doc.setInMemoryDoc(undefined);
             if (doc.isDetached()) {
                 this.cache.delete(doc.uri);
-                this._onDidDeleteDoc.fire(doc.uri);
+                this.fireOnDidDeleteDoc(doc.uri);
             }
         });
 
@@ -166,11 +182,11 @@ export class DocumentProvider {
                     new Document(e.document.uri, { inMemoryDoc: e.document })
                 );
             }
-            this._onDidChangeDoc.fire(e.document.uri);
+            this.fireOnDidChangeDoc(e.document.uri);
         });
 
-        connection.onDidChangeWatchedFiles(async (parms) => {
-            for (const change of parms.changes) {
+        connection.onDidChangeWatchedFiles(async (params) => {
+            for (const change of params.changes) {
                 if (!this.isRelevantFile(change.uri)) {
                     continue;
                 }
@@ -180,7 +196,7 @@ export class DocumentProvider {
                         if (!doc) {
                             await this.openDocumentFromFs(change.uri);
                         }
-                        this._onDidCreateDoc.fire(change.uri);
+                        this.fireOnDidCreateDoc(change.uri);
                         break;
                     }
                     case FileChangeType.Changed: {
@@ -188,7 +204,7 @@ export class DocumentProvider {
                         if (doc) {
                             await this.openDocumentFromFs(change.uri);
                         }
-                        this._onDidChangeDoc.fire(change.uri);
+                        this.fireOnDidChangeDoc(change.uri);
                         break;
                     }
                     case FileChangeType.Deleted: {
@@ -197,7 +213,7 @@ export class DocumentProvider {
                             doc.setOnDiskDoc(undefined);
                             if (doc.isDetached()) {
                                 this.cache.delete(doc.uri);
-                                this._onDidDeleteDoc.fire(doc.uri);
+                                this.fireOnDidDeleteDoc(doc.uri);
                             }
                         }
                         break;
@@ -227,7 +243,7 @@ export class DocumentProvider {
         }
         let doc = await this.openDocumentFromFs(uri);
         if (doc) {
-            this._onDidLoadDoc.fire(uri);
+            this.fireOnDidLoadDoc(uri);
         }
     }
 
@@ -255,5 +271,37 @@ export class DocumentProvider {
 
     private isRelevantFile(uri: string): boolean {
         return path.extname(uri) === ".cnfg" || path.extname(uri) === ".yaml";
+    }
+
+    private fireOnDidChangeDoc(uri: URI) {
+        this.tokenManager.cancel(uri);
+        this._onDidChangeDoc.fire({
+            token: this.tokenManager.token(uri),
+            uri: uri,
+        });
+    }
+
+    private fireOnDidCreateDoc(uri: URI) {
+        this.tokenManager.cancel(uri);
+        this._onDidCreateDoc.fire({
+            token: this.tokenManager.token(uri),
+            uri: uri,
+        });
+    }
+
+    private fireOnDidDeleteDoc(uri: URI) {
+        this.tokenManager.cancel(uri);
+        this._onDidDeleteDoc.fire({
+            token: this.tokenManager.token(uri),
+            uri: uri,
+        });
+    }
+
+    private fireOnDidLoadDoc(uri: URI) {
+        this.tokenManager.cancel(uri);
+        this._onDidLoadDoc.fire({
+            token: this.tokenManager.token(uri),
+            uri: uri,
+        });
     }
 }

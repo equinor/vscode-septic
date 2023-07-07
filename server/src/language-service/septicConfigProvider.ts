@@ -56,10 +56,10 @@ export class SepticConfigProvider implements ISepticConfigProvider {
         this.getValue = getValue;
         this.docProvider = docProvider;
 
-        docProvider.onDidChangeDoc(async (uri) => this.update(uri));
-        docProvider.onDidCreateDoc(async (uri) => this.update(uri));
-        docProvider.onDidLoadDoc(async (uri) => this.update(uri));
-        docProvider.onDidDeleteDoc((uri) => this.invalidate(uri));
+        docProvider.onDidChangeDoc(async (params) => this.update(params.uri));
+        docProvider.onDidCreateDoc(async (params) => this.update(params.uri));
+        docProvider.onDidLoadDoc(async (params) => this.update(params.uri));
+        docProvider.onDidDeleteDoc((params) => this.invalidate(params.uri));
     }
 
     public async get(resource: URI): Promise<SepticCnfg | undefined> {

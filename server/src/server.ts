@@ -18,6 +18,10 @@ import {
     LocationLink,
     Location,
     DidChangeWatchedFilesNotification,
+    CancellationToken,
+    Diagnostic,
+    FullDocumentDiagnosticReport,
+    UnchangedDocumentDiagnosticReport,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -54,41 +58,37 @@ let hasConfigurationCapability = true;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
 
-async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
+async function computeDiagnosticsContext(
+    context: ScgContext,
+    token: CancellationToken | undefined = undefined
+): Promise<Diagnostic[]> {
     await context.load();
     const diagnosticsPromises = context.files.map(async (file) => {
         let doc = await documentProvider.getDocument(file);
         if (!doc) {
-            return null;
+            return [];
         }
-        const diagnostics = await langService.provideDiagnostics(doc, context!);
-        connection.sendDiagnostics({ uri: file, diagnostics: diagnostics });
+        const diagnostics: Diagnostic[] = await langService.provideDiagnostics(
+            doc,
+            context,
+            token
+        );
+        return diagnostics;
     });
 
-    await Promise.all(diagnosticsPromises);
+    let diagnostics = await Promise.all(diagnosticsPromises);
+    return diagnostics.flat();
 }
 
-async function publishDiagnosticsCnfg(cnfg: SepticCnfg): Promise<void> {
+async function computeDiagnosticsCnfg(
+    cnfg: SepticCnfg,
+    token: CancellationToken | undefined = undefined
+): Promise<Diagnostic[]> {
     let doc = await documentProvider.getDocument(cnfg.uri);
     if (!doc) {
-        return;
+        return [];
     }
-    let diagnostics = await langService.provideDiagnostics(doc, cnfg);
-    connection.sendDiagnostics({ uri: doc.uri, diagnostics: diagnostics });
-}
-
-async function publishDiagnostics(uri: string) {
-    let context: ScgContext | undefined = await contextManager.getContext(uri);
-    if (context) {
-        publishDiagnosticsContext(context);
-        return;
-    }
-
-    let cnfg = await langService.cnfgProvider.get(uri);
-    if (!cnfg) {
-        return;
-    }
-    publishDiagnosticsCnfg(cnfg);
+    return await langService.provideDiagnostics(doc, cnfg, token);
 }
 
 connection.onInitialize((params: InitializeParams) => {
@@ -123,6 +123,10 @@ connection.onInitialize((params: InitializeParams) => {
             },
             hoverProvider: true,
             documentFormattingProvider: true,
+            diagnosticProvider: {
+                interFileDependencies: true,
+                workspaceDiagnostics: false,
+            },
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -134,6 +138,33 @@ connection.onInitialize((params: InitializeParams) => {
     }
     return result;
 });
+
+connection.languages.diagnostics.on(
+    async (
+        params,
+        token
+    ): Promise<
+        FullDocumentDiagnosticReport | UnchangedDocumentDiagnosticReport
+    > => {
+        let context: ScgContext | undefined = await contextManager.getContext(
+            params.textDocument.uri
+        );
+        if (context) {
+            return {
+                items: await computeDiagnosticsContext(context, token),
+                kind: "full",
+            };
+        }
+        let cnfg = await langService.cnfgProvider.get(params.textDocument.uri);
+        if (!cnfg) {
+            return { items: [], kind: "full" };
+        }
+        return {
+            items: await computeDiagnosticsCnfg(cnfg, token),
+            kind: "full",
+        };
+    }
+);
 
 connection.onInitialized(async () => {
     if (hasConfigurationCapability) {
@@ -155,20 +186,12 @@ connection.onInitialized(async () => {
     }
 });
 
-documentProvider.onDidChangeDoc(async (uri) => {
-    publishDiagnostics(uri);
-});
-
-documentProvider.onDidCreateDoc(async (uri) => {
-    publishDiagnostics(uri);
-});
-
 contextManager.onDidUpdateContext(async (uri) => {
     let context = contextManager.getContextByName(uri);
     if (!context) {
         return;
     }
-    publishDiagnosticsContext(context);
+    computeDiagnosticsContext(context);
 });
 
 connection.onDidChangeConfiguration((change) => {

@@ -32,13 +32,15 @@ export class ContextManager {
         this.docProvider = docProvider;
         this.cnfgProvider = cnfgProvider;
         this.connection = connection;
-        this.docProvider.onDidChangeDoc(async (uri) => {
-            this.onDidChangeDoc(uri);
+        this.docProvider.onDidChangeDoc(async (params) => {
+            this.onDidChangeDoc(params.uri);
         });
-        this.docProvider.onDidCreateDoc(async (uri) => {
-            this.onDidChangeDoc(uri);
+        this.docProvider.onDidCreateDoc(async (params) => {
+            this.onDidChangeDoc(params.uri);
         });
-        this.docProvider.onDidDeleteDoc((uri) => this.onDidDeleteDoc(uri));
+        this.docProvider.onDidDeleteDoc((params) =>
+            this.onDidDeleteDoc(params.uri)
+        );
     }
 
     public async getContext(uri: string): Promise<ScgContext | undefined> {

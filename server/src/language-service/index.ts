@@ -34,7 +34,8 @@ export interface ILanguageService {
 
     provideDiagnostics(
         doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        refProvider: SepticReferenceProvider,
+        token: lsp.CancellationToken | undefined
     ): Promise<lsp.Diagnostic[]>;
 
     provideDocumentSymbols(
