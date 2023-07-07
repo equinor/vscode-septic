@@ -48,6 +48,7 @@ export interface SepticReferenceProvider {
     load(): Promise<void>;
     getXvrRefs(name: string): SepticReference[] | undefined;
     getAllXvrObjects(): SepticObject[];
+    getObjectsByIdentifier(identifier: string): SepticObject[];
     validateRef(
         name: string,
         validationFunction: RefValidationFunction

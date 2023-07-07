@@ -4,7 +4,12 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Diagnostic, DiagnosticSeverity, Range } from "vscode-languageserver";
+import {
+    CancellationToken,
+    Diagnostic,
+    DiagnosticSeverity,
+    Range,
+} from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
@@ -13,19 +18,17 @@ import {
     SepticMetaInfoProvider,
     parseAlg,
     SepticReferenceProvider,
-    AlgParsingError,
-    AlgParsingErrorType,
     SepticComment,
     Attribute,
     SepticObject,
     defaultRefValidationFunction,
     AlgCalc,
-    AttributeValue,
-    SepticCalcParameterInfo,
     AlgExpr,
     AlgLiteral,
     AlgTokenType,
     SepticCalcInfo,
+    calcNumParameterInfo,
+    arityToNum,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -143,6 +146,301 @@ export function getDiagnostics(
     return filteredDiags;
 }
 
+export function algDiagnostic(
+    cnfg: SepticCnfg,
+    doc: ITextDocument,
+    refProvider: SepticReferenceProvider
+): Diagnostic[] {
+    const diagnostics: Diagnostic[] = [];
+    let algAttrs = cnfg.getAlgAttrs();
+
+    for (let i = 0; i < algAttrs.length; i++) {
+        let algAttrValue = algAttrs[i].getAttrValue();
+        if (!algAttrValue) {
+            continue;
+        }
+        const offsetStartAlg = algAttrValue.start + 1;
+        let expr;
+        try {
+            expr = parseAlg(algAttrValue.getValue());
+        } catch (error: any) {
+            const diagnostic = createDiagnostic(
+                DiagnosticSeverity.Error,
+                {
+                    start: doc.positionAt(offsetStartAlg + error.token.start),
+                    end: doc.positionAt(algAttrValue.end),
+                },
+                error.message,
+                DiagnosticCode.E201
+            );
+            diagnostics.push(diagnostic);
+            continue;
+        }
+        const visitor = new AlgVisitor();
+        visitor.visit(expr);
+
+        visitor.calcs.forEach((calc) => {
+            diagnostics.push(
+                ...calcDiagnostics(calc, doc, refProvider, offsetStartAlg)
+            );
+        });
+
+        for (let variable of visitor.variables) {
+            if (isPureJinja(variable.value)) {
+                continue;
+            }
+            if (
+                !refProvider.validateRef(
+                    variable.value.split(".")[0],
+                    defaultRefValidationFunction
+                )
+            ) {
+                const diagnostic = createDiagnostic(
+                    DiagnosticSeverity.Warning,
+                    {
+                        start: doc.positionAt(offsetStartAlg + variable.start),
+                        end: doc.positionAt(offsetStartAlg + variable.end),
+                    },
+                    `Undefined Xvr '${variable.value}'`,
+                    DiagnosticCode.W101
+                );
+                diagnostics.push(diagnostic);
+            }
+        }
+    }
+    return diagnostics;
+}
+
+export function calcDiagnostics(
+    calc: AlgCalc,
+    doc: ITextDocument,
+    refProvider: SepticReferenceProvider,
+    offsetStartAlg: number
+): Diagnostic[] {
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
+    const diagnostics: Diagnostic[] = [];
+    const calcMetaInfo = metaInfoProvider.getCalc(calc.identifier);
+    if (!calcMetaInfo) {
+        const diagnostic = createDiagnostic(
+            DiagnosticSeverity.Error,
+            {
+                start: doc.positionAt(offsetStartAlg + calc.start),
+                end: doc.positionAt(offsetStartAlg + calc.end),
+            },
+            `Calc with unknown identifier: ${calc.identifier}`,
+            DiagnosticCode.E202
+        );
+        return [diagnostic];
+    }
+    diagnostics.push(
+        ...calcParamDiagnostics(
+            calc,
+            calcMetaInfo,
+            refProvider,
+            doc,
+            offsetStartAlg
+        )
+    );
+    diagnostics.push(
+        ...calcNumParamDiagnostics(calc, calcMetaInfo, doc, offsetStartAlg)
+    );
+    return diagnostics;
+}
+
+function calcParamDiagnostics(
+    calc: AlgCalc,
+    calcMetaInfo: SepticCalcInfo,
+    refProvider: SepticReferenceProvider,
+    doc: ITextDocument,
+    offsetStartAlg: number
+): Diagnostic[] {
+    let diagnostics: Diagnostic[] = [];
+    let indexCalcParams = 0;
+    let indexParamInfo = 0;
+    for (let param of calcMetaInfo.parameters) {
+        if (indexCalcParams >= calc.params.length) {
+            break;
+        }
+
+        indexParamInfo += arityToNum(param.arity);
+        while (
+            indexCalcParams < indexParamInfo &&
+            indexCalcParams < calc.params.length
+        ) {
+            if (
+                param.arity !== "optional" &&
+                calc.params[indexCalcParams] instanceof AlgLiteral
+            ) {
+                let paramCalc = calc.params[indexCalcParams] as AlgLiteral;
+                if (!paramCalc.value.length) {
+                    diagnostics.push(
+                        createDiagnostic(
+                            DiagnosticSeverity.Error,
+                            {
+                                start: doc.positionAt(
+                                    offsetStartAlg +
+                                        calc.params[indexCalcParams].start
+                                ),
+                                end: doc.positionAt(
+                                    offsetStartAlg +
+                                        calc.params[indexCalcParams].end
+                                ),
+                            },
+                            `Missing value for non-optional parameter`,
+                            DiagnosticCode.E205
+                        )
+                    );
+                }
+            }
+            if (param.type === "Value") {
+                indexCalcParams += 1;
+                continue;
+            }
+            if (
+                checkParamType(
+                    calc.params[indexCalcParams],
+                    [param.type],
+                    refProvider
+                )
+            ) {
+                indexCalcParams += 1;
+                continue;
+            }
+            diagnostics.push(
+                createDiagnostic(
+                    DiagnosticSeverity.Error,
+                    {
+                        start: doc.positionAt(
+                            offsetStartAlg + calc.params[indexCalcParams].start
+                        ),
+                        end: doc.positionAt(
+                            offsetStartAlg + calc.params[indexCalcParams].end
+                        ),
+                    },
+                    `Wrong data type for parameter. Expected data type: ${param.type}`,
+                    DiagnosticCode.E203
+                )
+            );
+            indexCalcParams += 1;
+        }
+    }
+    return diagnostics;
+}
+
+function calcNumParamDiagnostics(
+    calc: AlgCalc,
+    calcInfo: SepticCalcInfo,
+    doc: ITextDocument,
+    offsetStartAlg: number
+): Diagnostic[] {
+    let diagnostics: Diagnostic[] = [];
+    let numberParamsConditions: NumberParamConditions[] =
+        getNumberOfParamsConditions(calcInfo);
+    let numberParamsCalc = calc.params.length;
+    numberParamsConditions.forEach((cond) => {
+        let condEval = cond(numberParamsCalc);
+        if (!condEval.condition) {
+            diagnostics.push(
+                createDiagnostic(
+                    DiagnosticSeverity.Error,
+                    {
+                        start: doc.positionAt(offsetStartAlg + calc.start),
+                        end: doc.positionAt(offsetStartAlg + calc.end),
+                    },
+                    `${condEval.message}`,
+                    DiagnosticCode.E204
+                )
+            );
+        }
+    });
+    return diagnostics;
+}
+
+function getNumberOfParamsConditions(
+    calcInfo: SepticCalcInfo
+): NumberParamConditions[] {
+    let numParamInfo = calcNumParameterInfo(calcInfo);
+    let conditions: NumberParamConditions[] = [];
+    if (
+        numParamInfo.maxActive &&
+        numParamInfo.minNumber === numParamInfo.maxNumber
+    ) {
+        let conditionExactNumbers: NumberParamConditions = (n: number) => {
+            return {
+                condition: n === numParamInfo.minNumber,
+                message: `Expected number of arguments to equal ${numParamInfo.minNumber}`,
+            };
+        };
+        conditions.push(conditionExactNumbers);
+    } else if (numParamInfo.maxActive) {
+        let conditionBetween: NumberParamConditions = (n: number) => {
+            return {
+                condition:
+                    n >= numParamInfo.minNumber && n <= numParamInfo.maxNumber,
+                message: `Expected number of arguments to be between ${numParamInfo.minNumber} and ${numParamInfo.maxNumber}`,
+            };
+        };
+        conditions.push(conditionBetween);
+    } else {
+        let conditionMoreThan: NumberParamConditions = (n: number) => {
+            return {
+                condition: n >= numParamInfo.minNumber,
+                message: `Expected number of arguments to be >= ${numParamInfo.minNumber}`,
+            };
+        };
+        conditions.push(conditionMoreThan);
+    }
+
+    if (numParamInfo.parityActive && !numParamInfo.maxActive) {
+        let parityBit = numParamInfo.minNumber % 2;
+        let evenOrOdd = parityBit ? "odd" : "even";
+        let conditionParity: NumberParamConditions = (n: number) => {
+            return {
+                condition: n % 2 === parityBit,
+                message: `Expected number of arguments to be ${evenOrOdd}`,
+            };
+        };
+        conditions.push(conditionParity);
+    }
+    return conditions;
+}
+
+function checkParamType(
+    param: AlgExpr,
+    type: string[],
+    refProvider: SepticReferenceProvider
+): boolean {
+    if (!(param instanceof AlgLiteral)) {
+        return false;
+    }
+    if (param.type !== AlgTokenType.identifier) {
+        return false;
+    }
+    let objects = refProvider.getObjectsByIdentifier(param.value);
+    for (let obj of objects) {
+        if (obj.isType(...type)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+export function objDiagnostics(
+    cnfg: SepticCnfg,
+    doc: ITextDocument,
+    refProvider: SepticReferenceProvider
+): Diagnostic[] {
+    let diagnostics: Diagnostic[] = [];
+    for (let obj of cnfg.objects) {
+        diagnostics.push(...identifierDiagnostics(obj, doc));
+        diagnostics.push(...objRefDiagnostics(obj, doc, refProvider));
+        for (let attr of obj.attributes) {
+            diagnostics.push(...attrDiagnostics(attr, doc));
+        }
+    }
+    return diagnostics;
+}
+
 export function identifierDiagnostics(
     obj: SepticObject,
     doc: ITextDocument
@@ -191,340 +489,6 @@ export function identifierDiagnostics(
             DiagnosticCode.E101
         );
         diagnostics.push(diagnostic);
-    }
-    return diagnostics;
-}
-
-export function algDiagnostic(
-    cnfg: SepticCnfg,
-    doc: ITextDocument,
-    refProvider: SepticReferenceProvider
-): Diagnostic[] {
-    const diagnostics: Diagnostic[] = [];
-    let algAttrs = cnfg.getAlgAttrs();
-
-    for (let i = 0; i < algAttrs.length; i++) {
-        let algAttrValue = algAttrs[i].getAttrValue();
-        if (!algAttrValue) {
-            continue;
-        }
-
-        let expr;
-        try {
-            expr = parseAlg(algAttrValue.getValue() ?? "");
-        } catch (error: any) {
-            let severity: DiagnosticSeverity = DiagnosticSeverity.Error;
-            if (
-                error instanceof AlgParsingError &&
-                error.type === AlgParsingErrorType.unsupportedJinja
-            ) {
-                severity = DiagnosticSeverity.Hint;
-            }
-            const diagnostic = createDiagnostic(
-                severity,
-                {
-                    start: doc.positionAt(
-                        algAttrValue.start + 1 + error.token.start
-                    ),
-                    end: doc.positionAt(algAttrValue.end),
-                },
-                error.message,
-                DiagnosticCode.E201
-            );
-            diagnostics.push(diagnostic);
-            continue;
-        }
-        const visitor = new AlgVisitor();
-        visitor.visit(expr);
-
-        visitor.calcs.forEach((calc) => {
-            diagnostics.push(
-                ...calcDiagnostics(calc, doc, cnfg, algAttrValue!)
-            );
-        });
-
-        for (let variable of visitor.variables) {
-            if (isPureJinja(variable.value)) {
-                continue;
-            }
-            if (
-                !refProvider.validateRef(
-                    variable.value.split(".")[0],
-                    defaultRefValidationFunction
-                )
-            ) {
-                const diagnostic = createDiagnostic(
-                    DiagnosticSeverity.Warning,
-                    {
-                        start: doc.positionAt(
-                            algAttrValue.start + 1 + variable.start
-                        ),
-                        end: doc.positionAt(
-                            algAttrValue.start + 1 + variable.end
-                        ),
-                    },
-                    `Undefined Xvr '${variable.value}'`,
-                    DiagnosticCode.W101
-                );
-                diagnostics.push(diagnostic);
-            }
-        }
-    }
-    return diagnostics;
-}
-
-export function calcDiagnostics(
-    calc: AlgCalc,
-    doc: ITextDocument,
-    cnfg: SepticCnfg,
-    algAttrValue: AttributeValue
-): Diagnostic[] {
-    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
-    const diagnostics: Diagnostic[] = [];
-    const calcMetaInfo = metaInfoProvider.getCalc(calc.identifier);
-    if (!calcMetaInfo) {
-        const diagnostic = createDiagnostic(
-            DiagnosticSeverity.Error,
-            {
-                start: doc.positionAt(algAttrValue.start + 1 + calc.start),
-                end: doc.positionAt(algAttrValue.start + 1 + calc.end),
-            },
-            `Calc with unknown identifier: ${calc.identifier}`,
-            DiagnosticCode.E202
-        );
-        return [diagnostic];
-    }
-
-    let indexCalcParams = 0;
-    let indexParamInfo = 0;
-    for (let param of calcMetaInfo.parameters) {
-        if (indexCalcParams >= calc.params.length) {
-            break;
-        }
-
-        indexParamInfo += arityParamToNum(param);
-        while (
-            indexCalcParams < indexParamInfo &&
-            indexCalcParams < calc.params.length
-        ) {
-            if (
-                param.arity !== "optional" &&
-                calc.params[indexCalcParams] instanceof AlgLiteral
-            ) {
-                let paramCalc = calc.params[indexCalcParams] as AlgLiteral;
-                if (!paramCalc.value.length) {
-                    diagnostics.push(
-                        createDiagnostic(
-                            DiagnosticSeverity.Error,
-                            {
-                                start: doc.positionAt(
-                                    algAttrValue!.start +
-                                        1 +
-                                        calc.params[indexCalcParams].start
-                                ),
-                                end: doc.positionAt(
-                                    algAttrValue!.start +
-                                        1 +
-                                        calc.params[indexCalcParams].end
-                                ),
-                            },
-                            `Missing value for non-optional parameter`,
-                            DiagnosticCode.E205
-                        )
-                    );
-                }
-            }
-            if (param.type === "Value") {
-                indexCalcParams += 1;
-                continue;
-            }
-
-            if (
-                checkParamType(calc.params[indexCalcParams], [param.type], cnfg)
-            ) {
-                indexCalcParams += 1;
-                continue;
-            }
-            diagnostics.push(
-                createDiagnostic(
-                    DiagnosticSeverity.Error,
-                    {
-                        start: doc.positionAt(
-                            algAttrValue!.start +
-                                1 +
-                                calc.params[indexCalcParams].start
-                        ),
-                        end: doc.positionAt(
-                            algAttrValue!.start +
-                                1 +
-                                calc.params[indexCalcParams].end
-                        ),
-                    },
-                    `Wrong data type for parameter. Expected data type: ${param.type}`,
-                    DiagnosticCode.E203
-                )
-            );
-            indexCalcParams += 1;
-        }
-    }
-
-    let numberParamsConditions: NumberParamConditions[] =
-        getNumberOfParamsConditions(calcMetaInfo);
-    let numberParamsCalc = calc.params.length;
-    numberParamsConditions.forEach((cond) => {
-        let condEval = cond(numberParamsCalc);
-        if (!condEval.condition) {
-            diagnostics.push(
-                createDiagnostic(
-                    DiagnosticSeverity.Error,
-                    {
-                        start: doc.positionAt(
-                            algAttrValue!.start + 1 + calc.start
-                        ),
-                        end: doc.positionAt(algAttrValue!.start + 1 + calc.end),
-                    },
-                    `${condEval.message}`,
-                    DiagnosticCode.E204
-                )
-            );
-        }
-    });
-
-    return diagnostics;
-}
-
-function getNumberOfParamsConditions(
-    calcInfo: SepticCalcInfo
-): NumberParamConditions[] {
-    let minNumber = 0;
-    let maxNumber = 0;
-    let maxFlag = true;
-    let parity = true;
-    for (let i = 0; i < calcInfo.parameters.length; i++) {
-        let param = calcInfo.parameters[i];
-        switch (param.arity) {
-            case "even":
-                maxFlag = false;
-                minNumber += 2;
-                break;
-            case "odd":
-                maxFlag = false;
-                minNumber += 1;
-                break;
-            case "+":
-                maxFlag = false;
-                parity = false;
-                minNumber += 1;
-                break;
-            case "optional":
-                let restIsOptional = true;
-                for (let j = i + 1; j < calcInfo.parameters.length; j++) {
-                    if (calcInfo.parameters[j].arity !== "optional") {
-                        restIsOptional = false;
-                        break;
-                    }
-                }
-                if (!restIsOptional) {
-                    minNumber += 1;
-                } else {
-                    parity = false;
-                }
-                maxNumber += 1;
-                break;
-            default:
-                let n = parseInt(param.arity);
-                minNumber += n;
-                maxNumber += n;
-                break;
-        }
-    }
-    let conditions: NumberParamConditions[] = [];
-
-    if (maxFlag && minNumber === maxNumber) {
-        let conditionExactNumbers: NumberParamConditions = (n: number) => {
-            return {
-                condition: n === minNumber,
-                message: `Expected number of arguments to equal ${minNumber}`,
-            };
-        };
-        conditions.push(conditionExactNumbers);
-    } else if (maxFlag) {
-        let conditionBetween: NumberParamConditions = (n: number) => {
-            return {
-                condition: n >= minNumber && n <= maxNumber,
-                message: `Expected number of arguments to be between ${minNumber} and ${maxNumber}`,
-            };
-        };
-        conditions.push(conditionBetween);
-    } else {
-        let conditionMoreThan: NumberParamConditions = (n: number) => {
-            return {
-                condition: n >= minNumber,
-                message: `Expected number of arguments to be >= ${minNumber}`,
-            };
-        };
-        conditions.push(conditionMoreThan);
-    }
-
-    if (parity && !maxFlag) {
-        let parityBit = minNumber % 2;
-        let evenOrOdd = parityBit ? "odd" : "even";
-        let conditionParity: NumberParamConditions = (n: number) => {
-            return {
-                condition: n % 2 === parityBit,
-                message: `Expected number of arguments to be ${evenOrOdd}`,
-            };
-        };
-        conditions.push(conditionParity);
-    }
-    return conditions;
-}
-
-function checkParamType(
-    param: AlgExpr,
-    type: string[],
-    cnfg: SepticCnfg
-): boolean {
-    if (!(param instanceof AlgLiteral)) {
-        return false;
-    }
-    if (param.type !== AlgTokenType.identifier) {
-        return false;
-    }
-    let objects = cnfg.getObjectsByIdentifier(param.value);
-    for (let obj of objects) {
-        if (obj.isType(...type)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function arityParamToNum(paramInfo: SepticCalcParameterInfo): number {
-    switch (paramInfo.arity) {
-        case "even":
-        case "odd":
-        case "+":
-            return 100000;
-        case "optional":
-            return 1;
-        default:
-            return parseInt(paramInfo.arity);
-    }
-}
-
-export function objDiagnostics(
-    cnfg: SepticCnfg,
-    doc: ITextDocument,
-    refProvider: SepticReferenceProvider
-): Diagnostic[] {
-    let diagnostics: Diagnostic[] = [];
-    for (let obj of cnfg.objects) {
-        diagnostics.push(...identifierDiagnostics(obj, doc));
-        diagnostics.push(...objRefDiagnostics(obj, doc, refProvider));
-        for (let attr of obj.attributes) {
-            diagnostics.push(...attrDiagnostics(attr, doc));
-        }
     }
     return diagnostics;
 }
