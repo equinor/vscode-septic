@@ -7,6 +7,7 @@ import * as YAML from "js-yaml";
 import * as fs from "fs";
 import * as path from "path";
 import { SymbolKind } from "vscode-languageserver-types";
+import { bold, code, h3, h4, horizontalRule } from "../util/markdown";
 
 export const defaultObjectLevel = 2;
 export const defaultObjectSymbolKind = SymbolKind.Object;
@@ -25,20 +26,14 @@ const defaultObject: SepticObjectInfo = {
 
 export class SepticMetaInfoProvider {
     private static metaInfoProvider: SepticMetaInfoProvider;
-    public metaInfo: SepticMetaInfo;
-    private calcsMap: Map<string, SepticCalcInfo> = new Map<
-        string,
-        SepticCalcInfo
-    >();
-    private calcsMapFlag = false;
-    private objectsMap: Map<string, SepticObjectInfo> = new Map<
-        string,
-        SepticObjectInfo
-    >();
-    private objectsMapFlag = false;
+    private calcsMap: Map<string, SepticCalcInfo>;
+    private objectsMap: Map<string, SepticObjectInfo>;
+    private objectsDocMap: Map<string, SepticObjectDocumentation>;
 
     private constructor() {
-        this.metaInfo = this.loadMetaInfo();
+        this.calcsMap = this.loadCalcsInfo();
+        this.objectsMap = this.loadObjectsInfo();
+        this.objectsDocMap = this.loadObjectsDocumentation();
     }
 
     public static getInstance(): SepticMetaInfoProvider {
@@ -50,23 +45,23 @@ export class SepticMetaInfoProvider {
     }
 
     public getCalcs(): SepticCalcInfo[] {
-        return this.metaInfo.calcs;
+        return [...this.calcsMap.values()];
     }
 
     public getCalc(name: string): SepticCalcInfo | undefined {
-        return this.getCalcMap().get(name);
+        return this.calcsMap.get(name);
     }
 
     public hasCalc(name: string): boolean {
-        return this.getCalcMap().has(name);
+        return this.calcsMap.has(name);
     }
 
     public getObject(objectType: string): SepticObjectInfo | undefined {
-        return this.getObjectsMap().get(objectType);
+        return this.objectsMap.get(objectType);
     }
 
     public getObjectDefault(objectType: string): SepticObjectInfo {
-        const obj = this.getObjectsMap().get(objectType);
+        const obj = this.objectsMap.get(objectType);
         if (obj) {
             return obj;
         }
@@ -74,68 +69,52 @@ export class SepticMetaInfoProvider {
     }
 
     public hasObject(objectType: string): boolean {
-        return this.getObjectsMap().has(objectType);
+        return this.objectsMap.has(objectType);
     }
 
     public updateObjectLevel(objectType: string, level: number): void {
-        let obj = this.getObjectsMap().get(objectType);
+        let obj = this.objectsMap.get(objectType);
         if (!obj) {
             return;
         }
         obj.level = level;
     }
 
-    private getCalcMap(): Map<string, SepticCalcInfo> {
-        if (!this.calcsMapFlag) {
-            for (let calc of this.metaInfo.calcs) {
-                this.calcsMap.set(calc.name, calc);
-            }
-            this.calcsMapFlag = true;
-        }
-        return this.calcsMap;
+    public getObjectDocumentation(objectType: string) {
+        return this.objectsDocMap.get(objectType);
     }
 
-    private getObjectsMap(): Map<string, SepticObjectInfo> {
-        if (!this.objectsMapFlag) {
-            for (let func of this.metaInfo.objects) {
-                this.objectsMap.set(func.name, func);
-            }
-            this.objectsMapFlag = true;
-        }
-        return this.objectsMap;
-    }
-
-    private loadCalcsInfo(): SepticCalcInfoInput[] {
+    private loadCalcsInfo(): Map<string, SepticCalcInfo> {
         const filePath = path.join(__dirname, "../../../public/calcs.yaml");
         const file = fs.readFileSync(filePath, "utf-8");
         const calcInfo: SepticCalcInfoInput[] = YAML.load(
             file
         ) as SepticCalcInfoInput[];
-        return calcInfo;
+        const calcs: SepticCalcInfo[] = calcInfo.map((calc) => {
+            return {
+                name: calc.name,
+                briefDescription: calc.briefDescription ?? "Brief description",
+                detailedDescription:
+                    calc.detailedDescription ?? "Detailed description",
+                signature: calc.signature ?? calc.name + "()",
+                retr: calc.retr ?? "",
+                parameters: calc.parameters ?? [],
+            };
+        });
+        let calcsMap = new Map<string, SepticCalcInfo>();
+        for (let calc of calcs) {
+            calcsMap.set(calc.name, calc);
+        }
+        return calcsMap;
     }
 
-    private loadObjectsInfo(): SepticObjectsInfoInput[] {
+    private loadObjectsInfo(): Map<string, SepticObjectInfo> {
         const filePath = path.join(__dirname, "../../../public/objects.yaml");
         const file = fs.readFileSync(filePath, "utf-8");
         const objectsInfo: SepticObjectsInfoInput[] = YAML.load(
             file
         ) as SepticObjectsInfoInput[];
-        return objectsInfo;
-    }
-    private loadMetaInfo(): SepticMetaInfo {
-        let calcInfo = this.loadCalcsInfo();
-        let objectsInfo = this.loadObjectsInfo();
-        const metaInfo: SepticMetaInfoInput = {
-            objects: objectsInfo,
-            calcs: calcInfo,
-        };
-        return this.setDefaultValues(metaInfo);
-    }
-
-    private setDefaultValues(
-        metaInfoInput: SepticMetaInfoInput
-    ): SepticMetaInfo {
-        const objects: SepticObjectInfo[] = metaInfoInput.objects.map((obj) => {
+        const objects: SepticObjectInfo[] = objectsInfo.map((obj) => {
             return {
                 name: obj.name,
                 level: obj.level ? obj.level : defaultObjectLevel,
@@ -154,21 +133,27 @@ export class SepticMetaInfoProvider {
                 },
             };
         });
-        const calcs: SepticCalcInfo[] = metaInfoInput.calcs.map((calc) => {
-            return {
-                name: calc.name,
-                briefDescription: calc.briefDescription ?? "Brief description",
-                detailedDescription:
-                    calc.detailedDescription ?? "Detailed description",
-                signature: calc.signature ?? calc.name + "()",
-                retr: calc.retr ?? "",
-                parameters: calc.parameters ?? [],
-            };
-        });
-        return {
-            objects: objects,
-            calcs: calcs,
-        };
+        let objectsMap = new Map<string, SepticObjectInfo>();
+        for (let obj of objects) {
+            objectsMap.set(obj.name, obj);
+        }
+        return objectsMap;
+    }
+
+    private loadObjectsDocumentation(): Map<string, SepticObjectDocumentation> {
+        const filePath = path.join(
+            __dirname,
+            "../../../public/objectsDoc.yaml"
+        );
+        const file = fs.readFileSync(filePath, "utf-8");
+        const objectsDoc: SepticObjectDocumentation[] = YAML.load(
+            file
+        ) as SepticObjectDocumentation[];
+        let objectsDocMap = new Map<string, SepticObjectDocumentation>();
+        for (let obj of objectsDoc) {
+            objectsDocMap.set(obj.name, obj);
+        }
+        return objectsDocMap;
     }
 }
 
@@ -200,6 +185,30 @@ export interface SepticObjectInfo {
     level: number;
     symbolKind: SymbolKind;
     refs: SepticRefs;
+}
+
+export interface SepticObjectsInfoInput {
+    name: string;
+    level?: number;
+    symbolKind?: string;
+    refs?: SepticRefsInput;
+}
+
+export interface SepticObjectDocumentation {
+    name: string;
+    attributes: SepticAttributeDocumentation[];
+    description: string;
+}
+
+export interface SepticAttributeDocumentation {
+    briefDescription: string;
+    dataType: string;
+    default: string;
+    detailedDescription: string;
+    enums: string[];
+    list: boolean;
+    name: string;
+    tags: string[];
 }
 
 export interface SepticCalcInfoInput {
@@ -247,11 +256,53 @@ export interface SepticRefsInput {
     attr?: string[];
 }
 
-export interface SepticObjectsInfoInput {
-    name: string;
-    level?: number;
-    symbolKind?: string;
-    refs?: SepticRefsInput;
+export function formatObjectDocumentationMarkdown(
+    objDoc: SepticObjectDocumentation
+) {
+    let markdown: string[] = [];
+    markdown.push(h4(objDoc.name));
+    markdown.push(horizontalRule());
+    markdown.push(`${objDoc.description}`);
+    markdown.push("Attributes:");
+    objDoc.attributes.forEach((attr) => {
+        markdown.push(formatObjectAttribute(attr));
+    });
+    return markdown.join("\n\n");
+}
+
+export function formatObjectAttribute(
+    attrDoc: SepticAttributeDocumentation,
+    long = false
+) {
+    if (!long) {
+        return "`" + attrDoc.name + "`" + `: ${attrDoc.briefDescription}`;
+    }
+    let doc = h4(attrDoc.name);
+    let newline = "\n\n";
+    doc += newline + horizontalRule();
+    doc += newline + attrDoc.briefDescription;
+    doc += newline + code("DataType:") + " " + attrDoc.dataType;
+    if (attrDoc.dataType === "Enum") {
+        doc += newline + code("Enums:") + " " + `${attrDoc.enums.join("|")}`;
+    }
+    if (attrDoc.list) {
+        doc += newline + code("List:") + " True";
+    }
+    if (attrDoc.default !== "") {
+        doc += newline + code("Default:") + " " + attrDoc.default;
+    }
+    if (attrDoc.tags.length) {
+        doc += newline + code("Tags:");
+        doc += attrDoc.tags
+            .map((tag) => {
+                return tag;
+            })
+            .join(",");
+    }
+    if (attrDoc.detailedDescription !== "") {
+        doc += newline + attrDoc.detailedDescription;
+    }
+    return doc;
 }
 
 export function formatCalcMarkdown(
@@ -262,7 +313,8 @@ export function formatCalcMarkdown(
         return formatCalcParameter(param);
     });
     let markdown = [
-        "`" + `${calc.signature}` + "`",
+        "```js\n" + `function ${calc.signature}` + "\n```",
+        horizontalRule(),
         `${calc.briefDescription.replace(/\r\n/g, "\n")}`,
     ];
 

@@ -8,6 +8,8 @@ import {
     SepticObject,
     SepticReferenceProvider,
     formatCalcMarkdown,
+    formatObjectAttribute,
+    formatObjectDocumentationMarkdown,
     parseAlg,
 } from "../septic";
 
@@ -28,6 +30,10 @@ export class HoverProvider {
             return undefined;
         }
         const offset = doc.offsetAt(params.position);
+        let objectHover = getObjectHover(cnfg, offset, doc);
+        if (objectHover) {
+            return objectHover;
+        }
         let calcHover = getCalcHover(cnfg, offset, doc);
         let refHover = getReferenceHover(cnfg, offset, doc, refProvider);
 
@@ -89,6 +95,54 @@ function getReferenceHover(
                 end: doc.positionAt(ref.location.end),
             },
         };
+    }
+}
+
+function getObjectHover(cnfg: SepticCnfg, offset: number, doc: ITextDocument) {
+    const obj = cnfg.getObjectFromOffset(offset);
+    if (!obj) {
+        return undefined;
+    }
+    const objDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation(
+        obj.type
+    );
+    if (!objDoc) {
+        return undefined;
+    }
+    if (offset <= obj.start + obj.type.length) {
+        return {
+            contents: {
+                value: formatObjectDocumentationMarkdown(objDoc),
+                kind: MarkupKind.Markdown,
+            },
+            range: {
+                start: doc.positionAt(obj.start),
+                end: doc.positionAt(obj.start + obj.type.length),
+            },
+        };
+    }
+    for (let attr of obj.attributes) {
+        if (
+            offset >= attr.start &&
+            offset <= attr.start + attr.key.length + 1
+        ) {
+            let attrDoc = objDoc.attributes.find(
+                (attrDoc) => attrDoc.name === attr.key
+            );
+            if (!attrDoc) {
+                return undefined;
+            }
+            return {
+                contents: {
+                    value: formatObjectAttribute(attrDoc, true),
+                    kind: MarkupKind.Markdown,
+                },
+                range: {
+                    start: doc.positionAt(attr.start),
+                    end: doc.positionAt(attr.start + attr.key.length),
+                },
+            };
+        }
     }
 }
 
