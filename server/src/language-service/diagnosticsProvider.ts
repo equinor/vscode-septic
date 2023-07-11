@@ -4,12 +4,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import {
-    CancellationToken,
-    Diagnostic,
-    DiagnosticSeverity,
-    Range,
-} from "vscode-languageserver";
+import { Diagnostic, DiagnosticSeverity, Range } from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
@@ -29,6 +24,11 @@ import {
     SepticCalcInfo,
     calcNumParameterInfo,
     arityToNum,
+    ISepticObjectDocumentation,
+    AttributeValue,
+    SepticAttributeDocumentation,
+    SepticTokenType,
+    SepticObjectInfo,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -38,17 +38,21 @@ export const disableDiagnosticRegex =
 export const diagnosticCodeRegex = /(E|W)[0-9]{3}/;
 
 export enum DiagnosticCode {
-    E101 = "E101", // Identifier
-    E201 = "E201", // Unable to parse alg
-    E202 = "E202", // Unknown calc in alg
-    E203 = "E203", // Wrong data type param
-    E204 = "E204", // Wrong number of params
-    E205 = "E205", // Missing value for non optional param
-    E301 = "E301", // Missing list length
-    E302 = "E302", // Mismatch length of list
-    E303 = "E303", // Unknown object type
-    E304 = "E304", // Missing attribute
-    W101 = "W101", // Missing reference
+    invalidIdentifier = "E101",
+    unknownObjectType = "E102",
+    invalidAlg = "E201",
+    unknownCalc = "E202",
+    invalidDataTypeParam = "E203",
+    invalidNumberOfParams = "E204",
+    missingValueNonOptionalParam = "E205",
+    missingListLengthValue = "E301",
+    mismatchLengthList = "E302",
+    missingAttributeValue = "E304",
+    unknownAttribute = "E305",
+    missingListAttribute = "E306",
+    invalidDataTypeAttribute = "E307",
+    unexpectedList = "E308",
+    missingReference = "W101",
 }
 
 export enum DiagnosticLevel {
@@ -125,7 +129,7 @@ export function getDiagnostics(
     refProvider: SepticReferenceProvider
 ) {
     const diagnostics: Diagnostic[] = [];
-    diagnostics.push(...validateObject(cnfg, doc, refProvider));
+    diagnostics.push(...validateObjects(cnfg, doc, refProvider));
     diagnostics.push(...validateAlgs(cnfg, doc, refProvider));
     let disabledLines = getDisabledLines(cnfg.comments, doc);
     let filteredDiags = diagnostics.filter((diag) => {
@@ -171,7 +175,7 @@ export function validateAlgs(
                     end: doc.positionAt(algAttrValue.end),
                 },
                 error.message,
-                DiagnosticCode.E201
+                DiagnosticCode.invalidAlg
             );
             diagnostics.push(diagnostic);
             continue;
@@ -202,7 +206,7 @@ export function validateAlgs(
                         end: doc.positionAt(offsetStartAlg + variable.end),
                     },
                     `Undefined Xvr '${variable.value}'`,
-                    DiagnosticCode.W101
+                    DiagnosticCode.missingReference
                 );
                 diagnostics.push(diagnostic);
             }
@@ -228,7 +232,7 @@ export function validateCalc(
                 end: doc.positionAt(offsetStartAlg + calc.end),
             },
             `Calc with unknown identifier: ${calc.identifier}`,
-            DiagnosticCode.E202
+            DiagnosticCode.unknownCalc
         );
         return [diagnostic];
     }
@@ -287,7 +291,7 @@ function validateCalcParams(
                                 ),
                             },
                             `Missing value for non-optional parameter`,
-                            DiagnosticCode.E205
+                            DiagnosticCode.missingValueNonOptionalParam
                         )
                     );
                 }
@@ -318,7 +322,7 @@ function validateCalcParams(
                         ),
                     },
                     `Wrong data type for parameter. Expected data type: ${param.type}`,
-                    DiagnosticCode.E203
+                    DiagnosticCode.invalidDataTypeParam
                 )
             );
             indexCalcParams += 1;
@@ -348,7 +352,7 @@ function validateCalcParamNumber(
                         end: doc.positionAt(offsetStartAlg + calc.end),
                     },
                     `${condEval.message}`,
-                    DiagnosticCode.E204
+                    DiagnosticCode.invalidNumberOfParams
                 )
             );
         }
@@ -425,18 +429,51 @@ function checkParamType(
     return false;
 }
 
-export function validateObject(
+export function validateObjects(
     cnfg: SepticCnfg,
     doc: ITextDocument,
     refProvider: SepticReferenceProvider
 ): Diagnostic[] {
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     let diagnostics: Diagnostic[] = [];
     for (let obj of cnfg.objects) {
-        diagnostics.push(...validateIdentifier(obj, doc));
-        diagnostics.push(...validateObjectReferences(obj, doc, refProvider));
-        for (let attr of obj.attributes) {
-            diagnostics.push(...validateAttribute(attr, doc));
+        const objectDoc = metaInfoProvider.getObjectDocumentation(obj.type);
+        const objectInfo = metaInfoProvider.getObject(obj.type);
+        if (!objectDoc || !objectInfo) {
+            diagnostics.push(
+                createDiagnostic(
+                    DiagnosticSeverity.Error,
+                    {
+                        start: doc.positionAt(obj.start),
+                        end: doc.positionAt(obj.start + obj.type.length),
+                    },
+                    "Unknown object type",
+                    DiagnosticCode.unknownObjectType
+                )
+            );
+            continue;
         }
+        diagnostics.push(
+            ...validateObject(obj, doc, refProvider, objectDoc, objectInfo)
+        );
+    }
+    return diagnostics;
+}
+
+export function validateObject(
+    obj: SepticObject,
+    doc: ITextDocument,
+    refProvider: SepticReferenceProvider,
+    objectDoc: ISepticObjectDocumentation,
+    objectInfo: SepticObjectInfo
+): Diagnostic[] {
+    const diagnostics: Diagnostic[] = [];
+    diagnostics.push(...validateIdentifier(obj, doc));
+    diagnostics.push(
+        ...validateObjectReferences(obj, doc, refProvider, objectInfo)
+    );
+    for (let attr of obj.attributes) {
+        diagnostics.push(...validateAttribute(attr, doc, objectDoc));
     }
     return diagnostics;
 }
@@ -454,7 +491,7 @@ export function validateIdentifier(
                 end: doc.positionAt(obj.start + obj.type.length),
             },
             `Missing identifier for object of type ${obj.type}`,
-            DiagnosticCode.E101
+            DiagnosticCode.invalidIdentifier
         );
         diagnostics.push(diagnostic);
         return diagnostics;
@@ -472,7 +509,7 @@ export function validateIdentifier(
                 end: doc.positionAt(obj.identifier.end),
             },
             `Invalid identifier. Identifier needs to contain minimum one letter. Allowed chars: [a-z, A-Z, 0-9, _, -]. Jinja-expressions are allowed for SCG`,
-            DiagnosticCode.E101
+            DiagnosticCode.invalidIdentifier
         ),
     ];
 }
@@ -480,23 +517,9 @@ export function validateIdentifier(
 function validateObjectReferences(
     obj: SepticObject,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    refProvider: SepticReferenceProvider,
+    objectMetaInfo: SepticObjectInfo
 ): Diagnostic[] {
-    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
-    const objectMetaInfo = metaInfoProvider.getObject(obj.type);
-    if (!objectMetaInfo) {
-        return [
-            createDiagnostic(
-                DiagnosticSeverity.Error,
-                {
-                    start: doc.positionAt(obj.start),
-                    end: doc.positionAt(obj.start + obj.type.length),
-                },
-                `Unknown object type ${obj.type}`,
-                DiagnosticCode.E303
-            ),
-        ];
-    }
     const diagnostics: Diagnostic[] = [];
     if (objectMetaInfo.refs.identifier && obj.identifier && !obj.isXvr()) {
         let validRef = refProvider.validateRef(
@@ -514,7 +537,7 @@ function validateObjectReferences(
                         end: doc.positionAt(obj.identifier.end),
                     },
                     `Reference to undefined Xvr ${obj.identifier.name}`,
-                    DiagnosticCode.W101
+                    DiagnosticCode.missingReference
                 )
             );
         }
@@ -538,7 +561,7 @@ function validateObjectReferences(
                         end: doc.positionAt(attr.start + attr.key.length),
                     },
                     `Reference to undefined Xvr ${attr.key}`,
-                    DiagnosticCode.W101
+                    DiagnosticCode.missingReference
                 )
             );
         }
@@ -568,7 +591,7 @@ function validateObjectReferences(
                         end: doc.positionAt(attrValue.end),
                     },
                     `Reference to undefined Xvr ${attrValue.getValue()}`,
-                    DiagnosticCode.W101
+                    DiagnosticCode.missingReference
                 )
             );
         }
@@ -576,56 +599,172 @@ function validateObjectReferences(
     return diagnostics;
 }
 
-function validateAttribute(attr: Attribute, doc: ITextDocument): Diagnostic[] {
+function validateAttribute(
+    attr: Attribute,
+    doc: ITextDocument,
+    objectDoc: ISepticObjectDocumentation
+): Diagnostic[] {
+    const attrDoc = objectDoc.getAttribute(attr.key);
+    const diagnostics: Diagnostic[] = [];
+    if (!attrDoc) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Error,
+                {
+                    start: doc.positionAt(attr.start),
+                    end: doc.positionAt(attr.start + attr.key.length),
+                },
+                `Unknown attribute for Object of type ${objectDoc.name}`,
+                DiagnosticCode.unknownAttribute
+            ),
+        ];
+    }
     let attrValues = attr.getAttrValues();
-    if (!attrValues.length) {
-        return [
-            createDiagnostic(
-                DiagnosticSeverity.Error,
-                {
-                    start: doc.positionAt(attr.start),
-                    end: doc.positionAt(attr.start + attr.key.length),
-                },
-                `Missing value for attribute`,
-                DiagnosticCode.E304
-            ),
-        ];
-    }
+    diagnostics.push(
+        ...validateAttributeNumValues(
+            attrValues,
+            attrDoc,
+            attr.start,
+            attr.start + attr.key.length,
+            doc
+        )
+    );
+    const startIndex = attrValues.length > 1 ? 1 : 0;
+    diagnostics.push(
+        ...validateAttributeDataType(attrValues.slice(startIndex), attrDoc, doc)
+    );
+    return diagnostics;
+}
 
-    if (attrValues.length === 1) {
-        return [];
+function validateAttributeDataType(
+    attrValues: AttributeValue[],
+    attrDoc: SepticAttributeDocumentation,
+    doc: ITextDocument
+): Diagnostic[] {
+    const diagnostics: Diagnostic[] = [];
+    for (let attrValue of attrValues) {
+        if (!checkAttributeDataType(attrValue, attrDoc)) {
+            let errorMessage = `Wrong data type for attribute. Expected DataType: ${attrDoc.dataType}`;
+            if (attrDoc.dataType === "Enum") {
+                errorMessage += `. Permissable enums: ${attrDoc.enums.join(
+                    "|"
+                )}`;
+            }
+            diagnostics.push(
+                createDiagnostic(
+                    DiagnosticSeverity.Error,
+                    {
+                        start: doc.positionAt(attrValue.start),
+                        end: doc.positionAt(attrValue.end),
+                    },
+                    errorMessage,
+                    DiagnosticCode.invalidDataTypeAttribute
+                )
+            );
+        }
     }
-    let numValues = parseInt(attrValues[0].value);
-    if (isNaN(numValues)) {
-        return [
-            createDiagnostic(
-                DiagnosticSeverity.Error,
-                {
-                    start: doc.positionAt(attr.start),
-                    end: doc.positionAt(attr.start + attr.key.length),
-                },
-                `First value needs to be int when multiple values are provided for attribute`,
-                DiagnosticCode.E301
-            ),
-        ];
-    }
+    return diagnostics;
+}
 
-    if (numValues !== attrValues.length - 1) {
-        return [
-            createDiagnostic(
-                DiagnosticSeverity.Error,
-                {
-                    start: doc.positionAt(attr.start),
-                    end: doc.positionAt(attr.start + attr.key.length),
-                },
-                `Incorrect number of values given. Expected: ${numValues} Actual: ${
-                    attrValues.length - 1
-                }.`,
-                DiagnosticCode.E302
-            ),
-        ];
+function validateAttributeNumValues(
+    attrValues: AttributeValue[],
+    attrDoc: SepticAttributeDocumentation,
+    startAttr: number,
+    endAttr: number,
+    doc: ITextDocument
+): Diagnostic[] {
+    const range = {
+        start: doc.positionAt(startAttr),
+        end: doc.positionAt(endAttr),
+    };
+    switch (attrValues.length) {
+        case 0:
+            return [
+                createDiagnostic(
+                    DiagnosticSeverity.Error,
+                    range,
+                    `Missing value for attribute`,
+                    DiagnosticCode.missingAttributeValue
+                ),
+            ];
+        case 1:
+            if (!attrDoc.list) {
+                return [];
+            }
+            return [
+                createDiagnostic(
+                    DiagnosticSeverity.Error,
+                    range,
+                    `Attribute don't expect list of values`,
+                    DiagnosticCode.missingListAttribute
+                ),
+            ];
+        default:
+            if (!attrDoc.list) {
+                return [
+                    createDiagnostic(
+                        DiagnosticSeverity.Error,
+                        range,
+                        `Attribute don't expect list of values`,
+                        DiagnosticCode.unexpectedList
+                    ),
+                ];
+            }
+            if (!isInt(attrValues[0].value)) {
+                return [
+                    createDiagnostic(
+                        DiagnosticSeverity.Error,
+                        range,
+                        `First value needs to be positive int when multiple values are provided for attribute`,
+                        DiagnosticCode.missingListLengthValue
+                    ),
+                ];
+            }
+            let numValues = parseInt(attrValues[0].value);
+            if (attrValues.length - 1 !== numValues) {
+                return [
+                    createDiagnostic(
+                        DiagnosticSeverity.Error,
+                        range,
+                        `Incorrect number of values given. Expected: ${numValues} Actual: ${
+                            attrValues.length - 1
+                        }.`,
+                        DiagnosticCode.mismatchLengthList
+                    ),
+                ];
+            }
+            return [];
     }
-    return [];
+}
+
+export function checkAttributeDataType(
+    attrValue: AttributeValue,
+    attrDoc: SepticAttributeDocumentation
+): boolean {
+    if (attrValue.type === SepticTokenType.jinjaExpression) {
+        return true;
+    }
+    switch (attrDoc.dataType) {
+        case "Int":
+            return isInt(attrValue.value);
+        case "Double":
+            return attrValue.type === SepticTokenType.numeric;
+        case "String":
+            return attrValue.type === SepticTokenType.string;
+        case "Enum":
+            return attrDoc.enums.includes(attrValue.value);
+        default:
+            let bitMaskMatch = attrDoc.dataType.match(/^Bit([0-9]+)$/);
+            if (!bitMaskMatch) {
+                return true;
+            }
+            let number = parseInt(bitMaskMatch[1]);
+            return RegExp(`[01]{${number}}`).test(attrValue.value);
+    }
+}
+
+function isInt(str: string) {
+    return /^-?[0-9]+$/.test(str);
 }
 
 export function checkIdentifier(identifier: string): boolean {

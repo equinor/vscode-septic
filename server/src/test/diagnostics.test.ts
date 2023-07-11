@@ -6,8 +6,16 @@ import {
     getDiagnostics,
     disableDiagnosticRegex,
     DiagnosticCode,
+    validateObject,
+    checkAttributeDataType,
 } from "../language-service/diagnosticsProvider";
-import { parseSeptic } from "../septic";
+import {
+    AttributeValue,
+    SepticAttributeDocumentation,
+    SepticMetaInfoProvider,
+    SepticTokenType,
+    parseSeptic,
+} from "../septic";
 import { MockDocument } from "./util";
 
 describe("Test alg diagnostics", () => {
@@ -23,7 +31,7 @@ describe("Test alg diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.E201);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
     });
     it("Unexpected token in alg", () => {
         const text = `
@@ -37,7 +45,21 @@ describe("Test alg diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.E201);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
+    });
+    it("Multiple expressions in alg", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "(1+1)(1+2)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
     });
     it("Missing reference in alg", () => {
         const text = `
@@ -51,7 +73,7 @@ describe("Test alg diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.W101);
+        expect(diag[0].code).to.equal(DiagnosticCode.missingReference);
     });
     it("Unknown function in alg", () => {
         const text = `
@@ -65,7 +87,7 @@ describe("Test alg diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.E202);
+        expect(diag[0].code).to.equal(DiagnosticCode.unknownCalc);
     });
 });
 
@@ -128,7 +150,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.E203);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeParam);
     });
     it("No diagnostics for empty optional param", () => {
         const text = `
@@ -158,7 +180,9 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.E205);
+        expect(diag[0].code).to.equal(
+            DiagnosticCode.missingValueNonOptionalParam
+        );
     });
 
     it("Diagnostics for incorrect parity of arguments", () => {
@@ -173,7 +197,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.E204);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
 
     it("No diagnostics for not using optional params", () => {
@@ -208,7 +232,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.E204);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
     it("Diagnostics for fewer number of params", () => {
         const text = `
@@ -222,7 +246,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.E204);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
     it("Multiple diagnostics for calc", () => {
         const text = `
@@ -236,8 +260,10 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(2);
-        expect(diag[0].code).to.equal(DiagnosticCode.E205);
-        expect(diag[1].code).to.equal(DiagnosticCode.E204);
+        expect(diag[0].code).to.equal(
+            DiagnosticCode.missingValueNonOptionalParam
+        );
+        expect(diag[1].code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
 });
 
@@ -252,7 +278,7 @@ describe("Test identifier diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateIdentifier(cnfg.objects[0], doc);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.E101);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidIdentifier);
     });
     it("Error for identifier with invalid char", () => {
         const text = `
@@ -264,7 +290,7 @@ describe("Test identifier diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateIdentifier(cnfg.objects[0], doc);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.E101);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidIdentifier);
     });
     it("No error for identifier with only jinja", () => {
         const text = `
@@ -313,7 +339,7 @@ describe("Test regex for disabling diagnostics", () => {
 describe("Test disabling of diagnostics", () => {
     it("Disabling diagnostics using line comment", () => {
         const text = `
-        Evr: 1234 // noqa
+        Mvr: 1234 // noqa
 		`;
 
         const doc = new MockDocument(text);
@@ -325,7 +351,7 @@ describe("Test disabling of diagnostics", () => {
 
     it("Disabling diagnostics using jinja comment", () => {
         const text = `
-        Evr: 1234 {# noqa #}
+        Mvr: 1234 {# noqa #}
 		`;
 
         const doc = new MockDocument(text);
@@ -337,7 +363,7 @@ describe("Test disabling of diagnostics", () => {
 
     it("Disabling diagnostics using code", () => {
         const text = `
-        Evr: 1234 {# noqa: E101 #}
+        Mvr: 1234 {# noqa: E101 #}
 		`;
 
         const doc = new MockDocument(text);
@@ -348,7 +374,7 @@ describe("Test disabling of diagnostics", () => {
     });
     it("Not disabling diagnostics using empty code", () => {
         const text = `
-        Evr: 1234 {# noqa: #}
+        Mvr: 1234 {# noqa: #}
 		`;
 
         const doc = new MockDocument(text);
@@ -359,7 +385,7 @@ describe("Test disabling of diagnostics", () => {
     });
     it("Not disabling diagnostics using wrong code", () => {
         const text = `
-        Evr: 1234 {# noqa: E201 #}
+        Mvr: 1234 {# noqa: E201 #}
 		`;
 
         const doc = new MockDocument(text);
@@ -391,5 +417,307 @@ describe("Test disabling of diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = getDiagnostics(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
+    });
+});
+
+describe("Test validation of attributes", () => {
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
+    const mvrDoc = metaInfoProvider.getObjectDocumentation("Mvr");
+    const mvrInfo = metaInfoProvider.getObject("Mvr");
+    it("Validation of attribute without value", () => {
+        const text = `
+            Mvr: Test
+            Text1= 
+        `;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            mvrDoc!,
+            mvrInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.missingAttributeValue);
+    });
+    it("Validation of attribute with wrong data type", () => {
+        const text = `
+            Mvr: Test
+            Text1= 1
+        `;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            mvrDoc!,
+            mvrInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
+    });
+    it("Validation of attribute with wrong data type", () => {
+        const text = `
+            Mvr: Test
+            IvPrio= 1.1
+        `;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            mvrDoc!,
+            mvrInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
+    });
+    it("Validation of attribute with wrong data type", () => {
+        const text = `
+            Mvr: Test
+            LockHL= 1
+        `;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            mvrDoc!,
+            mvrInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
+    });
+    it("Validation of attribute with wrong enum value", () => {
+        const text = `
+            Mvr: Test
+            LockHL= TEST
+        `;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            mvrDoc!,
+            mvrInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
+    });
+    it("Validation of attribute that don't expect list", () => {
+        const text = `
+            Mvr: Test
+            Nfix= 1 1
+        `;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            mvrDoc!,
+            mvrInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.unexpectedList);
+    });
+    it("Validation of attribute that expect list", () => {
+        const text = `
+            Mvr: Test
+            Blocking= 11
+        `;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            mvrDoc!,
+            mvrInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.missingListAttribute);
+    });
+    it("Validation of attribute with mismatch on list length", () => {
+        const text = `
+            Mvr: Test
+            Blocking= 2 1
+        `;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            mvrDoc!,
+            mvrInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.mismatchLengthList);
+    });
+
+    it("Validation of attribute with wrong list indicator", () => {
+        const text = `
+            Mvr: Test
+            Blocking= 2.2 1
+        `;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            mvrDoc!,
+            mvrInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.missingListLengthValue);
+    });
+    it("Validation of attribute with correct list", () => {
+        const text = `
+            Mvr: Test
+            Blocking= 3 1 2 3
+        `;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            mvrDoc!,
+            mvrInfo!
+        );
+        expect(diag.length).to.equal(0);
+    });
+});
+
+describe("Test validation of attribute data type", () => {
+    const createAttrDoc = (
+        datatype: string,
+        enums: string[]
+    ): SepticAttributeDocumentation => {
+        return {
+            briefDescription: "",
+            dataType: datatype,
+            detailedDescription: "",
+            enums: enums,
+            list: false,
+            name: "",
+            tags: [],
+            default: "",
+        };
+    };
+    it("Check valid bitmask", () => {
+        const attrValue = new AttributeValue("10000", SepticTokenType.numeric);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("Bit5", []))
+        ).to.equal(true);
+    });
+    it("Check valid bitmask", () => {
+        const attrValue = new AttributeValue(
+            "0000000000000000000010000000001",
+            SepticTokenType.numeric
+        );
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("Bit31", []))
+        ).to.equal(true);
+    });
+    it("Check invalid bitmask", () => {
+        const attrValue = new AttributeValue(
+            "000000000000000000001000000000",
+            SepticTokenType.numeric
+        );
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("Bit31", []))
+        ).to.equal(false);
+    });
+    it("Check invalid bitmask", () => {
+        const attrValue = new AttributeValue(
+            "2000000000000000000010000000001",
+            SepticTokenType.numeric
+        );
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("Bit31", []))
+        ).to.equal(false);
+    });
+    it("Check valid int", () => {
+        const attrValue = new AttributeValue("1", SepticTokenType.numeric);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("Int", []))
+        ).to.equal(true);
+    });
+    it("Check invalid int", () => {
+        const attrValue = new AttributeValue("1.1", SepticTokenType.numeric);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("Int", []))
+        ).to.equal(false);
+    });
+    it("Check invalid int", () => {
+        const attrValue = new AttributeValue("1e+10", SepticTokenType.numeric);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("Int", []))
+        ).to.equal(false);
+    });
+    it("Check valid double", () => {
+        const attrValue = new AttributeValue("1e+10", SepticTokenType.numeric);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("Double", []))
+        ).to.equal(true);
+    });
+    it("Check invalid double", () => {
+        const attrValue = new AttributeValue("Test", SepticTokenType.string);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("Double", []))
+        ).to.equal(false);
+    });
+    it("Check valid string", () => {
+        const attrValue = new AttributeValue("Test", SepticTokenType.string);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("String", []))
+        ).to.equal(true);
+    });
+    it("Check invalid string", () => {
+        const attrValue = new AttributeValue("1.1", SepticTokenType.numeric);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("String", []))
+        ).to.equal(false);
+    });
+    it("Check valid enum", () => {
+        const attrValue = new AttributeValue(
+            "TEST",
+            SepticTokenType.identifier
+        );
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("Enum", ["TEST"]))
+        ).to.equal(true);
+    });
+    it("Check invalid enum", () => {
+        const attrValue = new AttributeValue("TES", SepticTokenType.identifier);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("Enum", ["TEST"]))
+        ).to.equal(false);
+    });
+    it("Check jinja expression", () => {
+        const attrValue = new AttributeValue(
+            "{{ TEST }}",
+            SepticTokenType.jinjaExpression
+        );
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("String", ["TEST"]))
+        ).to.equal(true);
+    });
+    it("Check jinja expression", () => {
+        const attrValue = new AttributeValue(
+            "{{ TEST }}",
+            SepticTokenType.jinjaExpression
+        );
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("Int", []))
+        ).to.equal(true);
     });
 });

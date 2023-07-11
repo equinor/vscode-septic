@@ -28,7 +28,7 @@ export class SepticMetaInfoProvider {
     private static metaInfoProvider: SepticMetaInfoProvider;
     private calcsMap: Map<string, SepticCalcInfo>;
     private objectsMap: Map<string, SepticObjectInfo>;
-    private objectsDocMap: Map<string, SepticObjectDocumentation>;
+    private objectsDocMap: Map<string, ISepticObjectDocumentation>;
 
     private constructor() {
         this.calcsMap = this.loadCalcsInfo();
@@ -80,7 +80,9 @@ export class SepticMetaInfoProvider {
         obj.level = level;
     }
 
-    public getObjectDocumentation(objectType: string) {
+    public getObjectDocumentation(
+        objectType: string
+    ): ISepticObjectDocumentation | undefined {
         return this.objectsDocMap.get(objectType);
     }
 
@@ -140,18 +142,21 @@ export class SepticMetaInfoProvider {
         return objectsMap;
     }
 
-    private loadObjectsDocumentation(): Map<string, SepticObjectDocumentation> {
+    private loadObjectsDocumentation(): Map<
+        string,
+        ISepticObjectDocumentation
+    > {
         const filePath = path.join(
             __dirname,
             "../../../public/objectsDoc.yaml"
         );
         const file = fs.readFileSync(filePath, "utf-8");
-        const objectsDoc: SepticObjectDocumentation[] = YAML.load(
+        const objectsDoc: SepticObjectDocumentationInput[] = YAML.load(
             file
-        ) as SepticObjectDocumentation[];
-        let objectsDocMap = new Map<string, SepticObjectDocumentation>();
+        ) as SepticObjectDocumentationInput[];
+        let objectsDocMap = new Map<string, ISepticObjectDocumentation>();
         for (let obj of objectsDoc) {
-            objectsDocMap.set(obj.name, obj);
+            objectsDocMap.set(obj.name, new SepticObjectDocumentation(obj));
         }
         return objectsDocMap;
     }
@@ -175,6 +180,29 @@ function toSymbolKind(name: string) {
     }
 }
 
+class SepticObjectDocumentation implements ISepticObjectDocumentation {
+    name: string;
+    attributes: SepticAttributeDocumentation[];
+    description: string;
+    attrMap: Map<string, SepticAttributeDocumentation> = new Map<
+        string,
+        SepticAttributeDocumentation
+    >();
+
+    constructor(input: SepticObjectDocumentationInput) {
+        this.name = input.name;
+        this.attributes = input.attributes;
+        this.description = input.description;
+        this.attributes.forEach((attr) => this.attrMap.set(attr.name, attr));
+    }
+
+    public getAttribute(
+        attr: string
+    ): SepticAttributeDocumentation | undefined {
+        return this.attrMap.get(attr);
+    }
+}
+
 export interface SepticMetaInfo {
     objects: SepticObjectInfo[];
     calcs: SepticCalcInfo[];
@@ -194,7 +222,14 @@ export interface SepticObjectsInfoInput {
     refs?: SepticRefsInput;
 }
 
-export interface SepticObjectDocumentation {
+export interface ISepticObjectDocumentation {
+    name: string;
+    attributes: SepticAttributeDocumentation[];
+    description: string;
+    getAttribute(attr: string): SepticAttributeDocumentation | undefined;
+}
+
+export interface SepticObjectDocumentationInput {
     name: string;
     attributes: SepticAttributeDocumentation[];
     description: string;
@@ -257,7 +292,7 @@ export interface SepticRefsInput {
 }
 
 export function formatObjectDocumentationMarkdown(
-    objDoc: SepticObjectDocumentation
+    objDoc: SepticObjectDocumentationInput
 ) {
     let markdown: string[] = [];
     markdown.push(h4(objDoc.name));
