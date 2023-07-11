@@ -14,7 +14,7 @@ import {
 } from "../septic";
 
 const indentsObjectDeclaration = 2;
-const indentsAttributesDelimiter = 14;
+export const indentsAttributesDelimiter = 14;
 const startObjectName = 17;
 const spacesBetweenValues = 2;
 const spacesBetweenIntValues = 6;

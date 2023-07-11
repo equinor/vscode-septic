@@ -116,9 +116,14 @@ export class SepticCnfg implements SepticReferenceProvider {
     }
 
     public getObjectFromOffset(offset: number): SepticObject | undefined {
-        return this.objects.find((obj) => {
-            return offset >= obj.start && offset <= obj.end;
-        });
+        let index = 1;
+        while (index < this.objects.length) {
+            if (this.objects[index].start >= offset) {
+                return this.objects[index - 1];
+            }
+            index += 1;
+        }
+        return this.objects[this.objects.length - 1];
     }
 
     public getXvrRefFromOffset(offset: number): SepticReference | undefined {

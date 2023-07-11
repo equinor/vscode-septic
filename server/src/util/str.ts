@@ -5,3 +5,7 @@ export function removeSpaces(str: string) {
 export function isPureJinja(str: string) {
     return /^\{\{.*\}\}$/.test(str);
 }
+
+export function isAlpha(char: string): boolean {
+    return /^[a-zA-Z]$/.test(char);
+}
