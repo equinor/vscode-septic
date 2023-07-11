@@ -26,7 +26,7 @@ import {
     formatObjectAttribute,
 } from "../septic";
 import { indentsAttributesDelimiter } from "./formatProvider";
-import { isAlpha } from "../util";
+import { isAlphaNumeric } from "../util";
 
 export class CompletionProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
@@ -52,7 +52,7 @@ export class CompletionProvider {
     }
 }
 
-function getCalcCompletion(
+export function getCalcCompletion(
     offset: number,
     cnfg: SepticCnfg,
     refProvider: SepticReferenceProvider
@@ -84,7 +84,7 @@ function getCalcCompletion(
     return compItems;
 }
 
-function getObjectCompletion(
+export function getObjectCompletion(
     offset: number,
     cnfg: SepticCnfg,
     refProvider: SepticReferenceProvider,
@@ -108,7 +108,7 @@ function getObjectCompletion(
         const offsetEndLine = doc.offsetAt(
             Position.create(pos.line, line.length)
         );
-        const startName = obj.start + obj.type.length + 1;
+        const startName = obj.start + obj.type.length + 2;
         const endName = obj.attributes.length
             ? obj.attributes[0].start
             : offsetEndLine;
@@ -136,6 +136,9 @@ function getObjectCompletion(
     }
     let rangeNewLine = getRangeAttrTextEdit(offset, doc);
     for (let attr of objDoc.attributes) {
+        if (obj.getAttribute(attr.name)) {
+            continue;
+        }
         let text = rangeNewLine.addNewLine
             ? "\n" + getTextAttrTextEdit(attr)
             : getTextAttrTextEdit(attr);
@@ -154,6 +157,7 @@ function getObjectCompletion(
     }
     return compItems;
 }
+
 function getTextAttrTextEdit(attr: SepticAttributeDocumentation) {
     let hasDefault = attr.default.length > 0;
     let attrFormatted =
@@ -195,7 +199,7 @@ function getExistingCompletion(
     let existing = "";
     let index = startIndex;
     while (index >= 0) {
-        if (isAlpha(line[index])) {
+        if (isAlphaNumeric(line[index])) {
             existing += line[index];
             index -= 1;
         } else {
@@ -225,7 +229,7 @@ function getRelevantXvrs(
         return xvrs.filter((xvr) => xvr.isType("Sopc" + curObj.type));
     } else if (curObj.isSopcXvr()) {
         return xvrs.filter((xvr) => xvr.isType(curObj.type.slice(4)));
-    } else if (curObj.type === "CalcPvr") {
+    } else if (curObj.isType("CalcPvr")) {
         return xvrs.filter((xvr) => xvr.isXvr());
     } else {
         return [];
