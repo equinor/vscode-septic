@@ -1,8 +1,8 @@
 import { expect } from "chai";
 
 import {
-    algDiagnostic,
-    identifierDiagnostics,
+    validateAlgs,
+    validateIdentifier,
     getDiagnostics,
     disableDiagnosticRegex,
     DiagnosticCode,
@@ -21,7 +21,7 @@ describe("Test alg diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.E201);
     });
@@ -35,7 +35,7 @@ describe("Test alg diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.E201);
     });
@@ -49,7 +49,7 @@ describe("Test alg diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.W101);
     });
@@ -63,7 +63,7 @@ describe("Test alg diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.E202);
     });
@@ -80,7 +80,7 @@ describe("Test parameter diagnostics in alg", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
     });
     it("No diagnostics for correct number of params", () => {
@@ -93,7 +93,7 @@ describe("Test parameter diagnostics in alg", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
     });
     it("No diagnostics for correct datatype", () => {
@@ -109,7 +109,7 @@ describe("Test parameter diagnostics in alg", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
     });
 
@@ -126,7 +126,7 @@ describe("Test parameter diagnostics in alg", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.E203);
     });
@@ -143,7 +143,7 @@ describe("Test parameter diagnostics in alg", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
     });
     it("Diagnostics for empty non-optional param", () => {
@@ -156,7 +156,7 @@ describe("Test parameter diagnostics in alg", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.E205);
     });
@@ -171,7 +171,7 @@ describe("Test parameter diagnostics in alg", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.E204);
     });
@@ -189,7 +189,7 @@ describe("Test parameter diagnostics in alg", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
     });
 
@@ -206,7 +206,7 @@ describe("Test parameter diagnostics in alg", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.E204);
     });
@@ -220,7 +220,7 @@ describe("Test parameter diagnostics in alg", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.E204);
     });
@@ -234,7 +234,7 @@ describe("Test parameter diagnostics in alg", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = algDiagnostic(cnfg, doc, cnfg);
+        let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(2);
         expect(diag[0].code).to.equal(DiagnosticCode.E205);
         expect(diag[1].code).to.equal(DiagnosticCode.E204);
@@ -250,7 +250,7 @@ describe("Test identifier diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = identifierDiagnostics(cnfg.objects[0], doc);
+        let diag = validateIdentifier(cnfg.objects[0], doc);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.E101);
     });
@@ -262,7 +262,7 @@ describe("Test identifier diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = identifierDiagnostics(cnfg.objects[0], doc);
+        let diag = validateIdentifier(cnfg.objects[0], doc);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.E101);
     });
@@ -274,7 +274,7 @@ describe("Test identifier diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = identifierDiagnostics(cnfg.objects[0], doc);
+        let diag = validateIdentifier(cnfg.objects[0], doc);
         expect(diag.length).to.equal(0);
     });
     it("No error for valid identifier", () => {
@@ -285,7 +285,7 @@ describe("Test identifier diagnostics", () => {
         const doc = new MockDocument(text);
 
         const cnfg = parseSeptic(doc.getText());
-        let diag = identifierDiagnostics(cnfg.objects[0], doc);
+        let diag = validateIdentifier(cnfg.objects[0], doc);
         expect(diag.length).to.equal(0);
     });
 });

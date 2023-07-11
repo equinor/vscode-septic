@@ -125,8 +125,8 @@ export function getDiagnostics(
     refProvider: SepticReferenceProvider
 ) {
     const diagnostics: Diagnostic[] = [];
-    diagnostics.push(...objDiagnostics(cnfg, doc, refProvider));
-    diagnostics.push(...algDiagnostic(cnfg, doc, refProvider));
+    diagnostics.push(...validateObject(cnfg, doc, refProvider));
+    diagnostics.push(...validateAlgs(cnfg, doc, refProvider));
     let disabledLines = getDisabledLines(cnfg.comments, doc);
     let filteredDiags = diagnostics.filter((diag) => {
         let disabledLine = disabledLines.get(diag.range.start.line);
@@ -146,7 +146,7 @@ export function getDiagnostics(
     return filteredDiags;
 }
 
-export function algDiagnostic(
+export function validateAlgs(
     cnfg: SepticCnfg,
     doc: ITextDocument,
     refProvider: SepticReferenceProvider
@@ -181,7 +181,7 @@ export function algDiagnostic(
 
         visitor.calcs.forEach((calc) => {
             diagnostics.push(
-                ...calcDiagnostics(calc, doc, refProvider, offsetStartAlg)
+                ...validateCalc(calc, doc, refProvider, offsetStartAlg)
             );
         });
 
@@ -211,7 +211,7 @@ export function algDiagnostic(
     return diagnostics;
 }
 
-export function calcDiagnostics(
+export function validateCalc(
     calc: AlgCalc,
     doc: ITextDocument,
     refProvider: SepticReferenceProvider,
@@ -233,7 +233,7 @@ export function calcDiagnostics(
         return [diagnostic];
     }
     diagnostics.push(
-        ...calcParamDiagnostics(
+        ...validateCalcParams(
             calc,
             calcMetaInfo,
             refProvider,
@@ -242,12 +242,12 @@ export function calcDiagnostics(
         )
     );
     diagnostics.push(
-        ...calcNumParamDiagnostics(calc, calcMetaInfo, doc, offsetStartAlg)
+        ...validateCalcParamNumber(calc, calcMetaInfo, doc, offsetStartAlg)
     );
     return diagnostics;
 }
 
-function calcParamDiagnostics(
+function validateCalcParams(
     calc: AlgCalc,
     calcMetaInfo: SepticCalcInfo,
     refProvider: SepticReferenceProvider,
@@ -327,7 +327,7 @@ function calcParamDiagnostics(
     return diagnostics;
 }
 
-function calcNumParamDiagnostics(
+function validateCalcParamNumber(
     calc: AlgCalc,
     calcInfo: SepticCalcInfo,
     doc: ITextDocument,
@@ -425,23 +425,23 @@ function checkParamType(
     return false;
 }
 
-export function objDiagnostics(
+export function validateObject(
     cnfg: SepticCnfg,
     doc: ITextDocument,
     refProvider: SepticReferenceProvider
 ): Diagnostic[] {
     let diagnostics: Diagnostic[] = [];
     for (let obj of cnfg.objects) {
-        diagnostics.push(...identifierDiagnostics(obj, doc));
-        diagnostics.push(...objRefDiagnostics(obj, doc, refProvider));
+        diagnostics.push(...validateIdentifier(obj, doc));
+        diagnostics.push(...validateObjectReferences(obj, doc, refProvider));
         for (let attr of obj.attributes) {
-            diagnostics.push(...attrDiagnostics(attr, doc));
+            diagnostics.push(...validateAttribute(attr, doc));
         }
     }
     return diagnostics;
 }
 
-export function identifierDiagnostics(
+export function validateIdentifier(
     obj: SepticObject,
     doc: ITextDocument
 ): Diagnostic[] {
@@ -460,40 +460,24 @@ export function identifierDiagnostics(
         return diagnostics;
     }
 
-    let report = validateIdentifier(obj.identifier.name);
-    if (report.valid) {
+    if (checkIdentifier(obj.identifier.name)) {
         return [];
     }
 
-    if (!report.containsLetter) {
-        const diagnostic: Diagnostic = createDiagnostic(
+    return [
+        createDiagnostic(
             DiagnosticSeverity.Error,
             {
                 start: doc.positionAt(obj.identifier.start),
                 end: doc.positionAt(obj.identifier.end),
             },
-            `Identifier needs to contain minimum one letter`,
+            `Invalid identifier. Identifier needs to contain minimum one letter. Allowed chars: [a-z, A-Z, 0-9, _, -]. Jinja-expressions are allowed for SCG`,
             DiagnosticCode.E101
-        );
-        diagnostics.push(diagnostic);
-    }
-
-    if (report.invalidChars.length) {
-        const diagnostic: Diagnostic = createDiagnostic(
-            DiagnosticSeverity.Error,
-            {
-                start: doc.positionAt(obj.identifier.start),
-                end: doc.positionAt(obj.identifier.end),
-            },
-            `Identifier contains the following invalid chars: ${report.invalidChars}`,
-            DiagnosticCode.E101
-        );
-        diagnostics.push(diagnostic);
-    }
-    return diagnostics;
+        ),
+    ];
 }
 
-function objRefDiagnostics(
+function validateObjectReferences(
     obj: SepticObject,
     doc: ITextDocument,
     refProvider: SepticReferenceProvider
@@ -592,7 +576,7 @@ function objRefDiagnostics(
     return diagnostics;
 }
 
-function attrDiagnostics(attr: Attribute, doc: ITextDocument): Diagnostic[] {
+function validateAttribute(attr: Attribute, doc: ITextDocument): Diagnostic[] {
     let attrValues = attr.getAttrValues();
     if (!attrValues.length) {
         return [
@@ -644,13 +628,7 @@ function attrDiagnostics(attr: Attribute, doc: ITextDocument): Diagnostic[] {
     return [];
 }
 
-interface IdentifierReport {
-    containsLetter: boolean;
-    invalidChars: string[];
-    valid: boolean;
-}
-
-export function validateIdentifier(identifier: string): IdentifierReport {
+export function checkIdentifier(identifier: string): boolean {
     const ignoredPattern = /\{\{\s*[\w\-]+\s*\}\}/g;
 
     const filteredIdentifier = identifier.replace(ignoredPattern, "");
@@ -659,19 +637,14 @@ export function validateIdentifier(identifier: string): IdentifierReport {
         /[a-zA-Z]/.test(filteredIdentifier) ||
         filteredIdentifier.length < identifier.length;
 
-    const invalidChars = getInvalidChars(filteredIdentifier);
+    const invalidChars = containsInvalidChars(filteredIdentifier);
 
-    return {
-        valid: containsLetter && !invalidChars.length,
-        invalidChars: invalidChars,
-        containsLetter: containsLetter,
-    };
+    return containsLetter && !invalidChars;
 }
 
-function getInvalidChars(str: string): string[] {
+function containsInvalidChars(str: string): boolean {
     const invalidCharsRegex = /[^a-zA-Z0-9_]/g;
-    const invalidChars = str.match(invalidCharsRegex) || [];
-    return [...new Set(invalidChars)];
+    return invalidCharsRegex.test(str);
 }
 
 function getDisabledLines(
