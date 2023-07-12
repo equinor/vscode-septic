@@ -46,8 +46,8 @@ function compareFiles(expectedContent: string, actualContent: string) {
     ) {
         const e = expectedLines[i];
         const a = actualLines[i];
-        console.log(`Expected: ${e}`);
-        console.log(`Actual: ${a}`);
+        console.log(`${i} Expected: ${e}`);
+        console.log(`${i} Actual:   ${a}`);
     }
 
     expect(
