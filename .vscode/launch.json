@@ -9,9 +9,7 @@
             "name": "Attach to server",
             "port": 6009,
             "request": "attach",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
+            "skipFiles": ["<node_internals>/**"],
             "type": "node"
         },
         {
@@ -21,37 +19,20 @@
             "runtimeExecutable": "${execPath}",
             "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
             "outFiles": ["${workspaceRoot}/client/out/**/*.js"],
-            "preLaunchTask": "npm: compile"
+            "preLaunchTask": "npm: watch"
         },
         {
             "name": "Language Server E2E Test",
             "type": "extensionHost",
             "request": "launch",
             "args": [
+                "--disable-extensions",
                 "--extensionDevelopmentPath=${workspaceFolder}",
                 "--extensionTestsPath=${workspaceFolder}/client/out/test/index",
                 "${workspaceRoot}/client/src/test/fixtures"
             ],
             "outFiles": ["${workspaceFolder}/client/out/test/**/*.js"],
-            "preLaunchTask": "npm: compile"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}/server/src/language-service/fileInfoProvider.ts",
-            "preLaunchTask": "npm: watch",
-            "outFiles": ["${workspaceFolder}/server/out/**/*.js"]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Jest Tests",
-            "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
-            "args": ["-i"],
-            "preLaunchTask": "npm: compile",
-            "internalConsoleOptions": "openOnSessionStart",
-            "outFiles": ["${workspaceRoot}/server/out/**/*"]
+            "preLaunchTask": "npm: watch"
         }
     ]
 }

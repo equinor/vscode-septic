@@ -1,0 +1,50 @@
+  System:        CVMVtest
+         Text1=  "Small system for SEPTIC test of three CVs and three MVs. OPC connection to simulator "
+         Text2=  ""
+         Nsecs=  10
+       PlotMax=  10
+         Nhist=  10
+         Npred=  10
+         Nmodl=  10
+         Nxupd=  1
+        ClipOn=  OFF
+     ChngLogOn=  ON
+         WdwDx=  800
+         WdwDy=  400
+         Xline=  0
+         Xback=  0.7
+          Grps=  3
+                 "Group1"  "Group2"  "Group3"
+       GrpLock=  0000
+        Xgroup=  0001
+      MaxLogon=  ROOT
+       RootPwd=  ""
+       MngrPwd=  ""
+       OperPwd=  ""
+       UserPwd=  ""
+          Terr=  0
+       DebugNR=  1000
+       DebugOn=  00000000
+         Zname=  225
+         Zhilo=  275
+        Zstate=  225
+         Zopen=  225
+         Zfont=  275
+         Zline=  275
+      FontSize=  -1
+  InitialGroup=  -1
+ShowText1WithName=  OFF
+       MinXPos=  0
+       MinYPos=  0
+       MaxXPos=  0
+       MaxYPos=  0
+    InitScreen=  -1
+      InitXPos=  -1
+      InitYPos=  -1
+     InitWidth=  -1
+    InitHeight=  -1
+MinimizeByHide=  OFF
+HideCloseButton=  OFF
+OPCSampleTimeOffset=  0
+
+  ExprProc:      CVMVtest

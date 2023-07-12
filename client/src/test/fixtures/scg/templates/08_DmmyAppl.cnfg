@@ -1,0 +1,15 @@
+  DmmyAppl:      DmmyApplTest
+         Text1=  ""
+         Text2=  ""
+         Nstep=  1
+       PlotMax=  25
+      MasterOn=  ON
+       DesMode=  ACTIVE
+
+  Evr:           EvrTest
+         Text1=  ""
+         Text2=  ""
+
+  Evr:           Deadband{{Test}}
+         Text1=  ""
+         Text2=  ""

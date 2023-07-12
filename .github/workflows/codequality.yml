@@ -19,7 +19,7 @@ jobs:
         run: npm ci
 
       - name: 🧪 Run Unittests
-        run: xvfb-run --auto-servernum npm run unittest
+        run: xvfb-run --auto-servernum npm run test
 
       - name: 🧪 Run Integrationtests
-        run: xvfb-run --auto-servernum npm run integrationtest
+        run: xvfb-run --auto-servernum npm run e2e-test
