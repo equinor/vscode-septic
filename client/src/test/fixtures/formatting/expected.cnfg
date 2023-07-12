@@ -31,11 +31,10 @@ Evr: Test Text1=""
   Evr:           Evr{{ Test }}
          Text1=  ""
        GrpMask=  0000000000000000000000000000001
-
-// Test calcModl 
+/* Test calcModl */
   CalcModl:      CalcModlName
          Text1=  ""
-         Text2=  ""
+         Text2=  "" //Test
 
 
 {# format #}
