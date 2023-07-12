@@ -11,7 +11,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 suite("Test formatting", async () => {
-    test("Renaming of SopcXvr", async () => {
+    test("Formatting of messed up file", async () => {
         await testFormatting(
             getDocUri("formatting/original.cnfg"),
             path.join(__dirname, "fixtures", "formatting", "expected.cnfg")
