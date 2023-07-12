@@ -46,6 +46,7 @@ function compareFiles(expectedContent: string, actualContent: string) {
     ) {
         const e = expectedLines[i];
         const a = actualLines[i];
+        console.log(e);
         expect(e, `Difference at line ${i}`).to.be.equal(a);
     }
 
