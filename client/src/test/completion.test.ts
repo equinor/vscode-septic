@@ -9,7 +9,7 @@ import { getDocUri, activate } from "./helper";
 import { expect } from "chai";
 
 suite("Should get completion", () => {
-    const docUri = getDocUri("completion.cnfg");
+    const docUri = getDocUri("completion/completion.cnfg");
     test("Suggest corresponding SopcXvr name", async () => {
         await testCompletion(docUri, new vscode.Position(6, 19), {
             items: [
