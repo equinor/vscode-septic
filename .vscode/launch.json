@@ -9,9 +9,7 @@
             "name": "Attach to server",
             "port": 6009,
             "request": "attach",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
+            "skipFiles": ["<node_internals>/**"],
             "type": "node"
         },
         {
@@ -28,12 +26,13 @@
             "type": "extensionHost",
             "request": "launch",
             "args": [
+                "--disable-extensions",
                 "--extensionDevelopmentPath=${workspaceFolder}",
                 "--extensionTestsPath=${workspaceFolder}/client/out/test/index",
                 "${workspaceRoot}/client/src/test/fixtures"
             ],
             "outFiles": ["${workspaceFolder}/client/out/test/**/*.js"],
-            "preLaunchTask": "npm: compile"
+            "preLaunchTask": "npm: watch"
         },
         {
             "type": "node",
