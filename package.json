@@ -118,7 +118,8 @@
       "server/src/server.ts",
       "server/src/documentProvider.ts",
       "server/src/settings.ts",
-      "server/src/protocol.ts"
+      "server/src/protocol.ts",
+      ".vscode-test/*"
     ],
     "reporter": [
       "html"
@@ -139,9 +140,9 @@
     "watch": "tsc -b -w",
     "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-    "integrationtest": "npm run compile && node ./client/out/test/runTest",
-    "unittest": "mocha --require ts-node/register server/src/test/**/*.test.ts ",
-    "unittest_with_coverage": "nyc mocha --require ts-node/register --require source-map-support/register server/src/test/**/*.test.ts "
+    "e2e-test": "npm run compile && node ./client/out/test/runTest",
+    "test": "mocha --require ts-node/register server/src/test/**/*.test.ts ",
+    "test_with_coverage": "nyc mocha --require ts-node/register --require source-map-support/register server/src/test/**/*.test.ts "
   },
   "devDependencies": {
     "@types/chai": "4.3.5",
