@@ -135,7 +135,7 @@
     "vscode:prepublish": "npm run compile",
     "clean": "rimraf ./server/out/public",
     "copy-files": "copyfiles -u 2 ./server/src/public/** ./server/out",
-    "copy-files-fixtures": "copyfiles -u 2 ./client/src/test/fixtures/** ./client/out/",
+    "copy-files-fixtures": "copyfiles -u 2 ./client/src/test/fixtures/**/* ./client/out/",
     "compile": "tsc -b && npm run clean && npm run copy-files && npm run copy-files-fixtures",
     "watch": "tsc -b -w",
     "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
