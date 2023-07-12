@@ -1,0 +1,25 @@
+  SopcProc:      CVMVtest
+         Text1=  ""
+         Text2=  ""
+          Site=  SITENONE
+      ServName=  "Statoil.OPC.Server_v2"
+      ServNode=  "SERVNODE"
+   RealTimeFac=  1
+       ProcTag=  ""
+AllowActiveTag=  "Common.WD_OK"
+     StatusTag=  "Common.STATUS"
+    DesModeTag=  "DUMMY_TAG"
+       PulsTag=  "Common.PULS"
+LoopcheckWriteTag=  "DUMMY_TAG"
+LoopcheckReadTag=  "DUMMY_TAG"
+ ServFactorTag=  "DUMMY_TAG"
+    CPUTimeTag=  "DUMMY_TAG"
+         IdTag=  ""
+   ScheduleTag=  "time"
+        RunSec=  -1
+   RequestRate=  -1
+ BadCountLimit=  0
+SampleAgeLimit=  -1
+BlockWritingIfBad=  OFF
+   WriteGroups=  1
+WriteGroupPause=  1000

@@ -1,0 +1,22 @@
+  DisplayGroup:  Tables
+       GroupNo=  1
+        Locked=  OFF
+          Rows=  -1
+          Cols=  -1
+         xGrid=  OFF
+         yGrid=  OFF
+         xAxis=  OFF
+         yAxis=  ON
+     Autoscale=  OFF
+     Spanscale=  ON
+      HistSize=  360
+
+  Table:         MPCtable
+           Row=  1
+           Col=  1
+       RowSize=  -1
+       ColSize=  -1
+   NameColSize=  -1
+   TextColSize=  -1
+  ValueColSize=  -1
+ GroupsColSize=  -1

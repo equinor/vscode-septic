@@ -1,0 +1,16 @@
+  Spacer:        s1
+          Size=  2
+
+  Heading:       D{{ Id }}
+          Text=  "AUTO WELL D{{ Id }}"
+    SizeOffset=  2
+
+  CvrList:       CVList
+          Text=  "CV"
+          Cvrs=  1
+                 "D{{Id}}Qg"
+
+  MvrList:       MVlist
+          Text=  "MV"
+          Mvrs=  1
+                 "D{{Id}}Zpc"
