@@ -125,7 +125,8 @@
       "server/src/documentProvider.ts",
       "server/src/settings.ts",
       "server/src/protocol.ts",
-      ".vscode-test/*"
+      ".vscode-test/*",
+      "**/index.ts"
     ],
     "reporter": [
       "html"

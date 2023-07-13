@@ -20,10 +20,12 @@ import {
 export class ReferenceProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
 
+    /* istanbul ignore next */
     constructor(cnfgProvider: ISepticConfigProvider) {
         this.cnfgProvider = cnfgProvider;
     }
 
+    /* istanbul ignore next */
     public async provideDefinition(
         params: DefinitionParams,
         doc: ITextDocument,
@@ -38,6 +40,7 @@ export class ReferenceProvider {
         return getDefinition(offset, cnfg, refProvider);
     }
 
+    /* istanbul ignore next */
     public async provideReferences(
         params: ReferenceParams,
         doc: ITextDocument,
@@ -52,6 +55,7 @@ export class ReferenceProvider {
         return getReferences(offset, cnfg, refProvider);
     }
 
+    /* istanbul ignore next */
     public async provideDeclaration(
         params: DeclarationParams,
         doc: ITextDocument,
