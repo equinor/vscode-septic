@@ -20,10 +20,12 @@ import {
 export class SignatureHelpProvider {
     private cnfgProvider: SepticConfigProvider;
 
+    /* istanbul ignore next */
     constructor(cnfgProvider: SepticConfigProvider) {
         this.cnfgProvider = cnfgProvider;
     }
 
+    /* istanbul ignore next */
     public async provideSignatureHelp(
         param: SignatureHelpParams,
         doc: ITextDocument

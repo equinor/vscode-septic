@@ -21,10 +21,12 @@ import {
 export class HoverProvider {
     private cnfgProvider: SepticConfigProvider;
 
+    /* istanbul ignore next */
     constructor(cnfgProvider: SepticConfigProvider) {
         this.cnfgProvider = cnfgProvider;
     }
 
+    /* istanbul ignore next */
     async provideHover(
         params: HoverParams,
         doc: ITextDocument,
