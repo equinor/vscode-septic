@@ -8,18 +8,20 @@ import {
     DiagnosticCode,
     validateObject,
     checkAttributeDataType,
+    validateObjectReferences,
 } from "../language-service/diagnosticsProvider";
 import {
     AttributeValue,
     SepticAttributeDocumentation,
     SepticMetaInfoProvider,
+    SepticObjectInfo,
     SepticTokenType,
     parseSeptic,
 } from "../septic";
 import { MockDocument } from "./util";
 
-describe("Test alg diagnostics", () => {
-    it("Missing parenthesis in alg", () => {
+describe("Test diagnostics for invalid algs", () => {
+    it("Expect diagnostics for missing parenthesis in alg", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -33,7 +35,7 @@ describe("Test alg diagnostics", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
     });
-    it("Unexpected token in alg", () => {
+    it("Expect diagnostics for unexpected token in alg", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -47,7 +49,7 @@ describe("Test alg diagnostics", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
     });
-    it("Multiple expressions in alg", () => {
+    it("Expect diagnostics when alg contains multiple expressions", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -61,7 +63,10 @@ describe("Test alg diagnostics", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
     });
-    it("Missing reference in alg", () => {
+});
+
+describe("Test diagnostics for references in algs", () => {
+    it("Expect diagnostics for undefined reference in alg", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -75,7 +80,49 @@ describe("Test alg diagnostics", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.missingReference);
     });
-    it("Unknown function in alg", () => {
+    it("Expect no diagnostics for defined reference in alg", () => {
+        const text = `
+            Evr: var1
+            
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "var1"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(0);
+    });
+    it("Expect no diagnostics for pure jinja expression in alg", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "{{ Test }}"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(0);
+    });
+    it("Expect diagnostics for undefined reference in alg with jinja", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "var1{{ Test }}"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.missingReference);
+    });
+    it("Expect diagnostics for reference to unknown calc in alg", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -89,10 +136,23 @@ describe("Test alg diagnostics", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.unknownCalc);
     });
+    it("Expect no diagnostics for reference to known calc in alg", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "or(1)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(0);
+    });
 });
 
 describe("Test parameter diagnostics in alg", () => {
-    it("No diagnostics for correct number of params", () => {
+    it("Expect no diagnostics for correct number of params", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -105,7 +165,7 @@ describe("Test parameter diagnostics in alg", () => {
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
     });
-    it("No diagnostics for correct number of params", () => {
+    it("Expect no diagnostics for correct number of params", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -118,7 +178,7 @@ describe("Test parameter diagnostics in alg", () => {
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
     });
-    it("No diagnostics for correct datatype", () => {
+    it("Expect no diagnostics for correct datatype", () => {
         const text = `
             Tvr: Test
                 Text1= "Test"
@@ -135,7 +195,7 @@ describe("Test parameter diagnostics in alg", () => {
         expect(diag.length).to.equal(0);
     });
 
-    it("Diagnostics for incorrect datatype", () => {
+    it("Expect diagnostics for incorrect datatype", () => {
         const text = `
             Mvr: Test
                 Text1= "Test"
@@ -152,7 +212,41 @@ describe("Test parameter diagnostics in alg", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeParam);
     });
-    it("No diagnostics for empty optional param", () => {
+    it("Expect diagnostics when giving expression to param that expect object", () => {
+        const text = `
+            Mvr: Test
+                Text1= "Test"
+        
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "labupdt(1+2, 1, 1)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeParam);
+    });
+    it("Expect diagnostics when giving value to param that expect object", () => {
+        const text = `
+            Mvr: Test
+                Text1= "Test"
+        
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "labupdt(1, 1, 1)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeParam);
+    });
+    it("Expect no diagnostics for empty optional param", () => {
         const text = `
             Tvr: Test
                 Text1= "Test"
@@ -168,7 +262,7 @@ describe("Test parameter diagnostics in alg", () => {
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
     });
-    it("Diagnostics for empty non-optional param", () => {
+    it("Expect diagnostics for empty non-optional param", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -185,7 +279,7 @@ describe("Test parameter diagnostics in alg", () => {
         );
     });
 
-    it("Diagnostics for incorrect parity of arguments", () => {
+    it("Expect diagnostics for incorrect parity of arguments", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -200,7 +294,7 @@ describe("Test parameter diagnostics in alg", () => {
         expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
 
-    it("No diagnostics for not using optional params", () => {
+    it("Expect no diagnostics for not using optional params", () => {
         const text = `
             Tvr: Test
                 Text1= "Test"
@@ -217,7 +311,7 @@ describe("Test parameter diagnostics in alg", () => {
         expect(diag.length).to.equal(0);
     });
 
-    it("Diagnostics for exceeding number of params", () => {
+    it("Expect diagnostics for exceeding number of params in calc", () => {
         const text = `
             Tvr: Test
                 Text1= "Test"
@@ -234,7 +328,7 @@ describe("Test parameter diagnostics in alg", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
-    it("Diagnostics for fewer number of params", () => {
+    it("Expect that we get diagnostic when too few params are used in calc", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -248,7 +342,7 @@ describe("Test parameter diagnostics in alg", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
-    it("Multiple diagnostics for calc", () => {
+    it("Expect that validation catches multiple issues in one alg", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
@@ -265,10 +359,35 @@ describe("Test parameter diagnostics in alg", () => {
         );
         expect(diag[1].code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
+    it("Expect that validation ignore alg attributes without value", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= 
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(0);
+    });
 });
 
 describe("Test identifier diagnostics", () => {
-    it("Error for identifier without letter", () => {
+    it("Expect diagnostics for missing identifier", () => {
+        const text = `
+        Evr:  
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateIdentifier(cnfg.objects[0], doc);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidIdentifier);
+    });
+    it("Expect diagnostics for identifier without letter", () => {
         const text = `
         Evr: 1234
 		`;
@@ -280,7 +399,7 @@ describe("Test identifier diagnostics", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidIdentifier);
     });
-    it("Error for identifier with invalid char", () => {
+    it("Expect diagnostics for identifier with invalid char", () => {
         const text = `
         Evr: Test***
 		`;
@@ -292,7 +411,7 @@ describe("Test identifier diagnostics", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidIdentifier);
     });
-    it("No error for identifier with only jinja", () => {
+    it("Expect no diagnostics for identifier with only jinja", () => {
         const text = `
         Evr: {{ Test }}
 		`;
@@ -303,7 +422,7 @@ describe("Test identifier diagnostics", () => {
         let diag = validateIdentifier(cnfg.objects[0], doc);
         expect(diag.length).to.equal(0);
     });
-    it("No error for valid identifier", () => {
+    it("Expect no diagnostics for valid identifier", () => {
         const text = `
         Evr: Something___123
 		`;
@@ -337,7 +456,7 @@ describe("Test regex for disabling diagnostics", () => {
 });
 
 describe("Test disabling of diagnostics", () => {
-    it("Disabling diagnostics using line comment", () => {
+    it("Expect no diagnostics for disabled line using line comment", () => {
         const text = `
         Mvr: 1234 // noqa
 		`;
@@ -349,7 +468,7 @@ describe("Test disabling of diagnostics", () => {
         expect(diag.length).to.equal(0);
     });
 
-    it("Disabling diagnostics using jinja comment", () => {
+    it("Expect no diagnostics for disabled line using jinja comment", () => {
         const text = `
         Mvr: 1234 {# noqa #}
 		`;
@@ -361,7 +480,7 @@ describe("Test disabling of diagnostics", () => {
         expect(diag.length).to.equal(0);
     });
 
-    it("Disabling diagnostics using code", () => {
+    it("Expect no diagnostics for disabled line using correct code", () => {
         const text = `
         Mvr: 1234 {# noqa: E101 #}
 		`;
@@ -372,7 +491,7 @@ describe("Test disabling of diagnostics", () => {
         let diag = getDiagnostics(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
     });
-    it("Not disabling diagnostics using empty code", () => {
+    it("Expect diagnostics for attempted disabled line when not giving codes", () => {
         const text = `
         Mvr: 1234 {# noqa: #}
 		`;
@@ -383,7 +502,7 @@ describe("Test disabling of diagnostics", () => {
         let diag = getDiagnostics(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
     });
-    it("Not disabling diagnostics using wrong code", () => {
+    it("Expect diagnostics for disabled line using wrong code", () => {
         const text = `
         Mvr: 1234 {# noqa: E201 #}
 		`;
@@ -394,7 +513,7 @@ describe("Test disabling of diagnostics", () => {
         let diag = getDiagnostics(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
     });
-    it("Not disabling diagnostics using wrong code", () => {
+    it("Expect diagnostics for disabled line using wrong code", () => {
         const text = `
         CalcPvr:  Test
             Alg=  "something" // noqa: E203
@@ -405,8 +524,9 @@ describe("Test disabling of diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = getDiagnostics(cnfg, doc, cnfg);
         expect(diag.length).to.equal(2);
+        expect(diag[1].code).to.not.equal(DiagnosticCode.invalidDataTypeParam);
     });
-    it("Using multiple codes for sameline", () => {
+    it("Expect no diagnostics for disabled line with multiple codes", () => {
         const text = `
         CalcPvr:  Test
             Alg=  "something(tes)" // noqa: E202, W101
@@ -418,13 +538,25 @@ describe("Test disabling of diagnostics", () => {
         let diag = getDiagnostics(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
     });
+    it("Expect that regular comments are ignored", () => {
+        const text = `
+        CalcPvr:  Test
+            Alg=  "something(tes)" // This is a noqa line
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = getDiagnostics(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(3);
+    });
 });
 
 describe("Test validation of attributes", () => {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const mvrDoc = metaInfoProvider.getObjectDocumentation("Mvr");
     const mvrInfo = metaInfoProvider.getObject("Mvr");
-    it("Validation of attribute without value", () => {
+    it("Expect diagnostics for attribute without value", () => {
         const text = `
             Mvr: Test
             Text1= 
@@ -441,7 +573,7 @@ describe("Test validation of attributes", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.missingAttributeValue);
     });
-    it("Validation of attribute with wrong data type", () => {
+    it("Expect diagnostics for attribute with wrong data type", () => {
         const text = `
             Mvr: Test
             Text1= 1
@@ -458,7 +590,7 @@ describe("Test validation of attributes", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
     });
-    it("Validation of attribute with wrong data type", () => {
+    it("Expect diagnostics for attribute with wrong data type", () => {
         const text = `
             Mvr: Test
             IvPrio= 1.1
@@ -475,7 +607,7 @@ describe("Test validation of attributes", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
     });
-    it("Validation of attribute with wrong data type", () => {
+    it("Expect diagnostics for attribute with wrong data type", () => {
         const text = `
             Mvr: Test
             LockHL= 1
@@ -492,7 +624,7 @@ describe("Test validation of attributes", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
     });
-    it("Validation of attribute with wrong enum value", () => {
+    it("Expect diagnostics for attribute with wrong enum value", () => {
         const text = `
             Mvr: Test
             LockHL= TEST
@@ -509,7 +641,7 @@ describe("Test validation of attributes", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
     });
-    it("Validation of attribute that don't expect list", () => {
+    it("Expect diagnostics when giving list to non-list attribute", () => {
         const text = `
             Mvr: Test
             Nfix= 1 1
@@ -526,7 +658,7 @@ describe("Test validation of attributes", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.unexpectedList);
     });
-    it("Validation of attribute that expect list", () => {
+    it("Expect diagnostics when not giving list to list attribute", () => {
         const text = `
             Mvr: Test
             Blocking= 11
@@ -543,7 +675,7 @@ describe("Test validation of attributes", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.missingListAttribute);
     });
-    it("Validation of attribute with mismatch on list length", () => {
+    it("Expect diagnostics for attribute with mismatch on list length", () => {
         const text = `
             Mvr: Test
             Blocking= 2 1
@@ -561,7 +693,7 @@ describe("Test validation of attributes", () => {
         expect(diag[0].code).to.equal(DiagnosticCode.mismatchLengthList);
     });
 
-    it("Validation of attribute with wrong list indicator", () => {
+    it("Expect diagnostics for attribute with wrong datatype for list indicator", () => {
         const text = `
             Mvr: Test
             Blocking= 2.2 1
@@ -578,7 +710,7 @@ describe("Test validation of attributes", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.missingListLengthValue);
     });
-    it("Validation of attribute with correct list", () => {
+    it("Expect no diagnostics for attribute with correct list", () => {
         const text = `
             Mvr: Test
             Blocking= 3 1 2 3
@@ -593,6 +725,23 @@ describe("Test validation of attributes", () => {
             mvrInfo!
         );
         expect(diag.length).to.equal(0);
+    });
+    it("Expect diagnostics for unknown attribute", () => {
+        const text = `
+            Mvr: Test
+            BsAttr= 3
+        `;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            mvrDoc!,
+            mvrInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.unknownAttribute);
     });
 });
 
@@ -719,5 +868,81 @@ describe("Test validation of attribute data type", () => {
         expect(
             checkAttributeDataType(attrValue, createAttrDoc("Int", []))
         ).to.equal(true);
+    });
+});
+
+describe("Test validation of object references", () => {
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
+    it("Expect diagnostics for missing reference in identifier", () => {
+        const text = `
+            SopcMvr: TestMvr
+
+            Mvr: MvrTest       
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("SopcMvr");
+        let diag = validateObjectReferences(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.missingReference);
+    });
+    it("Expect no  diagnostics for correct reference in identifier", () => {
+        const text = `
+            SopcMvr: MvrTest
+
+            Mvr: MvrTest       
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("SopcMvr");
+        let diag = validateObjectReferences(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        expect(diag.length).to.equal(0);
+    });
+    it("Expect diagnostics for missing reference in attr list", () => {
+        const text = `
+            Mvr: TestMvr
+
+            MvrList: Test
+            Mvrs= 1 "MvrTest"       
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("MvrList");
+        let diag = validateObjectReferences(
+            cnfg.objects[1],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.missingReference);
+    });
+    it("Expect no diagnostics for corret reference in attr list", () => {
+        const text = `
+            Mvr: TestMvr
+
+            MvrList: Test
+            Mvrs= 1 "TestMvr"       
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("MvrList");
+        let diag = validateObjectReferences(
+            cnfg.objects[1],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        expect(diag.length).to.equal(0);
     });
 });

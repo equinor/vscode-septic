@@ -94,6 +94,7 @@ export class DiagnosticProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
     private readonly settingsManager: SettingsManager;
 
+    /* istanbul ignore next */
     constructor(
         cnfgProvider: ISepticConfigProvider,
         settingsManager: SettingsManager
@@ -102,6 +103,7 @@ export class DiagnosticProvider {
         this.settingsManager = settingsManager;
     }
 
+    /* istanbul ignore next */
     public async provideDiagnostics(
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
@@ -514,7 +516,7 @@ export function validateIdentifier(
     ];
 }
 
-function validateObjectReferences(
+export function validateObjectReferences(
     obj: SepticObject,
     doc: ITextDocument,
     refProvider: SepticReferenceProvider,
