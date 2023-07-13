@@ -30,10 +30,13 @@ import { isAlphaNumeric } from "../util";
 
 export class CompletionProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
+
+    /* istanbul ignore next */
     constructor(cnfgProvider: ISepticConfigProvider) {
         this.cnfgProvider = cnfgProvider;
     }
 
+    /* istanbul ignore next */
     public async provideCompletion(
         pos: TextDocumentPositionParams,
         doc: ITextDocument,
@@ -45,11 +48,20 @@ export class CompletionProvider {
             return [];
         }
         await refProvider.load();
-        if (cnfg.offsetInAlg(offset)) {
-            return getCalcCompletion(offset, cnfg, refProvider);
-        }
-        return getObjectCompletion(offset, cnfg, refProvider, doc);
+        return getCompletion(cnfg, offset, doc, refProvider);
     }
+}
+
+export function getCompletion(
+    cnfg: SepticCnfg,
+    offset: number,
+    doc: ITextDocument,
+    refProvider: SepticReferenceProvider
+): CompletionItem[] {
+    if (cnfg.offsetInAlg(offset)) {
+        return getCalcCompletion(offset, cnfg, refProvider);
+    }
+    return getObjectCompletion(offset, cnfg, refProvider, doc);
 }
 
 export function getCalcCompletion(
@@ -92,9 +104,6 @@ export function getObjectCompletion(
 ): CompletionItem[] {
     const compItems: CompletionItem[] = [];
     const obj = cnfg.getObjectFromOffset(offset);
-    if (!obj) {
-        return [];
-    }
     const pos = doc.positionAt(obj.start);
     const line = doc.getText({
         start: Position.create(pos.line, 0),

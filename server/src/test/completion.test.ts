@@ -2,6 +2,7 @@ import { describe } from "mocha";
 import { SepticMetaInfoProvider, parseSeptic } from "../septic";
 import {
     getCalcCompletion,
+    getCompletion,
     getObjectCompletion,
 } from "../language-service/completionProvider";
 import { CompletionItemKind, Position, TextEdit } from "vscode-languageserver";
@@ -196,5 +197,42 @@ describe("Test calc completion", () => {
                 (item) => item.kind === CompletionItemKind.Function
             ).length
         ).to.equal(calcs.length);
+    });
+});
+
+describe("Test completion logic", () => {
+    it("Expect to get completion items relevant for algs when inside alg", () => {
+        const text = `Mvr:   TestMvr\nText1= ""  \nCalcPvr: TestCalc\nAlg= "  "\n`;
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSeptic(doc.getText());
+        const offset = doc.offsetAt(Position.create(3, 6));
+        const compItems = getCompletion(cnfg, offset, doc, cnfg);
+        expect(
+            compItems.filter(
+                (item) => item.kind === CompletionItemKind.Function
+            ).length
+        ).to.greaterThan(0);
+        expect(
+            compItems.filter(
+                (item) => item.kind === CompletionItemKind.Property
+            ).length
+        ).to.equal(0);
+    });
+    it("Expect to get completion items relevant for object when outside alg", () => {
+        const text = `Mvr:   TestMvr\nText1= ""  \nCalcPvr: TestCalc\nAlg= "  "\n`;
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSeptic(doc.getText());
+        const offset = doc.offsetAt(Position.create(1, 10));
+        const compItems = getCompletion(cnfg, offset, doc, cnfg);
+        expect(
+            compItems.filter(
+                (item) => item.kind === CompletionItemKind.Function
+            ).length
+        ).to.equal(0);
+        expect(
+            compItems.filter(
+                (item) => item.kind === CompletionItemKind.Property
+            ).length
+        ).to.greaterThan(0);
     });
 });
