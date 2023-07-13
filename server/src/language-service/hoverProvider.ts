@@ -1,4 +1,9 @@
-import { Hover, HoverParams, MarkupKind } from "vscode-languageserver";
+import {
+    Hover,
+    HoverParams,
+    MarkupContent,
+    MarkupKind,
+} from "vscode-languageserver";
 import { SepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
@@ -29,32 +34,30 @@ export class HoverProvider {
         if (!cnfg) {
             return undefined;
         }
+        await refProvider.load();
         const offset = doc.offsetAt(params.position);
-        let objectHover = getObjectHover(cnfg, offset, doc);
-        if (objectHover) {
-            return objectHover;
-        }
-        let calcHover = getCalcHover(cnfg, offset, doc);
-        let refHover = getReferenceHover(cnfg, offset, doc, refProvider);
-
-        if (!calcHover) {
-            return refHover;
-        }
-        if (!refHover) {
-            return calcHover;
-        }
-
-        if (
-            calcHover.range!.start.character < refHover.range!.start.character
-        ) {
-            return refHover;
-        } else {
-            return calcHover;
-        }
+        return getHover(cnfg, offset, doc, refProvider);
     }
 }
 
-function getReferenceHover(
+export function getHover(
+    cnfg: SepticCnfg,
+    offset: number,
+    doc: ITextDocument,
+    refProvider: SepticReferenceProvider
+): Hover | undefined {
+    let objectHover = getObjectHover(cnfg, offset, doc);
+    if (objectHover) {
+        return objectHover;
+    }
+    let refHover = getReferenceHover(cnfg, offset, doc, refProvider);
+    if (refHover) {
+        return refHover;
+    }
+    return getCalcHover(cnfg, offset, doc);
+}
+
+export function getReferenceHover(
     cnfg: SepticCnfg,
     offset: number,
     doc: ITextDocument,
@@ -76,7 +79,7 @@ function getReferenceHover(
     });
 
     if (xvr.length) {
-        let text = getTextXvr(xvr[0].obj!);
+        let text = getMarkdownXvr(xvr[0].obj!);
         return {
             contents: text,
             range: {
@@ -87,7 +90,7 @@ function getReferenceHover(
     }
 
     if (sopcXvr.length) {
-        let text = getTextXvr(sopcXvr[0].obj!);
+        let text = getMarkdownXvr(sopcXvr[0].obj!);
         return {
             contents: text,
             range: {
@@ -98,11 +101,12 @@ function getReferenceHover(
     }
 }
 
-function getObjectHover(cnfg: SepticCnfg, offset: number, doc: ITextDocument) {
+export function getObjectHover(
+    cnfg: SepticCnfg,
+    offset: number,
+    doc: ITextDocument
+): Hover | undefined {
     const obj = cnfg.getObjectFromOffset(offset);
-    if (!obj) {
-        return undefined;
-    }
     const objDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation(
         obj.type
     );
@@ -146,15 +150,15 @@ function getObjectHover(cnfg: SepticCnfg, offset: number, doc: ITextDocument) {
     }
 }
 
-function getCalcHover(cnfg: SepticCnfg, offset: number, doc: ITextDocument) {
+export function getCalcHover(
+    cnfg: SepticCnfg,
+    offset: number,
+    doc: ITextDocument
+): Hover | undefined {
     const obj = cnfg.getObjectFromOffset(offset);
-    if (!obj) {
-        return undefined;
-    }
     if (obj.type !== "CalcPvr") {
         return undefined;
     }
-
     let algAttr = obj.getAttribute("Alg");
     if (!algAttr) {
         return undefined;
@@ -183,42 +187,36 @@ function getCalcHover(cnfg: SepticCnfg, offset: number, doc: ITextDocument) {
         }
     }
     if (currentCalc) {
-        return getCalc(
-            currentCalc.identifier,
-            startAlg + currentCalc.start,
-            startAlg + currentCalc.end,
-            doc
-        );
+        const content = getCalcDocumentation(currentCalc.identifier);
+        if (!content) {
+            return undefined;
+        }
+        return {
+            contents: content,
+            range: {
+                start: doc.positionAt(startAlg + currentCalc.start),
+                end: doc.positionAt(startAlg + currentCalc.end),
+            },
+        };
     }
     return undefined;
 }
 
-function getCalc(
-    name: string,
-    start: number,
-    end: number,
-    doc: ITextDocument
-): Hover | undefined {
+function getCalcDocumentation(name: string): MarkupContent | undefined {
     let metaInfoProvider = SepticMetaInfoProvider.getInstance();
     let calcInfo = metaInfoProvider.getCalc(name);
     if (!calcInfo) {
         return undefined;
     }
     return {
-        contents: {
-            value: formatCalcMarkdown(calcInfo),
-            kind: MarkupKind.Markdown,
-        },
-        range: {
-            start: doc.positionAt(start),
-            end: doc.positionAt(end),
-        },
+        value: formatCalcMarkdown(calcInfo),
+        kind: MarkupKind.Markdown,
     };
 }
 
-function getTextXvr(obj: SepticObject) {
-    let text1 = getTextAttr("Text1", obj);
-    let text2 = getTextAttr("Text2", obj);
+function getMarkdownXvr(obj: SepticObject): MarkupContent {
+    let text1 = obj.getAttribute("Text1")?.getValue() ?? "";
+    let text2 = obj.getAttribute("Text2")?.getValue() ?? "";
     let text = `${obj.type}: ${obj.identifier?.name}`;
     if (text1 !== "") {
         text += `\n\nText1= ${text1}`;
@@ -226,10 +224,5 @@ function getTextXvr(obj: SepticObject) {
     if (text2 !== "") {
         text += `\n\nText2= ${text2}`;
     }
-    return text;
-}
-
-function getTextAttr(attrId: string, obj: SepticObject) {
-    const attrValue = obj.getAttribute(attrId)?.getValue();
-    return attrValue ?? "";
+    return { value: text, kind: "markdown" };
 }

@@ -115,7 +115,7 @@ export class SepticCnfg implements SepticReferenceProvider {
         return undefined;
     }
 
-    public getObjectFromOffset(offset: number): SepticObject | undefined {
+    public getObjectFromOffset(offset: number): SepticObject {
         let index = 1;
         while (index < this.objects.length) {
             if (this.objects[index].start >= offset) {
