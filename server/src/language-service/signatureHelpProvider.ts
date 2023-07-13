@@ -14,6 +14,7 @@ import {
     SepticMetaInfoProvider,
     formatCalcParameter,
     parseAlg,
+    SepticCnfg,
 } from "../septic";
 
 export class SignatureHelpProvider {
@@ -22,6 +23,7 @@ export class SignatureHelpProvider {
     constructor(cnfgProvider: SepticConfigProvider) {
         this.cnfgProvider = cnfgProvider;
     }
+
     public async provideSignatureHelp(
         param: SignatureHelpParams,
         doc: ITextDocument
@@ -31,50 +33,57 @@ export class SignatureHelpProvider {
             return { signatures: [] };
         }
         let offset = doc.offsetAt(param.position);
-        let alg = cnfg.getAlgFromOffset(offset);
-        if (!alg) {
-            return { signatures: [] };
-        }
-        let parsedAlg: AlgExpr;
-        try {
-            parsedAlg = parseAlg(alg.getValue()!);
-        } catch {
-            return { signatures: [] };
-        }
-        let algVisitor = new AlgVisitor();
-        algVisitor.visit(parsedAlg);
-        let offsetAlg = offset - (alg.getAttrValue()!.start + 1);
-        let currentCalc: AlgCalc | undefined = undefined;
-        for (let calc of algVisitor.calcs) {
-            let start = calc.start + calc.identifier.length + 1;
-            if (offsetAlg >= start && offsetAlg <= calc.end) {
-                currentCalc = calc;
-            }
-        }
-        if (!currentCalc) {
-            return { signatures: [] };
-        }
-        let metaInfoProvider = SepticMetaInfoProvider.getInstance();
-        let calcMetaInfo = metaInfoProvider.getCalc(currentCalc.identifier);
-        if (!calcMetaInfo) {
-            return { signatures: [] };
-        }
-        let paramMetaInfoIndex = indexToParamIndexDocumentation(
-            calcMetaInfo,
-            getIndexParamCalc(currentCalc, offsetAlg)
-        );
-        return {
-            signatures: [
-                {
-                    label: calcMetaInfo.signature,
-                    parameters: calcMetaInfo.parameters.map((param) => {
-                        return paramMetaInfoToParameterInformation(param);
-                    }),
-                    activeParameter: paramMetaInfoIndex,
-                },
-            ],
-        };
+        return getSignatureHelp(cnfg, offset);
     }
+}
+
+export function getSignatureHelp(
+    cnfg: SepticCnfg,
+    offset: number
+): SignatureHelp {
+    let alg = cnfg.getAlgFromOffset(offset);
+    if (!alg) {
+        return { signatures: [] };
+    }
+    let parsedAlg: AlgExpr;
+    try {
+        parsedAlg = parseAlg(alg.getValue()!);
+    } catch {
+        return { signatures: [] };
+    }
+    let algVisitor = new AlgVisitor();
+    algVisitor.visit(parsedAlg);
+    let offsetAlg = offset - (alg.getAttrValue()!.start + 1);
+    let currentCalc: AlgCalc | undefined = undefined;
+    for (let calc of algVisitor.calcs) {
+        let start = calc.start + calc.identifier.length + 1;
+        if (offsetAlg >= start && offsetAlg <= calc.end) {
+            currentCalc = calc;
+        }
+    }
+    if (!currentCalc) {
+        return { signatures: [] };
+    }
+    let metaInfoProvider = SepticMetaInfoProvider.getInstance();
+    let calcMetaInfo = metaInfoProvider.getCalc(currentCalc.identifier);
+    if (!calcMetaInfo) {
+        return { signatures: [] };
+    }
+    let paramMetaInfoIndex = indexToParamIndexDocumentation(
+        calcMetaInfo,
+        getIndexParamCalc(currentCalc, offsetAlg)
+    );
+    return {
+        signatures: [
+            {
+                label: calcMetaInfo.signature,
+                parameters: calcMetaInfo.parameters.map((param) => {
+                    return paramMetaInfoToParameterInformation(param);
+                }),
+                activeParameter: paramMetaInfoIndex,
+            },
+        ],
+    };
 }
 
 function paramMetaInfoToParameterInformation(
@@ -126,5 +135,5 @@ function indexToParamIndexDocumentation(
         }
     }
 
-    return -1;
+    return indexParam - 1;
 }

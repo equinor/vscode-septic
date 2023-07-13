@@ -18,8 +18,6 @@ describe("Test reference hover", () => {
         const doc = TextDocument.create("", "", 0, content);
         const offset = doc.offsetAt(Position.create(0, 21));
         const hover = getReferenceHover(cnfg, offset, doc, cnfg);
-
-        const expectedContent = "Mvr: MvrTest\n\nText1= Test\n\nText2= Test+";
         expect(hover).to.not.equal(undefined);
         compareRanges(
             {
@@ -39,8 +37,6 @@ describe("Test reference hover", () => {
         const doc = TextDocument.create("", "", 0, content);
         const offset = doc.offsetAt(Position.create(49, 21));
         const hover = getReferenceHover(cnfg, offset, doc, cnfg);
-
-        const expectedContent = "Mvr: MvrTest\n\nText1= Test\n\nText2= Test+";
         expect(hover).to.not.equal(undefined);
         compareRanges(
             {
@@ -60,8 +56,6 @@ describe("Test reference hover", () => {
         const doc = TextDocument.create("", "", 0, content);
         const offset = doc.offsetAt(Position.create(31, 21));
         const hover = getReferenceHover(cnfg, offset, doc, cnfg);
-
-        const expectedContent = "SopcCvr: CvrTest\n\nText1= Not Test";
         expect(hover).to.not.equal(undefined);
         compareRanges(
             {
@@ -81,8 +75,6 @@ describe("Test reference hover", () => {
         const doc = TextDocument.create("", "", 0, content);
         const offset = doc.offsetAt(Position.create(125, 21));
         const hover = getReferenceHover(cnfg, offset, doc, cnfg);
-
-        const expectedContent = "Evr: EvrTest\n\nText1= Test";
         expect(hover).to.not.equal(undefined);
         compareRanges(
             {
@@ -102,8 +94,6 @@ describe("Test reference hover", () => {
         const doc = TextDocument.create("", "", 0, content);
         const offset = doc.offsetAt(Position.create(128, 29));
         const hover = getReferenceHover(cnfg, offset, doc, cnfg);
-
-        const expectedContent = "Tvr: TvrTest\n\nText2= Test";
         expect(hover).to.not.equal(undefined);
         const hoverMarkdown = hover!.contents as MarkupContent;
         expect(/\bTvr\b/.test(hoverMarkdown.value.split("\n")[0])).to.equal(
@@ -116,8 +106,6 @@ describe("Test reference hover", () => {
         const doc = TextDocument.create("", "", 0, content);
         const offset = doc.offsetAt(Position.create(128, 45));
         const hover = getReferenceHover(cnfg, offset, doc, cnfg);
-
-        const expectedContent = "Mvr: MvrTest\n\nText1= Test\n\nText2= Test+";
         expect(hover).to.not.equal(undefined);
         const hoverMarkdown = hover!.contents as MarkupContent;
         expect(/\bMvr\b/.test(hoverMarkdown.value.split("\n")[0])).to.equal(

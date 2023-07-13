@@ -150,7 +150,7 @@
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
     "e2e-test": "npm run compile && node ./client/out/test/runTest",
     "test": "mocha --require ts-node/register server/src/test/**/*.test.ts ",
-    "test_with_coverage": "nyc mocha --require ts-node/register --require source-map-support/register --recursive server/src/test/**/*.test.ts "
+    "test_with_coverage": "npm run compile && nyc mocha --require ts-node/register --require source-map-support/register --recursive server/src/test/**/*.test.ts "
   },
   "devDependencies": {
     "@types/chai": "4.3.5",
