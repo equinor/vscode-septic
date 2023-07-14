@@ -32,10 +32,12 @@ export const lineCommentRegex = /^\s*\/\/\s|\*\/\s*$|#}\s*$/;
 export class FormattingProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
 
+    /* istanbul ignore next */
     constructor(cnfgProvider: ISepticConfigProvider) {
         this.cnfgProvider = cnfgProvider;
     }
 
+    /* istanbul ignore next */
     public async provideFormatting(doc: ITextDocument): Promise<TextEdit[]> {
         const cnfg = await this.cnfgProvider.get(doc.uri);
         if (!cnfg) {
@@ -48,7 +50,7 @@ export class FormattingProvider {
 
 type FormatterCheck = (element: SepticBase | undefined) => boolean;
 
-class SepticCnfgFormatter {
+export class SepticCnfgFormatter {
     private doc: ITextDocument;
 
     private lines: string[] = [];
@@ -111,23 +113,12 @@ class SepticCnfgFormatter {
         let editedFlag = this.getEditedFlag();
         let existingWhitespaces = 0;
         if (editedFlag) {
+            this.addEmptyLine();
             let pos = this.doc.positionAt(this.start);
             let currentLineText = this.doc.getText({
                 start: Position.create(pos.line, 0),
                 end: pos,
             });
-            let onlyWhitespaces = currentLineText.trim().length === 0;
-            if (onlyWhitespaces) {
-                existingWhitespaces = currentLineText.length;
-                if (existingWhitespaces >= indentsObjectDeclaration) {
-                    this.start -=
-                        existingWhitespaces - indentsObjectDeclaration;
-                    existingWhitespaces = indentsObjectDeclaration;
-                }
-            }
-            if (!onlyWhitespaces) {
-                this.addEmptyLine();
-            }
             if (!lineCommentRegex.test(currentLineText)) {
                 this.addEmptyLine();
             }
@@ -166,22 +157,7 @@ class SepticCnfgFormatter {
         let editedFlag = this.getEditedFlag();
         let existingWhitespaces = 0;
         if (editedFlag) {
-            let pos = this.doc.positionAt(this.start);
-            let lineText = this.doc.getText({
-                start: Position.create(pos.line, 0),
-                end: pos,
-            });
-            let onlyWhitespaces = lineText.trim().length === 0;
-            if (onlyWhitespaces) {
-                existingWhitespaces = lineText.length;
-                if (existingWhitespaces >= indentsAttributesDelimiter) {
-                    this.start -=
-                        existingWhitespaces - indentsAttributesDelimiter;
-                    existingWhitespaces = indentsAttributesDelimiter;
-                }
-            } else {
-                this.addEmptyLine();
-            }
+            this.addEmptyLine();
         }
         let indentsStart = Math.max(
             indentsAttributesDelimiter - attr.key.length - existingWhitespaces,
@@ -194,72 +170,71 @@ class SepticCnfgFormatter {
 
     private formatAttrValue(attrValue: AttributeValue) {
         let editedFlag = this.getEditedFlag();
-        if (!editedFlag) {
-            if (this.attrValueState.first) {
-                this.currentLine +=
-                    " ".repeat(
-                        indentsAttributeValuesStart -
-                            (indentsAttributesDelimiter + 1)
-                    ) + attrValue.value;
-                this.attrValueState.first = false;
-                if (this.attrValueState.type === ValueTypes.stringList) {
-                    this.addLine();
-                }
-                return;
-            }
-
-            if (
-                this.attrValueState.counter >=
-                this.getMaxNumberOfAttrValuesLine()
-            ) {
-                this.addLine();
+        let resetDoToEdit = false;
+        if (editedFlag) {
+            let pos = this.doc.positionAt(this.start);
+            let lineText = this.doc.getText({
+                start: Position.create(pos.line, 0),
+                end: pos,
+            });
+            if (/\/\/ /.test(lineText)) {
+                this.addEmptyLine();
                 this.resetAttrValueCounter();
-            }
-            let spaces = !this.currentLine.length
-                ? indentsAttributeValuesStart
-                : spacesBetweenValues;
-
-            if (
-                this.attrValueState.type === ValueTypes.numericList &&
-                spaces === spacesBetweenValues
-            ) {
-                spaces = Math.max(
-                    1,
-                    spacesBetweenIntValues - attrValue.value.length
-                );
-                if (this.attrValueState.second) {
-                    this.attrValueState.second = false;
-                    spaces = Math.max(1, spaces - 1);
+                this.attrValueState.first = false;
+                this.attrValueState.second = false;
+            } else {
+                if (
+                    this.attrValueState.type === ValueTypes.stringList &&
+                    this.attrValueState.second
+                ) {
+                    this.addEmptyLine();
+                } else {
+                    resetDoToEdit = true;
                 }
             }
-            this.currentLine += " ".repeat(spaces) + attrValue.value;
-            this.incrementAttrValueCounter();
+        }
+        if (this.attrValueState.first) {
+            this.currentLine +=
+                " ".repeat(
+                    indentsAttributeValuesStart -
+                        (indentsAttributesDelimiter + 1)
+                ) + attrValue.value;
+            this.attrValueState.first = false;
+            if (this.attrValueState.type === ValueTypes.stringList) {
+                this.addLine();
+            }
             return;
         }
 
-        this.resetAttrValueCounter();
-        this.attrValueState.first = false;
-        this.attrValueState.second = false;
-
-        let pos = this.doc.positionAt(this.start);
-        let lineText = this.doc.getText({
-            start: Position.create(pos.line, 0),
-            end: pos,
-        });
-        let onlyWhitespaces = lineText.trim().length === 0;
-        if (!onlyWhitespaces) {
-            let spaces = /\s$/.test(lineText) ? 0 : 1;
-            this.currentLine += " ".repeat(spaces) + attrValue.value;
-            return;
+        if (
+            this.attrValueState.counter >= this.getMaxNumberOfAttrValuesLine()
+        ) {
+            this.addLine();
+            this.resetAttrValueCounter();
         }
-        let existingWhitespaces = lineText.length;
-        if (existingWhitespaces >= indentsAttributeValuesStart) {
-            this.start -= existingWhitespaces - indentsAttributeValuesStart;
-            existingWhitespaces = indentsAttributeValuesStart;
+        let spaces = !this.currentLine.length
+            ? indentsAttributeValuesStart
+            : spacesBetweenValues;
+        if (resetDoToEdit) {
+            spaces = 1;
         }
-        this.currentLine +=
-            " ".repeat(indentsAttributeValuesStart - existingWhitespaces) +
-            attrValue.value;
+        if (
+            this.attrValueState.type === ValueTypes.numericList &&
+            spaces === spacesBetweenValues
+        ) {
+            spaces = Math.max(
+                1,
+                spacesBetweenIntValues - attrValue.value.length
+            );
+            if (this.attrValueState.second) {
+                this.attrValueState.second = false;
+                spaces = Math.max(1, spaces - 1);
+            }
+        }
+        if (this.attrValueState.type === ValueTypes.stringList) {
+            this.attrValueState.second = false;
+        }
+        this.currentLine += " ".repeat(spaces) + attrValue.value;
         this.incrementAttrValueCounter();
     }
 
@@ -279,11 +254,6 @@ class SepticCnfgFormatter {
 
     private formatSepticComment(comment: SepticComment) {
         this.addEdit();
-        let nextElement = this.peek();
-        if (!nextElement) {
-            this.start = this.elements[this.elements.length - 1].end;
-            return;
-        }
         this.start = comment.end;
         return;
     }
@@ -295,10 +265,6 @@ class SepticCnfgFormatter {
                 return;
             }
             let nextElement = this.previous();
-            if (!nextElement) {
-                this.start = this.elements[this.elements.length - 1].end;
-                return;
-            }
             this.start = nextElement.end;
             return;
         }
@@ -309,10 +275,6 @@ class SepticCnfgFormatter {
                 return;
             }
             let nextElement = this.previous();
-            if (!nextElement) {
-                this.start = this.elements[this.elements.length - 1].end;
-                return;
-            }
             this.start = nextElement.end;
             return;
         }
@@ -326,10 +288,6 @@ class SepticCnfgFormatter {
                 return;
             }
             let nextElement = this.previous();
-            if (!nextElement) {
-                this.start = this.elements[this.elements.length - 1].end;
-                return;
-            }
             this.start = nextElement.end;
             return;
         }
@@ -347,7 +305,7 @@ class SepticCnfgFormatter {
     }
 
     private syncJinjaFor(element: SepticBase | undefined) {
-        if (undefined) {
+        if (!element) {
             return false;
         }
         let isComment = element instanceof SepticComment;
@@ -358,7 +316,7 @@ class SepticCnfgFormatter {
     }
 
     private syncJinjaIf(element: SepticBase | undefined) {
-        if (undefined) {
+        if (!element) {
             return false;
         }
         let isComment = element instanceof SepticComment;
@@ -369,7 +327,7 @@ class SepticCnfgFormatter {
     }
 
     private syncStartFormatting(element: SepticBase | undefined) {
-        if (undefined) {
+        if (!element) {
             return false;
         }
         let isComment = element instanceof SepticComment;

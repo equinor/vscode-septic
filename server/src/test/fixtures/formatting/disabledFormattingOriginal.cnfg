@@ -1,0 +1,47 @@
+// Test disabling using marker
+{# format:off #}
+    Evr: Test Text1="" Text2= "" Meas= 1.1
+{# format:on #}
+
+// Not disabled with wrong marker
+{# format #}
+  Evr:           EvrName
+         Text1=  "" /* 
+        Test 
+    */
+         Text2=  ""
+{# format #}
+  SopcProc:      Test
+         Text1=  "Test" {% Test %}
+         Text2=  ""
+          Site=  AIM_AIMGUI
+// No formatting of jinja expressions
+{%- if final|default(false) %}
+       ServName=  "Test1"
+{%- else %}
+                ServName=  "Test2"
+{%- endif %}
+
+  TvrList:       TvrListTest
+          Text=  ""
+          Tvrs=  1
+                {% for Flowline in ["Test1", "Test2"] %}
+                 "{{Flowline}}Test" 
+                 "{{Flowline}}Test" 
+                 "{{Flowline}}Test" 
+                 "{{Flowline}}Test" 
+                 "{{Flowline}}Test" 
+                 "{{Flowline}}Test" 
+                 "{{Flowline}}Test" 
+              {% endfor %}  
+
+{% for well in ["P1", "P2"] %}
+Heading:       {{ well }}
+          Text=  ""
+        SizeOffset=  2
+
+  MvrList:       MVlist
+          Text=  "MV"
+          Mvrs=  4
+                 "{{ well }}Test"  "{{ well }}Test"  "{{ well }}Test"  "{{ well }}Test"
+{% endfor %}

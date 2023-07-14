@@ -143,7 +143,10 @@ export class Attribute extends SepticBase {
     }
 
     getValue(): string | undefined {
-        return this.values?.[0].getValue();
+        if (!this.values.length) {
+            return undefined;
+        }
+        return this.values[0].getValue();
     }
 
     getValues(): string[] {
