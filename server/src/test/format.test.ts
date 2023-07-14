@@ -1,8 +1,7 @@
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { loadFile } from "./util";
+import { compareFiles, loadFile } from "./util";
 import { parseSeptic } from "../septic";
 import { SepticCnfgFormatter } from "../language-service/formatProvider";
-import { expect } from "chai";
 
 describe("Test formatting", () => {
 	it("Expect correct formatting of lists", () => {
@@ -56,25 +55,3 @@ describe("Test formatting", () => {
         compareFiles(expectedContent, formattedContent);
     });
 });
-
-function compareFiles(expectedContent: string, actualContent: string) {
-    const expectedLines = expectedContent.split(/\r?\n/);
-    const actualLines = actualContent.split(/\r?\n/);
-
-    for (
-        let i = 0;
-        i < Math.min(expectedLines.length, actualLines.length);
-        i += 1
-    ) {
-        const e = expectedLines[i];
-        const a = actualLines[i];
-        expect(e, `Difference at line ${i}`).to.be.equal(a);
-    }
-
-    expect(
-        actualLines.length,
-        expectedLines.length > actualLines.length
-            ? "Actual contains more lines than expected"
-            : "Expected contains more lines than the actual"
-    ).to.be.equal(expectedLines.length);
-}
