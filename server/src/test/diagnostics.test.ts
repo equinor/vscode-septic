@@ -63,6 +63,48 @@ describe("Test diagnostics for invalid algs", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
     });
+    it("Expect diagnostics when alg contains multiple expressions", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "(1+1)(1+2)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
+    });
+    it("Expect diagnostics when alg exceeds maximum length", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "${"x".repeat(1000)}"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(2);
+        expect(diag[0].code).to.equal(DiagnosticCode.algMaxLength);
+    });
+    it("Expect no diagnostics when alg exceeds maximum length but contains jinja", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "${"x".repeat(1000)}+{{ Test }}"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.not.equal(DiagnosticCode.algMaxLength);
+    });
 });
 
 describe("Test diagnostics for references in algs", () => {

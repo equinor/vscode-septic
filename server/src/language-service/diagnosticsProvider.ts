@@ -36,6 +36,8 @@ import { isPureJinja } from "../util";
 export const disableDiagnosticRegex =
     /\/\/\s+noqa\b(?::([ \w,]*))?|\{#\s+noqa\b(?::([ \w,]*))?\s*#\}/i;
 export const diagnosticCodeRegex = /(E|W)[0-9]{3}/;
+const jinjaRegex = /\{\{[\S\s]*?\}\}|\{%[\S\s]*?%\}/;
+const maxAlgLength = 250;
 
 export enum DiagnosticCode {
     invalidIdentifier = "E101",
@@ -45,6 +47,7 @@ export enum DiagnosticCode {
     invalidDataTypeParam = "E203",
     invalidNumberOfParams = "E204",
     missingValueNonOptionalParam = "E205",
+    algMaxLength = "E206",
     missingListLengthValue = "E301",
     mismatchLengthList = "E302",
     missingAttributeValue = "E304",
@@ -164,6 +167,19 @@ export function validateAlgs(
         let algAttrValue = algAttrs[i].getAttrValue();
         if (!algAttrValue) {
             continue;
+        }
+        if (!checkAlgLength(algAttrValue.getValue())) {
+            diagnostics.push(
+                createDiagnostic(
+                    DiagnosticSeverity.Error,
+                    {
+                        start: doc.positionAt(algAttrValue.start),
+                        end: doc.positionAt(algAttrValue.end),
+                    },
+                    `Alg exceed the maximum length of ${maxAlgLength} chars`,
+                    DiagnosticCode.algMaxLength
+                )
+            );
         }
         const offsetStartAlg = algAttrValue.start + 1;
         let expr;
@@ -409,6 +425,13 @@ function getNumberOfParamsConditions(
         conditions.push(conditionParity);
     }
     return conditions;
+}
+
+function checkAlgLength(alg: string) {
+    if (jinjaRegex.test(alg)) {
+        return true;
+    }
+    return alg.length <= maxAlgLength;
 }
 
 function checkParamType(
