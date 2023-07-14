@@ -1,3 +1,9 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Equinor ASA
+ *  Copyright (c) Microsoft Corporation. All rights reserved. [markdown-language-features]
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import {
     ParameterInformation,
     SignatureHelp,
