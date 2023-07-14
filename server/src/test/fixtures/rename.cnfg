@@ -1,0 +1,33 @@
+  SopcMvr:       Test1
+         Text1=  ""
+
+  Mvr:           Test1
+         Text1=  "Test2"
+
+  Evr:           Test2
+         Text1=  "Test1"
+
+  CalcPvr:       Test2
+         Text1=  ""
+         Text2=  ""
+           Alg=  "Test1 + 2"
+
+  MvrList:       MvrList
+          Text=  ""
+          Mvrs=  1
+                 "Test1"
+
+  XvrMatrix:     XvrMatrixName
+        ColIds=  2
+                 "Test2"  "Test1"
+          Xvrs=  2
+                 "Test2"  "Test1"
+
+  XvrPlot:       Test2
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1
+
+  System:        Test1
+         Text1=  ""

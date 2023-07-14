@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { compareRanges, loadFile } from "./util";
+import { compareRange, loadFile } from "./util";
 import { parseSeptic } from "../septic";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { MarkupContent, Position, Range } from "vscode-languageserver";
@@ -19,7 +19,7 @@ describe("Test reference hover", () => {
         const offset = doc.offsetAt(Position.create(0, 21));
         const hover = getReferenceHover(cnfg, offset, doc, cnfg);
         expect(hover).to.not.equal(undefined);
-        compareRanges(
+        compareRange(
             {
                 start: Position.create(0, 17),
                 end: Position.create(0, 24),
@@ -38,7 +38,7 @@ describe("Test reference hover", () => {
         const offset = doc.offsetAt(Position.create(49, 21));
         const hover = getReferenceHover(cnfg, offset, doc, cnfg);
         expect(hover).to.not.equal(undefined);
-        compareRanges(
+        compareRange(
             {
                 start: Position.create(49, 17),
                 end: Position.create(49, 24),
@@ -57,7 +57,7 @@ describe("Test reference hover", () => {
         const offset = doc.offsetAt(Position.create(31, 21));
         const hover = getReferenceHover(cnfg, offset, doc, cnfg);
         expect(hover).to.not.equal(undefined);
-        compareRanges(
+        compareRange(
             {
                 start: Position.create(31, 17),
                 end: Position.create(31, 24),
@@ -76,7 +76,7 @@ describe("Test reference hover", () => {
         const offset = doc.offsetAt(Position.create(125, 21));
         const hover = getReferenceHover(cnfg, offset, doc, cnfg);
         expect(hover).to.not.equal(undefined);
-        compareRanges(
+        compareRange(
             {
                 start: Position.create(125, 17),
                 end: Position.create(125, 24),
@@ -131,7 +131,7 @@ describe("Test object hovering", () => {
         const offset = doc.offsetAt(Position.create(49, 4));
         const hover = getObjectHover(cnfg, offset, doc);
         expect(hover).to.not.equal(undefined);
-        compareRanges(
+        compareRange(
             {
                 start: Position.create(49, 2),
                 end: Position.create(49, 5),
@@ -165,7 +165,7 @@ describe("Test object hovering", () => {
         const offset = doc.offsetAt(Position.create(52, 12));
         const hover = getObjectHover(cnfg, offset, doc);
         expect(hover).to.not.equal(undefined);
-        compareRanges(
+        compareRange(
             {
                 start: Position.create(52, 10),
                 end: Position.create(52, 14),
@@ -201,7 +201,7 @@ describe("Test calc hovering", () => {
         const offset = doc.offsetAt(Position.create(128, 22));
         const hover = getCalcHover(cnfg, offset, doc);
         expect(hover).to.not.equal(undefined);
-        compareRanges(
+        compareRange(
             {
                 start: Position.create(128, 18),
                 end: Position.create(128, 38),
@@ -218,7 +218,7 @@ describe("Test calc hovering", () => {
         const offset = doc.offsetAt(Position.create(128, 34));
         const hover = getCalcHover(cnfg, offset, doc);
         expect(hover).to.not.equal(undefined);
-        compareRanges(
+        compareRange(
             {
                 start: Position.create(128, 18),
                 end: Position.create(128, 38),
@@ -235,7 +235,7 @@ describe("Test calc hovering", () => {
         const offset = doc.offsetAt(Position.create(136, 26));
         const hover = getCalcHover(cnfg, offset, doc);
         expect(hover).to.not.equal(undefined);
-        compareRanges(
+        compareRange(
             {
                 start: Position.create(136, 21),
                 end: Position.create(136, 38),
@@ -271,7 +271,7 @@ describe("Test get hover logic", () => {
         const offset = doc.offsetAt(Position.create(49, 4));
         const hover = getHover(cnfg, offset, doc, cnfg);
         expect(hover).to.not.equal(undefined);
-        compareRanges(
+        compareRange(
             {
                 start: Position.create(49, 2),
                 end: Position.create(49, 5),
@@ -288,7 +288,7 @@ describe("Test get hover logic", () => {
         const offset = doc.offsetAt(Position.create(128, 30));
         const hover = getHover(cnfg, offset, doc, cnfg);
         expect(hover).to.not.equal(undefined);
-        compareRanges(
+        compareRange(
             {
                 start: Position.create(128, 26),
                 end: Position.create(128, 33),
@@ -305,7 +305,7 @@ describe("Test get hover logic", () => {
         const offset = doc.offsetAt(Position.create(136, 19));
         const hover = getHover(cnfg, offset, doc, cnfg);
         expect(hover).to.not.equal(undefined);
-        compareRanges(
+        compareRange(
             {
                 start: Position.create(136, 18),
                 end: Position.create(136, 42),

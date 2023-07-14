@@ -13,13 +13,16 @@ import {
 import { SepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
-import { SepticReferenceProvider } from "../septic";
+import { SepticCnfg, SepticReferenceProvider } from "../septic";
 import { DocumentProvider } from "../documentProvider";
+
+export type GetDocument = (uri: string) => Promise<ITextDocument | undefined>;
 
 export class RenameProvider {
     private cnfgProvider: SepticConfigProvider;
     private docProvider: DocumentProvider;
 
+    /* istanbul ignore next */
     constructor(
         cnfgProvider: SepticConfigProvider,
         docProvider: DocumentProvider
@@ -28,6 +31,7 @@ export class RenameProvider {
         this.docProvider = docProvider;
     }
 
+    /* istanbul ignore next */
     async provideRename(
         params: RenameParams,
         doc: ITextDocument,
@@ -38,36 +42,16 @@ export class RenameProvider {
             return undefined;
         }
         const offset = doc.offsetAt(params.position);
-        const ref = cnfg.getXvrRefFromOffset(offset);
-        if (!ref) {
-            return undefined;
-        }
-
-        const refs = refProvider.getXvrRefs(ref.identifier);
-
-        if (!refs) {
-            return undefined;
-        }
-
-        const builder = new WorkspaceEditBuilder();
-        for (const ref of refs) {
-            let docRef = await this.docProvider.getDocument(ref.location.uri);
-            if (!docRef) {
-                continue;
-            }
-            builder.replace(
-                ref.location.uri,
-                Range.create(
-                    docRef.positionAt(ref.location.start),
-                    docRef.positionAt(ref.location.end)
-                ),
-                params.newName
-            );
-        }
-
-        return builder.getEdit();
+        return getRenameEdits(
+            cnfg,
+            offset,
+            params.newName,
+            refProvider,
+            this.docProvider.getDocument.bind(this.docProvider)
+        );
     }
 
+    /* istanbul ignore next */
     async providePrepareRename(
         params: PrepareRenameParams,
         doc: ITextDocument
@@ -76,15 +60,47 @@ export class RenameProvider {
         if (!cnfg) {
             return null;
         }
-
         const ref = cnfg.getXvrRefFromOffset(doc.offsetAt(params.position));
         if (!ref) {
             return null;
         }
-
         return Range.create(
             doc.positionAt(ref.location.start),
             doc.positionAt(ref.location.end)
         );
     }
+}
+
+export async function getRenameEdits(
+    cnfg: SepticCnfg,
+    offset: number,
+    newName: string,
+    refProvider: SepticReferenceProvider,
+    getDocumentFunction: GetDocument
+): Promise<WorkspaceEdit | undefined> {
+    const ref = cnfg.getXvrRefFromOffset(offset);
+    if (!ref) {
+        return undefined;
+    }
+    const refs = refProvider.getXvrRefs(ref.identifier);
+    if (!refs) {
+        return undefined;
+    }
+    const builder = new WorkspaceEditBuilder();
+    for (const ref of refs) {
+        let docRef = await getDocumentFunction(ref.location.uri);
+        if (!docRef) {
+            continue;
+        }
+        builder.replace(
+            ref.location.uri,
+            Range.create(
+                docRef.positionAt(ref.location.start),
+                docRef.positionAt(ref.location.end)
+            ),
+            newName
+        );
+    }
+
+    return builder.getEdit();
 }
