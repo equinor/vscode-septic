@@ -1,20 +1,20 @@
-// Test formatting of numeric list
+/* Test formatting of numeric list */
   Mvr:           MvrName
          Text1=  ""
       Blocking=  6 2 4         7 11           16  22 
 
-// Test formatting of numeric list with long numbers
+/* Test formatting of numeric list with long numbers */
   Mvr:           MvrName
          Text1=  ""
       Blocking=  6 22222.2222 3.324325436 5.5 5445455.555 4 4.5555555555
 
-// Test formatting of string list
+/* Test formatting of string list */
   MvrList:       MvrListName
           Text=  ""
           Mvrs=  9
                  "Test" "Test" "Test" "Test" "Test" "Test" "Test" "Test" "Test"
 
-// Test formatting of XvrMatrix  
+/* Test formatting of XvrMatrix */
   XvrMatrix:     XvrMatrixName
            Row=  -1
            Col=  -1
@@ -54,7 +54,7 @@
                  "Test"
 
 
-// Test formatting with comments in list
+/* Test formatting with comments in list */
   Mvr:           MvrName
          Text1=  ""
       Blocking=  6    2     4 {# Test of comment #}  7    11    16    22 

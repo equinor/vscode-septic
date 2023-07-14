@@ -2,7 +2,7 @@
   Mvr:           MvrName
          Text1=  ""
 
-// Test that no extra line is added when line already empty
+/* Test that no extra line is added when line already empty */
   Mvr:           MvrName
          Text1=  ""
 
