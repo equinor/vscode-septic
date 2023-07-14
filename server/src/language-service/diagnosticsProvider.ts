@@ -567,31 +567,6 @@ export function validateObjectReferences(
             );
         }
     }
-
-    for (let attrRefs of objectMetaInfo.refs.attr) {
-        let attr = obj.getAttribute(attrRefs);
-        if (!attr) {
-            continue;
-        }
-        let validRef = refProvider.validateRef(
-            attr.getValue() ?? "",
-            defaultRefValidationFunction
-        );
-        if (!validRef) {
-            diagnostics.push(
-                createDiagnostic(
-                    DiagnosticSeverity.Warning,
-                    {
-                        start: doc.positionAt(attr.start),
-                        end: doc.positionAt(attr.start + attr.key.length),
-                    },
-                    `Reference to undefined Xvr ${attr.key}`,
-                    DiagnosticCode.missingReference
-                )
-            );
-        }
-    }
-
     for (let attrRefsList of objectMetaInfo.refs.attrList) {
         let attrValues = obj.getAttribute(attrRefsList)?.getAttrValues();
         if (!attrValues || attrValues.length < 2) {

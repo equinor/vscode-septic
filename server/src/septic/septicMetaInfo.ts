@@ -19,7 +19,6 @@ const defaultObject: SepticObjectInfo = {
     refs: {
         identifier: false,
         identifierOptional: false,
-        attr: [],
         attrList: [],
     },
 };
@@ -131,7 +130,6 @@ export class SepticMetaInfoProvider {
                         ? obj.refs.identifierOptional
                         : false,
                     attrList: obj.refs?.attrList ? obj.refs.attrList : [],
-                    attr: obj.refs?.attr ? obj.refs.attr : [],
                 },
             };
         });
@@ -276,7 +274,6 @@ export interface SepticRefs {
     identifier: boolean;
     identifierOptional: boolean;
     attrList: string[];
-    attr: string[];
 }
 
 export interface SepticMetaInfoInput {
@@ -288,7 +285,6 @@ export interface SepticRefsInput {
     identifier?: boolean;
     identifierOptional?: boolean;
     attrList?: string[];
-    attr?: string[];
 }
 
 export function formatObjectDocumentationMarkdown(

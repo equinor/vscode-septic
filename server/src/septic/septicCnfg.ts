@@ -189,10 +189,6 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
         xvrRefs.push(...xvrRefsAttrList(obj, attr));
     });
 
-    objectDef.refs.attr.forEach((attr) => {
-        xvrRefs.push(...xvrRefAttr(obj, attr));
-    });
-
     if (obj.isType("CalcPvr")) {
         xvrRefs.push(...calcPvrXvrRefs(obj));
     }
@@ -244,18 +240,4 @@ function xvrRefsAttrList(
             end: ref.end - 1,
         });
     });
-}
-
-function xvrRefAttr(obj: SepticObject, attrName: string): SepticReference[] {
-    let attrValue = obj.getAttribute(attrName)?.getAttrValue();
-    if (!attrValue) {
-        return [];
-    }
-    return [
-        createSepticReference(attrValue.getValue(), {
-            uri: "",
-            start: attrValue.start + 1,
-            end: attrValue.end - 1,
-        }),
-    ];
 }
