@@ -252,6 +252,8 @@ export function algDiagnostic(
                     defaultRefValidationFunction
                 )
             ) {
+                const variableValue = variable.value.trim(); // remove whitespaces
+                if (variableValue === "") continue; // skip empty/no variable ""
                 const diagnostic = createDiagnostic(
                     DiagnosticSeverity.Warning,
                     {
