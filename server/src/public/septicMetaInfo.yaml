@@ -124,6 +124,11 @@ septicConfig:
       symbolKind: Interface
       refs:
         identifier: True
+    - name: SopcChangeEvr
+      level: 2
+      symbolKind: Interface
+      refs:
+        identifier: True
     - name: SopcEvr
       level: 2
       symbolKind: Interface
