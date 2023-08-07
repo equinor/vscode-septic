@@ -6,8 +6,8 @@ import {
     parseSeptic,
 } from "../septic";
 
-describe("Basic tests lexer", () => {
-    it("Lexing keyword", () => {
+describe("Test tokenization of basic expressions", () => {
+    it("Expect object tokens for object declaration", () => {
         const input = "System:  FirstTest";
         const scanner = new SepticScanner(input);
         let tokens = scanner.scanTokens().tokens;
@@ -16,7 +16,16 @@ describe("Basic tests lexer", () => {
         expect(tokens[1].type).to.equal(SepticTokenType.identifier);
     });
 
-    it("Lexing keyword with scg variable", () => {
+    it("Expect no object tokens for incorrect object declaration", () => {
+        const input = "System:FirstTest";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(4);
+        expect(tokens[0].type).to.equal(SepticTokenType.identifier);
+        expect(tokens[1].type).to.equal(SepticTokenType.unknown);
+    });
+
+    it("Expect correct tokenization of object with scg in identifier", () => {
         const input = "SopcEvr:  {{ TestEvr }}";
         const scanner = new SepticScanner(input);
         let tokens = scanner.scanTokens().tokens;
@@ -25,7 +34,43 @@ describe("Basic tests lexer", () => {
         expect(tokens[1].type).to.equal(SepticTokenType.identifier);
     });
 
-    it("Lexing tagmap with string value", () => {
+    it("Expect correct tokenization of object with scg in identifier", () => {
+        const input = "SopcEvr:  Test{{ TestEvr }}Test";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
+    });
+
+    it("Expect correct tokenization of object with number in identifier", () => {
+        const input = "SopcEvr:  213Test";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
+    });
+
+    it("Expect correct tokenization of object with underscore in identifier", () => {
+        const input = "SopcEvr:  213_Test";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
+    });
+
+    it("Expect correct tokenization of object with hyphen in identifier", () => {
+        const input = "SopcEvr:  213-Test";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
+    });
+
+    it("Expect attribute tokens for attribute declaration", () => {
         const input = 'Test1= "Dummy"';
         const scanner = new SepticScanner(input);
         let tokens = scanner.scanTokens().tokens;
@@ -34,7 +79,16 @@ describe("Basic tests lexer", () => {
         expect(tokens[1].type).to.equal(SepticTokenType.string);
     });
 
-    it("Lexing tagmap with scg in string value", () => {
+    it("Expect no attribute tokens for incorrect attribute declaration", () => {
+        const input = 'Test1="Dummy"';
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(4);
+        expect(tokens[0].type).to.equal(SepticTokenType.identifier);
+        expect(tokens[1].type).to.equal(SepticTokenType.unknown);
+    });
+
+    it("Expect correct tokenization of string containing jinja", () => {
         const input = 'Text1= "{{ Jinja but should be hidden since string }}"';
         const scanner = new SepticScanner(input);
         let tokens = scanner.scanTokens().tokens;
@@ -43,7 +97,7 @@ describe("Basic tests lexer", () => {
         expect(tokens[1].type).to.equal(SepticTokenType.string);
     });
 
-    it("Lexing tagmap with number value", () => {
+    it("Expect numeric token for numeric expression", () => {
         const input = "Test2= 3.14";
         const scanner = new SepticScanner(input);
         let tokens = scanner.scanTokens().tokens;
@@ -52,7 +106,43 @@ describe("Basic tests lexer", () => {
         expect(tokens[1].type).to.equal(SepticTokenType.numeric);
     });
 
-    it("Lexing tagmap with groupmask value", () => {
+    it("Expect numeric token for negative numeric expression", () => {
+        const input = "Test2= -3.14";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect numeric token for positive numeric expression", () => {
+        const input = "Test2= +3.14";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect numeric token for scientific numeric expression", () => {
+        const input = "Test2= +3.14e-10";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect numeric token for scientific numeric expression", () => {
+        const input = "Test2= 3.14E+10";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect numeric token for groupmask", () => {
         const input = "GrpLock=  0000000000000000000000000";
         const scanner = new SepticScanner(input);
         let tokens = scanner.scanTokens().tokens;
@@ -61,7 +151,7 @@ describe("Basic tests lexer", () => {
         expect(tokens[1].type).to.equal(SepticTokenType.numeric);
     });
 
-    it("Lexing tagmap with bits value", () => {
+    it("Expect numeric token for bitmask", () => {
         const input = "Bits2=  0001";
         const scanner = new SepticScanner(input);
         let tokens = scanner.scanTokens().tokens;
@@ -243,7 +333,7 @@ UseFactorWeight=  0`;
             tokens.filter((el) => {
                 return el.type === SepticTokenType.numeric;
             }).length
-        ).to.equal(40);
+        ).to.equal(38);
     });
 
     it("Test lexer for plot", () => {

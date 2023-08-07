@@ -218,9 +218,17 @@ export class SepticScanner {
                     this.error(`Unexpected token: ${this.peek()}`);
                 }
                 break;
+            case "-":
+            case "+":
+                if (this.isDigit(this.peek())) {
+                    this.numeric();
+                }
+                break;
             default:
-                if (this.isAlphaNumeric(c)) {
-                    this.alphaNumeric();
+                if (this.isDigit(c)) {
+                    this.numeric();
+                } else if (this.isAlpha(c)) {
+                    this.identifier();
                 } else {
                     this.addToken(SepticTokenType.unknown);
                     this.error(`Unexpected token: ${c}`);
@@ -257,6 +265,13 @@ export class SepticScanner {
         return this.source.charAt(this.current + 1);
     }
 
+    private peekNextNext(): string {
+        if (this.current + 2 >= this.source.length) {
+            return "\0";
+        }
+        return this.source.charAt(this.current + 2);
+    }
+
     private addToken(type: SepticTokenType): void {
         this.tokens.push({
             type: type,
@@ -291,7 +306,11 @@ export class SepticScanner {
     }
 
     private lineComment() {
-        while (!this.isAtEnd() && !this.match("\n") && !this.match("\r")) {
+        while (
+            !this.isAtEnd() &&
+            this.peek() !== "\n" &&
+            this.peek() !== "\r"
+        ) {
             this.advance();
         }
         this.addComment(SepticTokenType.lineComment);
@@ -304,61 +323,103 @@ export class SepticScanner {
         this.addToken(SepticTokenType.string);
     }
 
-    private alphaNumeric() {
-        let isNumericFlag = true;
-        while (!this.isAtEnd() && this.isAlphaNumeric(this.peek())) {
-            if (!this.isNumeric(this.peek())) {
-                isNumericFlag = false;
+    private numeric() {
+        while (this.isDigit(this.peek())) {
+            this.advance();
+        }
+        if (this.isAlpha(this.peek())) {
+            if (this.peek() !== "e" || this.peek() !== "E") {
+                return this.identifier();
             }
+            if (!this.isDigit(this.peekNext())) {
+                return this.identifier();
+            }
+        }
+        if (this.peek() === "." && this.isDigit(this.peekNext())) {
+            this.advance();
+            while (this.isDigit(this.peek())) {
+                this.advance();
+            }
+        }
+        // Support numbers using scientific notation
+        if (this.peek() === "e" || this.peek() === "E") {
+            if (
+                this.isDigit(this.peekNext()) ||
+                ((this.peekNext() === "-" || this.peekNext() === "+") &&
+                    this.isDigit(this.peekNextNext()))
+            ) {
+                this.advance();
+                if (!this.isDigit(this.peek())) {
+                    this.advance();
+                }
+                while (this.isDigit(this.peek())) {
+                    this.advance();
+                }
+                if (this.peek() === "." && this.isDigit(this.peekNext())) {
+                    this.advance();
+                    while (this.isDigit(this.peek())) {
+                        this.advance();
+                    }
+                }
+            }
+        }
+        this.addToken(SepticTokenType.numeric);
+    }
+
+    private identifier() {
+        while (this.isAlphaNumeric(this.peek())) {
             this.advance();
             if (this.peek() === ":") {
-                if (this.peekNext() !== " ") {
+                if (!this.isBlank(this.peekNext())) {
                     this.error("Expecting space at end of object declaration");
+                    break;
                 }
                 this.addToken(SepticTokenType.object);
                 this.advance();
                 return;
             }
             if (this.peek() === "=") {
-                if (this.peekNext() !== " ") {
+                if (!this.isBlank(this.peekNext())) {
                     this.error(
                         "Expecting space at end of attribute declaration"
                     );
+                    break;
                 }
                 this.addToken(SepticTokenType.attribute);
                 this.advance();
                 return;
             }
         }
-        if (isNumericFlag && (this.isBlank(this.peek()) || this.isAtEnd())) {
-            this.addToken(SepticTokenType.numeric);
-        } else {
-            this.addToken(SepticTokenType.identifier);
-        }
+        this.addToken(SepticTokenType.identifier);
     }
 
     private isNumeric(char: string): boolean {
         const validNumericChars = ["+", "-", "e", "E", "."];
-        if ((char >= "0" && char <= "9") || validNumericChars.includes(char)) {
+        if (this.isDigit(char) || validNumericChars.includes(char)) {
             return true;
         }
         return false;
     }
 
-    private isAlpha(char: string): boolean {
-        return (char >= "a" && char <= "z") || (char >= "A" && char <= "Z");
+    private isDigit(char: string): boolean {
+        return char >= "0" && char <= "9";
     }
 
-    private isAlphaNumeric(char: string): boolean {
-        const validIdentifierChars = ["-", "_", "*"];
+    private isAlpha(char: string): boolean {
         return (
-            this.isAlpha(char) ||
-            this.isNumeric(char) ||
-            validIdentifierChars.includes(char)
+            (char >= "a" && char <= "z") ||
+            (char >= "A" && char <= "Z") ||
+            char === "_" ||
+            char === "*" ||
+            char === "-"
         );
     }
 
-    private isBlank(char: string) {
+    private isAlphaNumeric(char: string): boolean {
+        return this.isAlpha(char) || this.isNumeric(char);
+    }
+
+    private isBlank(char: string): boolean {
         return [" ", "\n", "\r"].includes(char);
     }
 
