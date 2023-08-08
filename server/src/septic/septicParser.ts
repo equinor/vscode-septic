@@ -177,7 +177,12 @@ export class SepticScanner {
             this.start = this.current;
             this.scanToken();
         }
-        this.addToken(SepticTokenType.eof);
+        this.tokens.push({
+            type: SepticTokenType.eof,
+            content: "\0",
+            start: this.current,
+            end: this.current,
+        });
         return {
             tokens: this.concatIdentifiers(this.tokens),
             comments: this.comments,
@@ -222,6 +227,8 @@ export class SepticScanner {
             case "+":
                 if (this.isDigit(this.peek())) {
                     this.numeric();
+                } else {
+                    this.error(`Unexpected token: ${c}`);
                 }
                 break;
             default:
@@ -270,6 +277,10 @@ export class SepticScanner {
             return "\0";
         }
         return this.source.charAt(this.current + 2);
+    }
+
+    private error(msg: string): void {
+        this.errors.push(msg);
     }
 
     private addToken(type: SepticTokenType): void {
@@ -331,7 +342,13 @@ export class SepticScanner {
             if (this.peek() !== "e" || this.peek() !== "E") {
                 return this.identifier();
             }
-            if (!this.isDigit(this.peekNext())) {
+            if (
+                !this.isDigit(this.peekNext()) &&
+                !(
+                    (this.peekNext() === "-" || this.peekNext() === "+") &&
+                    this.isDigit(this.peekNextNext())
+                )
+            ) {
                 return this.identifier();
             }
         }
@@ -393,12 +410,20 @@ export class SepticScanner {
         this.addToken(SepticTokenType.identifier);
     }
 
-    private isNumeric(char: string): boolean {
-        const validNumericChars = ["+", "-", "e", "E", "."];
-        if (this.isDigit(char) || validNumericChars.includes(char)) {
-            return true;
+    private jinja(type: string): void {
+        while (!this.isAtEnd() && !this.match(type)) {
+            this.advance();
         }
-        return false;
+        if (!this.match("}")) {
+            this.error("Invalid jinja expression");
+        }
+        if (type === "%") {
+            this.addComment(SepticTokenType.jinjaExpression);
+        } else if (type === "#") {
+            this.addComment(SepticTokenType.jinjaComment);
+        } else {
+            this.addToken(SepticTokenType.identifier);
+        }
     }
 
     private isDigit(char: string): boolean {
@@ -416,27 +441,11 @@ export class SepticScanner {
     }
 
     private isAlphaNumeric(char: string): boolean {
-        return this.isAlpha(char) || this.isNumeric(char);
+        return this.isAlpha(char) || this.isDigit(char);
     }
 
     private isBlank(char: string): boolean {
-        return [" ", "\n", "\r"].includes(char);
-    }
-
-    private jinja(type: string): void {
-        while (!this.isAtEnd() && !this.match(type)) {
-            this.advance();
-        }
-        if (!this.match("}")) {
-            this.error("Invalid jinja expression");
-        }
-        if (type === "%") {
-            this.addComment(SepticTokenType.jinjaExpression);
-        } else if (type === "#") {
-            this.addComment(SepticTokenType.jinjaComment);
-        } else {
-            this.addToken(SepticTokenType.identifier);
-        }
+        return [" ", "\n", "\r", "\t"].includes(char);
     }
 
     private concatIdentifiers(tokens: SepticToken[]): SepticToken[] {
@@ -466,8 +475,5 @@ export class SepticScanner {
             i = j - 1;
         }
         return updatedTokens;
-    }
-    private error(msg: string): void {
-        this.errors.push(msg);
     }
 }

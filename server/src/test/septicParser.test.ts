@@ -333,7 +333,7 @@ UseFactorWeight=  0`;
             tokens.filter((el) => {
                 return el.type === SepticTokenType.numeric;
             }).length
-        ).to.equal(38);
+        ).to.equal(40);
     });
 
     it("Test lexer for plot", () => {
