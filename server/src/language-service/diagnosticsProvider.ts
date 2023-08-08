@@ -573,11 +573,12 @@ export function validateObjectReferences(
             continue;
         }
         for (let attrValue of attrValues.slice(1)) {
-            if (attrValue.getValue().trim() === "") {
+            let refName = attrValue.getValue();
+            if (refName.length < 1) {
                 continue;
             }
             let validRef = refProvider.validateRef(
-                attrValue.getValue(),
+                refName,
                 defaultRefValidationFunction
             );
             if (validRef) {
