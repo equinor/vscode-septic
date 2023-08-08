@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { CancellationToken, Trace } from "vscode-languageserver";
+import { CancellationToken } from "vscode-languageserver";
 import { Parser, IToken, ParserError } from "./parser";
 import { SepticCnfg } from "./septicCnfg";
 import { SepticToken, SepticTokenType } from "./septicTokens";
