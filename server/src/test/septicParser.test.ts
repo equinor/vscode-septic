@@ -223,6 +223,14 @@ describe("Test tokenization of numeric expressions", () => {
         expect(tokens[0].type).to.equal(SepticTokenType.numeric);
     });
 
+    it("Expect numeric token for scientific numeric expression", () => {
+        const input = "3E+10";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.numeric);
+    });
+
     it("Expect numeric token for groupemask", () => {
         const input = "0000000000000000000000000";
         const scanner = new SepticScanner(input);

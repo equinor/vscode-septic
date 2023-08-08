@@ -339,7 +339,7 @@ export class SepticScanner {
             this.advance();
         }
         if (this.isAlpha(this.peek())) {
-            if (this.peek() !== "e" || this.peek() !== "E") {
+            if (this.peek() !== "e" && this.peek() !== "E") {
                 return this.identifier();
             }
             if (
@@ -416,6 +416,7 @@ export class SepticScanner {
         }
         if (!this.match("}")) {
             this.error("Invalid jinja expression");
+            return;
         }
         if (type === "%") {
             this.addComment(SepticTokenType.jinjaExpression);
