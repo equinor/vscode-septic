@@ -27,11 +27,15 @@ export class SepticMetaInfoProvider {
     private calcsMap: Map<string, SepticCalcInfo>;
     private objectsMap: Map<string, SepticObjectInfo>;
     private objectsDocMap: Map<string, ISepticObjectDocumentation>;
+    private objectHierarchy: SepticObjectHierarchy;
 
     private constructor() {
         this.calcsMap = this.loadCalcsInfo();
         this.objectsMap = this.loadObjectsInfo();
         this.objectsDocMap = this.loadObjectsDocumentation();
+        this.objectHierarchy = this.loadObjectHierarchy(
+            Array.from(this.objectsDocMap.values())
+        );
     }
 
     public static getInstance(): SepticMetaInfoProvider {
@@ -82,6 +86,10 @@ export class SepticMetaInfoProvider {
         objectType: string
     ): ISepticObjectDocumentation | undefined {
         return this.objectsDocMap.get(objectType);
+    }
+
+    public getObjectHierarchy(): SepticObjectHierarchy {
+        return this.objectHierarchy;
     }
 
     private loadCalcsInfo(): Map<string, SepticCalcInfo> {
@@ -157,6 +165,14 @@ export class SepticMetaInfoProvider {
         }
         return objectsDocMap;
     }
+
+    private loadObjectHierarchy(
+        objectsDoc: ISepticObjectDocumentation[]
+    ): SepticObjectHierarchy {
+        let objectTree = createSepticObjectTree(objectsDoc);
+        updateObjectHierarchyLevels(objectTree);
+        return objectTree;
+    }
 }
 
 function toSymbolKind(name: string) {
@@ -191,7 +207,7 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
         this.name = input.name;
         this.attributes = input.attributes;
         this.description = input.description;
-        this.parents = [];
+        this.parents = input.parents;
         this.attributes.forEach((attr) => this.attrMap.set(attr.name, attr));
     }
 
@@ -233,6 +249,7 @@ export interface SepticObjectDocumentationInput {
     name: string;
     attributes: SepticAttributeDocumentation[];
     description: string;
+    parents: string[];
 }
 
 export interface SepticAttributeDocumentation {
@@ -317,14 +334,14 @@ export class SepticObjectNode {
     }
 }
 
-export interface SepticObjectTree {
+export interface SepticObjectHierarchy {
     nodes: Map<string, SepticObjectNode>;
     rootNode: SepticObjectNode;
 }
 
 export function createSepticObjectTree(
     objects: ISepticObjectDocumentation[]
-): SepticObjectTree {
+): SepticObjectHierarchy {
     const nodes: Map<string, SepticObjectNode> = new Map<
         string,
         SepticObjectNode
@@ -359,7 +376,7 @@ export function createSepticObjectTree(
     return { nodes: nodes, rootNode: roots[0] };
 }
 
-export function updateObjectLevelsTree(tree: SepticObjectTree) {
+export function updateObjectHierarchyLevels(tree: SepticObjectHierarchy) {
     updateObjectLevel(tree.rootNode, 0, tree.nodes);
 }
 
@@ -373,77 +390,4 @@ function updateObjectLevel(
         let childNode = nodes.get(child);
         updateObjectLevel(childNode!, level + 1, nodes);
     });
-}
-
-export interface ICalcNumParameter {
-    minNumber: number;
-    maxNumber: number;
-    maxActive: boolean;
-    parityActive: boolean;
-}
-
-export function calcNumParameterInfo(
-    calcInfo: SepticCalcInfo
-): ICalcNumParameter {
-    let minNumber = 0;
-    let maxNumber = 0;
-    let maxActive = true;
-    let parityActive = true;
-    for (let i = 0; i < calcInfo.parameters.length; i++) {
-        let param = calcInfo.parameters[i];
-        switch (param.arity) {
-            case "even":
-                maxActive = false;
-                minNumber += 2;
-                break;
-            case "odd":
-                maxActive = false;
-                minNumber += 1;
-                break;
-            case "+":
-                maxActive = false;
-                parityActive = false;
-                minNumber += 1;
-                break;
-            case "optional":
-                let restIsOptional = true;
-                for (let j = i + 1; j < calcInfo.parameters.length; j++) {
-                    if (calcInfo.parameters[j].arity !== "optional") {
-                        restIsOptional = false;
-                        break;
-                    }
-                }
-                if (!restIsOptional) {
-                    minNumber += 1;
-                } else {
-                    parityActive = false;
-                }
-                maxNumber += 1;
-                break;
-            default:
-                let n = parseInt(param.arity);
-                minNumber += n;
-                maxNumber += n;
-                break;
-        }
-    }
-    return {
-        minNumber: minNumber,
-        maxNumber: maxNumber,
-        maxActive: maxActive,
-        parityActive: parityActive,
-    };
-}
-
-export function arityToNum(arity: string): number {
-    switch (arity) {
-        case "even":
-        case "odd":
-        case "+":
-            return Infinity;
-        case "optional":
-            return 1;
-        default:
-            return parseInt(arity);
-    }
 }
