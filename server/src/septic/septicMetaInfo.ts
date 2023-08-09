@@ -182,6 +182,7 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
     name: string;
     attributes: SepticAttributeDocumentation[];
     description: string;
+    parents: string[];
     attrMap: Map<string, SepticAttributeDocumentation> = new Map<
         string,
         SepticAttributeDocumentation
@@ -191,6 +192,7 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
         this.name = input.name;
         this.attributes = input.attributes;
         this.description = input.description;
+        this.parents = [];
         this.attributes.forEach((attr) => this.attrMap.set(attr.name, attr));
     }
 
@@ -224,6 +226,7 @@ export interface ISepticObjectDocumentation {
     name: string;
     attributes: SepticAttributeDocumentation[];
     description: string;
+    parents: string[];
     getAttribute(attr: string): SepticAttributeDocumentation | undefined;
 }
 
@@ -285,6 +288,72 @@ export interface SepticRefsInput {
     identifier?: boolean;
     identifierOptional?: boolean;
     attrList?: string[];
+}
+
+export interface SepticObjectTree {
+    nodes: Map<string, SepticObjectNode>;
+    rootNode: SepticObjectNode;
+}
+
+export class SepticObjectNode {
+    name: string;
+    children: string[] = [];
+    parents: string[] = [];
+
+    constructor(name: string) {
+        this.name = name;
+    }
+
+    addChild(name: string) {
+        if (this.children.includes(name)) {
+            return;
+        }
+        this.children.push(name);
+    }
+
+    addParent(name: string) {
+        if (this.parents.includes(name)) {
+            return;
+        }
+        this.parents.push(name);
+    }
+}
+
+export function createSepticObjectTree(
+    objects: ISepticObjectDocumentation[]
+): SepticObjectTree {
+    const nodes: Map<string, SepticObjectNode> = new Map<
+        string,
+        SepticObjectNode
+    >();
+    for (let obj of objects) {
+        let node = nodes.get(obj.name);
+        if (!node) {
+            node = new SepticObjectNode(obj.name);
+            nodes.set(obj.name, node);
+        }
+        obj.parents.forEach((parent) => {
+            node?.addParent(parent);
+        });
+        for (let parent of obj.parents) {
+            let parentNode = nodes.get(parent);
+            if (!parentNode) {
+                parentNode = new SepticObjectNode(parent);
+                nodes.set(parent, parentNode);
+            }
+            parentNode.addChild(obj.name);
+        }
+    }
+    let roots: SepticObjectNode[] = [];
+    nodes.forEach((value) => {
+        if (!value.parents.length) {
+            roots.push(value);
+        }
+    });
+    if (roots.length !== 1) {
+        console.log("Incorrect number of roots in object documentation tree");
+    }
+    return { nodes: nodes, rootNode: roots[0] };
 }
 
 export function formatObjectDocumentationMarkdown(
