@@ -29,6 +29,7 @@ import {
     SepticAttributeDocumentation,
     SepticTokenType,
     SepticObjectInfo,
+    SepticObjectHierarchy,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -56,6 +57,9 @@ export enum DiagnosticCode {
     invalidDataTypeAttribute = "E307",
     unexpectedList = "E308",
     missingReference = "W101",
+    invalidParentObject = "E401",
+    unexpectedParentObject = "E402",
+    missingParentObject = "E403",
 }
 
 export enum DiagnosticLevel {
@@ -493,6 +497,7 @@ export function validateObject(
     objectInfo: SepticObjectInfo
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
+    diagnostics.push(...validateObjectParent(obj, doc));
     diagnostics.push(...validateIdentifier(obj, doc));
     diagnostics.push(
         ...validateObjectReferences(obj, doc, refProvider, objectInfo)
@@ -736,6 +741,56 @@ function validateAttributeNumValues(
             }
             return [];
     }
+}
+
+export function validateObjectParent(
+    obj: SepticObject,
+    doc: ITextDocument
+): Diagnostic[] {
+    const objectHierarchy =
+        SepticMetaInfoProvider.getInstance().getObjectHierarchy();
+    const expectedParents = objectHierarchy.nodes.get(obj.type)?.parents ?? [];
+    if (!expectedParents.length && obj.parent) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Error,
+                {
+                    start: doc.positionAt(obj.start),
+                    end: doc.positionAt(obj.start + obj.type.length),
+                },
+                `Unexpected parent object for object of type ${obj.type}`,
+                DiagnosticCode.unexpectedParentObject
+            ),
+        ];
+    }
+    if (expectedParents.length && !obj.parent) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Error,
+                {
+                    start: doc.positionAt(obj.start),
+                    end: doc.positionAt(obj.start + obj.type.length),
+                },
+                `No parent object for object. Expected parent object of type: ${expectedParents}`,
+                DiagnosticCode.missingParentObject
+            ),
+        ];
+    }
+    let parent = obj.parent?.type ?? "";
+    if (expectedParents.length && !expectedParents.includes(parent)) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Error,
+                {
+                    start: doc.positionAt(obj.start),
+                    end: doc.positionAt(obj.start + obj.type.length),
+                },
+                `Invalid parent object of type ${parent}. Expected parent object of type: ${expectedParents}`,
+                DiagnosticCode.invalidParentObject
+            ),
+        ];
+    }
+    return [];
 }
 
 export function checkAttributeDataType(

@@ -27,8 +27,14 @@ import { DocumentProvider } from "./documentProvider";
 import * as protocol from "./protocol";
 import { ContextManager } from "./contextManager";
 import { offsetToPositionRange } from "./util/converter";
-import { ScgContext, SepticCnfg, SepticReferenceProvider } from "./septic";
+import {
+    ScgContext,
+    SepticCnfg,
+    SepticReferenceProvider,
+    SepticMetaInfoProvider,
+} from "./septic";
 import { getIgnorePatterns, isPathIgnored } from "./ignorePath";
+
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
@@ -62,6 +68,9 @@ let hasDiagnosticRelatedInformationCapability = false;
 async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
     await context.load();
     const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
+    await context.updateObjectParents(
+        SepticMetaInfoProvider.getInstance().getObjectHierarchy()
+    );
     const diagnosticsPromises = context.files.map(async (file) => {
         if (isPathIgnored(file, ignorePatterns)) {
             connection.sendDiagnostics({ uri: file, diagnostics: [] });
@@ -92,6 +101,9 @@ async function publishDiagnosticsCnfg(uri: string): Promise<void> {
     if (!doc) {
         return;
     }
+    await cnfg.updateObjectParents(
+        SepticMetaInfoProvider.getInstance().getObjectHierarchy()
+    );
     let diagnostics = await langService.provideDiagnostics(doc, cnfg);
     connection.sendDiagnostics({ uri: doc.uri, diagnostics: diagnostics });
 }

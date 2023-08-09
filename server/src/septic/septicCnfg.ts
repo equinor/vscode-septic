@@ -5,7 +5,10 @@
 
 import { AlgVisitor, parseAlg } from "./algParser";
 import { SepticTokenType } from "./septicTokens";
-import { SepticMetaInfoProvider } from "./septicMetaInfo";
+import {
+    SepticMetaInfoProvider,
+    SepticObjectHierarchy,
+} from "./septicMetaInfo";
 import { Attribute, SepticComment, SepticObject } from "./septicElements";
 import {
     SepticReference,
@@ -15,6 +18,7 @@ import {
     createSepticReference,
 } from "./reference";
 import { removeSpaces } from "../util";
+import { updateParentObjects } from "./hierarchy";
 
 export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];
@@ -139,6 +143,13 @@ export class SepticCnfg implements SepticReferenceProvider {
             }
         }
         return undefined;
+    }
+
+    public updateObjectParents(
+        hierarchy: SepticObjectHierarchy
+    ): Promise<void> {
+        updateParentObjects(this.objects, hierarchy);
+        return Promise.resolve();
     }
 
     private extractXvrRefs(): void {

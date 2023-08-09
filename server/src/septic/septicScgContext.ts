@@ -14,6 +14,8 @@ import { SepticObject } from "./septicElements";
 import { SepticConfigProvider } from "../language-service/septicConfigProvider";
 import { SepticCnfg } from "./septicCnfg";
 import { removeSpaces } from "../util";
+import { SepticObjectHierarchy } from "./septicMetaInfo";
+import { updateParentObjects } from "./hierarchy";
 
 export interface ScgConfig {
     outputfile?: string;
@@ -159,5 +161,20 @@ export class ScgContext implements SepticReferenceProvider {
             xvrObjs.push(...cnfg.getAllXvrObjects());
         }
         return xvrObjs;
+    }
+
+    public async updateObjectParents(
+        hierarchy: SepticObjectHierarchy
+    ): Promise<void> {
+        await this.load();
+        const objects: SepticObject[] = [];
+        for (let file in this.files) {
+            let cnfg = this.cnfgCache.get(file);
+            if (!cnfg) {
+                continue;
+            }
+            objects.push(...cnfg.objects);
+        }
+        updateParentObjects(objects, hierarchy);
     }
 }

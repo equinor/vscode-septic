@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { SepticObject } from "./septicElements";
+import { SepticObjectHierarchy } from "./septicMetaInfo";
 
 export interface SepticReference {
     identifier: string;
@@ -53,4 +54,5 @@ export interface SepticReferenceProvider {
         name: string,
         validationFunction: RefValidationFunction
     ): boolean;
+    updateObjectParents(hierarchy: SepticObjectHierarchy): Promise<void>;
 }

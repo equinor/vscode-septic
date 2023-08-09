@@ -9,6 +9,7 @@ import {
     validateObject,
     checkAttributeDataType,
     validateObjectReferences,
+    validateObjectParent,
 } from "../language-service/diagnosticsProvider";
 import {
     AttributeValue,
@@ -985,6 +986,116 @@ describe("Test validation of object references", () => {
             cnfg,
             objectInfo!
         );
+        expect(diag.length).to.equal(0);
+    });
+});
+
+describe("Test validation of object structure", () => {
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
+    it("Expect no diagnostics for correct structure", () => {
+        const text = `
+            CalcModl: TestModl
+
+            CalcPvr: Test
+        "       
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        let diag = validateObjectParent(cnfg.objects[1], doc);
+        expect(diag.length).to.equal(0);
+    });
+
+    it("Expect diagnostics for incorrect structure", () => {
+        const text = `
+        CalcPvr: Test
+
+        CalcModl: TestModl
+        "       
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        let diag = validateObjectParent(cnfg.objects[0], doc);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.missingParentObject);
+    });
+
+    it("Expect diagnostics for incorrect structure", () => {
+        const text = `
+        CalcPvr: Test
+
+        CalcModl: TestModl
+        "       
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        let diag = validateObjectParent(cnfg.objects[1], doc);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidParentObject);
+    });
+
+    it("Expect diagnostics for unexpected object on same level structure", () => {
+        const text = `
+        SmpcAppl: Test1
+
+        DmmyAppl: Test2
+
+        Mvr: Test3
+        "       
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        let diag = validateObjectParent(cnfg.objects[2], doc);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidParentObject);
+    });
+
+    it("Expect no diagnostics for object on same level structure", () => {
+        const text = `
+        DmmyAppl: Test2
+
+        SmpcAppl: Test1
+
+        Mvr: Test3
+        "       
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        let diag = validateObjectParent(cnfg.objects[2], doc);
+        expect(diag.length).to.equal(0);
+    });
+
+    it("Expect no diagnostics for object on same level structure", () => {
+        const text = `
+        DmmyAppl: Test1
+        
+        CalcModl: Test2
+
+        CalcPvr: Test3
+
+        Evr: Test4
+        "       
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        let diag = validateObjectParent(cnfg.objects[3], doc);
+        expect(diag.length).to.equal(0);
+    });
+
+    it("Expect no diagnostics for correct root object", () => {
+        const text = `
+        System: Test1
+        "       
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        let diag = validateObjectParent(cnfg.objects[0], doc);
         expect(diag.length).to.equal(0);
     });
 });
