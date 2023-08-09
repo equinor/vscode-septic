@@ -22,6 +22,8 @@ class SepticObject:
     name: str
     description: str
     attributes: List[Attribute]
+    parents: List[str]
+    publicAttributes: List[str]
     extends: str
     abstract: bool
 
@@ -78,14 +80,26 @@ def parseObjectDoxygenDoc(doxygen: str) -> Optional[SepticObject]:
     if not name_match:
         return None
     name = name_match.group(1)
+    
     description_regex = r"\\brief\s([\s\S]*?)(?=\\property|\*\/)"
     description_match = re.search(description_regex, doxygen)
     description = description_match.group(1).strip() if description_match else ""
+    
     extends_regex = r"\\extends\s+([\w]+)Cnfg"
     extends_match = re.search(extends_regex, doxygen)
     extends = extends_match.group(1) if extends_match else ""
+    
     abstract_regex = r"\\abstract"
     abstract = True if re.search(abstract_regex, doxygen) else False
+    
+    public_attributes_regex = r"\\calcPublicProperties ([\S]*)"
+    public_attributes_match = re.search(public_attributes_regex, doxygen)
+    public_attributes = [attr.strip() for attr in  public_attributes_match.group(1).split(",")] if public_attributes_match else []
+
+    parents_regex = r"\\containers ([\S]*)"
+    parents_match = re.search(parents_regex, doxygen)
+    parents = [parent.strip() for parent in parents_match.group(1).split(",")] if parents_match else []
+    
     attr_regex = r"\\property\s[\s\S]*?(?=\\property|\*\/)"
     attr_matches = re.findall(attr_regex, doxygen)
     attributes: List[Attribute] = []
@@ -93,7 +107,7 @@ def parseObjectDoxygenDoc(doxygen: str) -> Optional[SepticObject]:
         attr = parseAttribute(attr_dox)
         if attr:
             attributes.append(attr)
-    return SepticObject(name, description, attributes, extends, abstract)
+    return SepticObject(name, description, attributes, parents, public_attributes, extends, abstract)
 
 
 def parseAttribute(attribute: str) -> Optional[Attribute]:

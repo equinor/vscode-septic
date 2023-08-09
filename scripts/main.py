@@ -8,9 +8,6 @@ from src.parse_doxygen import (
 )
 from dataclasses import asdict
 
-TEST = True
-
-
 def resolve_inheritance(septic_objects: List[SepticObject]):
     upper_dict: dict = {}
     for obj in septic_objects:
