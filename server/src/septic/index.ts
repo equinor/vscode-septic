@@ -7,3 +7,5 @@ export * from "./septicMetaInfo";
 export * from "./septicElements";
 export * from "./reference";
 export * from "./septicScgContext";
+export * from "./docFormatting";
+export * from "./calc";
