@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.7.3](https://github.com/equinor/vscode-septic/compare/v1.7.2...v1.7.3) (2023-08-09)
+
+
+### 🧹 Chores
+
+* **deps:** bump @types/node from 16.18.38 to 16.18.40 ([#259](https://github.com/equinor/vscode-septic/issues/259)) ([208a702](https://github.com/equinor/vscode-septic/commit/208a7029cd5e82248aef719a24fd58a50244f2e7))
+* **deps:** bump @types/vscode from 1.79.1 to 1.81.0 ([#255](https://github.com/equinor/vscode-septic/issues/255)) ([8be3fc7](https://github.com/equinor/vscode-septic/commit/8be3fc7200abeadfb60ab3dca09c907d22c59d1e))
+* **deps:** bump @typescript-eslint/parser from 5.61.0 to 5.62.0 ([#242](https://github.com/equinor/vscode-septic/issues/242)) ([150f39d](https://github.com/equinor/vscode-septic/commit/150f39d7ebf042d677fe3dc47c05a8a5399dee35))
+* **deps:** bump eslint from 8.44.0 to 8.46.0 ([#248](https://github.com/equinor/vscode-septic/issues/248)) ([a5e8a8e](https://github.com/equinor/vscode-septic/commit/a5e8a8edcd975584d36706ba08037baddc37859c))
+* **deps:** bump typescript from 4.9.5 to 5.1.6 ([#225](https://github.com/equinor/vscode-septic/issues/225)) ([2365368](https://github.com/equinor/vscode-septic/commit/23653688e855892401eb264697b8743285d0458e))
+
+
+### 🐛 Bug Fixes
+
+* add SopcChangeEvr ([#253](https://github.com/equinor/vscode-septic/issues/253)) ([086d0bf](https://github.com/equinor/vscode-septic/commit/086d0bf72c3fd4891bebf2ac90a48acf8a608518))
+* no diagnostics for empty refs ([#260](https://github.com/equinor/vscode-septic/issues/260)) ([012e6e2](https://github.com/equinor/vscode-septic/commit/012e6e2944c888164251f3c738b121dd9434a04d))
+
+
+### 🔨 Refactor
+
+* improve e2e-test coverage ([#243](https://github.com/equinor/vscode-septic/issues/243)) ([f90c609](https://github.com/equinor/vscode-septic/commit/f90c60925029ec595ff91c83c47110feaed212b5))
+
 ## [1.7.2](https://github.com/equinor/vscode-septic/compare/v1.7.1...v1.7.2) (2023-07-06)
 
 
