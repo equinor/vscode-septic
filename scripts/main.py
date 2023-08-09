@@ -8,6 +8,11 @@ from src.parse_doxygen import (
 )
 from dataclasses import asdict
 
+OBJECT_BRANCH = "object_documentation"
+OBJECT_OUTPUT_PATH = "./public/objectsDoc.yaml"
+CALCS_BRANCH = "calc_documentation"
+CALCS_OUTPUT_PATH = "./public/calcs.yaml"
+
 def resolve_inheritance(septic_objects: List[SepticObject]):
     upper_dict: dict = {}
     for obj in septic_objects:
@@ -35,9 +40,7 @@ def resolve(name: str, dict: dict):
 
 
 def updateObjects():
-    output_path = "./public/objectsDoc.yaml"
-    branch = "object_documentation"
-    files = getObjectFiles(branch)
+    files = getObjectFiles(OBJECT_BRANCH)
     objects: List[SepticObject] = []
     for f in files:
         objects.extend(parseObjectDocumentation(f))
@@ -45,8 +48,8 @@ def updateObjects():
     objects = [obj for obj in objects if not obj.abstract]
     for obj in objects:
         obj.attributes.sort(key=lambda x: x.name)
-    commit = getCommitId(branch)
-    with open(output_path, "w") as file:
+    commit = getCommitId(OBJECT_BRANCH)
+    with open(OBJECT_OUTPUT_PATH, "w") as file:
         file.write(f"# Commit: {commit}\n")
         yaml.dump(
             [asdict(obj, dict_factory=SepticObject.dict_factory) for obj in objects],
@@ -55,13 +58,11 @@ def updateObjects():
 
 
 def updateCalcs():
-    output_path = "./public/calcs.yaml"
-    branch = "calc_documentation"
-    calc_file = getCalcFile(branch)
+    calc_file = getCalcFile(CALCS_BRANCH)
     calcs = parseCalcDocumentation(calc_file)
     calcs.sort(key=lambda x: x.name)
-    commit = getCommitId(branch)
-    with open(output_path, "w") as file:
+    commit = getCommitId(CALCS_BRANCH)
+    with open(CALCS_OUTPUT_PATH, "w") as file:
         file.write(f"# Commit: {commit}\n")
         yaml.dump([asdict(calc) for calc in calcs], file)
 

@@ -6,7 +6,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Get Calc Documentation",
+            "name": "Update Documentation",
             "type": "python",
             "request": "launch",
             "program": "${workspaceRoot}/scripts/main.py",
