@@ -289,16 +289,11 @@ export interface SepticRefsInput {
     identifierOptional?: boolean;
     attrList?: string[];
 }
-
-export interface SepticObjectTree {
-    nodes: Map<string, SepticObjectNode>;
-    rootNode: SepticObjectNode;
-}
-
 export class SepticObjectNode {
     name: string;
     children: string[] = [];
     parents: string[] = [];
+    level: number = -1;
 
     constructor(name: string) {
         this.name = name;
@@ -317,6 +312,15 @@ export class SepticObjectNode {
         }
         this.parents.push(name);
     }
+
+    setLevel(level: number) {
+        this.level = level;
+    }
+}
+
+export interface SepticObjectTree {
+    nodes: Map<string, SepticObjectNode>;
+    rootNode: SepticObjectNode;
 }
 
 export function createSepticObjectTree(
@@ -354,6 +358,22 @@ export function createSepticObjectTree(
         console.log("Incorrect number of roots in object documentation tree");
     }
     return { nodes: nodes, rootNode: roots[0] };
+}
+
+export function updateObjectLevelsTree(tree: SepticObjectTree) {
+    updateObjectLevel(tree.rootNode, 0, tree.nodes);
+}
+
+function updateObjectLevel(
+    node: SepticObjectNode,
+    level: number,
+    nodes: Map<string, SepticObjectNode>
+) {
+    node.setLevel(level);
+    node.children.forEach((child) => {
+        let childNode = nodes.get(child);
+        updateObjectLevel(childNode!, level + 1, nodes);
+    });
 }
 
 export function formatObjectDocumentationMarkdown(
