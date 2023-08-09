@@ -361,6 +361,9 @@ function objRefDiagnostics(
             continue;
         }
         for (let attrValue of attrValues.slice(1)) {
+            if (attrValue.getValue().trim() === "") {
+                continue;
+            }
             let validRef = refProvider.validateRef(
                 attrValue.getValue(),
                 defaultRefValidationFunction
