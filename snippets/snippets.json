@@ -401,6 +401,26 @@
             "       PlotMax=  25",
             "         Nhorz=  80",
             "        Nstart=  0",
+            "       DesMode=  ADVISORY",
+            "       FailMax=  0",
+            "  SteadySolver=  QP",
+            "      OpenFlag=  CONSTMVR",
+            "       FeasTol=  1e-10",
+            "     PrintSens=  0"
+        ],
+        "description": "SmpcAppl with only linear attributes "
+    },
+    "SmpcAppl_nonlinear": {
+        "prefix": "smpcapplnonlinear",
+        "body": [
+            "  SmpcAppl:      ${1:ApplicationName}",
+            "         Text1=  \"${2}\"",
+            "         Text2=  \"\"",
+            "         Npred=  80",
+            "         Nstep=  1",
+            "       PlotMax=  25",
+            "         Nhorz=  80",
+            "        Nstart=  0",
             "      MasterOn=  ON",
             "       DesMode=  ADVISORY",
             "       FailMax=  0",
@@ -436,7 +456,7 @@
             "     SensLimSS=  1e-06",
             "    SensLimDyn=  1e-06\r"
         ],
-        "description": "For SEPTIC >= v2.82 "
+        "description": "SmpcAppl with nonlinear attributes"
     },
     "SmpcAppl_v2.81": {
         "prefix": "smpcappl281",
