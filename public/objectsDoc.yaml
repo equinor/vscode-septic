@@ -1,4 +1,4 @@
-# Commit: 9cabf29
+# Commit: c5d60ce
 - attributes:
   - briefDescription: Auto-scaling for plot
     dataType: Enum
@@ -217,14 +217,6 @@
     list: false
     name: MeasHighLimit
     tags: []
-  - briefDescription: Low limit for use in measurement validation
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: MeasLowLimit
-    tags: []
   - briefDescription: Measurement validation activation
     dataType: Enum
     default: ''
@@ -337,13 +329,10 @@
     list: false
     name: Unit
     tags: []
-  - briefDescription: Description
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: UseFactorWeight
-    tags: []
   description: Manipulated Variable Description
   name: Mvr
+  parents:
+  - SmpcAppl
+  publicAttributes:
+  - Fulf
+  - Iv

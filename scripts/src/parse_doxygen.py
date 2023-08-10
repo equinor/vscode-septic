@@ -3,6 +3,8 @@ from typing import List, Optional
 from dataclasses import dataclass
 
 doxygen_regex = r"\/\*![\s\S]*?\*\/"
+vscode_regex = r"\\cond\s+VSCodeSupport"
+vscode_support_regex = r"\\cond\s+VSCodeSupport([\S\s]+)\\endcond"
 
 
 @dataclass
@@ -52,6 +54,11 @@ class Calc:
     detailedDescription: str
 
 
+def getVSCodeDoxygen(doxygen: str) -> Optional[str]:
+    match_vscode_support = re.search(vscode_support_regex, doxygen)
+    return match_vscode_support.group(1)
+
+
 def getObjectDoxygenFromFile(file: str) -> List[str]:
     matches_doxygen = re.findall(doxygen_regex, file)
     return list(filter(validateObjectDoxygen, matches_doxygen))
@@ -59,18 +66,21 @@ def getObjectDoxygenFromFile(file: str) -> List[str]:
 
 def validateObjectDoxygen(doxygen: str) -> bool:
     class_regex = r"\\class\s+([\w]+Cnfg)\b"
-    if re.search(class_regex, doxygen):
+    if re.search(class_regex, doxygen) and re.search(vscode_regex, doxygen):
         return True
     return False
 
 
 def parseObjectDocumentation(file: str) -> List[SepticObject]:
     doxygen_objects = getObjectDoxygenFromFile(file)
+    doxygen_objects = [getVSCodeDoxygen(dox) for dox in doxygen_objects]
     septic_objects: List[SepticObject] = []
     for obj_dox in doxygen_objects:
         obj = parseObjectDoxygenDoc(obj_dox)
         if obj:
             septic_objects.append(obj)
+        else:
+            print(f"Unable to parse the following doxygen:\n {obj_dox}")
     return septic_objects
 
 
@@ -80,26 +90,34 @@ def parseObjectDoxygenDoc(doxygen: str) -> Optional[SepticObject]:
     if not name_match:
         return None
     name = name_match.group(1)
-    
+
     description_regex = r"\\brief\s([\s\S]*?)(?=\\property|\*\/)"
     description_match = re.search(description_regex, doxygen)
     description = description_match.group(1).strip() if description_match else ""
-    
+
     extends_regex = r"\\extends\s+([\w]+)Cnfg"
     extends_match = re.search(extends_regex, doxygen)
     extends = extends_match.group(1) if extends_match else ""
-    
+
     abstract_regex = r"\\abstract"
     abstract = True if re.search(abstract_regex, doxygen) else False
-    
-    public_attributes_regex = r"\\calcPublicProperties ([\S]*)"
-    public_attributes_match = re.search(public_attributes_regex, doxygen)
-    public_attributes = [attr.strip() for attr in  public_attributes_match.group(1).split(",")] if public_attributes_match else []
 
-    parents_regex = r"\\containers ([\S]*)"
+    public_attributes_regex = r"\\calcPublicProperties\s+\[([\S\s]*)\]"
+    public_attributes_match = re.search(public_attributes_regex, doxygen)
+    public_attributes = (
+        [attr.strip() for attr in public_attributes_match.group(1).split(",")]
+        if public_attributes_match
+        else []
+    )
+
+    parents_regex = r"\\containers\s+\[([\S]*)\]"
     parents_match = re.search(parents_regex, doxygen)
-    parents = [parent.strip() for parent in parents_match.group(1).split(",")] if parents_match else []
-    
+    parents = (
+        [parent.strip() for parent in parents_match.group(1).split(",")]
+        if parents_match
+        else []
+    )
+
     attr_regex = r"\\property\s[\s\S]*?(?=\\property|\*\/)"
     attr_matches = re.findall(attr_regex, doxygen)
     attributes: List[Attribute] = []
@@ -107,7 +125,9 @@ def parseObjectDoxygenDoc(doxygen: str) -> Optional[SepticObject]:
         attr = parseAttribute(attr_dox)
         if attr:
             attributes.append(attr)
-    return SepticObject(name, description, attributes, parents, public_attributes, extends, abstract)
+    return SepticObject(
+        name, description, attributes, parents, public_attributes, extends, abstract
+    )
 
 
 def parseAttribute(attribute: str) -> Optional[Attribute]:
@@ -156,7 +176,11 @@ def getCalcDoxygenFromFile(file: str) -> List[str]:
 def validateCalcDoxygen(doxygen: str) -> bool:
     class_regex = r"\\class\s+(Calc[\w]+)\b"
     function_regex = r"\\fn\s*([\w]+)\([\S ]+\)"
-    if re.search(class_regex, doxygen) and re.search(function_regex, doxygen):
+    if (
+        re.search(class_regex, doxygen)
+        and re.search(function_regex, doxygen)
+        and re.search(vscode_regex, doxygen)
+    ):
         return True
     return False
 
@@ -170,13 +194,13 @@ def parseCalcDoxygenDoc(calc: str) -> Optional[Calc]:
     signature = func.group(1) if func else None
     if not signature:
         return None
-    paramMatches = re.findall(r"\\param[\S ]+", calc)
-    for param in paramMatches:
+    param_matches = re.findall(r"\\param[\S ]+", calc)
+    for param in param_matches:
         parsedParam = parseParameter(param)
         if parsedParam:
             parameters.append(parsedParam)
-    returnMatch = re.search(r"\\return([\S ]+)", calc)
-    retr = returnMatch.group(1).strip() if returnMatch else ""
+    return_match = re.search(r"\\return([\S ]+)", calc)
+    retr = return_match.group(1).strip() if return_match else ""
     brief_description_match = re.search(
         r"\\brief([\s\S]*?)(?:(?=(?:\r?\n){3})|(?=\\par|\*\/))", calc
     )
@@ -200,27 +224,30 @@ def parseCalcDoxygenDoc(calc: str) -> Optional[Calc]:
 
 
 def parseParameter(param: str) -> Optional[Parameter]:
-    paramMatch = re.search(
+    param_match = re.search(
         r"\\param\[([\w]+)\]\s+([\w]+)\s+([\w\s.,-\/]+)(?:\(([\w]+)\))?(?:\s*\[([\w\+]+)\])?",
         param,
     )
-    direction = paramMatch.group(1) if paramMatch else None
-    name = paramMatch.group(2) if paramMatch else None
+    direction = param_match.group(1) if param_match else None
+    name = param_match.group(2) if param_match else None
     if not direction or not name:
         return None
-    description = paramMatch.group(3).strip() if paramMatch.group(3) else ""
-    type = paramMatch.group(4) if paramMatch.group(4) else "Value"
-    arity = paramMatch.group(5) if paramMatch.group(5) else "1"
+    description = param_match.group(3).strip() if param_match.group(3) else ""
+    type = param_match.group(4) if param_match.group(4) else "Value"
+    arity = param_match.group(5) if param_match.group(5) else "1"
     return Parameter(
         name=name, description=description, direction=direction, type=type, arity=arity
     )
 
 
 def parseCalcDocumentation(file: str) -> List[Calc]:
-    calcDoxygen = getCalcDoxygenFromFile(file)
+    calcs_doxygen = getCalcDoxygenFromFile(file)
+    calcs_doxygen = [getVSCodeDoxygen(dox) for dox in calcs_doxygen]
     parsedCalcs: List[Calc] = []
-    for calc in calcDoxygen:
-        parsedCalc = parseCalcDoxygenDoc(calc)
-        if parsedCalc:
-            parsedCalcs.append(parsedCalc)
+    for calc_dox in calcs_doxygen:
+        parsed_calc = parseCalcDoxygenDoc(calc_dox)
+        if parsed_calc:
+            parsedCalcs.append(parsed_calc)
+        else:
+            print(f"Unable to parse the following doxygen:\n {calc_dox}")
     return parsedCalcs
