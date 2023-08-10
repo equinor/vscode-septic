@@ -124,10 +124,14 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
         }
         if (this.match(AlgTokenType.leftParen)) {
             let expr = this.comparison();
-            this.consume(
-                AlgTokenType.rightParen,
-                "Missing closing paranthesis at end of grouping."
-            );
+            if (!this.match(AlgTokenType.rightParen)) {
+                this.error(
+                    `Unexpected token: "${
+                        this.peek().content
+                    }". Expected closing parenthesis at end of grouping.`,
+                    this.peek()
+                );
+            }
             return new AlgGrouping(expr);
         }
         if (this.match(AlgTokenType.identifier)) {
