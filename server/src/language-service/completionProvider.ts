@@ -13,10 +13,12 @@ import {
     InsertTextMode,
     InsertTextFormat,
     Range,
+    CompletionParams,
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
+    AlgVisitor,
     SepticAttributeDocumentation,
     SepticCnfg,
     SepticMetaInfoProvider,
@@ -24,6 +26,7 @@ import {
     SepticReferenceProvider,
     formatCalcMarkdown,
     formatObjectAttribute,
+    parseAlg,
 } from "../septic";
 import { indentsAttributesDelimiter } from "./formatProvider";
 import { isAlphaNumeric } from "../util";
@@ -38,30 +41,96 @@ export class CompletionProvider {
 
     /* istanbul ignore next */
     public async provideCompletion(
-        pos: TextDocumentPositionParams,
+        params: CompletionParams,
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
     ): Promise<CompletionItem[]> {
-        const offset = doc.offsetAt(pos.position);
-        const cnfg = await this.cnfgProvider.get(pos.textDocument.uri);
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
         await refProvider.load();
-        return getCompletion(cnfg, offset, doc, refProvider);
+        return getCompletion(
+            params.position,
+            params.context?.triggerCharacter,
+            cnfg,
+            doc,
+            refProvider
+        );
     }
 }
 
 export function getCompletion(
+    pos: Position,
+    triggerCharacter: string | undefined,
     cnfg: SepticCnfg,
-    offset: number,
     doc: ITextDocument,
     refProvider: SepticReferenceProvider
 ): CompletionItem[] {
-    if (cnfg.offsetInAlg(offset)) {
+    const offset = doc.offsetAt(pos);
+    if (triggerCharacter === ".") {
+        return getCalcPublicPropertiesCompletion(offset, cnfg, refProvider);
+    }
+    const alg = cnfg.offsetInAlg(offset);
+    if (alg) {
         return getCalcCompletion(offset, cnfg, refProvider);
     }
     return getObjectCompletion(offset, cnfg, refProvider, doc);
+}
+
+export function getCalcPublicPropertiesCompletion(
+    offset: number,
+    cnfg: SepticCnfg,
+    refProvider: SepticReferenceProvider
+): CompletionItem[] {
+    let algValue = cnfg.offsetInAlg(offset);
+    if (!algValue) {
+        return [];
+    }
+    let expr;
+    try {
+        expr = parseAlg(algValue.getValue());
+    } catch {
+        return [];
+    }
+    const visitor = new AlgVisitor();
+    visitor.visit(expr);
+    let offsetCharInAlg = offset - (algValue.start + 1);
+    for (let variable of visitor.variables) {
+        if (offsetCharInAlg !== variable.end) {
+            continue;
+        }
+        let variableCore = variable.value.slice(0, variable.value.length - 1);
+        let objects = refProvider.getObjectsByIdentifier(variableCore);
+        for (let obj of objects) {
+            if (!obj.isXvr()) {
+                continue;
+            }
+            let metaInfoProvider = SepticMetaInfoProvider.getInstance();
+            let objDoc = metaInfoProvider.getObjectDocumentation(obj.type);
+            if (!objDoc) {
+                continue;
+            }
+            return publicPropertiesToCompletionItems(
+                objDoc.publicAttributes,
+                obj.type
+            );
+        }
+    }
+    return [];
+}
+
+function publicPropertiesToCompletionItems(
+    properties: string[],
+    objType: string
+): CompletionItem[] {
+    return properties.map((prop) => {
+        return {
+            label: prop,
+            kind: CompletionItemKind.Property,
+            detail: `Public property for ${objType}`,
+        };
+    });
 }
 
 export function getCalcCompletion(

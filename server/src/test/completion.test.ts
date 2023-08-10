@@ -2,12 +2,14 @@ import { describe } from "mocha";
 import { SepticMetaInfoProvider, parseSeptic } from "../septic";
 import {
     getCalcCompletion,
+    getCalcPublicPropertiesCompletion,
     getCompletion,
     getObjectCompletion,
 } from "../language-service/completionProvider";
 import { CompletionItemKind, Position, TextEdit } from "vscode-languageserver";
 import { expect } from "chai";
 import { TextDocument } from "vscode-languageserver-textdocument";
+import { loadFile } from "./util";
 
 describe("Test completion of identifier", () => {
     it("Completion of SopcCvr identifier for Cvr", () => {
@@ -200,13 +202,56 @@ describe("Test calc completion", () => {
     });
 });
 
+describe("Test property completion in alg", () => {
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
+    it("Expect completion of Mvr public properties", () => {
+        const content = loadFile("completion/publicProperties.cnfg");
+        const doc = TextDocument.create("test.cnfg", "septic", 0, content);
+        const cnfg = parseSeptic(doc.getText());
+        const offset = doc.offsetAt(Position.create(6, 26));
+        const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
+        expect(
+            compItems.filter(
+                (item) => item.kind === CompletionItemKind.Property
+            ).length
+        ).to.equal(
+            metaInfoProvider.getObjectDocumentation("Mvr")?.publicAttributes
+                .length
+        );
+    });
+    it("Expect no completion item for unknown variable", () => {
+        const content = loadFile("completion/publicProperties.cnfg");
+        const doc = TextDocument.create("test.cnfg", "septic", 0, content);
+        const cnfg = parseSeptic(doc.getText());
+        const offset = doc.offsetAt(Position.create(11, 27));
+        const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
+        expect(compItems.length).to.equal(0);
+    });
+    it("Expect no completion item for number", () => {
+        const content = loadFile("completion/publicProperties.cnfg");
+        const doc = TextDocument.create("test.cnfg", "septic", 0, content);
+        const cnfg = parseSeptic(doc.getText());
+        const offset = doc.offsetAt(Position.create(16, 20));
+        const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
+        expect(compItems.length).to.equal(0);
+    });
+    it("Expect no completion item for already completed variable", () => {
+        const content = loadFile("completion/publicProperties.cnfg");
+        const doc = TextDocument.create("test.cnfg", "septic", 0, content);
+        const cnfg = parseSeptic(doc.getText());
+        const offset = doc.offsetAt(Position.create(21, 26));
+        const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
+        expect(compItems.length).to.equal(0);
+    });
+});
+
 describe("Test completion logic", () => {
     it("Expect to get completion items relevant for algs when inside alg", () => {
         const text = `Mvr:   TestMvr\nText1= ""  \nCalcPvr: TestCalc\nAlg= "  "\n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
         const cnfg = parseSeptic(doc.getText());
-        const offset = doc.offsetAt(Position.create(3, 6));
-        const compItems = getCompletion(cnfg, offset, doc, cnfg);
+        const pos = Position.create(3, 6);
+        const compItems = getCompletion(pos, "", cnfg, doc, cnfg);
         expect(
             compItems.filter(
                 (item) => item.kind === CompletionItemKind.Function
@@ -222,8 +267,8 @@ describe("Test completion logic", () => {
         const text = `Mvr:   TestMvr\nText1= ""  \nCalcPvr: TestCalc\nAlg= "  "\n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
         const cnfg = parseSeptic(doc.getText());
-        const offset = doc.offsetAt(Position.create(1, 10));
-        const compItems = getCompletion(cnfg, offset, doc, cnfg);
+        const pos = Position.create(1, 10);
+        const compItems = getCompletion(pos, "", cnfg, doc, cnfg);
         expect(
             compItems.filter(
                 (item) => item.kind === CompletionItemKind.Function

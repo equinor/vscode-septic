@@ -44,7 +44,7 @@ export interface ILanguageService {
     ): Promise<lsp.DocumentSymbol[]>;
 
     provideCompletion(
-        pos: lsp.TextDocumentPositionParams,
+        pos: lsp.CompletionParams,
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
     ): Promise<lsp.CompletionItem[]>;

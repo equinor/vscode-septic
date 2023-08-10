@@ -198,6 +198,7 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
     attributes: SepticAttributeDocumentation[];
     description: string;
     parents: string[];
+    publicAttributes: string[];
     attrMap: Map<string, SepticAttributeDocumentation> = new Map<
         string,
         SepticAttributeDocumentation
@@ -208,6 +209,7 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
         this.attributes = input.attributes;
         this.description = input.description;
         this.parents = input.parents;
+        this.publicAttributes = input.publicAttributes;
         this.attributes.forEach((attr) => this.attrMap.set(attr.name, attr));
     }
 
@@ -242,6 +244,7 @@ export interface ISepticObjectDocumentation {
     attributes: SepticAttributeDocumentation[];
     description: string;
     parents: string[];
+    publicAttributes: string[];
     getAttribute(attr: string): SepticAttributeDocumentation | undefined;
 }
 
@@ -250,6 +253,7 @@ export interface SepticObjectDocumentationInput {
     attributes: SepticAttributeDocumentation[];
     description: string;
     parents: string[];
+    publicAttributes: string[];
 }
 
 export interface SepticAttributeDocumentation {

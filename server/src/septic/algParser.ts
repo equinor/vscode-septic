@@ -163,32 +163,12 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             this.advance();
             end = this.previous().end;
             content += ".";
-
-            if (
-                !(
-                    this.check(AlgTokenType.identifier) ||
-                    this.check(AlgTokenType.jinja)
-                )
-            ) {
-                this.error("Missing specifier after dot", {
-                    start: token.start,
-                    end: this.previous().end,
-                    content: content,
-                    type: AlgTokenType.error,
-                });
-            }
             this.advance();
             let nextToken = this.variable();
-            if (nextToken.start !== end) {
-                this.error("Missing specifier after dot", {
-                    start: token.start,
-                    end: this.previous().end,
-                    content: content,
-                    type: AlgTokenType.error,
-                });
+            if (nextToken.start === end) {
+                content += nextToken.content;
+                end = nextToken.end;
             }
-            content += nextToken.content;
-            end = nextToken.end;
         }
 
         return {

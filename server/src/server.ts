@@ -18,6 +18,7 @@ import {
     LocationLink,
     Location,
     DidChangeWatchedFilesNotification,
+    CompletionParams,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -152,6 +153,7 @@ connection.onInitialize((params: InitializeParams) => {
             documentSymbolProvider: true,
             completionProvider: {
                 resolveProvider: false,
+                triggerCharacters: ["."],
             },
             definitionProvider: true,
             referencesProvider: true,
@@ -237,23 +239,23 @@ connection.onDocumentSymbol(
 );
 
 connection.onCompletion(
-    async (docPos: TextDocumentPositionParams): Promise<CompletionItem[]> => {
-        const document = documents.get(docPos.textDocument.uri);
+    async (params: CompletionParams): Promise<CompletionItem[]> => {
+        const document = documents.get(params.textDocument.uri);
         if (!document) {
             return [];
         }
         let context: SepticReferenceProvider | undefined =
-            await contextManager.getContext(docPos.textDocument.uri);
+            await contextManager.getContext(params.textDocument.uri);
         if (!context) {
             context = await langService.cnfgProvider.get(
-                docPos.textDocument.uri
+                params.textDocument.uri
             );
         }
 
         if (!context) {
             return [];
         }
-        return langService.provideCompletion(docPos, document, context);
+        return langService.provideCompletion(params, document, context);
     }
 );
 

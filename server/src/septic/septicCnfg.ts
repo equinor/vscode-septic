@@ -9,7 +9,12 @@ import {
     SepticMetaInfoProvider,
     SepticObjectHierarchy,
 } from "./septicMetaInfo";
-import { Attribute, SepticComment, SepticObject } from "./septicElements";
+import {
+    Attribute,
+    AttributeValue,
+    SepticComment,
+    SepticObject,
+} from "./septicElements";
 import {
     SepticReference,
     SepticReferenceProvider,
@@ -85,21 +90,21 @@ export class SepticCnfg implements SepticReferenceProvider {
         });
     }
 
-    public offsetInAlg(offset: number): boolean {
+    public offsetInAlg(offset: number): undefined | AttributeValue {
         const obj = this.getObjectFromOffset(offset);
         if (!obj) {
-            return false;
+            return undefined;
         }
         const alg = obj.getAttribute("Alg");
         let algValue = alg?.getAttrValue();
         if (!algValue) {
-            return false;
+            return undefined;
         }
 
         if (offset >= algValue.start && offset <= algValue.end) {
-            return true;
+            return algValue;
         }
-        return false;
+        return undefined;
     }
 
     public getAlgFromOffset(offset: number): Attribute | undefined {
