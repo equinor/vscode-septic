@@ -1,121 +1,415 @@
 import { expect } from "chai";
 import {
     SepticParser,
+    SepticScanner,
     SepticTokenType,
     parseSeptic,
-    tokenize,
 } from "../septic";
 
-describe("Basic tests lexer", () => {
-    it("Lexing keyword", () => {
+describe("Test tokenization of objects and identifiers", () => {
+    it("Expect object tokens for object declaration", () => {
         const input = "System:  FirstTest";
-        let tokens = tokenize(input).tokens;
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
         expect(tokens.length).to.equal(3);
         expect(tokens[0].type).to.equal(SepticTokenType.object);
         expect(tokens[1].type).to.equal(SepticTokenType.identifier);
     });
 
-    it("Lexing keyword with scg variable", () => {
+    it("Expect object tokens for object declaration", () => {
+        const input = "System:         FirstTest";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
+    });
+
+    it("Expect object tokens for multiline object declaration", () => {
+        const input = "System:\n  FirstTest";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
+    });
+
+    it("Expect no object tokens for incorrect object declaration", () => {
+        const input = "System:FirstTest";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(4);
+        expect(tokens[0].type).to.equal(SepticTokenType.identifier);
+        expect(tokens[1].type).to.equal(SepticTokenType.unknown);
+    });
+
+    it("Expect no object tokens for incorrect object declaration", () => {
+        const input = "System; FirstTest";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(4);
+        expect(tokens[0].type).to.equal(SepticTokenType.identifier);
+        expect(tokens[1].type).to.equal(SepticTokenType.unknown);
+    });
+
+    it("Expect correct tokenization of object with scg in identifier", () => {
         const input = "SopcEvr:  {{ TestEvr }}";
-        let tokens = tokenize(input).tokens;
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
         expect(tokens.length).to.equal(3);
         expect(tokens[0].type).to.equal(SepticTokenType.object);
         expect(tokens[1].type).to.equal(SepticTokenType.identifier);
     });
 
-    it("Lexing tagmap with string value", () => {
-        const input = 'Test1= "Dummy"';
-        let tokens = tokenize(input).tokens;
+    it("Expect correct tokenization of object with scg in identifier", () => {
+        const input = "SopcEvr:  Test{{ TestEvr }}Test";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
         expect(tokens.length).to.equal(3);
-        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
-        expect(tokens[1].type).to.equal(SepticTokenType.string);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
     });
 
-    it("Lexing tagmap with scg in string value", () => {
-        const input = 'Text1= "{{ Jinja but should be hidden since string }}"';
-        let tokens = tokenize(input).tokens;
+    it("Expect correct tokenization of object with number in identifier", () => {
+        const input = "SopcEvr:  213Test";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
         expect(tokens.length).to.equal(3);
-        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
-        expect(tokens[1].type).to.equal(SepticTokenType.string);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
     });
 
-    it("Lexing tagmap with number value", () => {
-        const input = "Test2= 3.14";
-        let tokens = tokenize(input).tokens;
+    it("Expect correct tokenization of object with underscore in identifier", () => {
+        const input = "SopcEvr:  213_Test";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
+    });
+
+    it("Expect correct tokenization of object with hyphen in identifier", () => {
+        const input = "SopcEvr:  213-Test";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
+    });
+});
+
+describe("Test tokenization of attributes", () => {
+    it("Expect attribute token for correct attribute", () => {
+        const input = "Text1= 1";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
         expect(tokens.length).to.equal(3);
         expect(tokens[0].type).to.equal(SepticTokenType.attribute);
         expect(tokens[1].type).to.equal(SepticTokenType.numeric);
     });
-
-    it("Lexing tagmap with groupmask value", () => {
-        const input = "GrpLock=  0000000000000000000000000";
-        let tokens = tokenize(input).tokens;
+    it("Expect attribute token for correct attribute", () => {
+        const input = "Text1=   \n1";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
         expect(tokens.length).to.equal(3);
         expect(tokens[0].type).to.equal(SepticTokenType.attribute);
         expect(tokens[1].type).to.equal(SepticTokenType.numeric);
     });
+    it("Expect no attribute tokens for incorrect attribute declaration", () => {
+        const input = "Test1=1";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(4);
+        expect(tokens[0].type).to.equal(SepticTokenType.identifier);
+        expect(tokens[1].type).to.equal(SepticTokenType.unknown);
+    });
+    it("Expect no attribute tokens for incorrect attribute declaration", () => {
+        const input = "Test1 =1";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(4);
+        expect(tokens[0].type).to.equal(SepticTokenType.identifier);
+        expect(tokens[1].type).to.equal(SepticTokenType.unknown);
+    });
+    it("Expect no attribute tokens for incorrect attribute declaration", () => {
+        const input = "Test1>= 1";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(5);
+        expect(tokens[0].type).to.equal(SepticTokenType.identifier);
+        expect(tokens[1].type).to.equal(SepticTokenType.unknown);
+    });
+});
 
-    it("Lexing tagmap with bits value", () => {
-        const input = "Bits2=  0001";
-        let tokens = tokenize(input).tokens;
+describe("Test tokenization of strings", () => {
+    it("Expect correct tokenization of string", () => {
+        const input = '"Test"';
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.string);
+    });
+
+    it("Expect correct tokenization of string containing jinja", () => {
+        const input = '"{{ Jinja but should be hidden since string }}"';
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.string);
+    });
+
+    it("Expect correct tokenization of string containing block comment", () => {
+        const input = '"/* Test */"';
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.string);
+    });
+
+    it("Expect correct tokenization of string containing attributes", () => {
+        const input = '"Text2= 2"';
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.string);
+    });
+});
+
+describe("Test tokenization of numeric expressions", () => {
+    it("Expect numeric token for int", () => {
+        const input = "3";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.numeric);
+    });
+    it("Expect numeric token for numeric double", () => {
+        const input = "3.14";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect numeric token for negative double", () => {
+        const input = "-3.14";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect numeric token for positive numeric expression", () => {
+        const input = "+3.14";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect numeric token for scientific numeric expression", () => {
+        const input = "3.14e-10";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect numeric token for scientific numeric expression", () => {
+        const input = "3.14E+10";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect numeric token for scientific numeric expression", () => {
+        const input = "3E+10";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect numeric token for groupemask", () => {
+        const input = "0000000000000000000000000";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect numeric token for bitmask", () => {
+        const input = "0001";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect identifier token for incorrect scientific numeric expression", () => {
+        const input = "3E-E";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.identifier);
+    });
+
+    it("Expect identifier token for incorrect numeric expression containing letters", () => {
+        const input = "3FE";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(2);
+        expect(tokens[0].type).to.equal(SepticTokenType.identifier);
+    });
+
+    it("Expect identifier token for incorrect numeric expression containing letters", () => {
+        const input = "3.14F";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
         expect(tokens.length).to.equal(3);
-        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
-        expect(tokens[1].type).to.equal(SepticTokenType.numeric);
+        expect(tokens[0].type).to.equal(SepticTokenType.numeric);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
     });
 
-    it("Lexing blocking tagmap", () => {
-        const input = "Blocking=  8    1    2    4    8   16   32   64   96";
-        let tokens = tokenize(input).tokens;
-        expect(tokens.length).to.equal(11);
-        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
-        expect(tokens[1].type).to.equal(SepticTokenType.numeric);
-        expect(tokens[2].type).to.equal(SepticTokenType.numeric);
+    it("Expect unknown token for incorrect numeric expression", () => {
+        const input = "3.14.4";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(4);
+        expect(tokens[0].type).to.equal(SepticTokenType.numeric);
+        expect(tokens[1].type).to.equal(SepticTokenType.unknown);
     });
+});
 
-    it("Lexing line comment", () => {
-        const input = '// Test1=  "Dummy"';
-        let tokens = tokenize(input).tokens;
-        expect(tokens.length).to.equal(1);
-    });
-
-    it("Lexing block comment", () => {
-        const input = '/* Bits2=  0001 */ Test1= "Dummy"';
-        let tokens = tokenize(input).tokens;
-        expect(tokens.length).to.equal(3);
-        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
-        expect(tokens[1].type).to.equal(SepticTokenType.string);
-    });
-
-    it("Lexing jinja comment", () => {
-        const input = '{# Bits2=  0001 #} Test1= "Dummy"';
-        let tokens = tokenize(input).tokens;
-        expect(tokens.length).to.equal(3);
-        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
-        expect(tokens[1].type).to.equal(SepticTokenType.string);
-    });
-
-    it("Lexing jinja epression", () => {
-        const input = '{%- if final|default(false) %} Test1= "Dummy"';
-        let tokens = tokenize(input).tokens;
-        expect(tokens.length).to.equal(3);
-        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
-        expect(tokens[1].type).to.equal(SepticTokenType.string);
-    });
-
-    it("Lexing with unknown character", () => {
+describe("Test tokenization of code with unknown characters", () => {
+    it("Expect unknown token for misplaced %", () => {
         const input = 'Test1= %"Dummy"';
-        let tokens = tokenize(input).tokens;
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
         expect(tokens.length).to.equal(4);
         expect(tokens[0].type).to.equal(SepticTokenType.attribute);
         expect(tokens[1].type).to.equal(SepticTokenType.unknown);
         expect(tokens[2].type).to.equal(SepticTokenType.string);
     });
 
-    it("Lexing group tag", () => {
+    it("Expect unknown token for misplaced =", () => {
+        const input = 'Test1 = "Dummy"';
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(4);
+        expect(tokens[0].type).to.equal(SepticTokenType.identifier);
+        expect(tokens[1].type).to.equal(SepticTokenType.unknown);
+        expect(tokens[2].type).to.equal(SepticTokenType.string);
+    });
+
+    it("Expect unknown token for misplaced :", () => {
+        const input = "Test1 : Test";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(4);
+        expect(tokens[0].type).to.equal(SepticTokenType.identifier);
+        expect(tokens[1].type).to.equal(SepticTokenType.unknown);
+        expect(tokens[2].type).to.equal(SepticTokenType.identifier);
+    });
+});
+
+describe("Test tokenization of comments", () => {
+    it("Expect line comment token for line comment", () => {
+        const input = `// Test1=  "Dummy"
+        `;
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens();
+        expect(tokens.comments.length).to.equal(1);
+        expect(tokens.comments[0].type).to.equal(SepticTokenType.lineComment);
+        expect(tokens.tokens.length).to.equal(1);
+    });
+
+    it("Expect that line comment is contained to line", () => {
+        const input = `// Test1=  "Dummy"
+                        Test2= 2
+        `;
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens();
+        expect(tokens.comments.length).to.equal(1);
+        expect(tokens.comments[0].type).to.equal(SepticTokenType.lineComment);
+        expect(tokens.tokens.length).to.equal(3);
+        expect(tokens.tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens.tokens[1].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect block comment for block comment", () => {
+        const input = '/* Text1= "" */';
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens();
+        expect(tokens.comments.length).to.equal(1);
+        expect(tokens.comments[0].type).to.equal(SepticTokenType.blockComment);
+        expect(tokens.tokens.length).to.equal(1);
+    });
+
+    it("Expect block comment is limited", () => {
+        const input = '/* Text1= "" */ Test2= 2';
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens();
+        expect(tokens.comments.length).to.equal(1);
+        expect(tokens.comments[0].type).to.equal(SepticTokenType.blockComment);
+        expect(tokens.tokens.length).to.equal(3);
+        expect(tokens.tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens.tokens[1].type).to.equal(SepticTokenType.numeric);
+    });
+
+    it("Expect jinja comment token for jinja comment", () => {
+        const input = "{# Bits2=  0001 #}";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens();
+        expect(tokens.comments.length).to.equal(1);
+        expect(tokens.comments[0].type).to.equal(SepticTokenType.jinjaComment);
+        expect(tokens.tokens.length).to.equal(1);
+    });
+
+    it("Expect jinja comment to be limited", () => {
+        const input = '{# Bits2=  0001 #} Text1= "Test"';
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens();
+        expect(tokens.comments.length).to.equal(1);
+        expect(tokens.comments[0].type).to.equal(SepticTokenType.jinjaComment);
+        expect(tokens.tokens.length).to.equal(3);
+        expect(tokens.tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens.tokens[1].type).to.equal(SepticTokenType.string);
+    });
+
+    it("Expect jinja expression token for jinja expression", () => {
+        const input = "{%- if final|default(false) %}";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens();
+        expect(tokens.comments.length).to.equal(1);
+        expect(tokens.comments[0].type).to.equal(
+            SepticTokenType.jinjaExpression
+        );
+        expect(tokens.tokens.length).to.equal(1);
+    });
+
+    it("Expect jinja expression to be limited", () => {
+        const input = '{%- if final|default(false) %} Text1= "Test"';
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens();
+        expect(tokens.comments.length).to.equal(1);
+        expect(tokens.comments[0].type).to.equal(
+            SepticTokenType.jinjaExpression
+        );
+        expect(tokens.tokens.length).to.equal(3);
+        expect(tokens.tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens.tokens[1].type).to.equal(SepticTokenType.string);
+    });
+});
+
+describe("Test tokenization of blocks", () => {
+    it("Expect correct tokenization of attribute with list of values", () => {
         const input = `Grps=  7
                  "Tables1"  "Tables2"  "Tables3"  "Tables4"  "Tables5"
                  "Tables6"  "Tables7"`;
-        let tokens = tokenize(input).tokens;
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
         expect(tokens.length).to.equal(10);
         expect(tokens[0].type).to.equal(SepticTokenType.attribute);
         expect(
@@ -124,16 +418,16 @@ describe("Basic tests lexer", () => {
             }).length
         ).to.equal(7);
     });
-});
 
-describe("Test lexing of blocks", () => {
-    it("Test lexing of small system block", () => {
-        const input = `  System:        TESTAPP
+    it("Expect correct tokenization of small object", () => {
+        const input = `
+        System:  TESTAPP
          Text1=  "Dummy applikasjon"
-         Text2=  "1: Test �, 2: Test �, 3: Test �"
+         Text2=  "1: Test, 2: Test, 3: Test"
          Nsecs=  10
        PlotMax=  10`;
-        let tokens = tokenize(input).tokens;
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
         expect(tokens.length).to.equal(11);
         expect(tokens[0].type).to.equal(SepticTokenType.object);
         expect(
@@ -153,7 +447,36 @@ describe("Test lexing of blocks", () => {
         ).to.equal(2);
     });
 
-    it("Test lexing of Cvr", () => {
+    it("Expect correct tokenization of small object containing comments", () => {
+        const input = `
+        System:  TESTAPP // Test comment
+         Text1=  /* Test comment */ "Dummy applikasjon" 
+         Text2=  "1: Test, 2: Test, 3: Test"
+         Nsecs=  10 
+         {# PlotMax=  10 #}`;
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens();
+        expect(tokens.tokens.length).to.equal(9);
+        expect(tokens.tokens[0].type).to.equal(SepticTokenType.object);
+        expect(
+            tokens.tokens.filter((el) => {
+                return el.type === SepticTokenType.attribute;
+            }).length
+        ).to.equal(3);
+        expect(
+            tokens.tokens.filter((el) => {
+                return el.type === SepticTokenType.numeric;
+            }).length
+        ).to.equal(1);
+        expect(
+            tokens.tokens.filter((el) => {
+                return el.type === SepticTokenType.string;
+            }).length
+        ).to.equal(2);
+        expect(tokens.comments.length).to.equal(3);
+    });
+
+    it("Expect correct lexing of complete cvr object", () => {
         const input = `  Cvr:           TestCvr
          Text1=  "Test Cvr"
          Text2=  ""
@@ -204,7 +527,8 @@ MeasValidation=  OFF */
         LockSP=  OFF
         LockLL=  OFF
 UseFactorWeight=  0`;
-        let tokens = tokenize(input).tokens;
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
         expect(
             tokens.filter((el) => {
                 return el.type === SepticTokenType.attribute;
@@ -222,13 +546,14 @@ UseFactorWeight=  0`;
         ).to.equal(40);
     });
 
-    it("Test lexer for plot", () => {
+    it("Expect correct tokenization of small object", () => {
         const input = `XvrPlot:       {{ Wellname }}TestCvr
            Row=  3
            Col=  1
        RowSize=  3
        ColSize=  2`;
-        let tokens = tokenize(input).tokens;
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
         expect(tokens.length).to.equal(11);
         expect(tokens[1].type).to.equal(SepticTokenType.identifier);
         expect(

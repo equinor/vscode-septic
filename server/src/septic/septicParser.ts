@@ -5,19 +5,6 @@
 
 import { CancellationToken } from "vscode-languageserver";
 import { Parser, IToken, ParserError } from "./parser";
-import {
-    ATTRIBUTE_REGEX,
-    BLOCK_COMMENT_REGEX,
-    IDENTIFIER_REGEX,
-    JINJA_COMMENT_REGEX,
-    JINJA_EXPRESSION_REGEX,
-    LINE_COMMENT_REGEX,
-    NUMERIC_REGEX,
-    OBJECT_REGEX,
-    SKIP_REGEX,
-    STRING_REGEX,
-    UNKNOWN_REGEX,
-} from "./regex";
 import { SepticCnfg } from "./septicCnfg";
 import { SepticToken, SepticTokenType } from "./septicTokens";
 import {
@@ -32,7 +19,8 @@ export function parseSeptic(
     input: string,
     token: CancellationToken | undefined = undefined
 ): SepticCnfg {
-    const tokens = tokenize(input, token);
+    const scanner = new SepticScanner(input);
+    const tokens = scanner.scanTokens();
     if (!tokens.tokens.length) {
         return new SepticCnfg([]);
     }
@@ -167,97 +155,326 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
     }
 }
 
-/* Order in list matter. Most specialized should come first.
-    Attribute and Object needs to come before Identifier.
-    Unknown should always come last. 
-*/
-const REGEX_LIST = [
-    { type: SepticTokenType.lineComment, regex: LINE_COMMENT_REGEX },
-    { type: SepticTokenType.blockComment, regex: BLOCK_COMMENT_REGEX },
-    { type: SepticTokenType.jinjaComment, regex: JINJA_COMMENT_REGEX },
-    { type: SepticTokenType.jinjaExpression, regex: JINJA_EXPRESSION_REGEX },
-    { type: SepticTokenType.attribute, regex: ATTRIBUTE_REGEX },
-    { type: SepticTokenType.object, regex: OBJECT_REGEX },
-    { type: SepticTokenType.string, regex: STRING_REGEX },
-    { type: SepticTokenType.numeric, regex: NUMERIC_REGEX },
-    { type: SepticTokenType.identifier, regex: IDENTIFIER_REGEX },
-    { type: SepticTokenType.skip, regex: SKIP_REGEX },
-    { type: SepticTokenType.unknown, regex: UNKNOWN_REGEX },
-];
-
 interface ITokenize {
     tokens: IToken<SepticTokenType>[];
     comments: IToken<SepticTokenType>[];
 }
 
-export function tokenize(
-    input: string,
-    token: CancellationToken | undefined = undefined
-): ITokenize {
-    let commentTokens: IToken<SepticTokenType>[] = [];
-    let tokens: IToken<SepticTokenType>[] = [];
-    let curpos: number = 0;
-    while (curpos < input.length) {
-        if (token?.isCancellationRequested) {
-            return { tokens: [], comments: [] };
-        }
-        let temp = input.slice(curpos);
-        for (let i = 0; i < REGEX_LIST.length; i++) {
-            let element = REGEX_LIST[i];
-            let match = temp.match(element.regex);
-            if (!match) {
-                continue;
-            }
-            let lengthMatch = match[0].length;
-            if (element.type === SepticTokenType.skip) {
-                curpos += lengthMatch;
-                break;
-            }
+export class SepticScanner {
+    private readonly source: string;
+    private tokens: SepticToken[] = [];
+    private comments: SepticToken[] = [];
+    private start: number = 0;
+    private current: number = 0;
+    private errors: string[] = [];
 
-            if (
-                element.type === SepticTokenType.lineComment ||
-                element.type === SepticTokenType.blockComment ||
-                element.type === SepticTokenType.jinjaComment ||
-                element.type === SepticTokenType.jinjaExpression
-            ) {
-                commentTokens.push({
-                    type: element.type,
-                    start: curpos,
-                    end: curpos + lengthMatch,
-                    content: match[0],
-                });
-                curpos += lengthMatch;
+    constructor(source: string) {
+        this.source = source;
+    }
+
+    public scanTokens(): ITokenize {
+        while (!this.isAtEnd()) {
+            this.start = this.current;
+            this.scanToken();
+        }
+        this.tokens.push({
+            type: SepticTokenType.eof,
+            content: "\0",
+            start: this.current,
+            end: this.current,
+        });
+        return {
+            tokens: this.concatIdentifiers(this.tokens),
+            comments: this.comments,
+        };
+    }
+
+    private isAtEnd() {
+        return this.current >= this.source.length;
+    }
+
+    private scanToken(): void {
+        let c = this.advance();
+        switch (c) {
+            case " ":
+            case "\r":
+            case "\n":
+            case "\t":
                 break;
-            }
-            let token: IToken<SepticTokenType>;
-            if (
-                element.type === SepticTokenType.object ||
-                element.type === SepticTokenType.attribute
-            ) {
-                token = {
-                    type: element.type,
-                    start: curpos,
-                    end: curpos + lengthMatch,
-                    content: match[1],
-                };
-            } else {
-                token = {
-                    type: element.type,
-                    start: curpos,
-                    end: curpos + lengthMatch,
-                    content: match[0],
-                };
-            }
-            tokens.push(token);
-            curpos += lengthMatch;
-            break;
+            case "{":
+                let next = this.advance();
+                if (next === "{") {
+                    this.jinja("}");
+                } else if (next === "#" || next === "%") {
+                    this.jinja(next);
+                } else {
+                    this.error(`Unexpected token: ${next}`);
+                }
+                break;
+            case `"`:
+                this.string();
+                break;
+            case "/":
+                if (this.peek() === "/") {
+                    this.lineComment();
+                } else if (this.peek() === "*") {
+                    this.blockComment();
+                } else {
+                    this.error(`Unexpected token: ${this.peek()}`);
+                }
+                break;
+            case "-":
+            case "+":
+                if (this.isDigit(this.peek())) {
+                    this.numeric();
+                } else {
+                    this.error(`Unexpected token: ${c}`);
+                }
+                break;
+            default:
+                if (this.isDigit(c)) {
+                    this.numeric();
+                } else if (this.isAlpha(c)) {
+                    this.identifier();
+                } else {
+                    this.addToken(SepticTokenType.unknown);
+                    this.error(`Unexpected token: ${c}`);
+                }
         }
     }
-    tokens.push({
-        type: SepticTokenType.eof,
-        start: curpos,
-        end: curpos,
-        content: "\0",
-    });
-    return { tokens: tokens, comments: commentTokens };
+
+    private match(expected: string): boolean {
+        if (this.isAtEnd()) {
+            return false;
+        }
+        if (this.source.charAt(this.current) !== expected) {
+            return false;
+        }
+        this.current += 1;
+        return true;
+    }
+
+    private advance(): string {
+        return this.source.charAt(this.current++);
+    }
+
+    private peek(): string {
+        if (this.isAtEnd()) {
+            return "\0";
+        }
+        return this.source.charAt(this.current);
+    }
+
+    private peekNext(): string {
+        if (this.current + 1 >= this.source.length) {
+            return "\0";
+        }
+        return this.source.charAt(this.current + 1);
+    }
+
+    private peekNextNext(): string {
+        if (this.current + 2 >= this.source.length) {
+            return "\0";
+        }
+        return this.source.charAt(this.current + 2);
+    }
+
+    private error(msg: string): void {
+        this.errors.push(msg);
+    }
+
+    private addToken(type: SepticTokenType): void {
+        this.tokens.push({
+            type: type,
+            content: this.source.substring(this.start, this.current),
+            start: this.start,
+            end: this.current,
+        });
+    }
+
+    private addComment(type: SepticTokenType): void {
+        this.comments.push({
+            type: type,
+            content: this.source.substring(this.start, this.current),
+            start: this.start,
+            end: this.current,
+        });
+    }
+
+    private blockComment() {
+        while (!this.isAtEnd() && !this.isEndOfBlockComment()) {
+            this.advance();
+        }
+        if (!this.isAtEnd()) {
+            this.advance();
+            this.advance();
+        }
+        this.addComment(SepticTokenType.blockComment);
+    }
+
+    private isEndOfBlockComment() {
+        return this.peek() === "*" && this.peekNext() === "/";
+    }
+
+    private lineComment() {
+        while (
+            !this.isAtEnd() &&
+            this.peek() !== "\n" &&
+            this.peek() !== "\r"
+        ) {
+            this.advance();
+        }
+        this.addComment(SepticTokenType.lineComment);
+    }
+
+    private string() {
+        while (!this.isAtEnd() && !this.match(`"`)) {
+            this.advance();
+        }
+        this.addToken(SepticTokenType.string);
+    }
+
+    private numeric() {
+        while (this.isDigit(this.peek())) {
+            this.advance();
+        }
+        if (this.isAlpha(this.peek())) {
+            if (this.peek() !== "e" && this.peek() !== "E") {
+                return this.identifier();
+            }
+            if (
+                !this.isDigit(this.peekNext()) &&
+                !(
+                    (this.peekNext() === "-" || this.peekNext() === "+") &&
+                    this.isDigit(this.peekNextNext())
+                )
+            ) {
+                return this.identifier();
+            }
+        }
+        if (this.peek() === "." && this.isDigit(this.peekNext())) {
+            this.advance();
+            while (this.isDigit(this.peek())) {
+                this.advance();
+            }
+        }
+        // Support numbers using scientific notation
+        if (this.peek() === "e" || this.peek() === "E") {
+            if (
+                this.isDigit(this.peekNext()) ||
+                ((this.peekNext() === "-" || this.peekNext() === "+") &&
+                    this.isDigit(this.peekNextNext()))
+            ) {
+                this.advance();
+                if (!this.isDigit(this.peek())) {
+                    this.advance();
+                }
+                while (this.isDigit(this.peek())) {
+                    this.advance();
+                }
+                if (this.peek() === "." && this.isDigit(this.peekNext())) {
+                    this.advance();
+                    while (this.isDigit(this.peek())) {
+                        this.advance();
+                    }
+                }
+            }
+        }
+        this.addToken(SepticTokenType.numeric);
+    }
+
+    private identifier() {
+        while (this.isAlphaNumeric(this.peek())) {
+            this.advance();
+            if (this.peek() === ":") {
+                if (!this.isBlank(this.peekNext())) {
+                    this.error("Expecting space at end of object declaration");
+                    break;
+                }
+                this.addToken(SepticTokenType.object);
+                this.advance();
+                return;
+            }
+            if (this.peek() === "=") {
+                if (!this.isBlank(this.peekNext())) {
+                    this.error(
+                        "Expecting space at end of attribute declaration"
+                    );
+                    break;
+                }
+                this.addToken(SepticTokenType.attribute);
+                this.advance();
+                return;
+            }
+        }
+        this.addToken(SepticTokenType.identifier);
+    }
+
+    private jinja(type: string): void {
+        while (!this.isAtEnd() && !this.match(type)) {
+            this.advance();
+        }
+        if (!this.match("}")) {
+            this.error("Invalid jinja expression");
+            return;
+        }
+        if (type === "%") {
+            this.addComment(SepticTokenType.jinjaExpression);
+        } else if (type === "#") {
+            this.addComment(SepticTokenType.jinjaComment);
+        } else {
+            this.addToken(SepticTokenType.identifier);
+        }
+    }
+
+    private isDigit(char: string): boolean {
+        return char >= "0" && char <= "9";
+    }
+
+    private isAlpha(char: string): boolean {
+        return (
+            (char >= "a" && char <= "z") ||
+            (char >= "A" && char <= "Z") ||
+            char === "_" ||
+            char === "*" ||
+            char === "-"
+        );
+    }
+
+    private isAlphaNumeric(char: string): boolean {
+        return this.isAlpha(char) || this.isDigit(char);
+    }
+
+    private isBlank(char: string): boolean {
+        return [" ", "\n", "\r", "\t"].includes(char);
+    }
+
+    private concatIdentifiers(tokens: SepticToken[]): SepticToken[] {
+        const updatedTokens: SepticToken[] = [];
+        for (let i = 0; i < tokens.length; i++) {
+            if (tokens[i].type !== SepticTokenType.identifier) {
+                updatedTokens.push(tokens[i]);
+                continue;
+            }
+            let identifierToken = tokens[i];
+            let j = i + 1;
+            let nextToken = j < tokens.length ? tokens[j] : undefined;
+            while (nextToken) {
+                if (
+                    nextToken.type === SepticTokenType.identifier &&
+                    nextToken.start === identifierToken.end
+                ) {
+                    identifierToken.end = nextToken.end;
+                    identifierToken.content += nextToken.content;
+                    j += 1;
+                    nextToken = j < tokens.length ? tokens[j] : undefined;
+                } else {
+                    break;
+                }
+            }
+            updatedTokens.push(identifierToken);
+            i = j - 1;
+        }
+        return updatedTokens;
+    }
 }
