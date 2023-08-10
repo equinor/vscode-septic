@@ -29,7 +29,6 @@ import {
     SepticAttributeDocumentation,
     SepticTokenType,
     SepticObjectInfo,
-    SepticObjectHierarchy,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -49,6 +48,8 @@ export enum DiagnosticCode {
     invalidNumberOfParams = "E204",
     missingValueNonOptionalParam = "E205",
     algMaxLength = "E206",
+    missingPublicProperty = "E207",
+    unknownPublicProperty = "E208",
     missingListLengthValue = "E301",
     mismatchLengthList = "E302",
     missingAttributeValue = "E304",
@@ -211,30 +212,97 @@ export function validateAlgs(
             );
         });
 
-        for (let variable of visitor.variables) {
-            if (isPureJinja(variable.value)) {
-                continue;
-            }
-            if (
-                !refProvider.validateRef(
-                    variable.value.split(".")[0],
-                    defaultRefValidationFunction
+        visitor.variables.forEach((variable) => {
+            diagnostics.push(
+                ...validateAlgVariable(
+                    variable,
+                    doc,
+                    refProvider,
+                    offsetStartAlg
                 )
-            ) {
-                const diagnostic = createDiagnostic(
-                    DiagnosticSeverity.Warning,
-                    {
-                        start: doc.positionAt(offsetStartAlg + variable.start),
-                        end: doc.positionAt(offsetStartAlg + variable.end),
-                    },
-                    `Undefined Xvr '${variable.value}'`,
-                    DiagnosticCode.missingReference
-                );
-                diagnostics.push(diagnostic);
-            }
-        }
+            );
+        });
     }
     return diagnostics;
+}
+
+export function validateAlgVariable(
+    variable: AlgLiteral,
+    doc: ITextDocument,
+    refProvider: SepticReferenceProvider,
+    offsetStartAlg: number
+): Diagnostic[] {
+    if (isPureJinja(variable.value)) {
+        return [];
+    }
+    let variableParts = variable.value.split(".");
+    if (
+        !refProvider.validateRef(variableParts[0], defaultRefValidationFunction)
+    ) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Warning,
+                {
+                    start: doc.positionAt(offsetStartAlg + variable.start),
+                    end: doc.positionAt(offsetStartAlg + variable.end),
+                },
+                `Undefined Xvr '${variable.value}'`,
+                DiagnosticCode.missingReference
+            ),
+        ];
+    }
+    if (variableParts.length === 1) {
+        return [];
+    }
+    if (variableParts[1] === "") {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Error,
+                {
+                    start: doc.positionAt(offsetStartAlg + variable.end - 1),
+                    end: doc.positionAt(offsetStartAlg + variable.end),
+                },
+                `Missing public property for variable`,
+                DiagnosticCode.missingPublicProperty
+            ),
+        ];
+    }
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
+    let referencedObjects = refProvider.getObjectsByIdentifier(
+        variableParts[0]
+    );
+    referencedObjects = referencedObjects.filter((obj) => obj.isXvr());
+    if (!referencedObjects.length) {
+        return [];
+    }
+    const publicAttributes = metaInfoProvider.getObjectDocumentation(
+        referencedObjects[0].type
+    )?.publicAttributes;
+
+    if (!publicAttributes) {
+        return [];
+    }
+
+    if (!publicAttributes.includes(variableParts[1])) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Error,
+                {
+                    start: doc.positionAt(
+                        offsetStartAlg +
+                            variable.start +
+                            variableParts[0].length +
+                            1
+                    ),
+                    end: doc.positionAt(offsetStartAlg + variable.end),
+                },
+                `Unknown public property ${variableParts[1]} for ${referencedObjects[0].type}'`,
+                DiagnosticCode.unknownPublicProperty
+            ),
+        ];
+    }
+
+    return [];
 }
 
 export function validateCalc(

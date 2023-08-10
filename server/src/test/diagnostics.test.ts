@@ -192,6 +192,50 @@ describe("Test diagnostics for references in algs", () => {
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
     });
+    it("Expect no diagnostics for correctly used public property", () => {
+        const text = `
+            Mvr: TestMvr
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "TestMvr.SSVal"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(0);
+    });
+    it("Expect diagnostics for missing property after .", () => {
+        const text = `
+            Mvr: TestMvr
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "TestMvr."
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.missingPublicProperty);
+    });
+    it("Expect diagnostics for unknown property", () => {
+        const text = `
+            Mvr: TestMvr
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "TestMvr.BS"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.unknownPublicProperty);
+    });
 });
 
 describe("Test parameter diagnostics in alg", () => {
