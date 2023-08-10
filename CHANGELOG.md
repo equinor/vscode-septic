@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.7.4](https://github.com/equinor/vscode-septic/compare/v1.7.3...v1.7.4) (2023-08-10)
+
+
+### 🔨 Refactor
+
+* improve responsiveness with new tokenizer ([#258](https://github.com/equinor/vscode-septic/issues/258)) ([ea22ab7](https://github.com/equinor/vscode-septic/commit/ea22ab7e4ea5edc0845aa2a2e9d0df1677eec937))
+
+
+### ⏪️ Revert
+
+* version of @types/vscode to match engine version ([#264](https://github.com/equinor/vscode-septic/issues/264)) ([7b51a48](https://github.com/equinor/vscode-septic/commit/7b51a486ea38e0475090880011f292b27497ccc1))
+
 ## [1.7.3](https://github.com/equinor/vscode-septic/compare/v1.7.2...v1.7.3) (2023-08-09)
 
 
