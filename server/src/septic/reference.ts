@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { Cycle } from "./cycle";
 import { SepticObject } from "./septicElements";
 import { SepticObjectHierarchy } from "./septicMetaInfo";
 
@@ -55,4 +56,7 @@ export interface SepticReferenceProvider {
         validationFunction: RefValidationFunction
     ): boolean;
     updateObjectParents(hierarchy: SepticObjectHierarchy): Promise<void>;
+    getCalcPvrs(): SepticObject[];
+    detectCycles(): void;
+    getCycles(): Cycle[];
 }
