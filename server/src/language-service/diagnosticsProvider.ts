@@ -57,6 +57,7 @@ export enum DiagnosticCode {
     missingListAttribute = "E306",
     invalidDataTypeAttribute = "E307",
     unexpectedList = "E308",
+    invalidCharInString = "E309",
     missingReference = "W101",
     invalidParentObject = "E401",
     unexpectedParentObject = "E402",
@@ -705,12 +706,12 @@ function validateAttribute(
     );
     const startIndex = attrValues.length > 1 ? 1 : 0;
     diagnostics.push(
-        ...validateAttributeDataType(attrValues.slice(startIndex), attrDoc, doc)
+        ...validateAttributeValue(attrValues.slice(startIndex), attrDoc, doc)
     );
     return diagnostics;
 }
 
-function validateAttributeDataType(
+function validateAttributeValue(
     attrValues: AttributeValue[],
     attrDoc: SepticAttributeDocumentation,
     doc: ITextDocument
@@ -735,6 +736,26 @@ function validateAttributeDataType(
                     DiagnosticCode.invalidDataTypeAttribute
                 )
             );
+        }
+        if (attrValue.type === SepticTokenType.string) {
+            let indexInvalid = attrValue.getValue().indexOf("'");
+            if (indexInvalid !== -1) {
+                diagnostics.push(
+                    createDiagnostic(
+                        DiagnosticSeverity.Error,
+                        {
+                            start: doc.positionAt(
+                                attrValue.start + 1 + indexInvalid
+                            ),
+                            end: doc.positionAt(
+                                attrValue.start + 1 + indexInvalid + 1
+                            ),
+                        },
+                        `Invalid char in string: "'"`,
+                        DiagnosticCode.invalidCharInString
+                    )
+                );
+            }
         }
     }
     return diagnostics;

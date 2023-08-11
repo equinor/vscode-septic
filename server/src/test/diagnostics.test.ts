@@ -830,6 +830,24 @@ describe("Test validation of attributes", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.unknownAttribute);
     });
+
+    it("Expect diagnostics for invalid char in string", () => {
+        const text = `
+            Mvr: Test
+            Text1= "'"
+        `;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            mvrDoc!,
+            mvrInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidCharInString);
+    });
 });
 
 describe("Test validation of attribute data type", () => {
