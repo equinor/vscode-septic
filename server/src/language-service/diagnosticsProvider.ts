@@ -35,6 +35,8 @@ import {
     getValueOfAlgExpr,
     formatCalcMarkdown,
     formatDataType,
+    Alg,
+    findAlgCycles,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -65,6 +67,7 @@ export enum DiagnosticCode {
     algMaxLength = "E206",
     missingPublicProperty = "E207", // Combine with under
     unknownPublicProperty = "E208",
+    cycleAlg = "W209",
     missingListLengthValue = "E301",
     mismatchLengthList = "E302",
     missingAttributeValue = "E303",
@@ -152,6 +155,7 @@ export function getDiagnostics(
     const diagnostics: Diagnostic[] = [];
     diagnostics.push(...validateObjects(cnfg, doc, refProvider));
     diagnostics.push(...validateAlgs(cnfg, doc, refProvider));
+    diagnostics.push(...validateAlgCycles(refProvider, doc));
     let disabledLines = getDisabledLines(cnfg.comments, doc);
     let filteredDiags = diagnostics.filter((diag) => {
         let disabledLine = disabledLines.get(diag.range.start.line);
@@ -967,4 +971,40 @@ function getDiagnosticCodes(codes: string): string[] {
         }
     });
     return diagnosticCodes;
+}
+
+export function validateAlgCycles(
+    refProvider: SepticReferenceProvider,
+    doc: ITextDocument
+): Diagnostic[] {
+    const diagnostics: Diagnostic[] = [];
+    for (let cycle of refProvider.getCycles()) {
+        let cycleStr = [...cycle.nodes, cycle.nodes[0]]
+            .map((node) => node.name)
+            .join("->");
+        for (let node of cycle.nodes) {
+            let xvrRefs = refProvider.getXvrRefs(node.name);
+            if (!xvrRefs) {
+                continue;
+            }
+            let xvrObjs = xvrRefs.filter((xvr) => xvr.obj?.isType("CalcPvr"));
+            if (!xvrObjs.length) {
+                continue;
+            }
+            if (xvrObjs[0].location.uri === doc.uri) {
+                diagnostics.push(
+                    createDiagnostic(
+                        DiagnosticSeverity.Warning,
+                        {
+                            start: doc.positionAt(xvrObjs[0].location.start),
+                            end: doc.positionAt(xvrObjs[0].location.end),
+                        },
+                        `Cycle in algs detected for CalcPvr. ${cycleStr}`,
+                        DiagnosticCode.cycleAlg
+                    )
+                );
+            }
+        }
+    }
+    return diagnostics;
 }

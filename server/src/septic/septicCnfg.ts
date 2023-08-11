@@ -24,10 +24,12 @@ import {
 } from "./reference";
 import { removeSpaces } from "../util";
 import { updateParentObjects } from "./hierarchy";
+import { Alg, Cycle, findAlgCycles } from "./cycle";
 
 export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];
     public comments: SepticComment[];
+    public cycles: Cycle[] = [];
     private xvrRefs = new Map<string, SepticReference[]>();
     private xvrRefsExtracted = false;
     public uri: string = "";
@@ -163,6 +165,31 @@ export class SepticCnfg implements SepticReferenceProvider {
         return Promise.resolve();
     }
 
+    public getCalcPvrs(): SepticObject[] {
+        return this.objects.filter((obj) => obj.isType("CalcPvr"));
+    }
+
+    public getCycles(): Cycle[] {
+        return this.cycles;
+    }
+
+    public detectCycles(): void {
+        let calcPvrs = this.getCalcPvrs();
+        let algs: Alg[] = [];
+        for (let calcPvr of calcPvrs) {
+            let alg = calcPvr.getAttribute("Alg");
+            let content = alg?.getAttrValue()?.getValue();
+            if (!content || !calcPvr.identifier?.name) {
+                continue;
+            }
+            algs.push({
+                calcPvrName: calcPvr.identifier?.name!,
+                content: content,
+            });
+        }
+        this.cycles = findAlgCycles(algs);
+    }
+
     private extractXvrRefs(): void {
         if (this.xvrRefsExtracted) {
             return;
@@ -194,7 +221,7 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
     }
 
     if (objectDef.refs.identifier && obj.identifier) {
-        let isObjRef = obj.isXvr() || obj.isSopcXvr();
+        let isObjRef = obj.isXvr() || obj.isSopcXvr() || obj.isType("CalcPvr");
         let ref: SepticReference = createSepticReference(
             obj.identifier.name,
             {

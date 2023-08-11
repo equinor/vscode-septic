@@ -6,17 +6,16 @@ import {
     getDiagnostics,
     disableDiagnosticRegex,
     DiagnosticCode,
-    validateObject,
     checkAttributeDataType,
     validateObjectReferences,
     validateObjectParent,
     validateAttribute,
+    validateAlgCycles,
 } from "../language-service/diagnosticsProvider";
 import {
     AttributeValue,
     SepticAttributeDocumentation,
     SepticMetaInfoProvider,
-    SepticObjectInfo,
     SepticTokenType,
     parseSeptic,
 } from "../septic";
@@ -1201,5 +1200,53 @@ describe("Test validation of object structure", () => {
         cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
         let diag = validateObjectParent(cnfg.objects[0], doc);
         expect(diag.length).to.equal(0);
+    });
+});
+
+describe("Test validation of cycles", () => {
+    it("Expect no diagnostics for non-cyclic calcs", () => {
+        const text = `
+        Evr: Test1
+        Evr: Test2
+        CalcPvr:  Test1
+            Alg=  "Test2 + 1"
+		`;
+
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        cnfg.detectCycles();
+        let diag = validateAlgCycles(cnfg, doc);
+        expect(diag.length).to.equal(0);
+    });
+
+    it("Expect diagnostics for self cycle", () => {
+        const text = `
+        Evr: Test1
+        CalcPvr:  Test1
+            Alg=  "Test1 + 1"
+		`;
+
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        cnfg.detectCycles();
+        let diag = validateAlgCycles(cnfg, doc);
+        expect(diag.length).to.equal(1);
+    });
+
+    it("Expect diagnostics for cycle of length 2", () => {
+        const text = `
+        Evr: Test1
+        Evr: Test2
+        CalcPvr:  Test1
+            Alg=  "Test2 + 1"
+        CalcPvr:  Test2
+            Alg=  "Test1 - 1"
+		`;
+
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        cnfg.detectCycles();
+        let diag = validateAlgCycles(cnfg, doc);
+        expect(diag.length).to.equal(2);
     });
 });
