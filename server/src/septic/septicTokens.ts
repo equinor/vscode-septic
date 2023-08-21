@@ -17,6 +17,7 @@ export enum SepticTokenType {
     skip,
     unknown,
     identifier,
+    path,
     eof = "eof",
 }
 

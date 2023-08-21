@@ -403,6 +403,37 @@ describe("Test tokenization of comments", () => {
     });
 });
 
+describe("Test tokenization of paths", () => {
+    it("Expect correct tokenization of path", () => {
+        const input = "Obj= /test/path ";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens();
+        expect(tokens.tokens.length).to.equal(3);
+        expect(tokens.tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens.tokens[1].type).to.equal(SepticTokenType.path);
+        expect(tokens.tokens[1].content).to.equal("/test/path");
+    });
+
+    it("Expect correct tokenization of wildcard path", () => {
+        const input = "Obj= ~ ";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens();
+        expect(tokens.tokens.length).to.equal(3);
+        expect(tokens.tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens.tokens[1].type).to.equal(SepticTokenType.path);
+        expect(tokens.tokens[1].content).to.equal("~");
+    });
+
+    it("Expect no path tokens for invalid paths", () => {
+        const input = "Obj= \bspath ";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens();
+        expect(tokens.tokens.length).to.equal(4);
+        expect(tokens.tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens.tokens[1].type).to.not.equal(SepticTokenType.path);
+    });
+});
+
 describe("Test tokenization of blocks", () => {
     it("Expect correct tokenization of attribute with list of values", () => {
         const input = `Grps=  7
@@ -638,6 +669,12 @@ describe("Test basic functionality of parser", () => {
                 content: "OFF",
             },
             {
+                type: SepticTokenType.path,
+                start: 65,
+                end: 70,
+                content: "/test/path",
+            },
+            {
                 type: SepticTokenType.eof,
                 start: 100,
                 end: 100,
@@ -648,12 +685,13 @@ describe("Test basic functionality of parser", () => {
         parser.advance();
         let attr = parser.attribute();
         expect(attr.key).to.equal("Test");
-        expect(attr.values.length).to.equal(5);
+        expect(attr.values.length).to.equal(6);
         expect(attr.values[0].value).to.equal("Test");
         expect(attr.values[1].value).to.equal("77");
         expect(attr.values[2].value).to.equal("00000000000000000000001");
         expect(attr.values[3].value).to.equal("1000");
         expect(attr.values[4].value).to.equal("OFF");
+        expect(attr.values[5].value).to.equal("/test/path");
     });
 
     it("Test parsing of variables with one part", () => {
