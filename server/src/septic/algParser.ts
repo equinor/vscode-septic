@@ -27,6 +27,7 @@ export enum AlgTokenType {
     string,
     number,
     error,
+    empty,
     eof = "eof",
 }
 
@@ -187,26 +188,50 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
         let identifierToken = this.previous();
         let args: AlgExpr[] = [];
         this.advance();
+        let startArgToken = this.previous();
+        let expr: AlgExpr | undefined = undefined;
         while (
             !this.isAtEnd() &&
             this.peek().type !== AlgTokenType.rightParen
         ) {
-            if (this.check(AlgTokenType.comma)) {
-                if (this.previous().type === AlgTokenType.comma) {
+            if (this.match(AlgTokenType.comma)) {
+                if (!expr) {
                     args.push(
                         new AlgLiteral({
-                            type: AlgTokenType.string,
+                            start: this.previous().start - 1,
+                            end: this.previous().end,
                             content: "",
-                            start: this.previous().end,
-                            end: this.peek().start,
+                            type: AlgTokenType.empty,
                         })
                     );
+                } else {
+                    args.push(expr);
                 }
-                this.advance();
+                expr = undefined;
+                startArgToken = this.previous();
                 continue;
             }
-            let arg = this.comparison();
-            args.push(arg);
+            if (expr) {
+                while (
+                    !this.isAtEnd() &&
+                    !(
+                        this.peek().type === AlgTokenType.comma ||
+                        this.peek().type === AlgTokenType.rightParen
+                    )
+                ) {
+                    this.advance();
+                }
+                this.error(
+                    "Multiple expressions provided for a single parameter",
+                    {
+                        start: startArgToken.end,
+                        end: this.peek().start,
+                        content: "",
+                        type: AlgTokenType.error,
+                    }
+                );
+            }
+            expr = this.comparison();
         }
         if (!this.check(AlgTokenType.rightParen)) {
             this.error(
@@ -218,6 +243,19 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
                     type: AlgTokenType.error,
                 }
             );
+        } else {
+            if (!expr) {
+                args.push(
+                    new AlgLiteral({
+                        start: this.previous().start - 1,
+                        end: this.previous().end,
+                        content: "",
+                        type: AlgTokenType.empty,
+                    })
+                );
+            } else {
+                args.push(expr);
+            }
         }
         if (this.previous().type === AlgTokenType.comma) {
             args.push(
