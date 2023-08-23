@@ -159,6 +159,7 @@ export function getCalcCompletion(
                 value: formatCalcMarkdown(calc, true),
                 kind: "markdown",
             },
+            filterText: calc.name + " " + calc.briefDescription,
             commitCharacters: ["("],
         });
     }
