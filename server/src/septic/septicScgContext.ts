@@ -15,7 +15,6 @@ import { SepticConfigProvider } from "../language-service/septicConfigProvider";
 import { SepticCnfg } from "./septicCnfg";
 import { SepticObjectHierarchy } from "./septicMetaInfo";
 import { updateParentObjects } from "./hierarchy";
-import { Alg, Cycle, findAlgCycles } from "./cycle";
 
 export interface ScgConfig {
     outputfile?: string;
@@ -46,7 +45,6 @@ export interface ScgTemplate {
 export class ScgContext implements SepticReferenceProvider {
     public name: string;
     public filePath: string;
-    public cycles: Cycle[] = [];
 
     private cnfgProvider: SepticConfigProvider;
     private cnfgCache = new Map<string, SepticCnfg | undefined>();
@@ -163,7 +161,6 @@ export class ScgContext implements SepticReferenceProvider {
         }
         return xvrObjs;
     }
-
     public async updateObjectParents(
         hierarchy: SepticObjectHierarchy
     ): Promise<void> {
@@ -177,38 +174,5 @@ export class ScgContext implements SepticReferenceProvider {
             objects.push(...cnfg.objects);
         }
         updateParentObjects(objects, hierarchy);
-    }
-
-    public getCalcPvrs(): SepticObject[] {
-        let calcPvrs: SepticObject[] = [];
-        for (const file of this.files) {
-            let cnfg = this.cnfgCache.get(file);
-            if (!cnfg) {
-                continue;
-            }
-            calcPvrs.push(...cnfg.getCalcPvrs());
-        }
-        return calcPvrs;
-    }
-
-    public getCycles(): Cycle[] {
-        return this.cycles;
-    }
-
-    public detectCycles(): void {
-        let calcPvrs = this.getCalcPvrs();
-        let algs: Alg[] = [];
-        for (let calcPvr of calcPvrs) {
-            let alg = calcPvr.getAttribute("Alg");
-            let content = alg?.getAttrValue()?.getValue();
-            if (!content || !calcPvr.identifier?.name) {
-                continue;
-            }
-            algs.push({
-                calcPvrName: calcPvr.identifier?.name!,
-                content: content,
-            });
-        }
-        this.cycles = findAlgCycles(algs);
     }
 }

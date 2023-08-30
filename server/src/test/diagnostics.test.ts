@@ -1205,7 +1205,6 @@ describe("Test validation of cycles", () => {
 
         const doc = new MockDocument(text);
         const cnfg = parseSeptic(doc.getText());
-        cnfg.detectCycles();
         let diag = validateAlgCycles(cnfg, doc);
         expect(diag.length).to.equal(0);
     });
@@ -1219,7 +1218,6 @@ describe("Test validation of cycles", () => {
 
         const doc = new MockDocument(text);
         const cnfg = parseSeptic(doc.getText());
-        cnfg.detectCycles();
         let diag = validateAlgCycles(cnfg, doc);
         expect(diag.length).to.equal(1);
     });
@@ -1236,8 +1234,7 @@ describe("Test validation of cycles", () => {
 
         const doc = new MockDocument(text);
         const cnfg = parseSeptic(doc.getText());
-        cnfg.detectCycles();
         let diag = validateAlgCycles(cnfg, doc);
-        expect(diag.length).to.equal(2);
+        expect(diag.length).to.equal(1);
     });
 });

@@ -29,7 +29,6 @@ import { ContextManager } from "./contextManager";
 import { offsetToPositionRange } from "./util/converter";
 import {
     ScgContext,
-    SepticCnfg,
     SepticReferenceProvider,
     SepticMetaInfoProvider,
 } from "./septic";
@@ -71,7 +70,6 @@ async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
     await context.updateObjectParents(
         SepticMetaInfoProvider.getInstance().getObjectHierarchy()
     );
-    context.detectCycles();
     const diagnosticsPromises = context.files.map(async (file) => {
         if (isPathIgnored(file, ignorePatterns)) {
             connection.sendDiagnostics({ uri: file, diagnostics: [] });
@@ -105,7 +103,6 @@ async function publishDiagnosticsCnfg(uri: string): Promise<void> {
     await cnfg.updateObjectParents(
         SepticMetaInfoProvider.getInstance().getObjectHierarchy()
     );
-    cnfg.detectCycles();
     let diagnostics = await langService.provideDiagnostics(doc, cnfg);
     connection.sendDiagnostics({ uri: doc.uri, diagnostics: diagnostics });
 }
