@@ -68,6 +68,19 @@ export class SepticCnfg implements SepticReferenceProvider {
         return this.xvrRefs.get(removeSpaces(name));
     }
 
+    public getObject(
+        name: string,
+        type: string | undefined = undefined
+    ): SepticObject | undefined {
+        let objects = this.objects.filter((obj) => {
+            return obj.identifier?.name === name;
+        });
+        if (type) {
+            objects = objects.filter((obj) => obj.isType(type));
+        }
+        return objects.length ? objects[0] : undefined;
+    }
+
     public validateRef(
         name: string,
         validationFunction: RefValidationFunction = defaultRefValidationFunction
@@ -165,16 +178,8 @@ export class SepticCnfg implements SepticReferenceProvider {
         return Promise.resolve();
     }
 
-    public getCalcPvrs(): SepticObject[] {
-        return this.objects.filter((obj) => obj.isType("CalcPvr"));
-    }
-
-    public getCycles(): Cycle[] {
-        return this.cycles;
-    }
-
-    public detectCycles(): void {
-        let calcPvrs = this.getCalcPvrs();
+    public findCycles(): Cycle[] {
+        let calcPvrs = this.objects.filter((obj) => obj.isType("CalcPvr"));
         let algs: Alg[] = [];
         for (let calcPvr of calcPvrs) {
             let alg = calcPvr.getAttribute("Alg");
@@ -187,7 +192,7 @@ export class SepticCnfg implements SepticReferenceProvider {
                 content: content,
             });
         }
-        this.cycles = findAlgCycles(algs);
+        return findAlgCycles(algs);
     }
 
     private extractXvrRefs(): void {

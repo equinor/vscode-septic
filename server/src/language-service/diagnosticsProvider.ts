@@ -4,7 +4,12 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Diagnostic, DiagnosticSeverity, Range } from "vscode-languageserver";
+import {
+    Diagnostic,
+    DiagnosticRelatedInformation,
+    DiagnosticSeverity,
+    Range,
+} from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
@@ -33,10 +38,7 @@ import {
     getCalcParamIndexInfo,
     getIndexOfParam,
     getValueOfAlgExpr,
-    formatCalcMarkdown,
     formatDataType,
-    Alg,
-    findAlgCycles,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -101,7 +103,8 @@ function createDiagnostic(
     severity: DiagnosticSeverity,
     range: Range,
     message: string,
-    code: DiagnosticCode
+    code: DiagnosticCode,
+    relatedInformation: DiagnosticRelatedInformation[] = []
 ): Diagnostic {
     return {
         severity: severity,
@@ -109,6 +112,7 @@ function createDiagnostic(
         message: message,
         code: code,
         source: "septic",
+        relatedInformation: relatedInformation,
     };
 }
 
@@ -155,7 +159,10 @@ export function getDiagnostics(
     const diagnostics: Diagnostic[] = [];
     diagnostics.push(...validateObjects(cnfg, doc, refProvider));
     diagnostics.push(...validateAlgs(cnfg, doc, refProvider));
-    diagnostics.push(...validateAlgCycles(refProvider, doc));
+    const isContext = !(refProvider instanceof SepticCnfg);
+    if (!isContext) {
+        diagnostics.push(...validateAlgCycles(cnfg, doc));
+    }
     let disabledLines = getDisabledLines(cnfg.comments, doc);
     let filteredDiags = diagnostics.filter((diag) => {
         let disabledLine = disabledLines.get(diag.range.start.line);
@@ -974,37 +981,50 @@ function getDiagnosticCodes(codes: string): string[] {
 }
 
 export function validateAlgCycles(
-    refProvider: SepticReferenceProvider,
+    cnfg: SepticCnfg,
     doc: ITextDocument
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    for (let cycle of refProvider.getCycles()) {
+    for (let cycle of cnfg.findCycles()) {
         let cycleStr = [...cycle.nodes, cycle.nodes[0]]
             .map((node) => node.name)
             .join("->");
-        for (let node of cycle.nodes) {
-            let xvrRefs = refProvider.getXvrRefs(node.name);
-            if (!xvrRefs) {
-                continue;
-            }
-            let xvrObjs = xvrRefs.filter((xvr) => xvr.obj?.isType("CalcPvr"));
-            if (!xvrObjs.length) {
-                continue;
-            }
-            if (xvrObjs[0].location.uri === doc.uri) {
-                diagnostics.push(
-                    createDiagnostic(
-                        DiagnosticSeverity.Warning,
-                        {
-                            start: doc.positionAt(xvrObjs[0].location.start),
-                            end: doc.positionAt(xvrObjs[0].location.end),
-                        },
-                        `Cycle in algs detected for CalcPvr. ${cycleStr}`,
-                        DiagnosticCode.cycleAlg
-                    )
-                );
-            }
+        const relatedInformation: DiagnosticRelatedInformation[] = [];
+        const rootNode = cycle.nodes[0];
+        const rootObject = cnfg.getObject(rootNode.name, "CalcPvr");
+        if (!rootObject) {
+            continue;
         }
+        for (let node of cycle.nodes.slice(1)) {
+            let nodeObj = cnfg.getObject(node.name, "CalcPvr");
+            if (!nodeObj) {
+                continue;
+            }
+            relatedInformation.push(
+                DiagnosticRelatedInformation.create(
+                    {
+                        uri: doc.uri,
+                        range: {
+                            start: doc.positionAt(nodeObj.identifier!.start),
+                            end: doc.positionAt(nodeObj.identifier!.end),
+                        },
+                    },
+                    `Cycle in algs detected for CalcPvr. ${cycleStr}`
+                )
+            );
+        }
+        diagnostics.push(
+            createDiagnostic(
+                DiagnosticSeverity.Warning,
+                {
+                    start: doc.positionAt(rootObject.identifier!.start),
+                    end: doc.positionAt(rootObject.identifier!.end),
+                },
+                `Cycle in algs detected for CalcPvr. ${cycleStr}`,
+                DiagnosticCode.cycleAlg,
+                relatedInformation
+            )
+        );
     }
     return diagnostics;
 }
