@@ -8,6 +8,8 @@ jobs:
   build:
     name: "🛠️ Build"
     uses: ./.github/workflows/build-workflow.yml
+    with:
+      pre_release: true
 
   deploy:
     name: "🚀 Publish"

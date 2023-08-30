@@ -4,6 +4,11 @@ on:
     outputs:
       artifact-name:
         value: ${{ jobs.build.outputs.artifact-name }}
+    inputs:
+      pre_release:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -21,7 +26,7 @@ jobs:
         run: npm ci
 
       - name: "Create Artifact"
-        run: npx vsce package
+        run: npx vsce package  ${{ inputs.pre_release && '--pre-release' || ''}}
 
       - name: "Resolve build version"
         run: echo "BUILD_VERSION=$GITHUB_SHA" >> $GITHUB_ENV
