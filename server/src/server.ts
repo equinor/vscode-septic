@@ -37,7 +37,11 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
 const settingsManager = new SettingsManager(connection);
 
-const documentProvider = new DocumentProvider(connection, documents);
+const documentProvider = new DocumentProvider(
+    connection,
+    documents,
+    settingsManager
+);
 
 const langService: ILanguageService = createLanguageService(
     settingsManager,
