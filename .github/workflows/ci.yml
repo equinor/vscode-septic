@@ -1,5 +1,7 @@
 name: 👷 CI
 on:
+  push:
+    branches: main
   workflow_dispatch:
 
 jobs:
@@ -13,4 +15,5 @@ jobs:
     uses: ./.github/workflows/deploy-workflow.yml
     with:
       artifact: ${{ needs.build.outputs.artifact-name }}
+      pre_release: true
     secrets: inherit

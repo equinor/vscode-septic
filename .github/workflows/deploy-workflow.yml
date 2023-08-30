@@ -5,6 +5,10 @@ on:
       artifact:
         required: true
         type: string
+      pre_release:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   Deploy:
@@ -16,6 +20,6 @@ jobs:
           name: ${{ inputs.artifact }}
 
       - name: Publish
-        run: npx vsce publish --pat $VSCE_PAT --packagePath $(find . -iname *.vsix)
+        run: npx vsce publish ${{ inputs.pre_release && '--pre-release' || ''}} --pat $VSCE_PAT --packagePath $(find . -iname *.vsix)
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
