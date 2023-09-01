@@ -17,6 +17,15 @@
             "include": "#tagmap"
         },
         {
+            "include": "#numeric"
+        },
+        {
+            "include": "#bitfield"
+        },
+        { 
+            "include": "#variable"
+        },
+        {
             "comment": "Should be removed and fix grps etc explicitly using begin/end instead",
             "include": "#string"
         }
@@ -25,25 +34,13 @@
         "keyword": {
             "patterns": [
                 {
-                    "match": "\\b(\\w*)\\b(:)[\\s]*([\\w\\ \\{\\}\\*\\-<>]*)\\b",
+                    "match": "\\b(\\w+)(:)\\s",
                     "captures": {
                         "1": {
                             "name": "entity.name.class.septic"
                         },
                         "2": {
                             "name": "punctuation.separator.key-value.mapping.septic"
-                        },
-                        "3": {
-                            "name": "entity.other.variable.septic",
-                            "patterns": [
-                                {
-                                    "include": "source.jinja"
-                                },
-                                {
-                                    "name": "variable.name.septic",
-                                    "match": "\\b([\\w\\ \\{\\}\\*\\-<>]*)\\b"
-                                }
-                            ]
                         }
                     }
                 }
@@ -62,33 +59,13 @@
         "tagmap_default": {
             "patterns": [
                 {
-                    "match": "\\b(\\w*)\\b(=)[\\s]*(.*)$",
+                    "match": "\\b(\\w*)\\b(=)[\\s]+",
                     "captures": {
                         "1": {
                             "name": "entity.name.tag.septic"
                         },
                         "2": {
                             "name": "punctuation.separator.key-value.mapping.septic"
-                        },
-                        "3": {
-                            "name": "entity.other.variable.septic",
-                            "patterns": [
-                                {
-                                    "include": "source.jinja"
-                                },
-                                {
-                                    "include": "#line_comment"
-                                },
-                                {
-                                    "include": "#bitfield"
-                                },
-                                {
-                                    "include": "#numeric"
-                                },
-                                {
-                                    "include": "#string"
-                                }
-                            ]
                         }
                     }
                 }
@@ -98,7 +75,7 @@
             "comment": "Overrides regular tagmap for the Alg line in CalcPvr",
             "patterns": [
                 {
-                    "match": "^\\s*\\b(Alg)\\b(=)[\\s]*(\")(.*)(\")",
+                    "match": "\\b(Alg)\\b(=)[\\s]*(\")(.*?)(\")",
                     "captures": {
                         "1": {
                             "name": "entity.name.tag.septic"
@@ -136,6 +113,14 @@
                             "name": "string.quoted.double.septic"
                         }
                     }
+                }
+            ]
+        },
+        "variable": {
+            "patterns": [
+                {
+                    "match": "(\\{\\{[\\S\\s]+?\\}\\}|[\\w\\-\\*]+)+",
+                    "name": "variable.name.septic"
                 }
             ]
         },
