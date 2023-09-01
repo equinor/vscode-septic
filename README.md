@@ -26,6 +26,7 @@
 -   GoToDefinition: Goes to the declaration of the connected Xvr when referenced (e.g. in calcs, SopcXvr etc.)
 -   GoToDeclaration: Goes to the declaration of the connected SopcXvr when referenced (e.g. in calcs, Xvr etc.)
 -   Find References: Finds all references to a (Sopc)Xvr (e.g. in calcs, object declaration, XvrPlot etc.)
+-   Ignore Diagnostics for specified paths.
 
 ## Instructions
 
@@ -47,7 +48,7 @@ Adding the SEPTIC extension to VS Code allows you to do the following when loadi
     -   `ctrl-k` `ctrl-2` folds all level 2 sections (e.g. `SopcMvr` and `CalcModl`) and lower except the level 2 section at the cursor.
     -   `ctrl-k` `ctrl-3` folds all level 3 sections (e.g. `CalcPvr`) and lower except the level 3 section at the cursor.
     -   More info on folding [here](https://code.visualstudio.com/docs/editor/codebasics#_folding)
--   Diagnostics (Errors/Warnings) for a certain line can be disabled by writting `// noqa` or `{# noqa #}` at the same line. It is recommended to use the jinja version when supressing diagnostics when using scg in order to get proper diagnostics on the generated config. To disable certain errors/warnings write `{# noqa: Ennn, Wnnn #}` or `// noqa: Enn, Enn` (i.e. `noqa` + `:` + comma spearated list of errors). The relevant error codes are displayed on the errors/warnings (e.g. `septic Enn`). To disable all diagnostics, use the `septic.diagnostics.enabled` setting.
+-   Diagnostics (Errors/Warnings) for a certain line can be disabled by writting `// noqa` or `{# noqa #}` at the same line. It is recommended to use the jinja version when supressing diagnostics when using scg in order to get proper diagnostics on the generated config. To disable certain errors/warnings write `{# noqa: Ennn, Wnnn #}` or `// noqa: Enn, Enn` (i.e. `noqa` + `:` + comma spearated list of errors). The relevant error codes are displayed on the errors/warnings (e.g. `septic Enn`). To disable all diagnostics, use the `septic.diagnostics.enabled` setting. Diagnostics can be ignored for certain files by adding the path of the file to the `septic.ignored.paths` setting. The path needs to have the workspacefolder as the root i.e. have to be on the format `workspacefolder/...`. `*` can be used as a wildcard i.e. you can write `workspacefolder/templates/*` to ignore all files in the folder `templates`.
 
 -   Formatting of cnfg files can be enabled by setting `septic.formatting.enabled = True` in the settings. Comments `// or /* */` and jinja-comments `{#   #}` are not formatted. Everything between the jinja expressions `{% for w %}` ... `{% endfor %}` and `{% if %}` ... `{% endif %}` are not formatted. To avoid formatting certain sections of the file the flags `{# format:off #}` and `{# format:on #}` can be used to turn off and on again formatting (Tip: snippets available by writting `formaton/off`).
 
