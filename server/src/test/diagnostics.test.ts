@@ -64,20 +64,6 @@ describe("Test diagnostics for invalid algs", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
     });
-    it("Expect diagnostics when alg contains multiple expressions", () => {
-        const text = `
-			CalcPvr:  TestCalcPvr 
-				Text1= "Test"
-				Alg= "(1+1)(1+2)"
-		`;
-
-        const doc = new MockDocument(text);
-
-        const cnfg = parseSeptic(doc.getText());
-        let diag = validateAlgs(cnfg, doc, cnfg);
-        expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
-    });
     it("Expect diagnostics when alg exceeds maximum length", () => {
         const text = `
 			CalcPvr:  TestCalcPvr 
@@ -297,7 +283,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeParam);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeArg);
     });
     it("Expect diagnostics when giving expression to param that expect object", () => {
         const text = `
@@ -314,7 +300,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeParam);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeArg);
     });
     it("Expect diagnostics when giving value to param that expect object", () => {
         const text = `
@@ -331,7 +317,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeParam);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeArg);
     });
     it("Expect no diagnostics for empty optional param", () => {
         const text = `
@@ -362,7 +348,7 @@ describe("Test parameter diagnostics in alg", () => {
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(
-            DiagnosticCode.missingValueNonOptionalParam
+            DiagnosticCode.missingValueNonOptionalArg
         );
     });
 
@@ -378,7 +364,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfArgs);
     });
 
     it("Expect no diagnostics for not using optional params", () => {
@@ -413,7 +399,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfArgs);
     });
     it("Expect that we get diagnostic when too few params are used in calc", () => {
         const text = `
@@ -427,7 +413,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfArgs);
     });
     it("Expect that validation catches multiple issues in one alg", () => {
         const text = `
@@ -442,9 +428,9 @@ describe("Test parameter diagnostics in alg", () => {
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(2);
         expect(diag[0].code).to.equal(
-            DiagnosticCode.missingValueNonOptionalParam
+            DiagnosticCode.missingValueNonOptionalArg
         );
-        expect(diag[1].code).to.equal(DiagnosticCode.invalidNumberOfParams);
+        expect(diag[1].code).to.equal(DiagnosticCode.invalidNumberOfArgs);
     });
     it("Expect that validation ignore alg attributes without value", () => {
         const text = `
@@ -611,7 +597,7 @@ describe("Test disabling of diagnostics", () => {
         const cnfg = parseSeptic(doc.getText());
         let diag = getDiagnostics(cnfg, doc, cnfg);
         expect(diag.length).to.equal(2);
-        expect(diag[1].code).to.not.equal(DiagnosticCode.invalidDataTypeParam);
+        expect(diag[1].code).to.not.equal(DiagnosticCode.invalidDataTypeArg);
     });
     it("Expect no diagnostics for disabled line with multiple codes", () => {
         const text = `

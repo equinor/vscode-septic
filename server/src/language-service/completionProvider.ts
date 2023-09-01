@@ -31,6 +31,7 @@ import {
 import { indentsAttributesDelimiter } from "./formatProvider";
 import { isAlphaNumeric } from "../util";
 
+const threeLettersOrLessWordsRegex = /\b[\w]{1,3}\b/;
 export class CompletionProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
 
@@ -159,7 +160,10 @@ export function getCalcCompletion(
                 value: formatCalcMarkdown(calc, true),
                 kind: "markdown",
             },
-            filterText: calc.name + " " + calc.briefDescription,
+            filterText:
+                calc.name +
+                " " +
+                calc.briefDescription.replace(threeLettersOrLessWordsRegex, ""),
             commitCharacters: ["("],
         });
     }

@@ -39,29 +39,38 @@ export const diagnosticCodeRegex = /(E|W)[0-9]{3}/;
 const jinjaRegex = /\{\{[\S\s]*?\}\}|\{%[\S\s]*?%\}/;
 const maxAlgLength = 250;
 
+/*
+    Code system:
+    1**: Object
+    2**: Alg/Calc
+    3**: Attributes
+    4**: Structure
+    5**: References
+*/
 export enum DiagnosticCode {
-    invalidIdentifier = "E101",
-    unknownObjectType = "E102",
+    invalidIdentifier = "W101",
+    missingIdentifier = "E102",
+    unknownObjectType = "E103",
     invalidAlg = "E201",
     unknownCalc = "E202",
-    invalidDataTypeParam = "E203",
-    invalidNumberOfParams = "E204",
-    missingValueNonOptionalParam = "E205",
+    invalidDataTypeArg = "W203", // Possible error
+    invalidNumberOfArgs = "W204", // Possible error
+    missingValueNonOptionalArg = "W205", // Might be removed
     algMaxLength = "E206",
-    missingPublicProperty = "E207",
+    missingPublicProperty = "E207", // Combine with under
     unknownPublicProperty = "E208",
     missingListLengthValue = "E301",
     mismatchLengthList = "E302",
-    missingAttributeValue = "E304",
-    unknownAttribute = "E305",
-    missingListAttribute = "E306",
-    invalidDataTypeAttribute = "E307",
-    unexpectedList = "E308",
-    invalidCharInString = "E309",
-    missingReference = "W101",
-    invalidParentObject = "E401",
-    unexpectedParentObject = "E402",
-    missingParentObject = "E403",
+    missingAttributeValue = "E303",
+    unknownAttribute = "W304",
+    missingListAttribute = "E305",
+    invalidDataTypeAttribute = "E306",
+    unexpectedList = "E307",
+    invalidCharInString = "E308",
+    badCycleInAlgs = "W308",
+    invalidParentObject = "W401",
+    missingParentObject = "W402",
+    missingReference = "W501",
 }
 
 export enum DiagnosticLevel {
@@ -382,7 +391,7 @@ function validateCalcParams(
                                 ),
                             },
                             `Missing value for non-optional parameter`,
-                            DiagnosticCode.missingValueNonOptionalParam
+                            DiagnosticCode.missingValueNonOptionalArg
                         )
                     );
                 }
@@ -413,7 +422,7 @@ function validateCalcParams(
                         ),
                     },
                     `Wrong data type for parameter. Expected data type: ${param.type}`,
-                    DiagnosticCode.invalidDataTypeParam
+                    DiagnosticCode.invalidDataTypeArg
                 )
             );
             indexCalcParams += 1;
@@ -443,7 +452,7 @@ function validateCalcParamNumber(
                         end: doc.positionAt(offsetStartAlg + calc.end),
                     },
                     `${condEval.message}`,
-                    DiagnosticCode.invalidNumberOfParams
+                    DiagnosticCode.invalidNumberOfArgs
                 )
             );
         }
@@ -590,7 +599,7 @@ export function validateIdentifier(
                 end: doc.positionAt(obj.start + obj.type.length),
             },
             `Missing identifier for object of type ${obj.type}`,
-            DiagnosticCode.invalidIdentifier
+            DiagnosticCode.missingIdentifier
         );
         diagnostics.push(diagnostic);
         return diagnostics;
@@ -751,7 +760,7 @@ function validateAttributeValue(
                                 attrValue.start + 1 + indexInvalid + 1
                             ),
                         },
-                        `Invalid char in string: "'"`,
+                        `Invalid char in string: "'" `,
                         DiagnosticCode.invalidCharInString
                     )
                 );
@@ -790,7 +799,7 @@ function validateAttributeNumValues(
                 createDiagnostic(
                     DiagnosticSeverity.Error,
                     range,
-                    `Attribute don't expect list of values`,
+                    `Attribute expects list of values`,
                     DiagnosticCode.missingListAttribute
                 ),
             ];
@@ -800,7 +809,7 @@ function validateAttributeNumValues(
                     createDiagnostic(
                         DiagnosticSeverity.Error,
                         range,
-                        `Attribute don't expect list of values`,
+                        `Attribute doesn't expect list of values`,
                         DiagnosticCode.unexpectedList
                     ),
                 ];
@@ -839,19 +848,6 @@ export function validateObjectParent(
     const objectHierarchy =
         SepticMetaInfoProvider.getInstance().getObjectHierarchy();
     const expectedParents = objectHierarchy.nodes.get(obj.type)?.parents ?? [];
-    if (!expectedParents.length && obj.parent) {
-        return [
-            createDiagnostic(
-                DiagnosticSeverity.Error,
-                {
-                    start: doc.positionAt(obj.start),
-                    end: doc.positionAt(obj.start + obj.type.length),
-                },
-                `Unexpected parent object for object of type ${obj.type}`,
-                DiagnosticCode.unexpectedParentObject
-            ),
-        ];
-    }
     if (expectedParents.length && !obj.parent) {
         return [
             createDiagnostic(
