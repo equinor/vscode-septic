@@ -21,6 +21,7 @@ import {
 } from "vscode-languageserver-textdocument";
 import * as path from "path";
 import { TextDecoder } from "util";
+import { SettingsManager } from "./settings";
 
 class Document implements ITextDocument {
     private inMemoryDoc?: ITextDocument;
@@ -101,7 +102,8 @@ export class DocumentProvider {
     private readonly cache = new ResourceMap<Document>();
     private readonly documents: TextDocuments<TextDocument>;
     private readonly connection: Connection;
-    private decoder = new TextDecoder("utf-8");
+    private decoderUTF8 = new TextDecoder("utf-8");
+    private decoderWindows1252 = new TextDecoder("windows-1252");
 
     readonly _onDidChangeDoc = new Emitter<URI>();
 
@@ -119,12 +121,16 @@ export class DocumentProvider {
 
     readonly onDidLoadDoc = this._onDidLoadDoc.event;
 
+    readonly settingsManager: SettingsManager;
+
     constructor(
         connection: Connection,
-        documents: TextDocuments<TextDocument>
+        documents: TextDocuments<TextDocument>,
+        settingsManager: SettingsManager
     ) {
         this.connection = connection;
         this.documents = documents;
+        this.settingsManager = settingsManager;
 
         this.documents.onDidChangeContent((e) => {
             if (!this.isRelevantFile(e.document.uri)) {
@@ -235,16 +241,23 @@ export class DocumentProvider {
         uri: string
     ): Promise<Document | undefined> {
         try {
-            const content = await this.connection.sendRequest(
+            const encodedContent = await this.connection.sendRequest(
                 protocol.fsReadFile,
                 {
                     uri: uri,
                 }
             );
-            const utf8bytes = new Uint8Array(content);
-            const contentString = this.decoder.decode(utf8bytes);
+            const bytes = new Uint8Array(encodedContent);
+            const settings = await this.settingsManager.getSettings();
+            const encoding = settings?.encoding ?? "windows1252";
+            let content: string;
+            if (encoding === "utf8") {
+                content = this.decoderUTF8.decode(bytes);
+            } else {
+                content = this.decoderWindows1252.decode(bytes);
+            }
             const doc = new Document(uri, {
-                onDiskDoc: TextDocument.create(uri, "septic", 0, contentString),
+                onDiskDoc: TextDocument.create(uri, "septic", 0, content),
             });
             this.cache.set(uri, doc);
             return doc;

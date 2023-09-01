@@ -21,6 +21,7 @@ export interface Settings {
     readonly diagnostics: DiagnosticsSettings;
     readonly folding: FoldingSettings;
     readonly formatting: FormattingSettings;
+    readonly encoding: "utf8" | "windows1252";
 }
 
 export class SettingsManager {
@@ -46,10 +47,13 @@ export class SettingsManager {
     }
 
     private async updateSettings(): Promise<void> {
-        const settings = await this.connection.workspace.getConfiguration(
-            "septic"
-        );
-        this.settings = settings;
+        const settings = await this.connection.workspace.getConfiguration();
+        this.settings = {
+            diagnostics: settings["septic"].diagnostics,
+            folding: settings["septic"].folding,
+            formatting: settings["septic"].formatting,
+            encoding: settings["[septic]"]["files.encoding"],
+        };
         this.updateMetaInfo();
     }
 
