@@ -42,6 +42,7 @@ let validAttributeTokens = [
     SepticTokenType.numeric,
     SepticTokenType.string,
     SepticTokenType.identifier,
+    SepticTokenType.path,
 ];
 
 export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
@@ -220,7 +221,7 @@ export class SepticScanner {
                 } else if (this.peek() === "*") {
                     this.blockComment();
                 } else {
-                    this.error(`Unexpected token: ${this.peek()}`);
+                    this.path();
                 }
                 break;
             case "-":
@@ -230,6 +231,9 @@ export class SepticScanner {
                 } else {
                     this.error(`Unexpected token: ${c}`);
                 }
+                break;
+            case "~":
+                this.path();
                 break;
             default:
                 if (this.isDigit(c)) {
@@ -425,6 +429,20 @@ export class SepticScanner {
         } else {
             this.addToken(SepticTokenType.identifier);
         }
+    }
+
+    private path(): void {
+        while (
+            !this.isAtEnd() &&
+            !(
+                this.peek() === " " ||
+                this.peek() === "\n" ||
+                this.peek() === "\r"
+            )
+        ) {
+            this.advance();
+        }
+        this.addToken(SepticTokenType.path);
     }
 
     private isDigit(char: string): boolean {
