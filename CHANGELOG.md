@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.8.0](https://github.com/equinor/vscode-septic/compare/v1.7.4...v1.8.0) (2023-09-08)
+
+
+### 🧹 Chores
+
+* add linear and nonlinea SmpcAppl snippet ([a98e0c1](https://github.com/equinor/vscode-septic/commit/a98e0c18fa7e4a3cc219cac660806f09f0848a90))
+* add linear and nonlinear SmpcAppl snippet ([#265](https://github.com/equinor/vscode-septic/issues/265)) ([a98e0c1](https://github.com/equinor/vscode-septic/commit/a98e0c18fa7e4a3cc219cac660806f09f0848a90))
+* **deps:** bump @types/node from 16.18.40 to 16.18.41 ([#274](https://github.com/equinor/vscode-septic/issues/274)) ([d452e50](https://github.com/equinor/vscode-septic/commit/d452e5002a34ac0aa63db597049f116bc51ce49c))
+* **deps:** bump @types/node from 16.18.41 to 16.18.43 ([#278](https://github.com/equinor/vscode-septic/issues/278)) ([3f69393](https://github.com/equinor/vscode-septic/commit/3f69393d98aa94446f85fc6055d02516a9374c57))
+* **deps:** bump @types/node from 16.18.43 to 16.18.44 ([#280](https://github.com/equinor/vscode-septic/issues/280)) ([d3db127](https://github.com/equinor/vscode-septic/commit/d3db127212c98f85ece5fea18cd5727a08f8f35d))
+* **deps:** bump eslint from 8.46.0 to 8.47.0 ([#269](https://github.com/equinor/vscode-septic/issues/269)) ([c0e078c](https://github.com/equinor/vscode-septic/commit/c0e078c50903610546f50eaf9e68effa748310a1))
+* **deps:** bump typescript from 5.1.6 to 5.2.2 ([#282](https://github.com/equinor/vscode-septic/issues/282)) ([5162405](https://github.com/equinor/vscode-septic/commit/516240516c4e40a33756e64dc3f63089315317f7))
+* update to latest vscode version ([#268](https://github.com/equinor/vscode-septic/issues/268)) ([c61e887](https://github.com/equinor/vscode-septic/commit/c61e8871c24d6d82d0221ea8a474684126f56d31))
+
+
+### 👷 CI/CD
+
+* update code quality workflow to test building of artifact ([#267](https://github.com/equinor/vscode-septic/issues/267)) ([2a49ac5](https://github.com/equinor/vscode-septic/commit/2a49ac5f0f4e39c36b7f4ec761e00f54bf782fc8))
+
+
+### ✨ Features
+
+* Ignore diagnostics for specified paths ([#292](https://github.com/equinor/vscode-septic/issues/292)) ([5966d37](https://github.com/equinor/vscode-septic/commit/5966d378faee318c701f357e265dc305f2619554))
+
+
+### 🐛 Bug Fixes
+
+* add support for paths in msgbox.obj ([#276](https://github.com/equinor/vscode-septic/issues/276)) ([f15b4f1](https://github.com/equinor/vscode-septic/commit/f15b4f1f4066269fb798d2b39e48924e264ab2b5))
+* support syntax highlighting for oneliners ([#266](https://github.com/equinor/vscode-septic/issues/266)) ([608a0a5](https://github.com/equinor/vscode-septic/commit/608a0a5d0f77bf5b93c159816121117143d6bec3))
+* use correct encoding reading from fs ([#289](https://github.com/equinor/vscode-septic/issues/289)) ([9edabb2](https://github.com/equinor/vscode-septic/commit/9edabb27b438c4fefc69bccc7696e6dc85c3d218))
+
 ## [1.7.4](https://github.com/equinor/vscode-septic/compare/v1.7.3...v1.7.4) (2023-08-10)
 
 
