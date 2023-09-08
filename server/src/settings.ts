@@ -17,11 +17,16 @@ interface FormattingSettings {
     readonly enabled: boolean;
 }
 
+interface IgnoredSettings {
+    paths: string[];
+}
+
 export interface Settings {
     readonly diagnostics: DiagnosticsSettings;
     readonly folding: FoldingSettings;
     readonly formatting: FormattingSettings;
     readonly encoding: "utf8" | "windows1252";
+    readonly ignored: IgnoredSettings;
 }
 
 export class SettingsManager {
@@ -53,6 +58,7 @@ export class SettingsManager {
             folding: settings["septic"].folding,
             formatting: settings["septic"].formatting,
             encoding: settings["[septic]"]["files.encoding"],
+            ignored: settings["septic"].ignored,
         };
         this.updateMetaInfo();
     }

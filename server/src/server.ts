@@ -28,6 +28,7 @@ import * as protocol from "./protocol";
 import { ContextManager } from "./contextManager";
 import { offsetToPositionRange } from "./util/converter";
 import { ScgContext, SepticCnfg, SepticReferenceProvider } from "./septic";
+import { getIgnorePatterns, isPathIgnored } from "./ignorePath";
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
@@ -60,7 +61,12 @@ let hasDiagnosticRelatedInformationCapability = false;
 
 async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
     await context.load();
+    const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
     const diagnosticsPromises = context.files.map(async (file) => {
+        if (isPathIgnored(file, ignorePatterns)) {
+            connection.sendDiagnostics({ uri: file, diagnostics: [] });
+            return;
+        }
         let doc = await documentProvider.getDocument(file);
         if (!doc) {
             return null;
@@ -72,8 +78,17 @@ async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
     await Promise.all(diagnosticsPromises);
 }
 
-async function publishDiagnosticsCnfg(cnfg: SepticCnfg): Promise<void> {
-    let doc = await documentProvider.getDocument(cnfg.uri);
+async function publishDiagnosticsCnfg(uri: string): Promise<void> {
+    const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
+    if (isPathIgnored(uri, ignorePatterns)) {
+        connection.sendDiagnostics({ uri: uri, diagnostics: [] });
+        return;
+    }
+    let cnfg = await langService.cnfgProvider.get(uri);
+    if (!cnfg) {
+        return;
+    }
+    let doc = await documentProvider.getDocument(uri);
     if (!doc) {
         return;
     }
@@ -87,12 +102,19 @@ async function publishDiagnostics(uri: string) {
         publishDiagnosticsContext(context);
         return;
     }
+    publishDiagnosticsCnfg(uri);
+}
 
-    let cnfg = await langService.cnfgProvider.get(uri);
-    if (!cnfg) {
-        return;
+async function updateAllDiagnostics() {
+    for (const context of contextManager.getAllContexts()) {
+        publishDiagnosticsContext(context);
     }
-    publishDiagnosticsCnfg(cnfg);
+    for (const uri of documentProvider.getAllDocumentUris()) {
+        let context = await contextManager.getContext(uri);
+        if (!context) {
+            publishDiagnostics(uri);
+        }
+    }
 }
 
 connection.onInitialize((params: InitializeParams) => {
@@ -177,6 +199,7 @@ contextManager.onDidUpdateContext(async (uri) => {
 
 connection.onDidChangeConfiguration((change) => {
     settingsManager.invalidate();
+    updateAllDiagnostics();
 });
 
 connection.onFoldingRanges(async (params, token): Promise<FoldingRange[]> => {

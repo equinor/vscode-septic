@@ -40,6 +40,9 @@ export class ContextManager {
         });
         this.docProvider.onDidDeleteDoc((uri) => this.onDidDeleteDoc(uri));
     }
+    public getAllContexts(): ScgContext[] {
+        return Array.from(this.contexts.values());
+    }
 
     public async getContext(uri: string): Promise<ScgContext | undefined> {
         for (let context of this.contexts.values()) {

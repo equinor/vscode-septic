@@ -42,4 +42,8 @@ export class ResourceMap<T> {
     public delete(resource: URI) {
         this.map.delete(this.toKey(resource));
     }
+
+    public keys(): string[] {
+        return Array.from(this.map.keys());
+    }
 }

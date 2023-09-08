@@ -213,6 +213,10 @@ export class DocumentProvider {
         });
     }
 
+    public getAllDocumentUris(): string[] {
+        return this.cache.keys();
+    }
+
     public async getDocument(uri: string): Promise<ITextDocument | undefined> {
         const doc = this.cache.get(uri);
         if (doc) {
