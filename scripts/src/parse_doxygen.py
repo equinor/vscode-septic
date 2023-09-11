@@ -10,11 +10,12 @@ class Attribute:
     name: str
     dataType: str
     list: bool
-    values: List[str]
+    enums: List[str]
     tags: List[str]
     postfix: List[str]
     calc: bool
     noCnfg: bool
+    default: str
     description: str
 
 
@@ -31,7 +32,7 @@ class Parameter:
     name: str
     description: str
     direction: str
-    type: str
+    datatype: str
     arity: str
 
 
@@ -120,10 +121,11 @@ def parseAttribute(attribute: str) -> Optional[Attribute]:
         name=name,
         dataType=attr_info["datatype"],
         list=attr_info["list"],
-        values=attr_info["values"],
+        enums=attr_info["enums"],
         postfix=attr_info["postfix"],
         calc=attr_info["calc"],
         noCnfg=attr_info["nocnfg"],
+        default=attr_info["default"],
         tags=tags,
         description=description,
     )
@@ -137,10 +139,11 @@ def parseAttributeDetails(input: str):
         "postfix": [],
         "calc": False,
         "nocnfg": False,
+        "default": [],
     }
 
     def datatype(inp: str):
-        datatype_match = re.search(r"([\w]+)(?:\[([\w|]*)\])?", inp)
+        datatype_match = re.search(r"([\w]+)(?:\[([\S\s]*)\])?", inp)
         if not datatype_match:
             return
         information["datatype"] = datatype_match.group(1).lower()
@@ -149,14 +152,19 @@ def parseAttributeDetails(input: str):
             if datatype_match.group(2) and datatype_match.group(1).lower() != "enum"
             else False
         )
-        information["values"] = (
-            [elem.strip() for elem in datatype_match.group(2).split("|")]
+        information["enums"] = (
+            [elem.strip() for elem in datatype_match.group(2).split(",")]
             if datatype_match.group(2)
             else []
         )
 
     def postfix(inp: str):
-        information["postfix"] = [elem.strip() for elem in inp.split("|")]
+        list_match = re.search(r"\[([\S\s]+)\]", inp)
+        information["postfix"] = (
+            [e.strip() for e in list_match.group(1).split(",")]
+            if list_match
+            else inp.strip()
+        )
 
     def nocnfg(inp: str):
         information["nocnfg"] = True
@@ -164,14 +172,23 @@ def parseAttributeDetails(input: str):
     def calc(inp: str):
         information["calc"] = True
 
+    def default(inp: str):
+        list_match = re.search(r"\[([\S\s]+)\]", inp)
+        information["default"] = (
+            [e.strip() for e in list_match.group(1).split(",")]
+            if list_match
+            else inp.strip()
+        )
+
     callbacks = {
         "datatype": datatype,
         "postfix": postfix,
         "nocnfg": nocnfg,
         "calc": calc,
+        "default": default,
     }
-    name_regex = r"^\s*([\w]+)(?::([\S ]+))?"
-    for elem in input.split(","):
+    name_regex = r"^\s*([\w]+)(?::([\S\s]+))?"
+    for elem in input.split(";"):
         name_match = re.search(name_regex, elem)
         if not name_match:
             continue
@@ -241,7 +258,7 @@ def parseCalcDoxygenDoc(calc: str) -> Optional[Calc]:
 
 def parseParameter(param: str) -> Optional[Parameter]:
     param_match = re.search(
-        r"\\param\[([\w]+)\]\s+([\w]+)\s+([\w\s.,-\/]+)(?:\[([\w\-\+]+)\])?(?:\s*\{([\w\+\=\$]+)\})?",
+        r"\\param\[([\w]+)\]\s+([\w]+)\s+([\w\s.,-\/]+)(?:\{([\S\s]+)\})?",
         param,
     )
     direction = param_match.group(1) if param_match else None
@@ -249,11 +266,45 @@ def parseParameter(param: str) -> Optional[Parameter]:
     if not direction or not name:
         return None
     description = param_match.group(3).strip() if param_match.group(3) else ""
-    type = param_match.group(4) if param_match.group(4) else "Value"
-    arity = param_match.group(5) if param_match.group(5) else "1"
+    param_details = parseParameterDetails(param_match.group(4))
     return Parameter(
-        name=name, description=description, direction=direction, type=type, arity=arity
+        name=name,
+        description=description,
+        direction=direction,
+        datatype=param_details["datatype"],
+        arity=param_details["arity"],
     )
+
+
+def parseParameterDetails(inp: Optional[str]):
+    information = {"datatype": ["value"], "arity": "1"}
+    if not inp:
+        return information
+
+    def datatype(inp: str):
+        list_match = re.search(r"\[([\S\s]+)\]", inp)
+        information["datatype"] = (
+            [e.strip().lower() for e in list_match.group(1).split(",")]
+            if list_match
+            else [inp.strip().lower()]
+        )
+
+    def arity(inp: str):
+        information["arity"] = inp.strip()
+
+    callbacks = {"datatype": datatype, "arity": arity}
+
+    name_regex = r"^\s*([\w]+)(?::([\S ]+))?"
+    for elem in inp.split(";"):
+        name_match = re.search(name_regex, elem)
+        if not name_match:
+            continue
+        name = name_match.group(1)
+        callback = callbacks.get(name.lower())
+        if not callback:
+            continue
+        callback(name_match.group(2))
+    return information
 
 
 def parseCalcDocumentation(file: str) -> List[Calc]:
