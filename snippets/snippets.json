@@ -1680,4 +1680,10 @@
         ],
         "description": ""
     }
+    {
+        "jinja_snippets": {
+            "scope": "jinja",
+            "path": "jinja_snippets.json"
+        }
+    }
 }
