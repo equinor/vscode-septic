@@ -1679,5 +1679,50 @@
             "{# noqa #}"
         ],
         "description": ""
+    },
+    "IfBlockJinja": {
+        "prefix": "if",
+        "body": [
+            "{% if condition %}",
+            "\t$0",
+            "{% endif %}"
+        ],
+        "description": "Insert a Jinja if block"
+    },
+    "IfElseBlockJinja": {
+        "prefix": "ifelse",
+        "body": [
+            "{% if condition1 %}",
+            "\t$1",
+            "{% elseif condition2 %}",
+            "\t$2",
+            "{% else %}",
+            "\t$3",
+            "{% endif %}"
+        ],
+        "description": "Insert a Jinja if-else block"
+    },
+    "ForLoopJinja": {
+        "prefix": "for",
+        "body": [
+            "{% for item in items %}",
+            "\t$1",
+            "{% endfor %}"
+        ],
+        "description": "Iterate over a list using a Jinja for loop"
+    },
+	"SetVariableJinja": {
+        "prefix": "set",
+        "body": [
+            "{%- set $1 = $2 -%}"
+        ],
+        "description": "Set a variable in Jinja"
+    },
+    "IncludeTemplateJinja": {
+        "prefix": "include",
+        "body": [
+            "{%- include \"$1\" -%}"
+        ],
+        "description": "Include a template in Jinja"
     }
 }
