@@ -25,12 +25,12 @@ export function formatObjectAttribute(
     long = false
 ) {
     if (!long) {
-        return "`" + attrDoc.name + "`" + `: ${attrDoc.briefDescription}`;
+        return "`" + attrDoc.name + "`" + `: ${attrDoc.description}`;
     }
     let doc = h4(attrDoc.name);
     let newline = "\n\n";
     doc += newline + horizontalRule();
-    doc += newline + attrDoc.briefDescription;
+    doc += newline + attrDoc.description;
     doc += newline + code("DataType:") + " " + attrDoc.dataType;
     if (attrDoc.dataType === "Enum") {
         doc += newline + code("Enums:") + " " + `${attrDoc.enums.join("|")}`;
@@ -38,8 +38,12 @@ export function formatObjectAttribute(
     if (attrDoc.list) {
         doc += newline + code("List:") + " True";
     }
-    if (attrDoc.default !== "") {
-        doc += newline + code("Default:") + " " + attrDoc.default;
+    if (attrDoc.default.length) {
+        doc +=
+            newline +
+            code("Default:") +
+            " " +
+            formatDefaultValue(attrDoc.default);
     }
     if (attrDoc.tags.length) {
         doc += newline + code("Tags:");
@@ -48,9 +52,6 @@ export function formatObjectAttribute(
                 return tag;
             })
             .join(",");
-    }
-    if (attrDoc.detailedDescription !== "") {
-        doc += newline + attrDoc.detailedDescription;
     }
     return doc;
 }
@@ -92,4 +93,11 @@ export function formatCalcParameter(param: SepticCalcParameterInfo) {
         formattedParam += ` - ${param.arity}`;
     }
     return formattedParam;
+}
+
+export function formatDefaultValue(attrDefault: string[]) {
+    if (attrDefault.length === 1) {
+        return attrDefault[0];
+    }
+    return `${attrDefault.length}  ${attrDefault.join("  ")}`;
 }

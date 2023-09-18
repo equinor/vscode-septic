@@ -107,6 +107,8 @@ export class SepticMetaInfoProvider {
                 signature: calc.signature ?? calc.name + "()",
                 retr: calc.retr ?? "",
                 parameters: calc.parameters ?? [],
+                quality: calc.quality?.replace(/\r?\n/g, "") ?? "",
+                value: calc.value?.replace(/\r?\n/g, "") ?? "",
             };
         });
         let calcsMap = new Map<string, SepticCalcInfo>();
@@ -198,7 +200,7 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
     attributes: SepticAttributeDocumentation[];
     description: string;
     parents: string[];
-    publicAttributes: string[];
+    publicAttributes: string[] = [];
     attrMap: Map<string, SepticAttributeDocumentation> = new Map<
         string,
         SepticAttributeDocumentation
@@ -209,8 +211,12 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
         this.attributes = input.attributes;
         this.description = input.description;
         this.parents = input.parents;
-        this.publicAttributes = input.publicAttributes;
         this.attributes.forEach((attr) => this.attrMap.set(attr.name, attr));
+        this.attributes.forEach((attr) => {
+            if (attr.calc) {
+                this.publicAttributes.push(attr.name);
+            }
+        });
     }
 
     public getAttribute(
@@ -253,18 +259,19 @@ export interface SepticObjectDocumentationInput {
     attributes: SepticAttributeDocumentation[];
     description: string;
     parents: string[];
-    publicAttributes: string[];
 }
 
 export interface SepticAttributeDocumentation {
-    briefDescription: string;
+    description: string;
     dataType: string;
-    default: string;
-    detailedDescription: string;
     enums: string[];
     list: boolean;
     name: string;
     tags: string[];
+    calc: boolean;
+    postfix: string[];
+    noCnfg: boolean;
+    default: string[];
 }
 
 export interface SepticCalcInfoInput {
@@ -274,6 +281,8 @@ export interface SepticCalcInfoInput {
     retr?: string;
     briefDescription?: string;
     detailedDescription?: string;
+    quality?: string;
+    value?: string;
 }
 
 export interface SepticCalcInfo {
@@ -283,6 +292,8 @@ export interface SepticCalcInfo {
     retr: string;
     briefDescription: string;
     detailedDescription: string;
+    quality: string;
+    value: string;
 }
 
 export interface SepticCalcParameterInfo {

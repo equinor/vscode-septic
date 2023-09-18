@@ -1,236 +1,58 @@
-# Commit: c5d60ce
+# Commit: 33a8619
 - attributes:
-  - briefDescription: Auto-scaling for plot
-    dataType: Enum
-    default: ''
-    detailedDescription: ''
+  - calc: false
+    dataType: enum
+    default: []
+    description: Auto-scaling for plot
     enums:
     - 'ON'
     - 'OFF'
     list: false
     name: Auto
+    noCnfg: false
+    postfix: []
     tags: []
-  - briefDescription: High/Low based autoscale
-    dataType: Int
-    default: ''
-    detailedDescription: ''
+  - calc: false
+    dataType: double
+    default:
+    - '"test"'
+    - '"noe"'
+    description: Initial upper limit with limit initially activated
     enums: []
     list: false
-    name: AutoScale
+    name: High
+    noCnfg: false
+    postfix:
+    - 'On'
+    - 'Off'
     tags: []
-  - briefDescription: Blocking for manipulated variable. List describes the size of
-      each block
-    dataType: Int
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: true
-    name: Blocking
-    tags: []
-  - briefDescription: Penalty for ideal value deviations
-    dataType: Double
-    default: ''
-    detailedDescription: ''
+  - calc: false
+    dataType: double
+    default: []
+    description: Lower limit with limit initially activated
     enums: []
     list: false
-    name: Fulf
-    tags:
-    - tuning
-  - briefDescription: Rescaling of fulf if CalcIv moving in opposite direction of
-      ideal value
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: FulfReScale
+    name: Low
+    noCnfg: false
+    postfix:
+    - 'On'
+    - 'Off'
     tags: []
-  - briefDescription: Member of group if group bit 1
-    dataType: Bit31
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: GrpMask
-    tags: []
-  - briefDescription: Critical member of group if group bit 1
-    dataType: Bit31
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: GrpType
-    tags: []
-  - briefDescription: Initial upper limit with limit initially deactivated
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: HighOff
-    tags: []
-  - briefDescription: Initial upper limit with limit initially activated
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: HighOn
-    tags: []
-  - briefDescription: Time constant for first order filter for changes in ideal value
-      with filter initially activated
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: IvFiltOn
-    tags: []
-  - briefDescription: "Time constant for first order filter for changes in ideal value\
-      \ with filter\r\n  initially deactivated"
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: IvFiltOn
-    tags: []
-  - briefDescription: Initial ideal value for manipulated variable with ideal value
-      initially deactivated
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: IvOff
-    tags: []
-  - briefDescription: Initial ideal value for manipulated variable with ideal value
-      initially activated
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: IvOn
-    tags: []
-  - briefDescription: Priority level for ideal value
-    dataType: Int
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: IvPrio
-    tags:
-    - tuning
-  - briefDescription: "Desired rate of change for changes in ideal value. Replaces\r\
-      \n  first order filter if value > 0"
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: IvRoc
-    tags: []
-  - briefDescription: Description
-    dataType: Enum
-    default: ''
-    detailedDescription: ''
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: LockHL
-    tags: []
-  - briefDescription: Description
-    dataType: Enum
-    default: ''
-    detailedDescription: ''
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: LockIV
-    tags: []
-  - briefDescription: Description
-    dataType: Enum
-    default: ''
-    detailedDescription: ''
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: LockLL
-    tags: []
-  - briefDescription: Lower limit with limit initially deactivated
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: LowOff
-    tags: []
-  - briefDescription: Lower limit with limit initially activated
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: LowOn
-    tags: []
-  - briefDescription: Maximum Change in ...
-    dataType: Double
-    default: ''
-    detailedDescription: ''
+  - calc: true
+    dataType: double
+    default: []
+    description: Maximum Change in ...
     enums: []
     list: false
     name: MaxChg
-    tags: []
-  - briefDescription: Maximum allowed change downwards between samples
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: MaxDn
-    tags: []
-  - briefDescription: Maximum allowed change upwards between samples
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: MaxUp
-    tags: []
-  - briefDescription: Initial measurement value
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: Meas
-    tags: []
-  - briefDescription: High limit for use in measurement validation
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: MeasHighLimit
-    tags: []
-  - briefDescription: Measurement validation activation
-    dataType: Enum
-    default: ''
-    detailedDescription: ''
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: MeasValidation
-    tags: []
-  - briefDescription: Initial state of the variable in MPC
-    dataType: Enum
-    default: ''
-    detailedDescription: ''
+    noCnfg: false
+    postfix: []
+    tags:
+    - Tuning
+  - calc: false
+    dataType: enum
+    default: []
+    description: Initial state of the variable in MPC
     enums:
     - STOPPED
     - ACTIVE
@@ -238,101 +60,20 @@
     - 'OFF'
     list: false
     name: Mode
+    noCnfg: false
+    postfix: []
     tags: []
-  - briefDescription: Penalty for changes in manipulated between samples
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: MovePnlty
-    tags:
-    - tuning
-  - briefDescription: Number of decimals
-    dataType: Int
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: Nfix
-    tags: []
-  - briefDescription: Upper graph plotting limit
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: PlotMax
-    tags: []
-  - briefDescription: Lower graph plotting limit
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: PlotMin
-    tags: []
-  - briefDescription: Span of plot?
-    dataType: ''
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: PlotSpan
-    tags: []
-  - briefDescription: Description
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: Price
-    tags: []
-  - briefDescription: Initial value for process value measurement
-    dataType: Double
-    default: ''
-    detailedDescription: ''
+  - calc: true
+    dataType: double
+    default: []
+    description: Initial value for process value measurement
     enums: []
     list: false
     name: ProcessValue
-    tags: []
-  - briefDescription: Expected deviation in measured value. Used for scaling of penalties
-    dataType: Double
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: Span
-    tags:
-    - tuning
-  - briefDescription: Descriptive text
-    dataType: String
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: Text1
-    tags: []
-  - briefDescription: Descriptive text
-    dataType: String
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: Text2
-    tags: []
-  - briefDescription: Unit of measurement
-    dataType: String
-    default: ''
-    detailedDescription: ''
-    enums: []
-    list: false
-    name: Unit
+    noCnfg: true
+    postfix: []
     tags: []
   description: Manipulated Variable Description
   name: Mvr
   parents:
   - SmpcAppl
-  publicAttributes:
-  - Fulf
-  - Iv

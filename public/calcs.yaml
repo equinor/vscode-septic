@@ -1,92 +1,31 @@
-# Commit: 9f48ef0
-- briefDescription: Computes the logical and operation for all the provided elements
-  detailedDescription: ''
-  name: and
-  parameters:
-  - arity: +
-    description: The logical elements
-    direction: in
-    name: x
-    type: Value
-  retr: The logical and of all given elements
-  signature: and(...x)
-- briefDescription: Evaluates the logical condition and returns the coresponding evaluated
-    expression
-  detailedDescription: ''
-  name: if
-  parameters:
-  - arity: '1'
-    description: Logical condition to test
-    direction: in
-    name: condition
-    type: Value
-  - arity: '1'
-    description: The evaluated expression returned when condition is true
-    direction: inout
-    name: exprTrue
-    type: Value
-  - arity: '1'
-    description: The evaluated expression returned when condition is false
-    direction: inout
-    name: exprFalse
-    type: Value
-  - arity: optional
-    description: 1/0, debug of calc ERROR or first param BAD to out-file if 1
-    direction: in
-    name: debug
-    type: Value
-  retr: Evaluated expr given by the logical condition
-  signature: if(condition, exprTrue, exprFalse, debug?)
-- briefDescription: "Function calculates y by linear interpolation of the X,Y pairs.\r\
+# Commit: 33a8619
+- detailedDescription: "Function calculates y by linear interpolation of the X,Y pairs.\r\
     \n  Assumes that the sequence of X1, X2, ..., XN values are monotonically increasing.\r\
     \n  An input value x < X1 will give y = Y1, and x > XN gives y = YN."
-  detailedDescription: ''
   name: intpoltype1
   parameters:
   - arity: '1'
+    datatype:
+    - value
     description: Actual x-value
     direction: in
     name: x
-    type: Value
-  - arity: even
-    description: Values defining the curve to be interpolated. Values comes in X,Y-pairs
-    direction: in
-    name: xy
-    type: Value
-  retr: Interpolated value
-  signature: intpoltype1(x, ...xy)
-- briefDescription: "Perform checks for validity of SAMPLETVR, high limit, low limit\
-    \ etc\r\n  Logging: The calc reports accepted and rejected sampled to the file\
-    \ 'labupdates.log'\r\n\r\n  To use stddev without model, write \"labupdt(SAMPLETVR,\
-    \ ,stddev)\""
-  detailedDescription: ''
-  name: labupdt
-  parameters:
-  - arity: '1'
-    description: Tvr to perform validation of high/low limit etc.
-    direction: in
-    name: sampletvr
-    type: Tvr
-  - arity: optional
-    description: Description of model
-    direction: in
-    name: model
-    type: Value
-  - arity: optional
-    description: Acceptable standard deviation for samples
-    direction: in
-    name: stddev
-    type: Value
-  retr: Description of return value
-  signature: labupdt(sampletvr, model?, stddev?)
-- briefDescription: Computes the logical or operation on all elements
-  detailedDescription: ''
-  name: or
-  parameters:
   - arity: +
-    description: Logical elements
+    datatype:
+    - cvr
+    description: X-values. Assumed to be monotinically increasing.
     direction: in
-    name: x
-    type: Value
-  retr: The logical or operation on all the given elements
-  signature: or(...x)
+    name: Xn
+  - arity: =Xn
+    datatype:
+    - mvr
+    - cvr
+    description: Y-values corresponding to X-values
+    direction: in
+    name: Yn
+  quality: GOOD only if ALL arguments are GOOD and an odd number (5,7,9 ...) of parameters
+    are specified, else Q = BAD
+  retr: Interpolated value
+  signature: intpoltype1(x,X1,Y1,X2,Y2,...,XN,YN)
+  value: "0 when Q = BAD, Y1 when x <= X1, YN when x >= XN, Y(n-1) + (x - X(n-1))*(Y(n)-Y(n-1))/(X(n)-X(n-1))\
+    \ when\r\n    X(n-1)<= x <= X(n)"

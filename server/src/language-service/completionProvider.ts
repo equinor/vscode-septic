@@ -25,6 +25,7 @@ import {
     SepticObject,
     SepticReferenceProvider,
     formatCalcMarkdown,
+    formatDefaultValue,
     formatObjectAttribute,
     parseAlg,
 } from "../septic";
@@ -248,7 +249,9 @@ function getTextAttrTextEdit(attr: SepticAttributeDocumentation) {
         attr.name +
         "=" +
         "  ";
-    attrFormatted += hasDefault ? "${1:" + attr.default + "}" : "${1}";
+    attrFormatted += hasDefault
+        ? "${1:" + formatDefaultValue(attr.default) + "}"
+        : "${1}";
     return attrFormatted;
 }
 

@@ -729,8 +729,8 @@ function validateAttributeValue(
     for (let attrValue of attrValues) {
         if (!checkAttributeDataType(attrValue, attrDoc)) {
             let errorMessage = `Wrong data type for attribute. Expected DataType: ${attrDoc.dataType}`;
-            if (attrDoc.dataType === "Enum") {
-                errorMessage += `. Permissable enums: ${attrDoc.enums.join(
+            if (attrDoc.dataType === "enum") {
+                errorMessage += `. Permissable enums: ${attrDoc.values.join(
                     "|"
                 )}`;
             }
@@ -809,7 +809,7 @@ function validateAttributeNumValues(
                     createDiagnostic(
                         DiagnosticSeverity.Error,
                         range,
-                        `Attribute doesn't expect list of values`,
+                        `Attribute does not expect list of values`,
                         DiagnosticCode.unexpectedList
                     ),
                 ];
@@ -886,16 +886,16 @@ export function checkAttributeDataType(
         return true;
     }
     switch (attrDoc.dataType) {
-        case "Int":
+        case "int":
             return isInt(attrValue.value);
-        case "Double":
+        case "double":
             return attrValue.type === SepticTokenType.numeric;
-        case "String":
+        case "string":
             return attrValue.type === SepticTokenType.string;
-        case "Enum":
-            return attrDoc.enums.includes(attrValue.value);
+        case "enum":
+            return attrDoc.values.includes(attrValue.value);
         default:
-            let bitMaskMatch = attrDoc.dataType.match(/^Bit([0-9]+)$/);
+            let bitMaskMatch = attrDoc.dataType.match(/^bit([0-9]+)$/);
             if (!bitMaskMatch) {
                 return true;
             }
