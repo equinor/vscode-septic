@@ -10,7 +10,7 @@ from dataclasses import asdict
 
 OBJECT_BRANCH = "test_documentation"
 OBJECT_OUTPUT_PATH = "./public/objectsDoc.yaml"
-CALCS_BRANCH = "test_documentation"
+CALCS_BRANCH = "document_calcs"
 CALCS_OUTPUT_PATH = "./public/calcs.yaml"
 
 

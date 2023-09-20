@@ -215,7 +215,7 @@ def validateCalcDoxygen(doxygen: str) -> bool:
 
 def parseCalcDoxygenDoc(calc: str) -> Optional[Calc]:
     parameters: List[dict] = []
-    func = re.search(r"\\calc\{\s*(([\w]+)\([\S ]+\))\}", calc)
+    func = re.search(r"\\calc\{\s*(([\w]+)\([\S ]*\))\}", calc)
     name = func.group(2) if func else None
     if not name:
         return None
@@ -258,7 +258,7 @@ def parseCalcDoxygenDoc(calc: str) -> Optional[Calc]:
 
 def parseParameter(param: str) -> Optional[Parameter]:
     param_match = re.search(
-        r"\\param\[([\w]+)\]\s+([\w]+)\s+([\w\s.,-\/]+)(?:\{([\S\s]+)\})?",
+        r"\\param\[([\w,]+)\]\s+([\w]+)\s+([^\{]+)(?:\{([\S\s]+)\})?",
         param,
     )
     direction = param_match.group(1) if param_match else None
