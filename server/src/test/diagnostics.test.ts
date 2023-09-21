@@ -842,14 +842,16 @@ describe("Test validation of attribute data type", () => {
         enums: string[]
     ): SepticAttributeDocumentation => {
         return {
-            briefDescription: "",
+            description: "",
             dataType: datatype,
-            detailedDescription: "",
             enums: enums,
             list: false,
+            calc: false,
+            noCnfg: false,
+            postfix: [],
             name: "",
             tags: [],
-            default: "",
+            default: [""],
         };
     };
     it("Check valid bitmask", () => {

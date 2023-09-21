@@ -21,6 +21,7 @@ import {
     formatCalcParameter,
     parseAlg,
     SepticCnfg,
+    fromCalcIndexToParamIndex,
 } from "../septic";
 
 export class SignatureHelpProvider {
@@ -77,9 +78,10 @@ export function getSignatureHelp(
     if (!calcMetaInfo) {
         return { signatures: [] };
     }
-    let paramMetaInfoIndex = indexToParamIndexDocumentation(
+    let currentIndexCalc = getIndexParamCalc(currentCalc, offsetAlg);
+    let activeParameterIndex = fromCalcIndexToParamIndex(
         calcMetaInfo,
-        getIndexParamCalc(currentCalc, offsetAlg)
+        currentIndexCalc
     );
     return {
         signatures: [
@@ -88,7 +90,7 @@ export function getSignatureHelp(
                 parameters: calcMetaInfo.parameters.map((param) => {
                     return paramMetaInfoToParameterInformation(param);
                 }),
-                activeParameter: paramMetaInfoIndex,
+                activeParameter: activeParameterIndex,
             },
         ],
     };
@@ -116,68 +118,4 @@ function getIndexParamCalc(calc: AlgCalc, offset: number) {
         }
     }
     return index;
-}
-
-function indexToParamIndexDocumentation(
-    calc: SepticCalcInfo,
-    index: number
-): number {
-    let indexParam = 0;
-    let fixedLengthParams = getFixedLengthParams(calc);
-    fixedLengthParams.entries();
-    let i = 0;
-    while (i < fixedLengthParams.length) {
-        if (index < fixedLengthParams[i]) {
-            return i;
-        }
-        i += 1;
-    }
-
-    return 0;
-}
-
-function getFixedLengthParams(calc: SepticCalcInfo): number[] {
-    let indexParam = 0;
-    let indexList = [];
-    for (let param of calc.parameters) {
-        switch (param.arity) {
-            case "+":
-                return indexList;
-            case "?":
-                indexParam += 1;
-                indexList.push(indexParam);
-                break;
-
-            default:
-                if (
-                    param.arity.charAt(0) === "=" ||
-                    param.arity.charAt(0) === "$"
-                ) {
-                    return indexList;
-                }
-                indexParam += parseInt(param.arity);
-                indexList.push(indexParam);
-                break;
-        }
-    }
-    return indexList;
-}
-
-function getVariableLengthParamsAlternating(calc: SepticCalcInfo) {
-    let variableParamsMap = new Map<string, string[]>();
-    for (let param of calc.parameters) {
-        if (param.arity.charAt(0) === "=") {
-            let name = param.arity.slice(1);
-            let va = variableParamsMap.get(name);
-            if (!va) {
-                va = [];
-            }
-            va.push(param.name);
-        }
-        if (param.arity.charAt(0) === "$") {
-            continue;
-        }
-        if (param.arity.charAt(0) === "+") {
-        }
-    }
 }

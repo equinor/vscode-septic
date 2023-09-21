@@ -22,8 +22,6 @@ import {
     AlgLiteral,
     AlgTokenType,
     SepticCalcInfo,
-    calcNumParameterInfo,
-    arityToNum,
     ISepticObjectDocumentation,
     AttributeValue,
     SepticAttributeDocumentation,
@@ -345,9 +343,6 @@ export function validateCalc(
             offsetStartAlg
         )
     );
-    diagnostics.push(
-        ...validateCalcParamNumber(calc, calcMetaInfo, doc, offsetStartAlg)
-    );
     return diagnostics;
 }
 
@@ -361,7 +356,7 @@ function validateCalcParams(
     let diagnostics: Diagnostic[] = [];
     let indexCalcParams = 0;
     let indexParamInfo = 0;
-    for (let param of calcMetaInfo.parameters) {
+    for (let param of calc.params) {
         if (indexCalcParams >= calc.params.length) {
             break;
         }
@@ -429,84 +424,6 @@ function validateCalcParams(
         }
     }
     return diagnostics;
-}
-
-function validateCalcParamNumber(
-    calc: AlgCalc,
-    calcInfo: SepticCalcInfo,
-    doc: ITextDocument,
-    offsetStartAlg: number
-): Diagnostic[] {
-    let diagnostics: Diagnostic[] = [];
-    let numberParamsConditions: NumberParamConditions[] =
-        getNumberOfParamsConditions(calcInfo);
-    let numberParamsCalc = calc.params.length;
-    numberParamsConditions.forEach((cond) => {
-        let condEval = cond(numberParamsCalc);
-        if (!condEval.condition) {
-            diagnostics.push(
-                createDiagnostic(
-                    DiagnosticSeverity.Error,
-                    {
-                        start: doc.positionAt(offsetStartAlg + calc.start),
-                        end: doc.positionAt(offsetStartAlg + calc.end),
-                    },
-                    `${condEval.message}`,
-                    DiagnosticCode.invalidNumberOfArgs
-                )
-            );
-        }
-    });
-    return diagnostics;
-}
-
-function getNumberOfParamsConditions(
-    calcInfo: SepticCalcInfo
-): NumberParamConditions[] {
-    let numParamInfo = calcNumParameterInfo(calcInfo);
-    let conditions: NumberParamConditions[] = [];
-    if (
-        numParamInfo.maxActive &&
-        numParamInfo.minNumber === numParamInfo.maxNumber
-    ) {
-        let conditionExactNumbers: NumberParamConditions = (n: number) => {
-            return {
-                condition: n === numParamInfo.minNumber,
-                message: `Expected number of arguments to equal ${numParamInfo.minNumber}`,
-            };
-        };
-        conditions.push(conditionExactNumbers);
-    } else if (numParamInfo.maxActive) {
-        let conditionBetween: NumberParamConditions = (n: number) => {
-            return {
-                condition:
-                    n >= numParamInfo.minNumber && n <= numParamInfo.maxNumber,
-                message: `Expected number of arguments to be between ${numParamInfo.minNumber} and ${numParamInfo.maxNumber}`,
-            };
-        };
-        conditions.push(conditionBetween);
-    } else {
-        let conditionMoreThan: NumberParamConditions = (n: number) => {
-            return {
-                condition: n >= numParamInfo.minNumber,
-                message: `Expected number of arguments to be >= ${numParamInfo.minNumber}`,
-            };
-        };
-        conditions.push(conditionMoreThan);
-    }
-
-    if (numParamInfo.parityActive && !numParamInfo.maxActive) {
-        let parityBit = numParamInfo.minNumber % 2;
-        let evenOrOdd = parityBit ? "odd" : "even";
-        let conditionParity: NumberParamConditions = (n: number) => {
-            return {
-                condition: n % 2 === parityBit,
-                message: `Expected number of arguments to be ${evenOrOdd}`,
-            };
-        };
-        conditions.push(conditionParity);
-    }
-    return conditions;
 }
 
 function checkAlgLength(alg: string) {
@@ -730,7 +647,7 @@ function validateAttributeValue(
         if (!checkAttributeDataType(attrValue, attrDoc)) {
             let errorMessage = `Wrong data type for attribute. Expected DataType: ${attrDoc.dataType}`;
             if (attrDoc.dataType === "enum") {
-                errorMessage += `. Permissable enums: ${attrDoc.values.join(
+                errorMessage += `. Permissable enums: ${attrDoc.enums.join(
                     "|"
                 )}`;
             }
@@ -893,7 +810,7 @@ export function checkAttributeDataType(
         case "string":
             return attrValue.type === SepticTokenType.string;
         case "enum":
-            return attrDoc.values.includes(attrValue.value);
+            return attrDoc.enums.includes(attrValue.value);
         default:
             let bitMaskMatch = attrDoc.dataType.match(/^bit([0-9]+)$/);
             if (!bitMaskMatch) {

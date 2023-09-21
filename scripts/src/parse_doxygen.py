@@ -53,9 +53,8 @@ def getObjectDoxygenFromFile(file: str) -> List[str]:
 
 
 def validateObjectDoxygen(doxygen: str) -> bool:
-    class_regex = r"\\class\s+([\w]+)"
-    vscode_regex = r"\\vscode"
-    if re.search(class_regex, doxygen) and re.search(vscode_regex, doxygen):
+    vscode_regex = r"\\vscode\s+[\w]+"
+    if re.search(vscode_regex, doxygen):
         return True
     return False
 
@@ -73,7 +72,7 @@ def parseObjectDocumentation(file: str) -> List[SepticObject]:
 
 
 def parseObjectDoxygenDoc(doxygen: str) -> Optional[SepticObject]:
-    name_regex = r"\\class\s+([\w]+)"
+    name_regex = r"\\vscode\s+([\w]+)"
     name_match = re.search(name_regex, doxygen)
     if not name_match:
         return None
@@ -135,7 +134,7 @@ def parseAttributeDetails(input: str):
     information = {
         "datatype": "",
         "list": False,
-        "values": [],
+        "enums": [],
         "postfix": [],
         "calc": False,
         "nocnfg": False,
@@ -143,7 +142,7 @@ def parseAttributeDetails(input: str):
     }
 
     def datatype(inp: str):
-        datatype_match = re.search(r"([\w]+)(?:\[([\S\s]*)\])?", inp)
+        datatype_match = re.search(r"([\w]+)(\[([\S\s]*)\])?", inp)
         if not datatype_match:
             return
         information["datatype"] = datatype_match.group(1).lower()
@@ -153,8 +152,8 @@ def parseAttributeDetails(input: str):
             else False
         )
         information["enums"] = (
-            [elem.strip() for elem in datatype_match.group(2).split(",")]
-            if datatype_match.group(2)
+            [elem.strip() for elem in datatype_match.group(3).split(",")]
+            if datatype_match.group(2) and datatype_match.group(1).lower() == "enum"
             else []
         )
 
@@ -196,6 +195,8 @@ def parseAttributeDetails(input: str):
         callback = callbacks.get(name.lower())
         if not callback:
             continue
+        if not name_match.group(2):
+            print(f"Error parsing: {input}")
         callback(name_match.group(2))
     return information
 

@@ -40,7 +40,17 @@ def getCalcFile(branch: str):
 
 
 def getObjectFiles(branch: str):
-    paths = ["src/Xvrs.cpp"]
+    paths = [
+        "src/Xvrs.cpp",
+        "src/Smpc.cpp",
+        "src/Appl.cpp",
+        "src/Tcip.cpp",
+        "src/Sopc.cpp",
+        "src/guielements.cpp",
+        "src/Nois.cpp",
+        "FMUsrc/MdlFMU.cpp",
+        "src/Subr.cpp",
+    ]
     files = []
     for path in paths:
         try:

@@ -1,74 +1,82 @@
 import { SepticCalcInfo } from "./septicMetaInfo";
 
-export interface ICalcNumParameter {
-    minNumber: number;
-    maxNumber: number;
-    maxActive: boolean;
-    parityActive: boolean;
+export function fromCalcIndexToParamIndex(
+    calc: SepticCalcInfo,
+    index: number
+): number {
+    let fixedLengthParams = getFixedLengthParamsIndexes(calc);
+    if (!fixedLengthParams.length) {
+        return 0;
+    }
+    let i = 0;
+    while (i < fixedLengthParams.length) {
+        if (index < fixedLengthParams[i]) {
+            return i;
+        }
+        i += 1;
+    }
+    let fixedLengthParamsMax = fixedLengthParams[fixedLengthParams.length - 1];
+    if (!isAlternatingParamsCalc(calc)) {
+        return -1;
+    }
+    return getIndexAlternatingParams(calc, index, fixedLengthParamsMax);
 }
 
-export function calcNumParameterInfo(
-    calcInfo: SepticCalcInfo
-): ICalcNumParameter {
-    let minNumber = 0;
-    let maxNumber = 0;
-    let maxActive = true;
-    let parityActive = true;
-    for (let i = 0; i < calcInfo.parameters.length; i++) {
-        let param = calcInfo.parameters[i];
+function getIndexAlternatingParams(
+    calc: SepticCalcInfo,
+    index: number,
+    numFixedLengthParams: number
+) {
+    let numVariableLengthParams = getNumberOfVariableLengthParams(calc);
+    return (
+        ((index - numFixedLengthParams) % numVariableLengthParams) +
+        numFixedLengthParams
+    );
+}
+
+function getFixedLengthParamsIndexes(calc: SepticCalcInfo): number[] {
+    let indexParam = 0;
+    let indexList = [];
+    for (let param of calc.parameters) {
         switch (param.arity) {
-            case "even":
-                maxActive = false;
-                minNumber += 2;
-                break;
-            case "odd":
-                maxActive = false;
-                minNumber += 1;
-                break;
             case "+":
-                maxActive = false;
-                parityActive = false;
-                minNumber += 1;
+                return indexList;
+            case "?":
+                indexParam += 1;
+                indexList.push(indexParam);
                 break;
-            case "optional":
-                let restIsOptional = true;
-                for (let j = i + 1; j < calcInfo.parameters.length; j++) {
-                    if (calcInfo.parameters[j].arity !== "optional") {
-                        restIsOptional = false;
-                        break;
-                    }
-                }
-                if (!restIsOptional) {
-                    minNumber += 1;
-                } else {
-                    parityActive = false;
-                }
-                maxNumber += 1;
-                break;
+
             default:
-                let n = parseInt(param.arity);
-                minNumber += n;
-                maxNumber += n;
+                if (
+                    param.arity.charAt(0) === "=" ||
+                    param.arity.charAt(0) === "$"
+                ) {
+                    return indexList;
+                }
+                indexParam += parseInt(param.arity);
+                indexList.push(indexParam);
                 break;
         }
     }
-    return {
-        minNumber: minNumber,
-        maxNumber: maxNumber,
-        maxActive: maxActive,
-        parityActive: parityActive,
-    };
+    return indexList;
 }
 
-export function arityToNum(arity: string): number {
-    switch (arity) {
-        case "even":
-        case "odd":
-        case "+":
-            return Infinity;
-        case "optional":
-            return 1;
-        default:
-            return parseInt(arity);
+function isAlternatingParamsCalc(calcInfo: SepticCalcInfo) {
+    return !["MaxSelection", "MinSelection", "AvgSelection"].includes(
+        calcInfo.name
+    );
+}
+
+function getNumberOfVariableLengthParams(calcInfo: SepticCalcInfo) {
+    let numVariableLengthParams = 0;
+    for (let param of calcInfo.parameters) {
+        if (
+            param.arity.charAt(0) === "+" ||
+            param.arity.charAt(0) === "$" ||
+            param.arity.charAt(0) === "="
+        ) {
+            numVariableLengthParams += 1;
+        }
     }
+    return numVariableLengthParams;
 }
