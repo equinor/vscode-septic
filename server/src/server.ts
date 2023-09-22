@@ -13,7 +13,6 @@ import {
     InitializeResult,
     FoldingRange,
     DocumentSymbol,
-    TextDocumentPositionParams,
     CompletionItem,
     LocationLink,
     Location,
