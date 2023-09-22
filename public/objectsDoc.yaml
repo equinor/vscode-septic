@@ -1,8 +1,9 @@
-# Commit: 5af5c2c
+# Commit: deeda73
 - attributes:
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Description
     enums:
     - 'ON'
@@ -30,7 +31,8 @@
     tags: []
   - calc: true
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: Penalty ideal value deviations
     enums: []
     list: false
@@ -40,7 +42,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Rescaling of fulf if moving wrong direction from Iv
     enums: []
     list: false
@@ -50,7 +53,8 @@
     tags: []
   - calc: false
     dataType: bit31
-    default: '0000000000000000000000000000001'
+    default:
+    - '0000000000000000000000000000001'
     description: Member of group if group bit 1
     enums: []
     list: false
@@ -60,7 +64,8 @@
     tags: []
   - calc: false
     dataType: bit31
-    default: '0000000000000000000000000000000'
+    default:
+    - '0000000000000000000000000000000'
     description: Critical to group if group bit 1
     enums: []
     list: false
@@ -70,7 +75,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: 1e+10
+    default:
+    - 1e+10
     description: Upper limit with indicated initial state
     enums: []
     list: false
@@ -82,7 +88,8 @@
     tags: []
   - calc: true
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Ideal value with indicated initial state
     enums: []
     list: false
@@ -94,7 +101,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: Desired time constant for filtered change towards new ideal value.
       Interlocked with IvRoc
     enums: []
@@ -105,7 +113,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '99'
+    default:
+    - '99'
     description: Priority level for ideal value
     enums: []
     list: false
@@ -115,7 +124,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-1'
+    default:
+    - '-1'
     description: Desired rate of change towards new ideal value. Interlocked with
       IvFilt
     enums: []
@@ -126,7 +136,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Lock high limit from operator changes
     enums:
     - 'ON'
@@ -138,7 +149,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Lock ideal value from operator changes
     enums:
     - 'ON'
@@ -150,7 +162,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Lock low limit from operator changes
     enums:
     - 'ON'
@@ -162,7 +175,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: -1e+10
+    default:
+    - -1e+10
     description: Lower limit with indicated initial state
     enums: []
     list: false
@@ -174,7 +188,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-1'
+    default:
+    - '-1'
     description: User input dValue checking
     enums: []
     list: false
@@ -184,7 +199,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '10'
+    default:
+    - '10'
     description: Maximum change up for manipulated variable in single step
     enums: []
     list: false
@@ -194,7 +210,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-10'
+    default:
+    - '-10'
     description: Maximum change down for manipulated variable in single step
     enums: []
     list: false
@@ -204,7 +221,8 @@
     tags: []
   - calc: true
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Measurement
     enums: []
     list: false
@@ -214,7 +232,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: 1e+10
+    default:
+    - 1e+10
     description: Measurement validation high limit
     enums: []
     list: false
@@ -224,7 +243,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: -1e+10
+    default:
+    - -1e+10
     description: Measurement validation low limit
     enums: []
     list: false
@@ -234,7 +254,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Initial state of measurement validation
     enums:
     - 'ON'
@@ -246,7 +267,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Operation mode of manipulated variable
     enums:
     - 'OFF'
@@ -259,7 +281,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: Penalty for moving manipulated variable
     enums: []
     list: false
@@ -269,7 +292,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Number of decimals
     enums: []
     list: false
@@ -279,7 +303,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '100'
+    default:
+    - '100'
     description: Max plotting range
     enums: []
     list: false
@@ -289,7 +314,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Min plotting range
     enums: []
     list: false
@@ -299,7 +325,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-1'
+    default:
+    - '-1'
     description: Description
     enums: []
     list: false
@@ -309,7 +336,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Linear cost factor
     enums: []
     list: false
@@ -319,7 +347,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Actual process value of manipulated variable
     enums: []
     list: false
@@ -339,7 +368,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '10'
+    default:
+    - '10'
     description: Expected operating span
     enums: []
     list: false
@@ -349,7 +379,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -359,7 +390,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -369,7 +401,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Unit of measurement
     enums: []
     list: false
@@ -379,7 +412,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Scaling of use factor weight based on application importance
     enums: []
     list: false
@@ -394,7 +428,8 @@
 - attributes:
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Description
     enums:
     - 'ON'
@@ -406,7 +441,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Number of subsequent BAD measurements before switching to OFF
     enums: []
     list: false
@@ -416,7 +452,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Time constant for bias filter
     enums: []
     list: false
@@ -426,7 +463,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Time constant for bias prediction
     enums: []
     list: false
@@ -436,7 +474,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-1'
+    default:
+    - '-1'
     description: Constraint filter time constant
     enums: []
     list: false
@@ -446,7 +485,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Desired prediction horizon
     enums: []
     list: false
@@ -456,7 +496,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: First EvalDT samples are not used
     enums: []
     list: false
@@ -466,7 +507,8 @@
     tags: []
   - calc: true
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: Penalty set point deviations
     enums: []
     list: false
@@ -476,7 +518,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0.001'
+    default:
+    - '0.001'
     description: Rescaling of fulf if moving wrong direction from SetPnt
     enums: []
     list: false
@@ -486,7 +529,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: Rescaling fulf with same factor for whole horizon, if SetPnt wrong
       direction
     enums: []
@@ -497,7 +541,8 @@
     tags: []
   - calc: false
     dataType: bit31
-    default: '0000000000000000000000000000001'
+    default:
+    - '0000000000000000000000000000001'
     description: Member of group if group bit 1
     enums: []
     list: false
@@ -507,7 +552,8 @@
     tags: []
   - calc: false
     dataType: bit31
-    default: '0000000000000000000000000000000'
+    default:
+    - '0000000000000000000000000000000'
     description: Critical to group if group bit 1
     enums: []
     list: false
@@ -517,7 +563,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: 1e+10
+    default:
+    - 1e+10
     description: Upper limit with indicated initial state
     enums: []
     list: false
@@ -529,7 +576,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: High constraint back off used in steady state solver only
     enums: []
     list: false
@@ -539,7 +587,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1000'
+    default:
+    - '1000'
     description: High constraint maximum relaxation
     enums: []
     list: false
@@ -549,7 +598,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: High constraint violation quadratic penalty
     enums: []
     list: false
@@ -559,7 +609,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Priority level for high limit
     enums: []
     list: false
@@ -569,7 +620,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: 1=>open integrator
     enums: []
     list: false
@@ -579,7 +631,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Allow StdSolve to modify SetPnt, High and Low. ON = No modifications
     enums:
     - 'ON'
@@ -591,7 +644,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Lock high limit from operator changes
     enums:
     - 'ON'
@@ -603,7 +657,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Lock low limit from operator changes
     enums:
     - 'ON'
@@ -615,7 +670,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: -1e+10
+    default:
+    - -1e+10
     description: Lower limit with indicated initial state
     enums: []
     list: false
@@ -627,7 +683,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Low constraint back off used in steady state solver only
     enums: []
     list: false
@@ -637,7 +694,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1000'
+    default:
+    - '1000'
     description: Low constraint maximum relaxation
     enums: []
     list: false
@@ -647,7 +705,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: Low constraint violation quadratic penalty
     enums: []
     list: false
@@ -657,7 +716,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Priority level for low limit
     enums: []
     list: false
@@ -667,7 +727,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-1'
+    default:
+    - '-1'
     description: User input dValue checking
     enums: []
     list: false
@@ -677,7 +738,8 @@
     tags: []
   - calc: true
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Measurement
     enums: []
     list: false
@@ -687,7 +749,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: 1e+10
+    default:
+    - 1e+10
     description: Measurement validation high limit
     enums: []
     list: false
@@ -697,7 +760,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: -1e+10
+    default:
+    - -1e+10
     description: Measurement validation low limit
     enums: []
     list: false
@@ -707,7 +771,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Initial state of measurement validation
     enums:
     - 'ON'
@@ -719,7 +784,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Operation mode of manipulated variable
     enums:
     - 'OFF'
@@ -732,7 +798,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '5'
+    default:
+    - '5'
     description: Number of equidistant eval pointspec->pCvr->DesHorz
     enums: []
     list: false
@@ -742,7 +809,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Number of decimals
     enums: []
     list: false
@@ -752,7 +820,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '100'
+    default:
+    - '100'
     description: Max plotting range
     enums: []
     list: false
@@ -762,7 +831,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Min plotting range
     enums: []
     list: false
@@ -772,7 +842,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-1'
+    default:
+    - '-1'
     description: Description
     enums: []
     list: false
@@ -805,7 +876,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Set point for controlled variable with initial state indicated
     enums: []
     list: false
@@ -829,7 +901,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Priority level for set point
     enums: []
     list: false
@@ -839,7 +912,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: Rate of change for set point changes down using ramping
     enums: []
     list: false
@@ -849,7 +923,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: Rate of change for set point changes up using ramping
     enums: []
     list: false
@@ -859,7 +934,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Time constant for set point filter
     enums: []
     list: false
@@ -869,7 +945,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '10'
+    default:
+    - '10'
     description: Expected operating span
     enums: []
     list: false
@@ -879,7 +956,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -889,7 +967,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -899,7 +978,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: NOTRANS
+    default:
+    - NOTRANS
     description: Description
     enums:
     - NOTRANS
@@ -912,7 +992,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Unit of measurement
     enums: []
     list: false
@@ -922,7 +1003,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Scaling of use factor weight based on application importance
     enums: []
     list: false
@@ -937,7 +1019,8 @@
 - attributes:
   - calc: false
     dataType: bit31
-    default: '0000000000000000000000000000001'
+    default:
+    - '0000000000000000000000000000001'
     description: Member of group if group bit 1
     enums: []
     list: false
@@ -947,7 +1030,8 @@
     tags: []
   - calc: false
     dataType: bit31
-    default: '0000000000000000000000000000000'
+    default:
+    - '0000000000000000000000000000000'
     description: Critical to group if group bit 1
     enums: []
     list: false
@@ -957,7 +1041,8 @@
     tags: []
   - calc: true
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Measurement
     enums: []
     list: false
@@ -967,7 +1052,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: 1e+10
+    default:
+    - 1e+10
     description: Measurement validation high limit
     enums: []
     list: false
@@ -977,7 +1063,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: -1e+10
+    default:
+    - -1e+10
     description: Measurement validation low limit
     enums: []
     list: false
@@ -987,7 +1074,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Initial state of measurement validation
     enums:
     - 'ON'
@@ -999,7 +1087,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Operation mode of manipulated variable
     enums:
     - 'OFF'
@@ -1012,7 +1101,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Number of decimals
     enums: []
     list: false
@@ -1022,7 +1112,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '100'
+    default:
+    - '100'
     description: Max plotting range
     enums: []
     list: false
@@ -1032,7 +1123,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Min plotting range
     enums: []
     list: false
@@ -1042,7 +1134,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-1'
+    default:
+    - '-1'
     description: Description
     enums: []
     list: false
@@ -1052,7 +1145,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '10'
+    default:
+    - '10'
     description: Expected operating span
     enums: []
     list: false
@@ -1062,7 +1156,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -1072,7 +1167,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -1082,7 +1178,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Unit of measurement
     enums: []
     list: false
@@ -1112,7 +1209,8 @@
     tags: []
   - calc: false
     dataType: bit31
-    default: '0000000000000000000000000000001'
+    default:
+    - '0000000000000000000000000000001'
     description: Member of group if group bit 1
     enums: []
     list: false
@@ -1122,7 +1220,8 @@
     tags: []
   - calc: false
     dataType: bit31
-    default: '0000000000000000000000000000000'
+    default:
+    - '0000000000000000000000000000000'
     description: Critical to group if group bit 1
     enums: []
     list: false
@@ -1132,7 +1231,8 @@
     tags: []
   - calc: true
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Measurement
     enums: []
     list: false
@@ -1142,7 +1242,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: 1e+10
+    default:
+    - 1e+10
     description: Measurement validation high limit
     enums: []
     list: false
@@ -1152,7 +1253,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: -1e+10
+    default:
+    - -1e+10
     description: Measurement validation low limit
     enums: []
     list: false
@@ -1162,7 +1264,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Initial state of measurement validation
     enums:
     - 'ON'
@@ -1174,7 +1277,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Number of decimals
     enums: []
     list: false
@@ -1184,7 +1288,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '100'
+    default:
+    - '100'
     description: Max plotting range
     enums: []
     list: false
@@ -1194,7 +1299,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Min plotting range
     enums: []
     list: false
@@ -1204,7 +1310,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-1'
+    default:
+    - '-1'
     description: Description
     enums: []
     list: false
@@ -1214,7 +1321,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '10'
+    default:
+    - '10'
     description: Expected operating span
     enums: []
     list: false
@@ -1224,7 +1332,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -1234,7 +1343,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -1244,7 +1354,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Unit of measurement
     enums: []
     list: false
@@ -1254,7 +1365,9 @@
     tags: []
   description: Trend Variable Description
   name: Tvr
-  parents: []
+  parents:
+  - DmmyAppl
+  - SmpcAppl
 - attributes:
   - calc: false
     dataType: enum
@@ -1273,7 +1386,8 @@
     tags: []
   - calc: false
     dataType: bit31
-    default: '0000000000000000000000000000001'
+    default:
+    - '0000000000000000000000000000001'
     description: Member of group if group bit 1
     enums: []
     list: false
@@ -1283,7 +1397,8 @@
     tags: []
   - calc: false
     dataType: bit31
-    default: '0000000000000000000000000000000'
+    default:
+    - '0000000000000000000000000000000'
     description: Critical to group if group bit 1
     enums: []
     list: false
@@ -1293,7 +1408,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Max-value for UserInput
     enums: []
     list: false
@@ -1303,7 +1419,8 @@
     tags: []
   - calc: true
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Measurement
     enums: []
     list: false
@@ -1313,7 +1430,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: 1e+10
+    default:
+    - 1e+10
     description: Measurement validation high limit
     enums: []
     list: false
@@ -1323,7 +1441,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: -1e+10
+    default:
+    - -1e+10
     description: Measurement validation low limit
     enums: []
     list: false
@@ -1333,7 +1452,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Initial state of measurement validation
     enums:
     - 'ON'
@@ -1345,7 +1465,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Min value for UserInput
     enums: []
     list: false
@@ -1355,7 +1476,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Number of decimals
     enums: []
     list: false
@@ -1365,7 +1487,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '100'
+    default:
+    - '100'
     description: Max plotting range
     enums: []
     list: false
@@ -1375,7 +1498,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Min plotting range
     enums: []
     list: false
@@ -1385,7 +1509,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-1'
+    default:
+    - '-1'
     description: Description
     enums: []
     list: false
@@ -1395,7 +1520,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '10'
+    default:
+    - '10'
     description: Expected operating span
     enums: []
     list: false
@@ -1405,7 +1531,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -1415,7 +1542,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -1425,7 +1553,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Unit of measurement
     enums: []
     list: false
@@ -1435,7 +1564,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: WRRR
+    default:
+    - WRRR
     description: Set logon level needed for user input
     enums:
     - WWWW
@@ -1463,7 +1593,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Enable user input from RUI and type will be used for inputstyle
     enums:
     - 'OFF'
@@ -1478,7 +1609,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-1'
+    default:
+    - '-1'
     description: UserInput will be validated for changes in value based on this. -1
       disable validation
     enums: []
@@ -1494,7 +1626,8 @@
 - attributes:
   - calc: false
     dataType: enum
-    default: STOPPED
+    default:
+    - STOPPED
     description: Desired mode for MPC
     enums:
     - STOPPED
@@ -1508,7 +1641,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Maximum number of subsequent failed steps before changing mode to
       TRACKING
     enums: []
@@ -1519,7 +1653,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: 1e-10
+    default:
+    - 1e-10
     description: QP feasibility tolerance
     enums: []
     list: false
@@ -1529,7 +1664,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '80'
+    default:
+    - '80'
     description: Lenght of model optimisation horizon
     enums: []
     list: false
@@ -1539,7 +1675,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '80'
+    default:
+    - '80'
     description: Length of prediction horizon in samples
     enums: []
     list: false
@@ -1549,7 +1686,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: First possible ACTIVE sample number
     enums: []
     list: false
@@ -1559,7 +1697,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Description
     enums: []
     list: false
@@ -1569,7 +1708,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: CONSTMVR
+    default:
+    - CONSTMVR
     description: Mvr to be used for open-loop prediction. Constant or optimized Mvrs
     enums:
     - CONSTMVR
@@ -1581,7 +1721,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '25'
+    default:
+    - '25'
     description: Description
     enums: []
     list: false
@@ -1591,7 +1732,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Print sensitivity matrix to out-file (toggle number of samples)
     enums: []
     list: false
@@ -1601,7 +1743,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: QP
+    default:
+    - QP
     description: Solver used for steady state
     enums:
     - QP
@@ -1613,7 +1756,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -1623,7 +1767,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -1650,7 +1795,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1000'
+    default:
+    - '1000'
     description: Maximum number of lines in debug file
     enums: []
     list: false
@@ -1660,7 +1806,8 @@
     tags: []
   - calc: false
     dataType: bit8
-    default: '00000000'
+    default:
+    - '00000000'
     description: Description
     enums: []
     list: false
@@ -1670,7 +1817,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Font Size
     enums: []
     list: false
@@ -1680,7 +1828,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Groups locked for update
     enums: []
     list: false
@@ -1701,7 +1850,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Hide close button to avoid closing by accident
     enums:
     - 'ON'
@@ -1713,7 +1863,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Initial height of SEPTIC window on screen. -1 = No preferences
     enums: []
     list: false
@@ -1723,7 +1874,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Initial positioning of SEPTIC window on screen. -1 = No preferences
     enums: []
     list: false
@@ -1733,7 +1885,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Initial width of SEPTIC window on screen. -1 = No preferences
     enums: []
     list: false
@@ -1743,7 +1896,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Initial x position of SEPTIC window on screen. -1 = No preferences
     enums: []
     list: false
@@ -1753,7 +1907,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Initial y position of SEPTIC window on screen. -1 = No preferences
     enums: []
     list: false
@@ -1763,7 +1918,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Initial Group
     enums: []
     list: false
@@ -1773,7 +1929,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Maximum x pos for screen area for limiting size. 0 = No restriction
     enums: []
     list: false
@@ -1783,7 +1940,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Maximum Y pos for screen area for limiting size. 0 = No restriction
     enums: []
     list: false
@@ -1793,7 +1951,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Minimum x pos for screen area for limiting size. 0 = No restriction
     enums: []
     list: false
@@ -1803,7 +1962,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Minimum y pos for screen area for limiting size. 0 = No restriction
     enums: []
     list: false
@@ -1813,7 +1973,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Minimize window using hide
     enums:
     - 'ON'
@@ -1825,7 +1986,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Password for login into as MNGR
     enums: []
     list: false
@@ -1835,7 +1997,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1440'
+    default:
+    - '1440'
     description: Number of samples stored in buffers
     enums: []
     list: false
@@ -1845,7 +2008,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '80'
+    default:
+    - '80'
     description: Number of samples in model plot
     enums: []
     list: false
@@ -1855,7 +2019,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '80'
+    default:
+    - '80'
     description: Number of samples in prediction
     enums: []
     list: false
@@ -1865,7 +2030,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '10'
+    default:
+    - '10'
     description: Number of seconds per sample
     enums: []
     list: false
@@ -1875,7 +2041,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Adjustment of sample time for OPC
     enums: []
     list: false
@@ -1885,7 +2052,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Password for login into as OPER
     enums: []
     list: false
@@ -1895,7 +2063,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '10'
+    default:
+    - '10'
     description: Upper graph plotting limit
     enums: []
     list: false
@@ -1905,7 +2074,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Password for login into as ROOT
     enums: []
     list: false
@@ -1915,7 +2085,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Show text 1 together with name in plots
     enums:
     - 'ON'
@@ -1927,7 +2098,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Tsec correction for ctime if T error
     enums: []
     list: false
@@ -1937,7 +2109,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -1947,7 +2120,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -1957,7 +2131,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Password for login into as USER
     enums: []
     list: false
@@ -1971,7 +2146,8 @@
 - attributes:
   - calc: false
     dataType: enum
-    default: ACTIVE
+    default:
+    - ACTIVE
     description: Desired Mode
     enums:
     - STOPPED
@@ -1985,7 +2161,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'ON'
+    default:
+    - 'ON'
     description: Description
     enums:
     - 'ON'
@@ -1997,7 +2174,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Number of steps between execution of calcs
     enums: []
     list: false
@@ -2007,7 +2185,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '25'
+    default:
+    - '25'
     description: Upper graph plotting limit
     enums: []
     list: false
@@ -2017,7 +2196,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -2027,7 +2207,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -2042,7 +2223,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '4'
+    default:
+    - '4'
     description: Max severity level to show
     enums: []
     list: false
@@ -2052,7 +2234,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Min severity level to show
     enums: []
     list: false
@@ -2062,7 +2245,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '~'
+    default:
+    - '~'
     description: 'Path to object(s) to show messages. Format: /path/to/obj, No ""'
     enums: []
     list: false
@@ -2072,7 +2256,8 @@
     tags: []
   - calc: false
     dataType: bit31
-    default: '0000000000000000000000000000000'
+    default:
+    - '0000000000000000000000000000000'
     description: Plot group
     enums: []
     list: false
@@ -2087,7 +2272,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '64512'
+    default:
+    - '64512'
     description: Buffer size for send and recieve buffers
     enums: []
     list: false
@@ -2097,7 +2283,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'ON'
+    default:
+    - 'ON'
     description: Send history to RUIs at startup
     enums:
     - 'ON'
@@ -2109,7 +2296,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'ON'
+    default:
+    - 'ON'
     description: Send complete cnfg to RUIs
     enums:
     - 'ON'
@@ -2121,7 +2309,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '12030'
+    default:
+    - '12030'
     description: Master application socket port
     enums: []
     list: false
@@ -2131,7 +2320,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'ON'
+    default:
+    - 'ON'
     description: Send models to RUIs at startup
     enums:
     - 'ON'
@@ -2159,7 +2349,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '64512'
+    default:
+    - '64512'
     description: Size of recieve buffer
     enums: []
     list: false
@@ -2169,7 +2360,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'ON'
+    default:
+    - 'ON'
     description: Sendt multiple history points/models in message
     enums:
     - 'ON'
@@ -2181,7 +2373,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: History length requested by this remote
     enums: []
     list: false
@@ -2191,7 +2384,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '"127.0.0.1"'
+    default:
+    - '"127.0.0.1"'
     description: Master application ip address
     enums: []
     list: false
@@ -2201,7 +2395,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Size of send buffer on master side
     enums: []
     list: false
@@ -2211,7 +2406,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '12035'
+    default:
+    - '12035'
     description: Master application socket port
     enums: []
     list: false
@@ -2226,7 +2422,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Application is allowed, controlled from PCDA
     enums: []
     list: false
@@ -2236,7 +2433,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Number of BAD quality samples before it's reported as BAD
     enums: []
     list: false
@@ -2246,7 +2444,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Check quality of write tags before writing, skip if any tag is bad
     enums:
     - 'ON'
@@ -2258,7 +2457,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Report CPU time used in last step, write to OPC
     enums: []
     list: false
@@ -2268,7 +2468,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Tag for setting desired mode of application 1 = ACTIVE 0=INACTIVE
     enums: []
     list: false
@@ -2278,7 +2479,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -2288,7 +2490,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: For check of control loop, read this tag to PCS, verify that it follows
       Write
     enums: []
@@ -2299,7 +2502,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: For check of control loop, write tag to PCS
     enums: []
     list: false
@@ -2309,7 +2513,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Basic Sopc tag name
     enums: []
     list: false
@@ -2319,7 +2524,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Tag for SEPTIC puls (toggled each step)
     enums: []
     list: false
@@ -2329,7 +2535,8 @@
     tags: []
   - calc: false
     dataType: ''
-    default: '1'
+    default:
+    - '1'
     description: Real time simulation factor, cycle time is Nsecs*RealTimeFac if SITENONE
     enums: []
     list: false
@@ -2339,7 +2546,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Requested update rate from OPC server [secs]
     enums: []
     list: false
@@ -2349,7 +2557,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Specify when the scheduled proc is to run
     enums: []
     list: false
@@ -2359,7 +2568,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: SopcSampleTvrs, in hours. Samples older than limit at receive time
       are rejected
     enums: []
@@ -2370,7 +2580,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -2380,7 +2591,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Report application service factor, write to OPC
     enums: []
     list: false
@@ -2390,7 +2602,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '"Statoil.OPC.Server"'
+    default:
+    - '"Statoil.OPC.Server"'
     description: Name of OPC server
     enums: []
     list: false
@@ -2400,7 +2613,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '"SERVNODE"'
+    default:
+    - '"SERVNODE"'
     description: Node of OPC server if remote
     enums: []
     list: false
@@ -2410,7 +2624,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: AIM_AIMGUI
+    default:
+    - AIM_AIMGUI
     description: Name of site for automatic extension generation
     enums:
     - AIM_AIMGUI
@@ -2421,7 +2636,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Tag for status of application 1 = ACT, 0 = all other modes
     enums: []
     list: false
@@ -2431,7 +2647,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -2441,7 +2658,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -2451,7 +2669,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'ON'
+    default:
+    - 'ON'
     description: Use DCOM auth.level 5 as described in CVE-2021-26414
     enums:
     - 'ON'
@@ -2463,7 +2682,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1000'
+    default:
+    - '1000'
     description: Pause between writing the groups [ms]
     enums: []
     list: false
@@ -2473,7 +2693,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Split writing in multiple groups
     enums: []
     list: false
@@ -2488,7 +2709,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: AUTO = 1
     enums: []
     list: false
@@ -2498,7 +2720,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Cascade/Ratio = 0
     enums: []
     list: false
@@ -2508,7 +2731,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Watchdog/keepalive for HarmonyOPC Watchdog/keepalive for HarmonyOPC
     enums: []
     list: false
@@ -2518,7 +2742,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Controller in computer mode 1 = COMP
     enums: []
     list: false
@@ -2528,7 +2753,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: High limit read from controller
     enums: []
     list: false
@@ -2538,7 +2764,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -2548,7 +2775,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Ideal value tag
     enums: []
     list: false
@@ -2558,7 +2786,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Low limit read from controller
     enums: []
     list: false
@@ -2568,7 +2797,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Mv active written to PCDA. 1 = Active
     enums: []
     list: false
@@ -2578,7 +2808,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: High limit of manipulated variable written to OPC
     enums: []
     list: false
@@ -2588,7 +2819,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Ideal value of manipulated variable written to OPC
     enums: []
     list: false
@@ -2598,7 +2830,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Low limit of manipulated variable written to OPC
     enums: []
     list: false
@@ -2608,7 +2841,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Max down of manipulated variable written to OPC
     enums: []
     list: false
@@ -2618,7 +2852,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Max up of manipulated variable written to OPC
     enums: []
     list: false
@@ -2628,7 +2863,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Mv desired active from PCDA. 1 = Active 0 = Tracking
     enums: []
     list: false
@@ -2638,7 +2874,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -2648,7 +2885,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Not valid tag 1 = Not valid
     enums: []
     list: false
@@ -2658,7 +2896,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Offset of values on read/write
     enums: []
     list: false
@@ -2668,7 +2907,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Process Value tag
     enums: []
     list: false
@@ -2678,7 +2918,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: Scaling of values on read/write
     enums: []
     list: false
@@ -2688,7 +2929,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Calculated set point written to PCDA
     enums: []
     list: false
@@ -2698,7 +2940,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -2708,7 +2951,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -2718,7 +2962,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Command controller to computer mode
     enums: []
     list: false
@@ -2728,7 +2973,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Command controller to local mode
     enums: []
     list: false
@@ -2738,7 +2984,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Output tracking
     enums: []
     list: false
@@ -2748,7 +2995,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Windup high tag. 1 = Windup high
     enums: []
     list: false
@@ -2758,7 +3006,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Windup low tag. 1 = Windup low
     enums: []
     list: false
@@ -2773,7 +3022,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Cv active tag
     enums: []
     list: false
@@ -2783,7 +3033,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: High limit write tag
     enums: []
     list: false
@@ -2793,7 +3044,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Low limit write tag
     enums: []
     list: false
@@ -2803,7 +3055,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Set point write tag
     enums: []
     list: false
@@ -2813,7 +3066,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -2823,7 +3077,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Tag for Cvr
     enums: []
     list: false
@@ -2833,7 +3088,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: High limit of Cv, read from system
     enums: []
     list: false
@@ -2843,7 +3099,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Id tag
     enums: []
     list: false
@@ -2853,7 +3110,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Low limit of Cv, read from system
     enums: []
     list: false
@@ -2863,7 +3121,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Measurement tag
     enums: []
     list: false
@@ -2873,7 +3132,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Not valid tag 1 = Not valid
     enums: []
     list: false
@@ -2883,7 +3143,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Offset of values on read/write
     enums: []
     list: false
@@ -2893,7 +3154,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: Scaling of values on read/write
     enums: []
     list: false
@@ -2903,7 +3165,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Set point tag
     enums: []
     list: false
@@ -2913,7 +3176,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -2923,7 +3187,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -2938,7 +3203,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -2948,7 +3214,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -2958,7 +3225,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -2968,7 +3236,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -2978,7 +3247,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Measurement tag
     enums: []
     list: false
@@ -2988,7 +3258,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Not valid tag. 1 = Not Valid
     enums: []
     list: false
@@ -2998,7 +3269,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Offset of values on read/write
     enums: []
     list: false
@@ -3008,7 +3280,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: Scaling of values on read/write
     enums: []
     list: false
@@ -3018,7 +3291,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -3028,7 +3302,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -3043,7 +3318,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -3053,7 +3329,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -3063,7 +3340,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Measurement tag to write
     enums: []
     list: false
@@ -3073,7 +3351,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Not valid tag. 1 = Not Valid
     enums: []
     list: false
@@ -3083,7 +3362,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -3093,7 +3373,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -3108,7 +3389,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -3118,7 +3400,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -3128,7 +3411,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -3138,7 +3422,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -3148,7 +3433,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -3163,7 +3449,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Measurement tag
     enums: []
     list: false
@@ -3173,7 +3460,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Not valid tag. 1 = Not Valid
     enums: []
     list: false
@@ -3183,7 +3471,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Offset of values on read/write
     enums: []
     list: false
@@ -3193,7 +3482,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '1'
+    default:
+    - '1'
     description: Scaling of values on read/write
     enums: []
     list: false
@@ -3203,7 +3493,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -3213,7 +3504,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -3223,7 +3515,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -3233,7 +3526,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -3248,7 +3542,8 @@
 - attributes:
   - calc: false
     dataType: enum
-    default: 'ON'
+    default:
+    - 'ON'
     description: Use autoscaling in plots belonging to this group
     enums:
     - 'ON'
@@ -3260,7 +3555,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '12'
+    default:
+    - '12'
     description: Cols to use in a gridded group
     enums: []
     list: false
@@ -3270,7 +3566,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Id for the group
     enums: []
     list: false
@@ -3280,7 +3577,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '4320'
+    default:
+    - '4320'
     description: Length (in samples/steps) of history-part for plots belonging to
       this group
     enums: []
@@ -3303,7 +3601,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '180'
+    default:
+    - '180'
     description: Length (in samples/steps) of prediction-part for plots belonging
       to this group
     enums: []
@@ -3314,7 +3613,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '20'
+    default:
+    - '20'
     description: Rows to use in a gridded group
     enums: []
     list: false
@@ -3324,7 +3624,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Use span-scaling in plots belonging to this group
     enums:
     - 'ON'
@@ -3336,7 +3637,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Show x-axis in plots belonging to this group
     enums:
     - 'ON'
@@ -3348,7 +3650,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Show grid lines for x-axis in plots belonging to this group
     enums:
     - 'ON'
@@ -3360,7 +3663,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'ON'
+    default:
+    - 'ON'
     description: Show y-axis in plots belonging to this group
     enums:
     - 'ON'
@@ -3372,7 +3676,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Show grid lines for y-axis in plots belonging to this group
     enums:
     - 'ON'
@@ -3389,7 +3694,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -3399,7 +3705,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '5'
+    default:
+    - '5'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -3409,7 +3716,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '16'
+    default:
+    - '16'
     description: Width of Group column for table items (number of chars)
     enums: []
     list: false
@@ -3419,7 +3727,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '8'
+    default:
+    - '8'
     description: Width of Name/Id column for table items (number of chars)
     enums: []
     list: false
@@ -3429,7 +3738,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -3439,7 +3749,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '4'
+    default:
+    - '4'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -3449,7 +3760,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '12'
+    default:
+    - '12'
     description: Width of description column for table items (number of chars)
     enums: []
     list: false
@@ -3459,7 +3771,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Width of numeric columns for table items (number of chars)
     enums: []
     list: false
@@ -3497,7 +3810,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description
     enums: []
     list: false
@@ -3560,7 +3874,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of Tvrs
     enums: []
     list: false
@@ -3586,7 +3901,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Size offset between heading and normal text
     enums: []
     list: false
@@ -3596,7 +3912,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Heading text
     enums: []
     list: false
@@ -3606,11 +3923,13 @@
     tags: []
   description: Heading
   name: Heading
-  parents: []
+  parents:
+  - Table
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Description
     enums: []
     list: false
@@ -3620,7 +3939,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Heading
     enums: []
     list: false
@@ -3630,7 +3950,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Description
     enums: []
     list: false
@@ -3640,7 +3961,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: StatusXvr
     enums: []
     list: false
@@ -3655,7 +3977,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Description
     enums: []
     list: false
@@ -3665,7 +3988,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Heading
     enums: []
     list: false
@@ -3675,7 +3999,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Description
     enums: []
     list: false
@@ -3685,7 +4010,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: StatusXvr
     enums: []
     list: false
@@ -3700,7 +4026,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Heading
     enums: []
     list: false
@@ -3710,7 +4037,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Status xvrs
     enums: []
     list: true
@@ -3720,7 +4048,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Tool tip
     enums: []
     list: false
@@ -3730,7 +4059,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Xvrs
     enums: []
     list: true
@@ -3746,7 +4076,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Size of spacer
     enums: []
     list: false
@@ -3761,7 +4092,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded displaygroup
     enums: []
     list: false
@@ -3771,7 +4103,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -3781,7 +4114,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded displaygroup
     enums: []
     list: false
@@ -3791,7 +4125,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -3806,7 +4141,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: position in a gridded displaygroup
     enums: []
     list: false
@@ -3816,7 +4152,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: widtht of item in a gridded group
     enums: []
     list: false
@@ -3837,7 +4174,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '100'
+    default:
+    - '100'
     description: Max value y-range
     enums: []
     list: false
@@ -3847,7 +4185,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Min value y-range
     enums: []
     list: false
@@ -3857,7 +4196,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: position in a gridded displaygroup
     enums: []
     list: false
@@ -3867,7 +4207,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: height of item in a gridded group
     enums: []
     list: false
@@ -3877,7 +4218,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Plot title/heading
     enums: []
     list: false
@@ -3904,7 +4246,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -3914,7 +4257,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -3924,7 +4268,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -3934,7 +4279,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -3949,7 +4295,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -3959,7 +4306,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -3969,7 +4317,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -3979,7 +4328,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -3994,7 +4344,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -4004,7 +4355,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -4014,7 +4366,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -4024,7 +4377,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -4039,7 +4393,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -4049,7 +4404,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -4059,7 +4415,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -4069,7 +4426,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -4084,7 +4442,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -4094,7 +4453,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -4104,7 +4464,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -4114,7 +4475,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -4129,7 +4491,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -4139,7 +4502,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -4149,7 +4513,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -4159,7 +4524,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -4174,7 +4540,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -4184,7 +4551,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -4194,7 +4562,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -4204,7 +4573,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -4219,7 +4589,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -4229,7 +4600,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '5'
+    default:
+    - '5'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -4239,7 +4611,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Use legend for plot
     enums:
     - 'ON'
@@ -4251,7 +4624,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -4261,7 +4635,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '4'
+    default:
+    - '4'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -4271,7 +4646,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Description
     enums:
     - 'ON'
@@ -4283,7 +4659,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Title of plot
     enums: []
     list: false
@@ -4293,7 +4670,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '100'
+    default:
+    - '100'
     description: Maximum value along x-axis
     enums: []
     list: false
@@ -4303,7 +4681,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-100'
+    default:
+    - '-100'
     description: Minimum value along x-axis
     enums: []
     list: false
@@ -4313,7 +4692,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '100'
+    default:
+    - '100'
     description: Span of x
     enums: []
     list: false
@@ -4323,7 +4703,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Title of x-axis
     enums: []
     list: false
@@ -4333,7 +4714,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '100'
+    default:
+    - '100'
     description: Maximum value along y-axis
     enums: []
     list: false
@@ -4343,7 +4725,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-100'
+    default:
+    - '-100'
     description: Minimum value along y-axis
     enums: []
     list: false
@@ -4353,7 +4736,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '100'
+    default:
+    - '100'
     description: Span of y
     enums: []
     list: false
@@ -4363,7 +4747,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Title of y-axis
     enums: []
     list: false
@@ -4378,7 +4763,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '"black"'
+    default:
+    - '"black"'
     description: Color
     enums: []
     list: false
@@ -4388,7 +4774,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: Solid
+    default:
+    - Solid
     description: Line style
     enums:
     - Solid
@@ -4402,7 +4789,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Text
     enums: []
     list: false
@@ -4412,7 +4800,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width
     enums: []
     list: false
@@ -4451,7 +4840,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '"black"'
+    default:
+    - '"black"'
     description: Color of points
     enums: []
     list: false
@@ -4461,7 +4851,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Object id
     enums: []
     list: false
@@ -4471,7 +4862,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: Solid
+    default:
+    - Solid
     description: Plotting style of line
     enums:
     - Solid
@@ -4485,7 +4877,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Text used for legend
     enums: []
     list: false
@@ -4495,7 +4888,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '0'
+    default:
+    - '0'
     description: Description
     enums: []
     list: false
@@ -4505,7 +4899,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Line width
     enums: []
     list: false
@@ -4542,7 +4937,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '"black"'
+    default:
+    - '"black"'
     description: Color of points
     enums: []
     list: false
@@ -4552,7 +4948,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Number of samples included in the plot
     enums: []
     list: false
@@ -4562,7 +4959,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Text used for legend
     enums: []
     list: false
@@ -4572,7 +4970,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Size of point
     enums: []
     list: false
@@ -4582,7 +4981,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Name of variable along x-axis
     enums: []
     list: false
@@ -4592,7 +4992,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Name of variable along y-axis
     enums: []
     list: false
@@ -4607,7 +5008,8 @@
 - attributes:
   - calc: false
     dataType: enum
-    default: 'OFF'
+    default:
+    - 'OFF'
     description: Autoscale
     enums:
     - 'ON'
@@ -4619,7 +5021,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -4629,7 +5032,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -4639,7 +5043,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-1'
+    default:
+    - '-1'
     description: X-position of legend
     enums: []
     list: false
@@ -4649,7 +5054,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '100'
+    default:
+    - '100'
     description: Y-position of legend
     enums: []
     list: false
@@ -4659,7 +5065,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -4669,7 +5076,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -4679,7 +5087,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Title
     enums: []
     list: false
@@ -4700,7 +5109,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: X-axis title
     enums: []
     list: false
@@ -4710,7 +5120,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '100'
+    default:
+    - '100'
     description: Maximum value y
     enums: []
     list: false
@@ -4720,7 +5131,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '-100'
+    default:
+    - '-100'
     description: Minimum value y
     enums: []
     list: false
@@ -4730,7 +5142,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Y-axis title
     enums: []
     list: false
@@ -4745,7 +5158,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '"black"'
+    default:
+    - '"black"'
     description: Color
     enums: []
     list: false
@@ -4755,7 +5169,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: Cross
+    default:
+    - Cross
     description: Marker
     enums:
     - NoMarker
@@ -4773,7 +5188,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: Solid
+    default:
+    - Solid
     description: Line style
     enums:
     - Solid
@@ -4787,7 +5203,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -4808,7 +5225,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width
     enums: []
     list: false
@@ -4818,11 +5236,13 @@
     tags: []
   description: Chart Serie
   name: ChartSerie
-  parents: []
+  parents:
+  - DisplayGroup
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded displaygroup
     enums: []
     list: false
@@ -4832,7 +5252,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -4842,7 +5263,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: File name of image
     enums: []
     list: false
@@ -4852,7 +5274,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded displaygroup
     enums: []
     list: false
@@ -4862,7 +5285,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -4877,7 +5301,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '"white"'
+    default:
+    - '"white"'
     description: Background color of value
     enums: []
     list: false
@@ -4887,7 +5312,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: X-position of upper left corner of label relative to image in pixels.
       X1 < X2
     enums: []
@@ -4898,7 +5324,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: X-position of lower right corner of label relative to image in pixels.
       X1 < X2
     enums: []
@@ -4909,7 +5336,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Y-position of lower right corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
@@ -4920,7 +5348,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Y-position of upper left corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
@@ -4936,7 +5365,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: X-position of upper left corner of label relative to image in pixels.
       X1 < X2
     enums: []
@@ -4947,7 +5377,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: X-position of lower right corner of label relative to image in pixels.
       X1 < X2
     enums: []
@@ -4958,7 +5389,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Y-position of lower right corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
@@ -4969,7 +5401,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Y-position of upper left corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
@@ -4985,7 +5418,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Background color
     enums: []
     list: false
@@ -4995,7 +5429,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Heading of collection
     enums: []
     list: false
@@ -5005,7 +5440,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -5026,7 +5462,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: X-position of upper left corner of label relative to image in pixels.
       X1 < X2
     enums: []
@@ -5037,7 +5474,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: X-position of lower right corner of label relative to image in pixels.
       X1 < X2
     enums: []
@@ -5048,7 +5486,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Y-position of lower right corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
@@ -5070,7 +5509,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Y-position of upper left corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
@@ -5086,7 +5526,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: BackgroundColor
     enums: []
     list: false
@@ -5096,7 +5537,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Text color
     enums: []
     list: false
@@ -5106,7 +5548,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: X-position of upper left corner of label relative to image in pixels.
       X1 < X2
     enums: []
@@ -5117,7 +5560,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: X-position of lower right corner of label relative to image in pixels.
       X1 < X2
     enums: []
@@ -5128,7 +5572,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Y-position of lower right corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
@@ -5139,7 +5584,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Y-position of upper left corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
@@ -5155,7 +5601,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '"black"'
+    default:
+    - '"black"'
     description: Color
     enums: []
     list: false
@@ -5165,7 +5612,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Line width
     enums: []
     list: false
@@ -5175,7 +5623,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Target group
     enums: []
     list: false
@@ -5240,7 +5689,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: X-position of upper left corner of label relative to image in pixels.
       X1 < X2
     enums: []
@@ -5251,7 +5701,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: X-position of lower right corner of label relative to image in pixels.
       X1 < X2
     enums: []
@@ -5262,7 +5713,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Y-position of lower right corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
@@ -5273,7 +5725,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Y-position of upper left corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
@@ -5289,7 +5742,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -5310,7 +5764,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -5342,7 +5797,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -5363,7 +5819,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -5411,7 +5868,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -5421,7 +5879,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -5453,7 +5912,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -5463,7 +5923,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -5478,7 +5939,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -5488,7 +5950,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -5498,7 +5961,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '-1'
+    default:
+    - '-1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -5508,7 +5972,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: '1'
+    default:
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -5528,7 +5993,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Name of FMU model
     enums: []
     list: false
@@ -5538,7 +6004,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text
     enums: []
     list: false
@@ -5548,7 +6015,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text
     enums: []
     list: false
@@ -5568,7 +6036,8 @@
 - attributes:
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Description
     enums: []
     list: false
@@ -5578,7 +6047,8 @@
     tags: []
   - calc: false
     dataType: float
-    default: '0'
+    default:
+    - '0'
     description: Description
     enums: []
     list: false
@@ -5588,7 +6058,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -5598,7 +6069,8 @@
     tags: []
   - calc: false
     dataType: string
-    default: '""'
+    default:
+    - '""'
     description: Free text description of object
     enums: []
     list: false
@@ -5610,3 +6082,68 @@
   name: SubrXvr
   parents:
   - System
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Calc Model
+  name: CalcModl
+  parents:
+  - DmmyAppl
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Algorithm to be executed
+    enums: []
+    list: false
+    name: Alg
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Calculation
+  name: CalcPvr
+  parents:
+  - CalcModl
