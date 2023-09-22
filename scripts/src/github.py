@@ -50,6 +50,7 @@ def getObjectFiles(branch: str):
         "src/Nois.cpp",
         "FMUsrc/MdlFMU.cpp",
         "src/Subr.cpp",
+        "src/Calc.cpp",
     ]
     files = []
     for path in paths:

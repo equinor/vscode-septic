@@ -82,7 +82,7 @@ def parseObjectDoxygenDoc(doxygen: str) -> Optional[SepticObject]:
     description_match = re.search(description_regex, doxygen)
     description = description_match.group(1).strip() if description_match else ""
 
-    parents_regex = r"\\containers\s+\[([\S]*)\]"
+    parents_regex = r"\\containers\s+\[([\S\s]*)\]"
     parents_match = re.search(parents_regex, doxygen)
     parents = (
         [parent.strip() for parent in parents_match.group(1).split(",")]
@@ -176,7 +176,7 @@ def parseAttributeDetails(input: str):
         information["default"] = (
             [e.strip() for e in list_match.group(1).split(",")]
             if list_match
-            else inp.strip()
+            else [inp.strip()]
         )
 
     callbacks = {
