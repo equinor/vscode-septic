@@ -232,7 +232,7 @@ function toSymbolKind(name: string) {
 
 class SepticObjectDocumentation implements ISepticObjectDocumentation {
     name: string;
-    attributes: SepticAttributeDocumentation[];
+    attributes: SepticAttributeDocumentation[] = [];
     description: string;
     parents: string[];
     publicAttributes: string[] = [];
@@ -242,22 +242,46 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
     >();
 
     constructor(input: SepticObjectDocumentationInput) {
+        this.setAttributes(input.attributes);
         this.name = input.name;
-        this.attributes = input.attributes;
         this.description = input.description;
         this.parents = input.parents;
         this.attributes.forEach((attr) => this.attrMap.set(attr.name, attr));
-        this.attributes.forEach((attr) => {
-            if (attr.calc) {
-                this.publicAttributes.push(attr.name);
-            }
-        });
     }
 
     public getAttribute(
         attr: string
     ): SepticAttributeDocumentation | undefined {
         return this.attrMap.get(attr);
+    }
+
+    private setAttributes(attrs: SepticAttributeDocumentation[]) {
+        for (let attr of attrs) {
+            if (attr.calc) {
+                this.publicAttributes.push(attr.name);
+            }
+            if (attr.noCnfg) {
+                continue;
+            }
+            if (attr.postfix.length) {
+                attr.postfix.forEach((pf) => {
+                    this.attributes.push({
+                        description: attr.description,
+                        dataType: attr.dataType,
+                        enums: attr.enums,
+                        list: attr.list,
+                        name: attr.name + pf,
+                        tags: attr.tags,
+                        calc: attr.calc,
+                        postfix: [],
+                        noCnfg: false,
+                        default: attr.default,
+                    });
+                });
+                continue;
+            }
+            this.attributes.push(attr);
+        }
     }
 }
 
