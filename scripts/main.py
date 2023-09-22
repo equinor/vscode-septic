@@ -8,7 +8,7 @@ from src.parse_doxygen import (
 )
 from dataclasses import asdict
 
-OBJECT_BRANCH = "document_objects"
+OBJECT_BRANCH = "main"
 OBJECT_OUTPUT_PATH = "./public/objectsDoc.yaml"
 CALCS_BRANCH = "main"
 CALCS_OUTPUT_PATH = "./public/calcs.yaml"

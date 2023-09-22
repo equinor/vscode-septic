@@ -1,4 +1,4 @@
-# Commit: deeda73
+# Commit: bdee623
 - attributes:
   - calc: false
     dataType: enum
@@ -271,7 +271,7 @@
     - 'OFF'
     description: Operation mode of manipulated variable
     enums:
-    - 'OFF'
+    - STOPPED
     - TRACKING
     - ACTIVE
     list: false
@@ -788,7 +788,7 @@
     - 'OFF'
     description: Operation mode of manipulated variable
     enums:
-    - 'OFF'
+    - STOPPED
     - TRACKING
     - ACTIVE
     list: false
@@ -860,7 +860,7 @@
     description: Relaxation parameter locations
     enums: []
     list: true
-    name: RelaxParam
+    name: RelxParam
     noCnfg: false
     postfix: []
     tags: []
@@ -1091,9 +1091,8 @@
     - 'OFF'
     description: Operation mode of manipulated variable
     enums:
-    - 'OFF'
+    - STOPPED
     - TRACKING
-    - ACTIVE
     list: false
     name: Mode
     noCnfg: false
@@ -2438,7 +2437,7 @@
     description: Number of BAD quality samples before it's reported as BAD
     enums: []
     list: false
-    name: BadCountLim
+    name: BadCountLimit
     noCnfg: false
     postfix: []
     tags: []
@@ -2799,6 +2798,39 @@
     dataType: string
     default:
     - '""'
+    description: Max down of manipulated variable written to OPC
+    enums: []
+    list: false
+    name: MaxDownTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Max up of manipulated variable written to OPC
+    enums: []
+    list: false
+    name: MaxUpTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Measurement tag
+    enums: []
+    list: false
+    name: MeasTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
     description: Mv active written to PCDA. 1 = Active
     enums: []
     list: false
@@ -2843,32 +2875,10 @@
     dataType: string
     default:
     - '""'
-    description: Max down of manipulated variable written to OPC
-    enums: []
-    list: false
-    name: MvMaxDownTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Max up of manipulated variable written to OPC
-    enums: []
-    list: false
-    name: MvMaxUpTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
     description: Mv desired active from PCDA. 1 = Active 0 = Tracking
     enums: []
     list: false
-    name: MvSwitch
+    name: MvSwitchTag
     noCnfg: false
     postfix: []
     tags: []
@@ -3549,7 +3559,7 @@
     - 'ON'
     - 'OFF'
     list: false
-    name: AutoScale
+    name: Autoscale
     noCnfg: false
     postfix: []
     tags: []
@@ -3631,7 +3641,7 @@
     - 'ON'
     - 'OFF'
     list: false
-    name: SpanScale
+    name: Spanscale
     noCnfg: false
     postfix: []
     tags: []
@@ -3721,7 +3731,7 @@
     description: Width of Group column for table items (number of chars)
     enums: []
     list: false
-    name: GroupColSize
+    name: GroupsColSize
     noCnfg: false
     postfix: []
     tags: []
@@ -3835,6 +3845,17 @@
     noCnfg: false
     postfix: []
     tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description
+    enums: []
+    list: false
+    name: Text
+    noCnfg: false
+    postfix: []
+    tags: []
   description: List of manipulated variables with associated values
   name: MvrList
   parents:
@@ -3851,6 +3872,17 @@
     noCnfg: false
     postfix: []
     tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description
+    enums: []
+    list: false
+    name: Text
+    noCnfg: false
+    postfix: []
+    tags: []
   description: List of disturbance variables with associated values
   name: DvrList
   parents:
@@ -3864,6 +3896,17 @@
     enums: []
     list: true
     name: Evrs
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description
+    enums: []
+    list: false
+    name: Text
     noCnfg: false
     postfix: []
     tags: []
@@ -4053,7 +4096,7 @@
     description: Tool tip
     enums: []
     list: false
-    name: ToolTip
+    name: Tooltip
     noCnfg: false
     postfix: []
     tags: []
@@ -5015,7 +5058,7 @@
     - 'ON'
     - 'OFF'
     list: false
-    name: AutoScale
+    name: Autoscale
     noCnfg: false
     postfix: []
     tags: []
@@ -5338,11 +5381,11 @@
     dataType: int
     default:
     - '-1'
-    description: Y-position of lower right corner of label relative to image in pixels.
+    description: Y-position of upper left corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
     list: false
-    name: X2
+    name: Y1
     noCnfg: false
     postfix: []
     tags: []
@@ -5350,11 +5393,11 @@
     dataType: int
     default:
     - '-1'
-    description: Y-position of upper left corner of label relative to image in pixels.
+    description: Y-position of lower right corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
     list: false
-    name: Y1
+    name: Y2
     noCnfg: false
     postfix: []
     tags: []
@@ -5391,11 +5434,11 @@
     dataType: int
     default:
     - '-1'
-    description: Y-position of lower right corner of label relative to image in pixels.
+    description: Y-position of upper left corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
     list: false
-    name: X2
+    name: Y1
     noCnfg: false
     postfix: []
     tags: []
@@ -5403,11 +5446,11 @@
     dataType: int
     default:
     - '-1'
-    description: Y-position of upper left corner of label relative to image in pixels.
+    description: Y-position of lower right corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
     list: false
-    name: Y1
+    name: Y2
     noCnfg: false
     postfix: []
     tags: []
@@ -5455,7 +5498,7 @@
     - '""'
     description: Text to be displayed together with xvr
     enums: []
-    list: false
+    list: true
     name: Texts
     noCnfg: false
     postfix: []
@@ -5485,24 +5528,12 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Y-position of lower right corner of label relative to image in pixels.
-      Y1 < Y2
-    enums: []
-    list: false
-    name: X2
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
     dataType: string
     default:
     - '""'
     description: List of xvrs to be included
     enums: []
-    list: false
+    list: true
     name: Xvrs
     noCnfg: false
     postfix: []
@@ -5516,6 +5547,18 @@
     enums: []
     list: false
     name: Y1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Y-position of lower right corner of label relative to image in pixels.
+      Y1 < Y2
+    enums: []
+    list: false
+    name: Y2
     noCnfg: false
     postfix: []
     tags: []
@@ -5574,11 +5617,11 @@
     dataType: int
     default:
     - '-1'
-    description: Y-position of lower right corner of label relative to image in pixels.
+    description: Y-position of upper left corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
     list: false
-    name: X2
+    name: Y1
     noCnfg: false
     postfix: []
     tags: []
@@ -5586,11 +5629,11 @@
     dataType: int
     default:
     - '-1'
-    description: Y-position of upper left corner of label relative to image in pixels.
+    description: Y-position of lower right corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
     list: false
-    name: Y1
+    name: Y2
     noCnfg: false
     postfix: []
     tags: []
@@ -5715,11 +5758,11 @@
     dataType: int
     default:
     - '-1'
-    description: Y-position of lower right corner of label relative to image in pixels.
+    description: Y-position of upper left corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
     list: false
-    name: X2
+    name: Y1
     noCnfg: false
     postfix: []
     tags: []
@@ -5727,11 +5770,11 @@
     dataType: int
     default:
     - '-1'
-    description: Y-position of upper left corner of label relative to image in pixels.
+    description: Y-position of lower right corner of label relative to image in pixels.
       Y1 < Y2
     enums: []
     list: false
-    name: Y1
+    name: Y2
     noCnfg: false
     postfix: []
     tags: []
@@ -6028,7 +6071,40 @@
   name: FMUModl
   parents:
   - FMUProc
-- attributes: []
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Name of FMU model
+    enums: []
+    list: false
+    name: FMUname
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
   description: FMUProc
   name: FMUProc
   parents:
