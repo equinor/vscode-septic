@@ -200,6 +200,7 @@ const objectNameMap = new Map<string, string>([
     ["dvr", "Dvr"],
     ["evr", "Evr"],
     ["tvr", "Tvr"],
+    ["smpcappl", "SmpcAppl"],
 ]);
 
 export const VALUE = "Value";
