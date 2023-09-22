@@ -27,6 +27,11 @@ import {
     SepticAttributeDocumentation,
     SepticTokenType,
     SepticObjectInfo,
+    fromCalcIndexToParamIndex,
+    SepticCalcParameterInfo,
+    VALUE,
+    getCalcParamIndexInfo,
+    getIndexOfParam,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -52,7 +57,7 @@ export enum DiagnosticCode {
     invalidAlg = "E201",
     unknownCalc = "E202",
     invalidDataTypeArg = "W203", // Possible error
-    invalidNumberOfArgs = "W204", // Possible error
+    invalidNumberOfParams = "W204", // Possible error
     missingValueNonOptionalArg = "W205", // Might be removed
     algMaxLength = "E206",
     missingPublicProperty = "E207", // Combine with under
@@ -287,11 +292,7 @@ export function validateAlgVariable(
         referencedObjects[0].type
     )?.publicAttributes;
 
-    if (!publicAttributes) {
-        return [];
-    }
-
-    if (!publicAttributes.includes(variableParts[1])) {
+    if (!publicAttributes?.includes(variableParts[1])) {
         return [
             createDiagnostic(
                 DiagnosticSeverity.Error,
@@ -324,7 +325,7 @@ export function validateCalc(
     const calcMetaInfo = metaInfoProvider.getCalc(calc.identifier);
     if (!calcMetaInfo) {
         const diagnostic = createDiagnostic(
-            DiagnosticSeverity.Error,
+            DiagnosticSeverity.Warning,
             {
                 start: doc.positionAt(offsetStartAlg + calc.start),
                 end: doc.positionAt(offsetStartAlg + calc.end),
@@ -348,82 +349,169 @@ export function validateCalc(
 
 function validateCalcParams(
     calc: AlgCalc,
-    calcMetaInfo: SepticCalcInfo,
+    calcInfo: SepticCalcInfo,
     refProvider: SepticReferenceProvider,
     doc: ITextDocument,
     offsetStartAlg: number
 ): Diagnostic[] {
     let diagnostics: Diagnostic[] = [];
-    let indexCalcParams = 0;
-    let indexParamInfo = 0;
-    for (let param of calc.params) {
-        if (indexCalcParams >= calc.params.length) {
-            break;
+    for (let index = 0; index < calc.params.length; index++) {
+        let paramExpr = calc.params[index];
+        let calcParamIndex = fromCalcIndexToParamIndex(calcInfo, index);
+        let paramInfo = calcInfo.parameters[calcParamIndex];
+        if (!paramInfo) {
+            continue;
         }
-
-        indexParamInfo += arityToNum(param.arity);
-        while (
-            indexCalcParams < indexParamInfo &&
-            indexCalcParams < calc.params.length
-        ) {
-            if (
-                param.arity !== "optional" &&
-                calc.params[indexCalcParams] instanceof AlgLiteral
-            ) {
-                let paramCalc = calc.params[indexCalcParams] as AlgLiteral;
-                if (!paramCalc.value.length) {
-                    diagnostics.push(
-                        createDiagnostic(
-                            DiagnosticSeverity.Error,
-                            {
-                                start: doc.positionAt(
-                                    offsetStartAlg +
-                                        calc.params[indexCalcParams].start
-                                ),
-                                end: doc.positionAt(
-                                    offsetStartAlg +
-                                        calc.params[indexCalcParams].end
-                                ),
-                            },
-                            `Missing value for non-optional parameter`,
-                            DiagnosticCode.missingValueNonOptionalArg
-                        )
-                    );
-                }
-            }
-            if (param.type === "Value") {
-                indexCalcParams += 1;
-                continue;
-            }
-            if (
-                checkParamType(
-                    calc.params[indexCalcParams],
-                    [param.type],
-                    refProvider
-                )
-            ) {
-                indexCalcParams += 1;
-                continue;
-            }
+        if (isEmptyNonOptionalParam(paramExpr, paramInfo)) {
             diagnostics.push(
                 createDiagnostic(
-                    DiagnosticSeverity.Error,
+                    DiagnosticSeverity.Warning,
                     {
-                        start: doc.positionAt(
-                            offsetStartAlg + calc.params[indexCalcParams].start
-                        ),
-                        end: doc.positionAt(
-                            offsetStartAlg + calc.params[indexCalcParams].end
-                        ),
+                        start: doc.positionAt(offsetStartAlg + paramExpr.start),
+                        end: doc.positionAt(offsetStartAlg + paramExpr.end),
                     },
-                    `Wrong data type for parameter. Expected data type: ${param.type}`,
+                    `Missing value for non-optional parameter`,
+                    DiagnosticCode.missingValueNonOptionalArg
+                )
+            );
+        }
+        if (!checkValidParamType(paramExpr, paramInfo.datatype, refProvider)) {
+            diagnostics.push(
+                createDiagnostic(
+                    DiagnosticSeverity.Warning,
+                    {
+                        start: doc.positionAt(offsetStartAlg + paramExpr.start),
+                        end: doc.positionAt(offsetStartAlg + paramExpr.end),
+                    },
+                    `Wrong data type for parameter. Expected data type: ${paramInfo.datatype}`,
                     DiagnosticCode.invalidDataTypeArg
                 )
             );
-            indexCalcParams += 1;
         }
     }
+    diagnostics.push(
+        ...validateCalcParamsLength(calc, calcInfo, doc, offsetStartAlg)
+    );
     return diagnostics;
+}
+
+function validateCalcParamsLength(
+    calc: AlgCalc,
+    calcInfo: SepticCalcInfo,
+    doc: ITextDocument,
+    offsetStartAlg: number
+): Diagnostic[] {
+    let paramInfo = getCalcParamIndexInfo(calcInfo);
+    let numFixedParams = paramInfo.fixedLengthParams.length
+        ? paramInfo.fixedLengthParams[paramInfo.fixedLengthParams.length - 1]
+        : 0;
+    let numVariableParams = paramInfo.variableLengthParams.num;
+    let numParams = calc.params.length;
+
+    if (numParams < numFixedParams - paramInfo.numOptionalParams) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Warning,
+                {
+                    start: doc.positionAt(offsetStartAlg + calc.start),
+                    end: doc.positionAt(offsetStartAlg + calc.end),
+                },
+                `Missing parameter(s). Expected min ${
+                    numFixedParams - paramInfo.numOptionalParams
+                } params but got ${numParams}`,
+                DiagnosticCode.invalidNumberOfParams
+            ),
+        ];
+    }
+    if (!numVariableParams) {
+        if (numParams > numFixedParams) {
+            return [
+                createDiagnostic(
+                    DiagnosticSeverity.Warning,
+                    {
+                        start: doc.positionAt(offsetStartAlg + calc.start),
+                        end: doc.positionAt(offsetStartAlg + calc.end),
+                    },
+                    `Too many parameters. Expected max ${numFixedParams} params but got ${numParams}`,
+                    DiagnosticCode.invalidNumberOfParams
+                ),
+            ];
+        }
+        return [];
+    }
+    if (paramInfo.variableLengthParams.exactLength) {
+        let indexDesignatorParam = getIndexOfParam(
+            paramInfo.variableLengthParams.exactLength,
+            calcInfo
+        );
+        if (!indexDesignatorParam) {
+            return [];
+        }
+        let designatorValue = getValueOfCalcParam(indexDesignatorParam, calc);
+        if (designatorValue === -1) {
+            return [];
+        }
+        let expectedNumParams =
+            numVariableParams * designatorValue + numFixedParams;
+        if (numParams !== expectedNumParams) {
+            return [
+                createDiagnostic(
+                    DiagnosticSeverity.Warning,
+                    {
+                        start: doc.positionAt(offsetStartAlg + calc.start),
+                        end: doc.positionAt(offsetStartAlg + calc.end),
+                    },
+                    `Invalid number of parameters. Expected ${expectedNumParams} params but got ${numParams}`,
+                    DiagnosticCode.invalidNumberOfParams
+                ),
+            ];
+        }
+        return [];
+    }
+
+    if (
+        (numParams - numFixedParams) % numVariableParams !== 0 ||
+        numParams === 0
+    ) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Warning,
+                {
+                    start: doc.positionAt(offsetStartAlg + calc.start),
+                    end: doc.positionAt(offsetStartAlg + calc.end),
+                },
+                `Invalid number of parameters.`,
+                DiagnosticCode.invalidNumberOfParams
+            ),
+        ];
+    }
+    return [];
+}
+
+function getValueOfCalcParam(index: number, calc: AlgCalc) {
+    if (index >= calc.params.length) {
+        return -1;
+    }
+    let param = calc.params[index];
+    if (!(param instanceof AlgLiteral)) {
+        return -1;
+    }
+    let literal = param as AlgLiteral;
+    if (literal.type !== AlgTokenType.number) {
+        return -1;
+    }
+    return parseInt(param.value);
+}
+
+function isEmptyNonOptionalParam(
+    expr: AlgExpr,
+    paramInfo: SepticCalcParameterInfo
+) {
+    return (
+        expr instanceof AlgLiteral &&
+        !expr.value.length &&
+        paramInfo.arity !== "?"
+    );
 }
 
 function checkAlgLength(alg: string) {
@@ -433,24 +521,29 @@ function checkAlgLength(alg: string) {
     return alg.length <= maxAlgLength;
 }
 
-function checkParamType(
-    param: AlgExpr,
-    type: string[],
+function checkValidParamType(
+    expr: AlgExpr,
+    types: string[],
     refProvider: SepticReferenceProvider
 ): boolean {
-    if (!(param instanceof AlgLiteral)) {
+    if (types[0] === VALUE) {
+        return true;
+    }
+    if (!isAlgExprObjectReference(expr)) {
         return false;
     }
-    if (param.type !== AlgTokenType.identifier) {
-        return false;
-    }
-    let objects = refProvider.getObjectsByIdentifier(param.value);
+    let exprLiteral = expr as AlgLiteral;
+    let objects = refProvider.getObjectsByIdentifier(exprLiteral.value);
     for (let obj of objects) {
-        if (obj.isType(...type)) {
+        if (obj.isType(...types)) {
             return true;
         }
     }
     return false;
+}
+
+function isAlgExprObjectReference(expr: AlgExpr) {
+    return expr instanceof AlgLiteral && expr.type === AlgTokenType.identifier;
 }
 
 export function validateObjects(
@@ -600,7 +693,7 @@ export function validateObjectReferences(
     return diagnostics;
 }
 
-function validateAttribute(
+export function validateAttribute(
     attr: Attribute,
     doc: ITextDocument,
     objectDoc: ISepticObjectDocumentation
@@ -805,7 +898,7 @@ export function checkAttributeDataType(
     switch (attrDoc.dataType) {
         case "int":
             return isInt(attrValue.value);
-        case "double":
+        case "float":
             return attrValue.type === SepticTokenType.numeric;
         case "string":
             return attrValue.type === SepticTokenType.string;

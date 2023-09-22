@@ -106,7 +106,7 @@ export class SepticMetaInfoProvider {
                     calc.detailedDescription ?? "Detailed description",
                 signature: calc.signature ?? calc.name + "()",
                 retr: calc.retr ?? "",
-                parameters: calc.parameters ?? [],
+                parameters: updateDatatypeParams(calc.parameters),
                 quality: calc.quality?.replace(/\r?\n/g, "") ?? "",
                 value: calc.value?.replace(/\r?\n/g, "") ?? "",
             };
@@ -175,6 +175,41 @@ export class SepticMetaInfoProvider {
         updateObjectHierarchyLevels(objectTree);
         return objectTree;
     }
+}
+
+function updateDatatypeParams(params: SepticCalcParameterInfo[] | undefined) {
+    if (!params) {
+        return [];
+    }
+    return params.map((param) => {
+        return {
+            arity: param.arity,
+            description: param.description,
+            name: param.name,
+            direction: param.direction,
+            datatype: param.datatype.map((type) => {
+                return datatypeToObjectName(type);
+            }),
+        };
+    });
+}
+
+const objectNameMap = new Map<string, string>([
+    ["mvr", "Mvr"],
+    ["cvr", "Cvr"],
+    ["dvr", "Dvr"],
+    ["evr", "Evr"],
+    ["tvr", "Tvr"],
+]);
+
+export const VALUE = "Value";
+
+function datatypeToObjectName(type: string) {
+    let objectName = objectNameMap.get(type);
+    if (!objectName) {
+        return VALUE;
+    }
+    return objectName;
 }
 
 function toSymbolKind(name: string) {
@@ -300,7 +335,7 @@ export interface SepticCalcParameterInfo {
     name: string;
     description: string;
     direction: string;
-    type: string;
+    datatype: string[];
     arity: string;
 }
 

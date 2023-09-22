@@ -86,8 +86,8 @@ export function formatCalcMarkdown(
 
 export function formatCalcParameter(param: SepticCalcParameterInfo) {
     let formattedParam = `@param[${param.direction}]: ${param.name} - ${param.description}`;
-    if (param.type.length) {
-        formattedParam += ` - ${param.type}`;
+    if (param.datatype.length) {
+        formattedParam += ` - ${param.datatype}`;
     }
     if (param.arity.length) {
         formattedParam += ` - ${param.arity}`;

@@ -41,6 +41,9 @@ function updateParent(
         parent = parent.parent;
     }
     node.parent = parent;
+    if (parent?.obj.type === "") {
+        return node;
+    }
     node.obj.setParent(parent?.obj);
     return node;
 }

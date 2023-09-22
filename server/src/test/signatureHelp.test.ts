@@ -70,7 +70,7 @@ describe("Test active param", () => {
         const signHelp = getSignatureHelp(cnfg, offset);
         expect(signHelp.signatures.length).to.equal(1);
         const signature = signHelp.signatures[0];
-        expect(signature.parameters!.length).to.equal(2);
+        expect(signature.parameters!.length).to.equal(3);
         expect(signature.activeParameter).to.equal(1);
     });
     it("Expect second param in function with infinite even numbers", () => {
@@ -81,8 +81,8 @@ describe("Test active param", () => {
         const signHelp = getSignatureHelp(cnfg, offset);
         expect(signHelp.signatures.length).to.equal(1);
         const signature = signHelp.signatures[0];
-        expect(signature.parameters!.length).to.equal(2);
-        expect(signature.activeParameter).to.equal(1);
+        expect(signature.parameters!.length).to.equal(3);
+        expect(signature.activeParameter).to.equal(2);
     });
     it("Expect second param in function with infinite even numbers", () => {
         const content = loadFile("signatureHelp.cnfg");
@@ -92,7 +92,7 @@ describe("Test active param", () => {
         const signHelp = getSignatureHelp(cnfg, offset);
         expect(signHelp.signatures.length).to.equal(1);
         const signature = signHelp.signatures[0];
-        expect(signature.parameters!.length).to.equal(2);
+        expect(signature.parameters!.length).to.equal(3);
         expect(signature.activeParameter).to.equal(1);
     });
     it("Expect second param in function with infinite even numbers", () => {
@@ -103,8 +103,8 @@ describe("Test active param", () => {
         const signHelp = getSignatureHelp(cnfg, offset);
         expect(signHelp.signatures.length).to.equal(1);
         const signature = signHelp.signatures[0];
-        expect(signature.parameters!.length).to.equal(2);
-        expect(signature.activeParameter).to.equal(1);
+        expect(signature.parameters!.length).to.equal(3);
+        expect(signature.activeParameter).to.equal(2);
     });
 });
 

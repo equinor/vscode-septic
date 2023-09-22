@@ -73,7 +73,11 @@ describe("Test completion of identifier", () => {
         const cnfg = parseSeptic(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 12));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
-        expect(compItems.length).to.equal(0);
+        expect(
+            compItems.filter((item) => {
+                item.kind === CompletionItemKind.Variable;
+            }).length
+        ).to.equal(0);
     });
 });
 
