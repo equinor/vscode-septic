@@ -35,7 +35,7 @@ function updateParent(
     let node: ObjectNode = {
         obj: obj,
         parent: undefined,
-        level: objectHierarchy.nodes.get(obj.type)?.level ?? -1,
+        level: objectHierarchy.nodes.get(obj.type)?.level ?? 100,
     };
     while (parent && node.level <= parent.level) {
         parent = parent.parent;
