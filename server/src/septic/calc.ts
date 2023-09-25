@@ -1,10 +1,12 @@
+import { AlgCalc, AlgExpr, AlgLiteral, AlgTokenType } from "./algParser";
 import { SepticCalcInfo } from "./septicMetaInfo";
 
 export function fromCalcIndexToParamIndex(
-    calc: SepticCalcInfo,
+    calc: AlgCalc,
+    calcInfo: SepticCalcInfo,
     index: number
 ): number {
-    let paramIndexInfo = getCalcParamIndexInfo(calc);
+    let paramIndexInfo = getCalcParamIndexInfo(calcInfo);
     let i = 0;
     while (i < paramIndexInfo.fixedLengthParams.length) {
         if (index < paramIndexInfo.fixedLengthParams[i]) {
@@ -15,14 +17,19 @@ export function fromCalcIndexToParamIndex(
     if (!paramIndexInfo.variableLengthParams.num) {
         return i - 1;
     }
-    if (!isAlternatingParamsCalc(calc)) {
-        return 0;
+    if (!isAlternatingParamsCalc(calcInfo)) {
+        return getIndexNonAlternatingParams(
+            calcInfo,
+            paramIndexInfo,
+            calc,
+            index
+        );
     }
     return getIndexAlternatingParams(paramIndexInfo, index);
 }
 
 function isAlternatingParamsCalc(calcInfo: SepticCalcInfo): boolean {
-    return !["MaxSelection", "MinSelection", "AvgSelection"].includes(
+    return !["maxselection", "minselection", "avgselection"].includes(
         calcInfo.name
     );
 }
@@ -39,6 +46,35 @@ function getIndexAlternatingParams(
     return (
         ((index - numFixedLengthParams) %
             paramIndexInfo.variableLengthParams.num) +
+        numFixedLengthParams
+    );
+}
+
+function getIndexNonAlternatingParams(
+    calcInfo: SepticCalcInfo,
+    paramIndexInfo: CalcParamIndexInfo,
+    calc: AlgCalc,
+    index: number
+) {
+    let paramName = paramIndexInfo.variableLengthParams.exactLength;
+    let numFixedLengthParams = paramIndexInfo.fixedLengthParams.length
+        ? paramIndexInfo.fixedLengthParams[
+              paramIndexInfo.fixedLengthParams.length - 1
+          ]
+        : 0;
+    if (!paramName) {
+        return 0;
+    }
+    let paramIndex = getIndexOfParam(paramName, calcInfo);
+    if (paramIndex === undefined) {
+        return 0;
+    }
+    let value = getValueOfAlgExpr(calc.params[paramIndex]);
+    if (!value) {
+        return 0;
+    }
+    return (
+        Math.floor((index - numFixedLengthParams) / value) +
         numFixedLengthParams
     );
 }
@@ -149,4 +185,15 @@ function getVariableLengthParamsInfo(
         }
     }
     return { num: numVariableLengthParams, exactLength: exactLength };
+}
+
+function getValueOfAlgExpr(expr: AlgExpr): number | undefined {
+    if (!(expr instanceof AlgLiteral)) {
+        return undefined;
+    }
+    let literal = expr as AlgLiteral;
+    if (literal.type !== AlgTokenType.number) {
+        return undefined;
+    }
+    return parseInt(literal.value);
 }

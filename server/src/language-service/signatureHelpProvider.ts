@@ -80,6 +80,7 @@ export function getSignatureHelp(
     }
     let currentIndexCalc = getIndexParamCalc(currentCalc, offsetAlg);
     let activeParameterIndex = fromCalcIndexToParamIndex(
+        currentCalc,
         calcMetaInfo,
         currentIndexCalc
     );

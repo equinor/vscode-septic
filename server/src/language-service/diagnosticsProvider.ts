@@ -357,7 +357,7 @@ function validateCalcParams(
     let diagnostics: Diagnostic[] = [];
     for (let index = 0; index < calc.params.length; index++) {
         let paramExpr = calc.params[index];
-        let calcParamIndex = fromCalcIndexToParamIndex(calcInfo, index);
+        let calcParamIndex = fromCalcIndexToParamIndex(calc, calcInfo, index);
         let paramInfo = calcInfo.parameters[calcParamIndex];
         if (!paramInfo) {
             continue;
