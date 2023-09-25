@@ -22,3 +22,13 @@
          Text1=  ""
          Text2=  ""
            Alg=  "(1 + 2 + if(2>1,1,0)"
+
+  CalcPvr:       CalcPvrName
+         Text1=  ""
+         Text2=  ""
+           Alg=  "maxselection(3,1,2, )"
+
+  CalcPvr:       CalcPvrName
+         Text1=  ""
+         Text2=  ""
+           Alg=  "maxselection(3,1,2,3,4, )"

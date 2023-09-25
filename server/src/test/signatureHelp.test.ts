@@ -62,7 +62,7 @@ describe("Test active param", () => {
         expect(signature.parameters!.length).to.equal(4);
         expect(signature.activeParameter).to.equal(3);
     });
-    it("Expect second param in function with infinite even numbers", () => {
+    it("Expect second param in function with infinite params", () => {
         const content = loadFile("signatureHelp.cnfg");
         const cnfg = parseSeptic(content);
         const doc = TextDocument.create("", "", 0, content);
@@ -73,7 +73,7 @@ describe("Test active param", () => {
         expect(signature.parameters!.length).to.equal(3);
         expect(signature.activeParameter).to.equal(1);
     });
-    it("Expect second param in function with infinite even numbers", () => {
+    it("Expect second param in function with infinite params", () => {
         const content = loadFile("signatureHelp.cnfg");
         const cnfg = parseSeptic(content);
         const doc = TextDocument.create("", "", 0, content);
@@ -84,7 +84,7 @@ describe("Test active param", () => {
         expect(signature.parameters!.length).to.equal(3);
         expect(signature.activeParameter).to.equal(2);
     });
-    it("Expect second param in function with infinite even numbers", () => {
+    it("Expect second param in function with infinite params", () => {
         const content = loadFile("signatureHelp.cnfg");
         const cnfg = parseSeptic(content);
         const doc = TextDocument.create("", "", 0, content);
@@ -95,11 +95,33 @@ describe("Test active param", () => {
         expect(signature.parameters!.length).to.equal(3);
         expect(signature.activeParameter).to.equal(1);
     });
-    it("Expect second param in function with infinite even numbers", () => {
+    it("Expect second param in function with infinite  params", () => {
         const content = loadFile("signatureHelp.cnfg");
         const cnfg = parseSeptic(content);
         const doc = TextDocument.create("", "", 0, content);
         const offset = doc.offsetAt(Position.create(13, 43));
+        const signHelp = getSignatureHelp(cnfg, offset);
+        expect(signHelp.signatures.length).to.equal(1);
+        const signature = signHelp.signatures[0];
+        expect(signature.parameters!.length).to.equal(3);
+        expect(signature.activeParameter).to.equal(2);
+    });
+    it("Expect correct param in non alternating variable param calc", () => {
+        const content = loadFile("signatureHelp.cnfg");
+        const cnfg = parseSeptic(content);
+        const doc = TextDocument.create("", "", 0, content);
+        const offset = doc.offsetAt(Position.create(28, 38));
+        const signHelp = getSignatureHelp(cnfg, offset);
+        expect(signHelp.signatures.length).to.equal(1);
+        const signature = signHelp.signatures[0];
+        expect(signature.parameters!.length).to.equal(3);
+        expect(signature.activeParameter).to.equal(1);
+    });
+    it("Expect correct param in non alternating variable param calc", () => {
+        const content = loadFile("signatureHelp.cnfg");
+        const cnfg = parseSeptic(content);
+        const doc = TextDocument.create("", "", 0, content);
+        const offset = doc.offsetAt(Position.create(33, 42));
         const signHelp = getSignatureHelp(cnfg, offset);
         expect(signHelp.signatures.length).to.equal(1);
         const signature = signHelp.signatures[0];
