@@ -56,30 +56,28 @@ export function formatObjectAttribute(
     return doc;
 }
 
-export function formatCalcMarkdown(
-    calc: SepticCalcInfo,
-    short: boolean = false
-) {
-    let formattedParameters = calc.parameters.map((param) => {
-        return formatCalcParameter(param);
-    });
+export function formatCalcMarkdown(calc: SepticCalcInfo) {
     let markdown = [
         "```js\n" + `function ${calc.signature}` + "\n```",
         horizontalRule(),
-        `${calc.briefDescription.replace(/\r\n/g, "\n")}`,
+        `${calc.detailedDescription.replace(/\r\n/g, "\n")}`,
     ];
 
+    let formattedParameters = calc.parameters.map((param) => {
+        return formatCalcParameter(param);
+    });
     if (formattedParameters.length) {
         markdown.push(
-            "\n```\n" + formattedParameters[0],
+            "```\n" + formattedParameters[0],
             ...formattedParameters.slice(1),
-            `@return - ${calc.retr}` + "\n```\n"
+            "\n```"
         );
     }
-
-    if (!short) {
-        markdown.push(calc.detailedDescription.replace(/\r\n/g, "\n"));
-    }
+    markdown.push(
+        "```\n" + `@return - ${calc.retr}`,
+        `@value - ${calc.value}`,
+        `@quality - ${calc.quality}` + "\n```"
+    );
 
     return markdown.join("\n\n");
 }

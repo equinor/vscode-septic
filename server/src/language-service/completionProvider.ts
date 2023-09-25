@@ -158,7 +158,7 @@ export function getCalcCompletion(
             detail: "SepticCalc",
             data: calc,
             documentation: {
-                value: formatCalcMarkdown(calc, true),
+                value: formatCalcMarkdown(calc),
                 kind: "markdown",
             },
             filterText:
