@@ -58,7 +58,7 @@ Adding the SEPTIC extension to VS Code allows you to do the following when loadi
 
 -   SignatureHelp is provided when writing calcs inside CalcPvr.Alg. The signature is shown with the active parameter highlighted together with the documentation of the active parameter.
 
--   Search functionality for calcs are builtin into the completion. To start searching, start typing the search word into the CalcPvr.Alg field and all calcs that has the relevant search word in the documentation is included in the filtered results. Pressing `Space + .` starts the completion without a starting phrase and can be used to browse all available calcs and variables inside a CalcPvr.Alg.
+-   Search functionality for calcs are builtin into the completion. To start searching, start typing the search word into the CalcPvr.Alg field and all calcs that has the relevant search word in the documentation is included in the filtered results. Pressing `Ctrl + Space` starts the completion without a starting phrase and can be used to browse all available calcs and variables inside a CalcPvr.Alg.
 
 The extension supports SEPTIC projects that uses the SEPTIC Config Generator (SCG). The SCG-config file for the project is loaded and the relevant `.cnfg` files (required to be in the templates folder) listed in the layout section are loaded into a common context that shares references etc.
 
