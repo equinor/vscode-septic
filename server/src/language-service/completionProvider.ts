@@ -70,11 +70,11 @@ export function getCompletion(
     refProvider: SepticReferenceProvider
 ): CompletionItem[] {
     const offset = doc.offsetAt(pos);
-    if (triggerCharacter === ".") {
-        return getCalcPublicPropertiesCompletion(offset, cnfg, refProvider);
-    }
     const alg = cnfg.offsetInAlg(offset);
     if (alg) {
+        if (triggerCharacter === ".") {
+            return getCalcPublicPropertiesCompletion(offset, cnfg, refProvider);
+        }
         return getCalcCompletion(offset, cnfg, refProvider);
     }
     return getObjectCompletion(offset, cnfg, refProvider, doc);
@@ -179,6 +179,9 @@ export function getObjectCompletion(
 ): CompletionItem[] {
     const compItems: CompletionItem[] = [];
     const obj = cnfg.getObjectFromOffset(offset);
+    if (!obj) {
+        return [];
+    }
     const pos = doc.positionAt(obj.start);
     const line = doc.getText({
         start: Position.create(pos.line, 0),
