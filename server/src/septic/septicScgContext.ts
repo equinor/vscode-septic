@@ -168,7 +168,7 @@ export class ScgContext implements SepticReferenceProvider {
     ): Promise<void> {
         await this.load();
         const objects: SepticObject[] = [];
-        for (let file in this.files) {
+        for (let file of this.files) {
             let cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
                 continue;
