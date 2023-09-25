@@ -94,7 +94,7 @@ export function formatDefaultValue(attrDefault: string[]) {
     return `${attrDefault.length}  ${attrDefault.join("  ")}`;
 }
 
-function formatDataType(attrDoc: SepticAttributeDocumentation) {
+export function formatDataType(attrDoc: SepticAttributeDocumentation) {
     let output = capitlizeFirstLetter(attrDoc.dataType);
     if (attrDoc.dataType === "enum") {
         output += "[" + attrDoc.enums.join(", ") + "]";

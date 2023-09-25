@@ -33,6 +33,8 @@ import {
     getCalcParamIndexInfo,
     getIndexOfParam,
     getValueOfAlgExpr,
+    formatCalcMarkdown,
+    formatDataType,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -90,11 +92,6 @@ export interface DiagnosticsSettings {
 
 export const defaultDiagnosticsSettings: DiagnosticsSettings = {
     enabled: true,
-};
-
-type NumberParamConditions = (n: number) => {
-    condition: boolean;
-    message: string;
 };
 
 function createDiagnostic(
@@ -729,12 +726,8 @@ function validateAttributeValue(
     const diagnostics: Diagnostic[] = [];
     for (let attrValue of attrValues) {
         if (!checkAttributeDataType(attrValue, attrDoc)) {
-            let errorMessage = `Wrong data type for attribute. Expected DataType: ${attrDoc.dataType}`;
-            if (attrDoc.dataType === "enum") {
-                errorMessage += `. Permissable enums: ${attrDoc.enums.join(
-                    "|"
-                )}`;
-            }
+            let datatypeFormatted = formatDataType(attrDoc);
+            let errorMessage = `Wrong data type for attribute. Expected DataType: ${datatypeFormatted}`;
             diagnostics.push(
                 createDiagnostic(
                     DiagnosticSeverity.Error,
@@ -883,7 +876,7 @@ export function checkAttributeDataType(
     attrValue: AttributeValue,
     attrDoc: SepticAttributeDocumentation
 ): boolean {
-    if (attrValue.type === SepticTokenType.jinjaExpression) {
+    if (jinjaRegex.test(attrValue.value)) {
         return true;
     }
     switch (attrDoc.dataType) {
@@ -895,6 +888,8 @@ export function checkAttributeDataType(
             return attrValue.type === SepticTokenType.string;
         case "enum":
             return attrDoc.enums.includes(attrValue.value);
+        case "path":
+            return true;
         default:
             let bitMaskMatch = attrDoc.dataType.match(/^bit([0-9]+)$/);
             if (!bitMaskMatch) {
