@@ -56,7 +56,7 @@ Adding the SEPTIC extension to VS Code allows you to do the following when loadi
 
 -   Documentation of objects and calcs are available by hovering over the object/calc definition. Hovering on object definition will provide an overview of the object and related attributes. For more information about a certain attribute (datatype, description etc.), hover over the definition of the attribute. Hovering over a calc will provide information about parameters, return values, quality etc.
 
--   SignatureHelp is provided when writing calcs inside CalcPvr.Alg. The signature is shown with the active parameter highlighted together with the documentation of the active parameter.
+-   SignatureHelp is provided when writing calcs inside CalcPvr.Alg. The signature is shown with the active parameter highlighted together with the documentation of the active parameter. SignatureHelp can be manually activated by pressing `Ctrl + Shift + Space`.
 
 -   Search functionality for calcs are builtin into the completion. To start searching, start typing the search word into the CalcPvr.Alg field and all calcs that has the relevant search word in the documentation is included in the filtered results. Pressing `Ctrl + Space` starts the completion without a starting phrase and can be used to browse all available calcs and variables inside a CalcPvr.Alg.
 
