@@ -164,7 +164,10 @@ export function getCalcCompletion(
             filterText:
                 calc.name +
                 " " +
-                calc.briefDescription.replace(threeLettersOrLessWordsRegex, ""),
+                calc.detailedDescription.replace(
+                    threeLettersOrLessWordsRegex,
+                    ""
+                ),
             commitCharacters: ["("],
         });
     }
