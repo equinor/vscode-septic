@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.9.0](https://github.com/equinor/vscode-septic/compare/v1.8.0...v1.9.0) (2023-09-18)
+
+
+### 🧹 Chores
+
+* **deps:** bump @types/node from 16.18.44 to 16.18.52 ([#302](https://github.com/equinor/vscode-septic/issues/302)) ([770787e](https://github.com/equinor/vscode-septic/commit/770787e294d4269ea4472d608f939d0bfb9d6583))
+* **deps:** bump eslint from 8.47.0 to 8.49.0 ([#299](https://github.com/equinor/vscode-septic/issues/299)) ([a9e480e](https://github.com/equinor/vscode-septic/commit/a9e480ec3773395218c08b1c7f5811504b2848eb))
+
+
+### ✨ Features
+
+* jinja snippets ([#301](https://github.com/equinor/vscode-septic/issues/301)) ([64860c8](https://github.com/equinor/vscode-septic/commit/64860c86f97ef47991d7dd3c095b5069d332c8cc))
+
 ## [1.8.0](https://github.com/equinor/vscode-septic/compare/v1.7.4...v1.8.0) (2023-09-08)
 
 
