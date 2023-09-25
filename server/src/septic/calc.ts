@@ -187,7 +187,7 @@ function getVariableLengthParamsInfo(
     return { num: numVariableLengthParams, exactLength: exactLength };
 }
 
-function getValueOfAlgExpr(expr: AlgExpr): number | undefined {
+export function getValueOfAlgExpr(expr: AlgExpr): number | undefined {
     if (!(expr instanceof AlgLiteral)) {
         return undefined;
     }

@@ -32,6 +32,7 @@ import {
     VALUE,
     getCalcParamIndexInfo,
     getIndexOfParam,
+    getValueOfAlgExpr,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -447,8 +448,13 @@ function validateCalcParamsLength(
         if (!indexDesignatorParam) {
             return [];
         }
-        let designatorValue = getValueOfCalcParam(indexDesignatorParam, calc);
-        if (designatorValue === -1) {
+        if (indexDesignatorParam >= calc.params.length) {
+            return [];
+        }
+        let designatorValue = getValueOfAlgExpr(
+            calc.params[indexDesignatorParam]
+        );
+        if (designatorValue === undefined) {
             return [];
         }
         let expectedNumParams =
@@ -486,21 +492,6 @@ function validateCalcParamsLength(
         ];
     }
     return [];
-}
-
-function getValueOfCalcParam(index: number, calc: AlgCalc) {
-    if (index >= calc.params.length) {
-        return -1;
-    }
-    let param = calc.params[index];
-    if (!(param instanceof AlgLiteral)) {
-        return -1;
-    }
-    let literal = param as AlgLiteral;
-    if (literal.type !== AlgTokenType.number) {
-        return -1;
-    }
-    return parseInt(param.value);
 }
 
 function isEmptyNonOptionalParam(
