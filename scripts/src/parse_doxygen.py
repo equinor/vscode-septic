@@ -195,8 +195,6 @@ def parseAttributeDetails(input: str):
         callback = callbacks.get(name.lower())
         if not callback:
             continue
-        if not name_match.group(2):
-            print(f"Error parsing: {input}")
         callback(name_match.group(2))
     return information
 

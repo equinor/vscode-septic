@@ -51,6 +51,7 @@ def getObjectFiles(branch: str):
         "FMUsrc/MdlFMU.cpp",
         "src/Subr.cpp",
         "src/Calc.cpp",
+        "src/Expr.cpp",
     ]
     files = []
     for path in paths:
