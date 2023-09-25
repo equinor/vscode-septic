@@ -1,4 +1,4 @@
-# Commit: e35c809
+# Commit: fd29f4f
 - attributes:
   - calc: false
     dataType: enum
@@ -73,7 +73,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - 1e+10
@@ -111,7 +111,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: int
     default:
     - '99'
@@ -173,7 +173,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - -1e+10
@@ -356,7 +356,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - '0'
@@ -572,7 +572,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - 1e+10
@@ -618,7 +618,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: int
     default:
     - '1'
@@ -692,7 +692,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - -1e+10
@@ -738,7 +738,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: int
     default:
     - '1'
@@ -909,7 +909,7 @@
     noCnfg: true
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - '0'
@@ -934,7 +934,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: int
     default:
     - '1'
@@ -1145,6 +1145,17 @@
     postfix: []
     tags: []
   - calc: false
+    dataType: bit31
+    default:
+    - '0000000000000000000000000000000'
+    description: PlottingGroup
+    enums: []
+    list: false
+    name: PlotGrp
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
     dataType: float
     default:
     - '100'
@@ -1317,6 +1328,17 @@
     enums: []
     list: false
     name: Nfix
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: bit31
+    default:
+    - '0000000000000000000000000000000'
+    description: PlottingGroup
+    enums: []
+    list: false
+    name: PlotGrp
     noCnfg: false
     postfix: []
     tags: []
@@ -1520,6 +1542,17 @@
     postfix: []
     tags: []
   - calc: false
+    dataType: bit31
+    default:
+    - '0000000000000000000000000000000'
+    description: PlottingGroup
+    enums: []
+    list: false
+    name: PlotGrp
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
     dataType: float
     default:
     - '100'
@@ -1644,6 +1677,17 @@
   - calc: false
     dataType: float
     default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: UserMeas
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
     - '-1'
     description: UserInput will be validated for changes in value based on this. -1
       disable validation
@@ -1657,6 +1701,7 @@
   name: Evr
   parents:
   - DmmyAppl
+  - SmpcAppl
 - attributes:
   - calc: false
     dataType: enum
@@ -2634,7 +2679,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: path
     default:
     - '~'
     description: 'Path to object(s) to show messages. Format: /path/to/obj, No ""'
@@ -6424,6 +6469,253 @@
   name: NoisProc
   parents:
   - DmmyAppl
+- attributes:
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Amplitude of bias
+    enums: []
+    list: false
+    name: BiasA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: Filt
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: FiltA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: FiltNon
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: FiltT1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: Iwite
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: IwiteA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: IwiteMaxA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: IwiteNon
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: Ramp
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: RampMaxA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: RampR
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - SINE
+    description: Sine noise
+    enums:
+    - SINE
+    - SQUARE
+    - 'OFF'
+    list: false
+    name: Sine
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '20'
+    description: Amplitude of sine noise
+    enums: []
+    list: false
+    name: SineA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '20'
+    description: Time constant sine noise
+    enums: []
+    list: false
+    name: SineT
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: Wite
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: WiteA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: WiteMaxA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: WiteNon
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Noise variable
+  name: NoisXvr
+  parents:
+  - NoisProc
 - attributes:
   - calc: false
     dataType: string

@@ -1,4 +1,4 @@
-# Commit: eaa7cf4
+# Commit: fd29f4f
 - detailedDescription: Computes the absolute value
   name: abs
   parameters:
@@ -947,7 +947,7 @@
     - value
     description: Expression to evaluate when condition is false
     direction: in
-    name: falseExpre
+    name: falseExpr
   - arity: '?'
     datatype:
     - value
