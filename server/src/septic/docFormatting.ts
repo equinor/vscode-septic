@@ -31,13 +31,7 @@ export function formatObjectAttribute(
     let newline = "\n\n";
     doc += newline + horizontalRule();
     doc += newline + attrDoc.description;
-    doc += newline + code("DataType:") + " " + attrDoc.dataType;
-    if (attrDoc.dataType === "Enum") {
-        doc += newline + code("Enums:") + " " + `${attrDoc.enums.join("|")}`;
-    }
-    if (attrDoc.list) {
-        doc += newline + code("List:") + " True";
-    }
+    doc += newline + code("DataType:") + " " + formatDataType(attrDoc);
     if (attrDoc.default.length) {
         doc +=
             newline +
@@ -98,4 +92,19 @@ export function formatDefaultValue(attrDefault: string[]) {
         return attrDefault[0];
     }
     return `${attrDefault.length}  ${attrDefault.join("  ")}`;
+}
+
+function formatDataType(attrDoc: SepticAttributeDocumentation) {
+    let output = capitlizeFirstLetter(attrDoc.dataType);
+    if (attrDoc.dataType === "enum") {
+        output += "[" + attrDoc.enums.join(", ") + "]";
+    }
+    if (attrDoc.list) {
+        output += "[ ]";
+    }
+    return output;
+}
+
+function capitlizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
