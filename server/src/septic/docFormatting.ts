@@ -1,4 +1,4 @@
-import { code, h4, horizontalRule } from "../util/markdown";
+import { bold, code, h4, horizontalRule } from "../util/markdown";
 import {
     SepticAttributeDocumentation,
     SepticCalcInfo,
@@ -12,8 +12,9 @@ export function formatObjectDocumentationMarkdown(
     let markdown: string[] = [];
     markdown.push(h4(objDoc.name));
     markdown.push(horizontalRule());
-    markdown.push(`${objDoc.description}`);
-    markdown.push("Attributes:");
+    markdown.push(`${bold("Description:")} ${objDoc.description}`);
+    markdown.push(`${bold("Parent object(s):")} ${objDoc.parents.join(", ")}`);
+    markdown.push(bold("Attributes:"));
     objDoc.attributes.forEach((attr) => {
         markdown.push(formatObjectAttribute(attr));
     });
