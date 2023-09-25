@@ -1,4 +1,4 @@
-# Commit: fd29f4f
+# Commit: 0426424
 - attributes:
   - calc: false
     dataType: enum
@@ -461,7 +461,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - '0'
@@ -932,6 +932,16 @@
     list: false
     name: SetPntChangeMode
     noCnfg: false
+    postfix: []
+    tags: []
+  - calc: true
+    dataType: float
+    default: []
+    description: Filterd setpoint
+    enums: []
+    list: false
+    name: SetPntFilt
+    noCnfg: true
     postfix: []
     tags: []
   - calc: true
@@ -2203,6 +2213,19 @@
     postfix: []
     tags: []
   - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: ClipOn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
     dataType: int
     default:
     - '1000'
@@ -2572,6 +2595,127 @@
     enums: []
     list: false
     name: UserPwd
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '800'
+    description: Description
+    enums: []
+    list: false
+    name: WdwDx
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '400'
+    description: Description
+    enums: []
+    list: false
+    name: WdwDy
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0.7'
+    description: Description
+    enums: []
+    list: false
+    name: Xback
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: bit16
+    default:
+    - '0000000000000000'
+    description: Description
+    enums: []
+    list: false
+    name: Xgroup
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Xline
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Zfont
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Zhilo
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Zline
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Zname
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Zopen
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Zstate
     noCnfg: false
     postfix: []
     tags: []
