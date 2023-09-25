@@ -1,4 +1,4 @@
-# Commit: bdee623
+# Commit: e35c809
 - attributes:
   - calc: false
     dataType: enum
@@ -197,22 +197,22 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '10'
-    description: Maximum change up for manipulated variable in single step
-    enums: []
-    list: false
-    name: MaxUp
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - '-10'
     description: Maximum change down for manipulated variable in single step
+    enums: []
+    list: false
+    name: MaxDn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: true
+    dataType: float
+    default:
+    - '10'
+    description: Maximum change up for manipulated variable in single step
     enums: []
     list: false
     name: MaxUp
@@ -268,7 +268,7 @@
   - calc: false
     dataType: enum
     default:
-    - 'OFF'
+    - STOPPED
     description: Operation mode of manipulated variable
     enums:
     - STOPPED
@@ -298,6 +298,17 @@
     enums: []
     list: false
     name: Nfix
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: bit31
+    default:
+    - '0000000000000000000000000000000'
+    description: PlottingGroup
+    enums: []
+    list: false
+    name: PlotGrp
     noCnfg: false
     postfix: []
     tags: []
@@ -669,6 +680,19 @@
     postfix: []
     tags: []
   - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Lock set point from operator changes
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: LockSP
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
     dataType: float
     default:
     - -1e+10
@@ -785,7 +809,7 @@
   - calc: false
     dataType: enum
     default:
-    - 'OFF'
+    - STOPPED
     description: Operation mode of manipulated variable
     enums:
     - STOPPED
@@ -815,6 +839,17 @@
     enums: []
     list: false
     name: Nfix
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: bit31
+    default:
+    - '0000000000000000000000000000000'
+    description: PlottingGroup
+    enums: []
+    list: false
+    name: PlotGrp
     noCnfg: false
     postfix: []
     tags: []
@@ -1088,7 +1123,7 @@
   - calc: false
     dataType: enum
     default:
-    - 'OFF'
+    - STOPPED
     description: Operation mode of manipulated variable
     enums:
     - STOPPED
@@ -1626,6 +1661,19 @@
   - calc: false
     dataType: enum
     default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: ColdStart
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
     - STOPPED
     description: Desired mode for MPC
     enums:
@@ -1635,6 +1683,32 @@
     - ACTIVE
     list: false
     name: DesMode
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: DoStdSolve
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: EachParam
     noCnfg: false
     postfix: []
     tags: []
@@ -1653,11 +1727,171 @@
   - calc: false
     dataType: float
     default:
+    - '0.001'
+    description: Description
+    enums: []
+    list: false
+    name: FdifIntv
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '9.9999997e-06'
+    description: Description
+    enums: []
+    list: false
+    name: FeTol
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
     - 1e-10
     description: QP feasibility tolerance
     enums: []
     list: false
     name: FeasTol
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '9.9999999e-09'
+    description: Description
+    enums: []
+    list: false
+    name: FuncPrec
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: IterLineMax
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: IterNewSens
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: IterOpt
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: IterQpMax
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1000'
+    description: Description
+    enums: []
+    list: false
+    name: LinErrorLim
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '100'
+    description: Description
+    enums: []
+    list: false
+    name: LmPrio
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '200'
+    description: Description
+    enums: []
+    list: false
+    name: MajItLim
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: MajPrint
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: MasterOn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '100'
+    description: Description
+    enums: []
+    list: false
+    name: MaxPrioSQP
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '10'
+    description: Description
+    enums: []
+    list: false
+    name: MaxSeconds
     noCnfg: false
     postfix: []
     tags: []
@@ -1708,6 +1942,19 @@
   - calc: false
     dataType: enum
     default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: ObjConPrint
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
     - CONSTMVR
     description: Mvr to be used for open-loop prediction. Constant or optimized Mvrs
     enums:
@@ -1715,6 +1962,17 @@
     - OPTMVR
     list: false
     name: OpenFlag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-06
+    description: Description
+    enums: []
+    list: false
+    name: OptimTol
     noCnfg: false
     postfix: []
     tags: []
@@ -1730,6 +1988,30 @@
     postfix: []
     tags: []
   - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: PriceOn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1'
+    description: Description
+    enums: []
+    list: false
+    name: PriceScale
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
     dataType: int
     default:
     - '0'
@@ -1737,6 +2019,52 @@
     enums: []
     list: false
     name: PrintSens
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0.05'
+    description: Description
+    enums: []
+    list: false
+    name: RelPert
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-06
+    description: Description
+    enums: []
+    list: false
+    name: SensLimDyn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-06
+    description: Description
+    enums: []
+    list: false
+    name: SensLimSS
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: SimOptimal
     noCnfg: false
     postfix: []
     tags: []
@@ -1772,6 +2100,43 @@
     enums: []
     list: false
     name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: UnConstrnd
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: UpdFilt
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: VerifyGrads
     noCnfg: false
     postfix: []
     tags: []
@@ -1927,6 +2292,21 @@
     postfix: []
     tags: []
   - calc: false
+    dataType: enum
+    default:
+    - ROOT
+    description: Maximum logon level for application
+    enums:
+    - ROOT
+    - MNGR
+    - OPER
+    - USER
+    list: false
+    name: MaxLogon
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
     dataType: int
     default:
     - '0'
@@ -2035,6 +2415,17 @@
     enums: []
     list: false
     name: Nsecs
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1'
+    description: Refresh rate of X window
+    enums: []
+    list: false
+    name: Nxupd
     noCnfg: false
     postfix: []
     tags: []
@@ -3799,7 +4190,7 @@
   description: Table appl
   name: Appl
   parents:
-  - DisplayGroup
+  - Table
 - attributes: []
   description: Defines list of xvrs to appear in a table. Interface def, not possible
     to instantiate a XvrList
@@ -6223,3 +6614,8 @@
   name: CalcPvr
   parents:
   - CalcModl
+- attributes: []
+  description: Experimental models
+  name: ExprModl
+  parents:
+  - System
