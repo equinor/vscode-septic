@@ -8,20 +8,19 @@ from src.parse_doxygen import (
 )
 from dataclasses import asdict
 
-OBJECT_BRANCH = "main"
+BRANCH = "fix_documentation"
 OBJECT_OUTPUT_PATH = "./public/objectsDoc.yaml"
-CALCS_BRANCH = "main"
 CALCS_OUTPUT_PATH = "./public/calcs.yaml"
 
 
 def updateObjects():
-    files = getObjectFiles(OBJECT_BRANCH)
+    files = getObjectFiles(BRANCH)
     objects: List[SepticObject] = []
     for f in files:
         objects.extend(parseObjectDocumentation(f))
     for obj in objects:
         obj.attributes.sort(key=lambda x: x.name)
-    commit = getCommitId(OBJECT_BRANCH)
+    commit = getCommitId(BRANCH)
     with open(OBJECT_OUTPUT_PATH, "w") as file:
         file.write(f"# Commit: {commit}\n")
         yaml.dump(
@@ -31,10 +30,10 @@ def updateObjects():
 
 
 def updateCalcs():
-    calc_file = getCalcFile(CALCS_BRANCH)
+    calc_file = getCalcFile(BRANCH)
     calcs = parseCalcDocumentation(calc_file)
     calcs.sort(key=lambda x: x.name)
-    commit = getCommitId(CALCS_BRANCH)
+    commit = getCommitId(BRANCH)
     with open(CALCS_OUTPUT_PATH, "w") as file:
         file.write(f"# Commit: {commit}\n")
         yaml.dump([asdict(calc) for calc in calcs], file)

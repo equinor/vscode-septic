@@ -1,4 +1,4 @@
-# Commit: 0426424
+# Commit: 5d834bd
 - attributes:
   - calc: false
     dataType: enum
@@ -429,6 +429,32 @@
     enums: []
     list: false
     name: UseFactorWeight
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: true
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: WUpHi
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: true
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: WUpLo
     noCnfg: false
     postfix: []
     tags: []
@@ -2632,9 +2658,9 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: bit16
+    dataType: bit
     default:
-    - '0000000000000000'
+    - '0001'
     description: Description
     enums: []
     list: false
@@ -3208,8 +3234,27 @@
     description: Name of site for automatic extension generation
     enums:
     - AIM_AIMGUI
+    - SITENONE
+    - OPCSIMUL
+    - AIM
+    - SIEMENS_APC
+    - HARMONYOPC
+    - ROCKWELL
     list: false
     name: Site
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: SkipWriteBlocking
     noCnfg: false
     postfix: []
     tags: []
@@ -6608,11 +6653,33 @@
   name: OPCProcPlot
   parents:
   - DisplayGroup
-- attributes: []
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
   description: Simulate noise process
   name: NoisProc
   parents:
-  - DmmyAppl
+  - System
 - attributes:
   - calc: false
     dataType: float
