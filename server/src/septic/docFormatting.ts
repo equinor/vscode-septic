@@ -40,6 +40,10 @@ export function formatObjectAttribute(
     doc += newline + horizontalRule();
     doc += newline + attrDoc.description;
     doc += newline + code("DataType:") + " " + formatDataType(attrDoc);
+    doc +=
+        newline + code("PublicProperty") + " " + attrDoc.calc
+            ? "True"
+            : "False";
     if (attrDoc.default.length) {
         doc +=
             newline +
