@@ -902,6 +902,18 @@ describe("Test validation of attribute data type", () => {
             checkAttributeDataType(attrValue, createAttrDoc("bit31", []))
         ).to.equal(true);
     });
+    it("Check valid bitmask upper limit", () => {
+        const attrValue = new AttributeValue("0000", SepticTokenType.numeric);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("bit<4", []))
+        ).to.equal(true);
+    });
+    it("Check invalid bitmask upper limit", () => {
+        const attrValue = new AttributeValue("00001", SepticTokenType.numeric);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("bit<4", []))
+        ).to.equal(true);
+    });
     it("Check invalid bitmask", () => {
         const attrValue = new AttributeValue(
             "000000000000000000001000000000",
