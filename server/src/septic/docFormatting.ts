@@ -1,19 +1,26 @@
 import { bold, code, h4, horizontalRule } from "../util/markdown";
 import {
+    ISepticObjectDocumentation,
     SepticAttributeDocumentation,
     SepticCalcInfo,
     SepticCalcParameterInfo,
-    SepticObjectDocumentationInput,
 } from "./septicMetaInfo";
 
 export function formatObjectDocumentationMarkdown(
-    objDoc: SepticObjectDocumentationInput
+    objDoc: ISepticObjectDocumentation
 ) {
     let markdown: string[] = [];
     markdown.push(h4(objDoc.name));
     markdown.push(horizontalRule());
     markdown.push(`${bold("Description:")} ${objDoc.description}`);
     markdown.push(`${bold("Parent object(s):")} ${objDoc.parents.join(", ")}`);
+    if (objDoc.publicAttributes.length) {
+        markdown.push(
+            `${bold("Public properties:")} ${objDoc.publicAttributes.join(
+                ", "
+            )}`
+        );
+    }
     markdown.push(bold("Attributes:"));
     objDoc.attributes.forEach((attr) => {
         markdown.push(formatObjectAttribute(attr));
@@ -96,7 +103,7 @@ export function formatDefaultValue(attrDefault: string[]) {
 }
 
 export function formatDataType(attrDoc: SepticAttributeDocumentation) {
-    let output = capitlizeFirstLetter(attrDoc.dataType);
+    let output = capitalizeFirstLetter(attrDoc.dataType);
     if (attrDoc.dataType === "enum") {
         output += "[" + attrDoc.enums.join(", ") + "]";
     }
@@ -106,6 +113,6 @@ export function formatDataType(attrDoc: SepticAttributeDocumentation) {
     return output;
 }
 
-function capitlizeFirstLetter(str: string) {
+function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
