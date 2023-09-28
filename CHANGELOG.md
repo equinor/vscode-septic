@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.10.0](https://github.com/equinor/vscode-septic/compare/v1.9.0...v1.10.0) (2023-09-28)
+
+
+### 🧹 Chores
+
+* **deps:** bump chai and @types/chai ([#304](https://github.com/equinor/vscode-septic/issues/304)) ([2151d6c](https://github.com/equinor/vscode-septic/commit/2151d6c7c0e4f2679ff0c2c25d78297eff0d7f4d))
+
+
+### ✨ Features
+
+* add support for documentation from septic source code ([#233](https://github.com/equinor/vscode-septic/issues/233)) ([fc913bd](https://github.com/equinor/vscode-septic/commit/fc913bdac886f9e0951fab715eee2a70e17d593e))
+
 ## [1.9.0](https://github.com/equinor/vscode-septic/compare/v1.8.0...v1.9.0) (2023-09-18)
 
 
