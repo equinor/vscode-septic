@@ -1,0 +1,142 @@
+  SopcMvr:       MvrTest
+         Text1=  "Not Test"
+         Text2=  ""
+        MvrTag=  ""
+       MeasTag=  ".YXSP"
+         PVTag=  ".YX"
+         IdTag=  ""
+   NotValidTag=  ".YXF"
+     SpCalcTag=  ".XOUT"
+         HiTag=  ".XWRH|NotUsed"
+         LoTag=  ".XWRL|NotUsed"
+         IvTag=  ".YR"
+      MvLowTag=  "DUMMY_TAG"
+     MvHighTag=  "DUMMY_TAG"
+       MvIvTag=  "DUMMY_TAG"
+      MaxUpTag=  ".YWCU"
+    MaxDownTag=  ".YWCD"
+       AutoTag=  ".YBA"
+        WhiTag=  ".YXWH|NotUsed"
+        WloTag=  ".YXWL|NotUsed"
+       CompTag=  ".YADA"
+       CaraTag=  "DUMMY_TAG"
+       TrakTag=  "DUMMY_TAG"
+     ToCompTag=  "DUMMY_TAG"
+    ToLocalTag=  "DUMMY_TAG"
+   MvActiveTag=  ".XAPC"
+   MvSwitchTag=  "DUMMY_TAG"
+ CompStatusTag=  "DUMMY_TAG"
+         Scale=  1
+        Offset=  0
+
+  SopcCvr:       CvrTest
+         Text1=  "Not Test"
+         Text2=  ""
+        CvrTag=  ""
+       MeasTag=  ".YX"
+         IdTag=  ""
+         SpTag=  ".YR"
+      CvLowTag=  "DUMMY_TAG"
+     CvHighTag=  "DUMMY_TAG"
+ CvSetpointTag=  "DUMMY_TAG"
+   NotValidTag=  ".YXF"
+   CvSwitchTag=  ".YADA"
+   CvActiveTag=  ".XAPC"
+         LoTag=  ".YWRL"
+         HiTag=  ".YWRH"
+         Scale=  1
+        Offset=  0
+
+  Mvr:           MvrTest
+         Text1=  "Test"
+         Text2=  "Test+"
+          Mode=  STOPPED
+          Auto=  OFF
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+        MaxChg=  -1
+          Unit=  ""
+          Meas=  0
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+        HighOn=  1e+10
+         LowOn=  -1e+10
+  ProcessValue=  0
+         IvOff=  0
+         MaxUp=  10
+         MaxDn=  -10
+     MovePnlty=  1
+         IvRoc=  -1
+        IvPrio=  99
+        BSAttr=  1
+   FulfReScale=  0
+         Price=  0
+      Blocking=  6    2     4     7    11    16    22
+MeasValidation=  OFF
+ MeasHighLimit=  1e+10
+  MeasLowLimit=  -1e+10
+        LockHL=  OFF
+        LockIV=  OFF
+        LockLL=  OFF
+UseFactorWeight=  0
+
+  Tvr:           TvrTest
+         Text1=  ""
+         Text2=  "Test"
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+          Unit=  ""
+          Meas=  0
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+MeasValidation=  OFF
+ MeasHighLimit=  1e+10
+  MeasLowLimit=  -1e+10
+         Color=  BLACK
+
+  Evr:           EvrTest
+         Text1=  "Test"
+         Text2=  ""
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+          Unit=  ""
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+          Meas=  0
+     UserInput=  OFF
+    UserAccess=  WRRR
+      MinInput=  0
+      MaxInput=  0
+ValidationLimit=  -1
+         Color=  BLACK
+
+  CalcModl:      Test
+         Text1=  ""
+         Text2=  ""
+
+  CalcPvr:       EvrTest
+         Text1=  ""
+         Text2=  ""
+           Alg=  "labupdt(TvrTest,1,1) + MvrTest"
+
+  BSType:        Test
+         Text1=  "Test"
+
+  CalcPvr:       NestedCalcs
+         Text1=  ""
+         Text2=  ""
+           Alg=  "if(and(1 < 2, 1 > 2), 1)"
+
+  CalcPvr:       BsCalc
+         Text1=  ""
+         Text2=  ""
+           Alg=  "bscalc()"

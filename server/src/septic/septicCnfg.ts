@@ -5,8 +5,16 @@
 
 import { AlgVisitor, parseAlg } from "./algParser";
 import { SepticTokenType } from "./septicTokens";
-import { SepticMetaInfoProvider } from "./septicMetaInfo";
-import { Attribute, SepticComment, SepticObject } from "./septicElements";
+import {
+    SepticMetaInfoProvider,
+    SepticObjectHierarchy,
+} from "./septicMetaInfo";
+import {
+    Attribute,
+    AttributeValue,
+    SepticComment,
+    SepticObject,
+} from "./septicElements";
 import {
     SepticReference,
     SepticReferenceProvider,
@@ -15,6 +23,7 @@ import {
     createSepticReference,
 } from "./reference";
 import { removeSpaces } from "../util";
+import { updateParentObjects } from "./hierarchy";
 
 export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];
@@ -69,27 +78,61 @@ export class SepticCnfg implements SepticReferenceProvider {
         return this.objects.filter((obj) => obj.isXvr() || obj.isSopcXvr());
     }
 
-    public offsetInAlg(offset: number): boolean {
+    public getObjectsByIdentifier(identifier: string): SepticObject[] {
+        let identifierSpacesRemoved = removeSpaces(identifier);
+        return this.objects.filter((obj) => {
+            if (!obj.identifier) {
+                return false;
+            }
+            return (
+                removeSpaces(obj.identifier.name) === identifierSpacesRemoved
+            );
+        });
+    }
+
+    public offsetInAlg(offset: number): undefined | AttributeValue {
         const obj = this.getObjectFromOffset(offset);
         if (!obj) {
-            return false;
+            return undefined;
         }
         const alg = obj.getAttribute("Alg");
         let algValue = alg?.getAttrValue();
         if (!algValue) {
-            return false;
+            return undefined;
         }
 
         if (offset >= algValue.start && offset <= algValue.end) {
-            return true;
+            return algValue;
         }
-        return false;
+        return undefined;
     }
 
-    public getObjectFromOffset(offset: number): SepticObject | undefined {
-        return this.objects.find((obj) => {
-            return offset >= obj.start && offset <= obj.end;
-        });
+    public getAlgFromOffset(offset: number): Attribute | undefined {
+        const obj = this.getObjectFromOffset(offset);
+        if (!obj) {
+            return undefined;
+        }
+        const alg = obj.getAttribute("Alg");
+        let algValue = alg?.getAttrValue();
+        if (!algValue) {
+            return undefined;
+        }
+
+        if (offset >= algValue.start && offset <= algValue.end) {
+            return alg;
+        }
+        return undefined;
+    }
+
+    public getObjectFromOffset(offset: number): SepticObject {
+        let index = 1;
+        while (index < this.objects.length) {
+            if (this.objects[index].start >= offset) {
+                return this.objects[index - 1];
+            }
+            index += 1;
+        }
+        return this.objects[this.objects.length - 1];
     }
 
     public getXvrRefFromOffset(offset: number): SepticReference | undefined {
@@ -105,6 +148,13 @@ export class SepticCnfg implements SepticReferenceProvider {
             }
         }
         return undefined;
+    }
+
+    public updateObjectParents(
+        hierarchy: SepticObjectHierarchy
+    ): Promise<void> {
+        updateParentObjects(this.objects, hierarchy);
+        return Promise.resolve();
     }
 
     private extractXvrRefs(): void {
@@ -153,10 +203,6 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
 
     objectDef.refs.attrList.forEach((attr) => {
         xvrRefs.push(...xvrRefsAttrList(obj, attr));
-    });
-
-    objectDef.refs.attr.forEach((attr) => {
-        xvrRefs.push(...xvrRefAttr(obj, attr));
     });
 
     if (obj.isType("CalcPvr")) {
@@ -210,18 +256,4 @@ function xvrRefsAttrList(
             end: ref.end - 1,
         });
     });
-}
-
-function xvrRefAttr(obj: SepticObject, attrName: string): SepticReference[] {
-    let attrValue = obj.getAttribute(attrName)?.getAttrValue();
-    if (!attrValue) {
-        return [];
-    }
-    return [
-        createSepticReference(attrValue.getValue(), {
-            uri: "",
-            start: attrValue.start + 1,
-            end: attrValue.end - 1,
-        }),
-    ];
 }

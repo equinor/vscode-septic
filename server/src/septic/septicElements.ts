@@ -47,6 +47,7 @@ export class SepticObject extends SepticBase {
     type: string;
     identifier: Identifier | undefined;
     attributes: Attribute[];
+    parent: SepticObject | undefined;
 
     constructor(
         type: string,
@@ -58,6 +59,7 @@ export class SepticObject extends SepticBase {
         this.type = type;
         this.identifier = variable;
         this.attributes = [];
+        this.parent = undefined;
     }
 
     addAttribute(attr: Attribute) {
@@ -104,6 +106,10 @@ export class SepticObject extends SepticBase {
     isType(...type: string[]) {
         return type.includes(this.type);
     }
+
+    setParent(parent: SepticObject | undefined) {
+        this.parent = parent;
+    }
 }
 
 export class Attribute extends SepticBase {
@@ -143,7 +149,10 @@ export class Attribute extends SepticBase {
     }
 
     getValue(): string | undefined {
-        return this.values?.[0].getValue();
+        if (!this.values.length) {
+            return undefined;
+        }
+        return this.values[0].getValue();
     }
 
     getValues(): string[] {

@@ -1,0 +1,14 @@
+{# Test that objects are inserted on empty line #}
+  Mvr:           MvrName
+         Text1=  ""
+
+/* Test that no extra line is added when line already empty */
+  Mvr:           MvrName
+         Text1=  ""
+
+// Test Line comment rigth above
+  Mvr:           MvrName
+         Text1=  ""
+
+  Mvr:           MvrName
+         Text1=  ""

@@ -13,11 +13,11 @@ import {
     InitializeResult,
     FoldingRange,
     DocumentSymbol,
-    TextDocumentPositionParams,
     CompletionItem,
     LocationLink,
     Location,
     DidChangeWatchedFilesNotification,
+    CompletionParams,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -27,8 +27,14 @@ import { DocumentProvider } from "./documentProvider";
 import * as protocol from "./protocol";
 import { ContextManager } from "./contextManager";
 import { offsetToPositionRange } from "./util/converter";
-import { ScgContext, SepticCnfg, SepticReferenceProvider } from "./septic";
+import {
+    ScgContext,
+    SepticCnfg,
+    SepticReferenceProvider,
+    SepticMetaInfoProvider,
+} from "./septic";
 import { getIgnorePatterns, isPathIgnored } from "./ignorePath";
+
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
@@ -62,6 +68,9 @@ let hasDiagnosticRelatedInformationCapability = false;
 async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
     await context.load();
     const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
+    await context.updateObjectParents(
+        SepticMetaInfoProvider.getInstance().getObjectHierarchy()
+    );
     const diagnosticsPromises = context.files.map(async (file) => {
         if (isPathIgnored(file, ignorePatterns)) {
             connection.sendDiagnostics({ uri: file, diagnostics: [] });
@@ -92,6 +101,9 @@ async function publishDiagnosticsCnfg(uri: string): Promise<void> {
     if (!doc) {
         return;
     }
+    await cnfg.updateObjectParents(
+        SepticMetaInfoProvider.getInstance().getObjectHierarchy()
+    );
     let diagnostics = await langService.provideDiagnostics(doc, cnfg);
     connection.sendDiagnostics({ uri: doc.uri, diagnostics: diagnostics });
 }
@@ -140,6 +152,7 @@ connection.onInitialize((params: InitializeParams) => {
             documentSymbolProvider: true,
             completionProvider: {
                 resolveProvider: false,
+                triggerCharacters: ["."],
             },
             definitionProvider: true,
             referencesProvider: true,
@@ -149,6 +162,9 @@ connection.onInitialize((params: InitializeParams) => {
             },
             hoverProvider: true,
             documentFormattingProvider: true,
+            signatureHelpProvider: {
+                triggerCharacters: [",", "("],
+            },
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -222,23 +238,23 @@ connection.onDocumentSymbol(
 );
 
 connection.onCompletion(
-    async (docPos: TextDocumentPositionParams): Promise<CompletionItem[]> => {
-        const document = documents.get(docPos.textDocument.uri);
+    async (params: CompletionParams): Promise<CompletionItem[]> => {
+        const document = documents.get(params.textDocument.uri);
         if (!document) {
             return [];
         }
         let context: SepticReferenceProvider | undefined =
-            await contextManager.getContext(docPos.textDocument.uri);
+            await contextManager.getContext(params.textDocument.uri);
         if (!context) {
             context = await langService.cnfgProvider.get(
-                docPos.textDocument.uri
+                params.textDocument.uri
             );
         }
 
         if (!context) {
             return [];
         }
-        return langService.provideCompletion(docPos, document, context);
+        return langService.provideCompletion(params, document, context);
     }
 );
 
@@ -405,6 +421,14 @@ connection.onDocumentFormatting(async (params) => {
         return [];
     }
     return langService.provideFormatting(doc);
+});
+
+connection.onSignatureHelp(async (params) => {
+    let doc = await documentProvider.getDocument(params.textDocument.uri);
+    if (!doc) {
+        return undefined;
+    }
+    return langService.provideSignatureHelp(params, doc);
 });
 
 // Make the text document manager listen on the connection

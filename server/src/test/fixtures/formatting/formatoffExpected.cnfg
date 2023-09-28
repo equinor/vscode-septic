@@ -1,0 +1,21 @@
+  Tvr:           TvrName
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+          Unit=  ""
+          Meas=  0
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+MeasValidation=  OFF
+ MeasHighLimit=  1e+10
+  MeasLowLimit=  -1e+10
+         Color=  BLACK
+
+
+{# format:off #}
+Evr: Test Text1= "Test"
+Evr: Test2 Text1= "Test"

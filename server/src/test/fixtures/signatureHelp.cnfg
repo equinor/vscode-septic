@@ -1,0 +1,34 @@
+  CalcPvr:       Basic
+         Text1=  ""
+         Text2=  ""
+           Alg=  "if(1 > 2, 1, 0, 1, 2) + 1"
+
+  CalcPvr:       Nested
+         Text1=  ""
+         Text2=  ""
+           Alg=  "if(and(Test > 1, 1), 1, 0)"
+
+  CalcPvr:       CalcPvrName
+         Text1=  ""
+         Text2=  ""
+           Alg=  "intpoltype1(3, 2, 3, 4, 5)"
+
+  CalcPvr:       CalcPvrName
+         Text1=  ""
+         Text2=  ""
+           Alg=  "bscalc(1,2,3)"
+
+  CalcPvr:       CalcPvrName
+         Text1=  ""
+         Text2=  ""
+           Alg=  "(1 + 2 + if(2>1,1,0)"
+
+  CalcPvr:       CalcPvrName
+         Text1=  ""
+         Text2=  ""
+           Alg=  "maxselection(3,1,2, )"
+
+  CalcPvr:       CalcPvrName
+         Text1=  ""
+         Text2=  ""
+           Alg=  "maxselection(3,1,2,3,4, )"

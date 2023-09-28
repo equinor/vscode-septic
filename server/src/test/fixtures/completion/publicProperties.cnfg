@@ -1,0 +1,22 @@
+  Mvr:           MvrName
+         Text1=  ""
+
+  CalcPvr:       Test
+         Text1=  ""
+         Text2=  ""
+           Alg=  "MvrName."
+
+  CalcPvr:       Test
+         Text1=  ""
+         Text2=  ""
+           Alg=  "Variable."
+
+  CalcPvr:       Test
+         Text1=  ""
+         Text2=  ""
+           Alg=  "3."
+
+  CalcPvr:       Test
+         Text1=  ""
+         Text2=  ""
+           Alg=  "MvrName.SSVal"

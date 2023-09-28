@@ -22,10 +22,12 @@ interface SepticSymbol {
 export class DocumentSymbolProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
 
+    /* istanbul ignore next */
     constructor(cnfgProvider: ISepticConfigProvider) {
         this.cnfgProvider = cnfgProvider;
     }
 
+    /* istanbul ignore next */
     public async provideDocumentSymbols(
         document: ITextDocument,
         token: CancellationToken | undefined

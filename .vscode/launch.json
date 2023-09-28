@@ -6,6 +6,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Update Documentation",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceRoot}/scripts/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "Attach to server",
             "port": 6009,
             "request": "attach",

@@ -22,6 +22,7 @@ import { SepticReferenceProvider } from "../septic";
 import { RenameProvider } from "./renameProvider";
 import { HoverProvider } from "./hoverProvider";
 import { FormattingProvider } from "./formatProvider";
+import { SignatureHelpProvider } from "./signatureHelpProvider";
 
 export * from "./types/textDocument";
 
@@ -43,7 +44,7 @@ export interface ILanguageService {
     ): Promise<lsp.DocumentSymbol[]>;
 
     provideCompletion(
-        pos: lsp.TextDocumentPositionParams,
+        pos: lsp.CompletionParams,
         doc: ITextDocument,
         refProvider: SepticReferenceProvider
     ): Promise<lsp.CompletionItem[]>;
@@ -83,6 +84,11 @@ export interface ILanguageService {
     ): Promise<lsp.Hover | undefined>;
 
     provideFormatting(doc: ITextDocument): Promise<lsp.TextEdit[]>;
+
+    provideSignatureHelp(
+        param: lsp.SignatureHelpParams,
+        doc: ITextDocument
+    ): Promise<lsp.SignatureHelp>;
 }
 
 export function createLanguageService(
@@ -107,6 +113,8 @@ export function createLanguageService(
     const hoverProvider = new HoverProvider(cnfgProvider);
 
     const formattingProvider = new FormattingProvider(cnfgProvider);
+
+    const signatureHelpProvider = new SignatureHelpProvider(cnfgProvider);
 
     return Object.freeze<ILanguageService>({
         cnfgProvider,
@@ -134,5 +142,8 @@ export function createLanguageService(
         provideHover: hoverProvider.provideHover.bind(hoverProvider),
         provideFormatting:
             formattingProvider.provideFormatting.bind(formattingProvider),
+        provideSignatureHelp: signatureHelpProvider.provideSignatureHelp.bind(
+            signatureHelpProvider
+        ),
     });
 }

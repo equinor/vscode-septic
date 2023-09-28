@@ -163,32 +163,12 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             this.advance();
             end = this.previous().end;
             content += ".";
-
-            if (
-                !(
-                    this.check(AlgTokenType.identifier) ||
-                    this.check(AlgTokenType.jinja)
-                )
-            ) {
-                this.error("Missing specifier after dot", {
-                    start: token.start,
-                    end: this.previous().end,
-                    content: content,
-                    type: AlgTokenType.error,
-                });
-            }
             this.advance();
             let nextToken = this.variable();
-            if (nextToken.start !== end) {
-                this.error("Missing specifier after dot", {
-                    start: token.start,
-                    end: this.previous().end,
-                    content: content,
-                    type: AlgTokenType.error,
-                });
+            if (nextToken.start === end) {
+                content += nextToken.content;
+                end = nextToken.end;
             }
-            content += nextToken.content;
-            end = nextToken.end;
         }
 
         return {
@@ -207,23 +187,24 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             !this.isAtEnd() &&
             this.peek().type !== AlgTokenType.rightParen
         ) {
-            if (this.match(AlgTokenType.comma)) {
-                if (this.check(AlgTokenType.rightParen)) {
-                    this.error(
-                        `Missing argument in calc: ${identifierToken.content}`,
-                        {
-                            start: identifierToken.start,
-                            end: this.previous().end,
+            if (this.check(AlgTokenType.comma)) {
+                if (this.previous().type === AlgTokenType.comma) {
+                    args.push(
+                        new AlgLiteral({
+                            type: AlgTokenType.string,
                             content: "",
-                            type: AlgTokenType.error,
-                        }
+                            start: this.previous().end,
+                            end: this.peek().start,
+                        })
                     );
                 }
+                this.advance();
                 continue;
             }
-            args.push(this.comparison());
+            let arg = this.comparison();
+            args.push(arg);
         }
-        if (!this.match(AlgTokenType.rightParen)) {
+        if (!this.check(AlgTokenType.rightParen)) {
             this.error(
                 `Missing closing parenthesis for calc: ${identifierToken.content}`,
                 {
@@ -234,7 +215,18 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
                 }
             );
         }
-        return new AlgFunction(identifierToken, args);
+        if (this.previous().type === AlgTokenType.comma) {
+            args.push(
+                new AlgLiteral({
+                    type: AlgTokenType.string,
+                    content: "",
+                    start: this.previous().end,
+                    end: this.peek().start,
+                })
+            );
+        }
+        this.advance();
+        return new AlgCalc(identifierToken, this.previous(), args);
     }
 
     error(message: string, token: IToken<AlgTokenType>): never {
@@ -314,23 +306,21 @@ export class AlgLiteral extends AlgExpr {
     }
 }
 
-export class AlgFunction extends AlgExpr {
-    public args: AlgExpr[];
+export class AlgCalc extends AlgExpr {
+    public params: AlgExpr[];
     public identifier: string;
 
-    constructor(identifierToken: AlgToken, args: AlgExpr[]) {
-        let end;
-        if (args.length) {
-            end = args[args.length - 1].end + 1;
-        } else {
-            end = identifierToken.end + 2;
-        }
-        super(identifierToken.start, end);
+    constructor(
+        identifierToken: AlgToken,
+        rightParenToken: AlgToken,
+        params: AlgExpr[]
+    ) {
+        super(identifierToken.start, rightParenToken.end);
         this.identifier = identifierToken.content;
-        this.args = args;
+        this.params = params;
     }
     accept(visitor: IAlgVisitor): any {
-        return visitor.visitFunction(this);
+        return visitor.visitCalc(this);
     }
 }
 
@@ -350,12 +340,12 @@ export interface IAlgVisitor {
     visitBinary(expr: AlgBinary): void;
     visitLiteral(expr: AlgLiteral): void;
     visitGrouping(expr: AlgGrouping): void;
-    visitFunction(expr: AlgFunction): void;
+    visitCalc(expr: AlgCalc): void;
     visitUnary(expr: AlgUnary): void;
 }
 
 export class AlgVisitor implements IAlgVisitor {
-    calcs: AlgFunction[] = [];
+    calcs: AlgCalc[] = [];
     variables: AlgLiteral[] = [];
 
     visit(expr: AlgExpr) {
@@ -377,9 +367,9 @@ export class AlgVisitor implements IAlgVisitor {
         expr.expr.accept(this);
     }
 
-    visitFunction(expr: AlgFunction): void {
+    visitCalc(expr: AlgCalc): void {
         this.calcs.push(expr);
-        expr.args.forEach((arg) => {
+        expr.params.forEach((arg) => {
             arg.accept(this);
         });
     }

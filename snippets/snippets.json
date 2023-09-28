@@ -1681,7 +1681,7 @@
         "description": ""
     },
     "IfBlockJinja": {
-        "prefix": "if",
+        "prefix": "ifjinja",
         "body": [
             "{% if condition %}",
             "\t$0",
@@ -1690,7 +1690,7 @@
         "description": "Insert a Jinja if block"
     },
     "IfElseBlockJinja": {
-        "prefix": "ifelse",
+        "prefix": "ifelsejinja",
         "body": [
             "{% if condition1 %}",
             "\t$1",

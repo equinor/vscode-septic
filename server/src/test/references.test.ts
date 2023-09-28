@@ -148,6 +148,11 @@ describe("Test getDefinition", () => {
         let result = getDefinition(offset, cnfg, cnfg);
         expect(result.length).to.equal(1);
     });
+    it("Expect no definition when outside refs", () => {
+        const offset = 1;
+        let result = getDefinition(offset, cnfg, cnfg);
+        expect(result.length).to.equal(0);
+    });
 });
 
 describe("Test getDeclaration", () => {
@@ -191,6 +196,11 @@ describe("Test getDeclaration", () => {
         const offset = 190;
         let result = getDeclaration(offset, cnfg, cnfg);
         expect(result.length).to.equal(1);
+    });
+    it("Expect no declaration when not in ref", () => {
+        const offset = 1;
+        let result = getDeclaration(offset, cnfg, cnfg);
+        expect(result.length).to.equal(0);
     });
 });
 
@@ -240,5 +250,10 @@ describe("Test getReferences", () => {
         const offset = 190;
         let result = getReferences(offset, cnfg, cnfg);
         expect(result.length).to.equal(4);
+    });
+    it("Expect no references when outside", () => {
+        const offset = 1;
+        let result = getReferences(offset, cnfg, cnfg);
+        expect(result.length).to.equal(0);
     });
 });

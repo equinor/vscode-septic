@@ -13,6 +13,9 @@ import {
 import { SepticObject } from "./septicElements";
 import { SepticConfigProvider } from "../language-service/septicConfigProvider";
 import { SepticCnfg } from "./septicCnfg";
+import { removeSpaces } from "../util";
+import { SepticObjectHierarchy } from "./septicMetaInfo";
+import { updateParentObjects } from "./hierarchy";
 
 export interface ScgConfig {
     outputfile?: string;
@@ -104,6 +107,18 @@ export class ScgContext implements SepticReferenceProvider {
         );
     }
 
+    public getObjectsByIdentifier(identifier: string): SepticObject[] {
+        let objects: SepticObject[] = [];
+        for (let file of this.files) {
+            let cnfg = this.cnfgCache.get(file);
+            if (!cnfg) {
+                continue;
+            }
+            objects.push(...cnfg.getObjectsByIdentifier(identifier));
+        }
+        return objects;
+    }
+
     public getXvrRefs(name: string): SepticReference[] | undefined {
         let xvrRefs: SepticReference[] = [];
         for (const file of this.files) {
@@ -146,5 +161,20 @@ export class ScgContext implements SepticReferenceProvider {
             xvrObjs.push(...cnfg.getAllXvrObjects());
         }
         return xvrObjs;
+    }
+
+    public async updateObjectParents(
+        hierarchy: SepticObjectHierarchy
+    ): Promise<void> {
+        await this.load();
+        const objects: SepticObject[] = [];
+        for (let file of this.files) {
+            let cnfg = this.cnfgCache.get(file);
+            if (!cnfg) {
+                continue;
+            }
+            objects.push(...cnfg.objects);
+        }
+        updateParentObjects(objects, hierarchy);
     }
 }

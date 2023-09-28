@@ -2,7 +2,7 @@ import { expect } from "chai";
 import {
     AlgTokenType,
     AlgBinary,
-    AlgFunction,
+    AlgCalc,
     AlgGrouping,
     AlgScanner,
     AlgLiteral,
@@ -359,36 +359,36 @@ describe("Test parsing of functions", () => {
     it("Parsing of function with zero arguments", () => {
         const input = "add()";
         const expr = parseAlg(input);
-        expect(expr).to.instanceOf(AlgFunction);
-        expect((<AlgFunction>expr).args.length).to.equal(0);
+        expect(expr).to.instanceOf(AlgCalc);
+        expect((<AlgCalc>expr).params.length).to.equal(0);
     });
 
     it("Parsing of function with multiple arguments", () => {
         const input = "add(1,2)";
         const expr = parseAlg(input);
-        expect(expr).to.instanceOf(AlgFunction);
-        expect((<AlgFunction>expr).args.length).to.equal(2);
-        expect((<AlgFunction>expr).identifier).to.equal("add");
-        expect((<AlgFunction>expr).args[0]).to.instanceOf(AlgLiteral);
-        expect((<AlgFunction>expr).args[1]).to.instanceOf(AlgLiteral);
+        expect(expr).to.instanceOf(AlgCalc);
+        expect((<AlgCalc>expr).params.length).to.equal(2);
+        expect((<AlgCalc>expr).identifier).to.equal("add");
+        expect((<AlgCalc>expr).params[0]).to.instanceOf(AlgLiteral);
+        expect((<AlgCalc>expr).params[1]).to.instanceOf(AlgLiteral);
     });
     it("Parsing of nested functions", () => {
         const input = "and(not(true),false)";
         const expr = parseAlg(input);
-        expect(expr).to.instanceOf(AlgFunction);
-        expect((<AlgFunction>expr).args.length).to.equal(2);
-        expect((<AlgFunction>expr).identifier).to.equal("and");
-        expect((<AlgFunction>expr).args[0]).to.instanceOf(AlgFunction);
-        expect((<AlgFunction>expr).args[1]).to.instanceOf(AlgLiteral);
+        expect(expr).to.instanceOf(AlgCalc);
+        expect((<AlgCalc>expr).params.length).to.equal(2);
+        expect((<AlgCalc>expr).identifier).to.equal("and");
+        expect((<AlgCalc>expr).params[0]).to.instanceOf(AlgCalc);
+        expect((<AlgCalc>expr).params[1]).to.instanceOf(AlgLiteral);
     });
     it("Parsing of trublesome function", () => {
         const input = "intpoltype1({{ Wellname }}Zpc_Y, {{ Cv_curve_well }})";
         const expr = parseAlg(input);
-        expect(expr).to.instanceOf(AlgFunction);
-        expect((<AlgFunction>expr).args.length).to.equal(2);
-        expect((<AlgFunction>expr).identifier).to.equal("intpoltype1");
-        expect((<AlgFunction>expr).args[0]).to.instanceOf(AlgLiteral);
-        expect((<AlgFunction>expr).args[1]).to.instanceOf(AlgLiteral);
+        expect(expr).to.instanceOf(AlgCalc);
+        expect((<AlgCalc>expr).params.length).to.equal(2);
+        expect((<AlgCalc>expr).identifier).to.equal("intpoltype1");
+        expect((<AlgCalc>expr).params[0]).to.instanceOf(AlgLiteral);
+        expect((<AlgCalc>expr).params[1]).to.instanceOf(AlgLiteral);
     });
 });
 
@@ -440,7 +440,7 @@ describe("Test parsing of invalid algs", () => {
         const parse = () => {
             parseAlg(input);
         };
-        expect(parse).to.throw();
+        expect(parse).to.not.throw();
     });
     it("Parsing of seperate dot", () => {
         const input = "test .";
@@ -454,6 +454,6 @@ describe("Test parsing of invalid algs", () => {
         const parse = () => {
             parseAlg(input);
         };
-        expect(parse).to.throw();
+        expect(parse).to.not.throw();
     });
 });

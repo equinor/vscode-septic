@@ -2,8 +2,9 @@ out
 node_modules
 .vscode-test/
 *.vsix
-.env
+*.env
 .venv
+.cpp
 __pycache__
 .nyc_output
 coverage/

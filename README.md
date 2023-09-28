@@ -27,6 +27,8 @@
 -   GoToDeclaration: Goes to the declaration of the connected SopcXvr when referenced (e.g. in calcs, Xvr etc.)
 -   Find References: Finds all references to a (Sopc)Xvr (e.g. in calcs, object declaration, XvrPlot etc.)
 -   Ignore Diagnostics for specified paths.
+-   Documentation: Built in documentation of objects/attributes and calcs based on source code.
+-   SignatureHelp: Signature help for calcs
 
 ## Instructions
 
@@ -34,7 +36,7 @@ If you don't know what the SEPTIC file format is, then you don't need this exten
 
 Adding the SEPTIC extension to VS Code allows you to do the following when loading a SEPTIC .cnfg file:
 
--   Auto-complete (Sopc)Xvr names and Calcs.
+-   Auto-complete (Sopc)Xvr names/properties, object attributes and calcs.
 -   Diagnose certain fault modes (missing parenthesis in calcs, mistyped Calc or Xvr names etc.)
 -   Auto-complete commonly used segments of code, called snippets
     -   Type e.g. 'sopc' (uncapitalized letters only), and you should see a number of sopcxvr snippet options. Choose the one you want with `arrow up`/`arrow down` and press `Tab` to create a complete sopcxvr section.
@@ -51,6 +53,12 @@ Adding the SEPTIC extension to VS Code allows you to do the following when loadi
 -   Diagnostics (Errors/Warnings) for a certain line can be disabled by writing `// noqa` or `{# noqa #}` at the same line. It is recommended to use the jinja version when suppressing diagnostics when using scg in order to get proper diagnostics on the generated config. To disable certain errors/warnings write `{# noqa: Ennn, Wnnn #}` or `// noqa: Ennn, Ennn` (i.e. `noqa` + `:` + comma separated list of errors). The relevant error codes are displayed on the errors/warnings (e.g. `septic Enn`). To disable all diagnostics, use the `septic.diagnostics.enabled` setting. Diagnostics can be ignored for certain files by adding the path of the file to the `septic.ignored.paths` setting. . `*` can be used as a wildcard i.e. you can write `/templates/*` to ignore all files in the folder `templates`. The paths are calculated relative the workspace folder(s) root(s). This setting should be set on a workspace level in order avoid unintentionally ignoring files when switching between projects.
 
 -   Formatting of cnfg files can be enabled by setting `septic.formatting.enabled = True` in the settings. Comments `// or /* */` and jinja-comments `{#   #}` are not formatted. Everything between the jinja expressions `{% for w %}` ... `{% endfor %}` and `{% if %}` ... `{% endif %}` are not formatted. To avoid formatting certain sections of the file the flags `{# format:off #}` and `{# format:on #}` can be used to turn off and on again formatting (Tip: snippets available by writing `formaton/off`).
+
+-   Documentation of objects and calcs are available by hovering over the object/calc definition. Hovering on object definition will provide an overview of the object and related attributes. For more information about a certain attribute (datatype, description etc.), hover over the definition of the attribute. Hovering over a calc will provide information about parameters, return values, quality etc.
+
+-   SignatureHelp is provided when writing calcs inside CalcPvr.Alg. The signature is shown with the active parameter highlighted together with the documentation of the active parameter. SignatureHelp can be manually activated by pressing `Ctrl + Shift + Space`.
+
+-   Search functionality for calcs are builtin into the completion. To start searching, start typing the search word into the CalcPvr.Alg field and all calcs that has the relevant search word in the documentation is included in the filtered results. Pressing `Ctrl + Space` starts the completion without a starting phrase and can be used to browse all available calcs and variables inside a CalcPvr.Alg.
 
 The extension supports SEPTIC projects that uses the SEPTIC Config Generator (SCG). The SCG-config file for the project is loaded and the relevant `.cnfg` files (required to be in the templates folder) listed in the layout section are loaded into a common context that shares references etc.
 

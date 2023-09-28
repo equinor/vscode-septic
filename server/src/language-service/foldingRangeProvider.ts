@@ -12,10 +12,12 @@ import { SepticConfigProvider } from "./septicConfigProvider";
 export class FoldingRangeProvider {
     private readonly cnfgProvider: SepticConfigProvider;
 
+    /* istanbul ignore next */
     constructor(cnfgProvider: SepticConfigProvider) {
         this.cnfgProvider = cnfgProvider;
     }
 
+    /* istanbul ignore next */
     public async provideFoldingRanges(
         doc: ITextDocument,
         token: lsp.CancellationToken
