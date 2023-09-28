@@ -1,4 +1,4 @@
-# Commit: 95ee00c
+# Commit: 9510848
 - attributes:
   - calc: false
     dataType: enum
@@ -219,7 +219,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - '0'
@@ -788,7 +788,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - '0'
@@ -1114,7 +1114,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - '0'
@@ -1316,7 +1316,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - '0'
@@ -1517,7 +1517,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - '0'
