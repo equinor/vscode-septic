@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { Cycle } from "./cycle";
 import { SepticObject } from "./septicElements";
 import { SepticObjectHierarchy } from "./septicMetaInfo";
 
@@ -46,7 +47,6 @@ export const defaultRefValidationFunction: RefValidationFunction = (
 };
 
 export interface SepticReferenceProvider {
-    load(): Promise<void>;
     getXvrRefs(name: string): SepticReference[] | undefined;
     getAllXvrObjects(): SepticObject[];
     getObjectsByIdentifier(identifier: string): SepticObject[];
@@ -54,5 +54,6 @@ export interface SepticReferenceProvider {
         name: string,
         validationFunction: RefValidationFunction
     ): boolean;
-    updateObjectParents(hierarchy: SepticObjectHierarchy): Promise<void>;
+    update(): Promise<void>;
+    getCycles(): Cycle[];
 }

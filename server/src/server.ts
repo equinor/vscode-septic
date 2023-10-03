@@ -66,11 +66,8 @@ let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
 
 async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
-    await context.load();
     const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
-    await context.updateObjectParents(
-        SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-    );
+    await context.update();
     const diagnosticsPromises = context.files.map(async (file) => {
         if (isPathIgnored(file, ignorePatterns)) {
             connection.sendDiagnostics({ uri: file, diagnostics: [] });
@@ -101,9 +98,7 @@ async function publishDiagnosticsCnfg(uri: string): Promise<void> {
     if (!doc) {
         return;
     }
-    await cnfg.updateObjectParents(
-        SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-    );
+    await cnfg.update();
     let diagnostics = await langService.provideDiagnostics(doc, cnfg);
     connection.sendDiagnostics({ uri: doc.uri, diagnostics: diagnostics });
 }

@@ -171,14 +171,26 @@ export class SepticCnfg implements SepticReferenceProvider {
         return undefined;
     }
 
-    public updateObjectParents(
-        hierarchy: SepticObjectHierarchy
-    ): Promise<void> {
-        updateParentObjects(this.objects, hierarchy);
+    public getAllObjectsType(type: string) {
+        return this.objects.filter((obj) => obj.isType(type));
+    }
+
+    public async update(): Promise<void> {
+        this.updateParentObjects();
+        this.updateCycles();
         return Promise.resolve();
     }
 
-    public findCycles(): Cycle[] {
+    public getCycles(): Cycle[] {
+        return this.cycles;
+    }
+    private updateParentObjects(): void {
+        const hierarchy =
+            SepticMetaInfoProvider.getInstance().getObjectHierarchy();
+        updateParentObjects(this.objects, hierarchy);
+    }
+
+    private updateCycles(): void {
         let calcPvrs = this.objects.filter((obj) => obj.isType("CalcPvr"));
         let algs: Alg[] = [];
         for (let calcPvr of calcPvrs) {
@@ -192,7 +204,7 @@ export class SepticCnfg implements SepticReferenceProvider {
                 content: content,
             });
         }
-        return findAlgCycles(algs);
+        this.cycles = findAlgCycles(algs);
     }
 
     private extractXvrRefs(): void {

@@ -1,7 +1,7 @@
 import {
     AlgBinary,
     AlgExpr,
-    AlgFunction,
+    AlgCalc,
     AlgGrouping,
     AlgLiteral,
     AlgTokenType,
@@ -32,12 +32,12 @@ export class CycleDetectorVisitor implements IAlgVisitor {
         expr.expr.accept(this);
     }
 
-    visitFunction(expr: AlgFunction): void {
+    visitCalc(expr: AlgCalc): void {
         if (expr.identifier === "setgood") {
             return;
         }
-        expr.args.forEach((arg) => {
-            arg.accept(this);
+        expr.params.forEach((param) => {
+            param.accept(this);
         });
     }
 

@@ -159,10 +159,7 @@ export function getDiagnostics(
     const diagnostics: Diagnostic[] = [];
     diagnostics.push(...validateObjects(cnfg, doc, refProvider));
     diagnostics.push(...validateAlgs(cnfg, doc, refProvider));
-    const isContext = !(refProvider instanceof SepticCnfg);
-    if (!isContext) {
-        diagnostics.push(...validateAlgCycles(cnfg, doc));
-    }
+    diagnostics.push(...validateAlgCycles(refProvider, doc));
     let disabledLines = getDisabledLines(cnfg.comments, doc);
     let filteredDiags = diagnostics.filter((diag) => {
         let disabledLine = disabledLines.get(diag.range.start.line);
@@ -981,22 +978,22 @@ function getDiagnosticCodes(codes: string): string[] {
 }
 
 export function validateAlgCycles(
-    cnfg: SepticCnfg,
+    refProvider: SepticReferenceProvider,
     doc: ITextDocument
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    for (let cycle of cnfg.findCycles()) {
+    for (let cycle of refProvider.getCycles()) {
         let cycleStr = [...cycle.nodes, cycle.nodes[0]]
             .map((node) => node.name)
             .join("->");
         const relatedInformation: DiagnosticRelatedInformation[] = [];
         const rootNode = cycle.nodes[0];
-        const rootObject = cnfg.getObject(rootNode.name, "CalcPvr");
+        const rootObject = refProvider.getObject(rootNode.name, "CalcPvr");
         if (!rootObject) {
             continue;
         }
         for (let node of cycle.nodes.slice(1)) {
-            let nodeObj = cnfg.getObject(node.name, "CalcPvr");
+            let nodeObj = refProvider.getObject(node.name, "CalcPvr");
             if (!nodeObj) {
                 continue;
             }
