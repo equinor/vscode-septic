@@ -44,7 +44,11 @@
   refs:
     attrList: [Dvrs]
 - name: DynCurve
+  refs:
+    attrList: [xXvr, yXvr]
 - name: DynPoint
+  refs:
+    attrList: [xXvr, yXvr]
 - name: Evr
   level: 2
   symbolKind: Variable
@@ -60,6 +64,8 @@
 - name: FMUModl
 - name: FMUProc
 - name: FreeMeas
+  refs:
+    attrList: [StatusXvr]
 - name: FreeText
 - name: Heading
   level: 2
@@ -69,9 +75,17 @@
 - name: ImageStatusLabel
   level: 3
 - name: ImageTextXvr
+  refs:
+    identifier: True
 - name: ImageXvr
+  refs:
+    identifier: True
 - name: ImageXvrCollection
+  refs:
+    attrList: [Xvrs, StatusXvr]
 - name: ImageXvrPlot
+  refs:
+    identifier: True
 - name: ListMeas
   symbolKind: Array
 - name: MasterTcip
