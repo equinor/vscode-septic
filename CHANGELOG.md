@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.10.1](https://github.com/equinor/vscode-septic/compare/v1.10.0...v1.10.1) (2023-10-03)
+
+
+### 🧹 Chores
+
+* Update objects refs ([#317](https://github.com/equinor/vscode-septic/issues/317)) ([79fba7c](https://github.com/equinor/vscode-septic/commit/79fba7c37d1061fc9188ecc0e517e924f59df5ef))
+
+
+### 🐛 Bug Fixes
+
+* bug in attr doc on hover ([#313](https://github.com/equinor/vscode-septic/issues/313)) ([7a09351](https://github.com/equinor/vscode-septic/commit/7a093515a57e0d371c02c58840ac2c2756270e08))
+
 ## [1.10.0](https://github.com/equinor/vscode-septic/compare/v1.9.0...v1.10.0) (2023-09-28)
 
 
