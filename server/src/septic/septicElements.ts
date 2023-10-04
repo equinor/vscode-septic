@@ -8,6 +8,7 @@ import { SepticTokenType } from "./septicTokens";
 export class SepticBase {
     start: number;
     end: number;
+    uri: string = "";
 
     constructor(start: number = -1, end: number = -1) {
         this.start = start;
@@ -20,6 +21,10 @@ export class SepticBase {
 
     getElements(): SepticBase[] {
         return [];
+    }
+
+    setUri(uri: string) {
+        this.uri = uri;
     }
 }
 
@@ -48,6 +53,7 @@ export class SepticObject extends SepticBase {
     identifier: Identifier | undefined;
     attributes: Attribute[];
     parent: SepticObject | undefined;
+    children: SepticObject[] = [];
 
     constructor(
         type: string,
@@ -109,6 +115,14 @@ export class SepticObject extends SepticBase {
 
     setParent(parent: SepticObject | undefined) {
         this.parent = parent;
+    }
+
+    addChild(child: SepticObject) {
+        this.children.push(child);
+    }
+
+    resetChildren() {
+        this.children = [];
     }
 }
 

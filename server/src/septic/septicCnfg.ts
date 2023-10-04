@@ -43,6 +43,9 @@ export class SepticCnfg implements SepticReferenceProvider {
 
     public setUri(uri: string) {
         this.uri = uri;
+        this.objects.forEach((obj) => {
+            obj.setUri(uri);
+        });
     }
 
     public getAlgAttrs(): Attribute[] {

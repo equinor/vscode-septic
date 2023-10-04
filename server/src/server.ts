@@ -34,6 +34,7 @@ import {
     SepticMetaInfoProvider,
 } from "./septic";
 import { getIgnorePatterns, isPathIgnored } from "./ignorePath";
+import { createCodeActionInsertEvr } from "./language-service/codeActionProvider";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -165,6 +166,7 @@ connection.onInitialize((params: InitializeParams) => {
             signatureHelpProvider: {
                 triggerCharacters: [",", "("],
             },
+            codeActionProvider: true,
         },
     };
     if (hasWorkspaceFolderCapability) {
@@ -431,6 +433,39 @@ connection.onSignatureHelp(async (params) => {
     return langService.provideSignatureHelp(params, doc);
 });
 
+connection.onCodeAction(async (params) => {
+    let context: ScgContext | undefined = await contextManager.getContext(
+        params.textDocument.uri
+    );
+    if (!context) {
+        let cnfg = await langService.cnfgProvider.get(params.textDocument.uri);
+        if (!cnfg) {
+            return undefined;
+        }
+        cnfg.updateObjectParents(
+            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
+        );
+    } else {
+        context.updateObjectParents(
+            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
+        );
+    }
+
+    let doc = await documentProvider.getDocument(params.textDocument.uri);
+    if (!doc) {
+        return undefined;
+    }
+    let insertEvrActions = await langService.provideCodeAction(params, doc);
+    let codeActions = [];
+    for (let evrAction of insertEvrActions) {
+        let doc = await documentProvider.getDocument(evrAction.uri);
+        if (!doc) {
+            continue;
+        }
+        codeActions.push(createCodeActionInsertEvr(evrAction, doc));
+    }
+    return codeActions;
+});
 // Make the text document manager listen on the connection
 // for open, change and close text document events
 documents.listen(connection);
