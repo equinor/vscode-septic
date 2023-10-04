@@ -10,13 +10,19 @@ import { ITextDocument } from "./types/textDocument";
 import { SepticCnfg, SepticReferenceProvider } from "../septic";
 import { DiagnosticCode } from "./diagnosticsProvider";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
+import { SettingsManager } from "../settings";
 
 export class CodeActionProvider {
-    private cnfgProvider: SepticConfigProvider;
+    private readonly cnfgProvider: SepticConfigProvider;
+    private readonly settingsManager: SettingsManager;
 
     /* istanbul ignore next */
-    constructor(cnfgProvider: SepticConfigProvider) {
+    constructor(
+        cnfgProvider: SepticConfigProvider,
+        settingsManager: SettingsManager
+    ) {
         this.cnfgProvider = cnfgProvider;
+        this.settingsManager = settingsManager;
     }
 
     /* istanbul ignore next */
@@ -28,7 +34,9 @@ export class CodeActionProvider {
         if (!cnfg) {
             return [];
         }
-        return getCodeActionInsertEvr(params, cnfg, doc);
+        let settings = await this.settingsManager.getSettings();
+        let insertPos = settings?.codeActions.insertEvrPosition ?? "bottom";
+        return getCodeActionInsertEvr(params, cnfg, doc, insertPos);
     }
 }
 
@@ -42,7 +50,8 @@ export interface CodeActionInsertEvr {
 export function getCodeActionInsertEvr(
     params: CodeActionParams,
     cnfg: SepticCnfg,
-    doc: ITextDocument
+    doc: ITextDocument,
+    insertEvrPos: "top" | "bottom"
 ): CodeActionInsertEvr[] {
     let diag = getReferenceError(params.context.diagnostics);
     if (!diag) {
@@ -64,12 +73,14 @@ export function getCodeActionInsertEvr(
     if (!parent) {
         return [];
     }
-    let lastObjectBeforeCalcModl = parent;
-    for (const child of parent.children) {
-        if (child.isType("CalcModl")) {
-            break;
+    let objectBeforeInsert = parent;
+    if (insertEvrPos === "bottom") {
+        for (const child of parent.children) {
+            if (child.isType("CalcModl")) {
+                break;
+            }
+            objectBeforeInsert = child;
         }
-        lastObjectBeforeCalcModl = child;
     }
     let referencedVariable = cnfg.getXvrRefFromOffset(
         doc.offsetAt(params.range.start)
@@ -80,8 +91,8 @@ export function getCodeActionInsertEvr(
     return [
         {
             name: referencedVariable.identifier,
-            uri: lastObjectBeforeCalcModl.uri,
-            offsetEdit: lastObjectBeforeCalcModl.end,
+            uri: objectBeforeInsert.uri,
+            offsetEdit: objectBeforeInsert.end,
             diag: diag,
         },
     ];

@@ -122,7 +122,10 @@ export function createLanguageService(
 
     const signatureHelpProvider = new SignatureHelpProvider(cnfgProvider);
 
-    const codeActionProvider = new CodeActionProvider(cnfgProvider);
+    const codeActionProvider = new CodeActionProvider(
+        cnfgProvider,
+        configurationManager
+    );
 
     return Object.freeze<ILanguageService>({
         cnfgProvider,
@@ -154,6 +157,6 @@ export function createLanguageService(
             signatureHelpProvider
         ),
         provideCodeAction:
-            codeActionProvider.provideCodeAction.bind(completionProvider),
+            codeActionProvider.provideCodeAction.bind(codeActionProvider),
     });
 }
