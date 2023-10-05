@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/equinor/vscode-septic/compare/v1.10.1...v1.11.0) (2023-10-05)
+
+
+### ✨ Features
+
+* Code action that inserts evr when missing ref in CalcPvr ([#323](https://github.com/equinor/vscode-septic/issues/323)) ([b1616ed](https://github.com/equinor/vscode-septic/commit/b1616edab194bb808f9ce931031f53d1323c9e03))
+
 ## [1.10.1](https://github.com/equinor/vscode-septic/compare/v1.10.0...v1.10.1) (2023-10-03)
 
 
