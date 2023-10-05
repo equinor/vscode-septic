@@ -70,7 +70,7 @@
             "bottom"
           ],
           "default": "bottom",
-          "description": "Position of inserted evr. Bottom = Above CalcModl Top = Bellow DmmyAppl"
+          "description": "Position of inserted Evr. Bottom = Above CalcModl, Top = Below DmmyAppl"
         }
       }
     },
