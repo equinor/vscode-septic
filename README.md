@@ -29,6 +29,7 @@
 -   Ignore Diagnostics for specified paths.
 -   Documentation: Built in documentation of objects/attributes and calcs based on source code.
 -   SignatureHelp: Signature help for calcs
+-   Code actions for fixing references to unknown Evrs in calcs
 
 ## Instructions
 
@@ -59,6 +60,8 @@ Adding the SEPTIC extension to VS Code allows you to do the following when loadi
 -   SignatureHelp is provided when writing calcs inside CalcPvr.Alg. The signature is shown with the active parameter highlighted together with the documentation of the active parameter. SignatureHelp can be manually activated by pressing `Ctrl + Shift + Space`.
 
 -   Search functionality for calcs are builtin into the completion. To start searching, start typing the search word into the CalcPvr.Alg field and all calcs that has the relevant search word in the documentation is included in the filtered results. Pressing `Ctrl + Space` starts the completion without a starting phrase and can be used to browse all available calcs and variables inside a CalcPvr.Alg.
+
+-   Code actions for fixing references to unknown Xvrs are provided for CalcPvr. The code action can be activated by hovering over the relevant diagnostics in the file and pressing the `QuickFix` button. You can then select the `Insert Evr` code action. An Evr with the same name as the missing reference will then be inserted within the same DmmyAppl as the CalcPvr. The placement can be adjusted by changing the setting `septic.codeActions.insertEvrPosition`. `Top` means that the evr is inserted right below the DmmyAppl object, while `bottom` means right above the CalcModl object
 
 The extension supports SEPTIC projects that uses the SEPTIC Config Generator (SCG). The SCG-config file for the project is loaded and the relevant `.cnfg` files (required to be in the templates folder) listed in the layout section are loaded into a common context that shares references etc.
 
