@@ -23,6 +23,7 @@ import { RenameProvider } from "./renameProvider";
 import { HoverProvider } from "./hoverProvider";
 import { FormattingProvider } from "./formatProvider";
 import { SignatureHelpProvider } from "./signatureHelpProvider";
+import { CodeActionInsertEvr, CodeActionProvider } from "./codeActionProvider";
 
 export * from "./types/textDocument";
 
@@ -89,6 +90,11 @@ export interface ILanguageService {
         param: lsp.SignatureHelpParams,
         doc: ITextDocument
     ): Promise<lsp.SignatureHelp>;
+
+    provideCodeAction(
+        param: lsp.CodeActionParams,
+        doc: ITextDocument
+    ): Promise<CodeActionInsertEvr[]>;
 }
 
 export function createLanguageService(
@@ -115,6 +121,11 @@ export function createLanguageService(
     const formattingProvider = new FormattingProvider(cnfgProvider);
 
     const signatureHelpProvider = new SignatureHelpProvider(cnfgProvider);
+
+    const codeActionProvider = new CodeActionProvider(
+        cnfgProvider,
+        configurationManager
+    );
 
     return Object.freeze<ILanguageService>({
         cnfgProvider,
@@ -145,5 +156,7 @@ export function createLanguageService(
         provideSignatureHelp: signatureHelpProvider.provideSignatureHelp.bind(
             signatureHelpProvider
         ),
+        provideCodeAction:
+            codeActionProvider.provideCodeAction.bind(codeActionProvider),
     });
 }

@@ -11,6 +11,7 @@ export function updateParentObjects(
     objects: SepticObject[],
     objectHierarchy: SepticObjectHierarchy
 ) {
+    objects.forEach((obj) => obj.resetChildren());
     const root: ObjectNode = {
         obj: new SepticObject("", undefined),
         parent: undefined,
@@ -45,5 +46,6 @@ function updateParent(
         return node;
     }
     node.obj.setParent(parent?.obj);
+    parent?.obj.addChild(node.obj);
     return node;
 }
