@@ -891,15 +891,12 @@ export function checkAttributeDataType(
         case "path":
             return true;
         default:
-            let bitMaskMatch = attrDoc.dataType.match(/^bit(<)?([0-9]+)$/);
+            let bitMaskMatch = attrDoc.dataType.match(/^bit([0-9]+)$/);
             if (!bitMaskMatch) {
                 return true;
             }
-            let number = parseInt(bitMaskMatch[2]);
-            let numCondition = bitMaskMatch[1]
-                ? `{1,${number}}`
-                : `{${number}}`;
-            return RegExp(`[01]${numCondition}`).test(attrValue.value);
+            let number = parseInt(bitMaskMatch[1]);
+            return RegExp(`^[01]{1,${number}}$`).test(attrValue.value);
     }
 }
 
