@@ -44,7 +44,6 @@ class Calc:
     retr: str
     detailedDescription: str
     quality: str
-    value: str
 
 
 def getObjectDoxygenFromFile(file: str) -> List[str]:
@@ -242,8 +241,6 @@ def parseCalcDoxygenDoc(calc: str) -> Optional[Calc]:
         r"\\quality([\s\S]*?)(?:(?=(?:\r?\n){2})|(?=\\|\*\/))", calc
     )
     quality = quality_match.group(1).strip() if quality_match else ""
-    value_match = re.search(r"\\value([\s\S]*?)(?:(?=(?:\r?\n){2})|(?=\\|\*\/))", calc)
-    value = value_match.group(1).strip() if value_match else ""
     return Calc(
         name=name,
         signature=signature,
@@ -251,7 +248,6 @@ def parseCalcDoxygenDoc(calc: str) -> Optional[Calc]:
         retr=retr,
         detailedDescription=detailed_description,
         quality=quality,
-        value=value,
     )
 
 
@@ -316,3 +312,16 @@ def parseCalcDocumentation(file: str) -> List[Calc]:
         else:
             print(f"Unable to parse the following doxygen:\n {calc_dox}")
     return parsedCalcs
+
+
+def testCalc(calc: Calc) -> bool:
+    params_sign_match = re.search(r"\(([\)^])\)", calc.signature)
+    if not params_sign_match:
+        return True
+    param_sign = [param.strip() for param in params_sign_match.group(1).split(",")]
+    valid = True
+    for param in calc.parameters:
+        if param.name in param_sign:
+            print(f"{param.name} not in calc signature {calc.signature}")
+            valid = False
+    return valid
