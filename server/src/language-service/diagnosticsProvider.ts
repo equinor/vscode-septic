@@ -890,6 +890,11 @@ export function checkAttributeDataType(
             return attrDoc.enums.includes(attrValue.value);
         case "path":
             return true;
+        case "variable":
+            return (
+                attrValue.type === SepticTokenType.string ||
+                attrValue.type === SepticTokenType.identifier
+            );
         default:
             let bitMaskMatch = attrDoc.dataType.match(/^bit(<)?([0-9]+)$/);
             if (!bitMaskMatch) {
