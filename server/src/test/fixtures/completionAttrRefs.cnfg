@@ -1,0 +1,28 @@
+  Mvr:           MvrTest
+         Text1=  ""
+         Text2=  ""
+
+  Cvr:           CvrTest
+         Text1=  ""
+         Text2=  ""
+
+  XvrMatrix:     XvrMatrixName
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1
+          Xvrs=  1  MvrTest
+
+  MvrList:       MvrListName
+          Text=  ""
+          Mvrs=  1
+
+  MultiXvrPlot:  MyMultiXvrPlot1
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1
+         Title=  ""
+       PlotMax=  100
+       PlotMin=  0
+          Xvrs=  1  MvrTest

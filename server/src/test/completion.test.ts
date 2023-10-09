@@ -58,6 +58,16 @@ describe("Test completion of identifier", () => {
         expect(compItems[0].label).to.equal("TestMvr");
         expect(compItems[1].label).to.equal("TestCvr");
     });
+    it("Completion of Cvr & Mvr identifiers for non Xvr object with identifier reference", () => {
+        const text = "Mvr: TestMvr\nCvr: TestCvr\nXvrPlot:        \n";
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSeptic(doc.getText());
+        const offset = doc.offsetAt(Position.create(2, 10));
+        const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
+        expect(compItems.length).to.equal(2);
+        expect(compItems[0].label).to.equal("TestMvr");
+        expect(compItems[1].label).to.equal("TestCvr");
+    });
     it("Completion of Cvr with initial value", () => {
         const text = "SopcMvr: TestMvr\nSopcCvr: TestCvr\nCvr:   T     \n";
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
@@ -162,6 +172,54 @@ describe("Test completion of object attributes", () => {
         expect(compItems.length).to.greaterThan(0);
         let textEdit = compItems[0].textEdit as TextEdit;
         expect(textEdit.range.start.character).to.equal(10);
+    });
+});
+
+describe("Test completion of attribute with references to xvrs", () => {
+    it("Expect Xvrs for attribute that references Xvrs", () => {
+        const content = loadFile("completionAttrRefs.cnfg");
+        const doc = TextDocument.create("", "", 0, content);
+        const cnfg = parseSeptic(doc.getText());
+        const offset = doc.offsetAt(Position.create(13, 28));
+        const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
+        const variableCompItems = compItems.filter(
+            (item) => item.kind === CompletionItemKind.Variable
+        );
+        expect(variableCompItems.length).to.equal(2);
+    });
+    it("Expect Mvrs for attribute that references Mvrs", () => {
+        const content = loadFile("completionAttrRefs.cnfg");
+        const doc = TextDocument.create("", "", 0, content);
+        const cnfg = parseSeptic(doc.getText());
+        const offset = doc.offsetAt(Position.create(17, 19));
+        const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
+        const variableCompItems = compItems.filter(
+            (item) => item.kind === CompletionItemKind.Variable
+        );
+        expect(variableCompItems.length).to.equal(1);
+        expect(variableCompItems[0].label).to.equal("MvrTest");
+    });
+    it("Expect completion of xvr in-between existing attr values", () => {
+        const content = loadFile("completionAttrRefs.cnfg");
+        const doc = TextDocument.create("", "", 0, content);
+        const cnfg = parseSeptic(doc.getText());
+        const offset = doc.offsetAt(Position.create(27, 20));
+        const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
+        const variableCompItems = compItems.filter(
+            (item) => item.kind === CompletionItemKind.Variable
+        );
+        expect(variableCompItems.length).to.equal(2);
+    });
+    it("Expect no completion of xvr non-reference attribute", () => {
+        const content = loadFile("completionAttrRefs.cnfg");
+        const doc = TextDocument.create("", "", 0, content);
+        const cnfg = parseSeptic(doc.getText());
+        const offset = doc.offsetAt(Position.create(20, 20));
+        const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
+        const variableCompItems = compItems.filter(
+            (item) => item.kind === CompletionItemKind.Variable
+        );
+        expect(variableCompItems.length).to.equal(0);
     });
 });
 
