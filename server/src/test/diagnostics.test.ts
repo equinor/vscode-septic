@@ -902,34 +902,28 @@ describe("Test validation of attribute data type", () => {
             checkAttributeDataType(attrValue, createAttrDoc("bit31", []))
         ).to.equal(true);
     });
-    it("Check valid bitmask upper limit", () => {
+    it("Check valid bitmask lower limit", () => {
+        const attrValue = new AttributeValue("0", SepticTokenType.numeric);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("bit4", []))
+        ).to.equal(true);
+    });
+    it("Check valid bitmask exact length", () => {
         const attrValue = new AttributeValue("0000", SepticTokenType.numeric);
         expect(
-            checkAttributeDataType(attrValue, createAttrDoc("bit<4", []))
+            checkAttributeDataType(attrValue, createAttrDoc("bit4", []))
         ).to.equal(true);
     });
     it("Check invalid bitmask upper limit", () => {
         const attrValue = new AttributeValue("00001", SepticTokenType.numeric);
         expect(
-            checkAttributeDataType(attrValue, createAttrDoc("bit<4", []))
-        ).to.equal(true);
-    });
-    it("Check invalid bitmask", () => {
-        const attrValue = new AttributeValue(
-            "000000000000000000001000000000",
-            SepticTokenType.numeric
-        );
-        expect(
-            checkAttributeDataType(attrValue, createAttrDoc("bit31", []))
+            checkAttributeDataType(attrValue, createAttrDoc("bit4", []))
         ).to.equal(false);
     });
     it("Check invalid bitmask", () => {
-        const attrValue = new AttributeValue(
-            "2000000000000000000010000000001",
-            SepticTokenType.numeric
-        );
+        const attrValue = new AttributeValue("2000", SepticTokenType.numeric);
         expect(
-            checkAttributeDataType(attrValue, createAttrDoc("bit31", []))
+            checkAttributeDataType(attrValue, createAttrDoc("bit4", []))
         ).to.equal(false);
     });
     it("Check valid int", () => {
