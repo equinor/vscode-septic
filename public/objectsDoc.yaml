@@ -1,4 +1,4 @@
-# Commit: 9510848
+# Commit: 9b5fb63
 - attributes:
   - calc: false
     dataType: enum
@@ -219,7 +219,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: true
+  - calc: false
     dataType: float
     default:
     - '0'
@@ -300,17 +300,6 @@
     enums: []
     list: false
     name: Nfix
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: bit31
-    default:
-    - '0000000000000000000000000000000'
-    description: PlottingGroup
-    enums: []
-    list: false
-    name: PlotGrp
     noCnfg: false
     postfix: []
     tags: []
@@ -788,7 +777,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: true
+  - calc: false
     dataType: float
     default:
     - '0'
@@ -869,17 +858,6 @@
     enums: []
     list: false
     name: Nfix
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: bit31
-    default:
-    - '0000000000000000000000000000000'
-    description: PlottingGroup
-    enums: []
-    list: false
-    name: PlotGrp
     noCnfg: false
     postfix: []
     tags: []
@@ -1114,7 +1092,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: true
+  - calc: false
     dataType: float
     default:
     - '0'
@@ -1183,17 +1161,6 @@
     enums: []
     list: false
     name: Nfix
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: bit31
-    default:
-    - '0000000000000000000000000000000'
-    description: PlottingGroup
-    enums: []
-    list: false
-    name: PlotGrp
     noCnfg: false
     postfix: []
     tags: []
@@ -1316,7 +1283,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: true
+  - calc: false
     dataType: float
     default:
     - '0'
@@ -1372,17 +1339,6 @@
     enums: []
     list: false
     name: Nfix
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: bit31
-    default:
-    - '0000000000000000000000000000000'
-    description: PlottingGroup
-    enums: []
-    list: false
-    name: PlotGrp
     noCnfg: false
     postfix: []
     tags: []
@@ -1470,6 +1426,162 @@
   - SmpcAppl
 - attributes:
   - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Measurement
+    enums: []
+    list: false
+    name: Meas
+    noCnfg: false
+    postfix:
+    - ''
+    - Bad
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e+10
+    description: Measurement validation high limit
+    enums: []
+    list: false
+    name: MeasHighLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - -1e+10
+    description: Measurement validation low limit
+    enums: []
+    list: false
+    name: MeasLowLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Initial state of measurement validation
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: MeasValidation
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default: []
+    description: Nominal value from model
+    enums: []
+    list: false
+    name: ModelValue
+    noCnfg: false
+    postfix:
+    - ''
+    - Bad
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1'
+    description: Number of decimals
+    enums: []
+    list: false
+    name: Nfix
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '100'
+    description: Max plotting range
+    enums: []
+    list: false
+    name: PlotMax
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Min plotting range
+    enums: []
+    list: false
+    name: PlotMin
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '-1'
+    description: Description
+    enums: []
+    list: false
+    name: PlotSpan
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '10'
+    description: Expected operating span
+    enums: []
+    list: false
+    name: Span
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Unit of measurement
+    enums: []
+    list: false
+    name: Unit
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: "State Variable\r\n  Use with subroutine model (SubrModl) for a variable\
+    \ with nominal response calulated by\r\n  the model. Transport mechanism to/from\
+    \ model is identical to a Cvr"
+  name: Svr
+  parents:
+  - DmmyAppl
+  - SmpcAppl
+- attributes:
+  - calc: false
     dataType: enum
     default: []
     description: Color used in plot for the variable
@@ -1517,7 +1629,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: true
+  - calc: false
     dataType: float
     default:
     - '0'
@@ -1584,17 +1696,6 @@
     enums: []
     list: false
     name: Nfix
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: bit31
-    default:
-    - '0000000000000000000000000000000'
-    description: PlottingGroup
-    enums: []
-    list: false
-    name: PlotGrp
     noCnfg: false
     postfix: []
     tags: []
@@ -1748,6 +1849,339 @@
   parents:
   - DmmyAppl
   - SmpcAppl
+- attributes:
+  - calc: false
+    dataType: bit31
+    default:
+    - '0000000000000000000000000000001'
+    description: Member of group if group bit 1
+    enums: []
+    list: false
+    name: GrpMask
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: bit31
+    default:
+    - '0000000000000000000000000000000'
+    description: Critical to group if group bit 1
+    enums: []
+    list: false
+    name: GrpType
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - 0, NoCnfg
+    description: Flag for model use
+    enums: []
+    list: false
+    name: HasModel
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: High limit for acceptance of sample
+    enums: []
+    list: false
+    name: HighLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Low limit for acceptance of sample
+    enums: []
+    list: false
+    name: LowLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '"", NoCnfg'
+    description: Cnfg handling of manual sample
+    enums: []
+    list: false
+    name: ManualSample
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Maximal diff between sample and modelled value for acceptance of
+      sample
+    enums: []
+    list: false
+    name: MaxDiff
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Maximal variation in variable at sampletime for acceptance of sample
+    enums: []
+    list: false
+    name: MaxSdev
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Measurement
+    enums: []
+    list: false
+    name: Meas
+    noCnfg: false
+    postfix:
+    - ''
+    - Bad
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e+10
+    description: Measurement validation high limit
+    enums: []
+    list: false
+    name: MeasHighLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - -1e+10
+    description: Measurement validation low limit
+    enums: []
+    list: false
+    name: MeasLowLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Initial state of measurement validation
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: MeasValidation
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - 0, NoCnfg
+    description: Status info code for model, presented in SampleTvr and table
+    enums: []
+    list: false
+    name: ModelInfo
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: double
+    default:
+    - 0, NoCnfg
+    description: Value of model variable
+    enums: []
+    list: false
+    name: ModelVal
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1'
+    description: Number of decimals
+    enums: []
+    list: false
+    name: Nfix
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: double
+    default:
+    - 0, NoCnfg
+    description: Value of sdev variable
+    enums: []
+    list: false
+    name: NormSdev
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '100'
+    description: Max plotting range
+    enums: []
+    list: false
+    name: PlotMax
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Min plotting range
+    enums: []
+    list: false
+    name: PlotMin
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '-1'
+    description: Description
+    enums: []
+    list: false
+    name: PlotSpan
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1'
+    description: Samples used for adding the update fraction
+    enums: []
+    list: false
+    name: RampTime
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - 0, NoCnfg
+    description: Time offset [samples] since last sample was recieved
+    enums: []
+    list: false
+    name: RecievedTime
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - 0, NoCnfg
+    description: Status info code for sample, presented in SampleTvr and table
+    enums: []
+    list: false
+    name: SampleInfo
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - 0, NoCnfg
+    description: Time offset [samples] since last sample was taken
+    enums: []
+    list: false
+    name: SampleTime
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '10'
+    description: Expected operating span
+    enums: []
+    list: false
+    name: Span
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - NONE
+    description: Value transformation for difference calcluation
+    enums:
+    - NONE
+    - LN
+    - SQRT
+    list: false
+    name: Transform
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Unit of measurement
+    enums: []
+    list: false
+    name: Unit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1'
+    description: Fraction of model vs sample difference used in updating
+    enums: []
+    list: false
+    name: UpdateFrac
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: "Trend Variable for lab and online sampling values\r\n  Has parameters\
+    \ that are used by"
+  name: SampleTvr
+  parents:
+  - DmmyAppl
 - attributes:
   - calc: false
     dataType: enum
@@ -4756,7 +5190,7 @@
     dataType: int
     default:
     - '1'
-    description: Size of spacer
+    description: Adds horizontal space in a table, number of lines
     enums: []
     list: false
     name: Size
@@ -6452,10 +6886,21 @@
     postfix: []
     tags: []
   - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Width [#chars] of each matrix colum
+    enums: []
+    list: true
+    name: ColSizes
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Tooptip for each column
     enums: []
     list: true
     name: ColTips
@@ -6510,7 +6955,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Tooltip for each row
     enums: []
     list: true
     name: RowTips
@@ -6521,7 +6966,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Engineering units for each row
     enums: []
     list: true
     name: RowUnits
@@ -7128,7 +7573,13 @@
   parents:
   - CalcModl
 - attributes: []
-  description: Experimental models
+  description: Experimental model in a MPC/SmpcAppl
   name: ExprModl
+  parents:
+  - SmpcAppl
+- attributes: []
+  description: Experimental process, where the models are taken from the SmpcAppl
+    with same ID
+  name: ExprProc
   parents:
   - System

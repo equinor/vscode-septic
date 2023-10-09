@@ -78,7 +78,6 @@ export function formatCalcMarkdown(calc: SepticCalcInfo) {
     }
     markdown.push(
         "```\n" + `@return - ${calc.retr}`,
-        `@value - ${calc.value}`,
         `@quality - ${calc.quality}` + "\n```"
     );
 

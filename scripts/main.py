@@ -5,6 +5,7 @@ from src.parse_doxygen import (
     parseCalcDocumentation,
     parseObjectDocumentation,
     SepticObject,
+    testCalc,
 )
 from dataclasses import asdict
 
@@ -33,6 +34,7 @@ def updateCalcs():
     calc_file = getCalcFile(BRANCH)
     calcs = parseCalcDocumentation(calc_file)
     calcs.sort(key=lambda x: x.name)
+    calcs = filter(testCalc, calcs)
     commit = getCommitId(BRANCH)
     with open(CALCS_OUTPUT_PATH, "w") as file:
         file.write(f"# Commit: {commit}\n")

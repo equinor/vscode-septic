@@ -108,7 +108,6 @@ export class SepticMetaInfoProvider {
                 retr: calc.retr ?? "",
                 parameters: updateDatatypeParams(calc.parameters),
                 quality: calc.quality?.replace(/\r?\n/g, "") ?? "",
-                value: calc.value?.replace(/\r?\n/g, "") ?? "",
             };
         });
         let calcsMap = new Map<string, SepticCalcInfo>();
@@ -342,7 +341,6 @@ export interface SepticCalcInfoInput {
     briefDescription?: string;
     detailedDescription?: string;
     quality?: string;
-    value?: string;
 }
 
 export interface SepticCalcInfo {
@@ -353,7 +351,6 @@ export interface SepticCalcInfo {
     briefDescription: string;
     detailedDescription: string;
     quality: string;
-    value: string;
 }
 
 export interface SepticCalcParameterInfo {
