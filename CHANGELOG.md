@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.11.1](https://github.com/equinor/vscode-septic/compare/v1.11.0...v1.11.1) (2023-10-09)
+
+
+### 📚 Documentation
+
+* add variable datatype ([#333](https://github.com/equinor/vscode-septic/issues/333)) ([e6aecea](https://github.com/equinor/vscode-septic/commit/e6aeceab71bed08bdff8ce21be35fcb2ef05316a))
+* remove value from calc ([#332](https://github.com/equinor/vscode-septic/issues/332)) ([4037116](https://github.com/equinor/vscode-septic/commit/40371164ab68ae586e1114121a22813fb1e418bd))
+
+
+### 🐛 Bug Fixes
+
+* bug with hovering in document without objects ([#335](https://github.com/equinor/vscode-septic/issues/335)) ([a36c6a3](https://github.com/equinor/vscode-septic/commit/a36c6a309b2d1fb5d1def8b2070b7d7230a72659))
+* diagnostics length bit masks ([#334](https://github.com/equinor/vscode-septic/issues/334)) ([669cf5f](https://github.com/equinor/vscode-septic/commit/669cf5f690ea74a58e675d9a2dc93a6bad4d16c8))
+
 ## [1.11.0](https://github.com/equinor/vscode-septic/compare/v1.10.1...v1.11.0) (2023-10-05)
 
 
