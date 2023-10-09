@@ -109,6 +109,9 @@ export function getObjectHover(
     doc: ITextDocument
 ): Hover | undefined {
     const obj = cnfg.getObjectFromOffset(offset);
+    if (!obj) {
+        return undefined;
+    }
     const objDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation(
         obj.type
     );
@@ -158,6 +161,9 @@ export function getCalcHover(
     doc: ITextDocument
 ): Hover | undefined {
     const obj = cnfg.getObjectFromOffset(offset);
+    if (!obj) {
+        return undefined;
+    }
     if (obj.type !== "CalcPvr") {
         return undefined;
     }
