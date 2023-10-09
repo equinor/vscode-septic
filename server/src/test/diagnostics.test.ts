@@ -1001,6 +1001,21 @@ describe("Test validation of attribute data type", () => {
             checkAttributeDataType(attrValue, createAttrDoc("int", []))
         ).to.equal(true);
     });
+    it("Check variable datatype", () => {
+        const attrValue = new AttributeValue(
+            "Test",
+            SepticTokenType.identifier
+        );
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("variable", []))
+        ).to.equal(true);
+    });
+    it("Check variable datatype", () => {
+        const attrValue = new AttributeValue(`"Test"`, SepticTokenType.string);
+        expect(
+            checkAttributeDataType(attrValue, createAttrDoc("variable", []))
+        ).to.equal(true);
+    });
 });
 
 describe("Test validation of object references", () => {

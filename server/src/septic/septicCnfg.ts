@@ -208,7 +208,7 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
     }
 
     objectDef.refs.attrList.forEach((attr) => {
-        xvrRefs.push(...xvrRefsAttrList(obj, attr));
+        xvrRefs.push(...attrXvrRefs(obj, attr));
     });
 
     if (obj.isType("CalcPvr")) {
@@ -244,16 +244,17 @@ function calcPvrXvrRefs(obj: SepticObject): SepticReference[] {
     return xvrs;
 }
 
-function xvrRefsAttrList(
-    obj: SepticObject,
-    attrName: string
-): SepticReference[] {
+function attrXvrRefs(obj: SepticObject, attrName: string): SepticReference[] {
     let attr = obj.getAttribute(attrName);
-    if (!attr || attr.values.length < 2) {
+    if (!attr) {
         return [];
     }
-    let refs = attr.values.slice(1).filter((val) => {
-        return val.type === SepticTokenType.string;
+    let sliceIndex = attr.values.length < 2 ? 0 : 1;
+    let refs = attr.values.slice(sliceIndex).filter((val) => {
+        return (
+            val.type === SepticTokenType.string ||
+            val.type === SepticTokenType.identifier
+        );
     });
     return refs.map((ref) => {
         return createSepticReference(ref.getValue(), {
