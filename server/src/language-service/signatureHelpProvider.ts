@@ -111,7 +111,8 @@ function paramMetaInfoToParameterInformation(
 
 function getIndexParamCalc(calc: AlgCalc, offset: number) {
     let index = 0;
-    for (let param of calc.params) {
+    for (let i = 0; i < calc.getNumParams(); i++) {
+        let param = calc.params[i];
         if (param.end < offset) {
             index += 1;
         } else {

@@ -257,16 +257,6 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
                 args.push(expr);
             }
         }
-        if (this.previous().type === AlgTokenType.comma) {
-            args.push(
-                new AlgLiteral({
-                    type: AlgTokenType.string,
-                    content: "",
-                    start: this.previous().end,
-                    end: this.peek().start,
-                })
-            );
-        }
         this.advance();
         return new AlgCalc(identifierToken, this.previous(), args);
     }
@@ -363,6 +353,20 @@ export class AlgCalc extends AlgExpr {
     }
     accept(visitor: IAlgVisitor): any {
         return visitor.visitCalc(this);
+    }
+
+    getNumParams(): number {
+        if (!this.params.length) {
+            return 0;
+        }
+        let lastParam = this.params[this.params.length - 1];
+        if (lastParam instanceof AlgLiteral) {
+            let literal = lastParam as AlgLiteral;
+            if (literal.type === AlgTokenType.empty) {
+                return this.params.length - 1;
+            }
+        }
+        return this.params.length;
     }
 }
 
