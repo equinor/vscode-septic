@@ -206,7 +206,7 @@ export function validateAlgs(
                 DiagnosticSeverity.Error,
                 {
                     start: doc.positionAt(offsetStartAlg + error.token.start),
-                    end: doc.positionAt(algAttrValue.end),
+                    end: doc.positionAt(offsetStartAlg + error.token.end),
                 },
                 error.message,
                 DiagnosticCode.invalidAlg
