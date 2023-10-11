@@ -521,7 +521,9 @@ function checkValidParamType(
         return false;
     }
     let exprLiteral = expr as AlgLiteral;
-    let objects = refProvider.getObjectsByIdentifier(exprLiteral.value);
+    let objects = refProvider.getObjectsByIdentifier(
+        exprLiteral.value.split(".")[0]
+    );
     for (let obj of objects) {
         if (obj.isType(...types)) {
             return true;
