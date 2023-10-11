@@ -6,7 +6,6 @@
 
 import {
     CompletionItem,
-    TextDocumentPositionParams,
     CompletionItemKind,
     Position,
     TextEdit,
@@ -19,6 +18,7 @@ import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
     AlgVisitor,
+    Attribute,
     SepticAttributeDocumentation,
     SepticCnfg,
     SepticMetaInfoProvider,
@@ -146,7 +146,10 @@ export function getCalcCompletion(
     if (!obj) {
         return [];
     }
-    const relevantXvrs = getRelevantXvrs(obj, refProvider.getAllXvrObjects());
+    const relevantXvrs = getRelevantXvrsIdentifier(
+        obj,
+        refProvider.getAllXvrObjects()
+    );
     relevantXvrs.forEach((xvr) => {
         compItems.push(xvrToCompletionItem(xvr));
     });
@@ -185,46 +188,60 @@ export function getObjectCompletion(
     if (!obj) {
         return [];
     }
-    const pos = doc.positionAt(obj.start);
-    const line = doc.getText({
-        start: Position.create(pos.line, 0),
-        end: Position.create(pos.line, Infinity),
-    });
-    let existing = getExistingCompletion(
-        line,
-        doc.positionAt(offset).character - 1
-    );
-    if (!obj.identifier || existing.str === obj.identifier.name) {
-        const offsetEndLine = doc.offsetAt(
-            Position.create(pos.line, line.length)
-        );
-        const startName = obj.start + obj.type.length + 2;
-        const endName = obj.attributes.length
-            ? obj.attributes[0].start
-            : offsetEndLine;
-        if (offset > startName && offset < endName) {
-            const relevantXvrs = getRelevantXvrs(
-                obj,
+    if (isIdentifierCompletion(offset, obj)) {
+        return getRelevantXvrsIdentifier(
+            obj,
+            refProvider.getAllXvrObjects()
+        ).map((obj) => xvrToCompletionItem(obj));
+    }
+    const currentAttr = getCurrentAttr(offset, obj);
+    if (!currentAttr) {
+        return getObjectAttributeCompletion(obj, offset, doc);
+    }
+    if (isReferenceAttribute(obj, currentAttr)) {
+        compItems.push(
+            ...getRelevantXvrsAttributes(
+                currentAttr,
                 refProvider.getAllXvrObjects()
-            );
-            relevantXvrs.forEach((xvr) => {
-                compItems.push(xvrToCompletionItem(xvr));
-            });
-            return compItems;
-        }
+            ).map((obj) => xvrToCompletionItem(obj))
+        );
     }
+    if (isEndAttribute(offset, currentAttr)) {
+        compItems.push(...getObjectAttributeCompletion(obj, offset, doc));
+    }
+    return compItems;
+}
 
-    for (let attr of obj.attributes) {
-        if (offset > attr.start && offset < attr.end) {
-            return [];
-        }
+function getCurrentAttr(
+    offset: number,
+    obj: SepticObject
+): Attribute | undefined {
+    if (!obj.attributes.length) {
+        return undefined;
     }
-    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
-    const objDoc = metaInfoProvider.getObjectDocumentation(obj.type);
+    let index = 1;
+    while (index < obj.attributes.length) {
+        if (obj.attributes[index].start >= offset) {
+            return obj.attributes[index - 1];
+        }
+        index += 1;
+    }
+    return obj.attributes[obj.attributes.length - 1];
+}
+
+function getObjectAttributeCompletion(
+    obj: SepticObject,
+    offset: number,
+    doc: ITextDocument
+) {
+    const objDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation(
+        obj.type
+    );
     if (!objDoc) {
         return [];
     }
-    let rangeNewLine = getRangeAttrTextEdit(offset, doc);
+    const compItems: CompletionItem[] = [];
+    const rangeNewLine = getRangeAttrTextEdit(offset, doc);
     for (let attr of objDoc.attributes) {
         if (obj.getAttribute(attr.name)) {
             continue;
@@ -246,6 +263,41 @@ export function getObjectCompletion(
         });
     }
     return compItems;
+}
+
+function isIdentifierCompletion(offset: number, obj: SepticObject) {
+    let objectInfo = SepticMetaInfoProvider.getInstance().getObject(obj.type);
+    if (!objectInfo?.refs.identifier) {
+        return false;
+    }
+    if (!obj.identifier) {
+        if (!obj.attributes.length) {
+            return true;
+        }
+        if (offset < obj.attributes[0].start) {
+            return true;
+        }
+        return false;
+    }
+    if (
+        offset - 1 >= obj.identifier.start &&
+        offset - 1 <= obj.identifier.end
+    ) {
+        return true;
+    }
+    return false;
+}
+
+function isReferenceAttribute(obj: SepticObject, attr: Attribute): boolean {
+    const objectInfo = SepticMetaInfoProvider.getInstance().getObject(obj.type);
+    if (!objectInfo) {
+        return false;
+    }
+    return objectInfo.refs.attrList.includes(attr.key);
+}
+
+function isEndAttribute(offset: number, attr: Attribute): boolean {
+    return offset >= attr.end;
 }
 
 function getTextAttrTextEdit(attr: SepticAttributeDocumentation) {
@@ -313,17 +365,38 @@ function xvrToCompletionItem(obj: SepticObject): CompletionItem {
     };
 }
 
-function getRelevantXvrs(
-    curObj: SepticObject,
-    xvrs: SepticObject[]
+function getRelevantXvrsIdentifier(
+    obj: SepticObject,
+    objects: SepticObject[]
 ): SepticObject[] {
-    if (curObj.isXvr()) {
-        return xvrs.filter((xvr) => xvr.isType("Sopc" + curObj.type));
-    } else if (curObj.isSopcXvr()) {
-        return xvrs.filter((xvr) => xvr.isType(curObj.type.slice(4)));
-    } else if (curObj.isType("CalcPvr")) {
-        return xvrs.filter((xvr) => xvr.isXvr());
+    if (obj.isXvr()) {
+        return objects.filter((xvr) => xvr.isType("Sopc" + obj.type));
+    } else if (obj.isSopcXvr()) {
+        return objects.filter((xvr) => xvr.isType(obj.type.slice(4)));
     } else {
-        return [];
+        return objects.filter((xvr) => xvr.isXvr());
+    }
+}
+
+function getRelevantXvrsAttributes(
+    attr: Attribute,
+    objects: SepticObject[]
+): SepticObject[] {
+    switch (attr.key) {
+        case "Cvrs":
+        case "CvrIds":
+            return objects.filter((obj) => obj.isType("Cvr"));
+        case "Evrs":
+            return objects.filter((obj) => obj.isType("Evr"));
+        case "Dvrs":
+            return objects.filter((obj) => obj.isType("Dvr"));
+        case "Tvrs":
+            return objects.filter((obj) => obj.isType("Tvr"));
+        case "Mvrs":
+            return objects.filter((obj) => obj.isType("Mvr"));
+        case "MvrDvrIds":
+            return objects.filter((obj) => obj.isType("Mvr", "Dvr"));
+        default:
+            return objects.filter((obj) => obj.isXvr());
     }
 }

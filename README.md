@@ -12,15 +12,19 @@
 -   Multi-level folding
 -   Renaming of (Sopc)Xvrs
 -   Completion
-    -   Suggest Xvrs when creating identifier for SopcXvrs (vice versa)
-    -   Suggest Xvrs when creating identifier for CalcPvr
-    -   Suggest Xvrs and Calcs when editing CalcPvr Algs
+    -   Suggest relevant Xvrs when writing identifiers for objects
+    -   Suggest relevant Xvrs when writing values for attributes that references Xvrs
+    -   Suggest Xvrs, public properties and calcs when editing CalcPvr.Alg
 -   Diagnostics
     -   Disable diagnostics for certain lines using
     -   Report errors if unable to parse calc (missing parenthesis, incomplete expression, unexpected tokens etc.)
     -   Verify that the used calcs are valid SEPTIC calcs
     -   Verify that referenced Xvrs exist in the file
--   Hover: Display the Text1 and Text2 if non empty from the associated xvr when hovering over an (Sopc)Xvr reference.
+-   Hover:
+    -   Display the Text1 and Text2 if non empty from the associated xvr when hovering over an (Sopc)Xvr reference.
+    -   Display documentation for object type when hovering over object type (e.g. Evr:)
+    -   Display documentation for object attribute when hovering over object type (e.g. Meas=)
+    -   Display documentation for calc when hovering over calc identifier (e.g. intpoltype1(...) )
 -   Ensures correct encoding (Windows 1252) for SEPTIC files
 -   Formatting: Formats files similar to formatting done by SEPTIC. See instructions for more info,
 -   GoToDefinition: Goes to the declaration of the connected Xvr when referenced (e.g. in calcs, SopcXvr etc.)
@@ -37,7 +41,7 @@ If you don't know what the SEPTIC file format is, then you don't need this exten
 
 Adding the SEPTIC extension to VS Code allows you to do the following when loading a SEPTIC .cnfg file:
 
--   Auto-complete (Sopc)Xvr names/properties, object attributes and calcs.
+-   Auto-complete for references to other objects (identifiers and attributes), object attributes and calcs.
 -   Diagnose certain fault modes (missing parenthesis in calcs, mistyped Calc or Xvr names etc.)
 -   Auto-complete commonly used segments of code, called snippets
     -   Type e.g. 'sopc' (uncapitalized letters only), and you should see a number of sopcxvr snippet options. Choose the one you want with `arrow up`/`arrow down` and press `Tab` to create a complete sopcxvr section.
