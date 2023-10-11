@@ -1,4 +1,4 @@
-# Commit: 9b5fb63
+# Commit: 3f247f3
 - attributes:
   - calc: false
     dataType: enum
@@ -4877,7 +4877,7 @@
   - Table
 - attributes:
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: List of references to Cvrs to be included in list
@@ -4904,7 +4904,7 @@
   - Table
 - attributes:
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: List of references to Mvrs to be included in list
@@ -4931,7 +4931,7 @@
   - Table
 - attributes:
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: List of references to Dvrs to be included in list
@@ -4958,7 +4958,7 @@
   - Table
 - attributes:
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: List of references to Evrs to be included in list
@@ -4996,7 +4996,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: List of references to tvrs to be included in list
@@ -5072,7 +5072,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: StatusXvr
@@ -5340,7 +5340,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: number and names of items
@@ -6021,7 +6021,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: Name of variables along x-axis
@@ -6032,7 +6032,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: Name of variables along y-axis
@@ -6092,7 +6092,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: Name of variable along x-axis
@@ -6103,7 +6103,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: Name of variable along y-axis
@@ -6551,7 +6551,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: Description
@@ -6597,7 +6597,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: List of xvrs to be included
@@ -6974,7 +6974,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: Xvrs to be populated into matrix. Fills up each row starting on top
@@ -7012,7 +7012,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: Ids of cvrs to include in matrix
@@ -7023,7 +7023,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: Ids of mvrs/dvrs to include in matrix
