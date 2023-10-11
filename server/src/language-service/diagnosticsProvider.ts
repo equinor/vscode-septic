@@ -206,7 +206,7 @@ export function validateAlgs(
                 DiagnosticSeverity.Error,
                 {
                     start: doc.positionAt(offsetStartAlg + error.token.start),
-                    end: doc.positionAt(algAttrValue.end),
+                    end: doc.positionAt(offsetStartAlg + error.token.end),
                 },
                 error.message,
                 DiagnosticCode.invalidAlg
@@ -353,7 +353,7 @@ function validateCalcParams(
     offsetStartAlg: number
 ): Diagnostic[] {
     let diagnostics: Diagnostic[] = [];
-    for (let index = 0; index < calc.params.length; index++) {
+    for (let index = 0; index < calc.getNumParams(); index++) {
         let paramExpr = calc.params[index];
         let calcParamIndex = fromCalcIndexToParamIndex(calc, calcInfo, index);
         let paramInfo = calcInfo.parameters[calcParamIndex];
@@ -404,7 +404,7 @@ function validateCalcParamsLength(
         ? paramInfo.fixedLengthParams[paramInfo.fixedLengthParams.length - 1]
         : 0;
     let numVariableParams = paramInfo.variableLengthParams.num;
-    let numParams = calc.params.length;
+    let numParams = calc.getNumParams();
 
     if (numParams < numFixedParams - paramInfo.numOptionalParams) {
         return [

@@ -360,7 +360,8 @@ describe("Test parsing of functions", () => {
         const input = "add()";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgCalc);
-        expect((<AlgCalc>expr).params.length).to.equal(0);
+        expect((<AlgCalc>expr).params.length).to.equal(1);
+        expect((<AlgCalc>expr).params[0]).to.instanceOf(AlgLiteral);
     });
 
     it("Parsing of function with multiple arguments", () => {
