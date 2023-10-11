@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.12.0](https://github.com/equinor/vscode-septic/compare/v1.11.1...v1.12.0) (2023-10-11)
+
+
+### 🧹 Chores
+
+* **deps:** bump @types/node from 16.18.52 to 16.18.58 ([#330](https://github.com/equinor/vscode-septic/issues/330)) ([5cc5868](https://github.com/equinor/vscode-septic/commit/5cc58688863df2ef30eed13bb0f4ebb1ea0d2a57))
+* **deps:** bump eslint from 8.49.0 to 8.51.0 ([#329](https://github.com/equinor/vscode-septic/issues/329)) ([79487b9](https://github.com/equinor/vscode-septic/commit/79487b9cc62fc5a7c1db803ceb33112b4c746e9f))
+* **deps:** bump rimraf from 5.0.1 to 5.0.5 ([#312](https://github.com/equinor/vscode-septic/issues/312)) ([422674d](https://github.com/equinor/vscode-septic/commit/422674dd0ba7fa37c4389b350b21102faa42c0cd))
+
+
+### 📚 Documentation
+
+* update documentation ([#342](https://github.com/equinor/vscode-septic/issues/342)) ([66d0e4e](https://github.com/equinor/vscode-septic/commit/66d0e4e190e54f6c0df9640f56df2fcea4fd130e))
+
+
+### ✨ Features
+
+* add completion for all references to other objects ([#338](https://github.com/equinor/vscode-septic/issues/338)) ([b895778](https://github.com/equinor/vscode-septic/commit/b895778971bb8a430291f08db505efb879835ff4))
+
+
+### 🐛 Bug Fixes
+
+* wrong datatype diagnostics when using public property ([#339](https://github.com/equinor/vscode-septic/issues/339)) ([489ec88](https://github.com/equinor/vscode-septic/commit/489ec885a9bcc2304b53c38ec96a83ca42f19948))
+
+
+### 🔨 Refactor
+
+* improve error feedback for missing parenthesis in alg ([#263](https://github.com/equinor/vscode-septic/issues/263)) ([ba097bf](https://github.com/equinor/vscode-septic/commit/ba097bfc9650dcc149cbb4e69008257435882bd3))
+
 ## [1.11.1](https://github.com/equinor/vscode-septic/compare/v1.11.0...v1.11.1) (2023-10-09)
 
 
