@@ -25,6 +25,7 @@ export const jinjaForRegex = /^\{%-?\s+for\b.+%}$/;
 export const jinjaIfRegex = /^\{%-?\s+if\b.+%}$/;
 export const jinjaForEndRegex = /\{%-?\s+endfor\s+%}$/;
 export const jinjaIfEndRegex = /\{%-?\s+endif\s+%}$/;
+export const jinjaExpressionRegex = /\{%[\S\s]*%\}/;
 export const stopFormattingRegex = /^\{#\s+format:off\s+#}$/;
 export const startFormattingRegex = /^\{#\s+format:on\s+#}$/;
 export const lineCommentRegex = /^\s*\/\/\s|\*\/\s*$|#}\s*$/;
@@ -119,7 +120,16 @@ export class SepticCnfgFormatter {
                 start: Position.create(pos.line, 0),
                 end: pos,
             });
-            if (!lineCommentRegex.test(currentLineText)) {
+            if (lineCommentRegex.test(currentLineText)) {
+                let prevLineText = this.doc.getText({
+                    start: Position.create(pos.line - 1, 0),
+                    end: Position.create(pos.line - 1, 999),
+                });
+                if (!(prevLineText.trim().length === 0 || pos.line - 1 < 0)) {
+                    this.addEmptyLine();
+                }
+            }
+            if (jinjaExpressionRegex.test(currentLineText)) {
                 this.addEmptyLine();
             }
         } else {

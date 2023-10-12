@@ -1,9 +1,7 @@
-// Test disabling using marker
 {# format:off #}
     Evr: Test Text1="" Text2= "" Meas= 1.1
 {# format:on #}
 
-// Not disabled with wrong marker
 {# format #}
   Evr:           EvrName
          Text1=  "" /* 
@@ -11,6 +9,7 @@
     */
          Text2=  ""
 {# format #}
+
   SopcProc:      Test
          Text1=  "Test" {% Test %}
          Text2=  ""
