@@ -261,21 +261,15 @@ export class SepticCnfgFormatter {
     private formatJinjaExpression(comment: SepticComment) {
         if (jinjaForRegex.test(comment.content)) {
             this.addEdit();
-            if (!this.synchronize(this.syncJinjaFor)) {
-                return;
-            }
-            let nextElement = this.previous();
-            this.start = nextElement.end;
+            this.synchronize(this.syncJinjaFor);
+            this.start = this.previous().end;
             return;
         }
 
         if (jinjaIfRegex.test(comment.content)) {
             this.addEdit();
-            if (!this.synchronize(this.syncJinjaIf)) {
-                return;
-            }
-            let nextElement = this.previous();
-            this.start = nextElement.end;
+            this.synchronize(this.syncJinjaIf);
+            this.start = this.previous().end;
             return;
         }
         this.formatSepticComment(comment);
@@ -284,11 +278,8 @@ export class SepticCnfgFormatter {
     private formatJinjaComment(comment: SepticComment) {
         if (stopFormattingRegex.test(comment.content)) {
             this.addEdit();
-            if (!this.synchronize(this.syncStartFormatting)) {
-                return;
-            }
-            let nextElement = this.previous();
-            this.start = nextElement.end;
+            this.synchronize(this.syncStartFormatting);
+            this.start = this.previous().end;
             return;
         }
 
@@ -376,6 +367,9 @@ export class SepticCnfgFormatter {
     }
 
     private previous(): SepticBase {
+        if (this.isAtEnd()) {
+            return this.elements[this.elements.length - 1];
+        }
         return this.elements[this.iterElements - 1];
     }
 
