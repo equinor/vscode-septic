@@ -436,13 +436,9 @@ connection.onCodeAction(async (params) => {
         if (!cnfg) {
             return undefined;
         }
-        cnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        cnfg.update();
     } else {
-        context.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        context.update();
     }
 
     let doc = await documentProvider.getDocument(params.textDocument.uri);

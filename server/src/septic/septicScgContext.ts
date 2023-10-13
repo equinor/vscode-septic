@@ -216,3 +216,11 @@ export class ScgContext implements SepticReferenceProvider {
         this.updateObjectParents();
     }
 }
+
+function createCycleMap(cycles: Cycle[]): Map<string, cycle> {
+    let cyclesMap = new Map<string, Cycle[]>();
+    for (let cycle of cycles) {
+    }
+
+    return cyclesMap;
+}
