@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.2](https://github.com/equinor/vscode-septic/compare/v1.12.1...v1.12.2) (2023-10-13)
+
+
+### 🐛 Bug Fixes
+
+* bug with space in folder names ([#346](https://github.com/equinor/vscode-septic/issues/346)) ([1888e45](https://github.com/equinor/vscode-septic/commit/1888e45c4ffa8f1c23be9251fb16568621b9c474))
+
 ## [1.12.1](https://github.com/equinor/vscode-septic/compare/v1.12.0...v1.12.1) (2023-10-13)
 
 
