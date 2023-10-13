@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.1](https://github.com/equinor/vscode-septic/compare/v1.12.0...v1.12.1) (2023-10-13)
+
+
+### 🐛 Bug Fixes
+
+* formatting of non-terminated jinja ([#344](https://github.com/equinor/vscode-septic/issues/344)) ([aa9d20b](https://github.com/equinor/vscode-septic/commit/aa9d20b2c4b8375eaee0d51cc5805b7201e89959))
+
 ## [1.12.0](https://github.com/equinor/vscode-septic/compare/v1.11.1...v1.12.0) (2023-10-11)
 
 
