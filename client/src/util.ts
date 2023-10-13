@@ -11,5 +11,5 @@ export function getSearchPattern(workspacePath: string, templatePath: string) {
 
     parts = parts.reverse();
 
-    return "**/" + parts.join("/") + "/**.cnfg";
+    return "**/" + parts.join("/") + "/*.cnfg";
 }
