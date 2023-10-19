@@ -546,7 +546,7 @@ export function validateObjects(
     for (let obj of cnfg.objects) {
         const objectDoc = metaInfoProvider.getObjectDocumentation(obj.type);
         const objectInfo = metaInfoProvider.getObject(obj.type);
-        if (!objectDoc || !objectInfo) {
+        if (!objectDoc) {
             diagnostics.push(
                 createDiagnostic(
                     DiagnosticSeverity.Error,
@@ -572,7 +572,7 @@ export function validateObject(
     doc: ITextDocument,
     refProvider: SepticReferenceProvider,
     objectDoc: ISepticObjectDocumentation,
-    objectInfo: SepticObjectInfo
+    objectInfo: SepticObjectInfo | undefined
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     diagnostics.push(...validateObjectParent(obj, doc));
@@ -626,8 +626,11 @@ export function validateObjectReferences(
     obj: SepticObject,
     doc: ITextDocument,
     refProvider: SepticReferenceProvider,
-    objectMetaInfo: SepticObjectInfo
+    objectMetaInfo: SepticObjectInfo | undefined
 ): Diagnostic[] {
+    if (!objectMetaInfo) {
+        return [];
+    }
     const diagnostics: Diagnostic[] = [];
     if (objectMetaInfo.refs.identifier && obj.identifier && !obj.isXvr()) {
         let validRef = refProvider.validateRef(
