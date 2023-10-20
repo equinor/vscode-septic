@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.3](https://github.com/equinor/vscode-septic/compare/v1.12.2...v1.12.3) (2023-10-20)
+
+
+### 🐛 Bug Fixes
+
+* diagnostics for unknown objects ([#352](https://github.com/equinor/vscode-septic/issues/352)) ([2d4e9a9](https://github.com/equinor/vscode-septic/commit/2d4e9a92f5edd0533c8d5e78c137ed97ca117660))
+
 ## [1.12.2](https://github.com/equinor/vscode-septic/compare/v1.12.1...v1.12.2) (2023-10-13)
 
 
