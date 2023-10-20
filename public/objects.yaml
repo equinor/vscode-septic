@@ -159,6 +159,11 @@
     identifier: True
 - name: Spacer
 - name: SubrXvr
+- name: Svr
+  level: 2
+  symbolKind: Variable
+  refs:
+    identifier: True
 - name: System
   level: 1
   symbolKind: Namespace
