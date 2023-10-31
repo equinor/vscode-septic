@@ -176,7 +176,7 @@
             "patterns": [
                 {
                     "name": "comment.line.septic",
-                    "match": "//.*$"
+                    "match": "//\\s.*$"
                 }
             ]
         },
@@ -184,8 +184,8 @@
             "patterns": [
                 {
                     "name": "comment.block.septic",
-                    "begin": "\\/\\*",
-                    "end": "\\*\\/"
+                    "begin": "\\/\\*\\s",
+                    "end": "\\s\\*\\/"
                 }
             ]
         },

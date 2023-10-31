@@ -216,9 +216,9 @@ export class SepticScanner {
                 this.string();
                 break;
             case "/":
-                if (this.peek() === "/") {
+                if (this.isLineComment()) {
                     this.lineComment();
-                } else if (this.peek() === "*") {
+                } else if (this.isBlockComment()) {
                     this.blockComment();
                 } else {
                     this.path();
@@ -260,6 +260,13 @@ export class SepticScanner {
 
     private advance(): string {
         return this.source.charAt(this.current++);
+    }
+
+    private previous(): string {
+        if (this.current === 0) {
+            return "\0";
+        }
+        return this.source.charAt(this.current - 1);
     }
 
     private peek(): string {
@@ -305,6 +312,10 @@ export class SepticScanner {
         });
     }
 
+    private isBlockComment() {
+        return this.peek() === "*" && this.isWhiteSpace(this.peekNext());
+    }
+
     private blockComment() {
         while (!this.isAtEnd() && !this.isEndOfBlockComment()) {
             this.advance();
@@ -317,7 +328,19 @@ export class SepticScanner {
     }
 
     private isEndOfBlockComment() {
-        return this.peek() === "*" && this.peekNext() === "/";
+        return (
+            this.isWhiteSpace(this.previous()) &&
+            this.peek() === "*" &&
+            this.peekNext() === "/"
+        );
+    }
+
+    private isLineComment() {
+        return this.peek() === "/" && this.isWhiteSpace(this.peekNext());
+    }
+
+    private isWhiteSpace(char: string) {
+        return char === " " || char === "\n" || char === "\r";
     }
 
     private lineComment() {
