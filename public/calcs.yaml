@@ -1,4 +1,4 @@
-# Commit: 3f247f3
+# Commit: 3b041ba
 - detailedDescription: Computes the absolute value
   name: abs
   parameters:
@@ -2031,7 +2031,7 @@
   signature: movestd(xvr, nsamp)
 - detailedDescription: "Gets the calculated Mvr from an SmpcAppl.\r\n  Mvr.Mode ==\
     \ ACTIVE -> Mvr.mget(pAppl->N+1) else Mvr.Meas(pAppl->N)"
-  name: mvget
+  name: mvmget
   parameters:
   - arity: '1'
     datatype:
@@ -2041,7 +2041,7 @@
     name: mvr
   quality: GOOD if valid mvr otherwise BAD
   retr: 'Calculated Mvr: Mvr.Mode == ACTIVE -> Mvr.mget(pAppl->N+1) else Mvr.Meas(pAppl->N)'
-  signature: mvget(mvr)
+  signature: mvmget(mvr)
 - detailedDescription: "Get dynamic dynamic end prediction (Npred) of Mvr from an\
     \ SmpcAppl. Limitations: For MVR only. Tested only\r\n  for Mvr in SmpcAppl."
   name: mvpred
