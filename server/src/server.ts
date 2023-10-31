@@ -25,6 +25,7 @@ import { ILanguageService, createLanguageService } from "./language-service";
 import { SettingsManager } from "./settings";
 import { DocumentProvider } from "./documentProvider";
 import * as protocol from "./protocol";
+import * as path from "path";
 import { ContextManager } from "./contextManager";
 import { offsetToPositionRange } from "./util/converter";
 import {
@@ -207,12 +208,22 @@ documentProvider.onDidCreateDoc(async (uri) => {
     publishDiagnostics(uri);
 });
 
+documentProvider.onDidDeleteDoc(async (uri) => {
+    if (path.extname(uri) === ".cnfg") {
+        connection.sendDiagnostics({ uri: uri, diagnostics: [] });
+    }
+});
+
 contextManager.onDidUpdateContext(async (uri) => {
     let context = contextManager.getContextByName(uri);
     if (!context) {
         return;
     }
     publishDiagnosticsContext(context);
+});
+
+contextManager.onDidDeleteContext(async (uri) => {
+    updateAllDiagnostics();
 });
 
 connection.onDidChangeConfiguration((change) => {
