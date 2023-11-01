@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.12.4](https://github.com/equinor/vscode-septic/compare/v1.12.3...v1.12.4) (2023-11-01)
+
+
+### 👷 CI/CD
+
+* Update deploy action to use new package ([#373](https://github.com/equinor/vscode-septic/issues/373)) ([19c6621](https://github.com/equinor/vscode-septic/commit/19c6621b4cfbc60e9eecf8028172363523d606fc))
+
+
+### 📚 Documentation
+
+* Update documentation ([#372](https://github.com/equinor/vscode-septic/issues/372)) ([1191f7d](https://github.com/equinor/vscode-septic/commit/1191f7db157155a8a927799304bdcea1ecfea2f4))
+
 ## [1.12.3](https://github.com/equinor/vscode-septic/compare/v1.12.2...v1.12.3) (2023-10-20)
 
 
