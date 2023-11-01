@@ -29,7 +29,6 @@ import { ContextManager } from "./contextManager";
 import { offsetToPositionRange } from "./util/converter";
 import {
     ScgContext,
-    SepticCnfg,
     SepticReferenceProvider,
     SepticMetaInfoProvider,
 } from "./septic";

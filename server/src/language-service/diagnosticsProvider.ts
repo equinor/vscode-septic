@@ -4,7 +4,12 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Diagnostic, DiagnosticSeverity, Range } from "vscode-languageserver";
+import {
+    Diagnostic,
+    DiagnosticRelatedInformation,
+    DiagnosticSeverity,
+    Range,
+} from "vscode-languageserver";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
@@ -33,7 +38,6 @@ import {
     getCalcParamIndexInfo,
     getIndexOfParam,
     getValueOfAlgExpr,
-    formatCalcMarkdown,
     formatDataType,
     RefValidationFunction,
     SepticReference,
@@ -67,6 +71,7 @@ export enum DiagnosticCode {
     algMaxLength = "E206",
     missingPublicProperty = "E207", // Combine with under
     unknownPublicProperty = "E208",
+    cycleAlg = "W209",
     missingListLengthValue = "E301",
     mismatchLengthList = "E302",
     missingAttributeValue = "E303",
@@ -101,7 +106,8 @@ function createDiagnostic(
     severity: DiagnosticSeverity,
     range: Range,
     message: string,
-    code: DiagnosticCode
+    code: DiagnosticCode,
+    relatedInformation: DiagnosticRelatedInformation[] = []
 ): Diagnostic {
     return {
         severity: severity,
@@ -109,6 +115,7 @@ function createDiagnostic(
         message: message,
         code: code,
         source: "septic",
+        relatedInformation: relatedInformation,
     };
 }
 
@@ -155,6 +162,10 @@ export function getDiagnostics(
     const diagnostics: Diagnostic[] = [];
     diagnostics.push(...validateObjects(cnfg, doc, refProvider));
     diagnostics.push(...validateAlgs(cnfg, doc, refProvider));
+    const isContext = !(refProvider instanceof SepticCnfg);
+    if (!isContext) {
+        diagnostics.push(...validateAlgCycles(cnfg, doc));
+    }
     let disabledLines = getDisabledLines(cnfg.comments, doc);
     let filteredDiags = diagnostics.filter((diag) => {
         let disabledLine = disabledLines.get(diag.range.start.line);
@@ -1051,4 +1062,53 @@ function getDiagnosticCodes(codes: string): string[] {
         }
     });
     return diagnosticCodes;
+}
+
+export function validateAlgCycles(
+    cnfg: SepticCnfg,
+    doc: ITextDocument
+): Diagnostic[] {
+    const diagnostics: Diagnostic[] = [];
+    for (let cycle of cnfg.findCycles()) {
+        let cycleStr = [...cycle.nodes, cycle.nodes[0]]
+            .map((node) => node.name)
+            .join("->");
+        const relatedInformation: DiagnosticRelatedInformation[] = [];
+        const rootNode = cycle.nodes[0];
+        const rootObject = cnfg.getObject(rootNode.name, "CalcPvr");
+        if (!rootObject) {
+            continue;
+        }
+        for (let node of cycle.nodes.slice(1)) {
+            let nodeObj = cnfg.getObject(node.name, "CalcPvr");
+            if (!nodeObj) {
+                continue;
+            }
+            relatedInformation.push(
+                DiagnosticRelatedInformation.create(
+                    {
+                        uri: doc.uri,
+                        range: {
+                            start: doc.positionAt(nodeObj.identifier!.start),
+                            end: doc.positionAt(nodeObj.identifier!.end),
+                        },
+                    },
+                    `Cycle in algs detected for CalcPvr. ${cycleStr}`
+                )
+            );
+        }
+        diagnostics.push(
+            createDiagnostic(
+                DiagnosticSeverity.Warning,
+                {
+                    start: doc.positionAt(rootObject.identifier!.start),
+                    end: doc.positionAt(rootObject.identifier!.end),
+                },
+                `Cycle in algs detected for CalcPvr. ${cycleStr}`,
+                DiagnosticCode.cycleAlg,
+                relatedInformation
+            )
+        );
+    }
+    return diagnostics;
 }

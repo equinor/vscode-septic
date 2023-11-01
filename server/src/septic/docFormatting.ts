@@ -1,4 +1,4 @@
-import { bold, code, h4, horizontalRule } from "../util/markdown";
+import { bold, code, h4, horizontalRule } from "../util";
 import {
     ISepticObjectDocumentation,
     SepticAttributeDocumentation,

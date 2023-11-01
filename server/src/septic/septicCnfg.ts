@@ -24,10 +24,12 @@ import {
 } from "./reference";
 import { removeSpaces } from "../util";
 import { updateParentObjects } from "./hierarchy";
+import { Alg, Cycle, findAlgCycles } from "./cycle";
 
 export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];
     public comments: SepticComment[];
+    public cycles: Cycle[] = [];
     private xvrRefs = new Map<string, SepticReference[]>();
     private xvrRefsExtracted = false;
     public uri: string = "";
@@ -64,6 +66,19 @@ export class SepticCnfg implements SepticReferenceProvider {
     public getXvrRefs(name: string): SepticReference[] | undefined {
         this.extractXvrRefs();
         return this.xvrRefs.get(removeSpaces(name));
+    }
+
+    public getObject(
+        name: string,
+        type: string | undefined = undefined
+    ): SepticObject | undefined {
+        let objects = this.objects.filter((obj) => {
+            return obj.identifier?.name === name;
+        });
+        if (type) {
+            objects = objects.filter((obj) => obj.isType(type));
+        }
+        return objects.length ? objects[0] : undefined;
     }
 
     public validateRef(
@@ -163,6 +178,23 @@ export class SepticCnfg implements SepticReferenceProvider {
         return Promise.resolve();
     }
 
+    public findCycles(): Cycle[] {
+        let calcPvrs = this.objects.filter((obj) => obj.isType("CalcPvr"));
+        let algs: Alg[] = [];
+        for (let calcPvr of calcPvrs) {
+            let alg = calcPvr.getAttribute("Alg");
+            let content = alg?.getAttrValue()?.getValue();
+            if (!content || !calcPvr.identifier?.name) {
+                continue;
+            }
+            algs.push({
+                calcPvrName: calcPvr.identifier?.name!,
+                content: content,
+            });
+        }
+        return findAlgCycles(algs);
+    }
+
     private extractXvrRefs(): void {
         if (this.xvrRefsExtracted) {
             return;
@@ -194,7 +226,7 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
     }
 
     if (objectDef.refs.identifier && obj.identifier) {
-        let isObjRef = obj.isXvr() || obj.isSopcXvr();
+        let isObjRef = obj.isXvr() || obj.isSopcXvr() || obj.isType("CalcPvr");
         let ref: SepticReference = createSepticReference(
             obj.identifier.name,
             {

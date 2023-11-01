@@ -13,7 +13,6 @@ import {
 import { SepticObject } from "./septicElements";
 import { SepticConfigProvider } from "../language-service/septicConfigProvider";
 import { SepticCnfg } from "./septicCnfg";
-import { removeSpaces } from "../util";
 import { SepticObjectHierarchy } from "./septicMetaInfo";
 import { updateParentObjects } from "./hierarchy";
 
@@ -102,7 +101,7 @@ export class ScgContext implements SepticReferenceProvider {
                 if (!cnfg) {
                     return;
                 }
-                this.cnfgCache.set(cnfg!.uri, cnfg);
+                this.cnfgCache.set(cnfg.uri, cnfg);
             })
         );
     }
@@ -162,7 +161,6 @@ export class ScgContext implements SepticReferenceProvider {
         }
         return xvrObjs;
     }
-
     public async updateObjectParents(
         hierarchy: SepticObjectHierarchy
     ): Promise<void> {
