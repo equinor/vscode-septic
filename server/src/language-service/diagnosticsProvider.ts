@@ -35,6 +35,8 @@ import {
     getValueOfAlgExpr,
     formatCalcMarkdown,
     formatDataType,
+    RefValidationFunction,
+    SepticReference,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -77,6 +79,7 @@ export enum DiagnosticCode {
     invalidParentObject = "W401",
     missingParentObject = "W402",
     missingReference = "W501",
+    invalidReference = "W502",
 }
 
 export enum DiagnosticLevel {
@@ -632,23 +635,18 @@ export function validateObjectReferences(
         return [];
     }
     const diagnostics: Diagnostic[] = [];
-    if (objectMetaInfo.refs.identifier && obj.identifier && !obj.isXvr()) {
-        let validRef = refProvider.validateRef(
-            obj.identifier.name,
-            defaultRefValidationFunction
-        );
-        if (!validRef) {
+    if (shouldValidateIdentifier(objectMetaInfo, obj)) {
+        if (obj.isType("CalcPvr")) {
             diagnostics.push(
-                createDiagnostic(
-                    objectMetaInfo.refs.identifierOptional
-                        ? DiagnosticSeverity.Hint
-                        : DiagnosticSeverity.Warning,
-                    {
-                        start: doc.positionAt(obj.identifier.start),
-                        end: doc.positionAt(obj.identifier.end),
-                    },
-                    `Reference to undefined Xvr ${obj.identifier.name}`,
-                    DiagnosticCode.missingReference
+                ...validateCalcPvrIdentifierReferences(obj, refProvider, doc)
+            );
+        } else {
+            diagnostics.push(
+                ...validateIdentifierReferences(
+                    obj,
+                    refProvider,
+                    objectMetaInfo,
+                    doc
                 )
             );
         }
@@ -685,6 +683,89 @@ export function validateObjectReferences(
     }
     return diagnostics;
 }
+
+function shouldValidateIdentifier(
+    objectMetaInfo: SepticObjectInfo,
+    obj: SepticObject
+) {
+    return objectMetaInfo.refs.identifier && obj.identifier && !obj.isXvr();
+}
+
+function validateIdentifierReferences(
+    obj: SepticObject,
+    refProvider: SepticReferenceProvider,
+    objectMetaInfo: SepticObjectInfo,
+    doc: ITextDocument
+): Diagnostic[] {
+    let validRef = refProvider.validateRef(
+        obj.identifier!.name,
+        defaultRefValidationFunction
+    );
+    if (validRef) {
+        return [];
+    }
+    let severity = objectMetaInfo.refs.identifierOptional
+        ? DiagnosticSeverity.Hint
+        : DiagnosticSeverity.Warning;
+    return [
+        createDiagnostic(
+            severity,
+            {
+                start: doc.positionAt(obj.identifier!.start),
+                end: doc.positionAt(obj.identifier!.end),
+            },
+            `Reference to undefined Xvr ${obj.identifier!.name}`,
+            DiagnosticCode.missingReference
+        ),
+    ];
+}
+
+function validateCalcPvrIdentifierReferences(
+    obj: SepticObject,
+    refProvider: SepticReferenceProvider,
+    doc: ITextDocument
+): Diagnostic[] {
+    let referenceToEvr = refProvider.validateRef(
+        obj.identifier!.name,
+        hasReferenceToEvr
+    );
+    if (referenceToEvr) {
+        return [];
+    }
+    let referenceToXvr = refProvider.validateRef(
+        obj.identifier!.name,
+        defaultRefValidationFunction
+    );
+    let severity = referenceToXvr
+        ? DiagnosticSeverity.Warning
+        : DiagnosticSeverity.Hint;
+    let message = referenceToXvr
+        ? `CalcPvr references non Evr ${obj.identifier!.name}`
+        : `No reference to Evr`;
+    let code = referenceToXvr
+        ? DiagnosticCode.invalidReference
+        : DiagnosticCode.missingReference;
+    return [
+        createDiagnostic(
+            severity,
+            {
+                start: doc.positionAt(obj.identifier!.start),
+                end: doc.positionAt(obj.identifier!.end),
+            },
+            message,
+            code
+        ),
+    ];
+}
+
+const hasReferenceToEvr: RefValidationFunction = (refs: SepticReference[]) => {
+    for (const ref of refs) {
+        if (ref.obj?.isType("Evr")) {
+            return true;
+        }
+    }
+    return false;
+};
 
 export function validateAttribute(
     attr: Attribute,
