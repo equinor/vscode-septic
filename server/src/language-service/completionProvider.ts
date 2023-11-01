@@ -146,11 +146,7 @@ export function getCalcCompletion(
     if (!obj) {
         return [];
     }
-    const relevantXvrs = getRelevantXvrsIdentifier(
-        obj,
-        refProvider.getAllXvrObjects()
-    );
-    relevantXvrs.forEach((xvr) => {
+    getRelevantXvrsCalc(refProvider.getAllXvrObjects()).forEach((xvr) => {
         compItems.push(xvrToCompletionItem(xvr));
     });
     let calcs = metaInfoProvider.getCalcs();
@@ -365,6 +361,10 @@ function xvrToCompletionItem(obj: SepticObject): CompletionItem {
     };
 }
 
+function getRelevantXvrsCalc(objects: SepticObject[]) {
+    return objects.filter((obj) => obj.isXvr());
+}
+
 function getRelevantXvrsIdentifier(
     obj: SepticObject,
     objects: SepticObject[]
@@ -373,6 +373,8 @@ function getRelevantXvrsIdentifier(
         return objects.filter((xvr) => xvr.isType("Sopc" + obj.type));
     } else if (obj.isSopcXvr()) {
         return objects.filter((xvr) => xvr.isType(obj.type.slice(4)));
+    } else if (obj.isType("CalcPvr")) {
+        return objects.filter((xvr) => xvr.isType("Evr"));
     } else {
         return objects.filter((xvr) => xvr.isXvr());
     }

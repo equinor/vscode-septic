@@ -48,15 +48,15 @@ describe("Test completion of identifier", () => {
         expect(compItems.length).to.equal(1);
         expect(compItems[0].label).to.equal("TestCvr");
     });
-    it("Completion of Cvr & Mvr identifiers for CalcPvr", () => {
-        const text = "Mvr: TestMvr\nCvr: TestCvr\nCalcPvr:        \n";
+    it("Completion of identifiers for CalcPvr", () => {
+        const text =
+            "Evr: TestEvr\nMvr: TestMvr\nCvr: TestCvr\nCalcPvr:        \n";
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
         const cnfg = parseSeptic(doc.getText());
-        const offset = doc.offsetAt(Position.create(2, 10));
+        const offset = doc.offsetAt(Position.create(3, 10));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
-        expect(compItems.length).to.equal(2);
-        expect(compItems[0].label).to.equal("TestMvr");
-        expect(compItems[1].label).to.equal("TestCvr");
+        expect(compItems.length).to.equal(1);
+        expect(compItems[0].label).to.equal("TestEvr");
     });
     it("Completion of Cvr & Mvr identifiers for non Xvr object with identifier reference", () => {
         const text = "Mvr: TestMvr\nCvr: TestCvr\nXvrPlot:        \n";
