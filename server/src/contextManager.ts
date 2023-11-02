@@ -24,6 +24,10 @@ export class ContextManager {
 
     public onDidUpdateContext: Event<string> = this._onDidUpdateContext.event;
 
+    private _onDidDeleteContext: Emitter<string> = new Emitter<string>();
+
+    public onDidDeleteContext: Event<string> = this._onDidDeleteContext.event;
+
     constructor(
         docProvider: DocumentProvider,
         cnfgProvider: SepticConfigProvider,
@@ -91,6 +95,7 @@ export class ContextManager {
                 `Deleted file. Removing context ${context.name} from manager`
             );
             this.contexts.delete(uri);
+            this._onDidDeleteContext.fire(uri);
         }
     }
     public async createScgContext(uri: string): Promise<void> {
