@@ -11,3 +11,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install requirements
+        run: pip install -r scripts/requirements.txt
+
+      - name: Look for documentation changes
+        env:
+          API_TOKEN: ${{ secrets.SEPTIC_REPO_READ }}
+        run: python scripts/main.py
+
+      # - name: Setup tmate session
+      #   if: success() || failure()
+      #   uses: mxschmitt/action-tmate@v3
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          add-paths: public/*
+          labels: "documentation"
+          branch: "septic-documentation-branch"
+          title: "docs: update SEPTIC documentation"
+          commit-message: "some custom commit message here"
