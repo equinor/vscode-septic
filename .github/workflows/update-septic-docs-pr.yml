@@ -1,0 +1,13 @@
+name: "📚 Update SEPTIC docs"
+
+on: 
+  workflow_dispatch:
+  repository_dispatch:
+    types: [execute]
+
+jobs:
+  update_doc_pr:
+    name: "📚 Update PR"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
