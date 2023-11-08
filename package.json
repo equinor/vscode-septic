@@ -165,7 +165,7 @@
     "test_with_coverage": "npm run compile && nyc mocha --require ts-node/register --require source-map-support/register --recursive server/src/test/**/*.test.ts "
   },
   "devDependencies": {
-    "@types/chai": "4.3.7",
+    "@types/chai": "4.3.10",
     "@types/mocha": "^10.0.1",
     "@types/node": "^16.18.60",
     "@types/vscode": "^1.81.0",
