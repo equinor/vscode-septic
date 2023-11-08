@@ -313,7 +313,7 @@ export class SepticScanner {
     }
 
     private isBlockComment() {
-        return this.peek() === "*" && this.isWhiteSpace(this.peekNext());
+        return this.peek() === "*";
     }
 
     private blockComment() {
@@ -328,19 +328,11 @@ export class SepticScanner {
     }
 
     private isEndOfBlockComment() {
-        return (
-            this.isWhiteSpace(this.previous()) &&
-            this.peek() === "*" &&
-            this.peekNext() === "/"
-        );
+        return this.peek() === "*" && this.peekNext() === "/";
     }
 
     private isLineComment() {
-        return this.peek() === "/" && this.isWhiteSpace(this.peekNext());
-    }
-
-    private isWhiteSpace(char: string) {
-        return char === " " || char === "\n" || char === "\r";
+        return this.peek() === "/";
     }
 
     private lineComment() {

@@ -11,6 +11,7 @@ import {
     validateObjectReferences,
     validateObjectParent,
     validateAttribute,
+    validateComments,
 } from "../language-service/diagnosticsProvider";
 import {
     AttributeValue,
@@ -1200,6 +1201,99 @@ describe("Test validation of object structure", () => {
         const cnfg = parseSeptic(doc.getText());
         cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
         let diag = validateObjectParent(cnfg.objects[0], doc);
+        expect(diag.length).to.equal(0);
+    });
+});
+
+describe("Test validation of comments", () => {
+    it("Expect diagnostics for invalid line comment", () => {
+        const text = `
+            //Test
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateComments(cnfg, doc);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidComment);
+    });
+    it("Expect no diagnostics for valid line comment", () => {
+        const text = `
+            // Test
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateComments(cnfg, doc);
+        expect(diag.length).to.equal(0);
+    });
+    it("Expect no diagnostics for valid line comment", () => {
+        const text = `
+            //
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateComments(cnfg, doc);
+        expect(diag.length).to.equal(0);
+    });
+    it("Expect diagnostics for invalid block comment", () => {
+        const text = `
+            /*Test */
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateComments(cnfg, doc);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidComment);
+    });
+    it("Expect diagnostics for invalid block comment", () => {
+        const text = `
+            /* Test*/
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateComments(cnfg, doc);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.invalidComment);
+    });
+    it("Expect no diagnostics for valid block comment", () => {
+        const text = `
+            /* Test */
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateComments(cnfg, doc);
+        expect(diag.length).to.equal(0);
+    });
+    it("Expect no diagnostics for valid block comment", () => {
+        const text = `
+            /* */
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateComments(cnfg, doc);
+        expect(diag.length).to.equal(0);
+    });
+    it("Expect no diagnostics for valid block comment", () => {
+        const text = `
+        /*
+        CalcModl:      CalcModlName
+               Text1=  ""
+               Text2=  ""
+      
+        CalcPvr:       Var2
+               Text1=  ""
+               Text2=  ""
+                 Alg=  "Test1"
+      
+        CalcPvr:       Def
+               Text1=  ""
+               Text2=  ""
+                 Alg=  "Var2/selectvalue(Var2.Test)"
+      
+      */
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        let diag = validateComments(cnfg, doc);
         expect(diag.length).to.equal(0);
     });
 });
