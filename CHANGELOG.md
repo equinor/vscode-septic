@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.13.0](https://github.com/equinor/vscode-septic/compare/v1.12.4...v1.13.0) (2023-11-10)
+
+
+### 🧹 Chores
+
+* add IterEachN to dmmyappl snippet ([#377](https://github.com/equinor/vscode-septic/issues/377)) ([1a92f56](https://github.com/equinor/vscode-septic/commit/1a92f56b646cc862f09f0cd0f9ddc50b888f3642))
+* **deps:** bump @types/node from 16.18.58 to 16.18.60 ([#375](https://github.com/equinor/vscode-septic/issues/375)) ([7504a3a](https://github.com/equinor/vscode-septic/commit/7504a3a5cb82e0c4f4daba942f0a5f7e468657c9))
+* **deps:** bump actions/checkout from 3 to 4 ([#297](https://github.com/equinor/vscode-septic/issues/297)) ([6c4f4f4](https://github.com/equinor/vscode-septic/commit/6c4f4f4ea07d22b6518a9f36c17b384eff5b262b))
+* **deps:** bump actions/setup-node from 3 to 4 ([#363](https://github.com/equinor/vscode-septic/issues/363)) ([e73cfc0](https://github.com/equinor/vscode-septic/commit/e73cfc0a98a7e4b828c597f0f8e96efd9499cd7c))
+* **deps:** bump chai and @types/chai ([#343](https://github.com/equinor/vscode-septic/issues/343)) ([101d396](https://github.com/equinor/vscode-septic/commit/101d396ae4cc161060754d9e926859ed92246708))
+
+
+### 👷 CI/CD
+
+* add doc-automation workflow shell ([#383](https://github.com/equinor/vscode-septic/issues/383)) ([36bf4a3](https://github.com/equinor/vscode-septic/commit/36bf4a3a9a838e27c37e9e28ea67d8f58ada3719))
+* automate SEPTIC documentation PR ([#382](https://github.com/equinor/vscode-septic/issues/382)) ([00e0ec6](https://github.com/equinor/vscode-septic/commit/00e0ec6fa4d07d5fc2997054fbc4d048f834e41e))
+
+
+### ✨ Features
+
+* add warning for refs to non evr in calcpvr ([#371](https://github.com/equinor/vscode-septic/issues/371)) ([a8e7df9](https://github.com/equinor/vscode-septic/commit/a8e7df9db93df211b072ea79c87419cda6484775))
+
+
+### 🐛 Bug Fixes
+
+* clear problems on deletion of files ([#366](https://github.com/equinor/vscode-septic/issues/366)) ([43d9136](https://github.com/equinor/vscode-septic/commit/43d913603ae2dfbb4609ebfad877cd7caf72735e))
+* update parsing and highlighting of invalid comments ([#365](https://github.com/equinor/vscode-septic/issues/365)) ([b4a4dbc](https://github.com/equinor/vscode-septic/commit/b4a4dbcb5d2ff4d76369b00898030fad156acbf8))
+
 ## [1.12.4](https://github.com/equinor/vscode-septic/compare/v1.12.3...v1.12.4) (2023-11-01)
 
 
