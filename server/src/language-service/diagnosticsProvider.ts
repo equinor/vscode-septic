@@ -33,7 +33,6 @@ import {
     getCalcParamIndexInfo,
     getIndexOfParam,
     getValueOfAlgExpr,
-    formatCalcMarkdown,
     formatDataType,
     RefValidationFunction,
     SepticReference,
@@ -45,6 +44,8 @@ export const disableDiagnosticRegex =
     /\/\/\s+noqa\b(?::([ \w,]*))?|\{#\s+noqa\b(?::([ \w,]*))?\s*#\}/i;
 export const diagnosticCodeRegex = /(E|W)[0-9]{3}/;
 const jinjaRegex = /\{\{[\S\s]*?\}\}|\{%[\S\s]*?%\}/;
+const blockCommentRegex = /^\/\*(\s[\S\s]*\s|\s)\*\/$/;
+const lineCommentRegex = /^\/\/(\s.*|)$/;
 const maxAlgLength = 250;
 
 /*
@@ -54,6 +55,7 @@ const maxAlgLength = 250;
     3**: Attributes
     4**: Structure
     5**: References
+    6**: Comments
 */
 export enum DiagnosticCode {
     invalidIdentifier = "W101",
@@ -80,6 +82,7 @@ export enum DiagnosticCode {
     missingParentObject = "W402",
     missingReference = "W501",
     invalidReference = "W502",
+    invalidComment = "W601",
 }
 
 export enum DiagnosticLevel {
@@ -155,6 +158,7 @@ export function getDiagnostics(
     const diagnostics: Diagnostic[] = [];
     diagnostics.push(...validateObjects(cnfg, doc, refProvider));
     diagnostics.push(...validateAlgs(cnfg, doc, refProvider));
+    diagnostics.push(...validateComments(cnfg, doc));
     let disabledLines = getDisabledLines(cnfg.comments, doc);
     let filteredDiags = diagnostics.filter((diag) => {
         let disabledLine = disabledLines.get(diag.range.start.line);
@@ -172,6 +176,38 @@ export function getDiagnostics(
         return true;
     });
     return filteredDiags;
+}
+
+export function validateComments(
+    cnfg: SepticCnfg,
+    doc: ITextDocument
+): Diagnostic[] {
+    const diagnostics: Diagnostic[] = [];
+    for (let comment of cnfg.comments) {
+        if (!checkSepticComment(comment)) {
+            diagnostics.push(
+                createDiagnostic(
+                    DiagnosticSeverity.Error,
+                    {
+                        start: doc.positionAt(comment.start),
+                        end: doc.positionAt(comment.end),
+                    },
+                    `Invalid comment. Correct format is //{whitespace}... or /*{whitespace}...{whitespace}*/`,
+                    DiagnosticCode.invalidComment
+                )
+            );
+        }
+    }
+    return diagnostics;
+}
+
+function checkSepticComment(comment: SepticComment): boolean {
+    if (comment.type === SepticTokenType.blockComment) {
+        return blockCommentRegex.test(comment.content);
+    } else if (comment.type === SepticTokenType.lineComment) {
+        return lineCommentRegex.test(comment.content);
+    }
+    return true;
 }
 
 export function validateAlgs(
