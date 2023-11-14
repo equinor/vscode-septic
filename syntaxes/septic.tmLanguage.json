@@ -185,7 +185,7 @@
                 {
                     "name": "comment.block.septic",
                     "begin": "\\/\\*\\s",
-                    "end": "\\s\\*\\/"
+                    "end": "(\\s\\*\\/|^\\*\\/)"
                 }
             ]
         },
