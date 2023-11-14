@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.1](https://github.com/equinor/vscode-septic/compare/v1.13.0...v1.13.1) (2023-11-14)
+
+
+### 🐛 Bug Fixes
+
+* bug with block comment syntax ([#392](https://github.com/equinor/vscode-septic/issues/392)) ([5d6d68d](https://github.com/equinor/vscode-septic/commit/5d6d68dee36469b3765e560933c34ae12f46b91b))
+
 ## [1.13.0](https://github.com/equinor/vscode-septic/compare/v1.12.4...v1.13.0) (2023-11-10)
 
 
