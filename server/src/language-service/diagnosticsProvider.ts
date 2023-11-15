@@ -36,6 +36,7 @@ import {
     formatDataType,
     RefValidationFunction,
     SepticReference,
+    ReferenceType,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -820,8 +821,10 @@ export function validateEvrReferences(
     if (!name) {
         return [];
     }
-    const refs = refProvider.getObjectsByIdentifier(name);
-    const calcPvrRef = refs.find((obj) => obj.isType("CalcPvr"));
+    const refs = refProvider.getXvrRefs(name);
+    const calcPvrRef = refs?.find((ref) => {
+        return ref.type === ReferenceType.calc;
+    });
     if (!calcPvrRef) {
         return [
             createDiagnostic(
@@ -830,7 +833,7 @@ export function validateEvrReferences(
                     start: doc.positionAt(obj.identifier!.start),
                     end: doc.positionAt(obj.identifier!.end),
                 },
-                "Unused Evr. Evr not used in calcs or allow user input",
+                "Unused Evr. Evr not used in calcs or enabled user input",
                 DiagnosticCode.unusedEvr
             ),
         ];

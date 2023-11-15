@@ -14,6 +14,14 @@ export interface SepticReference {
         end: number;
     };
     obj?: SepticObject;
+    type: ReferenceType;
+}
+
+export enum ReferenceType {
+    xvr,
+    calc,
+    identifier,
+    attribute,
 }
 
 export function createSepticReference(
@@ -23,12 +31,14 @@ export function createSepticReference(
         start: number;
         end: number;
     },
-    obj: SepticObject | undefined = undefined
+    obj: SepticObject | undefined = undefined,
+    type: ReferenceType
 ): SepticReference {
     return {
         identifier: identifier.replace(/\s/g, ""),
         location: location,
         obj: obj,
+        type: type,
     };
 }
 

@@ -1102,7 +1102,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSeptic(doc.getText());
         const objectInfo = metaInfoProvider.getObject("MvrList");
         let diag = validateObjectReferences(
-            cnfg.objects[1],
+            cnfg.objects[0],
             doc,
             cnfg,
             objectInfo!
@@ -1119,13 +1119,49 @@ describe("Test validation of object references", () => {
         const cnfg = parseSeptic(doc.getText());
         const objectInfo = metaInfoProvider.getObject("MvrList");
         let diag = validateObjectReferences(
-            cnfg.objects[1],
+            cnfg.objects[0],
             doc,
             cnfg,
             objectInfo!
         );
-        expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.unusedEvr);
+        expect(diag.length).to.equal(0);
+    });
+    it("Expect no diagnostics for evr used in calc", () => {
+        const text = `
+            Evr: TestEvr
+            UserInput= DOUBLE 
+            
+            CalcPvr: TestEvr
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("MvrList");
+        let diag = validateObjectReferences(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        expect(diag.length).to.equal(0);
+    });
+    it("Expect no diagnostics for evr used in calc", () => {
+        const text = `
+            Evr: TestEvr
+            UserInput= DOUBLE 
+            
+            CalcPvr: Test
+            Alg= "TestEvr"
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("MvrList");
+        let diag = validateObjectReferences(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        expect(diag.length).to.equal(0);
     });
 });
 
