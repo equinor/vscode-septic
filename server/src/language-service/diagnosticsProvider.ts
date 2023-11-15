@@ -82,6 +82,7 @@ export enum DiagnosticCode {
     missingParentObject = "W402",
     missingReference = "W501",
     invalidReference = "W502",
+    unusedEvr = "W503",
     invalidComment = "W601",
 }
 
@@ -671,6 +672,9 @@ export function validateObjectReferences(
         return [];
     }
     const diagnostics: Diagnostic[] = [];
+    if (obj.isType("Evr")) {
+        diagnostics.push(...validateEvrReferences(obj, refProvider, doc));
+    }
     if (shouldValidateIdentifier(objectMetaInfo, obj)) {
         if (obj.isType("CalcPvr")) {
             diagnostics.push(
@@ -802,6 +806,37 @@ const hasReferenceToEvr: RefValidationFunction = (refs: SepticReference[]) => {
     }
     return false;
 };
+
+export function validateEvrReferences(
+    obj: SepticObject,
+    refProvider: SepticReferenceProvider,
+    doc: ITextDocument
+) {
+    const userInputAttrValue = obj.getAttribute("UserInput")?.getAttrValue();
+    if (userInputAttrValue && userInputAttrValue.getValue() !== "OFF") {
+        return [];
+    }
+    const name = obj.identifier?.name;
+    if (!name) {
+        return [];
+    }
+    const refs = refProvider.getObjectsByIdentifier(name);
+    const calcPvrRef = refs.find((obj) => obj.isType("CalcPvr"));
+    if (!calcPvrRef) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Warning,
+                {
+                    start: doc.positionAt(obj.identifier!.start),
+                    end: doc.positionAt(obj.identifier!.end),
+                },
+                "Unused Evr. Evr not used in calcs or allow user input",
+                DiagnosticCode.unusedEvr
+            ),
+        ];
+    }
+    return [];
+}
 
 export function validateAttribute(
     attr: Attribute,

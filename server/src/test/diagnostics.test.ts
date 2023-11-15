@@ -1093,6 +1093,40 @@ describe("Test validation of object references", () => {
         );
         expect(diag.length).to.equal(0);
     });
+    it("Expect diagnostics for unused evr", () => {
+        const text = `
+            Evr: TestEvr
+            UserInput= OFF    
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("MvrList");
+        let diag = validateObjectReferences(
+            cnfg.objects[1],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.unusedEvr);
+    });
+    it("Expect no diagnostics for evr with user input enabled", () => {
+        const text = `
+            Evr: TestEvr
+            UserInput= DOUBLE    
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSeptic(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("MvrList");
+        let diag = validateObjectReferences(
+            cnfg.objects[1],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.unusedEvr);
+    });
 });
 
 describe("Test validation of object structure", () => {
