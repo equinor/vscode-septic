@@ -1,10 +1,10 @@
-# Commit: 3b041ba
+# Commit: d99095d
 - attributes:
   - calc: false
     dataType: enum
     default:
     - 'OFF'
-    description: Description
+    description: Autoscaling of plot
     enums:
     - 'ON'
     - 'OFF'
@@ -271,7 +271,7 @@
     dataType: enum
     default:
     - STOPPED
-    description: Operation mode of manipulated variable
+    description: Desired mode of manipulated variable
     enums:
     - STOPPED
     - TRACKING
@@ -329,7 +329,7 @@
     dataType: float
     default:
     - '-1'
-    description: Description
+    description: Y-range of plot when scaled using span, -1 use min-max
     enums: []
     list: false
     name: PlotSpan
@@ -351,12 +351,14 @@
     dataType: float
     default:
     - '0'
-    description: Actual process value of manipulated variable
+    description: Process value of manipulated variable
     enums: []
     list: false
     name: ProcessValue
     noCnfg: false
-    postfix: []
+    postfix:
+    - ''
+    - BAD
     tags: []
   - calc: true
     dataType: float
