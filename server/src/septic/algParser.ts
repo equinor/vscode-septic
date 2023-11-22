@@ -168,14 +168,19 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             this.advance();
             end = this.previous().end;
             content += ".";
-            this.advance();
-            let nextToken = this.variable();
-            if (nextToken.start === end) {
-                content += nextToken.content;
-                end = nextToken.end;
+            let nextToken = this.peek();
+            if (nextToken?.start === end) {
+                if (
+                    nextToken?.type === AlgTokenType.identifier ||
+                    nextToken?.type === AlgTokenType.jinja
+                ) {
+                    this.advance();
+                    let nextVariable = this.variable();
+                    content += nextVariable.content;
+                    end = nextVariable.end;
+                }
             }
         }
-
         return {
             start: token.start,
             end: end,
