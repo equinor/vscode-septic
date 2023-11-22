@@ -21,6 +21,7 @@ import {
     RefValidationFunction,
     defaultRefValidationFunction,
     createSepticReference,
+    ReferenceType,
 } from "./reference";
 import { removeSpaces } from "../util";
 import { updateParentObjects } from "./hierarchy";
@@ -195,6 +196,7 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
 
     if (objectDef.refs.identifier && obj.identifier) {
         let isObjRef = obj.isXvr() || obj.isSopcXvr();
+        let isCalcPvr = obj.isType("CalcPvr");
         let ref: SepticReference = createSepticReference(
             obj.identifier.name,
             {
@@ -202,7 +204,12 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
                 start: obj.identifier.start,
                 end: obj.identifier.end,
             },
-            isObjRef ? obj : undefined
+            isObjRef ? obj : undefined,
+            isObjRef
+                ? ReferenceType.xvr
+                : isCalcPvr
+                ? ReferenceType.calc
+                : ReferenceType.identifier
         );
         xvrRefs.push(ref);
     }
@@ -234,11 +241,16 @@ function calcPvrXvrRefs(obj: SepticObject): SepticReference[] {
 
     visitor.variables.forEach((xvr) => {
         let identifier = xvr.value.split(".")[0];
-        const ref: SepticReference = createSepticReference(identifier, {
-            uri: "",
-            start: alg!.getAttrValue()!.start + xvr.start + 1,
-            end: alg!.getAttrValue()!.start + xvr.end + 1,
-        });
+        const ref: SepticReference = createSepticReference(
+            identifier,
+            {
+                uri: "",
+                start: alg!.getAttrValue()!.start + xvr.start + 1,
+                end: alg!.getAttrValue()!.start + xvr.end + 1,
+            },
+            undefined,
+            ReferenceType.calc
+        );
         xvrs.push(ref);
     });
     return xvrs;
@@ -257,10 +269,15 @@ function attrXvrRefs(obj: SepticObject, attrName: string): SepticReference[] {
         );
     });
     return refs.map((ref) => {
-        return createSepticReference(ref.getValue(), {
-            uri: "",
-            start: ref.start + 1,
-            end: ref.end - 1,
-        });
+        return createSepticReference(
+            ref.getValue(),
+            {
+                uri: "",
+                start: ref.start + 1,
+                end: ref.end - 1,
+            },
+            undefined,
+            ReferenceType.attribute
+        );
     });
 }
