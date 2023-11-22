@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.14.0](https://github.com/equinor/vscode-septic/compare/v1.13.1...v1.14.0) (2023-11-22)
+
+
+### ✨ Features
+
+* add diagnostics for unused evrs ([#395](https://github.com/equinor/vscode-septic/issues/395)) ([19ee438](https://github.com/equinor/vscode-septic/commit/19ee438748694cc031f09a5ebf0496f6b87f576d))
+
+
+### 🐛 Bug Fixes
+
+* completion of properties in calcs ([#396](https://github.com/equinor/vscode-septic/issues/396)) ([a40877c](https://github.com/equinor/vscode-septic/commit/a40877c1db33f515a4791bca363d57aa69a11426))
+* update diagnostics for cnfg when removed from context ([#394](https://github.com/equinor/vscode-septic/issues/394)) ([ece8ade](https://github.com/equinor/vscode-septic/commit/ece8ade62ac6a386b2d1f89d612173c50882137a))
+
 ## [1.13.1](https://github.com/equinor/vscode-septic/compare/v1.13.0...v1.13.1) (2023-11-14)
 
 
