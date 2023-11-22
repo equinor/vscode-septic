@@ -30,7 +30,6 @@ import { ContextManager } from "./contextManager";
 import { offsetToPositionRange } from "./util/converter";
 import {
     ScgContext,
-    SepticCnfg,
     SepticReferenceProvider,
     SepticMetaInfoProvider,
 } from "./septic";
@@ -120,9 +119,17 @@ async function publishDiagnostics(uri: string) {
 }
 
 async function updateAllDiagnostics() {
+    updateDiagnosticsAllContexts();
+    updateDiagnosticsAllStandaloneCnfgs();
+}
+
+async function updateDiagnosticsAllContexts() {
     for (const context of contextManager.getAllContexts()) {
         publishDiagnosticsContext(context);
     }
+}
+
+async function updateDiagnosticsAllStandaloneCnfgs() {
     for (const uri of documentProvider.getAllDocumentUris()) {
         let context = await contextManager.getContext(uri);
         if (!context) {
@@ -220,6 +227,7 @@ contextManager.onDidUpdateContext(async (uri) => {
         return;
     }
     publishDiagnosticsContext(context);
+    updateDiagnosticsAllStandaloneCnfgs();
 });
 
 contextManager.onDidDeleteContext(async (uri) => {

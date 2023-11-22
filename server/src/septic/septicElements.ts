@@ -124,6 +124,10 @@ export class SepticObject extends SepticBase {
     resetChildren() {
         this.children = [];
     }
+
+    resetParent() {
+        this.parent = undefined;
+    }
 }
 
 export class Attribute extends SepticBase {
