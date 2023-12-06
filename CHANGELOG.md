@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.14.2](https://github.com/equinor/vscode-septic/compare/v1.14.1...v1.14.2) (2023-12-06)
+
+
+### 🧹 Chores
+
+* **deps:** bump @babel/traverse from 7.22.8 to 7.23.2 ([#353](https://github.com/equinor/vscode-septic/issues/353)) ([f9e1bcb](https://github.com/equinor/vscode-septic/commit/f9e1bcbbe3b287657a7b0e58e315a885d99a7369))
+* **deps:** bump google-github-actions/release-please-action from 3 to 4 ([#407](https://github.com/equinor/vscode-septic/issues/407)) ([cf410dd](https://github.com/equinor/vscode-septic/commit/cf410dd478079f56b683aee0c4d2e71dad3bed8b))
+* update repo to follow scm policy ([#404](https://github.com/equinor/vscode-septic/issues/404)) ([162e076](https://github.com/equinor/vscode-septic/commit/162e076e69e9107c83b0c9cc69f4cf39a5d33a1e))
+
+
+### 👷 CI/CD
+
+* add missing Septic cpp files for documentation ([#411](https://github.com/equinor/vscode-septic/issues/411)) ([9d5c598](https://github.com/equinor/vscode-septic/commit/9d5c598a64c670ab2b6353d35c33aa665edc64c4))
+* fix typo ([#412](https://github.com/equinor/vscode-septic/issues/412)) ([328ae5f](https://github.com/equinor/vscode-septic/commit/328ae5f5b6571335ac464641a04da83f2fc543ba))
+
+
+### 📚 Documentation
+
+* update SEPTIC documentation ([#413](https://github.com/equinor/vscode-septic/issues/413)) ([a0f2394](https://github.com/equinor/vscode-septic/commit/a0f2394090219e700d1911fdc8f71b89102b7dc4))
+
+
+### ⏪️ Revert
+
+* [#407](https://github.com/equinor/vscode-septic/issues/407) use release-please 3 ([#414](https://github.com/equinor/vscode-septic/issues/414)) ([bc33f18](https://github.com/equinor/vscode-septic/commit/bc33f18e8e85b756e130c00a9972394dbf1b2623))
+
 ## [1.14.1](https://github.com/equinor/vscode-septic/compare/v1.14.0...v1.14.1) (2023-11-22)
 
 
