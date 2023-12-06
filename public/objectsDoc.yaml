@@ -1,4 +1,4 @@
-# Commit: d99095d
+# Commit: 75c6de0
 - attributes:
   - calc: false
     dataType: enum
@@ -7582,5 +7582,86 @@
   description: Experimental process, where the models are taken from the SmpcAppl
     with same ID
   name: ExprProc
+  parents:
+  - System
+- attributes:
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Step to triggering event
+    enums: []
+    list: false
+    name: N
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: For repeated trigging of event, specifies cycle length
+    enums: []
+    list: false
+    name: Ncycle
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Events/triggers for change of SEPTIC parameters
+  name: Event
+  parents:
+  - System
+- attributes:
+  - calc: false
+    dataType: int
+    default:
+    - '12'
+    description: Cols to use in a gridded group
+    enums: []
+    list: false
+    name: Cols
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default: []
+    description: Lock the group for changes
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: Locked
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - Playback
+    description: Controls data transport to SEPTIC
+    enums:
+    - BaseCase
+    - Playback
+    - Playback_nomode
+    list: false
+    name: Mode
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '20'
+    description: Rows to use in a gridded group
+    enums: []
+    list: false
+    name: Rows
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Filedata process, playback or basecase comparison of .dta file. ID
+    of FdtaProc is the filename
+  name: FdtaProc
   parents:
   - System
