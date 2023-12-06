@@ -1,7 +1,8 @@
-from dotenv import load_dotenv
-import requests as requests
-import os as os
 import base64
+import os as os
+
+import requests as requests
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -52,6 +53,8 @@ def getObjectFiles(branch: str):
         "src/Subr.cpp",
         "src/Calc.cpp",
         "src/Expr.cpp",
+        "src/Evnt.cpp"
+        "src/Fdta.cpp"
     ]
     files = []
     for path in paths:
