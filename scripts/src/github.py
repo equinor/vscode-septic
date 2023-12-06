@@ -53,15 +53,15 @@ def getObjectFiles(branch: str):
         "src/Subr.cpp",
         "src/Calc.cpp",
         "src/Expr.cpp",
-        "src/Evnt.cpp"
+        "src/Evnt.cpp",
         "src/Fdta.cpp"
     ]
     files = []
     for path in paths:
         try:
             files.append(getFile(branch, path))
-        except:
-            continue
+        except Exception as e:
+            print(e, path)
     return files
 
 
