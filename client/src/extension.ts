@@ -77,6 +77,10 @@ export function activate(context: vscode.ExtensionContext) {
         );
     });
 
+    vscode.commands.registerCommand("septic.detectCycles", async () => {
+        let result = await client.sendRequest(protocol.detectCycles, {});
+        return result;
+    });
     client.start();
 }
 
