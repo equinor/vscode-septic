@@ -34,7 +34,6 @@ import {
     SepticMetaInfoProvider,
 } from "./septic";
 import { getIgnorePatterns, isPathIgnored } from "./ignorePath";
-import { createCodeActionInsertEvr } from "./language-service/codeActionProvider";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -470,19 +469,7 @@ connection.onCodeAction(async (params) => {
         );
     }
 
-    let doc = await documentProvider.getDocument(params.textDocument.uri);
-    if (!doc) {
-        return undefined;
-    }
-    let insertEvrActions = await langService.provideCodeAction(params, doc);
-    let codeActions = [];
-    for (let evrAction of insertEvrActions) {
-        let doc = await documentProvider.getDocument(evrAction.uri);
-        if (!doc) {
-            continue;
-        }
-        codeActions.push(createCodeActionInsertEvr(evrAction, doc));
-    }
+    let codeActions = await langService.provideCodeAction(params);
     return codeActions;
 });
 // Make the text document manager listen on the connection

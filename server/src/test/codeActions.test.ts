@@ -35,7 +35,7 @@ describe("Test codeaction for inserting evr", () => {
         const codeActions = getCodeActionInsertEvr(params, cnfg, doc, "bottom");
         expect(codeActions.length).to.equal(1);
         const action = codeActions[0];
-        expect(doc.positionAt(action.offsetEdit).line).to.greaterThan(24);
+        expect(doc.positionAt(action.offset).line).to.greaterThan(24);
         expect(action.name === "NewTest");
     });
     it("Expect to insert evr for missing reference in calcpvr identifier at top", () => {
@@ -66,7 +66,7 @@ describe("Test codeaction for inserting evr", () => {
         const codeActions = getCodeActionInsertEvr(params, cnfg, doc, "top");
         expect(codeActions.length).to.equal(1);
         const action = codeActions[0];
-        expect(doc.positionAt(action.offsetEdit).line).to.lessThan(9);
+        expect(doc.positionAt(action.offset).line).to.lessThan(9);
         expect(action.name === "NewTest");
     });
     it("Expect to insert evr for missing reference in alg", () => {
@@ -97,7 +97,7 @@ describe("Test codeaction for inserting evr", () => {
         const codeActions = getCodeActionInsertEvr(params, cnfg, doc, "bottom");
         expect(codeActions.length).to.equal(1);
         const action = codeActions[0];
-        expect(doc.positionAt(action.offsetEdit).line).to.greaterThan(24);
+        expect(doc.positionAt(action.offset).line).to.greaterThan(24);
         expect(action.name === "SomethingTest");
     });
     it("Expect no insert evr existing reference", () => {

@@ -7,44 +7,79 @@ import {
 } from "vscode-languageserver";
 import { SepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
-import { SepticCnfg, SepticReferenceProvider } from "../septic";
+import { SepticCnfg, SepticObject } from "../septic";
 import { DiagnosticCode } from "./diagnosticsProvider";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
 import { SettingsManager } from "../settings";
+import { DocumentProvider } from "../documentProvider";
 
 export class CodeActionProvider {
     private readonly cnfgProvider: SepticConfigProvider;
     private readonly settingsManager: SettingsManager;
+    private readonly documentProvider: DocumentProvider;
 
     /* istanbul ignore next */
     constructor(
         cnfgProvider: SepticConfigProvider,
-        settingsManager: SettingsManager
+        settingsManager: SettingsManager,
+        documentProvider: DocumentProvider
     ) {
         this.cnfgProvider = cnfgProvider;
         this.settingsManager = settingsManager;
+        this.documentProvider = documentProvider;
     }
 
     /* istanbul ignore next */
     public async provideCodeAction(
-        params: CodeActionParams,
-        doc: ITextDocument
-    ): Promise<CodeActionInsertEvr[]> {
+        params: CodeActionParams
+    ): Promise<CodeAction[]> {
+        let codeActionsInsert: CodeActionInsert[] = [];
+        let doc = await this.documentProvider.getDocument(
+            params.textDocument.uri
+        );
+        if (!doc) {
+            return [];
+        }
         let cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
         let settings = await this.settingsManager.getSettings();
         let insertPos = settings?.codeActions.insertEvrPosition ?? "bottom";
-        return getCodeActionInsertEvr(params, cnfg, doc, insertPos);
+        codeActionsInsert.push(
+            ...getCodeActionInsertEvr(params, cnfg, doc, insertPos)
+        );
+        return this.createCodeActions(codeActionsInsert);
+    }
+
+    /* istanbul ignore next */
+    private async createCodeActions(codeActionsInsert: CodeActionInsert[]) {
+        let codeActions = [];
+        for (let cai of codeActionsInsert) {
+            let doc = await this.documentProvider.getDocument(cai.uri);
+            if (!doc) {
+                continue;
+            }
+            switch (cai.type) {
+                case CodaActionInsertType.evr:
+                    codeActions.push(createCodeActionInsertEvr(cai, doc));
+                default:
+                    continue;
+            }
+        }
+        return codeActions;
     }
 }
 
-export interface CodeActionInsertEvr {
+enum CodaActionInsertType {
+    evr,
+}
+export interface CodeActionInsert {
     name: string;
     uri: string;
-    offsetEdit: number;
+    offset: number;
     diag: Diagnostic;
+    type: CodaActionInsertType;
 }
 
 export function getCodeActionInsertEvr(
@@ -52,8 +87,10 @@ export function getCodeActionInsertEvr(
     cnfg: SepticCnfg,
     doc: ITextDocument,
     insertEvrPos: "top" | "bottom"
-): CodeActionInsertEvr[] {
-    let diag = getReferenceError(params.context.diagnostics);
+): CodeActionInsert[] {
+    let diag = params.context.diagnostics.find(
+        (diag) => diag.code === DiagnosticCode.missingReference
+    );
     if (!diag) {
         return [];
     }
@@ -63,59 +100,68 @@ export function getCodeActionInsertEvr(
     if (!currentObject?.isType("CalcPvr")) {
         return [];
     }
-    let parent = currentObject.parent;
-    if (!parent?.isType("CalcModl")) {
-        return [];
-    }
-    while (parent && !parent.isType("DmmyAppl")) {
-        parent = parent.parent;
-    }
-    if (!parent) {
-        return [];
-    }
-    let objectBeforeInsert = parent;
-    if (insertEvrPos === "bottom") {
-        for (const child of parent.children) {
-            if (child.isType("CalcModl")) {
-                break;
-            }
-            objectBeforeInsert = child;
-        }
-    }
     let referencedVariable = cnfg.getXvrRefFromOffset(
         doc.offsetAt(params.range.start)
     );
     if (!referencedVariable) {
         return [];
     }
+    let dmmyAppl = getDmmyApplAncestor(currentObject);
+    if (!dmmyAppl) {
+        return [];
+    }
+    let insertPos = getInsertOffsetAndUri(dmmyAppl, insertEvrPos);
+    if (!insertPos) {
+        return [];
+    }
     return [
         {
             name: referencedVariable.identifier,
-            uri: objectBeforeInsert.uri,
-            offsetEdit: objectBeforeInsert.end,
+            uri: insertPos.uri,
+            offset: insertPos.offset,
             diag: diag,
+            type: CodaActionInsertType.evr,
         },
     ];
 }
 
-function getReferenceError(diagnostics: Diagnostic[]): Diagnostic | undefined {
-    for (const diag of diagnostics) {
-        if (diag.code === DiagnosticCode.missingReference) {
-            return diag;
+function getDmmyApplAncestor(obj: SepticObject): undefined | SepticObject {
+    let parent = obj.parent;
+    while (parent && !parent.isType("DmmyAppl")) {
+        parent = parent.parent;
+    }
+    return parent;
+}
+
+function getInsertOffsetAndUri(
+    dmmyAppl: SepticObject,
+    insertPos: "top" | "bottom"
+): undefined | { offset: number; uri: string } {
+    if (insertPos === "top") {
+        return { offset: dmmyAppl.end, uri: dmmyAppl.uri };
+    }
+    let objectBeforeInsert = dmmyAppl;
+    for (const child of dmmyAppl.children) {
+        if (child.isType("CalcModl")) {
+            return {
+                offset: objectBeforeInsert.end,
+                uri: objectBeforeInsert.uri,
+            };
         }
+        objectBeforeInsert = child;
     }
     return undefined;
 }
 
-export function createCodeActionInsertEvr(
-    action: CodeActionInsertEvr,
+function createCodeActionInsertEvr(
+    action: CodeActionInsert,
     doc: ITextDocument
 ): CodeAction {
     let codeAction = CodeAction.create("Insert Evr");
     codeAction.diagnostics = [action.diag];
     codeAction.isPreferred = true;
     codeAction.kind = CodeActionKind.QuickFix;
-    codeAction.edit = createInsertEvrEdit(action.name, action.offsetEdit, doc);
+    codeAction.edit = createInsertEvrEdit(action.name, action.offset, doc);
     return codeAction;
 }
 
