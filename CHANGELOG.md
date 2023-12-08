@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.0](https://github.com/equinor/vscode-septic/compare/v1.14.2...v1.15.0) (2023-12-08)
+
+
+### ✨ Features
+
+* quick fix for disabling diagnostic code for line ([#420](https://github.com/equinor/vscode-septic/issues/420)) ([38c91a7](https://github.com/equinor/vscode-septic/commit/38c91a794f8de118b679f44731afb37e96e5319e))
+
 ## [1.14.2](https://github.com/equinor/vscode-septic/compare/v1.14.1...v1.14.2) (2023-12-06)
 
 
