@@ -156,8 +156,8 @@ describe("Test codeaction for ignoring warning", () => {
         const doc = TextDocument.create("", "", 0, content);
         const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg, doc);
         expect(codeActions.length).to.equal(2);
-        expect(codeActions[0].title === `W501: Disable for this line scg`);
-        expect(codeActions[1].title === `W501: Disable for this line`);
+        expect(codeActions[0].title === `W501: Disable with {# noqa: .... #}`);
+        expect(codeActions[1].title === `W501: Disable with // noqa: ....`);
     });
     it("Expect code actions to suggest updating ignore comment jinja", async () => {
         const range = {

@@ -233,7 +233,7 @@ function createCodeActionInsertIgnoreComment(
     doc: ITextDocument
 ): CodeAction[] {
     let codeActionJinja = CodeAction.create(
-        `${code}: Disable for this line scg`
+        `${code}: Disable with {# noqa: .... #}`
     );
     codeActionJinja.diagnostics = diagnostics;
     codeActionJinja.kind = CodeActionKind.QuickFix;
@@ -242,7 +242,7 @@ function createCodeActionInsertIgnoreComment(
         pos,
         doc
     );
-    let codeAction = CodeAction.create(`${code}: Disable for this line`);
+    let codeAction = CodeAction.create(`${code}: Disable with // noqa: ....`);
     codeAction.diagnostics = diagnostics;
     codeAction.kind = CodeActionKind.QuickFix;
     codeAction.edit = createCodeActionInsertIgnoreCommentEdit(
