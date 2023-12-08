@@ -1,0 +1,22 @@
+  CalcPvr:       NewTest
+         Text1=  ""
+         Text2=  ""
+           Alg=  "SomethingTest"
+
+  CalcPvr:       NewTest
+         Text1=  ""
+         Text2=  ""
+           Alg=  "SomethingTest + test()" {# noqa: W501 #}
+
+  CalcPvr:       NewTest
+         Text1=  ""
+         Text2=  ""
+           Alg=  "SomethingTest + test()" // noqa: W501 
+  CalcPvr:       NewTest
+         Text1=  ""
+         Text2=  ""
+           Alg=  "SomethingTest + test()" // Test haha
+  CalcPvr:       NewTest
+         Text1=  ""
+         Text2=  ""
+           Alg=  "SomethingTest + test()" {# Test haha #}

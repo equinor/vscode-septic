@@ -23,7 +23,7 @@ import { RenameProvider } from "./renameProvider";
 import { HoverProvider } from "./hoverProvider";
 import { FormattingProvider } from "./formatProvider";
 import { SignatureHelpProvider } from "./signatureHelpProvider";
-import { CodeActionInsert, CodeActionProvider } from "./codeActionProvider";
+import { CodeActionProvider } from "./codeActionProvider";
 
 export * from "./types/textDocument";
 

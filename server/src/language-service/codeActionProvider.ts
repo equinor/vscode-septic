@@ -3,12 +3,19 @@ import {
     CodeActionKind,
     CodeActionParams,
     Diagnostic,
+    Position,
+    Range,
     WorkspaceEdit,
 } from "vscode-languageserver";
 import { SepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
-import { SepticCnfg, SepticObject } from "../septic";
-import { DiagnosticCode } from "./diagnosticsProvider";
+import {
+    SepticCnfg,
+    SepticComment,
+    SepticObject,
+    SepticTokenType,
+} from "../septic";
+import { DiagnosticCode, disableDiagnosticRegex } from "./diagnosticsProvider";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
 import { SettingsManager } from "../settings";
 import { DocumentProvider } from "../documentProvider";
@@ -33,7 +40,7 @@ export class CodeActionProvider {
     public async provideCodeAction(
         params: CodeActionParams
     ): Promise<CodeAction[]> {
-        let codeActionsInsert: CodeActionInsert[] = [];
+        let codeActions: CodeAction[] = [];
         let doc = await this.documentProvider.getDocument(
             params.textDocument.uri
         );
@@ -46,40 +53,35 @@ export class CodeActionProvider {
         }
         let settings = await this.settingsManager.getSettings();
         let insertPos = settings?.codeActions.insertEvrPosition ?? "bottom";
-        codeActionsInsert.push(
-            ...getCodeActionInsertEvr(params, cnfg, doc, insertPos)
+        let insertEvrActions = await this.createCodeActionsInsertEvr(
+            getCodeActionInsertEvr(params, cnfg, doc, insertPos)
         );
-        return this.createCodeActions(codeActionsInsert);
+        codeActions.push(...insertEvrActions);
+        codeActions.push(...getCodeActionIgnoreDiagnostics(params, cnfg, doc));
+        return codeActions;
     }
 
     /* istanbul ignore next */
-    private async createCodeActions(codeActionsInsert: CodeActionInsert[]) {
+    private async createCodeActionsInsertEvr(
+        codeActionsInsert: CodeActionInsert[]
+    ) {
         let codeActions = [];
         for (let cai of codeActionsInsert) {
             let doc = await this.documentProvider.getDocument(cai.uri);
             if (!doc) {
                 continue;
             }
-            switch (cai.type) {
-                case CodaActionInsertType.evr:
-                    codeActions.push(createCodeActionInsertEvr(cai, doc));
-                default:
-                    continue;
-            }
+            codeActions.push(createCodeActionInsertEvr(cai, doc));
         }
         return codeActions;
     }
 }
 
-enum CodaActionInsertType {
-    evr,
-}
 export interface CodeActionInsert {
     name: string;
     uri: string;
     offset: number;
     diag: Diagnostic;
-    type: CodaActionInsertType;
 }
 
 export function getCodeActionInsertEvr(
@@ -120,7 +122,6 @@ export function getCodeActionInsertEvr(
             uri: insertPos.uri,
             offset: insertPos.offset,
             diag: diag,
-            type: CodaActionInsertType.evr,
         },
     ];
 }
@@ -151,6 +152,155 @@ function getInsertOffsetAndUri(
         objectBeforeInsert = child;
     }
     return undefined;
+}
+
+export function getCodeActionIgnoreDiagnostics(
+    params: CodeActionParams,
+    cnfg: SepticCnfg,
+    doc: ITextDocument
+): CodeAction[] {
+    let codeActions: CodeAction[] = [];
+    if (
+        !isOnlyIgnoreCommentsOnSameLine(cnfg.comments, params.range.start, doc)
+    ) {
+        return codeActions;
+    }
+    let comment = getIgnoreCommentSameLine(
+        params.range.start,
+        cnfg.comments,
+        doc
+    );
+    let codes = [
+        ...new Set(params.context.diagnostics.map((diag) => diag.code)),
+    ];
+    for (let code of codes) {
+        let applicableDiagnostics = params.context.diagnostics.filter(
+            (diag) => diag.code === code
+        );
+        if (comment) {
+            codeActions.push(
+                createCodeActionUpdateIgnoreComment(
+                    code!.toString(),
+                    comment,
+                    applicableDiagnostics,
+                    doc
+                )
+            );
+        } else {
+            codeActions.push(
+                ...createCodeActionInsertIgnoreComment(
+                    code!.toString(),
+                    params.range.start,
+                    applicableDiagnostics,
+                    doc
+                )
+            );
+        }
+    }
+    return codeActions;
+}
+
+function isOnlyIgnoreCommentsOnSameLine(
+    comments: SepticComment[],
+    pos: Position,
+    doc: ITextDocument
+) {
+    return (
+        comments.filter(
+            (comment) =>
+                doc.positionAt(comment.start).line === pos.line &&
+                !disableDiagnosticRegex.test(comment.content)
+        ).length === 0
+    );
+}
+
+function getIgnoreCommentSameLine(
+    pos: Position,
+    comments: SepticComment[],
+    doc: ITextDocument
+): undefined | SepticComment {
+    return comments.find(
+        (comment) =>
+            doc.positionAt(comment.start).line === pos.line &&
+            disableDiagnosticRegex.test(comment.content)
+    );
+}
+
+function createCodeActionInsertIgnoreComment(
+    code: string,
+    pos: Position,
+    diagnostics: Diagnostic[],
+    doc: ITextDocument
+): CodeAction[] {
+    let codeActionJinja = CodeAction.create(
+        `${code}: Disable for this line scg`
+    );
+    codeActionJinja.diagnostics = diagnostics;
+    codeActionJinja.kind = CodeActionKind.QuickFix;
+    codeActionJinja.edit = createCodeActionInsertIgnoreCommentEdit(
+        `  {# noqa: ${code} #}`,
+        pos,
+        doc
+    );
+    let codeAction = CodeAction.create(`${code}: Disable for this line`);
+    codeAction.diagnostics = diagnostics;
+    codeAction.kind = CodeActionKind.QuickFix;
+    codeAction.edit = createCodeActionInsertIgnoreCommentEdit(
+        `  // noqa: ${code}`,
+        pos,
+        doc
+    );
+    return [codeActionJinja, codeAction];
+}
+
+function createCodeActionInsertIgnoreCommentEdit(
+    text: string,
+    pos: Position,
+    doc: ITextDocument
+) {
+    let editBuilder = new WorkspaceEditBuilder();
+    editBuilder.insert(doc.uri, Position.create(pos.line, 9999), text);
+    return editBuilder.getEdit();
+}
+
+function createCodeActionUpdateIgnoreComment(
+    code: string,
+    comment: SepticComment,
+    diagnostics: Diagnostic[],
+    doc: ITextDocument
+): CodeAction {
+    let codeAction = CodeAction.create(`${code}: Update disable diagnostics`);
+    codeAction.diagnostics = diagnostics;
+    codeAction.kind = CodeActionKind.QuickFix;
+    codeAction.edit = createUpdateIgnoreCommentEdit(code, comment, doc);
+    return codeAction;
+}
+
+function createUpdateIgnoreCommentEdit(
+    code: string,
+    comment: SepticComment,
+    doc: ITextDocument
+): WorkspaceEdit {
+    let match = comment.content.match(disableDiagnosticRegex);
+    let existingCodes = (match![1] ?? match![2])
+        .split(",")
+        .map((code) => code.trim());
+    let editBuilder = new WorkspaceEditBuilder();
+    let text = "";
+    if (comment.type === SepticTokenType.jinjaComment) {
+        text = `{# noqa: ${[...existingCodes, code].join(", ")} #}`;
+    } else {
+        text = `// noqa: ${[...existingCodes, code].join(", ")}`;
+    }
+    editBuilder.replace(
+        doc.uri,
+        Range.create(
+            doc.positionAt(comment.start),
+            doc.positionAt(comment.end)
+        ),
+        text
+    );
+    return editBuilder.getEdit();
 }
 
 function createCodeActionInsertEvr(
