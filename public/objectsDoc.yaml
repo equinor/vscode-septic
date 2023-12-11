@@ -1,4 +1,4 @@
-# Commit: 75c6de0
+# Commit: 317ea68
 - attributes:
   - calc: false
     dataType: enum
@@ -5013,6 +5013,47 @@
   - Table
 - attributes:
   - calc: false
+    dataType: variable
+    default:
+    - '""'
+    description: List of references to SampleTvrs to be included in list
+    enums: []
+    list: true
+    name: SampleTvrs
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - CONFIG
+    description: Sort order of variables in the list
+    enums:
+    - CONFIG
+    - SAMPLETIME
+    - RECIEVEDTIME
+    list: false
+    name: SortBy
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description for list
+    enums: []
+    list: false
+    name: Text
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: List of sample based variables with associated values
+  name: SampleTvrList
+  parents:
+  - Table
+- attributes:
+  - calc: false
     dataType: int
     default:
     - '0'
@@ -5041,9 +5082,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default:
-    - '-1'
-    description: Description
+    default: []
+    description: Placement of value, related to table item placement
     enums: []
     list: false
     name: ColPos
@@ -5054,7 +5094,44 @@
     dataType: string
     default:
     - '""'
-    description: Heading
+    description: Heading/row text
+    enums: []
+    list: false
+    name: Heading
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: variable
+    default: []
+    description: Xvr providing status good/bad info
+    enums: []
+    list: false
+    name: StatusXvr
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Present Meas of Xvr below the preceding element in a Table, adding
+    a row to the table
+  name: ListMeas
+  parents:
+  - Table
+- attributes:
+  - calc: false
+    dataType: int
+    default: []
+    description: Placement of value, related to table item placement
+    enums: []
+    list: false
+    name: ColPos
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Heading/row text
     enums: []
     list: false
     name: Heading
@@ -5065,7 +5142,7 @@
     dataType: int
     default:
     - '0'
-    description: Description
+    description: text size offset from normal
     enums: []
     list: false
     name: SizeOffset
@@ -5074,25 +5151,24 @@
     tags: []
   - calc: false
     dataType: variable
-    default:
-    - '""'
-    description: StatusXvr
+    default: []
+    description: Xvr providing status good/bad info
     enums: []
     list: false
     name: StatusXvr
     noCnfg: false
     postfix: []
     tags: []
-  description: FreeMeas
+  description: Present Meas of Xvr below the preceding element in a Table, adding
+    a new row to the table
   name: FreeMeas
   parents:
-  - DisplayGroup
+  - Table
 - attributes:
   - calc: false
     dataType: int
-    default:
-    - '-1'
-    description: Description
+    default: []
+    description: Placement of value, related to table item placement
     enums: []
     list: false
     name: ColPos
@@ -5103,7 +5179,7 @@
     dataType: string
     default:
     - '""'
-    description: Heading
+    description: Heading/row text
     enums: []
     list: false
     name: Heading
@@ -5114,7 +5190,7 @@
     dataType: int
     default:
     - '0'
-    description: Description
+    description: text size offset from normal
     enums: []
     list: false
     name: SizeOffset
@@ -5123,19 +5199,19 @@
     tags: []
   - calc: false
     dataType: int
-    default:
-    - '1'
-    description: StatusXvr
+    default: []
+    description: Text to use, 1 for Text1, 2 for Text2
     enums: []
     list: false
     name: TextNo
     noCnfg: false
     postfix: []
     tags: []
-  description: FreeText
+  description: Present Text1/Text2 from a Xvr below the preceding element in a Table,
+    adding a new row to the table
   name: FreeText
   parents:
-  - DisplayGroup
+  - Table
 - attributes:
   - calc: false
     dataType: string
@@ -5695,7 +5771,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  description: Model Plot
+  description: Plot model corresponding to Id, format cvr_mvr/dvr
   name: ModelPlot
   parents:
   - DisplayGroup
@@ -5949,7 +6025,7 @@
   description: Curve
   name: Curve
   parents:
-  - DisplayGroup
+  - XYPlot
 - attributes:
   - calc: false
     dataType: string
@@ -6350,7 +6426,7 @@
   description: Chart Serie
   name: ChartSerie
   parents:
-  - DisplayGroup
+  - Chart
 - attributes:
   - calc: false
     dataType: int
