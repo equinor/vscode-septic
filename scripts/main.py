@@ -1,13 +1,14 @@
+from dataclasses import asdict
 from typing import List
+
 import yaml
 from src.github import getCalcFile, getCommitId, getObjectFiles
 from src.parse_doxygen import (
+    SepticObject,
     parseCalcDocumentation,
     parseObjectDocumentation,
-    SepticObject,
     testCalc,
 )
-from dataclasses import asdict
 
 BRANCH = "main"
 OBJECT_OUTPUT_PATH = "./public/objectsDoc.yaml"
@@ -15,9 +16,9 @@ CALCS_OUTPUT_PATH = "./public/calcs.yaml"
 
 
 def updateObjects():
-    files = getObjectFiles(BRANCH)
     objects: List[SepticObject] = []
-    for f in files:
+    file_generator = getObjectFiles(BRANCH)
+    for f in file_generator:
         objects.extend(parseObjectDocumentation(f))
     for obj in objects:
         obj.attributes.sort(key=lambda x: x.name)
