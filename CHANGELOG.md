@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.15.2](https://github.com/equinor/vscode-septic/compare/v1.15.1...v1.15.2) (2023-12-20)
+
+
+### 🧹 Chores
+
+* **deps:** bump @types/chai from 4.3.7 to 4.3.11 ([#400](https://github.com/equinor/vscode-septic/issues/400)) ([8e3d8cb](https://github.com/equinor/vscode-septic/commit/8e3d8cb269feb8302b154d07a6df416c2030395b))
+* **deps:** bump @types/mocha from 10.0.1 to 10.0.6 ([#401](https://github.com/equinor/vscode-septic/issues/401)) ([f0015d4](https://github.com/equinor/vscode-septic/commit/f0015d4cc0184ae3688f8e4567cefb8b7e09f70a))
+* **deps:** bump @types/node from 16.18.60 to 16.18.68 ([#417](https://github.com/equinor/vscode-septic/issues/417)) ([8405780](https://github.com/equinor/vscode-septic/commit/84057809b5ce35e83f220ec9d734b0c1059da97f))
+* **deps:** bump @types/vscode from 1.81.0 to 1.85.0 ([#418](https://github.com/equinor/vscode-septic/issues/418)) ([c894069](https://github.com/equinor/vscode-septic/commit/c8940692d1c870d5830a9b3e63a8d76f71d7b5ea))
+* **deps:** bump @typescript-eslint/eslint-plugin from 5.59.9 to 6.15.0 ([#430](https://github.com/equinor/vscode-septic/issues/430)) ([8f0b134](https://github.com/equinor/vscode-septic/commit/8f0b1347dcfca17205b973bc0a81de4e10001eae))
+* **deps:** bump actions/download-artifact from 3 to 4 ([#428](https://github.com/equinor/vscode-septic/issues/428)) ([a2094af](https://github.com/equinor/vscode-septic/commit/a2094afd825f5e452a26aa5a30777fd65bcee722))
+* **deps:** bump actions/setup-python from 4 to 5 ([#422](https://github.com/equinor/vscode-septic/issues/422)) ([63730fc](https://github.com/equinor/vscode-septic/commit/63730fc1ebc41b482004dbdb2177958ba25a3869))
+* **deps:** bump actions/upload-artifact from 3 to 4 ([#427](https://github.com/equinor/vscode-septic/issues/427)) ([eafb3d7](https://github.com/equinor/vscode-septic/commit/eafb3d76ee91096e1684e0b482fe47059f06037f))
+
+
+### 📚 Documentation
+
+* update SEPTIC documentation ([#429](https://github.com/equinor/vscode-septic/issues/429)) ([f3c0aa7](https://github.com/equinor/vscode-septic/commit/f3c0aa7f0d7c54510214c56de71a1f05f4d95346))
+
 ## [1.15.1](https://github.com/equinor/vscode-septic/compare/v1.15.0...v1.15.1) (2023-12-11)
 
 
