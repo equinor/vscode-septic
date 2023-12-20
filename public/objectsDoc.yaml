@@ -1,4 +1,4 @@
-# Commit: 317ea68
+# Commit: 2abe1a6
 - attributes:
   - calc: false
     dataType: enum
@@ -7661,6 +7661,17 @@
   parents:
   - System
 - attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: The command to trigger
+    enums: []
+    list: false
+    name: Cmd
+    noCnfg: false
+    postfix: []
+    tags: []
   - calc: false
     dataType: int
     default:
