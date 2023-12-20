@@ -40,29 +40,23 @@ def getCalcFile(branch: str):
     return getFile(branch, path)
 
 
+def getDir(branch: str, dir: str):
+    owner = "equinor"
+    repo = "SEPTIC"
+    endpoint = f"/repos/{owner}/{repo}/contents/{dir}?ref={branch}"
+    return sendRequestGithub(endpoint)
+
+
 def getObjectFiles(branch: str):
-    paths = [
-        "src/Xvrs.cpp",
-        "src/Smpc.cpp",
-        "src/Appl.cpp",
-        "src/Tcip.cpp",
-        "src/Sopc.cpp",
-        "src/guielements.cpp",
-        "src/Nois.cpp",
-        "FMUsrc/MdlFMU.cpp",
-        "src/Subr.cpp",
-        "src/Calc.cpp",
-        "src/Expr.cpp",
-        "src/Evnt.cpp",
-        "src/Fdta.cpp"
-    ]
-    files = []
+    paths_src = getDir(branch, "src")
+    paths_fmu = getDir(branch, "FMUsrc")
+    paths = paths_src + paths_fmu
+    paths = [x["path"] for x in paths if x["path"].endswith(".cpp")]
     for path in paths:
         try:
-            files.append(getFile(branch, path))
+            yield getFile(branch, path)
         except Exception as e:
             print(e, path)
-    return files
 
 
 def getFile(branch: str, path: str):
@@ -74,7 +68,5 @@ def getFile(branch: str, path: str):
 
 
 if __name__ == "__main__":
-    calc_file = getCalcFile("calc_documentation")
-    commit_hash = getCommitId("calc_documentation")
-    with open("calc.cpp", "w", encoding="utf-8", newline="") as file:
-        file.write(calc_file)
+    a = getObjectFiles("main")
+    print(a)
