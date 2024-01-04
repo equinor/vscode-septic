@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.15.3](https://github.com/equinor/vscode-septic/compare/v1.15.2...v1.15.3) (2024-01-04)
+
+
+### 📚 Documentation
+
+* check all cpp files in src dirs when updating docs ([#433](https://github.com/equinor/vscode-septic/issues/433)) ([5d9ce03](https://github.com/equinor/vscode-septic/commit/5d9ce037ba8a567fefeadefad432073a53cb20eb))
+
+
+### 🐛 Bug Fixes
+
+* set dynpoint and curve fold level 3 ([#444](https://github.com/equinor/vscode-septic/issues/444)) ([8557609](https://github.com/equinor/vscode-septic/commit/85576092cf54646611b786f5e5f99dae983ce454))
+
 ## [1.15.2](https://github.com/equinor/vscode-septic/compare/v1.15.1...v1.15.2) (2023-12-20)
 
 
