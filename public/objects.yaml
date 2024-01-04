@@ -17,6 +17,7 @@
 - name: ColumnList
   symbolKind: Array
 - name: Curve
+  level: 3
 - name: Cvr
   level: 2
   symbolKind: Variable
@@ -47,6 +48,7 @@
   refs:
     attrList: [xXvr, yXvr]
 - name: DynPoint
+  level: 3
   refs:
     attrList: [xXvr, yXvr]
 - name: Evr
