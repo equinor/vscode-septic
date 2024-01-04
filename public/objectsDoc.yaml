@@ -1,4 +1,2930 @@
-# Commit: 2abe1a6
+# Commit: d2bfb55
+- attributes:
+  - calc: false
+    dataType: enum
+    default: []
+    description: Enable change log to file
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: ChngLogOn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: ClipOn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1000'
+    description: Maximum number of lines in debug file
+    enums: []
+    list: false
+    name: DebugNR
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: bit8
+    default:
+    - '00000000'
+    description: Description
+    enums: []
+    list: false
+    name: DebugOn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Font Size
+    enums: []
+    list: false
+    name: FontSize
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Groups locked for update
+    enums: []
+    list: false
+    name: GrpLock
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '"Free 1"'
+    description: Plotting groups
+    enums: []
+    list: true
+    name: Grps
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Hide close button to avoid closing by accident
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: HideCloseButton
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Initial height of SEPTIC window on screen. -1 = No preferences
+    enums: []
+    list: false
+    name: InitHeight
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Initial positioning of SEPTIC window on screen. -1 = No preferences
+    enums: []
+    list: false
+    name: InitScreen
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Initial width of SEPTIC window on screen. -1 = No preferences
+    enums: []
+    list: false
+    name: InitWidth
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Initial x position of SEPTIC window on screen. -1 = No preferences
+    enums: []
+    list: false
+    name: InitXPos
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Initial y position of SEPTIC window on screen. -1 = No preferences
+    enums: []
+    list: false
+    name: InitYPos
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Initial Group
+    enums: []
+    list: false
+    name: InitialGroup
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - ROOT
+    description: Maximum logon level for application
+    enums:
+    - ROOT
+    - MNGR
+    - OPER
+    - USER
+    list: false
+    name: MaxLogon
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Maximum x pos for screen area for limiting size. 0 = No restriction
+    enums: []
+    list: false
+    name: MaxXPos
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Maximum Y pos for screen area for limiting size. 0 = No restriction
+    enums: []
+    list: false
+    name: MaxYPos
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Minimum x pos for screen area for limiting size. 0 = No restriction
+    enums: []
+    list: false
+    name: MinXPos
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Minimum y pos for screen area for limiting size. 0 = No restriction
+    enums: []
+    list: false
+    name: MinYPos
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Minimize window using hide
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: MinimizeByHide
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Password for login into as MNGR
+    enums: []
+    list: false
+    name: MngrPwd
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1440'
+    description: Number of samples stored in buffers
+    enums: []
+    list: false
+    name: Nhist
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '80'
+    description: Number of samples in model plot
+    enums: []
+    list: false
+    name: Nmodl
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '80'
+    description: Number of samples in prediction
+    enums: []
+    list: false
+    name: Npred
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '10'
+    description: Number of seconds per sample
+    enums: []
+    list: false
+    name: Nsecs
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1'
+    description: Refresh rate of X window
+    enums: []
+    list: false
+    name: Nxupd
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Adjustment of sample time for OPC
+    enums: []
+    list: false
+    name: OPCSampleTimeOffset
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Password for login into as OPER
+    enums: []
+    list: false
+    name: OperPwd
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '10'
+    description: Upper graph plotting limit
+    enums: []
+    list: false
+    name: PlotMax
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Password for login into as ROOT
+    enums: []
+    list: false
+    name: RootPwd
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Show text 1 together with name in plots
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: ShowText1WithName
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Tsec correction for ctime if T error
+    enums: []
+    list: false
+    name: Terr
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Password for login into as USER
+    enums: []
+    list: false
+    name: UserPwd
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '800'
+    description: Description
+    enums: []
+    list: false
+    name: WdwDx
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '400'
+    description: Description
+    enums: []
+    list: false
+    name: WdwDy
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0.7'
+    description: Description
+    enums: []
+    list: false
+    name: Xback
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: bit
+    default:
+    - '0001'
+    description: Description
+    enums: []
+    list: false
+    name: Xgroup
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Xline
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Zfont
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Zhilo
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Zline
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Zname
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Zopen
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Zstate
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Description of system object
+  name: System
+  parents: []
+- attributes:
+  - calc: false
+    dataType: enum
+    default:
+    - ACTIVE
+    description: Desired Mode
+    enums:
+    - STOPPED
+    - TRACKING
+    - ADVISORY
+    - ACTIVE
+    list: false
+    name: DesMode
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: MasterOn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1'
+    description: Number of steps between execution of calcs
+    enums: []
+    list: false
+    name: Nstep
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '25'
+    description: Upper graph plotting limit
+    enums: []
+    list: false
+    name: PlotMax
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Dummy Application
+  name: DmmyAppl
+  parents:
+  - System
+- attributes:
+  - calc: false
+    dataType: int
+    default: []
+    description: Sample number
+    enums: []
+    list: false
+    name: Ix
+    noCnfg: true
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '4'
+    description: Max severity level to show
+    enums: []
+    list: false
+    name: MaxLvl
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1'
+    description: Min severity level to show
+    enums: []
+    list: false
+    name: MinLvl
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: path
+    default:
+    - '~'
+    description: 'Path to object(s) to show messages. Format: /path/to/obj, No ""'
+    enums: []
+    list: false
+    name: Obj
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Message Box
+  name: MsgBox
+  parents:
+  - System
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Calc Model
+  name: CalcModl
+  parents:
+  - DmmyAppl
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Algorithm to be executed
+    enums: []
+    list: false
+    name: Alg
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Calculation
+  name: CalcPvr
+  parents:
+  - CalcModl
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: The command to trigger
+    enums: []
+    list: false
+    name: Cmd
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Step to triggering event
+    enums: []
+    list: false
+    name: N
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: For repeated trigging of event, specifies cycle length
+    enums: []
+    list: false
+    name: Ncycle
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Events/triggers for change of SEPTIC parameters
+  name: Event
+  parents:
+  - System
+- attributes: []
+  description: Experimental model in a MPC/SmpcAppl
+  name: ExprModl
+  parents:
+  - SmpcAppl
+- attributes: []
+  description: Experimental process, where the models are taken from the SmpcAppl
+    with same ID
+  name: ExprProc
+  parents:
+  - System
+- attributes:
+  - calc: false
+    dataType: int
+    default:
+    - '12'
+    description: Cols to use in a gridded group
+    enums: []
+    list: false
+    name: Cols
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default: []
+    description: Lock the group for changes
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: Locked
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - Playback
+    description: Controls data transport to SEPTIC
+    enums:
+    - BaseCase
+    - Playback
+    - Playback_nomode
+    list: false
+    name: Mode
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '20'
+    description: Rows to use in a gridded group
+    enums: []
+    list: false
+    name: Rows
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Filedata process, playback or basecase comparison of .dta file. ID
+    of FdtaProc is the filename
+  name: FdtaProc
+  parents:
+  - System
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Simulate noise process
+  name: NoisProc
+  parents:
+  - System
+- attributes:
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Amplitude of bias
+    enums: []
+    list: false
+    name: BiasA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: Filt
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: FiltA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: FiltNon
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: FiltT1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: Iwite
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: IwiteA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: IwiteMaxA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: IwiteNon
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: Ramp
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: RampMaxA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: RampR
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - SINE
+    description: Sine noise
+    enums:
+    - SINE
+    - SQUARE
+    - 'OFF'
+    list: false
+    name: Sine
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '20'
+    description: Amplitude of sine noise
+    enums: []
+    list: false
+    name: SineA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '20'
+    description: Time constant sine noise
+    enums: []
+    list: false
+    name: SineT
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: Wite
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: WiteA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: WiteMaxA
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: WiteNon
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Noise variable
+  name: NoisXvr
+  parents:
+  - NoisProc
+- attributes:
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: ColdStart
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - STOPPED
+    description: Desired mode for MPC
+    enums:
+    - STOPPED
+    - TRACKING
+    - ADVISORY
+    - ACTIVE
+    list: false
+    name: DesMode
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: DoStdSolve
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: EachParam
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Maximum number of subsequent failed steps before changing mode to
+      TRACKING
+    enums: []
+    list: false
+    name: FailMax
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0.001'
+    description: Description
+    enums: []
+    list: false
+    name: FdifIntv
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '9.9999997e-06'
+    description: Description
+    enums: []
+    list: false
+    name: FeTol
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-10
+    description: QP feasibility tolerance
+    enums: []
+    list: false
+    name: FeasTol
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '9.9999999e-09'
+    description: Description
+    enums: []
+    list: false
+    name: FuncPrec
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: IterLineMax
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: IterNewSens
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: IterOpt
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: IterQpMax
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1000'
+    description: Description
+    enums: []
+    list: false
+    name: LinErrorLim
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '100'
+    description: Description
+    enums: []
+    list: false
+    name: LmPrio
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '200'
+    description: Description
+    enums: []
+    list: false
+    name: MajItLim
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: MajPrint
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: MasterOn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '100'
+    description: Description
+    enums: []
+    list: false
+    name: MaxPrioSQP
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '10'
+    description: Description
+    enums: []
+    list: false
+    name: MaxSeconds
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '80'
+    description: Lenght of model optimisation horizon
+    enums: []
+    list: false
+    name: Nhorz
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '80'
+    description: Length of prediction horizon in samples
+    enums: []
+    list: false
+    name: Npred
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: First possible ACTIVE sample number
+    enums: []
+    list: false
+    name: Nstart
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1'
+    description: Description
+    enums: []
+    list: false
+    name: Nstep
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: ObjConPrint
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - CONSTMVR
+    description: Mvr to be used for open-loop prediction. Constant or optimized Mvrs
+    enums:
+    - CONSTMVR
+    - OPTMVR
+    list: false
+    name: OpenFlag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-06
+    description: Description
+    enums: []
+    list: false
+    name: OptimTol
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '25'
+    description: Description
+    enums: []
+    list: false
+    name: PlotMax
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: PriceOn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1'
+    description: Description
+    enums: []
+    list: false
+    name: PriceScale
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Print sensitivity matrix to out-file (toggle number of samples)
+    enums: []
+    list: false
+    name: PrintSens
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0.05'
+    description: Description
+    enums: []
+    list: false
+    name: RelPert
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-06
+    description: Description
+    enums: []
+    list: false
+    name: SensLimDyn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-06
+    description: Description
+    enums: []
+    list: false
+    name: SensLimSS
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: SimOptimal
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - QP
+    description: Solver used for steady state
+    enums:
+    - QP
+    - SQP
+    list: false
+    name: SteadySolver
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: UnConstrnd
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: UpdFilt
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: VerifyGrads
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Description of Septic MPC Application
+  name: SmpcAppl
+  parents:
+  - System
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Application is allowed, controlled from PCDA
+    enums: []
+    list: false
+    name: AllowActiveTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Number of BAD quality samples before it's reported as BAD
+    enums: []
+    list: false
+    name: BadCountLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Check quality of write tags before writing, skip if any tag is bad
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: BlockWritingIfBad
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Report CPU time used in last step, write to OPC
+    enums: []
+    list: false
+    name: CPUTimeTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Tag for setting desired mode of application 1 = ACTIVE 0=INACTIVE
+    enums: []
+    list: false
+    name: DesModeTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: IdTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: For check of control loop, read this tag to PCS, verify that it follows
+      Write
+    enums: []
+    list: false
+    name: LoopcheckReadTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: For check of control loop, write tag to PCS
+    enums: []
+    list: false
+    name: LoopcheckWriteTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Basic Sopc tag name
+    enums: []
+    list: false
+    name: ProcTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Tag for SEPTIC puls (toggled each step)
+    enums: []
+    list: false
+    name: PulsTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: ''
+    default:
+    - '1'
+    description: Real time simulation factor, cycle time is Nsecs*RealTimeFac if SITENONE
+    enums: []
+    list: false
+    name: RealTimeFac
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Requested update rate from OPC server [secs]
+    enums: []
+    list: false
+    name: RequestRate
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Specify when the scheduled proc is to run
+    enums: []
+    list: false
+    name: RunSec
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: SopcSampleTvrs, in hours. Samples older than limit at receive time
+      are rejected
+    enums: []
+    list: false
+    name: SampleAgeLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: ScheduleTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Report application service factor, write to OPC
+    enums: []
+    list: false
+    name: ServFactorTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '"Statoil.OPC.Server"'
+    description: Name of OPC server
+    enums: []
+    list: false
+    name: ServName
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '"SERVNODE"'
+    description: Node of OPC server if remote
+    enums: []
+    list: false
+    name: ServNode
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - AIM_AIMGUI
+    description: Name of site for automatic extension generation
+    enums:
+    - AIM_AIMGUI
+    - SITENONE
+    - OPCSIMUL
+    - AIM
+    - SIEMENS_APC
+    - HARMONYOPC
+    - ROCKWELL
+    list: false
+    name: Site
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: SkipWriteBlocking
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Tag for status of application 1 = ACT, 0 = all other modes
+    enums: []
+    list: false
+    name: StatusTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Use DCOM auth.level 5 as described in CVE-2021-26414
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: UseDCOMAUTHN
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1000'
+    description: Pause between writing the groups [ms]
+    enums: []
+    list: false
+    name: WriteGroupPause
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1'
+    description: Split writing in multiple groups
+    enums: []
+    list: false
+    name: WriteGroups
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: SopcProc description
+  name: SopcProc
+  parents:
+  - System
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: AUTO = 1
+    enums: []
+    list: false
+    name: AutoTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Cascade/Ratio = 0
+    enums: []
+    list: false
+    name: CaraTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Watchdog/keepalive for HarmonyOPC Watchdog/keepalive for HarmonyOPC
+    enums: []
+    list: false
+    name: CompStatusTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Controller in computer mode 1 = COMP
+    enums: []
+    list: false
+    name: CompTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: High limit read from controller
+    enums: []
+    list: false
+    name: HiTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: IdTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Ideal value tag
+    enums: []
+    list: false
+    name: IvTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Low limit read from controller
+    enums: []
+    list: false
+    name: LoTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Max down of manipulated variable written to OPC
+    enums: []
+    list: false
+    name: MaxDownTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Max up of manipulated variable written to OPC
+    enums: []
+    list: false
+    name: MaxUpTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Measurement tag
+    enums: []
+    list: false
+    name: MeasTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Mv active written to PCDA. 1 = Active
+    enums: []
+    list: false
+    name: MvActiveTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: High limit of manipulated variable written to OPC
+    enums: []
+    list: false
+    name: MvHighTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Ideal value of manipulated variable written to OPC
+    enums: []
+    list: false
+    name: MvIvTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Low limit of manipulated variable written to OPC
+    enums: []
+    list: false
+    name: MvLowTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Mv desired active from PCDA. 1 = Active 0 = Tracking
+    enums: []
+    list: false
+    name: MvSwitchTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: MvrTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Not valid tag 1 = Not valid
+    enums: []
+    list: false
+    name: NotValidTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Offset of values on read/write
+    enums: []
+    list: false
+    name: Offset
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Process Value tag
+    enums: []
+    list: false
+    name: PVTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1'
+    description: Scaling of values on read/write
+    enums: []
+    list: false
+    name: Scale
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Calculated set point written to PCDA
+    enums: []
+    list: false
+    name: SpCalcTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Command controller to computer mode
+    enums: []
+    list: false
+    name: ToCompTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Command controller to local mode
+    enums: []
+    list: false
+    name: ToLocalTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Output tracking
+    enums: []
+    list: false
+    name: TrakTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Windup high tag. 1 = Windup high
+    enums: []
+    list: false
+    name: WhiTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Windup low tag. 1 = Windup low
+    enums: []
+    list: false
+    name: WloTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Manipulated Variable OPC Connection
+  name: SopcMvr
+  parents:
+  - SopcProc
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Cv active tag
+    enums: []
+    list: false
+    name: CvActiveTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: High limit write tag
+    enums: []
+    list: false
+    name: CvHighTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Low limit write tag
+    enums: []
+    list: false
+    name: CvLowTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Set point write tag
+    enums: []
+    list: false
+    name: CvSetpointTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: CvSwitchTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Tag for Cvr
+    enums: []
+    list: false
+    name: CvrTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: High limit of Cv, read from system
+    enums: []
+    list: false
+    name: HiTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Id tag
+    enums: []
+    list: false
+    name: IdTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Low limit of Cv, read from system
+    enums: []
+    list: false
+    name: LoTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Measurement tag
+    enums: []
+    list: false
+    name: MeasTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Not valid tag 1 = Not valid
+    enums: []
+    list: false
+    name: NotValidTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Offset of values on read/write
+    enums: []
+    list: false
+    name: Offset
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1'
+    description: Scaling of values on read/write
+    enums: []
+    list: false
+    name: Scale
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Set point tag
+    enums: []
+    list: false
+    name: SpTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Control Variable OPC Connection
+  name: SopcCvr
+  parents:
+  - SopcProc
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: DvSwitchTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: DvTrackTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: DvrTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: IdTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Measurement tag
+    enums: []
+    list: false
+    name: MeasTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Not valid tag. 1 = Not Valid
+    enums: []
+    list: false
+    name: NotValidTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Offset of values on read/write
+    enums: []
+    list: false
+    name: Offset
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1'
+    description: Scaling of values on read/write
+    enums: []
+    list: false
+    name: Scale
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Disturbance variable OPC connection
+  name: SopcDvr
+  parents:
+  - SopcProc
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: EvrTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: IdTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Measurement tag to write
+    enums: []
+    list: false
+    name: MeasTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Not valid tag. 1 = Not Valid
+    enums: []
+    list: false
+    name: NotValidTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Enviromental/Calculated Variable OPC Connection (Only Write)
+  name: SopcEvr
+  parents:
+  - SopcProc
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: BaseName
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: IdTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: MeasTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: NotValidTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: PPSTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: SopcChangeEvr
+  name: SopcChangeEvr
+  parents:
+  - SopcProc
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Measurement tag
+    enums: []
+    list: false
+    name: MeasTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Not valid tag. 1 = Not Valid
+    enums: []
+    list: false
+    name: NotValidTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Offset of values on read/write
+    enums: []
+    list: false
+    name: Offset
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1'
+    description: Scaling of values on read/write
+    enums: []
+    list: false
+    name: Scale
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: Text1Tag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: TvrTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Trending variable OPC connection
+  name: SopcTvr
+  parents:
+  - SopcProc
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: DtaIx
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: Init
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: SubrXvr
+  name: SubrXvr
+  parents:
+  - System
+- attributes:
+  - calc: false
+    dataType: int
+    default:
+    - '64512'
+    description: Buffer size for send and recieve buffers
+    enums: []
+    list: false
+    name: BufferSize
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Send history to RUIs at startup
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: HistOn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Send complete cnfg to RUIs
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: InitOn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '12030'
+    description: Master application socket port
+    enums: []
+    list: false
+    name: MasterPort
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Send models to RUIs at startup
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: ModlOn
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '"127.0.0.1"'
+    description: IP address for RUIs which is allowed to write
+    enums: []
+    list: true
+    name: WriteHosts
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Master TCIP
+  name: MasterTcip
+  parents:
+  - System
+- attributes:
+  - calc: false
+    dataType: int
+    default:
+    - '64512'
+    description: Size of recieve buffer
+    enums: []
+    list: false
+    name: BufferSize
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Sendt multiple history points/models in message
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: FillMsg
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: History length requested by this remote
+    enums: []
+    list: false
+    name: HistSize
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '"127.0.0.1"'
+    description: Master application ip address
+    enums: []
+    list: false
+    name: MasterAddr
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Size of send buffer on master side
+    enums: []
+    list: false
+    name: MasterBufferSize
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '12035'
+    description: Master application socket port
+    enums: []
+    list: false
+    name: MasterPort
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: RemoteTcip
+  name: RemoteTcip
+  parents:
+  - System
 - attributes:
   - calc: false
     dataType: enum
@@ -2184,2441 +5110,6 @@
   name: SampleTvr
   parents:
   - DmmyAppl
-- attributes:
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: ColdStart
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - STOPPED
-    description: Desired mode for MPC
-    enums:
-    - STOPPED
-    - TRACKING
-    - ADVISORY
-    - ACTIVE
-    list: false
-    name: DesMode
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: DoStdSolve
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: EachParam
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Maximum number of subsequent failed steps before changing mode to
-      TRACKING
-    enums: []
-    list: false
-    name: FailMax
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0.001'
-    description: Description
-    enums: []
-    list: false
-    name: FdifIntv
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '9.9999997e-06'
-    description: Description
-    enums: []
-    list: false
-    name: FeTol
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - 1e-10
-    description: QP feasibility tolerance
-    enums: []
-    list: false
-    name: FeasTol
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '9.9999999e-09'
-    description: Description
-    enums: []
-    list: false
-    name: FuncPrec
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: IterLineMax
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: IterNewSens
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: IterOpt
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: IterQpMax
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '1000'
-    description: Description
-    enums: []
-    list: false
-    name: LinErrorLim
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '100'
-    description: Description
-    enums: []
-    list: false
-    name: LmPrio
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '200'
-    description: Description
-    enums: []
-    list: false
-    name: MajItLim
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: MajPrint
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: MasterOn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '100'
-    description: Description
-    enums: []
-    list: false
-    name: MaxPrioSQP
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '10'
-    description: Description
-    enums: []
-    list: false
-    name: MaxSeconds
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '80'
-    description: Lenght of model optimisation horizon
-    enums: []
-    list: false
-    name: Nhorz
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '80'
-    description: Length of prediction horizon in samples
-    enums: []
-    list: false
-    name: Npred
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: First possible ACTIVE sample number
-    enums: []
-    list: false
-    name: Nstart
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '1'
-    description: Description
-    enums: []
-    list: false
-    name: Nstep
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: ObjConPrint
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - CONSTMVR
-    description: Mvr to be used for open-loop prediction. Constant or optimized Mvrs
-    enums:
-    - CONSTMVR
-    - OPTMVR
-    list: false
-    name: OpenFlag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - 1e-06
-    description: Description
-    enums: []
-    list: false
-    name: OptimTol
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '25'
-    description: Description
-    enums: []
-    list: false
-    name: PlotMax
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: PriceOn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '1'
-    description: Description
-    enums: []
-    list: false
-    name: PriceScale
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Print sensitivity matrix to out-file (toggle number of samples)
-    enums: []
-    list: false
-    name: PrintSens
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0.05'
-    description: Description
-    enums: []
-    list: false
-    name: RelPert
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - 1e-06
-    description: Description
-    enums: []
-    list: false
-    name: SensLimDyn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - 1e-06
-    description: Description
-    enums: []
-    list: false
-    name: SensLimSS
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: SimOptimal
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - QP
-    description: Solver used for steady state
-    enums:
-    - QP
-    - SQP
-    list: false
-    name: SteadySolver
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: UnConstrnd
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: UpdFilt
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: VerifyGrads
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Description of Septic MPC Application
-  name: SmpcAppl
-  parents:
-  - System
-- attributes:
-  - calc: false
-    dataType: enum
-    default: []
-    description: Enable change log to file
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: ChngLogOn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: ClipOn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '1000'
-    description: Maximum number of lines in debug file
-    enums: []
-    list: false
-    name: DebugNR
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: bit8
-    default:
-    - '00000000'
-    description: Description
-    enums: []
-    list: false
-    name: DebugOn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Font Size
-    enums: []
-    list: false
-    name: FontSize
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Groups locked for update
-    enums: []
-    list: false
-    name: GrpLock
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '"Free 1"'
-    description: Plotting groups
-    enums: []
-    list: true
-    name: Grps
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Hide close button to avoid closing by accident
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: HideCloseButton
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Initial height of SEPTIC window on screen. -1 = No preferences
-    enums: []
-    list: false
-    name: InitHeight
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Initial positioning of SEPTIC window on screen. -1 = No preferences
-    enums: []
-    list: false
-    name: InitScreen
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Initial width of SEPTIC window on screen. -1 = No preferences
-    enums: []
-    list: false
-    name: InitWidth
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Initial x position of SEPTIC window on screen. -1 = No preferences
-    enums: []
-    list: false
-    name: InitXPos
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Initial y position of SEPTIC window on screen. -1 = No preferences
-    enums: []
-    list: false
-    name: InitYPos
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Initial Group
-    enums: []
-    list: false
-    name: InitialGroup
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - ROOT
-    description: Maximum logon level for application
-    enums:
-    - ROOT
-    - MNGR
-    - OPER
-    - USER
-    list: false
-    name: MaxLogon
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Maximum x pos for screen area for limiting size. 0 = No restriction
-    enums: []
-    list: false
-    name: MaxXPos
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Maximum Y pos for screen area for limiting size. 0 = No restriction
-    enums: []
-    list: false
-    name: MaxYPos
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Minimum x pos for screen area for limiting size. 0 = No restriction
-    enums: []
-    list: false
-    name: MinXPos
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Minimum y pos for screen area for limiting size. 0 = No restriction
-    enums: []
-    list: false
-    name: MinYPos
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Minimize window using hide
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: MinimizeByHide
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Password for login into as MNGR
-    enums: []
-    list: false
-    name: MngrPwd
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '1440'
-    description: Number of samples stored in buffers
-    enums: []
-    list: false
-    name: Nhist
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '80'
-    description: Number of samples in model plot
-    enums: []
-    list: false
-    name: Nmodl
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '80'
-    description: Number of samples in prediction
-    enums: []
-    list: false
-    name: Npred
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '10'
-    description: Number of seconds per sample
-    enums: []
-    list: false
-    name: Nsecs
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '1'
-    description: Refresh rate of X window
-    enums: []
-    list: false
-    name: Nxupd
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Adjustment of sample time for OPC
-    enums: []
-    list: false
-    name: OPCSampleTimeOffset
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Password for login into as OPER
-    enums: []
-    list: false
-    name: OperPwd
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '10'
-    description: Upper graph plotting limit
-    enums: []
-    list: false
-    name: PlotMax
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Password for login into as ROOT
-    enums: []
-    list: false
-    name: RootPwd
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Show text 1 together with name in plots
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: ShowText1WithName
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Tsec correction for ctime if T error
-    enums: []
-    list: false
-    name: Terr
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Password for login into as USER
-    enums: []
-    list: false
-    name: UserPwd
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '800'
-    description: Description
-    enums: []
-    list: false
-    name: WdwDx
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '400'
-    description: Description
-    enums: []
-    list: false
-    name: WdwDy
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0.7'
-    description: Description
-    enums: []
-    list: false
-    name: Xback
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: bit
-    default:
-    - '0001'
-    description: Description
-    enums: []
-    list: false
-    name: Xgroup
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Xline
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Zfont
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Zhilo
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Zline
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Zname
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Zopen
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Zstate
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Description of system object
-  name: System
-  parents: []
-- attributes:
-  - calc: false
-    dataType: enum
-    default:
-    - ACTIVE
-    description: Desired Mode
-    enums:
-    - STOPPED
-    - TRACKING
-    - ADVISORY
-    - ACTIVE
-    list: false
-    name: DesMode
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: MasterOn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '1'
-    description: Number of steps between execution of calcs
-    enums: []
-    list: false
-    name: Nstep
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '25'
-    description: Upper graph plotting limit
-    enums: []
-    list: false
-    name: PlotMax
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Dummy Application
-  name: DmmyAppl
-  parents:
-  - System
-- attributes:
-  - calc: false
-    dataType: int
-    default: []
-    description: Sample number
-    enums: []
-    list: false
-    name: Ix
-    noCnfg: true
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '4'
-    description: Max severity level to show
-    enums: []
-    list: false
-    name: MaxLvl
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '1'
-    description: Min severity level to show
-    enums: []
-    list: false
-    name: MinLvl
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: path
-    default:
-    - '~'
-    description: 'Path to object(s) to show messages. Format: /path/to/obj, No ""'
-    enums: []
-    list: false
-    name: Obj
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Message Box
-  name: MsgBox
-  parents:
-  - System
-- attributes:
-  - calc: false
-    dataType: int
-    default:
-    - '64512'
-    description: Buffer size for send and recieve buffers
-    enums: []
-    list: false
-    name: BufferSize
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Send history to RUIs at startup
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: HistOn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Send complete cnfg to RUIs
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: InitOn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '12030'
-    description: Master application socket port
-    enums: []
-    list: false
-    name: MasterPort
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Send models to RUIs at startup
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: ModlOn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '"127.0.0.1"'
-    description: IP address for RUIs which is allowed to write
-    enums: []
-    list: true
-    name: WriteHosts
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Master TCIP
-  name: MasterTcip
-  parents:
-  - System
-- attributes:
-  - calc: false
-    dataType: int
-    default:
-    - '64512'
-    description: Size of recieve buffer
-    enums: []
-    list: false
-    name: BufferSize
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Sendt multiple history points/models in message
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: FillMsg
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: History length requested by this remote
-    enums: []
-    list: false
-    name: HistSize
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '"127.0.0.1"'
-    description: Master application ip address
-    enums: []
-    list: false
-    name: MasterAddr
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Size of send buffer on master side
-    enums: []
-    list: false
-    name: MasterBufferSize
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '12035'
-    description: Master application socket port
-    enums: []
-    list: false
-    name: MasterPort
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: RemoteTcip
-  name: RemoteTcip
-  parents:
-  - System
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Application is allowed, controlled from PCDA
-    enums: []
-    list: false
-    name: AllowActiveTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Number of BAD quality samples before it's reported as BAD
-    enums: []
-    list: false
-    name: BadCountLimit
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Check quality of write tags before writing, skip if any tag is bad
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: BlockWritingIfBad
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Report CPU time used in last step, write to OPC
-    enums: []
-    list: false
-    name: CPUTimeTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Tag for setting desired mode of application 1 = ACTIVE 0=INACTIVE
-    enums: []
-    list: false
-    name: DesModeTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: IdTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: For check of control loop, read this tag to PCS, verify that it follows
-      Write
-    enums: []
-    list: false
-    name: LoopcheckReadTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: For check of control loop, write tag to PCS
-    enums: []
-    list: false
-    name: LoopcheckWriteTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Basic Sopc tag name
-    enums: []
-    list: false
-    name: ProcTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Tag for SEPTIC puls (toggled each step)
-    enums: []
-    list: false
-    name: PulsTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: ''
-    default:
-    - '1'
-    description: Real time simulation factor, cycle time is Nsecs*RealTimeFac if SITENONE
-    enums: []
-    list: false
-    name: RealTimeFac
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Requested update rate from OPC server [secs]
-    enums: []
-    list: false
-    name: RequestRate
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Specify when the scheduled proc is to run
-    enums: []
-    list: false
-    name: RunSec
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: SopcSampleTvrs, in hours. Samples older than limit at receive time
-      are rejected
-    enums: []
-    list: false
-    name: SampleAgeLimit
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: ScheduleTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Report application service factor, write to OPC
-    enums: []
-    list: false
-    name: ServFactorTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '"Statoil.OPC.Server"'
-    description: Name of OPC server
-    enums: []
-    list: false
-    name: ServName
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '"SERVNODE"'
-    description: Node of OPC server if remote
-    enums: []
-    list: false
-    name: ServNode
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - AIM_AIMGUI
-    description: Name of site for automatic extension generation
-    enums:
-    - AIM_AIMGUI
-    - SITENONE
-    - OPCSIMUL
-    - AIM
-    - SIEMENS_APC
-    - HARMONYOPC
-    - ROCKWELL
-    list: false
-    name: Site
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: SkipWriteBlocking
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Tag for status of application 1 = ACT, 0 = all other modes
-    enums: []
-    list: false
-    name: StatusTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Use DCOM auth.level 5 as described in CVE-2021-26414
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: UseDCOMAUTHN
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '1000'
-    description: Pause between writing the groups [ms]
-    enums: []
-    list: false
-    name: WriteGroupPause
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '1'
-    description: Split writing in multiple groups
-    enums: []
-    list: false
-    name: WriteGroups
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: SopcProc description
-  name: SopcProc
-  parents:
-  - System
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: AUTO = 1
-    enums: []
-    list: false
-    name: AutoTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Cascade/Ratio = 0
-    enums: []
-    list: false
-    name: CaraTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Watchdog/keepalive for HarmonyOPC Watchdog/keepalive for HarmonyOPC
-    enums: []
-    list: false
-    name: CompStatusTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Controller in computer mode 1 = COMP
-    enums: []
-    list: false
-    name: CompTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: High limit read from controller
-    enums: []
-    list: false
-    name: HiTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: IdTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Ideal value tag
-    enums: []
-    list: false
-    name: IvTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Low limit read from controller
-    enums: []
-    list: false
-    name: LoTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Max down of manipulated variable written to OPC
-    enums: []
-    list: false
-    name: MaxDownTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Max up of manipulated variable written to OPC
-    enums: []
-    list: false
-    name: MaxUpTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Measurement tag
-    enums: []
-    list: false
-    name: MeasTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Mv active written to PCDA. 1 = Active
-    enums: []
-    list: false
-    name: MvActiveTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: High limit of manipulated variable written to OPC
-    enums: []
-    list: false
-    name: MvHighTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Ideal value of manipulated variable written to OPC
-    enums: []
-    list: false
-    name: MvIvTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Low limit of manipulated variable written to OPC
-    enums: []
-    list: false
-    name: MvLowTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Mv desired active from PCDA. 1 = Active 0 = Tracking
-    enums: []
-    list: false
-    name: MvSwitchTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: MvrTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Not valid tag 1 = Not valid
-    enums: []
-    list: false
-    name: NotValidTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Offset of values on read/write
-    enums: []
-    list: false
-    name: Offset
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Process Value tag
-    enums: []
-    list: false
-    name: PVTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '1'
-    description: Scaling of values on read/write
-    enums: []
-    list: false
-    name: Scale
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Calculated set point written to PCDA
-    enums: []
-    list: false
-    name: SpCalcTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Command controller to computer mode
-    enums: []
-    list: false
-    name: ToCompTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Command controller to local mode
-    enums: []
-    list: false
-    name: ToLocalTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Output tracking
-    enums: []
-    list: false
-    name: TrakTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Windup high tag. 1 = Windup high
-    enums: []
-    list: false
-    name: WhiTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Windup low tag. 1 = Windup low
-    enums: []
-    list: false
-    name: WloTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Manipulated Variable OPC Connection
-  name: SopcMvr
-  parents:
-  - SopcProc
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Cv active tag
-    enums: []
-    list: false
-    name: CvActiveTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: High limit write tag
-    enums: []
-    list: false
-    name: CvHighTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Low limit write tag
-    enums: []
-    list: false
-    name: CvLowTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Set point write tag
-    enums: []
-    list: false
-    name: CvSetpointTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: CvSwitchTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Tag for Cvr
-    enums: []
-    list: false
-    name: CvrTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: High limit of Cv, read from system
-    enums: []
-    list: false
-    name: HiTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Id tag
-    enums: []
-    list: false
-    name: IdTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Low limit of Cv, read from system
-    enums: []
-    list: false
-    name: LoTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Measurement tag
-    enums: []
-    list: false
-    name: MeasTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Not valid tag 1 = Not valid
-    enums: []
-    list: false
-    name: NotValidTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Offset of values on read/write
-    enums: []
-    list: false
-    name: Offset
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '1'
-    description: Scaling of values on read/write
-    enums: []
-    list: false
-    name: Scale
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Set point tag
-    enums: []
-    list: false
-    name: SpTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Control Variable OPC Connection
-  name: SopcCvr
-  parents:
-  - SopcProc
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: DvSwitchTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: DvTrackTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: DvrTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: IdTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Measurement tag
-    enums: []
-    list: false
-    name: MeasTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Not valid tag. 1 = Not Valid
-    enums: []
-    list: false
-    name: NotValidTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Offset of values on read/write
-    enums: []
-    list: false
-    name: Offset
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '1'
-    description: Scaling of values on read/write
-    enums: []
-    list: false
-    name: Scale
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Disturbance variable OPC connection
-  name: SopcDvr
-  parents:
-  - SopcProc
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: EvrTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: IdTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Measurement tag to write
-    enums: []
-    list: false
-    name: MeasTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Not valid tag. 1 = Not Valid
-    enums: []
-    list: false
-    name: NotValidTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Enviromental/Calculated Variable OPC Connection (Only Write)
-  name: SopcEvr
-  parents:
-  - SopcProc
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: BaseName
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: IdTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: MeasTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: NotValidTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: PPSTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: SopcChangeEvr
-  name: SopcChangeEvr
-  parents:
-  - SopcProc
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Measurement tag
-    enums: []
-    list: false
-    name: MeasTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Not valid tag. 1 = Not Valid
-    enums: []
-    list: false
-    name: NotValidTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Offset of values on read/write
-    enums: []
-    list: false
-    name: Offset
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '1'
-    description: Scaling of values on read/write
-    enums: []
-    list: false
-    name: Scale
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: Text1Tag
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: TvrTag
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Trending variable OPC connection
-  name: SopcTvr
-  parents:
-  - SopcProc
 - attributes:
   - calc: false
     dataType: enum
@@ -7190,280 +7681,6 @@
     dataType: string
     default:
     - '""'
-    description: Free text description
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Simulate noise process
-  name: NoisProc
-  parents:
-  - System
-- attributes:
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Amplitude of bias
-    enums: []
-    list: false
-    name: BiasA
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: Filt
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: FiltA
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: FiltNon
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: FiltT1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: Iwite
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: IwiteA
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: IwiteMaxA
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: IwiteNon
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: Ramp
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: RampMaxA
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: RampR
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - SINE
-    description: Sine noise
-    enums:
-    - SINE
-    - SQUARE
-    - 'OFF'
-    list: false
-    name: Sine
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '20'
-    description: Amplitude of sine noise
-    enums: []
-    list: false
-    name: SineA
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '20'
-    description: Time constant sine noise
-    enums: []
-    list: false
-    name: SineT
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: Wite
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: WiteA
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: WiteMaxA
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: WiteNon
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Noise variable
-  name: NoisXvr
-  parents:
-  - NoisProc
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
     description: Name of FMU model
     enums: []
     list: false
@@ -7533,222 +7750,5 @@
     tags: []
   description: FMUProc
   name: FMUProc
-  parents:
-  - System
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: DtaIx
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Init
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: SubrXvr
-  name: SubrXvr
-  parents:
-  - System
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Calc Model
-  name: CalcModl
-  parents:
-  - DmmyAppl
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Algorithm to be executed
-    enums: []
-    list: false
-    name: Alg
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description of object
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Calculation
-  name: CalcPvr
-  parents:
-  - CalcModl
-- attributes: []
-  description: Experimental model in a MPC/SmpcAppl
-  name: ExprModl
-  parents:
-  - SmpcAppl
-- attributes: []
-  description: Experimental process, where the models are taken from the SmpcAppl
-    with same ID
-  name: ExprProc
-  parents:
-  - System
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: The command to trigger
-    enums: []
-    list: false
-    name: Cmd
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Step to triggering event
-    enums: []
-    list: false
-    name: N
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: For repeated trigging of event, specifies cycle length
-    enums: []
-    list: false
-    name: Ncycle
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Events/triggers for change of SEPTIC parameters
-  name: Event
-  parents:
-  - System
-- attributes:
-  - calc: false
-    dataType: int
-    default:
-    - '12'
-    description: Cols to use in a gridded group
-    enums: []
-    list: false
-    name: Cols
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default: []
-    description: Lock the group for changes
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: Locked
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - Playback
-    description: Controls data transport to SEPTIC
-    enums:
-    - BaseCase
-    - Playback
-    - Playback_nomode
-    list: false
-    name: Mode
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '20'
-    description: Rows to use in a gridded group
-    enums: []
-    list: false
-    name: Rows
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Filedata process, playback or basecase comparison of .dta file. ID
-    of FdtaProc is the filename
-  name: FdtaProc
   parents:
   - System
