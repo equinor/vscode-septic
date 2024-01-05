@@ -214,7 +214,7 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
         xvrRefs.push(ref);
     }
 
-    objectDef.refs.attrList.forEach((attr) => {
+    objectDef.refs.attributes.forEach((attr) => {
         xvrRefs.push(...attrXvrRefs(obj, attr));
     });
 

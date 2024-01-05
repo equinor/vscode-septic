@@ -27,7 +27,7 @@
   level: 2
   symbolKind: Array
   refs:
-    attrList: [Cvrs]
+    attributes: [Cvrs]
 - name: DisplayGroup
   level: 1
   symbolKind: Namespace
@@ -43,14 +43,14 @@
   level: 2
   symbolKind: Array
   refs:
-    attrList: [Dvrs]
+    attributes: [Dvrs]
 - name: DynCurve
   refs:
-    attrList: [xXvr, yXvr]
+    attributes: [xXvr, yXvr]
 - name: DynPoint
   level: 3
   refs:
-    attrList: [xXvr, yXvr]
+    attributes: [xXvr, yXvr]
 - name: Evr
   level: 2
   symbolKind: Variable
@@ -60,14 +60,14 @@
   level: 2
   symbolKind: Array
   refs:
-    attrList: [Evrs]
+    attributes: [Evrs]
 - name: ExprModl
   level: 2
 - name: FMUModl
 - name: FMUProc
 - name: FreeMeas
   refs:
-    attrList: [StatusXvr]
+    attributes: [StatusXvr]
 - name: FreeText
 - name: Heading
   level: 2
@@ -84,7 +84,7 @@
     identifier: True
 - name: ImageXvrCollection
   refs:
-    attrList: [Xvrs, StatusXvr]
+    attributes: [Xvrs, StatusXvr]
 - name: ImageXvrPlot
   refs:
     identifier: True
@@ -98,12 +98,12 @@
   level: 2
   symbolKind: Array
   refs:
-    attrList: [CvrIds, MvrDvrIds]
+    attributes: [CvrIds, MvrDvrIds]
 - name: ModelPlot
 - name: MsgBox
 - name: MultiXvrPlot
   refs:
-    attrList: [Xvrs]
+    attributes: [Xvrs]
 - name: Mvr
   level: 2
   symbolKind: Variable
@@ -113,7 +113,7 @@
   level: 2
   symbolKind: Array
   refs:
-    attrList: [Mvrs]
+    attributes: [Mvrs]
 - name: NoisProc
 - name: NoisXvr
   refs:
@@ -182,7 +182,7 @@
   level: 2
   symbolKind: Array
   refs:
-    attrList: [Tvrs]
+    attributes: [Tvrs]
 - name: UAProc
   level: 1
   symbolKind: Interface
@@ -218,7 +218,7 @@
     identifier: True
 - name: XvrMatrix
   refs:
-    attrList: [Xvrs]
+    attributes: [Xvrs]
 - name: XvrPlot
   level: 2
   refs:
