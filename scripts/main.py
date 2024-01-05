@@ -20,6 +20,7 @@ def updateObjects():
     file_generator = getObjectFiles(BRANCH)
     for f in file_generator:
         objects.extend(parseObjectDocumentation(f))
+    objects.sort(key=lambda x: x.name)
     for obj in objects:
         obj.attributes.sort(key=lambda x: x.name)
     commit = getCommitId(BRANCH)
