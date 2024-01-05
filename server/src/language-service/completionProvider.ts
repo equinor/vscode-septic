@@ -289,7 +289,7 @@ function isReferenceAttribute(obj: SepticObject, attr: Attribute): boolean {
     if (!objectInfo) {
         return false;
     }
-    return objectInfo.refs.attrList.includes(attr.key);
+    return objectInfo.refs.attributes.includes(attr.key);
 }
 
 function isEndAttribute(offset: number, attr: Attribute): boolean {

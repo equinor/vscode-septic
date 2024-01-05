@@ -692,12 +692,16 @@ export function validateObjectReferences(
             );
         }
     }
-    for (let attrRefsList of objectMetaInfo.refs.attrList) {
-        let attrValues = obj.getAttribute(attrRefsList)?.getAttrValues();
-        if (!attrValues || attrValues.length < 2) {
+    for (let attr of objectMetaInfo.refs.attributes) {
+        let attrValues = obj.getAttribute(attr)?.getAttrValues();
+        if (!attrValues) {
             continue;
         }
-        for (let attrValue of attrValues.slice(1)) {
+        if (attrValues.length > 1) {
+            attrValues = attrValues.slice(1);
+        }
+
+        for (let attrValue of attrValues) {
             let refName = attrValue.getValue();
             if (refName.length < 1) {
                 continue;
