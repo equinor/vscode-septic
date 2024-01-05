@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.15.4](https://github.com/equinor/vscode-septic/compare/v1.15.3...v1.15.4) (2024-01-05)
+
+
+### 📚 Documentation
+
+* add sorting of object docs for reliable diff ([#447](https://github.com/equinor/vscode-septic/issues/447)) ([97d2b51](https://github.com/equinor/vscode-septic/commit/97d2b5114161923132efad4ef4dc6605e8b8f84d))
+
+
+### 🐛 Bug Fixes
+
+* bug with attribute references ([#446](https://github.com/equinor/vscode-septic/issues/446)) ([175d1ba](https://github.com/equinor/vscode-septic/commit/175d1baa9ae495473e25147b65db1ecae0bfc3fa))
+
 ## [1.15.3](https://github.com/equinor/vscode-septic/compare/v1.15.2...v1.15.3) (2024-01-04)
 
 
