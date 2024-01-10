@@ -1023,6 +1023,16 @@
         ],
         "description": ""
     },
+    "Event": {
+        "prefix": "event",
+        "body": [
+            "  Event:         ${1:EventName}",
+            "             N=  ${2:1}",
+            "        Ncycle=  1",
+            "           Cmd=  \"${3}\"\r"
+        ],
+        "description": ""
+    },
     "MasterTcip": {
         "prefix": "mastertcip",
         "body": [
