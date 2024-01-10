@@ -15,6 +15,14 @@ describe("Test tokenization of objects and identifiers", () => {
         expect(tokens[0].type).to.equal(SepticTokenType.object);
         expect(tokens[1].type).to.equal(SepticTokenType.identifier);
     });
+    it("Expect object token for object declaration with length one", () => {
+        const input = "N:  FirstTest";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
+    });
 
     it("Expect object tokens for object declaration", () => {
         const input = "System:         FirstTest";
@@ -109,6 +117,14 @@ describe("Test tokenization of attributes", () => {
     });
     it("Expect attribute token for correct attribute", () => {
         const input = "Text1=   \n1";
+        const scanner = new SepticScanner(input);
+        let tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.attribute);
+        expect(tokens[1].type).to.equal(SepticTokenType.numeric);
+    });
+    it("Expect attribute token for correct attribute with length one", () => {
+        const input = "N= 100";
         const scanner = new SepticScanner(input);
         let tokens = scanner.scanTokens().tokens;
         expect(tokens.length).to.equal(3);
