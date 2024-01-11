@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.15.5](https://github.com/equinor/vscode-septic/compare/v1.15.4...v1.15.5) (2024-01-11)
+
+
+### 🧹 Chores
+
+* add snippet for event ([#454](https://github.com/equinor/vscode-septic/issues/454)) ([3e1bc33](https://github.com/equinor/vscode-septic/commit/3e1bc33cbec925b2ac76ad076460d058d9068029))
+
+
+### 🐛 Bug Fixes
+
+* bug with attribute/object name with length one ([#453](https://github.com/equinor/vscode-septic/issues/453)) ([81b392c](https://github.com/equinor/vscode-septic/commit/81b392c48601e6fdac4e252a238390aec7e114b8))
+
 ## [1.15.4](https://github.com/equinor/vscode-septic/compare/v1.15.3...v1.15.4) (2024-01-05)
 
 
