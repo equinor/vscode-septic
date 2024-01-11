@@ -403,8 +403,7 @@ export class SepticScanner {
     }
 
     private identifier() {
-        while (this.isAlphaNumeric(this.peek())) {
-            this.advance();
+        while (this.isAlphaNumericOrSpecial(this.peek())) {
             if (this.peek() === ":") {
                 if (!this.isBlank(this.peekNext())) {
                     this.error("Expecting space at end of object declaration");
@@ -425,6 +424,7 @@ export class SepticScanner {
                 this.advance();
                 return;
             }
+            this.advance();
         }
         this.addToken(SepticTokenType.identifier);
     }
@@ -474,8 +474,13 @@ export class SepticScanner {
         );
     }
 
-    private isAlphaNumeric(char: string): boolean {
-        return this.isAlpha(char) || this.isDigit(char);
+    private isAlphaNumericOrSpecial(char: string): boolean {
+        return (
+            this.isAlpha(char) ||
+            this.isDigit(char) ||
+            char === ":" ||
+            char === "="
+        );
     }
 
     private isBlank(char: string): boolean {
