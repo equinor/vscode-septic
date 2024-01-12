@@ -32,41 +32,47 @@ def getCommitId(branch: str):
     repo = "SEPTIC"
     endpoint = f"/repos/{owner}/{repo}/branches/{branch}"
     response = sendRequestGithub(endpoint)
-    return response["commit"]["sha"][0:7]
+    return response["commit"]["sha"]
 
 
-def getCalcFile(branch: str):
+def getCalcFile(ref: str):
     path = "src/Calc.cpp"
-    return getFile(branch, path)
+    return getFile(ref, path)
 
 
-def getDir(branch: str, dir: str):
+def getDir(ref: str, dir: str):
     owner = "equinor"
     repo = "SEPTIC"
-    endpoint = f"/repos/{owner}/{repo}/contents/{dir}?ref={branch}"
+    endpoint = f"/repos/{owner}/{repo}/contents/{dir}?ref={ref}"
     return sendRequestGithub(endpoint)
 
 
-def getObjectFiles(branch: str):
-    paths_src = getDir(branch, "src")
-    paths_fmu = getDir(branch, "FMUsrc")
+def getObjectFiles(ref: str):
+    paths_src = getDir(ref, "src")
+    paths_fmu = getDir(ref, "FMUsrc")
     paths = paths_src + paths_fmu
     paths = [x["path"] for x in paths if x["path"].endswith(".cpp")]
     for path in paths:
         try:
-            yield getFile(branch, path)
+            yield getFile(ref, path)
         except Exception as e:
             print(e, path)
 
 
-def getFile(branch: str, path: str):
+def getFile(ref: str, path: str):
     owner = "equinor"
     repo = "SEPTIC"
-    endpoint = f"/repos/{owner}/{repo}/contents/{path}?ref={branch}"
+    endpoint = f"/repos/{owner}/{repo}/contents/{path}?ref={ref}"
     response = sendRequestGithub(endpoint)
     return decodeBas64(response["content"])
 
 
+def getTags():
+    owner = "equinor"
+    repo = "SEPTIC"
+    endpoint = f"/repos/{owner}/{repo}/tags"
+    return sendRequestGithub(endpoint)
+
+
 if __name__ == "__main__":
-    a = getObjectFiles("main")
-    print(a)
+    pass
