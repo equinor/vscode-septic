@@ -1,3 +1,4 @@
+import json
 import os
 import re
 from dataclasses import asdict
@@ -17,6 +18,14 @@ output_path = Path("./public")
 object_file_name = "objectsDoc.yaml"
 calc_file_name = "calcs.yaml"
 first_valid_version = (2, 87)
+
+
+def get_versions():
+    return [
+        x[0].split("\\")[-1]
+        for x in os.walk(output_path.resolve())
+        if re.match(r"(?:v(\d+)_(\d+))|latest", x[0].split("\\")[-1])
+    ]
 
 
 def get_newest_existing_version():
@@ -53,6 +62,20 @@ def update_versioned_documentation():
         calc_path = folder_path / calc_file_name
         updateObjects(nv[1], object_path)
         updateCalcs(nv[1], calc_path)
+    update_version_options()
+
+
+def update_version_options():
+    package_path = Path("package.json")
+    with open(package_path.resolve(), "r") as f:
+        package = json.load(f)
+    available_versions = get_versions()
+    package["contributes"]["configuration"]["properties"][
+        "septic.documentation.version"
+    ]["enum"] = available_versions
+    package_path = Path("package.json")
+    with open(package_path.resolve(), "w") as f:
+        json.dump(package, f, indent=2)
 
 
 def updateObjects(ref: str, output_path: Path):
