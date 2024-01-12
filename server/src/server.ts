@@ -200,6 +200,7 @@ connection.onInitialized(async () => {
             connection.console.log("Workspace folder change event received.");
         });
     }
+    await settingsManager.update();
     const yamlFiles = await connection.sendRequest(protocol.findYamlFiles, {});
     for (const file of yamlFiles) {
         contextManager.createScgContext(file);

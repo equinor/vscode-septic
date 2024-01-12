@@ -38,6 +38,16 @@
           "default": "off",
           "description": "Traces the communication between VS Code and the language server."
         },
+        "septic.documentation.version": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "latest",
+            "v2_88"
+          ],
+          "default": "latest",
+          "description": "Select which version of the Septic to use for documentation and diagnostics. Latest is head of main."
+        },
         "septic.diagnostics.enabled": {
           "scope": "window",
           "type": "boolean",

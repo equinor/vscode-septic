@@ -24,15 +24,18 @@ const defaultObject: SepticObjectInfo = {
 
 export class SepticMetaInfoProvider {
     private static metaInfoProvider: SepticMetaInfoProvider;
+    private static version: string = "latest";
     private calcsMap: Map<string, SepticCalcInfo>;
     private objectsMap: Map<string, SepticObjectInfo>;
     private objectsDocMap: Map<string, ISepticObjectDocumentation>;
     private objectHierarchy: SepticObjectHierarchy;
+    private version: string;
 
-    private constructor() {
-        this.calcsMap = this.loadCalcsInfo();
+    private constructor(version: string) {
+        this.version = version;
+        this.calcsMap = this.loadCalcsInfo(version);
         this.objectsMap = this.loadObjectsInfo();
-        this.objectsDocMap = this.loadObjectsDocumentation();
+        this.objectsDocMap = this.loadObjectsDocumentation(version);
         this.objectHierarchy = this.loadObjectHierarchy(
             Array.from(this.objectsDocMap.values())
         );
@@ -41,9 +44,20 @@ export class SepticMetaInfoProvider {
     public static getInstance(): SepticMetaInfoProvider {
         if (!SepticMetaInfoProvider.metaInfoProvider) {
             SepticMetaInfoProvider.metaInfoProvider =
-                new SepticMetaInfoProvider();
+                new SepticMetaInfoProvider(SepticMetaInfoProvider.version);
+        }
+        if (
+            SepticMetaInfoProvider.metaInfoProvider.version !==
+            SepticMetaInfoProvider.version
+        ) {
+            SepticMetaInfoProvider.metaInfoProvider =
+                new SepticMetaInfoProvider(SepticMetaInfoProvider.version);
         }
         return SepticMetaInfoProvider.metaInfoProvider;
+    }
+
+    public static setVersion(version: string): void {
+        SepticMetaInfoProvider.version = version;
     }
 
     public getCalcs(): SepticCalcInfo[] {
@@ -92,8 +106,11 @@ export class SepticMetaInfoProvider {
         return this.objectHierarchy;
     }
 
-    private loadCalcsInfo(): Map<string, SepticCalcInfo> {
-        const filePath = path.join(__dirname, "../../../public/calcs.yaml");
+    private loadCalcsInfo(version: string): Map<string, SepticCalcInfo> {
+        const filePath = path.join(
+            __dirname,
+            `../../../public/${version}/calcs.yaml`
+        );
         const file = fs.readFileSync(filePath, "utf-8");
         const calcInfo: SepticCalcInfoInput[] = YAML.load(
             file
@@ -148,13 +165,12 @@ export class SepticMetaInfoProvider {
         return objectsMap;
     }
 
-    private loadObjectsDocumentation(): Map<
-        string,
-        ISepticObjectDocumentation
-    > {
+    private loadObjectsDocumentation(
+        version: string
+    ): Map<string, ISepticObjectDocumentation> {
         const filePath = path.join(
             __dirname,
-            "../../../public/objectsDoc.yaml"
+            `../../../public/${version}/objectsDoc.yaml`
         );
         const file = fs.readFileSync(filePath, "utf-8");
         const objectsDoc: SepticObjectDocumentationInput[] = YAML.load(
