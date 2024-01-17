@@ -43,10 +43,10 @@
           "type": "string",
           "enum": [
             "latest",
-            "v2_88"
+            "v2.88"
           ],
           "default": "latest",
-          "description": "Select which version of the Septic to use for documentation and diagnostics. Latest is head of main."
+          "description": "Select which version of the Septic to use for documentation and diagnostics."
         },
         "septic.diagnostics.enabled": {
           "scope": "window",

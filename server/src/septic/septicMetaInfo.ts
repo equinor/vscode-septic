@@ -109,7 +109,7 @@ export class SepticMetaInfoProvider {
     private loadCalcsInfo(version: string): Map<string, SepticCalcInfo> {
         const filePath = path.join(
             __dirname,
-            `../../../public/${version}/calcs.yaml`
+            `../../../public/${version.replace(/\./g, "_")}/calcs.yaml`
         );
         const file = fs.readFileSync(filePath, "utf-8");
         const calcInfo: SepticCalcInfoInput[] = YAML.load(
@@ -170,7 +170,7 @@ export class SepticMetaInfoProvider {
     ): Map<string, ISepticObjectDocumentation> {
         const filePath = path.join(
             __dirname,
-            `../../../public/${version}/objectsDoc.yaml`
+            `../../../public/${version.replace(/\./g, "_")}/objectsDoc.yaml`
         );
         const file = fs.readFileSync(filePath, "utf-8");
         const objectsDoc: SepticObjectDocumentationInput[] = YAML.load(

@@ -1,218 +1,209 @@
-# Commit: ced21d6
 - detailedDescription: Computes the absolute value
   name: abs
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: quality(x)
   retr: Absolute value of input
   signature: abs(x)
-- detailedDescription:
-    "Computes the inverse cosine (arccosine) of input.\r\n  Use\
+- detailedDescription: "Computes the inverse cosine (arccosine) of input.\r\n  Use\
     \ acos(min(1, max(-1, arg))) to avoid error in input"
   name: acos
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value in radians [-1, 1]
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value in radians [-1, 1]
+    direction: in
+    name: x
   quality: quality(x) if -1 <= x <= 1 else BAD
   retr: Inverse cosine of input
   signature: acos(x)
-- detailedDescription:
-    "Checks the final status for given  xvr. Returns quality =\
+- detailedDescription: "Checks the final status for given  xvr. Returns quality =\
     \ GOOD if FinalStatus >= ADVISORY. Intended for\r\n  Mvr/Cvr"
   name: act
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-      description: Xvr
-      direction: xvr
-      name: xvr
-  quality:
-    GOOD if Xvr.FinalStatus >= ADVISORY and quality(Xvr.Meas) == GOOD, BAD
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    description: Xvr
+    direction: xvr
+    name: xvr
+  quality: GOOD if Xvr.FinalStatus >= ADVISORY and quality(Xvr.Meas) == GOOD, BAD
     otherwise
-  retr: "Measurement value with quality GOOD if condition is true: Xvr.Meas"
+  retr: 'Measurement value with quality GOOD if condition is true: Xvr.Meas'
   signature: act(xvr)
-- detailedDescription:
-    Checks if number of ACTIVE Xvrs are greater than the given
+- detailedDescription: Checks if number of ACTIVE Xvrs are greater than the given
     numbers
   name: actchk
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Required number of active Xvrs
-      direction: in
-      name: numMinActive
-    - arity: +
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-      description: Xvrs to check and update mode
-      direction: in
-      name: xvrN
+  - arity: '1'
+    datatype:
+    - value
+    description: Required number of active Xvrs
+    direction: in
+    name: numMinActive
+  - arity: +
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    description: Xvrs to check and update mode
+    direction: in
+    name: xvrN
   quality: GOOD if number of active >= numMinActive
   retr: 1 if number of ACTIVE Xvrs >= numMinActive otherwise 0
   signature: actchk(numMinActive, xvr1, xvr2, ..., xvrN)
 - detailedDescription: Designed for cyclic update of estimators against analyzer values.
   name: anaupdt
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to update against, normally analyzer value
-      direction: in
-      name: ana
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to correct, estimated value
-      direction: in
-      name: est
-    - arity: "1"
-      datatype:
-        - value
-      description: Maximum abs(ana-est) value allowed to calculate bias
-      direction: in
-      name: maxdiff
-    - arity: "1"
-      datatype:
-        - value
-      description: Update fraction [0-1]
-      direction: in
-      name: updatefrac
-    - arity: "1"
-      datatype:
-        - value
-      description: Update cycle time (samples)
-      direction: in
-      name: uct
-    - arity: "1"
-      datatype:
-        - value
-      description: Ok to update if 1
-      direction: in
-      name: updateok
-  quality:
-    GOOD if all parameters GOOD and abs(ana-est) < maxdoff and uct < num samples
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to update against, normally analyzer value
+    direction: in
+    name: ana
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to correct, estimated value
+    direction: in
+    name: est
+  - arity: '1'
+    datatype:
+    - value
+    description: Maximum abs(ana-est) value allowed to calculate bias
+    direction: in
+    name: maxdiff
+  - arity: '1'
+    datatype:
+    - value
+    description: Update fraction [0-1]
+    direction: in
+    name: updatefrac
+  - arity: '1'
+    datatype:
+    - value
+    description: Update cycle time (samples)
+    direction: in
+    name: uct
+  - arity: '1'
+    datatype:
+    - value
+    description: Ok to update if 1
+    direction: in
+    name: updateok
+  quality: GOOD if all parameters GOOD and abs(ana-est) < maxdoff and uct < num samples
     since last update
   retr: Update updatefrac*(ana-est) success, else V = 0
   signature: anaupdt(ana, est, maxdiff, updatefrac, uct, updateok)
 - detailedDescription: Computes the logical and operation on all the provided elements
   name: and
   parameters:
-    - arity: +
-      datatype:
-        - value
-      description: Logical elements
-      direction: in
-      name: elemN
+  - arity: +
+    datatype:
+    - value
+    description: Logical elements
+    direction: in
+    name: elemN
   quality: GOOD only if all arguments are GOOD
-  retr: "Evaluated logical elements: 1 if true, 0 if false"
+  retr: 'Evaluated logical elements: 1 if true, 0 if false'
   signature: and(elem1, ..., elemN)
-- detailedDescription:
-    "Computes the inverse sine (arcsine) of input.\r\n  Use asin(min(1,\
+- detailedDescription: "Computes the inverse sine (arcsine) of input.\r\n  Use asin(min(1,\
     \ max(-1, arg))) to avoid error in input"
   name: asin
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value in radians [-1, 1]
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value in radians [-1, 1]
+    direction: in
+    name: x
   quality: quality(x) if -1 <= x <= 1 else BAD
   retr: Inverse sine of input
   signature: asin(x)
 - detailedDescription: Selects the avg of the values vN that has useN set to 1
   name: avgselection
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of values
-      direction: in
-      name: n
-    - arity: $n
-      datatype:
-        - value
-      description: Values to select from
-      direction: in
-      name: vN
-    - arity: $n
-      datatype:
-        - value
-      description: Indicator if corresponding value should be considered
-      direction: in
-      name: useN
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of values
+    direction: in
+    name: n
+  - arity: $n
+    datatype:
+    - value
+    description: Values to select from
+    direction: in
+    name: vN
+  - arity: $n
+    datatype:
+    - value
+    description: Indicator if corresponding value should be considered
+    direction: in
+    name: useN
   quality: GOOD only if ALL useN are GOOD and all vN to be used are GOOD
   retr: Average of values with corresponding useN set to 1
   signature: avgselection(n, v1, v2, ..., vN, use1, use2, ..., useN)
-- detailedDescription:
-    Gets the number of consecutive BAD states on expression x.
+- detailedDescription: Gets the number of consecutive BAD states on expression x.
     Reset to 0 when current x is GOOD
   name: badcount
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: GOOD
   retr: Number of consecutive BAD states
   signature: badcount(x)
-- detailedDescription:
-    conversion from diluent injection rate to viscosity or water
+- detailedDescription: conversion from diluent injection rate to viscosity or water
     in oil for Mariner.
   name: calcdiluentrate2wio
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: volumetric rate Heimdal oil Mariner
-      direction: in
-      name: qoH
-    - arity: "1"
-      datatype:
-        - value
-      description: volumetric rate Marueen oil Mariner
-      direction: in
-      name: qoM
-    - arity: "1"
-      datatype:
-        - value
-      description: diluent injection volumetric rate Mariner
-      direction: in
-      name: qdT
-    - arity: "1"
-      datatype:
-        - value
-      description: 0 for viscosity, 1 for water in oil
-      direction: in
-      name: outMeas
+  - arity: '1'
+    datatype:
+    - value
+    description: volumetric rate Heimdal oil Mariner
+    direction: in
+    name: qoH
+  - arity: '1'
+    datatype:
+    - value
+    description: volumetric rate Marueen oil Mariner
+    direction: in
+    name: qoM
+  - arity: '1'
+    datatype:
+    - value
+    description: diluent injection volumetric rate Mariner
+    direction: in
+    name: qdT
+  - arity: '1'
+    datatype:
+    - value
+    description: 0 for viscosity, 1 for water in oil
+    direction: in
+    name: outMeas
   quality: GOOD if 4 arguements
   retr: Viscosity or water in oil
   signature: calcdiluentrate2wio(qoH,qoM,qdT,outMeas)
 - detailedDescription: Computes the smallest integer greater than input
   name: ceil
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: quality(x)
   retr: Smallest integer larger than input
   signature: ceil(x)
@@ -225,244 +216,232 @@
 - detailedDescription: Calculate cloud of a mix
   name: cloudmix
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of volumes. ns <= 10
-      direction: in
-      name: ns
-    - arity: $ns
-      datatype:
-        - value
-      description: Volume of volume n
-      direction: in
-      name: volN
-    - arity: $ns
-      datatype:
-        - value
-      description: Quality of volume n
-      direction: in
-      name: qualN
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of volumes. ns <= 10
+    direction: in
+    name: ns
+  - arity: $ns
+    datatype:
+    - value
+    description: Volume of volume n
+    direction: in
+    name: volN
+  - arity: $ns
+    datatype:
+    - value
+    description: Quality of volume n
+    direction: in
+    name: qualN
   quality: GOOD if all supplied parameters are GOOD
   retr: Calculated quality of mix, 0 if sum of volumes = 0
   signature: cloudmix(ns, vol1, qual1, ..., volN, qualN)
 - detailedDescription: Computes the cosine of the given input
   name: cos
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value in radians
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value in radians
+    direction: in
+    name: x
   quality: quality(x)
   retr: Cosine value of x
   signature: cos(x)
 - detailedDescription: Computes the currently active control spec
   name: cvdynkpistate
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr to check control spec
-      direction: in
-      name: cvr
-    - arity: "?"
-      datatype:
-        - value
-      description: Tolerance to use for equality test. 0.01 if not specified
-      direction: in
-      name: tol
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr to check control spec
+    direction: in
+    name: cvr
+  - arity: '?'
+    datatype:
+    - value
+    description: Tolerance to use for equality test. 0.01 if not specified
+    direction: in
+    name: tol
   quality: GOOD
-  retr:
-    "Active control spec.: -1: CV not active, 0: ssval not equal to any of SetPnt,
-    High, Low,"
+  retr: 'Active control spec.: -1: CV not active, 0: ssval not equal to any of SetPnt,
+    High, Low,'
   signature: cvdynkpistate(cvr, tol?)
-- detailedDescription:
-    Computes the moving average deviation between measurement and
+- detailedDescription: Computes the moving average deviation between measurement and
     highlimit for given cvr.
   name: cvhighdevavg
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of samples to use up to and including current sample
-      direction: in
-      name: nsamp
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples to use up to and including current sample
+    direction: in
+    name: nsamp
   quality: GOOD if valid cvr else BAD
-  retr:
-    "Moving average deviation between measurement and highlimit: cvhighdevavg()
-    if quality GOOD else 0"
+  retr: 'Moving average deviation between measurement and highlimit: cvhighdevavg()
+    if quality GOOD else 0'
   signature: cvhighdevavg(cvr, nsamp)
-- detailedDescription:
-    "Computes the standard deviation between measurement and highlimit\
+- detailedDescription: "Computes the standard deviation between measurement and highlimit\
     \ for given cvr over the specified time\r\n  horizon."
   name: cvhighdevstd
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of samples to use up to and including current sample
-      direction: in
-      name: nsamp
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples to use up to and including current sample
+    direction: in
+    name: nsamp
   quality: GOOD if valid cvr else BAD
-  retr: "Standard deviation for Cvr: 0 if BAD"
+  retr: 'Standard deviation for Cvr: 0 if BAD'
   signature: cvhighdevstd(cvr, nsamp)
-- detailedDescription:
-    Computes the moving average deviation between measurement and
+- detailedDescription: Computes the moving average deviation between measurement and
     lowlimit for given cvr.
   name: cvlowdevavg
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of samples to use up to and including current sample
-      direction: in
-      name: nsamp
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples to use up to and including current sample
+    direction: in
+    name: nsamp
   quality: GOOD if valid cvr else BAD
-  retr: "Moving average deviation between measurement and lowlimit: 0 if BAD"
+  retr: 'Moving average deviation between measurement and lowlimit: 0 if BAD'
   signature: cvlowdevavg(cvr, nsamp)
-- detailedDescription:
-    "Computes the standard deviation between measurement and lowlimit\
+- detailedDescription: "Computes the standard deviation between measurement and lowlimit\
     \ for given cvr over the specified time\r\n  horizon."
   name: cvlowdevstd
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of samples to use up to and including current sample
-      direction: in
-      name: nsamp
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples to use up to and including current sample
+    direction: in
+    name: nsamp
   quality: GOOD if valid cvr else BAD
   retr: Standard deviation for Cvr:0 if BAD
   signature: cvlowdevstd(cvr, nsamp)
-- detailedDescription:
-    Computes the standard deviation between measurement and nominal
+- detailedDescription: Computes the standard deviation between measurement and nominal
     value for given cvr over the time horizon.
   name: cvmodeldevstd
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of samples to use up to and including current sample
-      direction: in
-      name: nsamp
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples to use up to and including current sample
+    direction: in
+    name: nsamp
   quality: GOOD if valid cvr else BAD
-  retr: "Standard deviation between measurement and nominal value: 0 if BAD"
+  retr: 'Standard deviation between measurement and nominal value: 0 if BAD'
   signature: cvmodeldevstd(cvr, nsamp)
-- detailedDescription:
-    Gets the last generated open loop prediction generated in an
+- detailedDescription: Gets the last generated open loop prediction generated in an
     iterative sequence
   name: cvopenloop
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
   quality: GOOD
-  retr:
-    "Most future open loop prediction point for Cvr: Cvr.OpenLoop(last evaluation
-    point)"
+  retr: 'Most future open loop prediction point for Cvr: Cvr.OpenLoop(last evaluation
+    point)'
   signature: cvopenloop(cvr)
 - detailedDescription: Gets the most future prediction point (last point in the prediction)
   name: cvpo
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
   quality: GOOD
-  retr: "Most future prediction point: Cvr.OptPred(last evaluation point)"
+  retr: 'Most future prediction point: Cvr.OptPred(last evaluation point)'
   signature: cvpo(cvr)
 - detailedDescription: Gets the future prediction point n sample ahead
   name: cvpred
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
   quality: GOOD
-  retr: "Future prediction point n samples ahead: Cvr.OptPred(pAppl->N + n)"
+  retr: 'Future prediction point n samples ahead: Cvr.OptPred(pAppl->N + n)'
   signature: cvpred(cvr, n)
-- detailedDescription:
-    Computes the moving average deviation between measurement and
+- detailedDescription: Computes the moving average deviation between measurement and
     setpoint for given cvr.
   name: cvspdevavg
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of samples to use up to and including current sample
-      direction: in
-      name: nsamp
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples to use up to and including current sample
+    direction: in
+    name: nsamp
   quality: GOOD if valid cvr else BAD
-  retr: "Moving average deviation for Cvr: cvspdevavg() if quality GOOD else 0"
+  retr: 'Moving average deviation for Cvr: cvspdevavg() if quality GOOD else 0'
   signature: cvspdevavg(cvr, nsamp)
-- detailedDescription:
-    "Computes the standard deviation between measurement and setpoint\
+- detailedDescription: "Computes the standard deviation between measurement and setpoint\
     \ for given cvr over the specified time\r\n  horizon."
   name: cvspdevstd
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of samples to use up to and including current sample
-      direction: in
-      name: nsamp
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples to use up to and including current sample
+    direction: in
+    name: nsamp
   quality: GOOD if valid cvr else BAD
-  retr:
-    "Standard deviation for Cvr over time horizon: cvspdevstd() if quality GOOD
-    else 0"
+  retr: 'Standard deviation for Cvr over time horizon: cvspdevstd() if quality GOOD
+    else 0'
   signature: cvspdevstd(cvr, nsamp)
-- detailedDescription: ""
+- detailedDescription: ''
   name: datadebug
   parameters: []
   quality: GOOD if at least argument and argument GOOD
@@ -471,614 +450,594 @@
 - detailedDescription: Calculates difference between to consequent samples in a buffer.
   name: delta
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-        - tvr
-        - evr
-      description: Xvr or Xvr.Mmbr
-      direction: in
-      name: xvr
-    - arity: "?"
-      datatype:
-        - value
-      description: Sample number counted backwards from current sample. Default 0
-      direction: in
-      name: n
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    - tvr
+    - evr
+    description: Xvr or Xvr.Mmbr
+    direction: in
+    name: xvr
+  - arity: '?'
+    datatype:
+    - value
+    description: Sample number counted backwards from current sample. Default 0
+    direction: in
+    name: n
   quality: GOOD if valid Xvr or Xvr.Mmbr
   retr: Difference between samples
   signature: delta(xvr, n)
-- detailedDescription:
-    Calculate mix distillation temperature at specified % REC of
+- detailedDescription: Calculate mix distillation temperature at specified % REC of
     mix
   name: distmix
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Recovery point for input temperatures (e.g.95%)
-      direction: in
-      name: recinp
-    - arity: "1"
-      datatype:
-        - value
-      description: Recovery point for output result (e.g. 85% or 95%)
-      direction: in
-      name: recoutp
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of streams in mix
-      direction: in
-      name: ns
-    - arity: $ns
-      datatype:
-        - value
-      description: Flow of stream n [m3/h]
-      direction: in
-      name: fN
-    - arity: $ns
-      datatype:
-        - value
-      description: Temperature for specified recinp for stream n
-      direction: in
-      name: tN
-    - arity: $ns
-      datatype:
-        - value
-      description: Slope [% recovered/C] around Tn
-      direction: in
-      name: sN
-  quality:
-    GOOD if all parameters are supplied and GOOD, else BAD (Volumes smaller
+  - arity: '1'
+    datatype:
+    - value
+    description: Recovery point for input temperatures (e.g.95%)
+    direction: in
+    name: recinp
+  - arity: '1'
+    datatype:
+    - value
+    description: Recovery point for output result (e.g. 85% or 95%)
+    direction: in
+    name: recoutp
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of streams in mix
+    direction: in
+    name: ns
+  - arity: $ns
+    datatype:
+    - value
+    description: Flow of stream n [m3/h]
+    direction: in
+    name: fN
+  - arity: $ns
+    datatype:
+    - value
+    description: Temperature for specified recinp for stream n
+    direction: in
+    name: tN
+  - arity: $ns
+    datatype:
+    - value
+    description: Slope [% recovered/C] around Tn
+    direction: in
+    name: sN
+  quality: GOOD if all parameters are supplied and GOOD, else BAD (Volumes smaller
     than 5 % will not affect quality)
   retr: Calulated temperature at which the mix is RECOUTP distilled
   signature: distmix(recinp, recoutp, ns, f1, t1, s1, ..., fN, tN, sN)
-- detailedDescription:
-    Dumps Application Ids and Xvrs Ids to file 'dumpxvrs.txt'.
+- detailedDescription: Dumps Application Ids and Xvrs Ids to file 'dumpxvrs.txt'.
     Actual dump controlled by parameter
   name: dumpXvrs
   parameters: []
   quality: GOOD
   retr: x
   signature: dumpXvrs(x)
-- detailedDescription:
-    Implements a gradient estimator based on Extremum seeking algorithm
+- detailedDescription: Implements a gradient estimator based on Extremum seeking algorithm
     in discrete time domain
   name: escgrad
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: "- Measured cost"
-      direction: in
-      name: J
-    - arity: "1"
-      datatype:
-        - value
-      description: "- Sinusoidal perturbation signal: sin(2*pi*N*Ts/Tp)"
-      direction: in
-      name: sine
-    - arity: "1"
-      datatype:
-        - value
-      description: "- High pass filter cut-off time"
-      direction: in
-      name: THP
-    - arity: "1"
-      datatype:
-        - value
-      description: "- Low pass filter cut-off time"
-      direction: in
-      name: TLP
-    - arity: "1"
-      datatype:
-        - value
-      description: "- Sampling time"
-      direction: in
-      name: Ts
-    - arity: "1"
-      datatype:
-        - value
-      description: "- sineOn - Set > 0 if sine wave is active (else calc returns 0)"
-      direction: in
-      name: THP
+  - arity: '1'
+    datatype:
+    - value
+    description: '- Measured cost'
+    direction: in
+    name: J
+  - arity: '1'
+    datatype:
+    - value
+    description: '- Sinusoidal perturbation signal: sin(2*pi*N*Ts/Tp)'
+    direction: in
+    name: sine
+  - arity: '1'
+    datatype:
+    - value
+    description: '- High pass filter cut-off time'
+    direction: in
+    name: THP
+  - arity: '1'
+    datatype:
+    - value
+    description: '- Low pass filter cut-off time'
+    direction: in
+    name: TLP
+  - arity: '1'
+    datatype:
+    - value
+    description: '- Sampling time'
+    direction: in
+    name: Ts
+  - arity: '1'
+    datatype:
+    - value
+    description: '- sineOn - Set > 0 if sine wave is active (else calc returns 0)'
+    direction: in
+    name: THP
   quality: GOOD if all supplied parameters are GOOD
-  retr:
-    Gradient multiplied by a/2, thus multiply by 2/a to get a correct value of
+  retr: Gradient multiplied by a/2, thus multiply by 2/a to get a correct value of
     gradient. Calculated quality of
   signature: escgrad(J,sine,THP,TLP,Ts,sineOn)
 - detailedDescription: Computes the exponential with base e
   name: exp
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: quality(x)
   retr: The exponential for x
   signature: exp(x)
-- detailedDescription:
-    Set the gain modifier in the active experimental model (ExprIvr.Scale)
+- detailedDescription: Set the gain modifier in the active experimental model (ExprIvr.Scale)
     of ExprProc
   name: exprprocmodset
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: CV for model identification
-      direction: in
-      name: CVRTAG
-    - arity: "1"
-      datatype:
-        - value
-      description: MV/DV for model identification
-      direction: in
-      name: IVRTAG
-    - arity: "1"
-      datatype:
-        - value
-      description:
-        is the gain modifier to use, Scale is not changed when quality(Scale)
-        or quality(Apply) is BAD
-      direction: in
-      name: Scale
-    - arity: "1"
-      datatype:
-        - value
-      description: = 1 commands to set Scale, any other value gives an unaffected Scale
-      direction: in
-      name: Apply
-  quality:
-    GOOD if CV and IV belongs to same SmpcAppl with an ExprModl and Amodl exists,
+  - arity: '1'
+    datatype:
+    - value
+    description: CV for model identification
+    direction: in
+    name: CVRTAG
+  - arity: '1'
+    datatype:
+    - value
+    description: MV/DV for model identification
+    direction: in
+    name: IVRTAG
+  - arity: '1'
+    datatype:
+    - value
+    description: is the gain modifier to use, Scale is not changed when quality(Scale)
+      or quality(Apply) is BAD
+    direction: in
+    name: Scale
+  - arity: '1'
+    datatype:
+    - value
+    description: = 1 commands to set Scale, any other value gives an unaffected Scale
+    direction: in
+    name: Apply
+  quality: GOOD if CV and IV belongs to same SmpcAppl with an ExprModl and Amodl exists,
     else BAD
-  retr:
-    steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl
+  retr: steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl
     with an ExprModl and Amodl
   signature: exprprocmodset(CVRTAG,IVRTAG,Scale,Apply)
 - detailedDescription: First order filter
   name: filt
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Raw measurement to be filtered
-      direction: in
-      name: rawmeas
-    - arity: "1"
-      datatype:
-        - value
-      description: First order time constant for filter [min]
-      direction: in
-      name: tau
+  - arity: '1'
+    datatype:
+    - value
+    description: Raw measurement to be filtered
+    direction: in
+    name: rawmeas
+  - arity: '1'
+    datatype:
+    - value
+    description: First order time constant for filter [min]
+    direction: in
+    name: tau
   quality: quality(rawmeas)
   retr: Filtered measurement value
   signature: filt(rawmeas, tau)
-- detailedDescription:
-    "First order filter that keeps value unchanged for BAD arguments.\
+- detailedDescription: "First order filter that keeps value unchanged for BAD arguments.\
     \ To be used for instance for slow BIAS\r\n  updates from analyzers"
   name: filtkeep
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Raw measurement to be filtered
-      direction: in
-      name: rawmeas
-    - arity: "1"
-      datatype:
-        - value
-      description: First order time constant for filter
-      direction: in
-      name: tau
+  - arity: '1'
+    datatype:
+    - value
+    description: Raw measurement to be filtered
+    direction: in
+    name: rawmeas
+  - arity: '1'
+    datatype:
+    - value
+    description: First order time constant for filter
+    direction: in
+    name: tau
   quality: quality(rawmeas)
   retr: Filtered measurement value
   signature: filtkeep(rawmeas, tau)
 - detailedDescription: Filter designed to transfer optimization results to setpoints
   name: filtopti
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Current value. Returned if update != 1
-      direction: in
-      name: currentValue
-    - arity: "1"
-      datatype:
-        - value
-      description: Updated value to be filtered
-      direction: in
-      name: updateValue
-    - arity: "1"
-      datatype:
-        - value
-      description: Filter time constant
-      direction: in
-      name: tau
-    - arity: "1"
-      datatype:
-        - value
-      description: Rate of change limit
-      direction: in
-      name: roc
-    - arity: "1"
-      datatype:
-        - value
-      description: Flag for allowing updates or not. 1 allows updates.
-      direction: in
-      name: update
+  - arity: '1'
+    datatype:
+    - value
+    description: Current value. Returned if update != 1
+    direction: in
+    name: currentValue
+  - arity: '1'
+    datatype:
+    - value
+    description: Updated value to be filtered
+    direction: in
+    name: updateValue
+  - arity: '1'
+    datatype:
+    - value
+    description: Filter time constant
+    direction: in
+    name: tau
+  - arity: '1'
+    datatype:
+    - value
+    description: Rate of change limit
+    direction: in
+    name: roc
+  - arity: '1'
+    datatype:
+    - value
+    description: Flag for allowing updates or not. 1 allows updates.
+    direction: in
+    name: update
   quality: GOOD
   retr: Filtered update of currentValue towards updateValue limited with roc
   signature: filtopti(currentValue, updateValue, tau, roc, update)
-- detailedDescription:
-    Implements a MPM flash from multiphase meter line conditions
+- detailedDescription: Implements a MPM flash from multiphase meter line conditions
     to standard conditions
   name: flashMPM
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: = rate value
-      direction: in
-      name: Q
-    - arity: "1"
-      datatype:
-        - value
-      description: = MPM pressure
-      direction: in
-      name: P
-    - arity: "1"
-      datatype:
-        - value
-      description: = MPM temperature
-      direction: in
-      name: T
-    - arity: "1"
-      datatype:
-        - value
-      description: = Phase (1=Oil,2=Gas,3=Water)
-      direction: in
-      name: Ph
-    - arity: "1"
-      datatype:
-        - value
-      description: = Well number ()
-      direction: in
-      name: W
-    - arity: "1"
-      datatype:
-        - value
-      description: = Oil rate (Optional, but needed for flashing of gas rates)
-      direction: in
-      name: Qo
+  - arity: '1'
+    datatype:
+    - value
+    description: = rate value
+    direction: in
+    name: Q
+  - arity: '1'
+    datatype:
+    - value
+    description: = MPM pressure
+    direction: in
+    name: P
+  - arity: '1'
+    datatype:
+    - value
+    description: = MPM temperature
+    direction: in
+    name: T
+  - arity: '1'
+    datatype:
+    - value
+    description: = Phase (1=Oil,2=Gas,3=Water)
+    direction: in
+    name: Ph
+  - arity: '1'
+    datatype:
+    - value
+    description: = Well number ()
+    direction: in
+    name: W
+  - arity: '1'
+    datatype:
+    - value
+    description: = Oil rate (Optional, but needed for flashing of gas rates)
+    direction: in
+    name: Qo
   quality: GOOD if all inputs are GOOD
   retr: flash, 0 if BAD
   signature: flashMPM(Q,P,T,Ph,W,Qo)
 - detailedDescription: Computes the greatest integer less than input
   name: floor
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: BAD if x<0 else quality(x)
   retr: The greatest integer less than input
   signature: floor(x)
 - detailedDescription: Implements a gas rate estimator using choke.
   name: gasrate
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: pressure upstream choke
-      direction: in
-      name: UCP
-    - arity: "1"
-      datatype:
-        - value
-      description: inlet separator pressure
-      direction: in
-      name: pSEP
-    - arity: "1"
-      datatype:
-        - value
-      description: choke pos %
-      direction: in
-      name: GIC
-    - arity: "1"
-      datatype:
-        - value
-      description: linearization interval
-      direction: in
-      name: kvs1
-    - arity: "1"
-      datatype:
-        - value
-      description: linearization interval
-      direction: in
-      name: kvs2
-    - arity: "1"
-      datatype:
-        - value
-      description: linearization interval
-      direction: in
-      name: kvs3
-    - arity: "1"
-      datatype:
-        - value
-      description: linearization interval
-      direction: in
-      name: kvs4
+  - arity: '1'
+    datatype:
+    - value
+    description: pressure upstream choke
+    direction: in
+    name: UCP
+  - arity: '1'
+    datatype:
+    - value
+    description: inlet separator pressure
+    direction: in
+    name: pSEP
+  - arity: '1'
+    datatype:
+    - value
+    description: choke pos %
+    direction: in
+    name: GIC
+  - arity: '1'
+    datatype:
+    - value
+    description: linearization interval
+    direction: in
+    name: kvs1
+  - arity: '1'
+    datatype:
+    - value
+    description: linearization interval
+    direction: in
+    name: kvs2
+  - arity: '1'
+    datatype:
+    - value
+    description: linearization interval
+    direction: in
+    name: kvs3
+  - arity: '1'
+    datatype:
+    - value
+    description: linearization interval
+    direction: in
+    name: kvs4
   quality: GOOD if all supplied parameters are GOOD
   retr: Calculated gas rate, 0 if BAD
   signature: gasrate(UCP, pSEP, GIC, kvs1, kvs2, kvs3, kvs4)
-- detailedDescription:
-    Implements a gas rate estimator using pressure drops across
+- detailedDescription: Implements a gas rate estimator using pressure drops across
     choke and well
   name: gasrateChokeWell
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: = Bottom hole pressure [bar]
-      direction: in
-      name: BHP
-    - arity: "1"
-      datatype:
-        - value
-      description: = Pressure upstream choke [bar]
-      direction: in
-      name: UCP
-    - arity: "1"
-      datatype:
-        - value
-      description: = Pressure downstream choke [bar]
-      direction: in
-      name: DCP
-    - arity: "1"
-      datatype:
-        - value
-      description: = Temperature upstream choke [C]
-      direction: in
-      name: UCT
-    - arity: "1"
-      datatype:
-        - value
-      description:
-        = Flow coefficient (US) [USG/(min*psi^0.5)] - from choke pos and
-        Cv-curve w intpoltype1
-      direction: in
-      name: Cv
-    - arity: "1"
-      datatype:
-        - value
-      description: = Vertical height from UCP to BHP [m]
-      direction: in
-      name: h
-    - arity: "1"
-      datatype:
-        - value
-      description: = Fluid density [kg/m^3]. E.g (893+1038)/2=965.5
-      direction: in
-      name: rhoL
-    - arity: "1"
-      datatype:
-        - value
-      description: = Slip factor
-      direction: in
-      name: alpha
-    - arity: "1"
-      datatype:
-        - value
-      description: = Gas compressibility (typ. 0.9)
-      direction: in
-      name: zG
-    - arity: "1"
-      datatype:
-        - value
-      description: = Gas mol weight (typ. 17.06)
-      direction: in
-      name: Mw
+  - arity: '1'
+    datatype:
+    - value
+    description: = Bottom hole pressure [bar]
+    direction: in
+    name: BHP
+  - arity: '1'
+    datatype:
+    - value
+    description: = Pressure upstream choke [bar]
+    direction: in
+    name: UCP
+  - arity: '1'
+    datatype:
+    - value
+    description: = Pressure downstream choke [bar]
+    direction: in
+    name: DCP
+  - arity: '1'
+    datatype:
+    - value
+    description: = Temperature upstream choke [C]
+    direction: in
+    name: UCT
+  - arity: '1'
+    datatype:
+    - value
+    description: = Flow coefficient (US) [USG/(min*psi^0.5)] - from choke pos and
+      Cv-curve w intpoltype1
+    direction: in
+    name: Cv
+  - arity: '1'
+    datatype:
+    - value
+    description: = Vertical height from UCP to BHP [m]
+    direction: in
+    name: h
+  - arity: '1'
+    datatype:
+    - value
+    description: = Fluid density [kg/m^3]. E.g (893+1038)/2=965.5
+    direction: in
+    name: rhoL
+  - arity: '1'
+    datatype:
+    - value
+    description: = Slip factor
+    direction: in
+    name: alpha
+  - arity: '1'
+    datatype:
+    - value
+    description: = Gas compressibility (typ. 0.9)
+    direction: in
+    name: zG
+  - arity: '1'
+    datatype:
+    - value
+    description: = Gas mol weight (typ. 17.06)
+    direction: in
+    name: Mw
   quality: GOOD if BHP, UCP, DCP, UCT and Cv are GOOD
   retr: Calculated gas rate, previous if BAD
   signature: gasrateChokeWell(BHP, UCP, DCP, UCT, Cv, h, rhoL, alpha, zG, Mw)
-- detailedDescription:
-    "Implements a gas rate estimator using venturi from multiphase\
+- detailedDescription: "Implements a gas rate estimator using venturi from multiphase\
     \ meter. Example for Heidrun A24 Alg=\r\n  gasrateVenturi(UCP, MPDP, 1735)"
   name: gasrateVenturi
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: = pressure upstream choke
-      direction: in
-      name: UCP
-    - arity: "1"
-      datatype:
-        - value
-      description: = dP over multiphase venturi
-      direction: in
-      name: MPDP
-    - arity: "1"
-      datatype:
-        - value
-      description: = venturi constant
-      direction: in
-      name: cvp
-    - arity: "1"
-      datatype:
-        - value
-      description: = Phase (1=Oil,2=Gas,3=Water)
-      direction: in
-      name: Ph
-    - arity: "1"
-      datatype:
-        - value
-      description: = Well number ()
-      direction: in
-      name: W
-    - arity: "1"
-      datatype:
-        - value
-      description: = Oil rate (Optional, but needed for flashing of gas rates)
-      direction: in
-      name: Qo
+  - arity: '1'
+    datatype:
+    - value
+    description: = pressure upstream choke
+    direction: in
+    name: UCP
+  - arity: '1'
+    datatype:
+    - value
+    description: = dP over multiphase venturi
+    direction: in
+    name: MPDP
+  - arity: '1'
+    datatype:
+    - value
+    description: = venturi constant
+    direction: in
+    name: cvp
+  - arity: '1'
+    datatype:
+    - value
+    description: = Phase (1=Oil,2=Gas,3=Water)
+    direction: in
+    name: Ph
+  - arity: '1'
+    datatype:
+    - value
+    description: = Well number ()
+    direction: in
+    name: W
+  - arity: '1'
+    datatype:
+    - value
+    description: = Oil rate (Optional, but needed for flashing of gas rates)
+    direction: in
+    name: Qo
   quality: GOOD if all inputs are GOOD
   retr: gas rate, 0 if BAD
   signature: gasrateVenturi(UCP, MPDP, cvp)
 - detailedDescription: Implements an adaptive gas rate estimator using choke.
   name: gasratechokeadap
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: pressure upstream choke
-      direction: in
-      name: UCP
-    - arity: "1"
-      datatype:
-        - value
-      description: inlet separator pressure
-      direction: in
-      name: pSEP
-    - arity: "1"
-      datatype:
-        - value
-      description: choke pos %
-      direction: in
-      name: GIC
-    - arity: "1"
-      datatype:
-        - value
-      description: Multiphase meter gas flow
-      direction: in
-      name: MPG
-    - arity: "1"
-      datatype:
-        - value
-      description: adaptive parameter for choke characteristics
-      direction: in
-      name: kvs1
-    - arity: "1"
-      datatype:
-        - value
-      description: adaptive parameter for choke characteristics
-      direction: in
-      name: kvs2
-    - arity: "1"
-      datatype:
-        - value
-      description: linearization interval
-      direction: in
-      name: z1
-    - arity: "1"
-      datatype:
-        - value
-      description: linearization interval
-      direction: in
-      name: z2
-    - arity: "1"
-      datatype:
-        - value
-      description:
-        Number of samples with no parameter update before estimate is set
-        BAD
-      direction: in
-      name: NFrysOk
-    - arity: "1"
-      datatype:
-        - value
-      description: Update "filter" for adaptation
-      direction: in
-      name: Gamma
+  - arity: '1'
+    datatype:
+    - value
+    description: pressure upstream choke
+    direction: in
+    name: UCP
+  - arity: '1'
+    datatype:
+    - value
+    description: inlet separator pressure
+    direction: in
+    name: pSEP
+  - arity: '1'
+    datatype:
+    - value
+    description: choke pos %
+    direction: in
+    name: GIC
+  - arity: '1'
+    datatype:
+    - value
+    description: Multiphase meter gas flow
+    direction: in
+    name: MPG
+  - arity: '1'
+    datatype:
+    - value
+    description: adaptive parameter for choke characteristics
+    direction: in
+    name: kvs1
+  - arity: '1'
+    datatype:
+    - value
+    description: adaptive parameter for choke characteristics
+    direction: in
+    name: kvs2
+  - arity: '1'
+    datatype:
+    - value
+    description: linearization interval
+    direction: in
+    name: z1
+  - arity: '1'
+    datatype:
+    - value
+    description: linearization interval
+    direction: in
+    name: z2
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples with no parameter update before estimate is set
+      BAD
+    direction: in
+    name: NFrysOk
+  - arity: '1'
+    datatype:
+    - value
+    description: Update "filter" for adaptation
+    direction: in
+    name: Gamma
   quality: GOOD if UCP, pSEP and GIC are GOOD
   retr: Calculated gas rate, previous if BAD
   signature: gasratechokeadap(UCP, pSEP, GIC, MPG, kvs1, kvs2, z1, z2, NFrysOk, Gamma)
 - detailedDescription: Implements an adaptive gas rate estimator using choke
   name: gasratechoketau
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: = pressure upstream choke
-      direction: in
-      name: UCP
-    - arity: "1"
-      datatype:
-        - value
-      description: = inlet separator pressure or pressure downstream choke
-      direction: in
-      name: pSEP
-    - arity: "1"
-      datatype:
-        - value
-      description: = choke pos %
-      direction: in
-      name: GIC
-    - arity: "1"
-      datatype:
-        - value
-      description: = Multiphase meter gas flow
-      direction: in
-      name: MPG
-    - arity: "1"
-      datatype:
-        - value
-      description: = Startpoint for pfhi1 curve
-      direction: in
-      name: z1
-    - arity: "1"
-      datatype:
-        - value
-      description: = Startpoint for pfhi2 curve
-      direction: in
-      name: z2
-    - arity: "1"
-      datatype:
-        - value
-      description:
-        = Number of samples with no parameter update before estimate is set
-        BAD
-      direction: in
-      name: NFrysOk
-    - arity: "1"
-      datatype:
-        - value
-      description: = Time constant for adaptation in minutes
-      direction: in
-      name: Tau
-    - arity: "1"
-      datatype:
-        - value
-      description:
-        = Ratio between update of kvs2 and kvs1. Typical Alfa=4. Limited
-        to 0 - 100
-      direction: in
-      name: Alfa
-  quality:
-    if any of the inputs are BAD (except MPG or kvs 1/2), V= previous and Q=
+  - arity: '1'
+    datatype:
+    - value
+    description: = pressure upstream choke
+    direction: in
+    name: UCP
+  - arity: '1'
+    datatype:
+    - value
+    description: = inlet separator pressure or pressure downstream choke
+    direction: in
+    name: pSEP
+  - arity: '1'
+    datatype:
+    - value
+    description: = choke pos %
+    direction: in
+    name: GIC
+  - arity: '1'
+    datatype:
+    - value
+    description: = Multiphase meter gas flow
+    direction: in
+    name: MPG
+  - arity: '1'
+    datatype:
+    - value
+    description: = Startpoint for pfhi1 curve
+    direction: in
+    name: z1
+  - arity: '1'
+    datatype:
+    - value
+    description: = Startpoint for pfhi2 curve
+    direction: in
+    name: z2
+  - arity: '1'
+    datatype:
+    - value
+    description: = Number of samples with no parameter update before estimate is set
+      BAD
+    direction: in
+    name: NFrysOk
+  - arity: '1'
+    datatype:
+    - value
+    description: = Time constant for adaptation in minutes
+    direction: in
+    name: Tau
+  - arity: '1'
+    datatype:
+    - value
+    description: = Ratio between update of kvs2 and kvs1. Typical Alfa=4. Limited
+      to 0 - 100
+    direction: in
+    name: Alfa
+  quality: if any of the inputs are BAD (except MPG or kvs 1/2), V= previous and Q=
     BAD
   retr: Gas rate estimate
-  signature:
-    gasratechoketau(UCP, pSEP, GIC, MPG, kvs1, kvs2, z1, z2, NFrysOk, Tau,
+  signature: gasratechoketau(UCP, pSEP, GIC, MPG, kvs1, kvs2, z1, z2, NFrysOk, Tau,
     Alfa)
-- detailedDescription:
-    "Gets IterEachN for a DmmyAppl, number of internal iterations<br>\r\
+- detailedDescription: "Gets IterEachN for a DmmyAppl, number of internal iterations<br>\r\
     \n  For use in process simulators to get time step pr iteration using"
   name: getApplIterEachN
   parameters:
-    - arity: "1"
-      datatype:
-        - dmmyappl
-      description: name of DmmyAppl
-      direction: in
-      name: DmmyApplID
+  - arity: '1'
+    datatype:
+    - dmmyappl
+    description: name of DmmyAppl
+    direction: in
+    name: DmmyApplID
   quality: BAD if DmmyApplID is non-existing
   retr: number of iterations
   signature: getApplIterEachN(DmmyApplID)
@@ -1088,8 +1047,7 @@
   quality: GOOD
   retr: day of month, [1-31]
   signature: getDay()
-- detailedDescription:
-    "Gets hour of day, using local settings on server where application\
+- detailedDescription: "Gets hour of day, using local settings on server where application\
     \ is running.\r\n  All details related to time shift summer/wintertime will be\
     \ handled by OS on server"
   name: getHour
@@ -1097,8 +1055,7 @@
   quality: GOOD
   retr: hour of day, [0-23]
   signature: getHour()
-- detailedDescription:
-    "Gets minute whitin current hour, using local settings on server\
+- detailedDescription: "Gets minute whitin current hour, using local settings on server\
     \ where application is running.\r\n  All details related to time shift summer/wintertime\
     \ will be handled by OS on server"
   name: getMinute
@@ -1112,8 +1069,7 @@
   quality: GOOD
   retr: month, [1-12]
   signature: getMonth()
-- detailedDescription:
-    "Gets pAppl->opcWriteTime, time in sec for last OPC write.\
+- detailedDescription: "Gets pAppl->opcWriteTime, time in sec for last OPC write.\
     \ Identical to blue curve in System info plot\r\n  Impl-detail, gets previus sample,\
     \ as current value in not yet calulated"
   name: getOPCwritetime
@@ -1121,8 +1077,7 @@
   quality: GOOD
   retr: pAppl->OPCWriteTime
   signature: getOPCwritetime()
-- detailedDescription:
-    "Gets current second within the minute, using local settings\
+- detailedDescription: "Gets current second within the minute, using local settings\
     \ on server where application is running.\r\n  All details related to time shift\
     \ summer/wintertime will be handled by OS on server"
   name: getSecond
@@ -1130,7 +1085,7 @@
   quality: GOOD
   retr: second within minute, [0-59]
   signature: getSecond()
-- detailedDescription: ""
+- detailedDescription: ''
   name: getUnixtime
   parameters: []
   quality: GOOD
@@ -1142,8 +1097,7 @@
   quality: GOOD
   retr: year (e.g. 2022)
   signature: getYear()
-- detailedDescription:
-    "Gets the time in secs for last step. Includes all activities\
+- detailedDescription: "Gets the time in secs for last step. Includes all activities\
     \ in the step.\r\n  Identical to info in System info plot Impl-detail, gets previous\
     \ sample, as current value\r\n  if not yet calulated"
   name: getappldeltatime
@@ -1154,30 +1108,28 @@
 - detailedDescription: Gets the desired mode for the application with the given id
   name: getappldesmode
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Application of id for application to check
-      direction: in
-      name: applID
+  - arity: '1'
+    datatype:
+    - value
+    description: Application of id for application to check
+    direction: in
+    name: applID
   quality: GOOD if valid applID else BAD
-  retr:
-    "Interger representing desired mode: 0: STOPPED, 1: TRACKING, 2: ADVISORY,
-    3: ACTIVE"
+  retr: 'Interger representing desired mode: 0: STOPPED, 1: TRACKING, 2: ADVISORY,
+    3: ACTIVE'
   signature: getappldesmode(applID)
 - detailedDescription: Gets the final status for the application with the given id
   name: getapplfinalstatus
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Application id of application to check
-      direction: in
-      name: applID
+  - arity: '1'
+    datatype:
+    - value
+    description: Application id of application to check
+    direction: in
+    name: applID
   quality: GOOD if valid applID else BAD
-  retr:
-    "Interger representing final status: 0: STOPPED, 1: TRACKING, 2: ADVISORY,
-    3: ACTIVE"
+  retr: 'Interger representing final status: 0: STOPPED, 1: TRACKING, 2: ADVISORY,
+    3: ACTIVE'
   signature: getapplfinalstatus(applID)
 - detailedDescription: Get the system sample counter pAppl->N
   name: getappln
@@ -1191,60 +1143,58 @@
   quality: GOOD
   retr: Number of seconds per sample
   signature: getapplnsecs()
-- detailedDescription:
-    Computes the sum of Mvr and Cvr use factor weight for application
+- detailedDescription: Computes the sum of Mvr and Cvr use factor weight for application
     with given id.
   name: getapplufwsum
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Apllication id
-      direction: in
-      name: applID
+  - arity: '1'
+    datatype:
+    - value
+    description: Apllication id
+    direction: in
+    name: applID
   quality: GOOD if valid applID
   retr: Sum of Mvr and Cvr use factor weight
   signature: getapplufwsum(applID)
 - detailedDescription: Gets the use factor for the application with the given id
   name: getapplusefactor
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Application id
-      direction: in
-      name: applID
+  - arity: '1'
+    datatype:
+    - value
+    description: Application id
+    direction: in
+    name: applID
   quality: GOOD if valid applid
   retr: Use factor for application
   signature: getapplusefactor(applID)
 - detailedDescription: Get current bias value for given cvr
   name: getbias
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
   quality: GOOD
-  retr: "Current bias value: Cvr.Bias"
+  retr: 'Current bias value: Cvr.Bias'
   signature: getbias(cvr)
 - detailedDescription: Gets the final status of the given Xvr
   name: getfinalstatus
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-      description: Xvr
-      direction: in
-      name: xvr
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    description: Xvr
+    direction: in
+    name: xvr
   quality: GOOD if valid xvr otherwise BAD
-  retr: "Final status: 0/1/2/3 for STOPPED/TRACKING/ADVISORY/ACTIVE"
+  retr: 'Final status: 0/1/2/3 for STOPPED/TRACKING/ADVISORY/ACTIVE'
   signature: getfinalstatus(xvr)
-- detailedDescription:
-    "Gets the history from buffer. Computes the average over the\
+- detailedDescription: "Gets the history from buffer. Computes the average over the\
     \ buffer starting on the given point back and until\r\n  the specified number\
     \ of samples\r\n\r\n  CalcPvr: T1MA     Alg= gethist(T1,10,5)\r\n  CalcPvr: T1SPMA\
     \   Alg= gethist(T1.SetPnt,10)\r\n\r\n  T1MA will get the 5-samples average for\
@@ -1253,312 +1203,302 @@
     \ is an Xvr without SetPnt member (not Cvr), T1SPMA will get the T1.Meas."
   name: gethist
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-        - evr
-        - tvr
-      description: Xvr or Xvr buffered member (Cvr.SetPnt etc.)
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of samples back in time from current sample
-      direction: in
-      name: nback
-    - arity: "?"
-      datatype:
-        - value
-      description: Number of samples to average up to Nback
-      direction: in
-      name: navg
-  quality:
-    GOOD if valid Xvr (Optionally member variable) and all samples GOOD, otherwise
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    - evr
+    - tvr
+    description: Xvr or Xvr buffered member (Cvr.SetPnt etc.)
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples back in time from current sample
+    direction: in
+    name: nback
+  - arity: '?'
+    datatype:
+    - value
+    description: Number of samples to average up to Nback
+    direction: in
+    name: navg
+  quality: GOOD if valid Xvr (Optionally member variable) and all samples GOOD, otherwise
     BAD
   retr: Average over given time horizon, 0 if quality BAD
   signature: gethist(xvr, nback, navg?)
 - detailedDescription: Gets the mode of the given Xvr
   name: getmode
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-      description: Xvr
-      direction: in
-      name: xvr
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    description: Xvr
+    direction: in
+    name: xvr
   quality: GOOD if valid xvr otherwise BAD
-  retr: "Mode: 0/1/2/3 for STOPPED/TRACKING/ADVISORY/ACTIVE"
+  retr: 'Mode: 0/1/2/3 for STOPPED/TRACKING/ADVISORY/ACTIVE'
   signature: getmode(xvr)
-- detailedDescription:
-    "Get the calculated MPC steady state for given Xvr. Value reflects\
+- detailedDescription: "Get the calculated MPC steady state for given Xvr. Value reflects\
     \ correct value at current sample only when\r\n  Xvr.FinalStatus >= ADVISORY"
   name: getssval
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-      description: Xvr
-      direction: in
-      name: xvr
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    description: Xvr
+    direction: in
+    name: xvr
   quality: GOOD
-  retr: "Steady state value for Xvr: Xvr.SSval"
+  retr: 'Steady state value for Xvr: Xvr.SSval'
   signature: getssval(xvr)
 - detailedDescription: Get WindUp status for mvr
   name: getwindup
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr
-      direction: in
-      name: mvr
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr
+    direction: in
+    name: mvr
   quality: GOOD if valid mvr otherwise BAD
-  retr:
-    "Status of windup: 0: No Mvr windup, 1: Mvr in windup low, 2: Mvr in windup
-    high, 3: Mvr in windup high and low"
+  retr: 'Status of windup: 0: No Mvr windup, 1: Mvr in windup low, 2: Mvr in windup
+    high, 3: Mvr in windup high and low'
   signature: getwindup(mvr)
 - detailedDescription: Check if quality of given value is GOOD
   name: good
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: quality(x)
   retr: 1 if quality is GOOD, 0 otherwise
   signature: good(x)
-- detailedDescription:
-    Sets the desired mode for Cvr.High. If MODE is not exactly
+- detailedDescription: Sets the desired mode for Cvr.High. If MODE is not exactly
     0 or 1, no action is performed
   name: highon
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Desired Mode (1/0 for ON/OFF)
-      direction: in
-      name: mode
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Desired Mode (1/0 for ON/OFF)
+    direction: in
+    name: mode
   quality: GOOD if valid xvr and value otherwise BAD
   retr: Resulting Mode
   signature: highon(cvr, mode)
 - detailedDescription: Computes liquid entalpy of petroleum fraction in MJ/T
   name: hliq
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Liquid temperature in C
-      direction: in
-      name: temp
-    - arity: "1"
-      datatype:
-        - value
-      description: Liquid density in kg/m3
-      direction: in
-      name: density
-    - arity: "1"
-      datatype:
-        - value
-      description: Watson-K factor
-      direction: in
-      name: wk
+  - arity: '1'
+    datatype:
+    - value
+    description: Liquid temperature in C
+    direction: in
+    name: temp
+  - arity: '1'
+    datatype:
+    - value
+    description: Liquid density in kg/m3
+    direction: in
+    name: density
+  - arity: '1'
+    datatype:
+    - value
+    description: Watson-K factor
+    direction: in
+    name: wk
   quality: GOOD if input GOOD
   retr: Liquid entaphi in MJ/T
   signature: hliq(temp, density, wk)
 - detailedDescription: Calculates vapor entalpy of petroleum fraction in MJ/T
   name: hvap
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Vapor temperature in C
-      direction: in
-      name: temp
-    - arity: "1"
-      datatype:
-        - value
-      description: Vapor density in kg/m3
-      direction: in
-      name: density
-    - arity: "1"
-      datatype:
-        - value
-      description: Watson-K factor
-      direction: in
-      name: wk
+  - arity: '1'
+    datatype:
+    - value
+    description: Vapor temperature in C
+    direction: in
+    name: temp
+  - arity: '1'
+    datatype:
+    - value
+    description: Vapor density in kg/m3
+    direction: in
+    name: density
+  - arity: '1'
+    datatype:
+    - value
+    description: Watson-K factor
+    direction: in
+    name: wk
   quality: GOOD if input GOOD
   retr: Vapor entalpy in MJ/T
   signature: hvap(temp, density, wk)
-- detailedDescription:
-    "Computes the specific enthalpy of saturated or superheated\
+- detailedDescription: "Computes the specific enthalpy of saturated or superheated\
     \ steam in a stream from its temperature and the\r\n  total stream pressure."
   name: hvapw
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Temperature in C
-      direction: in
-      name: temp
-    - arity: "1"
-      datatype:
-        - value
-      description: Pressure in barg
-      direction: in
-      name: pressure
+  - arity: '1'
+    datatype:
+    - value
+    description: Temperature in C
+    direction: in
+    name: temp
+  - arity: '1'
+    datatype:
+    - value
+    description: Pressure in barg
+    direction: in
+    name: pressure
   quality: GOOD if all inputs GOOD
   retr: Specific enthalpy in MJ/T
   signature: hvapw(temp, pressure)
 - detailedDescription: Calculate flash of a mix
   name: ibpmix
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Constant in equation, nominal 0.4
-      direction: in
-      name: kk1
-    - arity: "1"
-      datatype:
-        - value
-      description: Constant in equation, nominal 1.0
-      direction: in
-      name: kk2
-    - arity: "1"
-      datatype:
-        - value
-      description: Constant in equation, nominal 175
-      direction: in
-      name: kk3
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of volumes
-      direction: in
-      name: ns
-    - arity: $ns
-      datatype:
-        - value
-      description: Volume of volume n
-      direction: in
-      name: volN
-    - arity: $ns
-      datatype:
-        - value
-      description: Quality of volume n
-      direction: in
-      name: qualN
+  - arity: '1'
+    datatype:
+    - value
+    description: Constant in equation, nominal 0.4
+    direction: in
+    name: kk1
+  - arity: '1'
+    datatype:
+    - value
+    description: Constant in equation, nominal 1.0
+    direction: in
+    name: kk2
+  - arity: '1'
+    datatype:
+    - value
+    description: Constant in equation, nominal 175
+    direction: in
+    name: kk3
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of volumes
+    direction: in
+    name: ns
+  - arity: $ns
+    datatype:
+    - value
+    description: Volume of volume n
+    direction: in
+    name: volN
+  - arity: $ns
+    datatype:
+    - value
+    description: Quality of volume n
+    direction: in
+    name: qualN
   quality: GOOD if all supplied parameters are GOOD
   retr: Calculated quality of mix, 0 if sum of volumes = 0
   signature: ibpmix(kk1, kk2, kk3, ns, vol1, qual1, ..., volN, qualN)
-- detailedDescription:
-    Evaluates the condition and perform the corresponding conditional
+- detailedDescription: Evaluates the condition and perform the corresponding conditional
     expression
   name: if
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Condition to evaluate
-      direction: in
-      name: condition
-    - arity: "1"
-      datatype:
-        - value
-      description: Expression to evaluate when condition is true
-      direction: in
-      name: trueExpr
-    - arity: "1"
-      datatype:
-        - value
-      description: Expression to evaluate when condition is false
-      direction: in
-      name: falseExpr
-    - arity: "?"
-      datatype:
-        - value
-      description: Flag for debugging of calc
-      direction: in
-      name: debug
+  - arity: '1'
+    datatype:
+    - value
+    description: Condition to evaluate
+    direction: in
+    name: condition
+  - arity: '1'
+    datatype:
+    - value
+    description: Expression to evaluate when condition is true
+    direction: in
+    name: trueExpr
+  - arity: '1'
+    datatype:
+    - value
+    description: Expression to evaluate when condition is false
+    direction: in
+    name: falseExpr
+  - arity: '?'
+    datatype:
+    - value
+    description: Flag for debugging of calc
+    direction: in
+    name: debug
   quality: Quality of selected expression
-  retr:
-    "Value of evaluated expression according to condition: condition ? trueExpr
-    : falseExpr"
+  retr: 'Value of evaluated expression according to condition: condition ? trueExpr
+    : falseExpr'
   signature: if(condition, trueExpr, falseExpr, debug?)
-- detailedDescription:
-    "Function calculates y by linear interpolation of the X,Y pairs.\r\
+- detailedDescription: "Function calculates y by linear interpolation of the X,Y pairs.\r\
     \n  Assumes that the sequence of X1, X2, ..., XN values are monotonically increasing.<br>"
   name: intpoltype1
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Actual x-value
-      direction: in
-      name: x
-    - arity: +
-      datatype:
-        - value
-      description: X-values. Assumed to be monotonically increasing
-      direction: in
-      name: Xn
-    - arity: =Xn
-      datatype:
-        - value
-      description: Y-values corresponding to X-values
-      direction: in
-      name: Yn
+  - arity: '1'
+    datatype:
+    - value
+    description: Actual x-value
+    direction: in
+    name: x
+  - arity: +
+    datatype:
+    - value
+    description: X-values. Assumed to be monotonically increasing
+    direction: in
+    name: Xn
+  - arity: =Xn
+    datatype:
+    - value
+    description: Y-values corresponding to X-values
+    direction: in
+    name: Yn
   quality: GOOD only if ALL arguments are GOOD and  else BAD
   retr: Interpolated value. 0 when quality=BAD, Y1 when x <= X1, YN when x >= XN
   signature: intpoltype1(x, X1, Y1, X2, Y2, ..., XN, YN)
 - detailedDescription: Check for equality for multiple values
   name: isequal
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to test for equality for againts xN
-      direction: in
-      name: x
-    - arity: +
-      datatype:
-        - value
-      description: Values to be tested againts
-      direction: in
-      name: xN
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to test for equality for againts xN
+    direction: in
+    name: x
+  - arity: +
+    datatype:
+    - value
+    description: Values to be tested againts
+    direction: in
+    name: xN
   quality: GOOD
-  retr: "Evaluated equalities: 1 if at least one equal x, 0 otherwise"
+  retr: 'Evaluated equalities: 1 if at least one equal x, 0 otherwise'
   signature: isequal(x, x1, ..., xN)
-- detailedDescription:
-    Check if quality of given value is GOOD. Returned Quality is
+- detailedDescription: Check if quality of given value is GOOD. Returned Quality is
     always GOOD
   name: isgood
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: GOOD
   retr: 1 if quality is GOOD, 0 otherwise
   signature: isgood(x)
-- detailedDescription:
-    "Perform checks for validity of SAMPLETVR, high limit, low\
+- detailedDescription: "Perform checks for validity of SAMPLETVR, high limit, low\
     \ limit etc.\r\n  The calc reports accepted and rejected sampled to the file 'labupdates.log'.\r\
     \n  Also, it searches for an Xvr for reporting of rejected samples. First it searches\r\
     \n  for Xvr with name of CalcModl+\"_LABREJECT\", if not found it searches for\
@@ -1567,208 +1507,201 @@
     \ ie loops on 100.  This can be used for alarm/info."
   name: labupdt
   parameters:
-    - arity: "1"
-      datatype:
-        - tvr
-      description: Tvr to perform validation of
-      direction: in
-      name: sampletvr
-    - arity: "?"
-      datatype:
-        - value
-      description: Description
-      direction: in
-      name: model
-    - arity: "?"
-      datatype:
-        - value
-      description: Acceptable standard deviation for samples
-      direction: in
-      name: stddev
+  - arity: '1'
+    datatype:
+    - tvr
+    description: Tvr to perform validation of
+    direction: in
+    name: sampletvr
+  - arity: '?'
+    datatype:
+    - value
+    description: Description
+    direction: in
+    name: model
+  - arity: '?'
+    datatype:
+    - value
+    description: Acceptable standard deviation for samples
+    direction: in
+    name: stddev
   quality: Something ???
   retr: Something ???
   signature: labupdt(sampletvr, model?, stddev?)
-- detailedDescription:
-    Perform a linear mix of the given input streams, where each
+- detailedDescription: Perform a linear mix of the given input streams, where each
     stream is given with volume and quality/property.
   name: linmix
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of streams
-      direction: in
-      name: ns
-    - arity: $ns
-      datatype:
-        - value
-      description: Volume of stream n
-      direction: in
-      name: volN
-    - arity: $ns
-      datatype:
-        - value
-      description: Quality of stream n
-      direction: in
-      name: qualN
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of streams
+    direction: in
+    name: ns
+  - arity: $ns
+    datatype:
+    - value
+    description: Volume of stream n
+    direction: in
+    name: volN
+  - arity: $ns
+    datatype:
+    - value
+    description: Quality of stream n
+    direction: in
+    name: qualN
   quality: GOOD if all supplied parameters are GOOD
   retr: Calculated quality of mix, 0 if sum of volumes = 0
   signature: linmix(ns, vol1, qual1, ..., volN, qualN)
 - detailedDescription: Calculate flash of a mix
   name: linmix
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of volumes
-      direction: in
-      name: ns
-    - arity: $ns
-      datatype:
-        - value
-      description: Volume of volume n
-      direction: in
-      name: volN
-    - arity: $ns
-      datatype:
-        - value
-      description: Quality of volume n
-      direction: in
-      name: qualN
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of volumes
+    direction: in
+    name: ns
+  - arity: $ns
+    datatype:
+    - value
+    description: Volume of volume n
+    direction: in
+    name: volN
+  - arity: $ns
+    datatype:
+    - value
+    description: Quality of volume n
+    direction: in
+    name: qualN
   quality: GOOD if all supplied parameters are GOOD
   retr: Calculated quality of mix, 0 if sum of volumes = 0
   signature: linmix(ns, vol1, qual1, ..., volN, qualN)
 - detailedDescription: Computes the natural logarithm of x
   name: ln
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: quality(x) if x>0 else bad
-  retr: "The natural logarithm for input: if x>0: ln(x) else -99-9e9"
+  retr: 'The natural logarithm for input: if x>0: ln(x) else -99-9e9'
   signature: ln(x)
-- detailedDescription:
-    "Use when a High Limit should have a fixed value set by the\
+- detailedDescription: "Use when a High Limit should have a fixed value set by the\
     \ engineer, or set by calculation\r\n  When the limit is locked, the Operator\
     \ will not be able to change the value from RUI. The locked value\r\n  will have\
     \ indication in MPC table and other GUI elements. Intended for Mvr and CVR, lock\
     \ High Limit from Operator\r\n  changes<br>"
   name: lockHL
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: "- Lock value. 0 to unlock, all others lock"
-      direction: in
-      name: OnOff
+  - arity: '1'
+    datatype:
+    - value
+    description: '- Lock value. 0 to unlock, all others lock'
+    direction: in
+    name: OnOff
   quality: GOOD if valid xvr, BAD if MVRCVR tag is invalid
   retr: State of lock - 0 if unlocked, 1 if locked
   signature: lockHL(MVRCVRTAG,OnOff)
-- detailedDescription:
-    "Lock iv for mvr from operator changes\r\n  Use when a IV should\
+- detailedDescription: "Lock iv for mvr from operator changes\r\n  Use when a IV should\
     \ have a fixed value set by the engineer, or set by calculation\r\n  When the\
     \ limit is locked, the Operator will not be able to change the value from RUI.\
     \ The locked value\r\n  will have indication in MPC table and other GUI elements."
   name: lockiv
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr to lock
-      direction: in
-      name: mvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Lock value. 0 to unlock, all others lock
-      direction: in
-      name: lock
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr to lock
+    direction: in
+    name: mvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Lock value. 0 to unlock, all others lock
+    direction: in
+    name: lock
   quality: GOOD if valid xvr
   retr: State of lock, 0 if unlocked, 1 if locked
   signature: lockiv(mvr, lock)
-- detailedDescription:
-    "Lock low limit for mvr and cvr from operator changes.\r\n\
+- detailedDescription: "Lock low limit for mvr and cvr from operator changes.\r\n\
     \  Use when a Low Limit should have a fixed value set by the engineer, or set\
     \ by calculation\r\n  When the limit is locked, the Operator will not be able\
     \ to change the value from RUI. The locked value\r\n  will have indication in\
     \ MPC table and other GUI elements."
   name: lockll
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-      description: Xvr to lock
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Lock value. 0 to unlock, all others lock
-      direction: in
-      name: lock
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    description: Xvr to lock
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Lock value. 0 to unlock, all others lock
+    direction: in
+    name: lock
   quality: GOOD if valid xvr
   retr: State of lock, 0 if unlocked, 1 if locked
   signature: lockll(xvr, lock)
-- detailedDescription:
-    "Lock sp for cvr from operator changes\r\n  Use when a SP should\
+- detailedDescription: "Lock sp for cvr from operator changes\r\n  Use when a SP should\
     \ have a fixed value set by the engineer, or set by calculation\r\n  When the\
     \ limit is locked, the Operator will not be able to change the value from RUI.\
     \ The locked value\r\n  will have indication in MPC table and other GUI elements."
   name: locksp
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Xvr to lock
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Lock value. 0 to unlock, all others lock
-      direction: in
-      name: lock
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Xvr to lock
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Lock value. 0 to unlock, all others lock
+    direction: in
+    name: lock
   quality: GOOD if valid xvr
   retr: State of lock, 0 if unlocked, 1 if locked
   signature: locksp(cvr, lock)
 - detailedDescription: Computes the logarithm with base 10
   name: log10
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: BAD if quality(x) = BAD or x <= 0
   retr: Logarithm with base 10 of input. -99.0e9 if x<=0 else log10(x)
   signature: log10(x)
-- detailedDescription:
-    Sets the desired mode for Cvr.Low. If MODE is not exactly 0
+- detailedDescription: Sets the desired mode for Cvr.Low. If MODE is not exactly 0
     or 1, no action is performed
   name: lowon
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Desired Mode (1/0 for ON/OFF)
-      direction: in
-      name: mode
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Desired Mode (1/0 for ON/OFF)
+    direction: in
+    name: mode
   quality: GOOD if valid xvr and value otherwise BAD
   retr: Resulting Mode
   signature: lowon(cvr, mode)
-- detailedDescription:
-    "LPOPT maximises the objective function defined by the MV coefficients\r\
+- detailedDescription: "LPOPT maximises the objective function defined by the MV coefficients\r\
     \n    OBJF = OBJFCOEFF_MVR1*MVR1 + ... + OBJFCOEFF_MVRnmv*MVRnmv\r\n  while respecting\
     \ the upper and lower limits for the Mvrs/Dvrs (input variables) and for the Cvrs\
     \ (output variables).\r\n  LPOPT reads upper/lower limits for Mvrs and Cvrs (if\
@@ -1782,18 +1715,18 @@
     \ the optimal results will be written to Meas of those\r\n  variables."
   name: lpopt
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: "- number of cvs"
-      direction: in
-      name: ncv
-    - arity: "1"
-      datatype:
-        - value
-      description: "- number of mvs"
-      direction: in
-      name: nmv
+  - arity: '1'
+    datatype:
+    - value
+    description: '- number of cvs'
+    direction: in
+    name: ncv
+  - arity: '1'
+    datatype:
+    - value
+    description: '- number of mvs'
+    direction: in
+    name: nmv
   quality: GOOD if calculations are ok, else BAD
   retr: optimal function value if calculations are ok, else 0
   signature: lpopt(ncv,nmv,CVRTAG1,....,CVRTAGncv,MVRTAG1,....,MVRTAGnmv,OBJFCOEFF_MVR1,...,OBJFCOEFF_MVRnmv)
@@ -1801,550 +1734,537 @@
   name: lsqfit
   parameters: []
   quality: GOOD
-  retr:
-    least square fit - the gain between the MV and the CV based on the past N
+  retr: least square fit - the gain between the MV and the CV based on the past N
     samples
   signature: lsqfit(u,y,nsamp)
 - detailedDescription: Selects the maximum value of the provided values
   name: max
   parameters:
-    - arity: +
-      datatype:
-        - value
-      description: Values to select
-      direction: in
-      name: x
+  - arity: +
+    datatype:
+    - value
+    description: Values to select
+    direction: in
+    name: x
   quality: GOOD only if all inputs are GOOD
   retr: Maximum value from input list max(x1, x2, ...)
   signature: max(x...)
 - detailedDescription: Selects the max of the values vN that has useN set to 1
   name: maxselection
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of values
-      direction: in
-      name: n
-    - arity: $n
-      datatype:
-        - value
-      description: Values to select from
-      direction: in
-      name: vN
-    - arity: $n
-      datatype:
-        - value
-      description: Indicator if corresponding value should be considered
-      direction: in
-      name: useN
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of values
+    direction: in
+    name: n
+  - arity: $n
+    datatype:
+    - value
+    description: Values to select from
+    direction: in
+    name: vN
+  - arity: $n
+    datatype:
+    - value
+    description: Indicator if corresponding value should be considered
+    direction: in
+    name: useN
   quality: GOOD only if ALL useN are GOOD and all vN to be used are GOOD
   retr: Maximum value vN with corresponding useN set to 1
   signature: maxselection(n, v1, v2, ..., vN, use1, use2, ..., useN)
 - detailedDescription: Computes the mean value of all GOOD inputs in calc
   name: mean
   parameters:
-    - arity: +
-      datatype:
-        - value
-      description: Values
-      direction: in
-      name: xN
+  - arity: +
+    datatype:
+    - value
+    description: Values
+    direction: in
+    name: xN
   quality: GOOD if at least one input is GOOD
   retr: Mean of all GOOD inputs
   signature: mean(x1, x2, ..., xN)
 - detailedDescription: Select the minimum value from the provided input
   name: min
   parameters:
-    - arity: +
-      datatype:
-        - value
-      description: Values to select
-      direction: in
-      name: x
+  - arity: +
+    datatype:
+    - value
+    description: Values to select
+    direction: in
+    name: x
   quality: GOOD only if ALL inputs are GOOD
   retr: Minimum value from provided input min(x1, x2, ...)
   signature: min(x...)
 - detailedDescription: Selects the max of the values vN that has useN set to 1
   name: minselection
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of values
-      direction: in
-      name: n
-    - arity: $n
-      datatype:
-        - value
-      description: Values to select from
-      direction: in
-      name: vN
-    - arity: $n
-      datatype:
-        - value
-      description: Indicator if corresponding value should be considered
-      direction: in
-      name: useN
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of values
+    direction: in
+    name: n
+  - arity: $n
+    datatype:
+    - value
+    description: Values to select from
+    direction: in
+    name: vN
+  - arity: $n
+    datatype:
+    - value
+    description: Indicator if corresponding value should be considered
+    direction: in
+    name: useN
   quality: GOOD only if ALL useN are GOOD and all vN to be used are GOOD
   retr: Minimum value vN with corresponding useN set to 1
   signature: minselection(n, v1, v2, ..., vN, use1, use2, ..., useN)
-- detailedDescription:
-    "Lower all Xvr.Mode to TRACKING if not sufficiently many of\
+- detailedDescription: "Lower all Xvr.Mode to TRACKING if not sufficiently many of\
     \ them are ACTIVE. Typical use is to assure at least\r\n  minimum number of Mvrs\
     \ ACTIVE to run SmpcAppl"
   name: modechk
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Required number of active Xvrs
-      direction: in
-      name: numMinActive
-    - arity: +
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-      description: Xvrs to check and update mode
-      direction: in,out
-      name: xvrN
+  - arity: '1'
+    datatype:
+    - value
+    description: Required number of active Xvrs
+    direction: in
+    name: numMinActive
+  - arity: +
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    description: Xvrs to check and update mode
+    direction: in,out
+    name: xvrN
   quality: GOOD if number of active >= numMinActive
   retr: Number of active Xvrs
   signature: modechk(numMinActive, xvr1, xvr2, ..., xvrN)
-- detailedDescription:
-    "Set the gain modifier in the active experimental model. Cvr\
+- detailedDescription: "Set the gain modifier in the active experimental model. Cvr\
     \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl"
   name: modgain
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - mvr
-        - dvr
-      description: Mvr or Dvr
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Gain modifier to be used
-      direction: in
-      name: gain
-    - arity: "1"
-      datatype:
-        - value
-      description: Flag for allowing update (1)
-      direction: in
-      name: apply
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - mvr
+    - dvr
+    description: Mvr or Dvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Gain modifier to be used
+    direction: in
+    name: gain
+  - arity: '1'
+    datatype:
+    - value
+    description: Flag for allowing update (1)
+    direction: in
+    name: apply
   quality: GOOD if valid model between cvr and xvr
   retr: Steady state gain from xvr towards cvr, if valid model else 0
   signature: modgain(cvr, xvr, gain, apply)
-- detailedDescription:
-    "Get the steady state gain from the active experimental model,\
+- detailedDescription: "Get the steady state gain from the active experimental model,\
     \ including the scaling by\r\n  the gain modifier (Scale) set by CalcModSet. Cvr\
     \ and Mvr/Dvr needs to be contained in same SmpcAppl"
   name: modget
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - mvr
-        - dvr
-      description: Mvr or Dvr
-      direction: in
-      name: xvr
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - mvr
+    - dvr
+    description: Mvr or Dvr
+    direction: in
+    name: xvr
   quality: GOOD if valid model between cvr and xvr
   retr: Steady state gain from xvr towards cvr if valid model, else 0
   signature: modget(cvr, xvr)
-- detailedDescription:
-    "Set the gain modifier in the active experimental model. Cvr\
+- detailedDescription: "Set the gain modifier in the active experimental model. Cvr\
     \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl"
   name: modsched
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - mvr
-        - dvr
-      description: Mvr or Dvr
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Gain modifier to be used
-      direction: in
-      name: gain
-    - arity: "1"
-      datatype:
-        - value
-      description: First order time lag for model
-      direction: in
-      name: lag1
-    - arity: "1"
-      datatype:
-        - value
-      description: Second order time lag for model
-      direction: in
-      name: lag2
-    - arity: "1"
-      datatype:
-        - value
-      description: Something ???
-      direction: in
-      name: lead1
-    - arity: "1"
-      datatype:
-        - value
-      description: Delay ???
-      direction: in
-      name: delay
-    - arity: "1"
-      datatype:
-        - value
-      description: Flag for allowing update (1)
-      direction: in
-      name: apply
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - mvr
+    - dvr
+    description: Mvr or Dvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Gain modifier to be used
+    direction: in
+    name: gain
+  - arity: '1'
+    datatype:
+    - value
+    description: First order time lag for model
+    direction: in
+    name: lag1
+  - arity: '1'
+    datatype:
+    - value
+    description: Second order time lag for model
+    direction: in
+    name: lag2
+  - arity: '1'
+    datatype:
+    - value
+    description: Something ???
+    direction: in
+    name: lead1
+  - arity: '1'
+    datatype:
+    - value
+    description: Delay ???
+    direction: in
+    name: delay
+  - arity: '1'
+    datatype:
+    - value
+    description: Flag for allowing update (1)
+    direction: in
+    name: apply
   quality: GOOD if valid model between cvr and xvr
   retr: Update the model between given cvr and xvr
   signature: modsched(cvr, xvr, gain, lag1, lag2, lead1, delay, apply)
-- detailedDescription:
-    "Set the gain modifier in the active experimental model. Cvr\
+- detailedDescription: "Set the gain modifier in the active experimental model. Cvr\
     \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl"
   name: modset
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - mvr
-        - dvr
-      description: Mvr or Dvr
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Gain modifier to be used
-      direction: in
-      name: gain
-    - arity: "1"
-      datatype:
-        - value
-      description: Flag for allowing update (1)
-      direction: in
-      name: apply
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - mvr
+    - dvr
+    description: Mvr or Dvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Gain modifier to be used
+    direction: in
+    name: gain
+  - arity: '1'
+    datatype:
+    - value
+    description: Flag for allowing update (1)
+    direction: in
+    name: apply
   quality: GOOD if valid model between cvr and xvr
   retr: Steady state gain from xvr towards cvr. if valid model else 0
   signature: modset(cvr, xvr, gain, apply)
 - detailedDescription: Computes the moving average over a time horizon
   name: moveavg
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-        - evr
-        - tvr
-      description: Xvr or Xvr buffered member (Cvr.SetPnt etc.)
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of samples to include
-      direction: in
-      name: nsamp
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    - evr
+    - tvr
+    description: Xvr or Xvr buffered member (Cvr.SetPnt etc.)
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples to include
+    direction: in
+    name: nsamp
   quality: GOOD if valid Xvr (Optionally member variable), otherwise BAD
   retr: Moving average over given time horizon
   signature: moveavg(xvr, nsamp)
 - detailedDescription: Computes the moving standard deviation over a time horizon
   name: movestd
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-        - evr
-        - tvr
-      description: Xvr or Xvr buffered member (Cvr.SetPnt etc.)
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of samples to include
-      direction: in
-      name: nsamp
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    - evr
+    - tvr
+    description: Xvr or Xvr buffered member (Cvr.SetPnt etc.)
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples to include
+    direction: in
+    name: nsamp
   quality: GOOD if valid Xvr (Optionally member variable), otherwise BAD
   retr: Moving standard deviation over given time horizon, 0 if quality BAD
   signature: movestd(xvr, nsamp)
-- detailedDescription:
-    "Gets the calculated Mvr from an SmpcAppl.\r\n  Mvr.Mode ==\
+- detailedDescription: "Gets the calculated Mvr from an SmpcAppl.\r\n  Mvr.Mode ==\
     \ ACTIVE -> Mvr.mget(pAppl->N+1) else Mvr.Meas(pAppl->N)"
   name: mvmget
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr
-      direction: in
-      name: mvr
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr
+    direction: in
+    name: mvr
   quality: GOOD if valid mvr otherwise BAD
-  retr: "Calculated Mvr: Mvr.Mode == ACTIVE -> Mvr.mget(pAppl->N+1) else Mvr.Meas(pAppl->N)"
+  retr: 'Calculated Mvr: Mvr.Mode == ACTIVE -> Mvr.mget(pAppl->N+1) else Mvr.Meas(pAppl->N)'
   signature: mvmget(mvr)
-- detailedDescription:
-    "Get dynamic dynamic end prediction (Npred) of Mvr from an\
+- detailedDescription: "Get dynamic dynamic end prediction (Npred) of Mvr from an\
     \ SmpcAppl. Limitations: For MVR only. Tested only\r\n  for Mvr in SmpcAppl."
   name: mvpred
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: MVR
-      direction: in
-      name: TAG
+  - arity: '1'
+    datatype:
+    - value
+    description: MVR
+    direction: in
+    name: TAG
   quality: GOOD if TAG found and MVR
-  retr:
-    Dynamic dynamic end prediction (Npred). if Mvr.Mode >= ADVISORY, V = Mvr.mget(pAppl->Npred)
+  retr: Dynamic dynamic end prediction (Npred). if Mvr.Mode >= ADVISORY, V = Mvr.mget(pAppl->Npred)
     else V =
   signature: mvpred(TAG)
 - detailedDescription: Changes sign
   name: neg
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: quality(x)
   retr: -x, 0 if x missing
   signature: neg(x)
 - detailedDescription: Computes the logical not operation on the given input
   name: not
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Logical expression to evaluate
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Logical expression to evaluate
+    direction: in
+    name: x
   quality: quality(x)
-  retr: "Evaluated logical elements: not(x)"
+  retr: 'Evaluated logical elements: not(x)'
   signature: not(x)
 - detailedDescription: Checks if at least one of provided arguments have quality GOOD
   name: ok
   parameters:
-    - arity: +
-      datatype:
-        - value
-      description: Arguments to check quality
-      direction: in
-      name: argN
+  - arity: +
+    datatype:
+    - value
+    description: Arguments to check quality
+    direction: in
+    name: argN
   quality: GOOD if at least one GOOD argument else BAD
   retr: Value of first GOOD argument
   signature: ok(arg1, arg2, ..., argN)
 - detailedDescription: Computes the logical or operation on all the provided elements
   name: or
   parameters:
-    - arity: +
-      datatype:
-        - value
-      description: Logical elements
-      direction: in
-      name: elemN
+  - arity: +
+    datatype:
+    - value
+    description: Logical elements
+    direction: in
+    name: elemN
   quality: GOOD only if all arguments are GOOD
-  retr: "Evaluated logical elements: 1 if true, 0 if false"
+  retr: 'Evaluated logical elements: 1 if true, 0 if false'
   signature: or(elem1, ..., elemN)
 - detailedDescription: Computes petroleum fraction molecular weight
   name: pfmw
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Petroleum fraction density in kg/m3
-      direction: in
-      name: density
-    - arity: "1"
-      datatype:
-        - value
-      description: Watson-K factor
-      direction: in
-      name: wk
+  - arity: '1'
+    datatype:
+    - value
+    description: Petroleum fraction density in kg/m3
+    direction: in
+    name: density
+  - arity: '1'
+    datatype:
+    - value
+    description: Watson-K factor
+    direction: in
+    name: wk
   quality: GOOD if input GOOD
   retr: Molecular weight
   signature: pfmw(density, wk)
 - detailedDescription: PI controller
   name: picon
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: "- controller gain"
-      direction: in
-      name: KP
-    - arity: "1"
-      datatype:
-        - value
-      description: "- controller integral time [min]"
-      direction: in
-      name: TI
-    - arity: "1"
-      datatype:
-        - value
-      description: "- set point"
-      direction: in
-      name: SP
-    - arity: "1"
-      datatype:
-        - value
-      description: "- measurement"
-      direction: in
-      name: Y
-    - arity: "1"
-      datatype:
-        - value
-      description: "- last input"
-      direction: in
-      name: U
-    - arity: "1"
-      datatype:
-        - value
-      description: "- minimum u"
-      direction: in
-      name: UMIN
-    - arity: "1"
-      datatype:
-        - value
-      description: "- maximum u"
-      direction: in
-      name: UMAX
-    - arity: "1"
-      datatype:
-        - value
-      description: "- 0=manual, 1=auto"
-      direction: in
-      name: AUTO
-    - arity: "1"
-      datatype:
-        - value
-      description: "- 1=reverse acting, 0=direct acting"
-      direction: in
-      name: REVACT
+  - arity: '1'
+    datatype:
+    - value
+    description: '- controller gain'
+    direction: in
+    name: KP
+  - arity: '1'
+    datatype:
+    - value
+    description: '- controller integral time [min]'
+    direction: in
+    name: TI
+  - arity: '1'
+    datatype:
+    - value
+    description: '- set point'
+    direction: in
+    name: SP
+  - arity: '1'
+    datatype:
+    - value
+    description: '- measurement'
+    direction: in
+    name: Y
+  - arity: '1'
+    datatype:
+    - value
+    description: '- last input'
+    direction: in
+    name: U
+  - arity: '1'
+    datatype:
+    - value
+    description: '- minimum u'
+    direction: in
+    name: UMIN
+  - arity: '1'
+    datatype:
+    - value
+    description: '- maximum u'
+    direction: in
+    name: UMAX
+  - arity: '1'
+    datatype:
+    - value
+    description: '- 0=manual, 1=auto'
+    direction: in
+    name: AUTO
+  - arity: '1'
+    datatype:
+    - value
+    description: '- 1=reverse acting, 0=direct acting'
+    direction: in
+    name: REVACT
   quality: GOOD if all parameters are supplied and GOOD, else BAD
   retr: new controller output
   signature: picon(KP,TI,SP,Y,U,UMIN,UMAX,AUTO,REVACT)
 - detailedDescription: Computes number raised to the provided power
   name: pow
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Number to be raised to the specified power
-      direction: in
-      name: number
-    - arity: "1"
-      datatype:
-        - value
-      description: Power to raise specified number
-      direction: in
-      name: power
+  - arity: '1'
+    datatype:
+    - value
+    description: Number to be raised to the specified power
+    direction: in
+    name: number
+  - arity: '1'
+    datatype:
+    - value
+    description: Power to raise specified number
+    direction: in
+    name: power
   quality: GOOD if all arguments GOOD and return value not Nan or Inf
-  retr: "Number raised to power: 0 if arguments leads to Nan or Inf"
+  retr: 'Number raised to power: 0 if arguments leads to Nan or Inf'
   signature: pow(number, power)
-- detailedDescription:
-    "Pulse generator starting on rising edge of first argument\
+- detailedDescription: "Pulse generator starting on rising edge of first argument\
     \ and lasting a given duration. Output is TRUE for\r\n  given duration even if\
     \ input becomes false before duration end"
   name: pulseon
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Condition to check for rising edge
-      direction: in
-      name: condition
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of samples for pulse
-      direction: in
-      name: samples
+  - arity: '1'
+    datatype:
+    - value
+    description: Condition to check for rising edge
+    direction: in
+    name: condition
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples for pulse
+    direction: in
+    name: samples
   quality: GOOD if input GOOD
   retr: Boolean
   signature: pulseon(condition, samples)
 - detailedDescription: Computes the rounded value
   name: round
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: quality(x)
   retr: The rounded value of input
   signature: round(x)
-- detailedDescription: ""
+- detailedDescription: ''
   name: savedata
   parameters: []
-  quality: "BAD:  Nothing saved"
-  retr:
-    "0:  Nothing saved. Q = BAD: Reason printed on application .out file, 1: Current
-    sample successfully saved on"
+  quality: 'BAD:  Nothing saved'
+  retr: '0:  Nothing saved. Q = BAD: Reason printed on application .out file, 1: Current
+    sample successfully saved on'
   signature: savedata(XVR,SAVE)
 - detailedDescription: Selects the value of index from list of elements
   name: selectvalue
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Index of element in list to select
-      direction: in
-      name: n
-    - arity: +
-      datatype:
-        - value
-      description: Elements to select from
-      direction: in
-      name: xN
+  - arity: '1'
+    datatype:
+    - value
+    description: Index of element in list to select
+    direction: in
+    name: n
+  - arity: +
+    datatype:
+    - value
+    description: Elements to select from
+    direction: in
+    name: xN
   quality: quality(xN) if 1 <= n <= N (length of list) else BAD
-  retr: "Value of element n in list: value(xN) if  1 <= n <= N (length of list)"
+  retr: 'Value of element n in list: value(xN) if  1 <= n <= N (length of list)'
   signature: selectvalue(n, x1, x2, ..., xN)
-- detailedDescription:
-    "Send mail message when Triggertag changes from 0 to 1. Message\
+- detailedDescription: "Send mail message when Triggertag changes from 0 to 1. Message\
     \ is sent from SEPTIC_<Applid> to recipients\r\n  listed in TriggerTag->Text2.\
     \ Message subject is TriggerTag->Id, and message is TriggerTag->Text1"
   name: sendMail
   parameters: []
   quality: GOOD
-  retr: "1"
+  retr: '1'
   signature: sendMail(TriggerTag)
-- detailedDescription:
-    "Intended for Xvr, change PlotSpan value based on criteria<br>\r\
+- detailedDescription: "Intended for Xvr, change PlotSpan value based on criteria<br>\r\
     \n  When an Xvr is added to a MultiXvrPlot which uses Span-scaling, scaling is\
     \ based on first Xvr with PlotSpan set (not\r\n  -1) For some applications where\
     \ a variable has non-relevat value if (e.g. out of operation), its desired to\
@@ -2359,761 +2279,755 @@
 - detailedDescription: Sets the ActiveModifier for UseFactor calculations.
   name: setactivemodifier
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr to update
-      direction: in,out
-      name: mvr
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr to update
+    direction: in,out
+    name: mvr
   quality: GOOD
-  retr: "Updated value: value > 1 is set to  1, value < 0 is set to 0"
+  retr: 'Updated value: value > 1 is set to  1, value < 0 is set to 0'
   signature: setactivemodifier(mvr, value)
 - detailedDescription: Sets the desired mode for application with matching applID
   name: setappldesmode
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Application id for application to update
-      direction: in
-      name: applID
-    - arity: "1"
-      datatype:
-        - value
-      description: Desired mode for application
-      direction: in
-      name: mode
+  - arity: '1'
+    datatype:
+    - value
+    description: Application id for application to update
+    direction: in
+    name: applID
+  - arity: '1'
+    datatype:
+    - value
+    description: Desired mode for application
+    direction: in
+    name: mode
   quality: GOOD if valid applID else BAD
-  retr: "Desired mode for application: 0: STOPPED, 1: TRACKING, 2: ADVISORY, 3: ACTIVE"
+  retr: 'Desired mode for application: 0: STOPPED, 1: TRACKING, 2: ADVISORY, 3: ACTIVE'
   signature: setappldesmode(applID, mode)
 - detailedDescription: Sets the quality of the input to BAD
   name: setbad
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: BAD
   retr: Input value with quality set to bad
   signature: setbad(x)
 - detailedDescription: Sets the time constant for bias filter for given cvr
   name: setbiastfilt
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set [min]
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set [min]
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting BiasTfilt
   signature: setbiastfilt(cvr, value)
 - detailedDescription: Sets the time constant for bias prediction for given cvr
   name: setbiastpred
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set [min]
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set [min]
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting BiasTpred
   signature: setbiastpred(cvr, value)
 - detailedDescription: Set deas for dvr
   name: setdeas
   parameters:
-    - arity: "1"
-      datatype:
-        - dvr
-      description: Dvr
-      direction: in,out
-      name: dvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: value
-    - arity: "1"
-      datatype:
-        - value
-      description: Desired state (1/0 for GOOD/BAD)
-      direction: in
-      name: state
+  - arity: '1'
+    datatype:
+    - dvr
+    description: Dvr
+    direction: in,out
+    name: dvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: value
+  - arity: '1'
+    datatype:
+    - value
+    description: Desired state (1/0 for GOOD/BAD)
+    direction: in
+    name: state
   quality: state if valid dvr otherwise BAD
   retr: Set value
   signature: setdeas(dvr, value, state)
 - detailedDescription: Sets the fulf property for given xvr
   name: setfulf
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-      description: Xvr
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    description: Xvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid xvr and value otherwise BAD
   retr: Resulting fulf
   signature: setfulf(xvr, value)
 - detailedDescription: Sets the fulf rescale property for given xvr
   name: setfulfrescale
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-      description: Xvr
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    description: Xvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid xvr and value otherwise BAD
   retr: Resulting fulf rescale value
   signature: setfulfrescale(xvr, value)
 - detailedDescription: Sets the quality of the input to GOOD
   name: setgood
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: GOOD
   retr: Value with quality set to GOOD
   signature: setgood(x)
 - detailedDescription: Sets the high-limit for the given xvr
   name: sethigh
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-        - mvr
-      description: Xvr with high limit
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    - mvr
+    description: Xvr with high limit
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid xvr and value otherwise BAD
   retr: Resulting high-limit if succesfully set otherwise 0
   signature: sethigh(xvr, value)
 - detailedDescription: Sets the high back off property for given cvr
   name: sethighbackoff
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting high back off
   signature: sethighbackoff(cvr, value)
 - detailedDescription: Sets the high penalty property for given xvr
   name: sethighpnlty
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-      description: Xvr
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    description: Xvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid xvr and value otherwise BAD
   retr: Resulting high penalty
   signature: sethighpnlty(xvr, value)
 - detailedDescription: Sets the high priority for given cvr
   name: sethighprio
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting HighPrio
   signature: sethighprio(cvr, value)
 - detailedDescription: Sets the ideal value property of given mvr
   name: setiv
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr
-      direction: in
-      name: mvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr
+    direction: in
+    name: mvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid mvr and value otherwise BAD
   retr: Resulting ideal value
   signature: setiv(mvr, value)
 - detailedDescription: Sets the ideal value priority for given mvr
   name: setivprio
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr
-      direction: in
-      name: mvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr
+    direction: in
+    name: mvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid mvr and value otherwise BAD
   retr: Resulting Iv
   signature: setivprio(mvr, value)
 - detailedDescription: Sets the ideal value rate of change property of given mvr
   name: setivroc
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr
-      direction: in
-      name: mvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr
+    direction: in
+    name: mvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid mvr and value otherwise BAD
   retr: Resulting ideal value rate of change
   signature: setivroc(mvr, value)
-- detailedDescription:
-    Sets the KeepTarget property for given cvr. If MODE is not
+- detailedDescription: Sets the KeepTarget property for given cvr. If MODE is not
     exactly 0 or 1, no action is performed
   name: setkeeptargets
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Mode to set (1/0 for ON/OFF)
-      direction: in
-      name: mode
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Mode to set (1/0 for ON/OFF)
+    direction: in
+    name: mode
   quality: GOOD if valid cvr and mode otherwise BAD
   retr: Resulting KeepTarget (1/0 for ON/OFF)
   signature: setkeeptargets(cvr, mode)
 - detailedDescription: Sets the low-limit for the given xvr
   name: setlow
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-        - mvr
-      description: Xvr with low limit
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    - mvr
+    description: Xvr with low limit
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid xvr and value otherwise BAD
   retr: Resulting low-limit if succesfully set otherwise 0
   signature: setlow(xvr, value)
 - detailedDescription: Sets the low back off property for given cvr
   name: setlowbackoff
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting low back off
   signature: setlowbackoff(cvr, value)
 - detailedDescription: Sets the low penalty property for given xvr
   name: setlowpnlty
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-      description: Xvr
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    description: Xvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid xvr and value otherwise BAD
   retr: Resulting low penalty
   signature: setlowpnlty(xvr, value)
 - detailedDescription: Sets the low priority for given cvr
   name: setlowprio
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting LowPrio
   signature: setlowprio(cvr, value)
 - detailedDescription: Set the MaxDn property for given Mvr
   name: setmaxdn
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr
-      direction: in
-      name: mvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr
+    direction: in
+    name: mvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid mvr and value otherwise BAD
   retr: Resulting MaxDn if successful else 0
   signature: setmaxdn(mvr, value)
 - detailedDescription: Set the MaxUp property for given Mvr
   name: setmaxup
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr
-      direction: in
-      name: mvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr
+    direction: in
+    name: mvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid mvr and value otherwise BAD
   retr: Resulting MaxUp if successful else 0
   signature: setmaxup(mvr, value)
 - detailedDescription: Sets measurement value for xvr
   name: setmeas
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-        - tvr
-        - evr
-      description: Xvr
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    - tvr
+    - evr
+    description: Xvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid xvr and value else BAD
   retr: Set value
   signature: setmeas(xvr, value)
 - detailedDescription: Set mode of measurement high limit for xvr.
   name: setmeashighlimit
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-        - tvr
-        - evr
-      description: Xvr
-      direction: in,out
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Desired limit
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    - tvr
+    - evr
+    description: Xvr
+    direction: in,out
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Desired limit
+    direction: in
+    name: value
   quality: GOOD if valid xvr and GOOD value
   retr: Updated high limit, Value if succesful
   signature: setmeashighlimit(xvr, value)
 - detailedDescription: Set mode of measurement low limit for xvr.
   name: setmeaslowlimit
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-        - tvr
-        - evr
-      description: Xvr
-      direction: in,out
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Desired limit
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    - tvr
+    - evr
+    description: Xvr
+    direction: in,out
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Desired limit
+    direction: in
+    name: value
   quality: GOOD if valid xvr and GOOD value
   retr: Updated low limit, Value if successful
   signature: setmeaslowlimit(xvr, value)
-- detailedDescription:
-    "Set mode of measurement validation. For all XVRs, but as Meas\
+- detailedDescription: "Set mode of measurement validation. For all XVRs, but as Meas\
     \ Validation only is performed on OPC read, it\r\n  will only have effect for\
     \ OPCtags"
   name: setmeasvalidation
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-        - tvr
-        - evr
-      description: Xvr
-      direction: in,out
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Desired mode (1/0 for ON/OFF)
-      direction: in
-      name: mode
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    - tvr
+    - evr
+    description: Xvr
+    direction: in,out
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Desired mode (1/0 for ON/OFF)
+    direction: in
+    name: mode
   quality: GOOD if valid xvr
-  retr: "Updated meas validation mode: 1/0 for ON/OFF"
+  retr: 'Updated meas validation mode: 1/0 for ON/OFF'
   signature: setmeasvalidation(xvr, mode)
-- detailedDescription:
-    "Sets the mode of the given Xvr. If given mode is higher than\
+- detailedDescription: "Sets the mode of the given Xvr. If given mode is higher than\
     \ possible mode for Xvr, it is set to the highest\r\n  possible."
   name: setmode
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-      description: Xvr
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Desired mode (0/1/2/3 for STOPPED/TRACKING/ADVISORY/ACTIVE)
-      direction: in
-      name: mode
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    description: Xvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Desired mode (0/1/2/3 for STOPPED/TRACKING/ADVISORY/ACTIVE)
+    direction: in
+    name: mode
   quality: GOOD if valid xvr otherwise BAD
-  retr: "Set mode: 0/1/2/3 for STOPPED/TRACKING/ADVISORY/ACTIVE"
+  retr: 'Set mode: 0/1/2/3 for STOPPED/TRACKING/ADVISORY/ACTIVE'
   signature: setmode(xvr, mode)
 - detailedDescription: Set the MovePnlty property for given mvr
   name: setmovepnlty
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr
-      direction: in
-      name: mvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr
+    direction: in
+    name: mvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid mvr and value otherwise BAD
   retr: Resulting MovePnlty if successful else 0
   signature: setmovepnlty(mvr, value)
 - detailedDescription: Set the ProcessValue property for given mvr
   name: setprocessvalue
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr
-      direction: in
-      name: mvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr
+    direction: in
+    name: mvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid mvr and value otherwise BAD
   retr: Resulting ProcessValue
   signature: setprocessvalue(mvr, value)
 - detailedDescription: Sets the set-point value for given Cvr
   name: setsetpnt
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting SetPnt
   signature: setsetpnt(cvr, value)
-- detailedDescription:
-    "Sets the SetPntFilt value for given Cvr.\r\n  Purpose: Set\
+- detailedDescription: "Sets the SetPntFilt value for given Cvr.\r\n  Purpose: Set\
     \ a value as start point for a SP trajector from desired value towards\r\n  the\
     \ SP target given as CV SetPnt, with SetpTref as filter time.\r\n  The calculation\
     \ needs to be placed in a DmmyAppl/calculator processed\r\n  after the MPC due\
     \ to internal spfilt logics using previous value"
   name: setsetpntfilt
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting SetPntFilt
   signature: setsetpntfilt(cvr, value)
 - detailedDescription: Sets the set point priority for given cvr
   name: setsetpntprio
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting SetPointPrio
   signature: setsetpntprio(cvr, value)
-- detailedDescription:
-    Sets the SetpntRocDn property of given cvr. Positive values
+- detailedDescription: Sets the SetpntRocDn property of given cvr. Positive values
     are set to 0
   name: setsetpntrocdn
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value-
-      description: Value to set. value <= 0
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value-
+    description: Value to set. value <= 0
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting SetpntRocDn
   signature: setsetpntrocdn(cvr, value)
 - detailedDescription: Sets the SetpntRocUp property of given cvr
   name: setsetpntrocup
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting SetpntRocUp
   signature: setsetpntrocup(cvr, value)
 - detailedDescription: Sets the SetpTref property of given cvr
   name: setsetptref
   parameters:
-    - arity: "1"
-      datatype:
-        - cvr
-      description: Cvr
-      direction: in
-      name: cvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting SetpTref
   signature: setsetptref(cvr, value)
 - detailedDescription: Sets the span for given xvr
   name: setspan
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-        - tvr
-        - evr
-      description: Xvr
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Value to set
-      direction: in
-      name: value
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    - tvr
+    - evr
+    description: Xvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
   quality: GOOD if valid cvr and value otherwise BAD
   retr: Resulting Span
   signature: setspan(xvr, value)
 - detailedDescription: Set windup high status for mvr
   name: setwinduphigh
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr
-      direction: in
-      name: mvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Status for windup high (1/0 for ON/OFF)
-      direction: in
-      name: status
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr
+    direction: in
+    name: mvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Status for windup high (1/0 for ON/OFF)
+    direction: in
+    name: status
   quality: GOOD if valid mvr otherwise BAD
-  retr: "Set status of windup: 1/0 ON/OFF"
+  retr: 'Set status of windup: 1/0 ON/OFF'
   signature: setwinduphigh(mvr, status)
 - detailedDescription: Set windup low status for mvr
   name: setwinduplow
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr
-      direction: in
-      name: mvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Status for windup low (1/0 for ON/OFF)
-      direction: in
-      name: status
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr
+    direction: in
+    name: mvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Status for windup low (1/0 for ON/OFF)
+    direction: in
+    name: status
   quality: GOOD if valid mvr otherwise BAD
-  retr: "Set status of windup: 1/0 ON/OFF"
+  retr: 'Set status of windup: 1/0 ON/OFF'
   signature: setwinduplow(mvr, status)
 - detailedDescription: Computes the sign of the input
   name: sign
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: quality(x)
   retr: The sign of the input i.e. +1 if x > 0, -1 if x < 0, 0 if x == 0 (double)
   signature: sign(x)
 - detailedDescription: Computes the sine of the given input
   name: sin
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value in radians
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value in radians
+    direction: in
+    name: x
   quality: quality(x)
   retr: Sine value of x
   signature: sin(x)
-- detailedDescription:
-    "Debugging code. Will sleep for sleepsecs\r\n  Not part of\
+- detailedDescription: "Debugging code. Will sleep for sleepsecs\r\n  Not part of\
     \ release-builds, intended for debugging of Master<->RUI issues to introduce a\
     \ long \"exe-time\" in Master"
   name: sleep
@@ -3121,214 +3035,204 @@
   quality: BAD if input a is BAD, else GOOD
   retr: sleeptime [sec]
   signature: sleep(sleepsecs)
-- detailedDescription:
-    Sets the desired mode for Cvr.SetPnt or Mvr.Iv. If MODE is
+- detailedDescription: Sets the desired mode for Cvr.SetPnt or Mvr.Iv. If MODE is
     not exactly 0 or 1, no action is performed
   name: spivon
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-      description: Xvr
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: Desired Mode (1/0 for ON/OFF)
-      direction: in
-      name: mode
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    description: Xvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Desired Mode (1/0 for ON/OFF)
+    direction: in
+    name: mode
   quality: GOOD if valid xvr and value otherwise BAD
   retr: Resulting Mode
   signature: spivon(xvr, mode)
 - detailedDescription: Computes the square root of input
   name: sqrt
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value
+    direction: in
+    name: x
   quality: quality(x) if x >= 0 else BAD
-  retr: "Square root of input: sqrt(x) if x >= 0 else 0"
+  retr: 'Square root of input: sqrt(x) if x >= 0 else 0'
   signature: sqrt(x)
-- detailedDescription:
-    "Get the steady state gain from the MPC using a SUBR type model.\
+- detailedDescription: "Get the steady state gain from the MPC using a SUBR type model.\
     \ Typical use: Information.\r\n  The pair of CVRTAG/MVRTAG identifies which model\
     \ gain to fetch."
   name: subrmpcgain
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - dvr
-      description: Mvr or Dvr
-      direction: in
-      name: MVRTAG
+  - arity: '1'
+    datatype:
+    - mvr
+    - dvr
+    description: Mvr or Dvr
+    direction: in
+    name: MVRTAG
   quality: GOOD if calculations are ok, else BAD
-  retr:
-    the current steady state gain from the Mvr to the Cvr if (CVRTAG is a Cvr)
+  retr: the current steady state gain from the Mvr to the Cvr if (CVRTAG is a Cvr)
     and (MVRTAG is an MVR)
   signature: subrmpcgain(CVRTAG,MVRTAG)
-- detailedDescription:
-    "Set element of matrix ZeroSensitivity to 1/0 in the MPC using\
+- detailedDescription: "Set element of matrix ZeroSensitivity to 1/0 in the MPC using\
     \ a SUBR type model<br>\r\n  Typical use: Zero sensitivity to avoid undesired\
     \ use of Mvr/Cvr connection. The pair of CVRTAG/MVRTAG identifies the\r\n  sensitivity\
     \ element to set."
   name: subrzerosens
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - dvr
-      description: Mvr or Dvr
-      direction: in
-      name: MVRTAG
-    - arity: "1"
-      datatype:
-        - value
-      description: "- 1 means that it is zeroed"
-      direction: in
-      name: ZEROFLAG
+  - arity: '1'
+    datatype:
+    - mvr
+    - dvr
+    description: Mvr or Dvr
+    direction: in
+    name: MVRTAG
+  - arity: '1'
+    datatype:
+    - value
+    description: '- 1 means that it is zeroed'
+    direction: in
+    name: ZEROFLAG
   quality: GOOD if calculations are ok, else BAD
-  retr:
-    if (CVRTAG is a Cvr) and (MVRTAG is an MVR) and (CVRTAG and MVRTAG belongs
+  retr: if (CVRTAG is a Cvr) and (MVRTAG is an MVR) and (CVRTAG and MVRTAG belongs
     to same appl) and (appl is
   signature: subrzerosens(CVRTAG,MVRTAG,ZEROFLAG)
 - detailedDescription: Computes the hyperbolic tangent of x
   name: tanh
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Value in radians
-      direction: in
-      name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Value in radians
+    direction: in
+    name: x
   quality: quality(x)
   retr: Hyperbolic tangent of x
   signature: tanh(x)
-- detailedDescription:
-    Timer with delay on rising edge on condition. Output is TRUE
+- detailedDescription: Timer with delay on rising edge on condition. Output is TRUE
     after N samples of TRUE input.
   name: timeron
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Condition to check for rising edge
-      direction: in
-      name: condition
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of samples delay after rising edge
-      direction: in
-      name: samples
+  - arity: '1'
+    datatype:
+    - value
+    description: Condition to check for rising edge
+    direction: in
+    name: condition
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of samples delay after rising edge
+    direction: in
+    name: samples
   quality: GOOD if input GOOD
   retr: Boolean
   signature: timeron(condition, samples)
-- detailedDescription:
-    Checks if the final status for xvr is TRACKING. Intended for
+- detailedDescription: Checks if the final status for xvr is TRACKING. Intended for
     Mvr/Cvr/Dvr
   name: trk
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-        - cvr
-        - dvr
-      description: Xvr
-      direction: in
-      name: xvr
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    description: Xvr
+    direction: in
+    name: xvr
   quality: GOOD if Xvr.FinalStatus == TRACKING
-  retr: "Measurement of Xvr with Quality GOOD if FinalStatus == TRACKING: Xvr.Meas"
+  retr: 'Measurement of Xvr with Quality GOOD if FinalStatus == TRACKING: Xvr.Meas'
   signature: trk(Xvr)
 - detailedDescription: Calculate viscosity of a mix
   name: viscmix
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: Number of volumes
-      direction: in
-      name: ns
-    - arity: $ns
-      datatype:
-        - value
-      description: Volume of volume n
-      direction: in
-      name: volN
-    - arity: $ns
-      datatype:
-        - value
-      description: Quality of volume n
-      direction: in
-      name: qualN
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of volumes
+    direction: in
+    name: ns
+  - arity: $ns
+    datatype:
+    - value
+    description: Volume of volume n
+    direction: in
+    name: volN
+  - arity: $ns
+    datatype:
+    - value
+    description: Quality of volume n
+    direction: in
+    name: qualN
   quality: GOOD if all supplied parameters are GOOD
   retr: Calculated quality of mix, 0 if sum of volumes = 0
   signature: viscmix(ns, vol1, qual1, ..., volN, qualN)
-- detailedDescription:
-    "Disable control with an Mvr in windup high and low simultaneously,\
+- detailedDescription: "Disable control with an Mvr in windup high and low simultaneously,\
     \ because this indicates that cascade to\r\n  lower level controller is broken.\
     \ Lowers Mvr.Mode to TRACKING if this happens"
   name: windup
   parameters:
-    - arity: "1"
-      datatype:
-        - mvr
-      description: Mvr
-      direction: in,out
-      name: mvr
+  - arity: '1'
+    datatype:
+    - mvr
+    description: Mvr
+    direction: in,out
+    name: mvr
   quality: GOOD if valid mvr otherwise BAD
   retr: Status of windup. Set Mvr.Mode to min of Mode and TRACKING if status is 3
   signature: windup(mvr)
-- detailedDescription: ""
+- detailedDescription: ''
   name: xvrtext1tosystemtext2
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: ""
-      direction: in
-      name: xvr
-    - arity: "1"
-      datatype:
-        - value
-      description: ""
-      direction: in
-      name: selectorxvr
+  - arity: '1'
+    datatype:
+    - value
+    description: ''
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: ''
+    direction: in
+    name: selectorxvr
   quality: GOOD if xvr(s) ok, else BAD
-  retr:
-    1 if xvr(s) ok, 0 if any inputs are illegal when using selector, the Meas
+  retr: 1 if xvr(s) ok, 0 if any inputs are illegal when using selector, the Meas
     of the selector must be positive and
   signature: xvrtext1tosystemtext2(xvr)
-- detailedDescription:
-    "Calculates gas compressibility factor (z factor) for real\
+- detailedDescription: "Calculates gas compressibility factor (z factor) for real\
     \ gasses.<br>\r\n\r\n  Based on correlations from \"An efficient correlation for\
     \ calculating compressibility\r\n  factor of natural gases\" by Azizi et al 2010<br>\r\
     \n  Pseudo reduced properties are calculated by the sutton correlations"
   name: zfac
   parameters:
-    - arity: "1"
-      datatype:
-        - value
-      description: pressure [barg]
-      direction: in
-      name: p
-    - arity: "1"
-      datatype:
-        - value
-      description: temperature [degC]
-      direction: in
-      name: T
-    - arity: "1"
-      datatype:
-        - value
-      description: molecular weight [kg/kmol]
-      direction: in
-      name: mw
+  - arity: '1'
+    datatype:
+    - value
+    description: pressure [barg]
+    direction: in
+    name: p
+  - arity: '1'
+    datatype:
+    - value
+    description: temperature [degC]
+    direction: in
+    name: T
+  - arity: '1'
+    datatype:
+    - value
+    description: molecular weight [kg/kmol]
+    direction: in
+    name: mw
   quality: GOOD if all inputs are GOOD, else BAD
   retr: z factor, if BAD input the old value is kept with Q= BAD
   signature: zfac(p, T, mw)

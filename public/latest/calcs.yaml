@@ -1,4 +1,3 @@
-# Commit: fec1293
 - detailedDescription: Computes the absolute value
   name: abs
   parameters:
