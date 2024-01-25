@@ -1,4 +1,4 @@
-# Commit: d2bfb55
+# Commit: 651c0e3
 - attributes: []
   description: Table appl
   name: Appl
@@ -7681,7 +7681,7 @@
     dataType: string
     default:
     - '""'
-    description: Engineering units for each row
+    description: Engineering units for each row, number identical to RowIds
     enums: []
     list: true
     name: RowUnits
@@ -7692,7 +7692,8 @@
     dataType: variable
     default:
     - '""'
-    description: Xvrs to be populated into matrix. Fills up each row starting on top
+    description: Xvrs to be populated into matrix. Fills up each row starting on top.
+      Should be equal to ColIds*RowIds
     enums: []
     list: true
     name: Xvrs
