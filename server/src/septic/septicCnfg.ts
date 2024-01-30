@@ -273,8 +273,12 @@ function attrXvrRefs(obj: SepticObject, attrName: string): SepticReference[] {
             ref.getValue(),
             {
                 uri: "",
-                start: ref.start + 1,
-                end: ref.end - 1,
+                start:
+                    ref.type === SepticTokenType.string
+                        ? ref.start + 1
+                        : ref.start,
+                end:
+                    ref.type === SepticTokenType.string ? ref.end - 1 : ref.end,
             },
             undefined,
             ReferenceType.attribute
