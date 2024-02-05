@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.7](https://github.com/equinor/vscode-septic/compare/v1.15.6...v1.15.7) (2024-02-05)
+
+
+### 🐛 Bug Fixes
+
+* clipped references in lists ([#466](https://github.com/equinor/vscode-septic/issues/466)) ([2146f91](https://github.com/equinor/vscode-septic/commit/2146f910ca58e953c0d762942581698f69d0cf28))
+
 ## [1.15.6](https://github.com/equinor/vscode-septic/compare/v1.15.5...v1.15.6) (2024-02-05)
 
 
