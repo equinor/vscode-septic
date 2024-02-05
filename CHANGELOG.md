@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.15.6](https://github.com/equinor/vscode-septic/compare/v1.15.5...v1.15.6) (2024-02-05)
+
+
+### 🧹 Chores
+
+* **deps:** bump @typescript-eslint/eslint-plugin from 6.15.0 to 6.20.0 ([#463](https://github.com/equinor/vscode-septic/issues/463)) ([27b2a37](https://github.com/equinor/vscode-septic/commit/27b2a3781b448279f009c9649cf99bcacfd620c5))
+* **deps:** bump @typescript-eslint/parser from 6.15.0 to 6.20.0 ([#464](https://github.com/equinor/vscode-septic/issues/464)) ([9f169c8](https://github.com/equinor/vscode-septic/commit/9f169c82c722bc0923cb86a0881850158fb6d439))
+* **deps:** bump eslint from 8.51.0 to 8.56.0 ([#436](https://github.com/equinor/vscode-septic/issues/436)) ([38a4bb4](https://github.com/equinor/vscode-septic/commit/38a4bb4e5e030da5e8f3f8a56b0f2f3a24c1d277))
+* **deps:** bump typescript from 5.2.2 to 5.3.3 ([#437](https://github.com/equinor/vscode-septic/issues/437)) ([22511cc](https://github.com/equinor/vscode-septic/commit/22511cc165cf0601e50d9aaef095c2f0709946ad))
+
+
+### 📚 Documentation
+
+* update SEPTIC documentation ([#462](https://github.com/equinor/vscode-septic/issues/462)) ([f9b71c7](https://github.com/equinor/vscode-septic/commit/f9b71c79e6c561bafed6510e2f4eadf45202aae4))
+
+
+### 🐛 Bug Fixes
+
+* Update folding level appl object ([#474](https://github.com/equinor/vscode-septic/issues/474)) ([80328b3](https://github.com/equinor/vscode-septic/commit/80328b3067bf920e43f8439b300486ae4ce08703))
+
 ## [1.15.5](https://github.com/equinor/vscode-septic/compare/v1.15.4...v1.15.5) (2024-01-11)
 
 
