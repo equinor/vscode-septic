@@ -44,7 +44,7 @@ describe("Test folding of document", () => {
 			ExprModel:  TestCalcPvr 
 				Text1= "Test"
       
-        Appl: Test
+        DmmyAppl: Test
         Text1= "Test"
 		`;
 
