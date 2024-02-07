@@ -255,7 +255,7 @@ export function validateAlgs(
             diagnostics.push(diagnostic);
             continue;
         }
-        const visitor = new AlgVisitor();
+        const visitor = new AlgVisitor(true);
         visitor.visit(expr);
 
         visitor.calcs.forEach((calc) => {
@@ -556,17 +556,44 @@ function checkValidParamType(
     refProvider: SepticReferenceProvider
 ): boolean {
     if (types[0] === VALUE) {
-        return true;
+        return checkValidValueParam(expr, refProvider);
     }
     if (!isAlgExprObjectReference(expr)) {
         return false;
     }
+    return checkValidObjectParam(expr, types, refProvider);
+}
+
+function checkValidObjectParam(
+    expr: AlgExpr,
+    types: string[],
+    refProvider: SepticReferenceProvider
+) {
     let exprLiteral = expr as AlgLiteral;
     let objects = refProvider.getObjectsByIdentifier(
         exprLiteral.value.split(".")[0]
     );
     for (let obj of objects) {
         if (obj.isType(...types)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function checkValidValueParam(
+    expr: AlgExpr,
+    refProvider: SepticReferenceProvider
+) {
+    if (!isAlgExprObjectReference(expr)) {
+        return true;
+    }
+    let exprLiteral = expr as AlgLiteral;
+    let objects = refProvider.getObjectsByIdentifier(
+        exprLiteral.value.split(".")[0]
+    );
+    for (let obj of objects) {
+        if (obj.isXvr()) {
             return true;
         }
     }
