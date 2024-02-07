@@ -1,6 +1,6 @@
 import json
 import os
-import re
+import sys
 from dataclasses import asdict
 from pathlib import Path
 from typing import List, Union
@@ -16,6 +16,7 @@ from src.parse_doxygen import (
 from src.versioning import (
     folder_name_to_option,
     get_existing_versions,
+    get_major,
     get_newest_version_for_major,
     get_versions,
     get_versions_from_tag,
@@ -27,6 +28,31 @@ output_path = Path("./public")
 object_file_name = "objectsDoc.yaml"
 calc_file_name = "calcs.yaml"
 first_valid_version = (2, 88)
+
+
+def update_versioned_documentation_tag(tag: str):
+    tags = list(
+        map(lambda x: x["commit"]["sha"], filter(lambda x: x["name"] == tag, getTags()))
+    )
+    if len(tags) == 0:
+        raise Exception("Tag not found in repostitory")
+    commit = tags[0]
+    version = get_versions_from_tag(tag)
+    if not version:
+        raise Exception("Unable to get version from tag")
+    major = get_major(version)
+    majors_existing = get_newest_version_for_major(get_existing_versions(output_path))
+    if major in majors_existing and version <= majors_existing[major]:
+        return
+    folder_path = output_path / version_to_folder_name(version)
+    if not folder_path.exists():
+        os.makedirs(folder_path.resolve())
+    object_path = folder_path / object_file_name
+    calc_path = folder_path / calc_file_name
+    meta_path = folder_path / meta_info_name
+    updateObjects(commit, object_path)
+    updateCalcs(commit, calc_path)
+    update_meta_info(commit, version, meta_path)
 
 
 def update_versioned_documentation():
@@ -111,6 +137,15 @@ def update_meta_info(commit: str, version: Union[tuple, str], output_path: Path)
 
 
 if __name__ == "__main__":
-    update_versioned_documentation()
-    update_latest_documentation()
+    if len(sys.argv) == 1:
+        update_versioned_documentation()
+        update_latest_documentation()
+    elif len(sys.argv) == 2:
+        ref = sys.argv[1].split("/")[-1]
+        if ref == "main":
+            update_latest_documentation()
+        else:
+            update_versioned_documentation_tag(ref)
+    else:
+        exit()
     update_version_options()

@@ -17,11 +17,6 @@ def version_to_folder_name(version: tuple):
     return "v" + "_".join([str(x) for x in major])
 
 
-def version_to_setting_name(version: tuple):
-    major = get_major(version)
-    return "v" + ".".join(major)
-
-
 def read_meta_file(path: Path):
     with open(path, "r") as file:
         meta = yaml.safe_load(file)

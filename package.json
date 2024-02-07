@@ -46,7 +46,7 @@
             "v2.88"
           ],
           "default": "latest",
-          "description": "Select which version of the Septic to use for documentation and diagnostics."
+          "description": "Select which version of Septic to use for documentation and diagnostics."
         },
         "septic.diagnostics.enabled": {
           "scope": "window",
