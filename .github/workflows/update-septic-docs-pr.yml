@@ -31,7 +31,7 @@ jobs:
         id: checkfiles
         run: |
           # --quiet does apparently not imply --exit-code as git doc claims
-          echo "changed=$(git diff --exit-code -G'^[^#]' public >/dev/null; echo $?)" >> $GITHUB_OUTPUT
+          echo "changed=$(git diff --exit-code public >/dev/null; echo $?)" >> $GITHUB_OUTPUT
  
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
