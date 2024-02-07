@@ -3,7 +3,7 @@ name: "📚 Update SEPTIC docs"
 on: 
   workflow_dispatch:
   repository_dispatch:
-    types: [execute]
+    types: [update-vscode-septic-docs]
 
 jobs:
   update_doc_pr:
@@ -25,7 +25,7 @@ jobs:
       - name: Update documentation
         env:
           API_TOKEN: ${{ secrets.SEPTIC_REPO_READ }}
-        run: python scripts/main.py
+        run: python scripts/main.py ${{ github.event.client_payload.ref}}
 
       - name: Look for documentation changes
         id: checkfiles
