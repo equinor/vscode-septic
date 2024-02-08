@@ -25,6 +25,10 @@ interface CodeActions {
     insertEvrPosition: "top" | "bottom";
 }
 
+interface Documentation {
+    version: string;
+}
+
 export interface Settings {
     readonly diagnostics: DiagnosticsSettings;
     readonly folding: FoldingSettings;
@@ -32,6 +36,7 @@ export interface Settings {
     readonly encoding: "utf8" | "windows1252";
     readonly ignored: IgnoredSettings;
     readonly codeActions: CodeActions;
+    readonly documentation: Documentation;
 }
 
 export class SettingsManager {
@@ -65,6 +70,7 @@ export class SettingsManager {
             encoding: settings["[septic]"]["files.encoding"],
             ignored: settings["septic"].ignored,
             codeActions: settings["septic"].codeActions,
+            documentation: settings["septic"].documentation,
         };
         this.updateMetaInfo();
     }
@@ -85,7 +91,11 @@ export class SettingsManager {
         let level = this.settings?.folding.calcModl
             ? updatedFoldingLevel
             : defaultFoldingLevelCalcModl;
-
+        if (this.settings) {
+            SepticMetaInfoProvider.setVersion(
+                this.settings.documentation.version
+            );
+        }
         let metaInfoProvider = SepticMetaInfoProvider.getInstance();
 
         metaInfoProvider.updateObjectLevel("CalcModl", level);

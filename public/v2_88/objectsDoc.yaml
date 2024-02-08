@@ -1,4 +1,3 @@
-# Commit: 651c0e3
 - attributes: []
   description: Table appl
   name: Appl
@@ -448,7 +447,7 @@
   description: Chart Serie
   name: ChartSerie
   parents:
-  - Chart
+  - DisplayGroup
 - attributes:
   - calc: false
     dataType: string
@@ -575,7 +574,7 @@
   description: Curve
   name: Curve
   parents:
-  - XYPlot
+  - DisplayGroup
 - attributes:
   - calc: false
     dataType: enum
@@ -1821,44 +1820,6 @@
   - XYPlot
 - attributes:
   - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: The command to trigger
-    enums: []
-    list: false
-    name: Cmd
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Step to triggering event
-    enums: []
-    list: false
-    name: N
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: For repeated trigging of event, specifies cycle length
-    enums: []
-    list: false
-    name: Ncycle
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Events/triggers for change of SEPTIC parameters
-  name: Event
-  parents:
-  - System
-- attributes:
-  - calc: false
     dataType: enum
     default: []
     description: Color used in plot for the variable
@@ -2297,8 +2258,9 @@
 - attributes:
   - calc: false
     dataType: int
-    default: []
-    description: Placement of value, related to table item placement
+    default:
+    - '-1'
+    description: Description
     enums: []
     list: false
     name: ColPos
@@ -2309,7 +2271,7 @@
     dataType: string
     default:
     - '""'
-    description: Heading/row text
+    description: Heading
     enums: []
     list: false
     name: Heading
@@ -2320,7 +2282,7 @@
     dataType: int
     default:
     - '0'
-    description: text size offset from normal
+    description: Description
     enums: []
     list: false
     name: SizeOffset
@@ -2329,24 +2291,25 @@
     tags: []
   - calc: false
     dataType: variable
-    default: []
-    description: Xvr providing status good/bad info
+    default:
+    - '""'
+    description: StatusXvr
     enums: []
     list: false
     name: StatusXvr
     noCnfg: false
     postfix: []
     tags: []
-  description: Present Meas of Xvr below the preceding element in a Table, adding
-    a new row to the table
+  description: FreeMeas
   name: FreeMeas
   parents:
-  - Table
+  - DisplayGroup
 - attributes:
   - calc: false
     dataType: int
-    default: []
-    description: Placement of value, related to table item placement
+    default:
+    - '-1'
+    description: Description
     enums: []
     list: false
     name: ColPos
@@ -2357,7 +2320,7 @@
     dataType: string
     default:
     - '""'
-    description: Heading/row text
+    description: Heading
     enums: []
     list: false
     name: Heading
@@ -2368,7 +2331,7 @@
     dataType: int
     default:
     - '0'
-    description: text size offset from normal
+    description: Description
     enums: []
     list: false
     name: SizeOffset
@@ -2377,19 +2340,19 @@
     tags: []
   - calc: false
     dataType: int
-    default: []
-    description: Text to use, 1 for Text1, 2 for Text2
+    default:
+    - '1'
+    description: StatusXvr
     enums: []
     list: false
     name: TextNo
     noCnfg: false
     postfix: []
     tags: []
-  description: Present Text1/Text2 from a Xvr below the preceding element in a Table,
-    adding a new row to the table
+  description: FreeText
   name: FreeText
   parents:
-  - Table
+  - DisplayGroup
 - attributes:
   - calc: false
     dataType: int
@@ -2921,43 +2884,6 @@
 - attributes:
   - calc: false
     dataType: int
-    default: []
-    description: Placement of value, related to table item placement
-    enums: []
-    list: false
-    name: ColPos
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Heading/row text
-    enums: []
-    list: false
-    name: Heading
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: variable
-    default: []
-    description: Xvr providing status good/bad info
-    enums: []
-    list: false
-    name: StatusXvr
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: Present Meas of Xvr below the preceding element in a Table, adding
-    a row to the table
-  name: ListMeas
-  parents:
-  - Table
-- attributes:
-  - calc: false
-    dataType: int
     default:
     - '64512'
     description: Buffer size for send and recieve buffers
@@ -3197,7 +3123,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  description: Plot model corresponding to Id, format cvr_mvr/dvr
+  description: Model Plot
   name: ModelPlot
   parents:
   - DisplayGroup
@@ -4615,47 +4541,6 @@
   name: SampleTvr
   parents:
   - DmmyAppl
-- attributes:
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: List of references to SampleTvrs to be included in list
-    enums: []
-    list: true
-    name: SampleTvrs
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - CONFIG
-    description: Sort order of variables in the list
-    enums:
-    - CONFIG
-    - SAMPLETIME
-    - RECIEVEDTIME
-    list: false
-    name: SortBy
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text description for list
-    enums: []
-    list: false
-    name: Text
-    noCnfg: false
-    postfix: []
-    tags: []
-  description: List of sample based variables with associated values
-  name: SampleTvrList
-  parents:
-  - Table
 - attributes:
   - calc: false
     dataType: enum
@@ -7681,7 +7566,7 @@
     dataType: string
     default:
     - '""'
-    description: Engineering units for each row, number identical to RowIds
+    description: Engineering units for each row
     enums: []
     list: true
     name: RowUnits
@@ -7692,8 +7577,7 @@
     dataType: variable
     default:
     - '""'
-    description: Xvrs to be populated into matrix. Fills up each row starting on top.
-      Should be equal to ColIds*RowIds
+    description: Xvrs to be populated into matrix. Fills up each row starting on top
     enums: []
     list: true
     name: Xvrs
