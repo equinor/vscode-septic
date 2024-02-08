@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.16.0](https://github.com/equinor/vscode-septic/compare/v1.15.7...v1.16.0) (2024-02-08)
+
+
+### 👷 CI/CD
+
+* call doc generation with github ref ([4914aab](https://github.com/equinor/vscode-septic/commit/4914aab6e86efa09319ee0d3d947fe20bcc3de95))
+* ignore changes to meta.yaml on doc update ([#480](https://github.com/equinor/vscode-septic/issues/480)) ([f59bcaf](https://github.com/equinor/vscode-septic/commit/f59bcafd54767aeeafc15fb00cf590f20584b121))
+* ignore comments in septic doc yaml files ([51dad66](https://github.com/equinor/vscode-septic/commit/51dad66d06faa81b382e315d95d7e148536f17b5))
+
+
+### 📚 Documentation
+
+* update SEPTIC documentation ([#481](https://github.com/equinor/vscode-septic/issues/481)) ([d981845](https://github.com/equinor/vscode-septic/commit/d9818457cfa66b8abb8ee06e44b778d85412bc5c))
+
+
+### ✨ Features
+
+* add versioned documentation ([#456](https://github.com/equinor/vscode-septic/issues/456)) ([8f96617](https://github.com/equinor/vscode-septic/commit/8f9661776ca569462fe0df14bb6547a6b41894ea))
+
+
+### 🐛 Bug Fixes
+
+* support non-xvr calc params ([#478](https://github.com/equinor/vscode-septic/issues/478)) ([1dedaea](https://github.com/equinor/vscode-septic/commit/1dedaeaa732b9aee262efddd27239a21a2d85cb0))
+
 ## [1.15.7](https://github.com/equinor/vscode-septic/compare/v1.15.6...v1.15.7) (2024-02-05)
 
 
