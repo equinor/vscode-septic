@@ -610,7 +610,8 @@
   retr: steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl
     with an ExprModl and Amodl
   signature: exprprocmodset(CVRTAG,IVRTAG,Scale,Apply)
-- detailedDescription: First order filter
+- detailedDescription: First order filter. Resets to first good value after bad raw
+    values
   name: filt
   parameters:
   - arity: '1'
@@ -625,11 +626,17 @@
     description: First order time constant for filter [min]
     direction: in
     name: tau
+  - arity: '?'
+    datatype:
+    - value
+    description: Boolean input for resetting filter to raw value
+    direction: in
+    name: reset
   quality: quality(rawmeas)
   retr: Filtered measurement value
-  signature: filt(rawmeas, tau)
-- detailedDescription: "First order filter that keeps value unchanged for BAD arguments.\
-    \ To be used for instance for slow BIAS\r\n  updates from analyzers"
+  signature: filt(rawmeas, tau, reset)
+- detailedDescription: "First order filter that keeps value unchanged for BAD raw\
+    \ value. To be used for instance for slow BIAS\r\n  updates from analyzers"
   name: filtkeep
   parameters:
   - arity: '1'
@@ -641,12 +648,18 @@
   - arity: '1'
     datatype:
     - value
-    description: First order time constant for filter
+    description: First order time constant for filter [min]
     direction: in
     name: tau
+  - arity: '?'
+    datatype:
+    - value
+    description: Boolean input for resetting filter to raw value
+    direction: in
+    name: reset
   quality: quality(rawmeas)
   retr: Filtered measurement value
-  signature: filtkeep(rawmeas, tau)
+  signature: filtkeep(rawmeas, tau, reset)
 - detailedDescription: Filter designed to transfer optimization results to setpoints
   name: filtopti
   parameters:
@@ -1110,12 +1123,12 @@
   parameters:
   - arity: '1'
     datatype:
-    - value
+    - smpcappl
     description: Application of id for application to check
     direction: in
     name: applID
   quality: GOOD if valid applID else BAD
-  retr: 'Interger representing desired mode: 0: STOPPED, 1: TRACKING, 2: ADVISORY,
+  retr: 'Integer representing desired mode: 0: STOPPED, 1: TRACKING, 2: ADVISORY,
     3: ACTIVE'
   signature: getappldesmode(applID)
 - detailedDescription: Gets the final status for the application with the given id
@@ -1123,12 +1136,12 @@
   parameters:
   - arity: '1'
     datatype:
-    - value
+    - smpcappl
     description: Application id of application to check
     direction: in
     name: applID
   quality: GOOD if valid applID else BAD
-  retr: 'Interger representing final status: 0: STOPPED, 1: TRACKING, 2: ADVISORY,
+  retr: 'Integer representing final status: 0: STOPPED, 1: TRACKING, 2: ADVISORY,
     3: ACTIVE'
   signature: getapplfinalstatus(applID)
 - detailedDescription: Get the system sample counter pAppl->N
@@ -1149,8 +1162,8 @@
   parameters:
   - arity: '1'
     datatype:
-    - value
-    description: Apllication id
+    - smpcappl
+    description: Application id
     direction: in
     name: applID
   quality: GOOD if valid applID
@@ -1161,7 +1174,7 @@
   parameters:
   - arity: '1'
     datatype:
-    - value
+    - smpcappl
     description: Application id
     direction: in
     name: applID
@@ -1301,7 +1314,7 @@
   quality: GOOD if valid xvr and value otherwise BAD
   retr: Resulting Mode
   signature: highon(cvr, mode)
-- detailedDescription: Computes liquid entalpy of petroleum fraction in MJ/T
+- detailedDescription: Computes liquid enthalphy of petroleum fraction in MJ/T
   name: hliq
   parameters:
   - arity: '1'
@@ -1323,9 +1336,9 @@
     direction: in
     name: wk
   quality: GOOD if input GOOD
-  retr: Liquid entaphi in MJ/T
+  retr: Liquid enthalphy in MJ/T
   signature: hliq(temp, density, wk)
-- detailedDescription: Calculates vapor entalpy of petroleum fraction in MJ/T
+- detailedDescription: Calculates vapor enthalpy of petroleum fraction in MJ/T
   name: hvap
   parameters:
   - arity: '1'
@@ -1347,7 +1360,7 @@
     direction: in
     name: wk
   quality: GOOD if input GOOD
-  retr: Vapor entalpy in MJ/T
+  retr: Vapor enthalpy in MJ/T
   signature: hvap(temp, density, wk)
 - detailedDescription: "Computes the specific enthalpy of saturated or superheated\
     \ steam in a stream from its temperature and the\r\n  total stream pressure."
@@ -1896,8 +1909,10 @@
   quality: GOOD if valid model between cvr and xvr
   retr: Steady state gain from xvr towards cvr if valid model, else 0
   signature: modget(cvr, xvr)
-- detailedDescription: "Set the gain modifier in the active experimental model. Cvr\
-    \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl"
+- detailedDescription: "Construct the experimental model from parameters. Cvr and\
+    \ Mvr/Dvr needs to be contained in same SmpcAppl\r\n  The Laplace transform model\
+    \ is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1 + lag2*s)\r\n  where lead1,\
+    \ delay, lag1 and lag2 are given in minutes."
   name: modsched
   parameters:
   - arity: '1'
@@ -1922,25 +1937,26 @@
   - arity: '1'
     datatype:
     - value
-    description: First order time lag for model
+    description: First time constant for model
     direction: in
     name: lag1
   - arity: '1'
     datatype:
     - value
-    description: Second order time lag for model
+    description: Second time constant for model
     direction: in
     name: lag2
   - arity: '1'
     datatype:
     - value
-    description: Something ???
+    description: Time constant of the lead term (used to generate inverse response
+      and overshoot)
     direction: in
     name: lead1
   - arity: '1'
     datatype:
     - value
-    description: Delay ???
+    description: Dead time
     direction: in
     name: delay
   - arity: '1'
@@ -2293,7 +2309,7 @@
   parameters:
   - arity: '1'
     datatype:
-    - value
+    - smpcappl
     description: Application id for application to update
     direction: in
     name: applID
@@ -3027,14 +3043,14 @@
   quality: quality(x)
   retr: Sine value of x
   signature: sin(x)
-- detailedDescription: "Debugging code. Will sleep for sleepsecs\r\n  Not part of\
+- detailedDescription: "Debugging code. Will sleep for sleepmsecs\r\n  Not part of\
     \ release-builds, intended for debugging of Master<->RUI issues to introduce a\
     \ long \"exe-time\" in Master"
   name: sleep
   parameters: []
-  quality: BAD if input a is BAD, else GOOD
-  retr: sleeptime [sec]
-  signature: sleep(sleepsecs)
+  quality: BAD if input sleepmsecs is BAD, else GOOD
+  retr: sleeptime [msec]
+  signature: sleep(sleepmsecs)
 - detailedDescription: Sets the desired mode for Cvr.SetPnt or Mvr.Iv. If MODE is
     not exactly 0 or 1, no action is performed
   name: spivon
