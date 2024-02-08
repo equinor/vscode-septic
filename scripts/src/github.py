@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def sendRequestGithub(endpoint: str):
+def send_request_github(endpoint: str):
     base_url = "https://api.github.com"
     url = base_url + endpoint
     token = os.getenv("API_TOKEN")
@@ -22,56 +22,56 @@ def sendRequestGithub(endpoint: str):
     return response.json()
 
 
-def decodeBas64(base64_str: str):
+def decode_base64(base64_str: str):
     decoded_bytes = base64.b64decode(base64_str)
     return decoded_bytes.decode("utf-8")
 
 
-def getCommitId(branch: str):
+def get_commit_id(branch: str):
     owner = "equinor"
     repo = "SEPTIC"
     endpoint = f"/repos/{owner}/{repo}/branches/{branch}"
-    response = sendRequestGithub(endpoint)
+    response = send_request_github(endpoint)
     return response["commit"]["sha"]
 
 
-def getCalcFile(ref: str):
+def get_calc_file(ref: str):
     path = "src/Calc.cpp"
-    return getFile(ref, path)
+    return get_file(ref, path)
 
 
-def getDir(ref: str, dir: str):
+def get_dir(ref: str, dir: str):
     owner = "equinor"
     repo = "SEPTIC"
     endpoint = f"/repos/{owner}/{repo}/contents/{dir}?ref={ref}"
-    return sendRequestGithub(endpoint)
+    return send_request_github(endpoint)
 
 
-def getObjectFiles(ref: str):
-    paths_src = getDir(ref, "src")
-    paths_fmu = getDir(ref, "FMUsrc")
+def get_object_files(ref: str):
+    paths_src = get_dir(ref, "src")
+    paths_fmu = get_dir(ref, "FMUsrc")
     paths = paths_src + paths_fmu
     paths = [x["path"] for x in paths if x["path"].endswith(".cpp")]
     for path in paths:
         try:
-            yield getFile(ref, path)
+            yield get_file(ref, path)
         except Exception as e:
             print(e, path)
 
 
-def getFile(ref: str, path: str):
+def get_file(ref: str, path: str):
     owner = "equinor"
     repo = "SEPTIC"
     endpoint = f"/repos/{owner}/{repo}/contents/{path}?ref={ref}"
-    response = sendRequestGithub(endpoint)
-    return decodeBas64(response["content"])
+    response = send_request_github(endpoint)
+    return decode_base64(response["content"])
 
 
-def getTags():
+def get_tags():
     owner = "equinor"
     repo = "SEPTIC"
     endpoint = f"/repos/{owner}/{repo}/tags"
-    return sendRequestGithub(endpoint)
+    return send_request_github(endpoint)
 
 
 if __name__ == "__main__":

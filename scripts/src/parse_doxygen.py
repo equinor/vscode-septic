@@ -1,6 +1,6 @@
 import re
-from typing import List, Optional
 from dataclasses import dataclass
+from typing import List, Optional
 
 doxygen_regex = r"\/\*![\s\S]*?\*\/"
 
@@ -46,23 +46,23 @@ class Calc:
     quality: str
 
 
-def getObjectDoxygenFromFile(file: str) -> List[str]:
+def get_object_doxygen_from_file(file: str) -> List[str]:
     matches_doxygen = re.findall(doxygen_regex, file)
-    return list(filter(validateObjectDoxygen, matches_doxygen))
+    return list(filter(validate_object_doxygen, matches_doxygen))
 
 
-def validateObjectDoxygen(doxygen: str) -> bool:
+def validate_object_doxygen(doxygen: str) -> bool:
     vscode_regex = r"\\vscode\s+[\w]+"
     if re.search(vscode_regex, doxygen):
         return True
     return False
 
 
-def parseObjectDocumentation(file: str) -> List[SepticObject]:
-    doxygen_objects = getObjectDoxygenFromFile(file)
+def parse_object_documentation(file: str) -> List[SepticObject]:
+    doxygen_objects = get_object_doxygen_from_file(file)
     septic_objects: List[SepticObject] = []
     for obj_dox in doxygen_objects:
-        obj = parseObjectDoxygenDoc(obj_dox)
+        obj = parse_object_doxygen_doc(obj_dox)
         if obj:
             septic_objects.append(obj)
         else:
@@ -70,7 +70,7 @@ def parseObjectDocumentation(file: str) -> List[SepticObject]:
     return septic_objects
 
 
-def parseObjectDoxygenDoc(doxygen: str) -> Optional[SepticObject]:
+def parse_object_doxygen_doc(doxygen: str) -> Optional[SepticObject]:
     name_regex = r"\\vscode\s+([\w]+)"
     name_match = re.search(name_regex, doxygen)
     if not name_match:
@@ -93,13 +93,13 @@ def parseObjectDoxygenDoc(doxygen: str) -> Optional[SepticObject]:
     attr_matches = re.findall(attr_regex, doxygen)
     attributes: List[Attribute] = []
     for attr_dox in attr_matches:
-        attr = parseAttribute(attr_dox)
+        attr = parse_attribute(attr_dox)
         if attr:
             attributes.append(attr)
     return SepticObject(name, description, attributes, parents)
 
 
-def parseAttribute(attribute: str) -> Optional[Attribute]:
+def parse_attribute(attribute: str) -> Optional[Attribute]:
     attr_regex = (
         r"\\param\s+([\w]+)\s+([\S\s]*?)\s+(?:\{([\S\s]+)\})(?:\s*\[([\w\s,]+)\])?"
     )
@@ -109,7 +109,7 @@ def parseAttribute(attribute: str) -> Optional[Attribute]:
     name = attr_match.group(1)
     description = attr_match.group(2).strip()
     details = attr_match.group(3)
-    attr_info = parseAttributeDetails(details)
+    attr_info = parse_attribute_details(details)
     tags = (
         [e.strip() for e in attr_match.group(4).split(",")]
         if attr_match.group(4)
@@ -129,7 +129,7 @@ def parseAttribute(attribute: str) -> Optional[Attribute]:
     )
 
 
-def parseAttributeDetails(input: str):
+def parse_attribute_details(input: str):
     information = {
         "datatype": "",
         "list": False,
@@ -198,12 +198,12 @@ def parseAttributeDetails(input: str):
     return information
 
 
-def getCalcDoxygenFromFile(file: str) -> List[str]:
+def get_calc_doxygen_from_file(file: str) -> List[str]:
     matches_doxygen = re.findall(doxygen_regex, file)
-    return list(filter(validateCalcDoxygen, matches_doxygen))
+    return list(filter(validate_calc_doxygen, matches_doxygen))
 
 
-def validateCalcDoxygen(doxygen: str) -> bool:
+def validate_calc_doxygen(doxygen: str) -> bool:
     class_regex = r"\\class\s+(Calc[\w]+)\b"
     function_regex = r"\\calc\{[\S ]+\}"
     if re.search(class_regex, doxygen) and re.search(function_regex, doxygen):
@@ -211,7 +211,7 @@ def validateCalcDoxygen(doxygen: str) -> bool:
     return False
 
 
-def parseCalcDoxygenDoc(calc: str) -> Optional[Calc]:
+def parse_calc_doxygen_doc(calc: str) -> Optional[Calc]:
     parameters: List[dict] = []
     func = re.search(r"\\calc\{\s*(([\w]+)\([\S ]*\))\}", calc)
     name = func.group(2) if func else None
@@ -224,7 +224,7 @@ def parseCalcDoxygenDoc(calc: str) -> Optional[Calc]:
         r"\\param\s*[\S\s]*?(?:(?=(?:\r?\n){2})|(?=\\|\*\/))", calc
     )
     for param in param_matches:
-        parsedParam = parseParameter(param)
+        parsedParam = parse_parameter(param)
         if parsedParam:
             parameters.append(parsedParam)
     return_match = re.search(r"\\return([\S ]+)", calc)
@@ -251,7 +251,7 @@ def parseCalcDoxygenDoc(calc: str) -> Optional[Calc]:
     )
 
 
-def parseParameter(param: str) -> Optional[Parameter]:
+def parse_parameter(param: str) -> Optional[Parameter]:
     param_match = re.search(
         r"\\param\[([\w,]+)\]\s+([\w]+)\s+([^\{]+)(?:\{([\S\s]+)\})?",
         param,
@@ -261,7 +261,7 @@ def parseParameter(param: str) -> Optional[Parameter]:
     if not direction or not name:
         return None
     description = param_match.group(3).strip() if param_match.group(3) else ""
-    param_details = parseParameterDetails(param_match.group(4))
+    param_details = parse_parameter_details(param_match.group(4))
     return Parameter(
         name=name,
         description=description,
@@ -271,7 +271,7 @@ def parseParameter(param: str) -> Optional[Parameter]:
     )
 
 
-def parseParameterDetails(inp: Optional[str]):
+def parse_parameter_details(inp: Optional[str]):
     information = {"datatype": ["value"], "arity": "1"}
     if not inp:
         return information
@@ -302,11 +302,11 @@ def parseParameterDetails(inp: Optional[str]):
     return information
 
 
-def parseCalcDocumentation(file: str) -> List[Calc]:
-    calcs_doxygen = getCalcDoxygenFromFile(file)
+def parse_calc_documentation(file: str) -> List[Calc]:
+    calcs_doxygen = get_calc_doxygen_from_file(file)
     parsedCalcs: List[Calc] = []
     for calc_dox in calcs_doxygen:
-        parsed_calc = parseCalcDoxygenDoc(calc_dox)
+        parsed_calc = parse_calc_doxygen_doc(calc_dox)
         if parsed_calc:
             parsedCalcs.append(parsed_calc)
         else:
@@ -314,7 +314,7 @@ def parseCalcDocumentation(file: str) -> List[Calc]:
     return parsedCalcs
 
 
-def testCalc(calc: Calc) -> bool:
+def test_calc(calc: Calc) -> bool:
     params_sign_match = re.search(r"\(([\)^])\)", calc.signature)
     if not params_sign_match:
         return True

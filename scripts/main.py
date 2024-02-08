@@ -6,12 +6,12 @@ from pathlib import Path
 from typing import List, Union
 
 import yaml
-from src.github import getCalcFile, getCommitId, getObjectFiles, getTags
+from src.github import get_calc_file, get_commit_id, get_object_files, get_tags
 from src.parse_doxygen import (
     SepticObject,
-    parseCalcDocumentation,
-    parseObjectDocumentation,
-    testCalc,
+    parse_calc_documentation,
+    parse_object_documentation,
+    test_calc,
 )
 from src.versioning import (
     folder_name_to_option,
@@ -32,7 +32,9 @@ first_valid_version = (2, 88)
 
 def update_versioned_documentation_tag(tag: str):
     tags = list(
-        map(lambda x: x["commit"]["sha"], filter(lambda x: x["name"] == tag, getTags()))
+        map(
+            lambda x: x["commit"]["sha"], filter(lambda x: x["name"] == tag, get_tags())
+        )
     )
     if len(tags) == 0:
         raise Exception("Tag not found in repostitory")
@@ -56,7 +58,7 @@ def update_versioned_documentation_tag(tag: str):
 
 
 def update_versioned_documentation():
-    tags = getTags()
+    tags = get_tags()
     tag_versions = {}
     for tag in tags:
         version = get_versions_from_tag(tag["name"])
@@ -86,7 +88,7 @@ def update_latest_documentation():
     object_path = folder_path / object_file_name
     calc_path = folder_path / calc_file_name
     meta_path = folder_path / meta_info_name
-    commit = getCommitId("main")
+    commit = get_commit_id("main")
     updateObjects(commit, object_path)
     updateCalcs(commit, calc_path)
     update_meta_info(commit, "latest", meta_path)
@@ -106,9 +108,9 @@ def update_version_options():
 
 def updateObjects(ref: str, output_path: Path):
     objects: List[SepticObject] = []
-    file_generator = getObjectFiles(ref)
+    file_generator = get_object_files(ref)
     for f in file_generator:
-        objects.extend(parseObjectDocumentation(f))
+        objects.extend(parse_object_documentation(f))
     objects.sort(key=lambda x: x.name)
     for obj in objects:
         obj.attributes.sort(key=lambda x: x.name)
@@ -120,10 +122,10 @@ def updateObjects(ref: str, output_path: Path):
 
 
 def updateCalcs(ref: str, output_path: Path):
-    calc_file = getCalcFile(ref)
-    calcs = parseCalcDocumentation(calc_file)
+    calc_file = get_calc_file(ref)
+    calcs = parse_calc_documentation(calc_file)
     calcs.sort(key=lambda x: x.name)
-    calcs = filter(testCalc, calcs)
+    calcs = filter(test_calc, calcs)
     with open(output_path, "w") as file:
         yaml.dump([asdict(calc) for calc in calcs], file)
 
