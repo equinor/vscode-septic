@@ -589,6 +589,9 @@ function checkValidValueParam(
         return true;
     }
     let exprLiteral = expr as AlgLiteral;
+    if (isPureJinja(exprLiteral.value)) {
+        return true;
+    }
     let objects = refProvider.getObjectsByIdentifier(
         exprLiteral.value.split(".")[0]
     );
