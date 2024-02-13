@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.1](https://github.com/equinor/vscode-septic/compare/v1.16.0...v1.16.1) (2024-02-13)
+
+
+### 🐛 Bug Fixes
+
+* bug with unnecessary diagnostics for pure jinja in calcs that expect value ([#485](https://github.com/equinor/vscode-septic/issues/485)) ([59ae5dd](https://github.com/equinor/vscode-septic/commit/59ae5dda5fc079ad0a26540de65d3687990e13c9))
+
 ## [1.16.0](https://github.com/equinor/vscode-septic/compare/v1.15.7...v1.16.0) (2024-02-08)
 
 
