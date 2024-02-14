@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.2](https://github.com/equinor/vscode-septic/compare/v1.16.1...v1.16.2) (2024-02-14)
+
+
+### 🐛 Bug Fixes
+
+* deleting code when formatting uncomplete jinja ([#490](https://github.com/equinor/vscode-septic/issues/490)) ([8f04c87](https://github.com/equinor/vscode-septic/commit/8f04c87133a1e3e26a7dd06a3f9dd306f833fd46))
+
 ## [1.16.1](https://github.com/equinor/vscode-septic/compare/v1.16.0...v1.16.1) (2024-02-13)
 
 
