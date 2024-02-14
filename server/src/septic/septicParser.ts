@@ -433,6 +433,10 @@ export class SepticScanner {
         while (!this.isAtEnd() && !this.match(type)) {
             this.advance();
         }
+        if (this.isAtEnd()) {
+            this.addComment(SepticTokenType.jinjaComment);
+            return;
+        }
         if (!this.match("}")) {
             this.error("Invalid jinja expression");
             return;

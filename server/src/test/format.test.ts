@@ -56,4 +56,14 @@ describe("Test formatting", () => {
         const expectedContent = loadFile("formatting/formatoffExpected.cnfg");
         compareFiles(expectedContent, formattedContent);
     });
+    it("Expect no formatting of incomplete jinja", () => {
+        const content = loadFile("formatting/uncompletedJinjaOriginal.cnfg");
+        const doc = TextDocument.create("", "", 0, content);
+        const cnfg = parseSeptic(doc.getText());
+        const formatter = new SepticCnfgFormatter(cnfg, doc);
+        const edits = formatter.format();
+        const formattedContent = TextDocument.applyEdits(doc, edits);
+        const expectedContent = loadFile("formatting/uncompletedJinjaExpected.cnfg");
+        compareFiles(expectedContent, formattedContent);
+    });
 });
