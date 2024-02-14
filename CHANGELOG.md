@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.3](https://github.com/equinor/vscode-septic/compare/v1.16.2...v1.16.3) (2024-02-14)
+
+
+### 🐛 Bug Fixes
+
+* autocomplete for variables containing jinja ([#493](https://github.com/equinor/vscode-septic/issues/493)) ([129f8e5](https://github.com/equinor/vscode-septic/commit/129f8e5da0242eb0a2d38f2ca92e542a4f512503))
+
 ## [1.16.2](https://github.com/equinor/vscode-septic/compare/v1.16.1...v1.16.2) (2024-02-14)
 
 
