@@ -75,7 +75,7 @@ export function getCompletion(
         if (triggerCharacter === ".") {
             return getCalcPublicPropertiesCompletion(offset, cnfg, refProvider);
         }
-        return getCalcCompletion(offset, cnfg, refProvider);
+        return getCalcCompletion(offset, cnfg, doc, refProvider);
     }
     return getObjectCompletion(offset, cnfg, refProvider, doc);
 }
@@ -138,17 +138,25 @@ function publicPropertiesToCompletionItems(
 export function getCalcCompletion(
     offset: number,
     cnfg: SepticCnfg,
+    doc: ITextDocument,
     refProvider: SepticReferenceProvider
 ): CompletionItem[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const compItems: CompletionItem[] = [];
-    const obj = cnfg.getObjectFromOffset(offset);
-    if (!obj) {
-        return [];
-    }
+    let ref = cnfg.getXvrRefFromOffset(offset);
+    let range: Range = ref
+        ? {
+              start: doc.positionAt(ref.location.start),
+              end: doc.positionAt(ref.location.end),
+          }
+        : {
+              start: doc.positionAt(offset),
+              end: doc.positionAt(offset),
+          };
     getRelevantXvrsCalc(refProvider.getAllXvrObjects()).forEach((xvr) => {
-        compItems.push(xvrToCompletionItem(xvr));
+        compItems.push(xvrToCompletionItem(xvr, range));
     });
+
     let calcs = metaInfoProvider.getCalcs();
     for (let calc of calcs) {
         compItems.push({
@@ -184,22 +192,41 @@ export function getObjectCompletion(
     if (!obj) {
         return [];
     }
+    let ref = cnfg.getXvrRefFromOffset(offset);
     if (isIdentifierCompletion(offset, obj)) {
+        let range: Range = ref
+            ? {
+                  start: doc.positionAt(ref.location.start),
+                  end: doc.positionAt(ref.location.end),
+              }
+            : {
+                  start: doc.positionAt(offset),
+                  end: doc.positionAt(offset),
+              };
         return getRelevantXvrsIdentifier(
             obj,
             refProvider.getAllXvrObjects()
-        ).map((obj) => xvrToCompletionItem(obj));
+        ).map((obj) => xvrToCompletionItem(obj, range));
     }
     const currentAttr = getCurrentAttr(offset, obj);
     if (!currentAttr) {
         return getObjectAttributeCompletion(obj, offset, doc);
     }
     if (isReferenceAttribute(obj, currentAttr)) {
+        let range: Range = ref
+            ? {
+                  start: doc.positionAt(ref.location.start),
+                  end: doc.positionAt(ref.location.end),
+              }
+            : {
+                  start: doc.positionAt(offset),
+                  end: doc.positionAt(offset),
+              };
         compItems.push(
             ...getRelevantXvrsAttributes(
                 currentAttr,
                 refProvider.getAllXvrObjects()
-            ).map((obj) => xvrToCompletionItem(obj))
+            ).map((obj) => xvrToCompletionItem(obj, range))
         );
     }
     if (isEndAttribute(offset, currentAttr)) {
@@ -352,12 +379,13 @@ function getExistingCompletion(
     };
 }
 
-function xvrToCompletionItem(obj: SepticObject): CompletionItem {
+function xvrToCompletionItem(obj: SepticObject, range: Range): CompletionItem {
     return {
         label: obj.identifier!.name,
         kind: CompletionItemKind.Variable,
         detail: obj.type,
         data: obj.identifier!.name,
+        textEdit: TextEdit.replace(range, obj.identifier!.name),
     };
 }
 
