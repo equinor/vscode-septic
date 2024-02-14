@@ -229,7 +229,7 @@ describe("Test calc completion", () => {
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
         const cnfg = parseSeptic(doc.getText());
         const offset = doc.offsetAt(Position.create(3, 6));
-        const compItems = getCalcCompletion(offset, cnfg, cnfg);
+        const compItems = getCalcCompletion(offset, cnfg, doc, cnfg);
         expect(
             compItems.filter(
                 (item) => item.kind === CompletionItemKind.Variable
@@ -241,7 +241,7 @@ describe("Test calc completion", () => {
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
         const cnfg = parseSeptic(doc.getText());
         const offset = doc.offsetAt(Position.create(3, 6));
-        const compItems = getCalcCompletion(offset, cnfg, cnfg);
+        const compItems = getCalcCompletion(offset, cnfg, doc, cnfg);
         expect(
             compItems.filter(
                 (item) => item.kind === CompletionItemKind.Variable
@@ -253,7 +253,7 @@ describe("Test calc completion", () => {
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
         const cnfg = parseSeptic(doc.getText());
         const offset = doc.offsetAt(Position.create(3, 6));
-        const compItems = getCalcCompletion(offset, cnfg, cnfg);
+        const compItems = getCalcCompletion(offset, cnfg, doc, cnfg);
         const metaInfoProvider = SepticMetaInfoProvider.getInstance();
         const calcs = metaInfoProvider.getCalcs();
         expect(
