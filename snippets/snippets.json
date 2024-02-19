@@ -543,7 +543,8 @@
             "        LockHL=  OFF",
             "        LockIV=  OFF",
             "        LockLL=  OFF",
-            "UseFactorWeight=  0\r"
+            "UseFactorWeight=  0\r",
+            "        PVPred=  OFF"
         ],
         "description": "For SEPTIC >= v2.82"
     },
