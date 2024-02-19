@@ -43,7 +43,8 @@
           "type": "string",
           "enum": [
             "latest",
-            "v2.88"
+            "v2.88",
+            "v2.89"
           ],
           "default": "latest",
           "description": "Select which version of Septic to use for documentation and diagnostics."
