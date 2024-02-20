@@ -355,12 +355,20 @@ export class SepticCnfgFormatter {
             this.setEditedFlag();
             return;
         }
-        let element = this.previousPrevious();
+        let previousElement = this.previousPrevious();
         let endPos;
-        if (!element || this.isAtEnd()) {
+        if (!previousElement || this.isAtEnd()) {
             endPos = Position.create(this.doc.lineCount, 99);
         } else {
-            endPos = this.doc.positionAt(element.end);
+            let currentElement = this.previous();
+            if (previousElement.end > currentElement.end) {
+                endPos = this.doc.positionAt(currentElement.start);
+            } else {
+                endPos = this.doc.positionAt(previousElement.end);
+            }
+        }
+        if (previousElement instanceof Attribute) {
+            this.currentLine += "  ";
         }
         this.addLine();
         let edit = TextEdit.replace(
