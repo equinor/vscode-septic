@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.16.4](https://github.com/equinor/vscode-septic/compare/v1.16.3...v1.16.4) (2024-02-20)
+
+
+### 🧹 Chores
+
+* add pvpred attribute to mvr snippet ([#499](https://github.com/equinor/vscode-septic/issues/499)) ([78f6d09](https://github.com/equinor/vscode-septic/commit/78f6d09743477b0e7b3163e69ceb207bd5032647))
+
+
+### 📚 Documentation
+
+* add documentation for v2.89 ([#497](https://github.com/equinor/vscode-septic/issues/497)) ([e1dfff2](https://github.com/equinor/vscode-septic/commit/e1dfff20c85fc7808c36c1b903d4240584989172))
+* update SEPTIC documentation ([#484](https://github.com/equinor/vscode-septic/issues/484)) ([645d9e0](https://github.com/equinor/vscode-septic/commit/645d9e009217fdba4bd92c8eb26985c7236f74c8))
+
+
+### 🐛 Bug Fixes
+
+* formatting of jinja right after attribute def ([#502](https://github.com/equinor/vscode-septic/issues/502)) ([efb8c22](https://github.com/equinor/vscode-septic/commit/efb8c22fe97677a2d9ff0d4733a21875c94c28cf))
+
 ## [1.16.3](https://github.com/equinor/vscode-septic/compare/v1.16.2...v1.16.3) (2024-02-14)
 
 
