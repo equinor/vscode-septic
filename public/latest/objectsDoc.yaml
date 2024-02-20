@@ -983,6 +983,16 @@
     noCnfg: false
     postfix: []
     tags: []
+  - calc: true
+    dataType: float
+    default: []
+    description: Nominal value
+    enums: []
+    list: false
+    name: NomVal
+    noCnfg: true
+    postfix: []
+    tags: []
   - calc: false
     dataType: float
     default:
@@ -2547,6 +2557,103 @@
     dataType: string
     default:
     - '""'
+    description: curve colors of corresponding variable
+    enums: []
+    list: true
+    name: Colors
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '100'
+    description: Max value y-range
+    enums: []
+    list: false
+    name: PlotMax
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Min value y-range
+    enums: []
+    list: false
+    name: PlotMin
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: X-position of upper left corner of label relative to image in pixels.
+      X1 < X2
+    enums: []
+    list: false
+    name: X1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: X-position of lower right corner of label relative to image in pixels.
+      X1 < X2
+    enums: []
+    list: false
+    name: X2
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: variable
+    default:
+    - '""'
+    description: List of xvrs to be included
+    enums: []
+    list: true
+    name: Xvrs
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Y-position of upper left corner of label relative to image in pixels.
+      Y1 < Y2
+    enums: []
+    list: false
+    name: Y1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Y-position of lower right corner of label relative to image in pixels.
+      Y1 < Y2
+    enums: []
+    list: false
+    name: Y2
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: MultiXvrPlot overlaid image
+  name: ImageMultiXvrPlot
+  parents:
+  - Image
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
     description: Backgroundcolors of corresponding texts
     enums: []
     list: true
@@ -2913,7 +3020,7 @@
     noCnfg: false
     postfix: []
     tags: []
-  description: Plot of xvr overlaid image. Name of object = Xvr to plot
+  description: XvrPlot overlaid image. Name of object = Xvr to plot
   name: ImageXvrPlot
   parents:
   - Image
@@ -3654,6 +3761,20 @@
     enums: []
     list: false
     name: Nfix
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Use process value and not meas for open loop predictions. Typically
+      used for step chokes
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: PVPred
     noCnfg: false
     postfix: []
     tags: []
