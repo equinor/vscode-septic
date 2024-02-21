@@ -390,7 +390,9 @@
   quality: GOOD
   retr: 'Most future prediction point: Cvr.OptPred(last evaluation point)'
   signature: cvpo(cvr)
-- detailedDescription: Gets the future prediction point n sample ahead
+- detailedDescription: "Gets the future prediction point n sample ahead. If n<1, prediction\
+    \ 1 step forward is given, if n>last\r\n  evaluation point, then prediction at\
+    \ last evaluation (end value) is given"
   name: cvpred
   parameters:
   - arity: '1'
@@ -399,6 +401,12 @@
     description: Cvr
     direction: in
     name: cvr
+  - arity: '1'
+    datatype:
+    - value+
+    description: npred
+    direction: in
+    name: n
   quality: GOOD
   retr: 'Future prediction point n samples ahead: Cvr.OptPred(pAppl->N + n)'
   signature: cvpred(cvr, n)
@@ -1181,6 +1189,18 @@
   quality: GOOD if valid applid
   retr: Use factor for application
   signature: getapplusefactor(applID)
+- detailedDescription: Get base value for given xvr
+  name: getbase
+  parameters:
+  - arity: '1'
+    datatype:
+    - xvr
+    description: Xvr
+    direction: in
+    name: xvr
+  quality: GOOD
+  retr: 'Base value: Xvr.Base'
+  signature: getbase(xvr)
 - detailedDescription: Get current bias value for given cvr
   name: getbias
   parameters:
