@@ -142,12 +142,11 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         update_versioned_documentation()
         update_latest_documentation()
+        update_version_options()
     elif len(sys.argv) == 2:
         ref = sys.argv[1].split("/")[-1]
         if ref == "main":
             update_latest_documentation()
         else:
             update_versioned_documentation_tag(ref)
-    else:
-        exit()
-    update_version_options()
+            update_version_options()
