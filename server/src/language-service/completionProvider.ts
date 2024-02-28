@@ -144,15 +144,25 @@ export function getCalcCompletion(
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const compItems: CompletionItem[] = [];
     let ref = cnfg.getXvrRefFromOffset(offset);
-    let range: Range = ref
-        ? {
-              start: doc.positionAt(ref.location.start),
-              end: doc.positionAt(ref.location.end),
-          }
-        : {
-              start: doc.positionAt(offset),
-              end: doc.positionAt(offset),
-          };
+    let range: Range;
+    if (ref) {
+        range = {
+            start: doc.positionAt(ref.location.start),
+            end: doc.positionAt(ref.location.end),
+        };
+    } else {
+        let pos = doc.positionAt(offset);
+        let line = doc.getText({
+            start: Position.create(pos.line, 0),
+            end: Position.create(pos.line, Infinity),
+        });
+        let existing = getExistingCompletion(line, pos.character - 1);
+        range = {
+            start: doc.positionAt(offset - existing.str.length),
+            end: pos,
+        };
+    }
+
     getRelevantXvrsCalc(refProvider.getAllXvrObjects()).forEach((xvr) => {
         compItems.push(xvrToCompletionItem(xvr, range));
     });
@@ -385,6 +395,7 @@ function xvrToCompletionItem(obj: SepticObject, range: Range): CompletionItem {
         kind: CompletionItemKind.Variable,
         detail: obj.type,
         data: obj.identifier!.name,
+        filterText: obj.identifier!.name,
         textEdit: TextEdit.replace(range, obj.identifier!.name),
     };
 }
