@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.16.5](https://github.com/equinor/vscode-septic/compare/v1.16.4...v1.16.5) (2024-02-29)
+
+
+### 🧹 Chores
+
+* **deps:** bump @types/node from 16.18.68 to 16.18.85 ([#517](https://github.com/equinor/vscode-septic/issues/517)) ([cfb4430](https://github.com/equinor/vscode-septic/commit/cfb44303881b5bb18548b78f8fe0cec513816fc8))
+* **deps:** bump peter-evans/create-pull-request from 5 to 6 ([#468](https://github.com/equinor/vscode-septic/issues/468)) ([ede6e51](https://github.com/equinor/vscode-septic/commit/ede6e515ae5907e64e680aa393d03dd0e90fbfef))
+* **deps:** bump ts-node from 10.9.1 to 10.9.2 ([#435](https://github.com/equinor/vscode-septic/issues/435)) ([eed98b5](https://github.com/equinor/vscode-septic/commit/eed98b541c43d2174e8794bd39c604c28285ff71))
+
+
+### 👷 CI/CD
+
+* generate separate doc PRs for latest and versioned ([#505](https://github.com/equinor/vscode-septic/issues/505)) ([a074242](https://github.com/equinor/vscode-septic/commit/a074242a849cf1de8476ef528a532227393d5ef7))
+
+
+### 🐛 Bug Fixes
+
+* bug with completion in incomplete alg ([#516](https://github.com/equinor/vscode-septic/issues/516)) ([c912b81](https://github.com/equinor/vscode-septic/commit/c912b811a4599929f3dac04fdd22eee35797279d))
+* update documentation script ([#509](https://github.com/equinor/vscode-septic/issues/509)) ([a15c593](https://github.com/equinor/vscode-septic/commit/a15c593011348a0f6375742b054c828c7a811114))
+
 ## [1.16.4](https://github.com/equinor/vscode-septic/compare/v1.16.3...v1.16.4) (2024-02-20)
 
 
