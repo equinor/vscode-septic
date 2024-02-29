@@ -236,6 +236,18 @@ describe("Test calc completion", () => {
             ).length
         ).to.equal(2);
     });
+    it("Completion suggest Xvrs and Calcs in incomplete alg", () => {
+        const text = `Mvr: TestMvr\nEvr:   TestEvr\nCalcPvr: TestCalc\nAlg= "(TestMvr + T  "\n`;
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSeptic(doc.getText());
+        const offset = doc.offsetAt(Position.create(3, 17));
+        const compItems = getCalcCompletion(offset, cnfg, doc, cnfg);
+        expect(
+            compItems.filter(
+                (item) => item.kind === CompletionItemKind.Variable
+            ).length
+        ).to.equal(2);
+    });
     it("Completion don't suggest SopcXvrs", () => {
         const text = `SopcMvr: TestMvr\nSopcEvr:   TestEvr\nCalcPvr: TestCalc\nAlg= "  "\n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
