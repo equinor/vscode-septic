@@ -48,14 +48,17 @@ def format_attribute(attribute: dict):
     indents_attribute_delimiter = 14
     indents_line = max(indents_attribute_delimiter - len(name), 0)
     return (
-        " " * indents_line + name + "=  " + format_attribute_value(attribute["default"])
+        " " * indents_line
+        + name
+        + "=  "
+        + format_attribute_value(attribute["default"], attribute["list"])
     )
 
 
-def format_attribute_value(values: List[str]):
+def format_attribute_value(values: List[str], is_list: str):
     if not values:
-        return '""'
-    if len(values) > 1:
+        return ""
+    if is_list == "true":
         return f"{len(values)}" + "  " + "  ".join(values)
     return values[0]
 
