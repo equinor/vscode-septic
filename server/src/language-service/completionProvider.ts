@@ -197,10 +197,11 @@ export function getObjectCompletion(
     refProvider: SepticReferenceProvider,
     doc: ITextDocument
 ): CompletionItem[] {
-    const compItems: CompletionItem[] = [];
+    const compItems: CompletionItem[] =
+        SepticMetaInfoProvider.getInstance().getSnippets();
     const obj = cnfg.getObjectFromOffset(offset);
     if (!obj) {
-        return SepticMetaInfoProvider.getInstance().getSnippets();
+        return compItems;
     }
     let ref = cnfg.getXvrRefFromOffset(offset);
     if (isIdentifierCompletion(offset, obj)) {
@@ -241,7 +242,6 @@ export function getObjectCompletion(
     }
     if (isEndAttribute(offset, currentAttr)) {
         compItems.push(...getObjectAttributeCompletion(obj, offset, doc));
-        compItems.push(...SepticMetaInfoProvider.getInstance().getSnippets());
     }
     return compItems;
 }
