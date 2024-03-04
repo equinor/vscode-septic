@@ -7,6 +7,12 @@ import * as YAML from "js-yaml";
 import * as fs from "fs";
 import * as path from "path";
 import { SymbolKind } from "vscode-languageserver-types";
+import {
+    CompletionItem,
+    CompletionItemKind,
+    InsertTextFormat,
+    InsertTextMode,
+} from "vscode-languageserver";
 
 export const defaultObjectLevel = 2;
 export const defaultObjectSymbolKind = SymbolKind.Object;
@@ -29,6 +35,7 @@ export class SepticMetaInfoProvider {
     private objectsMap: Map<string, SepticObjectInfo>;
     private objectsDocMap: Map<string, ISepticObjectDocumentation>;
     private objectHierarchy: SepticObjectHierarchy;
+    private snippets: CompletionItem[];
     private version: string;
 
     private constructor(version: string) {
@@ -39,6 +46,7 @@ export class SepticMetaInfoProvider {
         this.objectHierarchy = this.loadObjectHierarchy(
             Array.from(this.objectsDocMap.values())
         );
+        this.snippets = this.loadSnippets(version);
     }
 
     public static getInstance(): SepticMetaInfoProvider {
@@ -104,6 +112,10 @@ export class SepticMetaInfoProvider {
 
     public getObjectHierarchy(): SepticObjectHierarchy {
         return this.objectHierarchy;
+    }
+
+    public getSnippets(): CompletionItem[] {
+        return this.snippets;
     }
 
     private loadCalcsInfo(version: string): Map<string, SepticCalcInfo> {
@@ -181,6 +193,29 @@ export class SepticMetaInfoProvider {
             objectsDocMap.set(obj.name, new SepticObjectDocumentation(obj));
         }
         return objectsDocMap;
+    }
+
+    private loadSnippets(version: string): CompletionItem[] {
+        const filePath = path.join(
+            __dirname,
+            `../../../public/${version.replace(/\./g, "_")}/snippets.yaml`
+        );
+        const file = fs.readFileSync(filePath, "utf-8");
+        const objectSnippets: SepticObjectSnippet[] = YAML.load(
+            file
+        ) as SepticObjectSnippet[];
+        let snippets: CompletionItem[] = objectSnippets.map((obj) => {
+            let compItem: CompletionItem = {
+                label: obj.prefix,
+                kind: CompletionItemKind.Snippet,
+                insertTextFormat: InsertTextFormat.Snippet,
+                insertText: obj.body.join("\n"),
+                insertTextMode: InsertTextMode.asIs,
+                detail: obj.description,
+            };
+            return compItem;
+        });
+        return snippets;
     }
 
     private loadObjectHierarchy(
@@ -318,6 +353,12 @@ export interface SepticObjectsInfoInput {
     level?: number;
     symbolKind?: string;
     refs?: SepticRefsInput;
+}
+
+export interface SepticObjectSnippet {
+    prefix: string;
+    body: string[];
+    description: string;
 }
 
 export interface ISepticObjectDocumentation {
