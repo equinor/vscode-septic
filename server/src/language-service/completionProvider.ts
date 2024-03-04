@@ -200,7 +200,7 @@ export function getObjectCompletion(
     const compItems: CompletionItem[] = [];
     const obj = cnfg.getObjectFromOffset(offset);
     if (!obj) {
-        return [];
+        return SepticMetaInfoProvider.getInstance().getSnippets();
     }
     let ref = cnfg.getXvrRefFromOffset(offset);
     if (isIdentifierCompletion(offset, obj)) {
@@ -241,6 +241,7 @@ export function getObjectCompletion(
     }
     if (isEndAttribute(offset, currentAttr)) {
         compItems.push(...getObjectAttributeCompletion(obj, offset, doc));
+        compItems.push(...SepticMetaInfoProvider.getInstance().getSnippets());
     }
     return compItems;
 }
