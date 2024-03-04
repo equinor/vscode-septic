@@ -13,6 +13,7 @@ from src.parse_doxygen import (
     parse_object_documentation,
     test_calc,
 )
+from src.snippets import generate_snippets
 from src.versioning import (
     folder_name_to_option,
     get_existing_versions,
@@ -112,8 +113,6 @@ def updateObjects(ref: str, output_path: Path):
     for f in file_generator:
         objects.extend(parse_object_documentation(f))
     objects.sort(key=lambda x: x.name)
-    for obj in objects:
-        obj.attributes.sort(key=lambda x: x.name)
     with open(output_path.resolve(), "w") as file:
         yaml.dump(
             [asdict(obj) for obj in objects],
@@ -147,6 +146,8 @@ if __name__ == "__main__":
         ref = sys.argv[1].split("/")[-1]
         if ref == "main":
             update_latest_documentation()
+            generate_snippets("latest")
         else:
             update_versioned_documentation_tag(ref)
             update_version_options()
+            generate_snippets(version_to_folder_name(get_versions_from_tag(ref)))
