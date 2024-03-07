@@ -670,7 +670,7 @@
     dataType: float
     default:
     - '0.001'
-    description: Rescaling of fulf if moving wrong direction from SetPnt
+    description: Rescale fulf if moving wrong direction from SetPnt
     enums: []
     list: false
     name: FulfReScale
@@ -681,8 +681,7 @@
     dataType: float
     default:
     - '1'
-    description: Rescaling fulf with same factor for whole horizon, if SetPnt wrong
-      direction
+    description: Rescale - same factor for whole horizon if SetPnt wrong direction
     enums: []
     list: false
     name: FulfUniScale
@@ -723,17 +722,6 @@
     postfix:
     - 'On'
     - 'Off'
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: High constraint back off used in steady state solver only
-    enums: []
-    list: false
-    name: HighBackOff
-    noCnfg: false
-    postfix: []
     tags: []
   - calc: false
     dataType: float
@@ -783,7 +771,7 @@
     dataType: enum
     default:
     - 'OFF'
-    description: Allow StdSolve to modify SetPnt, High and Low. ON = No modifications
+    description: Allow StdSolve to modify SetPnt/High/ Low. ON = No changes
     enums:
     - 'ON'
     - 'OFF'
@@ -1053,7 +1041,7 @@
     dataType: float
     default:
     - '0'
-    description: Set point for controlled variable with initial state indicated
+    description: Set point for CV with initial state indicated
     enums: []
     list: false
     name: SetPnt
@@ -1065,7 +1053,7 @@
   - calc: false
     dataType: enum
     default: []
-    description: Mode used for changes in set point. FILTER or RAMP
+    description: '- for changes in set point. FILTER or RAMP'
     enums:
     - FILTER
     - RAMP
@@ -1393,6 +1381,17 @@
     - ACTIVE
     list: false
     name: DesMode
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1'
+    description: Number of internal iterations in process simulators (not DELIVERY)
+    enums: []
+    list: false
+    name: IterEachN
     noCnfg: false
     postfix: []
     tags: []
@@ -2066,7 +2065,7 @@
     dataType: enum
     default:
     - WRRR
-    description: Set logon level needed for user input
+    description: Set needed logon level
     enums:
     - WWWW
     - WWWR
@@ -2095,7 +2094,7 @@
     dataType: enum
     default:
     - 'OFF'
-    description: Enable user input from RUI and type will be used for inputstyle
+    description: Enable user input, type for input style
     enums:
     - 'OFF'
     - BOOL
@@ -3564,8 +3563,8 @@
     dataType: float
     default:
     - '1'
-    description: Desired time constant for filtered change towards new ideal value.
-      Interlocked with IvRoc
+    description: Time constant for filtered change towards new IV. Interlocked with
+      IvRoc
     enums: []
     list: false
     name: IvFilt
@@ -3732,7 +3731,7 @@
     dataType: enum
     default:
     - STOPPED
-    description: Desired mode of manipulated variable
+    description: Desired mode of MV
     enums:
     - STOPPED
     - TRACKING
@@ -6628,7 +6627,7 @@
     postfix: []
     tags: []
   description: "State Variable\r\n  Use with subroutine model (SubrModl) for a variable\
-    \ with nominal response calulated by\r\n  the model. Transport mechanism to/from\
+    \ with nominal response calulated by the model. Transport mechanism\r\n  to/from\
     \ model is identical to a Cvr"
   name: Svr
   parents:
