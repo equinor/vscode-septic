@@ -1,0 +1,999 @@
+- body:
+  - '  Appl:          ${1:ApplName}'
+  description: Table appl
+  prefix: appl
+- body:
+  - '  ApplPlot:      ${1:ApplPlotName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  description: Appl Plot
+  prefix: applplot
+- body:
+  - '  BadXvrList:    ${1:BadXvrListName}'
+  - '           Row=  1'
+  - '           Col=  1'
+  - '       RowSize=  -1'
+  - '       ColSize=  -1'
+  description: List of bad xvrs in application
+  prefix: badxvrlist
+- body:
+  - '  CalcModl:      ${1:CalcModlName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  description: Calc Model
+  prefix: calcmodl
+- body:
+  - '  CalcPvr:       ${1:CalcPvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '           Alg=  ""'
+  description: Calculation
+  prefix: calcpvr
+- body:
+  - '  CalcTable:     ${1:CalcTableName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  description: Table of all calcs for indicated calc model
+  prefix: calctable
+- body:
+  - '  Chart:         ${1:ChartName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  - '         Title=  ""'
+  - '        xTitle=  ""'
+  - '        yTitle=  ""'
+  - '     Autoscale=  OFF'
+  - '          yMin=  -100'
+  - '          yMax=  100'
+  - '    LegendPosX=  -1'
+  - '    LegendPosY=  100'
+  - '         Types=  1'
+  - '                 ""  '
+  description: Chart
+  prefix: chart
+- body:
+  - '  ChartSerie:    ${1:ChartSerieName}'
+  - '         Color=  "black"'
+  - '          Text=  ""'
+  - '         Width=  1'
+  - '         Style=  Solid'
+  - '        Marker=  Cross'
+  - '        Values=  1'
+  - '                 ""  '
+  description: Chart Serie
+  prefix: chartserie
+- body:
+  - '  ColumnList:    ${1:ColumnListName}'
+  - '       Heading=  ""'
+  - '       Tooltip=  ""'
+  - '          Xvrs=  1'
+  - '                 ""  '
+  - '    StatusXvrs=  1'
+  - '                 ""  '
+  description: "The Xvrs listed are placed in a new column to the right of the corresponding\
+    \ XvrList\r\n  The heading text is used as heading for the new column"
+  prefix: columnlist
+- body:
+  - '  Curve:         ${1:CurveName}'
+  - '         Color=  "black"'
+  - '          Text=  ""'
+  - '         Width=  1'
+  - '       xPoints=  2  -10  10'
+  - '       yPoints=  2  -10  10'
+  - '         Style=  Solid'
+  description: Curve
+  prefix: curve
+- body:
+  - '  Cvr:           ${1:CvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '          Mode=  STOPPED'
+  - '          Auto=  OFF'
+  - '       PlotMax=  100'
+  - '       PlotMin=  0'
+  - '      PlotSpan=  -1'
+  - '          Nfix=  1'
+  - '        MaxChg=  -1'
+  - '          Unit=  ""'
+  - '          Meas=  0'
+  - '       GrpMask=  0000000000000000000000000000001'
+  - '       GrpType=  0000000000000000000000000000000'
+  - '          Span=  10'
+  - '      SetPntOn=  0'
+  - '        HighOn=  1e+10'
+  - '         LowOn=  -1e+10'
+  - '    SetPntPrio=  1'
+  - '      HighPrio=  1'
+  - '       LowPrio=  1'
+  - '   HighBackOff=  0'
+  - '    LowBackOff=  0'
+  - '          Fulf=  1'
+  - '     HighPnlty=  1'
+  - '      LowPnlty=  1'
+  - '     HighLimit=  1000'
+  - '      LowLimit=  1000'
+  - '     RelxParam=  3    1    30    90'
+  - '   FulfReScale=  0.001'
+  - '  FulfUniScale=  1'
+  - 'SetPntChangeMode=  '
+  - '      SetpTref=  0'
+  - '   SetPntRocUp=  1'
+  - '   SetPntRocDn=  1'
+  - '     BiasTfilt=  0'
+  - '     BiasTpred=  0'
+  - '     ConsTfilt=  -1'
+  - '         Integ=  0'
+  - ' TransformType=  NOTRANS'
+  - '     BadCntLim=  0'
+  - '       DesHorz=  0'
+  - '         Neval=  5'
+  - '        EvalDT=  0'
+  - '   KeepTargets=  OFF'
+  - MeasValidation=  OFF
+  - ' MeasHighLimit=  1e+10'
+  - '  MeasLowLimit=  -1e+10'
+  - '        LockHL=  OFF'
+  - '        LockSP=  OFF'
+  - '        LockLL=  OFF'
+  - UseFactorWeight=  0
+  description: Controlled Variable
+  prefix: cvr
+- body:
+  - '  CvrList:       ${1:CvrListName}'
+  - '          Text=  ""'
+  - '          Cvrs=  1'
+  - '                 ""  '
+  description: List of control variables with associated values
+  prefix: cvrlist
+- body:
+  - '  DisplayGroup:  ${1:DisplayGroupName}'
+  - '       GroupNo=  1'
+  - '        Locked=  '
+  - '          Rows=  20'
+  - '          Cols=  12'
+  - '         xGrid=  OFF'
+  - '         yGrid=  OFF'
+  - '         xAxis=  OFF'
+  - '         yAxis=  ON'
+  - '     Autoscale=  ON'
+  - '     Spanscale=  OFF'
+  - '      HistSize=  4320'
+  - '      PredSize=  180'
+  description: Container-object for all display items in a view
+  prefix: displaygroup
+- body:
+  - '  DmmyAppl:      ${1:DmmyApplName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '         Nstep=  1'
+  - '       PlotMax=  25'
+  - '      MasterOn=  ON'
+  - '       DesMode=  ACTIVE'
+  - '     IterEachN=  1'
+  description: Dummy Application
+  prefix: dmmyappl
+- body:
+  - '  Dvr:           ${1:DvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '          Mode=  STOPPED'
+  - '       PlotMax=  100'
+  - '       PlotMin=  0'
+  - '      PlotSpan=  -1'
+  - '          Nfix=  1'
+  - '          Unit=  ""'
+  - '          Meas=  0'
+  - '       GrpMask=  0000000000000000000000000000001'
+  - '       GrpType=  0000000000000000000000000000000'
+  - '          Span=  10'
+  - MeasValidation=  OFF
+  - ' MeasHighLimit=  1e+10'
+  - '  MeasLowLimit=  -1e+10'
+  description: Disturbance Variable
+  prefix: dvr
+- body:
+  - '  DvrList:       ${1:DvrListName}'
+  - '          Text=  ""'
+  - '          Dvrs=  1'
+  - '                 ""  '
+  description: List of disturbance variables with associated values
+  prefix: dvrlist
+- body:
+  - '  DynCurve:      ${1:DynCurveName}'
+  - '         ObjId=  ""'
+  - '         Color=  "black"'
+  - '          Text=  ""'
+  - '         Width=  1'
+  - '          Type=  0'
+  - '         Style=  Solid'
+  - '         xXvrs=  1'
+  - '                 ""  '
+  - '         yXvrs=  1'
+  - '                 ""  '
+  description: Dynamic Curve
+  prefix: dyncurve
+- body:
+  - '  DynPoint:      ${1:DynPointName}'
+  - '         Color=  "black"'
+  - '          Text=  ""'
+  - '         Width=  1'
+  - '      HistSize=  -1'
+  - '          xXvr=  ""'
+  - '          yXvr=  ""'
+  description: Dynamic Point (scatter plot)
+  prefix: dynpoint
+- body:
+  - '  Event:         ${1:EventName}'
+  - '             N=  0'
+  - '        Ncycle=  0'
+  - '           Cmd=  ""'
+  description: Events/triggers for change of SEPTIC parameters
+  prefix: event
+- body:
+  - '  Evr:           ${1:EvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '       PlotMax=  100'
+  - '       PlotMin=  0'
+  - '      PlotSpan=  -1'
+  - '          Nfix=  1'
+  - '          Unit=  ""'
+  - '          Meas=  0'
+  - '       GrpMask=  0000000000000000000000000000001'
+  - '       GrpType=  0000000000000000000000000000000'
+  - '          Span=  10'
+  - MeasValidation=  OFF
+  - ' MeasHighLimit=  1e+10'
+  - '  MeasLowLimit=  -1e+10'
+  - '         Color=  '
+  - '     UserInput=  OFF'
+  - '    UserAccess=  WRRR'
+  - '      UserMeas=  0'
+  - '      MinInput=  0'
+  - '      MaxInput=  0'
+  - '     UserEnums=  1'
+  - '                 ""  '
+  - ValidationLimit=  -1
+  description: Estimated/calculated Variable
+  prefix: evr
+- body:
+  - '  EvrList:       ${1:EvrListName}'
+  - '          Text=  ""'
+  - '          Evrs=  1'
+  - '                 ""  '
+  description: List of environmental/calculated variables with associated values
+  prefix: evrlist
+- body:
+  - '  ExprModl:      ${1:ExprModlName}'
+  description: Experimental model in a MPC/SmpcAppl
+  prefix: exprmodl
+- body:
+  - '  ExprProc:      ${1:ExprProcName}'
+  description: Experimental process, where the models are taken from the SmpcAppl
+    with same ID
+  prefix: exprproc
+- body:
+  - '  FMUModl:       ${1:FMUModlName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '       FMUname=  ""'
+  description: FMUModl
+  prefix: fmumodl
+- body:
+  - '  FMUProc:       ${1:FMUProcName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '       FMUname=  ""'
+  description: FMUProc
+  prefix: fmuproc
+- body:
+  - '  FdtaProc:      ${1:FdtaProcName}'
+  - '        Locked=  '
+  - '          Rows=  20'
+  - '          Cols=  12'
+  - '          Mode=  Playback'
+  description: Filedata process, playback or basecase comparison of .dta file. ID
+    of FdtaProc is the filename
+  prefix: fdtaproc
+- body:
+  - '  FreeMeas:      ${1:FreeMeasName}'
+  - '       Heading=  ""'
+  - '     StatusXvr=  '
+  - '        ColPos=  '
+  - '    SizeOffset=  0'
+  description: Present Meas of Xvr below the preceding element in a Table, adding
+    a new row to the table
+  prefix: freemeas
+- body:
+  - '  FreeText:      ${1:FreeTextName}'
+  - '       Heading=  ""'
+  - '        TextNo=  '
+  - '        ColPos=  '
+  - '    SizeOffset=  0'
+  description: Present Text1/Text2 from a Xvr below the preceding element in a Table,
+    adding a new row to the table
+  prefix: freetext
+- body:
+  - '  Heading:       ${1:HeadingName}'
+  - '          Text=  ""'
+  - '    SizeOffset=  0'
+  description: Heading
+  prefix: heading
+- body:
+  - '  Image:         ${1:ImageName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  - '      FileName=  ""'
+  description: Image
+  prefix: image
+- body:
+  - '  ImageArea:     ${1:ImageAreaName}'
+  - '   TargetGroup=  1'
+  - '     LineWidth=  1'
+  - '         Color=  "black"'
+  - '       xPoints=  4    0    10    10     0'
+  - '       yPoints=  4   20    20    40    40'
+  description: Image Area
+  prefix: imagearea
+- body:
+  - '  ImageMultiXvrPlot:  ${1:ImageMultiXvrPlotName}'
+  - '            X1=  -1'
+  - '            Y1=  -1'
+  - '            X2=  -1'
+  - '            Y2=  -1'
+  - '       PlotMax=  100'
+  - '       PlotMin=  0'
+  - '          Xvrs=  1'
+  - '                 ""  '
+  - '        Colors=  1'
+  - '                 ""  '
+  description: MultiXvrPlot overlaid image
+  prefix: imagemultixvrplot
+- body:
+  - '  ImageStatusLabel:  ${1:ImageStatusLabelName}'
+  - '            X1=  -1'
+  - '            Y1=  -1'
+  - '            X2=  -1'
+  - '            Y2=  -1'
+  - '         Texts=  1'
+  - '                 ""  '
+  - BackgroundColors=  1
+  - '                 ""  '
+  description: Image Status Label
+  prefix: imagestatuslabel
+- body:
+  - '  ImageTextXvr:  ${1:ImageTextXvrName}'
+  - '            X1=  -1'
+  - '            Y1=  -1'
+  - '            X2=  -1'
+  - '            Y2=  -1'
+  - '     TextColor=  ""'
+  - BackgroundColor=  ""
+  description: Image Text Xvr
+  prefix: imagetextxvr
+- body:
+  - '  ImageXvr:      ${1:ImageXvrName}'
+  - '            X1=  -1'
+  - '            Y1=  -1'
+  - '            X2=  -1'
+  - '            Y2=  -1'
+  - BackgroundColor=  "white"
+  description: Xvr value overlaid on image
+  prefix: imagexvr
+- body:
+  - '  ImageXvrCollection:  ${1:ImageXvrCollectionName}'
+  - '            X1=  -1'
+  - '            Y1=  -1'
+  - '            X2=  -1'
+  - '            Y2=  -1'
+  - '       Heading=  ""'
+  - '     StatusXvr=  ""'
+  - BackgroundColor=  ""
+  - '          Xvrs=  1'
+  - '                 ""  '
+  - '         Texts=  1'
+  - '                 ""  '
+  description: Collection of xvrs overlaid image
+  prefix: imagexvrcollection
+- body:
+  - '  ImageXvrPlot:  ${1:ImageXvrPlotName}'
+  - '            X1=  -1'
+  - '            Y1=  -1'
+  - '            X2=  -1'
+  - '            Y2=  -1'
+  description: XvrPlot overlaid image. Name of object = Xvr to plot
+  prefix: imagexvrplot
+- body:
+  - '  ListMeas:      ${1:ListMeasName}'
+  - '        ColPos=  '
+  - '       Heading=  ""'
+  - '     StatusXvr=  '
+  description: Present Meas of Xvr below the preceding element in a Table, adding
+    a row to the table
+  prefix: listmeas
+- body:
+  - '  MPCAppl:       ${1:MPCApplName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '         Nhorz=  80'
+  - '         Npred=  80'
+  - '       FeasTol=  1e-10'
+  - '       FailMax=  0'
+  - '       DesMode=  STOPPED'
+  description: SEPTIC MPC Application, MPCAppl version
+  prefix: mpcappl
+- body:
+  - '  MasterTcip:    ${1:MasterTcipName}'
+  - '    MasterPort=  12030'
+  - '        InitOn=  ON'
+  - '        HistOn=  ON'
+  - '        ModlOn=  ON'
+  - '    BufferSize=  64512'
+  - '    WriteHosts=  1'
+  - '                 "127.0.0.1"  '
+  description: Master TCIP
+  prefix: mastertcip
+- body:
+  - '  MessageView:   ${1:MessageViewName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  description: Message View
+  prefix: messageview
+- body:
+  - '  ModelMatrix:   ${1:ModelMatrixName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  - '        CvrIds=  1'
+  - '                 ""  '
+  - '     MvrDvrIds=  1'
+  - '                 ""  '
+  description: Model matrix between Mvrs/Dvrs and Cvrs
+  prefix: modelmatrix
+- body:
+  - '  ModelPlot:     ${1:ModelPlotName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  description: Plot model corresponding to Id, format cvr_mvr/dvr
+  prefix: modelplot
+- body:
+  - '  MsgBox:        ${1:MsgBoxName}'
+  - '        MaxLvl=  4'
+  - '        MinLvl=  1'
+  - '           Obj=  ~'
+  description: Message Box
+  prefix: msgbox
+- body:
+  - '  MultiXvrPlot:  ${1:MultiXvrPlotName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  - '         Title=  ""'
+  - '       PlotMax=  100'
+  - '       PlotMin=  0'
+  - '          Xvrs=  1'
+  - '                 ""  '
+  - '        Colors=  1'
+  - '                 ""  '
+  description: "MultiXvrPlot, plot Meas from multiple Xvr in same plot. Cnfg wih optional\
+    \ position and size if the group is\r\n  gridded"
+  prefix: multixvrplot
+- body:
+  - '  Mvr:           ${1:MvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '          Mode=  STOPPED'
+  - '          Auto=  OFF'
+  - '       PlotMax=  100'
+  - '       PlotMin=  0'
+  - '      PlotSpan=  -1'
+  - '          Nfix=  1'
+  - '        MaxChg=  -1'
+  - '          Unit=  ""'
+  - '          Meas=  0'
+  - '       GrpMask=  0000000000000000000000000000001'
+  - '       GrpType=  0000000000000000000000000000000'
+  - '          Span=  10'
+  - '        HighOn=  1e+10'
+  - '         LowOn=  -1e+10'
+  - '  ProcessValue=  0'
+  - '          IvOn=  0'
+  - '         MaxUp=  10'
+  - '         MaxDn=  -10'
+  - '     MovePnlty=  1'
+  - '         IvRoc=  -1'
+  - '        IvFilt=  1'
+  - '        IvPrio=  99'
+  - '          Fulf=  1'
+  - '   FulfReScale=  0'
+  - '         Price=  0'
+  - '      Blocking=  6    2     4     7    11    16    22'
+  - MeasValidation=  OFF
+  - ' MeasHighLimit=  1e+10'
+  - '  MeasLowLimit=  -1e+10'
+  - '        LockHL=  OFF'
+  - '        LockIV=  OFF'
+  - '        LockLL=  OFF'
+  - UseFactorWeight=  0
+  - '         WUpHi=  OFF'
+  - '         WUpLo=  OFF'
+  - '        PVPred=  OFF'
+  description: Manipulated Variable
+  prefix: mvr
+- body:
+  - '  MvrList:       ${1:MvrListName}'
+  - '          Text=  ""'
+  - '          Mvrs=  1'
+  - '                 ""  '
+  description: List of manipulated variables with associated values
+  prefix: mvrlist
+- body:
+  - '  NoisProc:      ${1:NoisProcName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  description: Simulate noise process
+  prefix: noisproc
+- body:
+  - '  NoisXvr:       ${1:NoisXvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '          Sine=  SINE'
+  - '         SineT=  20'
+  - '         SineA=  20'
+  - '         BiasA=  0'
+  - '          Ramp=  OFF'
+  - '         RampR=  0'
+  - '      RampMaxA=  0'
+  - '          Wite=  ON'
+  - '      WiteMaxA=  0'
+  - '       WiteNon=  0'
+  - '         WiteA=  0'
+  - '         Iwite=  ON'
+  - '     IwiteMaxA=  0'
+  - '      IwiteNon=  0'
+  - '        IwiteA=  0'
+  - '          Filt=  ON'
+  - '        FiltT1=  0'
+  - '       FiltNon=  0'
+  - '         FiltA=  0'
+  description: Noise variable
+  prefix: noisxvr
+- body:
+  - '  OPCProcPlot:   ${1:OPCProcPlotName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  description: OPC Process Plot
+  prefix: opcprocplot
+- body:
+  - '  PriorityTable:  ${1:PriorityTableName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  description: Table of priority levels for cvrs and mvrs
+  prefix: prioritytable
+- body:
+  - '  RemoteTcip:    ${1:RemoteTcipName}'
+  - '    MasterPort=  12035'
+  - '    MasterAddr=  "127.0.0.1"'
+  - '      HistSize=  -1'
+  - '       FillMsg=  ON'
+  - '    BufferSize=  64512'
+  - MasterBufferSize=  -1
+  description: RemoteTcip
+  prefix: remotetcip
+- body:
+  - '  SampleTvr:     ${1:SampleTvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '       PlotMax=  100'
+  - '       PlotMin=  0'
+  - '      PlotSpan=  -1'
+  - '          Nfix=  1'
+  - '          Unit=  ""'
+  - '          Meas=  0'
+  - '       GrpMask=  0000000000000000000000000000001'
+  - '       GrpType=  0000000000000000000000000000000'
+  - '          Span=  10'
+  - MeasValidation=  OFF
+  - ' MeasHighLimit=  1e+10'
+  - '  MeasLowLimit=  -1e+10'
+  - '     HighLimit=  0'
+  - '      LowLimit=  0'
+  - '       MaxDiff=  0'
+  - '       MaxSdev=  0'
+  - '    UpdateFrac=  1'
+  - '      RampTime=  1'
+  - '     Transform=  NONE'
+  - '  RecievedTime=  0, NoCnfg'
+  - '    SampleTime=  0, NoCnfg'
+  - '    SampleInfo=  0, NoCnfg'
+  - '     ModelInfo=  0, NoCnfg'
+  - '      HasModel=  0, NoCnfg'
+  - '      ModelVal=  0, NoCnfg'
+  - '      NormSdev=  0, NoCnfg'
+  - '  ManualSample=  "", NoCnfg'
+  description: "Trend Variable for lab and online sampling values\r\n  Has parameters\
+    \ that are used by"
+  prefix: sampletvr
+- body:
+  - '  SampleTvrList:  ${1:SampleTvrListName}'
+  - '          Text=  ""'
+  - '        SortBy=  CONFIG'
+  - '    SampleTvrs=  1'
+  - '                 ""  '
+  description: List of sample based variables with associated values
+  prefix: sampletvrlist
+- body:
+  - '  SmpcAppl:      ${1:SmpcApplName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '         Npred=  80'
+  - '         Nstep=  1'
+  - '       PlotMax=  25'
+  - '         Nhorz=  80'
+  - '        Nstart=  0'
+  - '       DesMode=  STOPPED'
+  - '       FailMax=  0'
+  - '  SteadySolver=  QP'
+  - '      OpenFlag=  CONSTMVR'
+  - '       FeasTol=  1e-10'
+  - '     PrintSens=  0'
+  - '      MasterOn=  OFF'
+  - '       PriceOn=  OFF'
+  - '    PriceScale=  1'
+  - '       IterOpt=  OFF'
+  - '   IterNewSens=  OFF'
+  - '     IterQpMax=  0'
+  - '   IterLineMax=  0'
+  - '    DoStdSolve=  ON'
+  - '      MajItLim=  200'
+  - '      MajPrint=  0'
+  - '   ObjConPrint=  OFF'
+  - '   VerifyGrads=  OFF'
+  - '      FuncPrec=  9.9999999e-09'
+  - '         FeTol=  9.9999997e-06'
+  - '      OptimTol=  1e-06'
+  - '      FdifIntv=  0.001'
+  - '    MaxSeconds=  10'
+  - '        LmPrio=  100'
+  - '    MaxPrioSQP=  100'
+  - '    UnConstrnd=  OFF'
+  - '       UpdFilt=  0'
+  - '       RelPert=  0.05'
+  - '     EachParam=  OFF'
+  - '   LinErrorLim=  1000'
+  - '     ColdStart=  ON'
+  - '    SimOptimal=  OFF'
+  - '     SensLimSS=  1e-06'
+  - '    SensLimDyn=  1e-06'
+  description: Description of Septic MPC Application
+  prefix: smpcappl
+- body:
+  - '  SopcChangeEvr:  ${1:SopcChangeEvrName}'
+  - '      BaseName=  ""'
+  - '         IdTag=  ""'
+  - '       MeasTag=  ""'
+  - '   NotValidTag=  ""'
+  - '        PPSTag=  ""'
+  description: SopcChangeEvr
+  prefix: sopcchangeevr
+- body:
+  - '  SopcCvr:       ${1:SopcCvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '        CvrTag=  ""'
+  - '       MeasTag=  ""'
+  - '         IdTag=  ""'
+  - '         SpTag=  ""'
+  - '      CvLowTag=  ""'
+  - '     CvHighTag=  ""'
+  - ' CvSetpointTag=  ""'
+  - '   NotValidTag=  ""'
+  - '   CvSwitchTag=  ""'
+  - '   CvActiveTag=  ""'
+  - '         LoTag=  ""'
+  - '         HiTag=  ""'
+  - '         Scale=  1'
+  - '        Offset=  0'
+  description: Control Variable OPC Connection
+  prefix: sopccvr
+- body:
+  - '  SopcDvr:       ${1:SopcDvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '        DvrTag=  ""'
+  - '       MeasTag=  ""'
+  - '         IdTag=  ""'
+  - '   NotValidTag=  ""'
+  - '   DvSwitchTag=  ""'
+  - '    DvTrackTag=  ""'
+  - '         Scale=  1'
+  - '        Offset=  0'
+  description: Disturbance variable OPC connection
+  prefix: sopcdvr
+- body:
+  - '  SopcEvr:       ${1:SopcEvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '        EvrTag=  ""'
+  - '       MeasTag=  ""'
+  - '         IdTag=  ""'
+  - '   NotValidTag=  ""'
+  description: Enviromental/Calculated Variable OPC Connection (Only Write)
+  prefix: sopcevr
+- body:
+  - '  SopcMvr:       ${1:SopcMvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '        MvrTag=  ""'
+  - '       MeasTag=  ""'
+  - '         PVTag=  ""'
+  - '         IdTag=  ""'
+  - '   NotValidTag=  ""'
+  - '     SpCalcTag=  ""'
+  - '         HiTag=  ""'
+  - '         LoTag=  ""'
+  - '         IvTag=  ""'
+  - '      MvLowTag=  ""'
+  - '     MvHighTag=  ""'
+  - '       MvIvTag=  ""'
+  - '      MaxUpTag=  ""'
+  - '    MaxDownTag=  ""'
+  - '       AutoTag=  ""'
+  - '        WhiTag=  ""'
+  - '        WloTag=  ""'
+  - '       CompTag=  ""'
+  - '       CaraTag=  ""'
+  - '       TrakTag=  ""'
+  - '     ToCompTag=  ""'
+  - '    ToLocalTag=  ""'
+  - '   MvActiveTag=  ""'
+  - '   MvSwitchTag=  ""'
+  - ' CompStatusTag=  ""'
+  - '         Scale=  1'
+  - '        Offset=  0'
+  description: Manipulated Variable OPC Connection
+  prefix: sopcmvr
+- body:
+  - '  SopcProc:      ${1:SopcProcName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '          Site=  AIM_AIMGUI'
+  - '      ServName=  "Statoil.OPC.Server"'
+  - '      ServNode=  "SERVNODE"'
+  - '   RealTimeFac=  1'
+  - '       ProcTag=  ""'
+  - AllowActiveTag=  ""
+  - '     StatusTag=  ""'
+  - '    DesModeTag=  ""'
+  - '       PulsTag=  ""'
+  - LoopcheckWriteTag=  ""
+  - LoopcheckReadTag=  ""
+  - ' ServFactorTag=  ""'
+  - '    CPUTimeTag=  ""'
+  - '         IdTag=  ""'
+  - '   ScheduleTag=  ""'
+  - '        RunSec=  -1'
+  - '   RequestRate=  -1'
+  - ' BadCountLimit=  0'
+  - SampleAgeLimit=  -1
+  - BlockWritingIfBad=  OFF
+  - '   WriteGroups=  1'
+  - WriteGroupPause=  1000
+  - '  UseDCOMAUTHN=  ON'
+  - SkipWriteBlocking=  ON
+  description: SopcProc description
+  prefix: sopcproc
+- body:
+  - '  SopcTvr:       ${1:SopcTvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '        TvrTag=  ""'
+  - '       MeasTag=  ""'
+  - '   NotValidTag=  ""'
+  - '      Text1Tag=  ""'
+  - '         Scale=  1'
+  - '        Offset=  0'
+  description: Trending variable OPC connection
+  prefix: sopctvr
+- body:
+  - '  Spacer:        ${1:SpacerName}'
+  - '          Size=  1'
+  description: Spacer
+  prefix: spacer
+- body:
+  - '  SubrXvr:       ${1:SubrXvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '         DtaIx=  ""'
+  - '          Init=  0'
+  description: SubrXvr
+  prefix: subrxvr
+- body:
+  - '  Svr:           ${1:SvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '       PlotMax=  100'
+  - '       PlotMin=  0'
+  - '      PlotSpan=  -1'
+  - '          Nfix=  1'
+  - '          Unit=  ""'
+  - '          Meas=  0'
+  - '    ModelValue=  '
+  - '          Span=  10'
+  - MeasValidation=  OFF
+  - ' MeasHighLimit=  1e+10'
+  - '  MeasLowLimit=  -1e+10'
+  description: "State Variable\r\n  Use with subroutine model (SubrModl) for a variable\
+    \ with nominal response calulated by the model. Transport mechanism\r\n  to/from\
+    \ model is identical to a Cvr"
+  prefix: svr
+- body:
+  - '  System:        ${1:SystemName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '         Nsecs=  10'
+  - '       PlotMax=  10'
+  - '         Nhist=  1440'
+  - '         Npred=  80'
+  - '         Nmodl=  80'
+  - '     ChngLogOn=  '
+  - '          Grps=  1'
+  - '                 "Free 1"  '
+  - '       GrpLock=  0'
+  - '      MaxLogon=  ROOT'
+  - '       RootPwd=  ""'
+  - '       MngrPwd=  ""'
+  - '       OperPwd=  ""'
+  - '       UserPwd=  ""'
+  - '          Terr=  0'
+  - '       DebugNR=  1000'
+  - '       DebugOn=  00000000'
+  - '      FontSize=  -1'
+  - '  InitialGroup=  -1'
+  - ShowText1WithName=  OFF
+  - '       MinXPos=  0'
+  - '       MinYPos=  0'
+  - '       MaxXPos=  0'
+  - '       MaxYPos=  0'
+  - '    InitScreen=  -1'
+  - '      InitXPos=  -1'
+  - '      InitYPos=  -1'
+  - '     InitWidth=  -1'
+  - '    InitHeight=  -1'
+  - MinimizeByHide=  OFF
+  - HideCloseButton=  OFF
+  - OPCSampleTimeOffset=  0
+  - '         Nxupd=  1'
+  - '        ClipOn=  OFF'
+  - '         WdwDx=  800'
+  - '         WdwDy=  400'
+  - '         Xline=  0'
+  - '         Xback=  0.7'
+  - '        Xgroup=  0001'
+  - '         Zname=  0'
+  - '         Zhilo=  0'
+  - '        Zstate=  0'
+  - '         Zopen=  0'
+  - '         Zfont=  0'
+  - '         Zline=  0'
+  description: Description of system object
+  prefix: system
+- body:
+  - '  SystemPlot:    ${1:SystemPlotName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  description: SystemPlot
+  prefix: systemplot
+- body:
+  - '  Table:         ${1:TableName}'
+  - '           Row=  1'
+  - '           Col=  1'
+  - '       RowSize=  4'
+  - '       ColSize=  5'
+  - '   NameColSize=  8'
+  - '   TextColSize=  12'
+  - '  ValueColSize=  -1'
+  - ' GroupsColSize=  16'
+  description: Defines table, setting parameters affecting all table configured as
+    children
+  prefix: table
+- body:
+  - '  Tvr:           ${1:TvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '       PlotMax=  100'
+  - '       PlotMin=  0'
+  - '      PlotSpan=  -1'
+  - '          Nfix=  1'
+  - '          Unit=  ""'
+  - '          Meas=  0'
+  - '       GrpMask=  0000000000000000000000000000001'
+  - '       GrpType=  0000000000000000000000000000000'
+  - '          Span=  10'
+  - MeasValidation=  OFF
+  - ' MeasHighLimit=  1e+10'
+  - '  MeasLowLimit=  -1e+10'
+  - '         Color=  '
+  description: Trend Variable Description
+  prefix: tvr
+- body:
+  - '  TvrList:       ${1:TvrListName}'
+  - '          Text=  ""'
+  - '          Tvrs=  1'
+  - '                 ""  '
+  description: List of trend variables with associated values
+  prefix: tvrlist
+- body:
+  - '  XYPlot:        ${1:XYPlotName}'
+  - '           Row=  1'
+  - '           Col=  1'
+  - '       RowSize=  4'
+  - '       ColSize=  5'
+  - '         Title=  ""'
+  - '        Legend=  OFF'
+  - '     SpanScale=  OFF'
+  - '        xTitle=  ""'
+  - '        yTitle=  ""'
+  - '          xMin=  -100'
+  - '          xMax=  100'
+  - '          yMin=  -100'
+  - '          yMax=  100'
+  - '         xSpan=  100'
+  - '         ySpan=  100'
+  description: XYPlot
+  prefix: xyplot
+- body:
+  - '  XvrList:       ${1:XvrListName}'
+  description: Defines list of xvrs to appear in a table. Interface def, not possible
+    to instantiate a XvrList
+  prefix: xvrlist
+- body:
+  - '  XvrMatrix:     ${1:XvrMatrixName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  - '       Heading=  ""'
+  - '        ColIds=  1'
+  - '                 ""  '
+  - '       ColTips=  1'
+  - '                 ""  '
+  - '      ColSizes=  1    0'
+  - '        RowIds=  1'
+  - '                 ""  '
+  - '       RowTips=  1'
+  - '                 ""  '
+  - '      RowUnits=  1'
+  - '                 ""  '
+  - '          Xvrs=  1'
+  - '                 ""  '
+  description: Matrix display for xvr values
+  prefix: xvrmatrix
+- body:
+  - '  XvrPlot:       ${1:XvrPlotName}'
+  - '           Row=  -1'
+  - '           Col=  -1'
+  - '       RowSize=  1'
+  - '       ColSize=  1'
+  description: XvrPlot cnfg wih optional position and size if the group is gridded
+  prefix: xvrplot
