@@ -110,7 +110,11 @@ describe("Test completion of object attributes", () => {
         const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(3, 8));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
-        expect(compItems.length).to.equal(0);
+        expect(
+            compItems.filter(
+                (item) => item.kind === CompletionItemKind.Property
+            ).length
+        ).to.equal(0);
     });
     it("Completion don't suggest existing attributes", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\nText1= ""\n  \n`;
@@ -158,7 +162,10 @@ describe("Test completion of object attributes", () => {
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
         const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 10));
-        const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
+        let compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
+        compItems = compItems.filter(
+            (item) => item.kind === CompletionItemKind.Property
+        );
         expect(compItems.length).to.greaterThan(0);
         const insertText = compItems[0].textEdit?.newText!;
         expect(/^\n/.test(insertText)).to.equal(true);
@@ -168,7 +175,10 @@ describe("Test completion of object attributes", () => {
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
         const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 15));
-        const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
+        let compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
+        compItems = compItems.filter(
+            (item) => item.kind === CompletionItemKind.Property
+        );
         expect(compItems.length).to.greaterThan(0);
         let textEdit = compItems[0].textEdit as TextEdit;
         expect(textEdit.range.start.character).to.equal(10);

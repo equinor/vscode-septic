@@ -197,8 +197,9 @@ export function getObjectCompletion(
     refProvider: SepticReferenceProvider,
     doc: ITextDocument
 ): CompletionItem[] {
-    const compItems: CompletionItem[] =
-        SepticMetaInfoProvider.getInstance().getSnippets();
+    const compItems: CompletionItem[] = SepticMetaInfoProvider.getInstance()
+        .getSnippets()
+        .slice();
     const obj = cnfg.getObjectFromOffset(offset);
     if (!obj) {
         return compItems;
