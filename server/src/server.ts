@@ -207,9 +207,19 @@ connection.onInitialized(async () => {
     }
 });
 
+let eventBuffer: string[] = [];
+
 documentProvider.onDidChangeDoc(async (uri) => {
-    publishDiagnostics(uri);
+    eventBuffer.push(uri);
 });
+
+setInterval(async () => {
+    if (eventBuffer.length > 0) {
+        const uri = eventBuffer.pop();
+        eventBuffer = [];
+        publishDiagnostics(uri!);
+    }
+}, 200);
 
 documentProvider.onDidCreateDoc(async (uri) => {
     publishDiagnostics(uri);

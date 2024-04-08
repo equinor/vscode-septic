@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { removeSpaces } from "../util";
 import { SepticTokenType } from "./septicTokens";
 
 export class SepticBase {
@@ -204,10 +205,12 @@ export class Attribute extends SepticBase {
 
 export class Identifier extends SepticBase {
     name: string;
+    id: string;
 
     constructor(name: string, start: number = -1, end: number = -1) {
         super(start, end);
         this.name = name;
+        this.id = removeSpaces(name);
     }
 
     getElements(): SepticBase[] {

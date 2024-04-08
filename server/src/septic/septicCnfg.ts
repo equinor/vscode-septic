@@ -88,9 +88,7 @@ export class SepticCnfg implements SepticReferenceProvider {
             if (!obj.identifier) {
                 return false;
             }
-            return (
-                removeSpaces(obj.identifier.name) === identifierSpacesRemoved
-            );
+            return obj.identifier.id === identifierSpacesRemoved;
         });
     }
 
