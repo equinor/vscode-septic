@@ -76,6 +76,33 @@ export function activate(context: vscode.ExtensionContext) {
         );
     });
 
+    vscode.commands.registerCommand("septic.detectCycles", async () => {
+        let contexts = await client.sendRequest(protocol.contexts, {});
+        let choice = await vscode.window.showQuickPick(contexts);
+        if (!choice) {
+            return;
+        }
+        let report = await client.sendRequest(protocol.cylceReport, {
+            uri: choice,
+        });
+        if (!report) {
+            vscode.window.showInformationMessage(
+                `Not able to generate cycle report for ${choice}`
+            );
+        }
+        const wsedit = new vscode.WorkspaceEdit();
+        const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        const filePath = vscode.Uri.file(wsPath + `/cycle_report.txt`);
+        wsedit.createFile(filePath, {
+            contents: Buffer.from(report),
+            overwrite: true,
+        });
+        await vscode.workspace.applyEdit(wsedit);
+        await vscode.window.showTextDocument(filePath, {
+            preserveFocus: false,
+        });
+    });
+
     client.start();
 }
 

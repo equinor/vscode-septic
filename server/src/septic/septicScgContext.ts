@@ -16,6 +16,7 @@ import { SepticCnfg } from "./septicCnfg";
 import { removeSpaces } from "../util";
 import { SepticObjectHierarchy } from "./septicMetaInfo";
 import { updateParentObjects } from "./hierarchy";
+import { Alg, Cycle, findAlgCycles } from "./cycle";
 
 export interface ScgConfig {
     outputfile?: string;
@@ -118,6 +119,22 @@ export class ScgContext implements SepticReferenceProvider {
         }
         return objects;
     }
+    getObjectByIdentifierAndType(
+        identifier: string,
+        type: string
+    ): SepticObject | undefined {
+        for (let file of this.files) {
+            let cnfg = this.cnfgCache.get(file);
+            if (!cnfg) {
+                continue;
+            }
+            let obj = cnfg.getObjectByIdentifierAndType(identifier, type);
+            if (obj) {
+                return obj;
+            }
+        }
+        return undefined;
+    }
 
     public getXvrRefs(name: string): SepticReference[] | undefined {
         let xvrRefs: SepticReference[] = [];
@@ -176,5 +193,31 @@ export class ScgContext implements SepticReferenceProvider {
             objects.push(...cnfg.objects);
         }
         updateParentObjects(objects, hierarchy);
+    }
+
+    public findAlgCycles(): Cycle[] {
+        let calcPvrs: SepticObject[] = [];
+        for (let file of this.files) {
+            let cnfg = this.cnfgCache.get(file);
+            if (!cnfg) {
+                continue;
+            }
+            calcPvrs.push(
+                ...cnfg.objects.filter((obj) => obj.type === "CalcPvr")
+            );
+        }
+        let algs: Alg[] = [];
+        for (let calcPvr of calcPvrs) {
+            let alg = calcPvr.getAttribute("Alg");
+            let content = alg?.getAttrValue()?.getValue();
+            if (!content || !calcPvr.identifier?.name) {
+                continue;
+            }
+            algs.push({
+                calcPvrName: removeSpaces(calcPvr.identifier?.name!),
+                content: content,
+            });
+        }
+        return findAlgCycles(algs);
     }
 }
