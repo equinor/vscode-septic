@@ -9,7 +9,7 @@ import {
     CancellationTokenSource,
     URI,
 } from "vscode-languageserver";
-import { SepticCnfg, parseSeptic } from "../septic";
+import { SepticCnfg, parseSepticAsync, parseSepticSync } from "../septic";
 import { ResourceMap } from "../util/resourceMap";
 import { ITextDocument } from ".";
 import { Lazy, lazy } from "../util/lazy";
@@ -23,21 +23,21 @@ export interface ISepticConfigProvider {
 type GetValueFn = (
     document: ITextDocument,
     token: CancellationToken
-) => SepticCnfg;
+) => Promise<SepticCnfg>;
 
-function getValueCnfg(
+async function getValueCnfg(
     document: ITextDocument,
     token: CancellationToken
-): SepticCnfg {
+): Promise<SepticCnfg> {
     const text = document.getText();
-    let cnfg = parseSeptic(text, token);
+    let cnfg = await parseSepticAsync(text, token);
     cnfg.setUri(document.uri);
     return cnfg;
 }
 
 export class SepticConfigProvider implements ISepticConfigProvider {
     private readonly cache = new ResourceMap<{
-        value: Lazy<SepticCnfg>;
+        value: Lazy<Promise<SepticCnfg>>;
         cts: CancellationTokenSource;
     }>();
 
@@ -97,7 +97,10 @@ export class SepticConfigProvider implements ISepticConfigProvider {
     private set(doc: ITextDocument) {
         let cts = new CancellationTokenSource();
         this.cache.set(doc.uri, {
-            value: lazy<SepticCnfg>(() => this.getValue(doc, cts.token)),
+            value: lazy<Promise<SepticCnfg>>(async () => {
+                let cnfg = await this.getValue(doc, cts.token);
+                return cnfg;
+            }),
             cts: cts,
         });
     }

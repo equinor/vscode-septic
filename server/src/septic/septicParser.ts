@@ -14,8 +14,9 @@ import {
     SepticComment,
     SepticObject,
 } from "./septicElements";
+import { sleep } from "../util";
 
-export function parseSeptic(
+export function parseSepticSync(
     input: string,
     token: CancellationToken | undefined = undefined
 ): SepticCnfg {
@@ -26,6 +27,29 @@ export function parseSeptic(
     }
     const parser = new SepticParser(tokens.tokens);
 
+    let cnfg = parser.parse(token);
+    cnfg.comments = tokens.comments.map((comment) => {
+        return new SepticComment(
+            comment.content,
+            comment.type,
+            comment.start,
+            comment.end
+        );
+    });
+    return cnfg;
+}
+
+export async function parseSepticAsync(
+    input: string,
+    token: CancellationToken | undefined = undefined
+): Promise<SepticCnfg> {
+    const scanner = new SepticScanner(input);
+    const tokens = scanner.scanTokens();
+    if (!tokens.tokens.length) {
+        return new SepticCnfg([]);
+    }
+    await sleep(1); // Short sleep to prevent starvation of other processes
+    const parser = new SepticParser(tokens.tokens);
     let cnfg = parser.parse(token);
     cnfg.comments = tokens.comments.map((comment) => {
         return new SepticComment(

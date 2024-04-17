@@ -1,5 +1,5 @@
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { parseSeptic } from "../septic";
+import { parseSepticSync } from "../septic";
 import { compareRange, loadFile } from "./util";
 import { Position, Range, TextDocumentEdit } from "vscode-languageserver";
 import { expect } from "chai";
@@ -18,7 +18,7 @@ const getDocumentFunction = (doc: ITextDocument): GetDocument => {
 describe("Test renaming", () => {
     it("Expect to rename 5 refs when renaming Test1", async () => {
         const content = loadFile("rename.cnfg");
-        const cnfg = parseSeptic(content);
+        const cnfg = parseSepticSync(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
         const offset = doc.offsetAt(Position.create(0, 21));
@@ -43,7 +43,7 @@ describe("Test renaming", () => {
     });
     it("Expect to rename 5 refs when renaming Test1 from inside alg", async () => {
         const content = loadFile("rename.cnfg");
-        const cnfg = parseSeptic(content);
+        const cnfg = parseSepticSync(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
         const offset = doc.offsetAt(Position.create(12, 21));
@@ -68,7 +68,7 @@ describe("Test renaming", () => {
     });
     it("Expect to rename 4 refs when renaming Test2", async () => {
         const content = loadFile("rename.cnfg");
-        const cnfg = parseSeptic(content);
+        const cnfg = parseSepticSync(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
         const offset = doc.offsetAt(Position.create(6, 21));
@@ -92,7 +92,7 @@ describe("Test renaming", () => {
     });
     it("Expect to rename 4 refs when renaming Test2 inside Xvr list", async () => {
         const content = loadFile("rename.cnfg");
-        const cnfg = parseSeptic(content);
+        const cnfg = parseSepticSync(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
         const offset = doc.offsetAt(Position.create(23, 21));
@@ -116,7 +116,7 @@ describe("Test renaming", () => {
     });
     it("Expect to no renames when trying to rename outside of ref", async () => {
         const content = loadFile("rename.cnfg");
-        const cnfg = parseSeptic(content);
+        const cnfg = parseSepticSync(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
         const offset = doc.offsetAt(Position.create(7, 21));

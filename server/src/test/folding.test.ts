@@ -1,5 +1,5 @@
 import { getFoldingRanges } from "../language-service/foldingRangeProvider";
-import { parseSeptic } from "../septic";
+import { parseSepticSync } from "../septic";
 import { expect } from "chai";
 import { MockDocument } from "./util";
 import { CancellationTokenSource } from "vscode-languageserver";
@@ -20,7 +20,7 @@ describe("Test folding of document", () => {
 
         const doc = new MockDocument(text);
 
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const foldingRanges = getFoldingRanges(doc, cnfg);
 
         expect(foldingRanges.length).to.equal(3);
@@ -50,7 +50,7 @@ describe("Test folding of document", () => {
 
         const doc = new MockDocument(text);
 
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
 
         const foldingRanges = getFoldingRanges(doc, cnfg);
 
@@ -80,7 +80,7 @@ describe("Test folding of document", () => {
         Text1= "Test"
 		`;
         const doc = new MockDocument(text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const cts = new CancellationTokenSource();
         cts.cancel();
         const foldingRanges = getFoldingRanges(doc, cnfg, cts.token);
