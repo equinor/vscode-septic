@@ -25,6 +25,7 @@ import {
 } from "./reference";
 import { removeSpaces } from "../util";
 import { updateParentObjects } from "./hierarchy";
+import { Alg, Cycle, findAlgCycles } from "./cycle";
 
 export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];
@@ -90,6 +91,22 @@ export class SepticCnfg implements SepticReferenceProvider {
             }
             return (
                 removeSpaces(obj.identifier.name) === identifierSpacesRemoved
+            );
+        });
+    }
+
+    public getObjectByIdentifierAndType(
+        identifier: string,
+        type: string
+    ): SepticObject | undefined {
+        let identifierSpacesRemoved = removeSpaces(identifier);
+        return this.objects.find((val, ind, obj) => {
+            if (!val.identifier) {
+                return false;
+            }
+            return (
+                removeSpaces(val.identifier.name) === identifierSpacesRemoved &&
+                val.type === type
             );
         });
     }
@@ -183,6 +200,23 @@ export class SepticCnfg implements SepticReferenceProvider {
         } else {
             this.xvrRefs.set(ref.identifier, [ref]);
         }
+    }
+
+    public findAlgCycles(): Cycle[] {
+        let calcPvrs = this.objects.filter((obj) => obj.isType("CalcPvr"));
+        let algs: Alg[] = [];
+        for (let calcPvr of calcPvrs) {
+            let alg = calcPvr.getAttribute("Alg");
+            let content = alg?.getAttrValue()?.getValue();
+            if (!content || !calcPvr.identifier?.name) {
+                continue;
+            }
+            algs.push({
+                calcPvrName: removeSpaces(calcPvr.identifier?.name!),
+                content: content,
+            });
+        }
+        return findAlgCycles(algs);
     }
 }
 

@@ -24,6 +24,7 @@ import { HoverProvider } from "./hoverProvider";
 import { FormattingProvider } from "./formatProvider";
 import { SignatureHelpProvider } from "./signatureHelpProvider";
 import { CodeActionProvider } from "./codeActionProvider";
+import { CycleReportProvider } from "./cycleReportProvider";
 
 export * from "./types/textDocument";
 
@@ -92,6 +93,11 @@ export interface ILanguageService {
     ): Promise<lsp.SignatureHelp>;
 
     provideCodeAction(param: lsp.CodeActionParams): Promise<lsp.CodeAction[]>;
+
+    provideCycleReport(
+        name: string,
+        refProvider: SepticReferenceProvider
+    ): Promise<string>;
 }
 
 export function createLanguageService(
@@ -125,6 +131,8 @@ export function createLanguageService(
         documentProvider
     );
 
+    const cycleReportProvider = new CycleReportProvider(documentProvider);
+
     return Object.freeze<ILanguageService>({
         cnfgProvider,
         provideFoldingRanges:
@@ -156,5 +164,7 @@ export function createLanguageService(
         ),
         provideCodeAction:
             codeActionProvider.provideCodeAction.bind(codeActionProvider),
+        provideCycleReport:
+            cycleReportProvider.generateCycleReport.bind(cycleReportProvider),
     });
 }

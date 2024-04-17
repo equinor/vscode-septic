@@ -18,6 +18,7 @@ import {
     Location,
     DidChangeWatchedFilesNotification,
     CompletionParams,
+    Diagnostic,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -136,6 +137,29 @@ async function updateDiagnosticsAllStandaloneCnfgs() {
         }
     }
 }
+connection.onRequest(protocol.cylceReport, async (param) => {
+    let context: SepticReferenceProvider | undefined =
+        await contextManager.getContextByName(param.uri);
+    if (!context) {
+        context = await langService.cnfgProvider.get(param.uri);
+        if (!context) {
+            return "";
+        }
+    }
+    const report = await langService.provideCycleReport(param.uri, context);
+    return report;
+});
+
+connection.onRequest(protocol.contexts, async () => {
+    let contexts = contextManager.getAllContexts().map((val) => val.name);
+    for (const uri of documentProvider.getAllDocumentUris()) {
+        let context = await contextManager.getContext(uri);
+        if (!context && uri.endsWith(".cnfg")) {
+            contexts.push(uri);
+        }
+    }
+    return contexts;
+});
 
 connection.onInitialize((params: InitializeParams) => {
     const capabilities = params.capabilities;
