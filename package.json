@@ -5,7 +5,7 @@
   "description": "Provides snippets, syntax highlighting and multi-level folding in Septic config files.",
   "author": "Equinor ASA",
   "license": "MIT",
-  "version": "1.16.7",
+  "version": "1.17.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/equinor/vscode-septic"
@@ -24,8 +24,10 @@
   "main": "./client/out/extension",
   "contributes": {
     "commands": [
-      {"command": "septic.detectCycles",
-      "title": "Septic: Detect Cycles in Calcs"}
+      {
+        "command": "septic.detectCycles",
+        "title": "Septic: Detect Cycles in Calcs"
+      }
     ],
     "configuration": {
       "type": "object",
