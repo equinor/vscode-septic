@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.17.0](https://github.com/equinor/vscode-septic/compare/v1.16.7...v1.17.0) (2024-04-17)
+
+
+### 🧹 Chores
+
+* **deps:** bump @types/node from 16.18.85 to 16.18.96 ([#539](https://github.com/equinor/vscode-septic/issues/539)) ([e83a049](https://github.com/equinor/vscode-septic/commit/e83a0494d77345b6d8c16ed9238c82692df994a3))
+* **deps:** bump @typescript-eslint/eslint-plugin from 6.20.0 to 7.0.0 ([#487](https://github.com/equinor/vscode-septic/issues/487)) ([af5f824](https://github.com/equinor/vscode-septic/commit/af5f8240a9c4a05104467098352ace0106bba74d))
+* **deps:** bump eslint from 8.56.0 to 9.0.0 ([#533](https://github.com/equinor/vscode-septic/issues/533)) ([25787d0](https://github.com/equinor/vscode-septic/commit/25787d0fde428da58447106a10798745e6f98b6c))
+
+
+### 📚 Documentation
+
+* update SEPTIC documentation for latest ([#540](https://github.com/equinor/vscode-septic/issues/540)) ([c51bfb0](https://github.com/equinor/vscode-septic/commit/c51bfb0b54b17492cc9af11755248c52ee020e78))
+
+
+### ✨ Features
+
+* add command for generating calc cycle report ([#536](https://github.com/equinor/vscode-septic/issues/536)) ([f4f47d5](https://github.com/equinor/vscode-septic/commit/f4f47d5afbe456190f3b74a319bb9f0d9ef41142))
+
+
+### 🏎️ Optimalization
+
+* add buffer for changes and remove bottleneck ([#534](https://github.com/equinor/vscode-septic/issues/534)) ([53a9569](https://github.com/equinor/vscode-septic/commit/53a95698bd480f4cd6841e939cf84cd93f931f90))
+
 ## [1.16.7](https://github.com/equinor/vscode-septic/compare/v1.16.6...v1.16.7) (2024-03-13)
 
 
