@@ -1,5 +1,5 @@
 import { describe } from "mocha";
-import { SepticMetaInfoProvider, parseSeptic } from "../septic";
+import { SepticMetaInfoProvider, parseSepticSync } from "../septic";
 import {
     getCalcCompletion,
     getCalcPublicPropertiesCompletion,
@@ -15,7 +15,7 @@ describe("Test completion of identifier", () => {
     it("Completion of SopcCvr identifier for Cvr", () => {
         const text = "SopcMvr: TestMvr\nSopcCvr: TestCvr\nCvr:        \n";
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 6));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.equal(1);
@@ -24,7 +24,7 @@ describe("Test completion of identifier", () => {
     it("Completion of SopcMvr identifier for Mvr", () => {
         const text = "SopcMvr: TestMvr\nSopcCvr: TestCvr\nMvr:        \n";
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 6));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.equal(1);
@@ -33,7 +33,7 @@ describe("Test completion of identifier", () => {
     it("Completion of Mvr identifier for SopcMvr", () => {
         const text = "Mvr: TestMvr\nCvr: TestCvr\nSopcMvr:        \n";
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 10));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.equal(1);
@@ -42,7 +42,7 @@ describe("Test completion of identifier", () => {
     it("Completion of Cvr identifier for SopcCvr", () => {
         const text = "Mvr: TestMvr\nCvr: TestCvr\nSopcCvr:        \n";
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 10));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.equal(1);
@@ -52,7 +52,7 @@ describe("Test completion of identifier", () => {
         const text =
             "Evr: TestEvr\nMvr: TestMvr\nCvr: TestCvr\nCalcPvr:        \n";
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(3, 10));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.equal(1);
@@ -61,7 +61,7 @@ describe("Test completion of identifier", () => {
     it("Completion of Cvr & Mvr identifiers for non Xvr object with identifier reference", () => {
         const text = "Mvr: TestMvr\nCvr: TestCvr\nXvrPlot:        \n";
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 10));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.equal(2);
@@ -71,7 +71,7 @@ describe("Test completion of identifier", () => {
     it("Completion of Cvr with initial value", () => {
         const text = "SopcMvr: TestMvr\nSopcCvr: TestCvr\nCvr:   T     \n";
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 8));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.equal(1);
@@ -80,7 +80,7 @@ describe("Test completion of identifier", () => {
     it("No Completion for Cvr with initial existing identifier", () => {
         const text = "SopcMvr: TestMvr\nSopcCvr: TestCvr\nCvr: Test     \n";
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 12));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(
@@ -95,7 +95,7 @@ describe("Test completion of object attributes", () => {
     it("Completion don't suggest identifiers", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\nText1= ""\n     \n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(3, 2));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(
@@ -107,7 +107,7 @@ describe("Test completion of object attributes", () => {
     it("Completion don't suggest completion when inside existing attribute", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\nText1= ""\nAttr= 2 " " " "\n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(3, 8));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.equal(0);
@@ -115,7 +115,7 @@ describe("Test completion of object attributes", () => {
     it("Completion don't suggest existing attributes", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\nText1= ""\n  \n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(3, 1));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.greaterThan(0);
@@ -126,7 +126,7 @@ describe("Test completion of object attributes", () => {
     it("Completion suggest all attributes when none exists", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\n   \n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 1));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         const metaInfoProvider = SepticMetaInfoProvider.getInstance();
@@ -136,7 +136,7 @@ describe("Test completion of object attributes", () => {
     it("Completion item is inserted on same line when completing on empty line", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\n   \n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 1));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.greaterThan(0);
@@ -146,7 +146,7 @@ describe("Test completion of object attributes", () => {
     it("Completion item is inserted on same line when completing on empty line with start", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\nTe   \n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 2));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.greaterThan(0);
@@ -156,7 +156,7 @@ describe("Test completion of object attributes", () => {
     it("Completion item is inserted on new line when completing on line with existing attr", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\nText1= ""     \n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 10));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.greaterThan(0);
@@ -166,7 +166,7 @@ describe("Test completion of object attributes", () => {
     it("Completion item is overwrites entire completion text", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\nText1= "" Text2    \n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 15));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.greaterThan(0);
@@ -179,7 +179,7 @@ describe("Test completion of attribute with references to xvrs", () => {
     it("Expect Xvrs for attribute that references Xvrs", () => {
         const content = loadFile("completionAttrRefs.cnfg");
         const doc = TextDocument.create("", "", 0, content);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(13, 28));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         const variableCompItems = compItems.filter(
@@ -190,7 +190,7 @@ describe("Test completion of attribute with references to xvrs", () => {
     it("Expect Mvrs for attribute that references Mvrs", () => {
         const content = loadFile("completionAttrRefs.cnfg");
         const doc = TextDocument.create("", "", 0, content);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(17, 19));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         const variableCompItems = compItems.filter(
@@ -202,7 +202,7 @@ describe("Test completion of attribute with references to xvrs", () => {
     it("Expect completion of xvr in-between existing attr values", () => {
         const content = loadFile("completionAttrRefs.cnfg");
         const doc = TextDocument.create("", "", 0, content);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(27, 20));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         const variableCompItems = compItems.filter(
@@ -213,7 +213,7 @@ describe("Test completion of attribute with references to xvrs", () => {
     it("Expect no completion of xvr non-reference attribute", () => {
         const content = loadFile("completionAttrRefs.cnfg");
         const doc = TextDocument.create("", "", 0, content);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(20, 20));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         const variableCompItems = compItems.filter(
@@ -227,7 +227,7 @@ describe("Test calc completion", () => {
     it("Completion suggest Xvrs", () => {
         const text = `Mvr: TestMvr\nEvr:   TestEvr\nCalcPvr: TestCalc\nAlg= "  "\n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(3, 6));
         const compItems = getCalcCompletion(offset, cnfg, doc, cnfg);
         expect(
@@ -239,7 +239,7 @@ describe("Test calc completion", () => {
     it("Completion suggest Xvrs and Calcs in incomplete alg", () => {
         const text = `Mvr: TestMvr\nEvr:   TestEvr\nCalcPvr: TestCalc\nAlg= "(TestMvr + T  "\n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(3, 17));
         const compItems = getCalcCompletion(offset, cnfg, doc, cnfg);
         expect(
@@ -251,7 +251,7 @@ describe("Test calc completion", () => {
     it("Completion don't suggest SopcXvrs", () => {
         const text = `SopcMvr: TestMvr\nSopcEvr:   TestEvr\nCalcPvr: TestCalc\nAlg= "  "\n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(3, 6));
         const compItems = getCalcCompletion(offset, cnfg, doc, cnfg);
         expect(
@@ -263,7 +263,7 @@ describe("Test calc completion", () => {
     it("Completion suggest all available functions", () => {
         const text = `SopcMvr: TestMvr\nSopcEvr:   TestEvr\nCalcPvr: TestCalc\nAlg= "  "\n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(3, 6));
         const compItems = getCalcCompletion(offset, cnfg, doc, cnfg);
         const metaInfoProvider = SepticMetaInfoProvider.getInstance();
@@ -281,7 +281,7 @@ describe("Test property completion in alg", () => {
     it("Expect completion of Mvr public properties", () => {
         const content = loadFile("completion/publicProperties.cnfg");
         const doc = TextDocument.create("test.cnfg", "septic", 0, content);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(6, 26));
         const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
         expect(
@@ -296,7 +296,7 @@ describe("Test property completion in alg", () => {
     it("Expect no completion item for unknown variable", () => {
         const content = loadFile("completion/publicProperties.cnfg");
         const doc = TextDocument.create("test.cnfg", "septic", 0, content);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(11, 27));
         const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
         expect(compItems.length).to.equal(0);
@@ -304,7 +304,7 @@ describe("Test property completion in alg", () => {
     it("Expect no completion item for number", () => {
         const content = loadFile("completion/publicProperties.cnfg");
         const doc = TextDocument.create("test.cnfg", "septic", 0, content);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(16, 20));
         const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
         expect(compItems.length).to.equal(0);
@@ -312,7 +312,7 @@ describe("Test property completion in alg", () => {
     it("Expect no completion item for already completed variable", () => {
         const content = loadFile("completion/publicProperties.cnfg");
         const doc = TextDocument.create("test.cnfg", "septic", 0, content);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(21, 26));
         const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
         expect(compItems.length).to.equal(0);
@@ -323,7 +323,7 @@ describe("Test completion logic", () => {
     it("Expect to get completion items relevant for algs when inside alg", () => {
         const text = `Mvr:   TestMvr\nText1= ""  \nCalcPvr: TestCalc\nAlg= "  "\n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const pos = Position.create(3, 6);
         const compItems = getCompletion(pos, "", cnfg, doc, cnfg);
         expect(
@@ -340,7 +340,7 @@ describe("Test completion logic", () => {
     it("Expect to get completion items relevant for object when outside alg", () => {
         const text = `Mvr:   TestMvr\nText1= ""  \nCalcPvr: TestCalc\nAlg= "  "\n`;
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         const pos = Position.create(1, 10);
         const compItems = getCompletion(pos, "", cnfg, doc, cnfg);
         expect(

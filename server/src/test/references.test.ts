@@ -4,7 +4,7 @@ import {
     getDeclaration,
     getReferences,
 } from "../language-service/referenceProvider";
-import { parseSeptic } from "../septic";
+import { parseSepticSync } from "../septic";
 import { MockDocument } from "./util";
 
 describe("Test extraction of refs from config file", () => {
@@ -25,7 +25,7 @@ describe("Test extraction of refs from config file", () => {
 
         const doc = new MockDocument(text);
 
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         expect(cnfg.getXvrRefs("Var1")?.length).to.equal(2);
         expect(cnfg.getXvrRefs("Var2")?.length).to.equal(1);
         expect(cnfg.getXvrRefs("Var3")?.length).to.equal(1);
@@ -48,7 +48,7 @@ describe("Test extraction of refs from config file", () => {
 
         const doc = new MockDocument(text);
 
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         expect(cnfg.getXvrRefs("Var1")?.length).to.equal(3);
         expect(cnfg.getXvrRefs("Var2")?.length).to.equal(3);
         expect(cnfg.getXvrRefs("CalcVar")?.length).to.equal(2);
@@ -73,7 +73,7 @@ describe("Test extraction of refs from config file", () => {
 
         const doc = new MockDocument(text);
 
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         expect(cnfg.getXvrRefs("Var1")?.length).to.equal(3);
         expect(cnfg.getXvrRefs("Var2")?.length).to.equal(2);
         expect(cnfg.getXvrRefs("Var3")?.length).to.equal(2);
@@ -94,7 +94,7 @@ describe("Test extraction of refs from config file", () => {
 
         const doc = new MockDocument(text);
 
-        const cnfg = parseSeptic(doc.getText());
+        const cnfg = parseSepticSync(doc.getText());
         expect(cnfg.getXvrRefs("Var1")?.length).to.equal(2);
         expect(cnfg.getXvrRefs("Var2")?.length).to.equal(2);
         expect(cnfg.getXvrRefs("Var3")?.length).to.equal(1);
@@ -122,7 +122,7 @@ describe("Test getDefinition", () => {
 		`;
     const doc = new MockDocument(text);
 
-    const cnfg = parseSeptic(doc.getText());
+    const cnfg = parseSepticSync(doc.getText());
     it("Get Definition SopcXvr", () => {
         const offset = 15;
         let result = getDefinition(offset, cnfg, cnfg);
@@ -176,7 +176,7 @@ describe("Test getDeclaration", () => {
 		`;
     const doc = new MockDocument(text);
 
-    const cnfg = parseSeptic(doc.getText());
+    const cnfg = parseSepticSync(doc.getText());
     it("Get Declaration SopcXvr", () => {
         const offset = 15;
         let result = getDeclaration(offset, cnfg, cnfg);
@@ -225,7 +225,7 @@ describe("Test getReferences", () => {
 		`;
     const doc = new MockDocument(text);
 
-    const cnfg = parseSeptic(doc.getText());
+    const cnfg = parseSepticSync(doc.getText());
     it("Get References SopcXvr", () => {
         const offset = 15;
         let result = getReferences(offset, cnfg, cnfg);
