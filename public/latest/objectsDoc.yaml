@@ -723,7 +723,7 @@
     - 'On'
     - 'Off'
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - '0'
@@ -843,7 +843,7 @@
     - 'On'
     - 'Off'
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - '0'
@@ -1200,6 +1200,7 @@
   name: Cvr
   parents:
   - SmpcAppl
+  - MPCAppl
 - attributes:
   - calc: false
     dataType: variable
@@ -1643,6 +1644,7 @@
   name: Dvr
   parents:
   - SmpcAppl
+  - MPCAppl
 - attributes:
   - calc: false
     dataType: variable
@@ -3073,6 +3075,93 @@
   - Table
 - attributes:
   - calc: false
+    dataType: enum
+    default:
+    - STOPPED
+    description: Desired mode for MPC
+    enums:
+    - STOPPED
+    - TRACKING
+    - ADVISORY
+    - ACTIVE
+    list: false
+    name: DesMode
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Maximum number of subsequent failed steps before changing mode to
+      TRACKING
+    enums: []
+    list: false
+    name: FailMax
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-10
+    description: QP feasibility tolerance
+    enums: []
+    list: false
+    name: FeasTol
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '80'
+    description: Lenght of model optimisation horizon
+    enums: []
+    list: false
+    name: Nhorz
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '80'
+    description: Length of prediction horizon in samples
+    enums: []
+    list: false
+    name: Npred
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: SEPTIC MPC Application, MPCAppl version
+  name: MPCAppl
+  parents:
+  - System
+- attributes:
+  - calc: false
     dataType: int
     default:
     - '64512'
@@ -3940,6 +4029,7 @@
   name: Mvr
   parents:
   - SmpcAppl
+  - MPCAppl
 - attributes:
   - calc: false
     dataType: variable
