@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.1](https://github.com/equinor/vscode-septic/compare/v1.17.0...v1.17.1) (2024-04-18)
+
+
+### 🐛 Bug Fixes
+
+* support setmeas in cycle detection ([#545](https://github.com/equinor/vscode-septic/issues/545)) ([86dc9d3](https://github.com/equinor/vscode-septic/commit/86dc9d3aa3210a7976877815862ef463228dbb4a))
+
 ## [1.17.0](https://github.com/equinor/vscode-septic/compare/v1.16.7...v1.17.0) (2024-04-17)
 
 
