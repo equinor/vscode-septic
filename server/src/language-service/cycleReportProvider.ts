@@ -25,9 +25,9 @@ export class CycleReportProvider {
                         .join("->")
             );
             for (let node of cycle.nodes) {
-                let nodeStr = `CalcPvr: ${node.name}`;
+                let nodeStr = `CalcPvr: ${node.calcpvr}`;
                 let nodeObj = refProvider.getObjectByIdentifierAndType(
-                    node.name,
+                    node.calcpvr,
                     "CalcPvr"
                 );
                 if (!nodeObj) {
