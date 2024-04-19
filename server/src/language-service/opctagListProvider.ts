@@ -19,7 +19,13 @@ export function generateOpcReport(
         "SopcCvr",
         "SopcDvr",
         "SopcMvr",
-        "SopcProc"
+        "SopcProc",
+        "SopcSampleTvr",
+        "SopcChangeEvr",
+        "SopcAsyncEvr",
+        "SopcTimeTvr",
+        "SopcTextTvr",
+        "SopcSvr"
     );
     for (let obj of opcObjects) {
         let objectName = obj.identifier?.id ?? "unknown";
