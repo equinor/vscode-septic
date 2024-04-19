@@ -11,7 +11,7 @@ export class OpcTagListProvider {
 export function generateOpcReport(
     refProvider: SepticReferenceProvider
 ): string {
-    let header: string = "ObjectId;ObjectType;ObjectAttribute;OPCTag;";
+    let header: string = "ObjectId;ObjectType;ObjectAttribute;OPCTag";
     let entries: string[] = [];
     let opcObjects = refProvider.getObjectsByType(
         "SopcTvr",
@@ -35,7 +35,7 @@ export function generateOpcReport(
             ) {
                 continue;
             }
-            entries.push(`${objectName};${obj.type};${tagAttr.key};${value};`);
+            entries.push(`${objectName};${obj.type};${tagAttr.key};${value}`);
         }
     }
     return [header, ...entries].join("\n");
