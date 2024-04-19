@@ -25,6 +25,7 @@ import { FormattingProvider } from "./formatProvider";
 import { SignatureHelpProvider } from "./signatureHelpProvider";
 import { CodeActionProvider } from "./codeActionProvider";
 import { CycleReportProvider } from "./cycleReportProvider";
+import { OpcTagListProvider, generateOpcReport } from "./opctagListProvider";
 
 export * from "./types/textDocument";
 
@@ -98,6 +99,8 @@ export interface ILanguageService {
         name: string,
         refProvider: SepticReferenceProvider
     ): Promise<string>;
+
+    provideOpcTagList(refProvider: SepticReferenceProvider): string;
 }
 
 export function createLanguageService(
@@ -166,5 +169,6 @@ export function createLanguageService(
             codeActionProvider.provideCodeAction.bind(codeActionProvider),
         provideCycleReport:
             cycleReportProvider.generateCycleReport.bind(cycleReportProvider),
+        provideOpcTagList: generateOpcReport,
     });
 }

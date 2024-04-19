@@ -59,6 +59,7 @@ export const defaultRefValidationFunction: RefValidationFunction = (
 export interface SepticReferenceProvider {
     load(): Promise<void>;
     getXvrRefs(name: string): SepticReference[] | undefined;
+    getObjectsByType(...types: string[]): SepticObject[];
     getAllXvrObjects(): SepticObject[];
     getObjectsByIdentifier(identifier: string): SepticObject[];
     getObjectByIdentifierAndType(

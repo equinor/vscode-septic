@@ -27,6 +27,10 @@
       {
         "command": "septic.detectCycles",
         "title": "Septic: Detect Cycles in Calcs"
+      },
+      {
+        "command": "septic.opcTagList",
+        "title": "Septic: List all OPC-Tags"
       }
     ],
     "configuration": {
