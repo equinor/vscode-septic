@@ -213,6 +213,31 @@
   quality: GOOD if all inputs are good
   retr: bit in a binary signal of either 32 or 64 bit
   signature: checkbinint(n, i, k)
+- detailedDescription: Clamps the value x to the range [lo, hi].If lo>hi, returns
+    x with quality bad.
+  name: clamp
+  parameters:
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to clamp
+    direction: in
+    name: x
+  - arity: '1'
+    datatype:
+    - value
+    description: Low value
+    direction: in
+    name: lo
+  - arity: '1'
+    datatype:
+    - value
+    description: High value
+    direction: in
+    name: hi
+  quality: GOOD only if ALL inputs are GOOD
+  retr: Clamped value
+  signature: clamp(x, lo, hi)
 - detailedDescription: Calculate cloud of a mix
   name: cloudmix
   parameters:
