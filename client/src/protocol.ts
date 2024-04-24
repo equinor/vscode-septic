@@ -21,4 +21,8 @@ export const cylceReport = new RequestType<{ uri: string }, string, any>(
     "septic/cycleReport"
 );
 
+export const opcTagList = new RequestType<{ uri: string }, string, any>(
+    "septic/opcTagList"
+);
+
 export const contexts = new RequestType<{}, string[], any>("septic/contexts");

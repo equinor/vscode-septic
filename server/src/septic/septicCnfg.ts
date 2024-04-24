@@ -83,6 +83,10 @@ export class SepticCnfg implements SepticReferenceProvider {
         return this.objects.filter((obj) => obj.isXvr() || obj.isSopcXvr());
     }
 
+    public getObjectsByType(...types: string[]): SepticObject[] {
+        return this.objects.filter((obj) => obj.isType(...types));
+    }
+
     public getObjectsByIdentifier(identifier: string): SepticObject[] {
         let identifierSpacesRemoved = removeSpaces(identifier);
         return this.objects.filter((obj) => {

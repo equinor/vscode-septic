@@ -137,6 +137,20 @@ async function updateDiagnosticsAllStandaloneCnfgs() {
         }
     }
 }
+
+connection.onRequest(protocol.opcTagList, async (param) => {
+    let context: SepticReferenceProvider | undefined =
+        await contextManager.getContextByName(param.uri);
+    if (!context) {
+        context = await langService.cnfgProvider.get(param.uri);
+        if (!context) {
+            return "";
+        }
+    }
+    const list = langService.provideOpcTagList(context);
+    return list;
+});
+
 connection.onRequest(protocol.cylceReport, async (param) => {
     let context: SepticReferenceProvider | undefined =
         await contextManager.getContextByName(param.uri);

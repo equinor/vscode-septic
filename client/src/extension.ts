@@ -103,6 +103,37 @@ export function activate(context: vscode.ExtensionContext) {
         });
     });
 
+    vscode.commands.registerCommand("septic.opcTagList", async () => {
+        let contexts = await client.sendRequest(protocol.contexts, {});
+        let choice = await vscode.window.showQuickPick(contexts);
+        if (!choice) {
+            return;
+        }
+        let report = await client.sendRequest(protocol.opcTagList, {
+            uri: choice,
+        });
+        if (!report) {
+            vscode.window.showInformationMessage(
+                `Not able to generate OPC tag list`
+            );
+        }
+        const name = vscode.Uri.parse(choice)
+            .path.split("/")
+            .slice(-1)[0]
+            .split(".")[0];
+        const wsedit = new vscode.WorkspaceEdit();
+        const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        const filePath = vscode.Uri.file(wsPath + `/opc_tags_${name}.csv`);
+        wsedit.createFile(filePath, {
+            contents: Buffer.from(report),
+            overwrite: true,
+        });
+        await vscode.workspace.applyEdit(wsedit);
+        await vscode.window.showTextDocument(filePath, {
+            preserveFocus: false,
+        });
+    });
+
     client.start();
 }
 

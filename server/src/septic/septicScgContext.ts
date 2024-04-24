@@ -180,6 +180,18 @@ export class ScgContext implements SepticReferenceProvider {
         return xvrObjs;
     }
 
+    getObjectsByType(...types: string[]): SepticObject[] {
+        let objects: SepticObject[] = [];
+        for (const file of this.files) {
+            let cnfg = this.cnfgCache.get(file);
+            if (!cnfg) {
+                continue;
+            }
+            objects.push(...cnfg.getObjectsByType(...types));
+        }
+        return objects;
+    }
+
     public async updateObjectParents(
         hierarchy: SepticObjectHierarchy
     ): Promise<void> {
