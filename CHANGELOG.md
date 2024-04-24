@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.18.0](https://github.com/equinor/vscode-septic/compare/v1.17.1...v1.18.0) (2024-04-24)
+
+
+### 🧹 Chores
+
+* **deps:** bump typescript from 5.3.3 to 5.4.5 ([#542](https://github.com/equinor/vscode-septic/issues/542)) ([6b9a26c](https://github.com/equinor/vscode-septic/commit/6b9a26ca656a20201602d10f6664dd5eca3cbb39))
+
+
+### 📚 Documentation
+
+* update SEPTIC documentation for latest ([#550](https://github.com/equinor/vscode-septic/issues/550)) ([3b51bdd](https://github.com/equinor/vscode-septic/commit/3b51bdd099817b1b70ef2b9e799aa709d1dbe06a))
+
+
+### ✨ Features
+
+* add command for extracting opctags to csv ([#548](https://github.com/equinor/vscode-septic/issues/548)) ([4ef570f](https://github.com/equinor/vscode-septic/commit/4ef570ffd80103e85162fc9552997fb6b8531f0e))
+
 ## [1.17.1](https://github.com/equinor/vscode-septic/compare/v1.17.0...v1.17.1) (2024-04-18)
 
 
