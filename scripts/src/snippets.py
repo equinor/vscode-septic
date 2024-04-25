@@ -24,7 +24,7 @@ def create_snippet(obj: dict) -> Snippet:
     body = []
     body.append(format_header(obj["name"]))
     for attr in obj["attributes"]:
-        if attr["noCnfg"] == "true":
+        if attr["noCnfg"] == "true" or attr["nosnippet"] == "true":
             continue
         body.extend(format_attribute(attr))
     description = obj["description"]
@@ -53,9 +53,12 @@ def format_attribute(attribute: dict):
     indents_attribute_delimiter = 14
     indents_line = max(indents_attribute_delimiter - len(name), 0)
     attribute_def = " " * indents_line + name + "=  "
-    attribute_values = format_attribute_value(
-        attribute["default"], attribute["list"], attribute["dataType"]
-    )
+    if attribute["snippet"]:
+        attribute_values = [attribute["snippet"]]
+    else:
+        attribute_values = format_attribute_value(
+            attribute["default"], attribute["list"], attribute["dataType"]
+        )
     attribute_values[0] = attribute_def + str(attribute_values[0])
     return attribute_values
 
@@ -81,7 +84,7 @@ def format_string_list(values: List[str]):
             lines.append(current_line.rstrip())
             current_line = " " * indents_attribute_value
         current_line += val + " " * spaces_between_values
-    lines.append(current_line)
+    lines.append(current_line.rstrip())
     return lines
 
 
