@@ -197,12 +197,13 @@ export function getObjectCompletion(
     refProvider: SepticReferenceProvider,
     doc: ITextDocument
 ): CompletionItem[] {
-    const compItems: CompletionItem[] = SepticMetaInfoProvider.getInstance()
+    const snippets: CompletionItem[] = SepticMetaInfoProvider.getInstance()
         .getSnippets()
         .slice();
+    const references: CompletionItem[] = [];
     const obj = cnfg.getObjectFromOffset(offset);
     if (!obj) {
-        return compItems;
+        return snippets;
     }
     let ref = cnfg.getXvrRefFromOffset(offset);
     if (isIdentifierCompletion(offset, obj)) {
@@ -221,10 +222,10 @@ export function getObjectCompletion(
         ).map((obj) => xvrToCompletionItem(obj, range));
     }
     const currentAttr = getCurrentAttr(offset, obj);
-    if (!currentAttr) {
-        return getObjectAttributeCompletion(obj, offset, doc);
+    if (!currentAttr.attr) {
+        return [...snippets, ...getObjectAttributeCompletion(obj, offset, doc)];
     }
-    if (isReferenceAttribute(obj, currentAttr)) {
+    if (isReferenceAttribute(obj, currentAttr.attr)) {
         let range: Range = ref
             ? {
                   start: doc.positionAt(ref.location.start),
@@ -234,34 +235,45 @@ export function getObjectCompletion(
                   start: doc.positionAt(offset),
                   end: doc.positionAt(offset),
               };
-        compItems.push(
+
+        references.push(
             ...getRelevantXvrsAttributes(
-                currentAttr,
+                currentAttr.attr,
                 refProvider.getAllXvrObjects()
             ).map((obj) => xvrToCompletionItem(obj, range))
         );
     }
-    if (isEndAttribute(offset, currentAttr)) {
-        compItems.push(...getObjectAttributeCompletion(obj, offset, doc));
+    if (isEndAttribute(offset, currentAttr.attr)) {
+        if (currentAttr.last) {
+            return [
+                ...getObjectAttributeCompletion(obj, offset, doc),
+                ...references,
+                ...snippets,
+            ];
+        }
+        return [
+            ...getObjectAttributeCompletion(obj, offset, doc),
+            ...references,
+        ];
     }
-    return compItems;
+    return [];
 }
 
 function getCurrentAttr(
     offset: number,
     obj: SepticObject
-): Attribute | undefined {
+): { attr: Attribute | undefined; last: boolean } {
     if (!obj.attributes.length) {
-        return undefined;
+        return { attr: undefined, last: false };
     }
     let index = 1;
     while (index < obj.attributes.length) {
         if (obj.attributes[index].start >= offset) {
-            return obj.attributes[index - 1];
+            return { attr: obj.attributes[index - 1], last: false };
         }
         index += 1;
     }
-    return obj.attributes[obj.attributes.length - 1];
+    return { attr: obj.attributes[obj.attributes.length - 1], last: true };
 }
 
 function getObjectAttributeCompletion(
