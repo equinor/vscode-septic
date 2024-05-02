@@ -310,17 +310,6 @@
     dataType: string
     default:
     - '""'
-    description: Description
-    enums: []
-    list: true
-    name: Types
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
     description: X-axis title
     enums: []
     list: false
@@ -423,17 +412,6 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Values
-    enums: []
-    list: true
-    name: Values
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
     dataType: int
     default:
     - '1'
@@ -464,32 +442,10 @@
     dataType: string
     default:
     - '""'
-    description: Status xvrs
-    enums: []
-    list: true
-    name: StatusXvrs
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
     description: Tool tip
     enums: []
     list: false
     name: Tooltip
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Xvrs
-    enums: []
-    list: true
-    name: Xvrs
     noCnfg: false
     postfix: []
     tags: []
@@ -550,8 +506,7 @@
   - calc: false
     dataType: float
     default:
-    - '-10'
-    - '10'
+    - '[]'
     description: X-points
     enums: []
     list: true
@@ -562,8 +517,7 @@
   - calc: false
     dataType: float
     default:
-    - '-10'
-    - '10'
+    - '[]'
     description: Y-points
     enums: []
     list: true
@@ -580,7 +534,7 @@
     dataType: enum
     default:
     - 'OFF'
-    description: Description
+    description: Autoscaling of plot
     enums:
     - 'ON'
     - 'OFF'
@@ -713,15 +667,15 @@
   - calc: true
     dataType: float
     default:
-    - 1e+10
+    - '100'
     description: Upper limit with indicated initial state
     enums: []
     list: false
     name: High
     noCnfg: false
     postfix:
-    - 'On'
     - 'Off'
+    - 'On'
     tags: []
   - calc: true
     dataType: float
@@ -737,7 +691,7 @@
   - calc: false
     dataType: float
     default:
-    - '1000'
+    - '0'
     description: High constraint maximum relaxation
     enums: []
     list: false
@@ -833,15 +787,15 @@
   - calc: true
     dataType: float
     default:
-    - -1e+10
+    - '0'
     description: Lower limit with indicated initial state
     enums: []
     list: false
     name: Low
     noCnfg: false
     postfix:
-    - 'On'
     - 'Off'
+    - 'On'
     tags: []
   - calc: true
     dataType: float
@@ -857,7 +811,7 @@
   - calc: false
     dataType: float
     default:
-    - '1000'
+    - '0'
     description: Low constraint maximum relaxation
     enums: []
     list: false
@@ -950,7 +904,7 @@
     dataType: enum
     default:
     - STOPPED
-    description: Operation mode of manipulated variable
+    description: Desired mode of CV
     enums:
     - STOPPED
     - TRACKING
@@ -1018,7 +972,7 @@
     dataType: float
     default:
     - '-1'
-    description: Description
+    description: Y-range of plot when scaled using span, -1 use min-max
     enums: []
     list: false
     name: PlotSpan
@@ -1058,12 +1012,13 @@
     name: SetPnt
     noCnfg: false
     postfix:
-    - 'On'
     - 'Off'
+    - 'On'
     tags: []
   - calc: false
     dataType: enum
-    default: []
+    default:
+    - FILTER
     description: '- for changes in set point. FILTER or RAMP'
     enums:
     - FILTER
@@ -1203,17 +1158,6 @@
   - MPCAppl
 - attributes:
   - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: List of references to Cvrs to be included in list
-    enums: []
-    list: true
-    name: Cvrs
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
     dataType: string
     default:
     - '""'
@@ -1232,7 +1176,7 @@
   - calc: false
     dataType: enum
     default:
-    - 'ON'
+    - 'OFF'
     description: Use autoscaling in plots belonging to this group
     enums:
     - 'ON'
@@ -1245,7 +1189,7 @@
   - calc: false
     dataType: int
     default:
-    - '12'
+    - '-1'
     description: Cols to use in a gridded group
     enums: []
     list: false
@@ -1267,7 +1211,7 @@
   - calc: false
     dataType: int
     default:
-    - '4320'
+    - '-1'
     description: Length (in samples/steps) of history-part for plots belonging to
       this group
     enums: []
@@ -1291,7 +1235,7 @@
   - calc: false
     dataType: int
     default:
-    - '180'
+    - '-1'
     description: Length (in samples/steps) of prediction-part for plots belonging
       to this group
     enums: []
@@ -1303,7 +1247,7 @@
   - calc: false
     dataType: int
     default:
-    - '20'
+    - '-1'
     description: Rows to use in a gridded group
     enums: []
     list: false
@@ -1543,7 +1487,7 @@
     dataType: enum
     default:
     - STOPPED
-    description: Operation mode of manipulated variable
+    description: Desired mode of DV
     enums:
     - STOPPED
     - TRACKING
@@ -1589,7 +1533,7 @@
     dataType: float
     default:
     - '-1'
-    description: Description
+    description: Y-range of plot when scaled using span, -1 use min-max
     enums: []
     list: false
     name: PlotSpan
@@ -1646,17 +1590,6 @@
   - SmpcAppl
   - MPCAppl
 - attributes:
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: List of references to Dvrs to be included in list
-    enums: []
-    list: true
-    name: Dvrs
-    noCnfg: false
-    postfix: []
-    tags: []
   - calc: false
     dataType: string
     default:
@@ -1740,28 +1673,6 @@
     enums: []
     list: false
     name: Width
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: Name of variables along x-axis
-    enums: []
-    list: true
-    name: xXvrs
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: Name of variables along y-axis
-    enums: []
-    list: true
-    name: yXvrs
     noCnfg: false
     postfix: []
     tags: []
@@ -1856,7 +1767,7 @@
     dataType: int
     default:
     - '0'
-    description: Step to triggering event
+    description: Step to trigger event
     enums: []
     list: false
     name: N
@@ -1867,7 +1778,7 @@
     dataType: int
     default:
     - '0'
-    description: For repeated trigging of event, specifies cycle length
+    description: For repeated triggering of event, specifies cycle length
     enums: []
     list: false
     name: Ncycle
@@ -1881,8 +1792,9 @@
 - attributes:
   - calc: false
     dataType: enum
-    default: []
-    description: Color used in plot for the variable
+    default:
+    - BLACK
+    description: Color used in plots for the variable
     enums:
     - BLACK
     - GREEN
@@ -1943,41 +1855,6 @@
   - calc: false
     dataType: float
     default:
-    - 1e+10
-    description: Measurement validation high limit
-    enums: []
-    list: false
-    name: MeasHighLimit
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - -1e+10
-    description: Measurement validation low limit
-    enums: []
-    list: false
-    name: MeasLowLimit
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Initial state of measurement validation
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: MeasValidation
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
     - '0'
     description: Min value for UserInput
     enums: []
@@ -2023,7 +1900,7 @@
     dataType: float
     default:
     - '-1'
-    description: Description
+    description: Y-range of plot when scaled using span, -1 use min-max
     enums: []
     list: false
     name: PlotSpan
@@ -2114,6 +1991,7 @@
     - ENUM
     - INT
     - DOUBLE
+    - 'ON'
     list: false
     name: UserInput
     noCnfg: false
@@ -2148,17 +2026,6 @@
   - DmmyAppl
   - SmpcAppl
 - attributes:
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: List of references to Evrs to be included in list
-    enums: []
-    list: true
-    name: Evrs
-    noCnfg: false
-    postfix: []
-    tags: []
   - calc: false
     dataType: string
     default:
@@ -2222,7 +2089,7 @@
   description: FMUModl
   name: FMUModl
   parents:
-  - FMUProc
+  - System
 - attributes:
   - calc: false
     dataType: string
@@ -2260,31 +2127,9 @@
   description: FMUProc
   name: FMUProc
   parents:
-  - System
+  - SmpcAppl
+  - MPCAppl
 - attributes:
-  - calc: false
-    dataType: int
-    default:
-    - '12'
-    description: Cols to use in a gridded group
-    enums: []
-    list: false
-    name: Cols
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default: []
-    description: Lock the group for changes
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: Locked
-    noCnfg: false
-    postfix: []
-    tags: []
   - calc: false
     dataType: enum
     default:
@@ -2300,13 +2145,12 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: int
-    default:
-    - '20'
-    description: Rows to use in a gridded group
+    dataType: string
+    default: []
+    description: Description
     enums: []
     list: false
-    name: Rows
+    name: Separator
     noCnfg: false
     postfix: []
     tags: []
@@ -2318,7 +2162,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: []
+    default:
+    - '-1'
     description: Placement of value, related to table item placement
     enums: []
     list: false
@@ -2350,7 +2195,8 @@
     tags: []
   - calc: false
     dataType: variable
-    default: []
+    default:
+    - '""'
     description: Xvr providing status good/bad info
     enums: []
     list: false
@@ -2366,7 +2212,8 @@
 - attributes:
   - calc: false
     dataType: int
-    default: []
+    default:
+    - '-1'
     description: Placement of value, related to table item placement
     enums: []
     list: false
@@ -2389,7 +2236,7 @@
     dataType: int
     default:
     - '0'
-    description: text size offset from normal
+    description: Text size offset from normal
     enums: []
     list: false
     name: SizeOffset
@@ -2398,7 +2245,8 @@
     tags: []
   - calc: false
     dataType: int
-    default: []
+    default:
+    - '1'
     description: Text to use, 1 for Text1, 2 for Text2
     enums: []
     list: false
@@ -2464,7 +2312,7 @@
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"", snippet: "${2}"'
     description: File name of image
     enums: []
     list: false
@@ -2529,34 +2377,6 @@
     enums: []
     list: false
     name: TargetGroup
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    - '10'
-    - '10'
-    - '0'
-    description: X-points. Number of points needs to match y-points
-    enums: []
-    list: true
-    name: xPoints
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '20'
-    - '20'
-    - '40'
-    - '40'
-    description: Y-points. Number of points needs to match x-points
-    enums: []
-    list: true
-    name: yPoints
     noCnfg: false
     postfix: []
     tags: []
@@ -2663,28 +2483,6 @@
   - Image
 - attributes:
   - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Backgroundcolors of corresponding texts
-    enums: []
-    list: true
-    name: BackgroundColors
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Texts to be displayed
-    enums: []
-    list: true
-    name: Texts
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
     dataType: int
     default:
     - '-1'
@@ -2751,7 +2549,7 @@
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"black"'
     description: Text color
     enums: []
     list: false
@@ -2879,7 +2677,7 @@
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"white"'
     description: Background color
     enums: []
     list: false
@@ -2902,7 +2700,7 @@
     dataType: variable
     default:
     - '""'
-    description: Description
+    description: Optional Xvr to indicate status of main Xvr (label)
     enums: []
     list: false
     name: StatusXvr
@@ -3201,7 +2999,7 @@
   - calc: false
     dataType: int
     default:
-    - '12030'
+    - '0'
     description: Master application socket port
     enums: []
     list: false
@@ -3219,17 +3017,6 @@
     - 'OFF'
     list: false
     name: ModlOn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '"127.0.0.1"'
-    description: IP address for RUIs which is allowed to write
-    enums: []
-    list: true
-    name: WriteHosts
     noCnfg: false
     postfix: []
     tags: []
@@ -3306,28 +3093,6 @@
     enums: []
     list: false
     name: ColSize
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: Ids of cvrs to include in matrix
-    enums: []
-    list: true
-    name: CvrIds
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: Ids of mvrs/dvrs to include in matrix
-    enums: []
-    list: true
-    name: MvrDvrIds
     noCnfg: false
     postfix: []
     tags: []
@@ -3478,17 +3243,6 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: number and names of colors for each curve
-    enums: []
-    list: true
-    name: Colors
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
     dataType: float
     default:
     - '100'
@@ -3540,17 +3294,6 @@
     enums: []
     list: false
     name: Title
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: number and names of items
-    enums: []
-    list: true
-    name: Xvrs
     noCnfg: false
     postfix: []
     tags: []
@@ -3668,7 +3411,7 @@
     enums: []
     list: false
     name: IvFilt
-    noCnfg: false
+    noCnfg: true
     postfix: []
     tags: []
   - calc: true
@@ -4009,7 +3752,7 @@
     - 'OFF'
     list: false
     name: WUpHi
-    noCnfg: false
+    noCnfg: true
     postfix: []
     tags: []
   - calc: true
@@ -4022,7 +3765,7 @@
     - 'OFF'
     list: false
     name: WUpLo
-    noCnfg: false
+    noCnfg: true
     postfix: []
     tags: []
   description: Manipulated Variable
@@ -4031,17 +3774,6 @@
   - SmpcAppl
   - MPCAppl
 - attributes:
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: List of references to Mvrs to be included in list
-    enums: []
-    list: true
-    name: Mvrs
-    noCnfg: false
-    postfix: []
-    tags: []
   - calc: false
     dataType: string
     default:
@@ -4468,7 +4200,7 @@
   - calc: false
     dataType: string
     default:
-    - '"127.0.0.1"'
+    - '""'
     description: Master application ip address
     enums: []
     list: false
@@ -4490,7 +4222,7 @@
   - calc: false
     dataType: int
     default:
-    - '12035'
+    - '0'
     description: Master application socket port
     enums: []
     list: false
@@ -4528,12 +4260,12 @@
   - calc: false
     dataType: int
     default:
-    - 0, NoCnfg
+    - '0'
     description: Flag for model use
     enums: []
     list: false
     name: HasModel
-    noCnfg: false
+    noCnfg: true
     postfix: []
     tags: []
   - calc: false
@@ -4561,12 +4293,12 @@
   - calc: false
     dataType: string
     default:
-    - '"", NoCnfg'
+    - '""'
     description: Cnfg handling of manual sample
     enums: []
     list: false
     name: ManualSample
-    noCnfg: false
+    noCnfg: true
     postfix: []
     tags: []
   - calc: false
@@ -4643,23 +4375,23 @@
   - calc: false
     dataType: int
     default:
-    - 0, NoCnfg
+    - '0'
     description: Status info code for model, presented in SampleTvr and table
     enums: []
     list: false
     name: ModelInfo
-    noCnfg: false
+    noCnfg: true
     postfix: []
     tags: []
   - calc: false
     dataType: double
     default:
-    - 0, NoCnfg
+    - '0'
     description: Value of model variable
     enums: []
     list: false
     name: ModelVal
-    noCnfg: false
+    noCnfg: true
     postfix: []
     tags: []
   - calc: false
@@ -4676,12 +4408,12 @@
   - calc: false
     dataType: double
     default:
-    - 0, NoCnfg
+    - '0'
     description: Value of sdev variable
     enums: []
     list: false
     name: NormSdev
-    noCnfg: false
+    noCnfg: true
     postfix: []
     tags: []
   - calc: false
@@ -4731,34 +4463,34 @@
   - calc: false
     dataType: int
     default:
-    - 0, NoCnfg
+    - '0'
     description: Time offset [samples] since last sample was recieved
     enums: []
     list: false
     name: RecievedTime
-    noCnfg: false
+    noCnfg: true
     postfix: []
     tags: []
   - calc: false
     dataType: int
     default:
-    - 0, NoCnfg
+    - '0'
     description: Status info code for sample, presented in SampleTvr and table
     enums: []
     list: false
     name: SampleInfo
-    noCnfg: false
+    noCnfg: true
     postfix: []
     tags: []
   - calc: false
     dataType: int
     default:
-    - 0, NoCnfg
+    - '0'
     description: Time offset [samples] since last sample was taken
     enums: []
     list: false
     name: SampleTime
-    noCnfg: false
+    noCnfg: true
     postfix: []
     tags: []
   - calc: false
@@ -4798,7 +4530,7 @@
     dataType: enum
     default:
     - NONE
-    description: Value transformation for difference calcluation
+    description: Value transformation for difference calculation
     enums:
     - NONE
     - LN
@@ -4893,7 +4625,7 @@
   - calc: false
     dataType: enum
     default:
-    - STOPPED
+    - ACTIVE
     description: Desired mode for MPC
     enums:
     - STOPPED
@@ -4957,7 +4689,7 @@
   - calc: false
     dataType: float
     default:
-    - '9.9999997e-06'
+    - 1e-05
     description: Description
     enums: []
     list: false
@@ -4979,7 +4711,7 @@
   - calc: false
     dataType: float
     default:
-    - '9.9999999e-09'
+    - 1e-08
     description: Description
     enums: []
     list: false
@@ -5082,7 +4814,7 @@
   - calc: false
     dataType: enum
     default:
-    - 'OFF'
+    - 'ON'
     description: Description
     enums:
     - 'ON'
@@ -5118,7 +4850,7 @@
     dataType: int
     default:
     - '80'
-    description: Lenght of model optimisation horizon
+    description: Length of model optimisation horizon
     enums: []
     list: false
     name: Nhorz
@@ -5209,7 +4941,7 @@
   - calc: false
     dataType: enum
     default:
-    - 'OFF'
+    - 'ON'
     description: Description
     enums:
     - 'ON'
@@ -6153,7 +5885,7 @@
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: Report CPU time used in last step, write to OPC
     enums: []
     list: false
@@ -6164,7 +5896,7 @@
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: Tag for setting desired mode of application 1 = ACTIVE 0=INACTIVE
     enums: []
     list: false
@@ -6186,7 +5918,7 @@
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: For check of control loop, read this tag to PCS, verify that it follows
       Write
     enums: []
@@ -6198,7 +5930,7 @@
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: For check of control loop, write tag to PCS
     enums: []
     list: false
@@ -6209,7 +5941,7 @@
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: Basic Sopc tag name
     enums: []
     list: false
@@ -6229,9 +5961,9 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: ''
+    dataType: float
     default:
-    - '1'
+    - '1.0'
     description: Real time simulation factor, cycle time is Nsecs*RealTimeFac if SITENONE
     enums: []
     list: false
@@ -6276,7 +6008,7 @@
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: Description
     enums: []
     list: false
@@ -6287,7 +6019,7 @@
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: Report application service factor, write to OPC
     enums: []
     list: false
@@ -6298,7 +6030,7 @@
   - calc: false
     dataType: string
     default:
-    - '"Statoil.OPC.Server"'
+    - '""'
     description: Name of OPC server
     enums: []
     list: false
@@ -6320,13 +6052,23 @@
   - calc: false
     dataType: enum
     default:
-    - AIM_AIMGUI
+    - SITENONE
     description: Name of site for automatic extension generation
     enums:
-    - AIM_AIMGUI
     - SITENONE
     - OPCSIMUL
+    - KOLLSNES
+    - TORDIS
+    - MONGSTAD
+    - KARSTO
+    - KARSTO_CP
+    - SNOHVIT
+    - KALUNDBORG
+    - KALUNDBORG_IP21
+    - KALUNDBORG_SGUI
     - AIM
+    - AIM_GUI
+    - ROCKWELL
     - SIEMENS_APC
     - HARMONYOPC
     - ROCKWELL
@@ -6338,7 +6080,7 @@
   - calc: false
     dataType: enum
     default:
-    - 'ON'
+    - 'OFF'
     description: Description
     enums:
     - 'ON'
@@ -6351,7 +6093,7 @@
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"NotUsed"'
     description: Tag for status of application 1 = ACT, 0 = all other modes
     enums: []
     list: false
@@ -6517,7 +6259,7 @@
   - calc: false
     dataType: int
     default:
-    - '1'
+    - '0'
     description: Adds horizontal space in a table, number of lines
     enums: []
     list: false
@@ -6634,7 +6376,7 @@
     enums: []
     list: false
     name: ModelValue
-    noCnfg: false
+    noCnfg: true
     postfix:
     - ''
     - Bad
@@ -6737,26 +6479,14 @@
 - attributes:
   - calc: false
     dataType: enum
-    default: []
+    default:
+    - 'ON'
     description: Enable change log to file
     enums:
     - 'ON'
     - 'OFF'
     list: false
     name: ChngLogOn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: ClipOn
     noCnfg: false
     postfix: []
     tags: []
@@ -6794,7 +6524,7 @@
     postfix: []
     tags: []
   - calc: false
-    dataType: int
+    dataType: bit31
     default:
     - '0'
     description: Groups locked for update
@@ -6807,7 +6537,7 @@
   - calc: false
     dataType: string
     default:
-    - '"Free 1"'
+    - '""'
     description: Plotting groups
     enums: []
     list: true
@@ -7029,7 +6759,7 @@
     enums: []
     list: false
     name: Nxupd
-    noCnfg: false
+    noCnfg: true
     postfix: []
     tags: []
   - calc: false
@@ -7133,127 +6863,6 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '800'
-    description: Description
-    enums: []
-    list: false
-    name: WdwDx
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '400'
-    description: Description
-    enums: []
-    list: false
-    name: WdwDy
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0.7'
-    description: Description
-    enums: []
-    list: false
-    name: Xback
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: bit
-    default:
-    - '0001'
-    description: Description
-    enums: []
-    list: false
-    name: Xgroup
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Xline
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Zfont
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Zhilo
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Zline
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Zname
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Zopen
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Description
-    enums: []
-    list: false
-    name: Zstate
-    noCnfg: false
-    postfix: []
-    tags: []
   description: Description of system object
   name: System
   parents: []
@@ -7310,7 +6919,7 @@
   - calc: false
     dataType: int
     default:
-    - '1'
+    - '-1'
     description: position in a gridded display group
     enums: []
     list: false
@@ -7321,7 +6930,7 @@
   - calc: false
     dataType: int
     default:
-    - '5'
+    - '1'
     description: Width of item in a gridded group
     enums: []
     list: false
@@ -7332,7 +6941,7 @@
   - calc: false
     dataType: int
     default:
-    - '16'
+    - '-1'
     description: Width of Group column for table items (number of chars)
     enums: []
     list: false
@@ -7343,7 +6952,7 @@
   - calc: false
     dataType: int
     default:
-    - '8'
+    - '-1'
     description: Width of Name/Id column for table items (number of chars)
     enums: []
     list: false
@@ -7354,7 +6963,7 @@
   - calc: false
     dataType: int
     default:
-    - '1'
+    - '-1'
     description: Position in a gridded display group
     enums: []
     list: false
@@ -7365,7 +6974,7 @@
   - calc: false
     dataType: int
     default:
-    - '4'
+    - '1'
     description: Height of item in a gridded group
     enums: []
     list: false
@@ -7376,7 +6985,7 @@
   - calc: false
     dataType: int
     default:
-    - '12'
+    - '-1'
     description: Width of description column for table items (number of chars)
     enums: []
     list: false
@@ -7403,8 +7012,9 @@
 - attributes:
   - calc: false
     dataType: enum
-    default: []
-    description: Color used in plot for the variable
+    default:
+    - BLACK
+    description: Color used in plots for the variable
     enums:
     - BLACK
     - GREEN
@@ -7523,7 +7133,7 @@
     dataType: float
     default:
     - '-1'
-    description: Description
+    description: Y-range of plot when scaled using span, -1 use min-max
     enums: []
     list: false
     name: PlotSpan
@@ -7591,21 +7201,588 @@
     noCnfg: false
     postfix: []
     tags: []
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: List of references to tvrs to be included in list
-    enums: []
-    list: true
-    name: Tvrs
-    noCnfg: false
-    postfix: []
-    tags: []
   description: List of trend variables with associated values
   name: TvrList
   parents:
   - Table
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Application allowed active
+    enums: []
+    list: false
+    name: xAllowActive
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Application desired active, 1 = Active
+    enums: []
+    list: false
+    name: xDesiredMode
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Application status, 1 = Active 0 = OFF
+    enums: []
+    list: false
+    name: yStatus
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Application OPC connection
+  name: UAAppl
+  parents:
+  - UAProc
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: CV desired active from PCDA. 1 = Active 0 = Tracking
+    enums: []
+    list: false
+    name: xDesiredActive
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: High limit
+    enums: []
+    list: false
+    name: xHighLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Low limit
+    enums: []
+    list: false
+    name: xLowLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Measurement tag
+    enums: []
+    list: false
+    name: xMeas
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Not valid, 1 = Not valid
+    enums: []
+    list: false
+    name: xNotValid
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Set point
+    enums: []
+    list: false
+    name: xSetpoint
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Cv active tag
+    enums: []
+    list: false
+    name: yActive
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: High limit
+    enums: []
+    list: false
+    name: yHighLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Low limit
+    enums: []
+    list: false
+    name: yLowLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Set point
+    enums: []
+    list: false
+    name: ySetpoint
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Control Variable (CV) OPC Connection
+  name: UACvr
+  parents:
+  - UAProc
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: DV desired active from PCDA. 1 = Active 0 = OFF
+    enums: []
+    list: false
+    name: xDesiredTracking
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Measurement
+    enums: []
+    list: false
+    name: xMeas
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Not valid tag. 1 = Not Valid
+    enums: []
+    list: false
+    name: xNotValid
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: DV in tracking written to PCDA. 1 = Tracking
+    enums: []
+    list: false
+    name: yTracking
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Disturbance variable (DV) OPC connection
+  name: UADvr
+  parents:
+  - UAProc
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Measurement tag to write
+    enums: []
+    list: false
+    name: yMeas
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Not valid tag. 1 = Not Valid
+    enums: []
+    list: false
+    name: yNotValid
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Enviromental/Calculated Variable (EV) OPC Connection
+  name: UAEvr
+  parents:
+  - UAProc
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Meas and CV model connected, AUTO = 1
+    enums: []
+    list: false
+    name: xAuto
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Mv desired active from PCDA. 1 = Active 0 = limited to Tracking
+    enums: []
+    list: false
+    name: xDesiredActive
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Controller in computer mode 1 = COMP
+    enums: []
+    list: false
+    name: xExtern
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: High limit
+    enums: []
+    list: false
+    name: xHighLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Ideal value
+    enums: []
+    list: false
+    name: xIdealValue
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Low limit
+    enums: []
+    list: false
+    name: xLowLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Max down of manipulated variable
+    enums: []
+    list: false
+    name: xMaxMoveDown
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Max up of manipulated variable
+    enums: []
+    list: false
+    name: xMaxMoveUp
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Measurement
+    enums: []
+    list: false
+    name: xMeas
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Not valid, 1 = Not valid
+    enums: []
+    list: false
+    name: xNotValid
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Process Value
+    enums: []
+    list: false
+    name: xProcessValue
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Windup high tag. 1 = Windup high
+    enums: []
+    list: false
+    name: xWindupHigh
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Windup low tag. 1 = Windup low
+    enums: []
+    list: false
+    name: xWindupLow
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Mv active written to PCDA. 1 = Active
+    enums: []
+    list: false
+    name: yActive
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Calculated set point
+    enums: []
+    list: false
+    name: yCalcSetpoint
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: High limit of manipulated variable
+    enums: []
+    list: false
+    name: yHighLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Ideal value of manipulated variable
+    enums: []
+    list: false
+    name: yIdealValue
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Low limit of manipulated variable
+    enums: []
+    list: false
+    name: yLowLimit
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Command controller to computer mode
+    enums: []
+    list: false
+    name: yToComp
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Command controller to local mode
+    enums: []
+    list: false
+    name: yToLocal
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Manipulated Variable (MV) OPCUA Connection
+  name: UAMvr
+  parents:
+  - UAProc
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: DefaultNameSpaceURI
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: Password
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '"opc.tcp://localhost:4840"'
+    description: OPC server adress
+    enums: []
+    list: false
+    name: ServerURL
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: For user
+    enums: []
+    list: false
+    name: UserName
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: credentialsPath
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: useSubscription
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: writeOnChangeOnly
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Tag for SEPTIC puls (toggled each step)
+    enums: []
+    list: false
+    name: yPulse
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: UAProc description
+  name: UAProc
+  parents:
+  - System
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Measurement
+    enums: []
+    list: false
+    name: MeasTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Not valid tag. 1 = Not Valid
+    enums: []
+    list: false
+    name: NotValidTag
+    noCnfg: false
+    postfix: []
+    tags: []
+  description: Trending variable (TV) OPC connection
+  name: UATvr
+  parents:
+  - UAProc
 - attributes:
   - calc: false
     dataType: int
@@ -7668,7 +7845,7 @@
     dataType: enum
     default:
     - 'OFF'
-    description: Description
+    description: Span scale
     enums:
     - 'ON'
     - 'OFF'
