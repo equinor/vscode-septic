@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.19.0](https://github.com/equinor/vscode-septic/compare/v1.18.1...v1.19.0) (2024-05-02)
+
+
+### ✨ Features
+
+* snippets from septic documentation based on version ([#521](https://github.com/equinor/vscode-septic/issues/521)) ([9e0931f](https://github.com/equinor/vscode-septic/commit/9e0931f4a68d9de32ae78774a28f37dcdc5b229f))
+
 ## [1.18.1](https://github.com/equinor/vscode-septic/compare/v1.18.0...v1.18.1) (2024-05-02)
 
 
