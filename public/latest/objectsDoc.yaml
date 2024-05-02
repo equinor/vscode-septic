@@ -13,7 +13,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -24,7 +26,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -35,7 +39,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -46,7 +52,9 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Appl Plot
   name: ApplPlot
@@ -62,7 +70,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -73,7 +83,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -84,7 +96,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -95,7 +109,9 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: List of bad xvrs in application
   name: BadXvrList
@@ -111,7 +127,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -122,7 +140,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Calc Model
   name: CalcModl
@@ -138,7 +158,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -149,7 +171,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -160,7 +184,9 @@
     list: false
     name: Alg
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}"'
     tags: []
   description: Calculation
   name: CalcPvr
@@ -176,7 +202,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -187,7 +215,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -198,7 +228,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -209,7 +241,9 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Table of all calcs for indicated calc model
   name: CalcTable
@@ -225,7 +259,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -236,7 +272,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -247,7 +285,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -258,7 +298,9 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -269,7 +311,9 @@
     list: false
     name: Title
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}"'
     tags: []
   - calc: false
     dataType: string
@@ -280,7 +324,9 @@
     list: false
     name: xTitle
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3}"'
     tags: []
   - calc: false
     dataType: string
@@ -291,7 +337,9 @@
     list: false
     name: yTitle
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${4}"'
     tags: []
   - calc: false
     dataType: enum
@@ -304,7 +352,9 @@
     list: false
     name: Autoscale
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -315,7 +365,9 @@
     list: false
     name: yMin
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -326,7 +378,9 @@
     list: false
     name: yMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -337,7 +391,9 @@
     list: false
     name: LegendPosX
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -348,6 +404,7 @@
     list: false
     name: LegendPosY
     noCnfg: false
+    nosnippet: false
     postfix: []
     tags: []
   - calc: false
@@ -393,6 +450,7 @@
     name: yTitle
     noCnfg: false
     postfix: []
+    snippet: ''
     tags: []
   description: Chart
   name: Chart
@@ -408,7 +466,9 @@
     list: false
     name: Color
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2:black}"'
     tags: []
   - calc: false
     dataType: string
@@ -419,7 +479,9 @@
     list: false
     name: Text
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -430,7 +492,9 @@
     list: false
     name: Width
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -445,7 +509,9 @@
     list: false
     name: Style
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${3|Solid,Dash,Dot,DashDot|}
     tags: []
   - calc: false
     dataType: enum
@@ -464,6 +530,7 @@
     list: false
     name: Marker
     noCnfg: false
+    nosnippet: false
     postfix: []
     tags: []
   - calc: false
@@ -502,6 +569,7 @@
     name: Width
     noCnfg: false
     postfix: []
+    snippet: ${4|Cross,XCross,Diamond,Triangle,UpTriangle,Circle,Rect,NoMarker|}
     tags: []
   description: Chart Serie
   name: ChartSerie
@@ -517,7 +585,9 @@
     list: false
     name: Heading
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}"'
     tags: []
   - calc: false
     dataType: string
@@ -528,7 +598,9 @@
     list: false
     name: Tooltip
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: "The Xvrs listed are placed in a new column to the right of the corresponding\
     \ XvrList\r\n  The heading text is used as heading for the new column"
@@ -545,7 +617,9 @@
     list: false
     name: Color
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}:black"'
     tags: []
   - calc: false
     dataType: string
@@ -556,7 +630,9 @@
     list: false
     name: Text
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3}"'
     tags: []
   - calc: false
     dataType: int
@@ -567,7 +643,9 @@
     list: false
     name: Width
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -578,7 +656,9 @@
     list: true
     name: xPoints
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: 1  ${4}
     tags: []
   - calc: false
     dataType: float
@@ -589,7 +669,9 @@
     list: true
     name: yPoints
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: 1  ${5}
     tags: []
   - calc: false
     dataType: enum
@@ -604,7 +686,9 @@
     list: false
     name: Style
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${6|Solid,Dash,Dot,DashDot|}
     tags: []
   description: Curve
   name: Curve
@@ -620,7 +704,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -631,13 +717,15 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
     default:
     - STOPPED
-    description: Operation mode of manipulated variable
+    description: Desired mode of CV
     enums:
     - STOPPED
     - TRACKING
@@ -645,7 +733,9 @@
     list: false
     name: Mode
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -658,7 +748,9 @@
     list: false
     name: Auto
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -669,7 +761,9 @@
     list: false
     name: PlotMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -680,18 +774,22 @@
     list: false
     name: PlotMin
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
     default:
     - '-1'
-    description: Description
+    description: Y-range of plot when scaled using span, -1 use min-max
     enums: []
     list: false
     name: PlotSpan
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -702,7 +800,9 @@
     list: false
     name: Nfix
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${2:1}
     tags: []
   - calc: false
     dataType: float
@@ -713,7 +813,9 @@
     list: false
     name: MaxChg
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -724,7 +826,9 @@
     list: false
     name: Unit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3}"'
     tags: []
   - calc: true
     dataType: float
@@ -735,9 +839,11 @@
     list: false
     name: Meas
     noCnfg: false
+    nosnippet: false
     postfix:
     - ''
     - Bad
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit31
@@ -748,7 +854,9 @@
     list: false
     name: GrpMask
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit31
@@ -759,7 +867,9 @@
     list: false
     name: GrpType
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -770,7 +880,9 @@
     list: false
     name: Span
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -781,35 +893,41 @@
     list: false
     name: SetPnt
     noCnfg: false
+    nosnippet: false
     postfix:
-    - 'On'
     - 'Off'
+    - 'On'
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
     default:
-    - 1e+10
+    - '100'
     description: Upper limit with indicated initial state
     enums: []
     list: false
     name: High
     noCnfg: false
+    nosnippet: false
     postfix:
-    - 'On'
     - 'Off'
+    - 'On'
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
     default:
-    - -1e+10
+    - '0'
     description: Lower limit with indicated initial state
     enums: []
     list: false
     name: Low
     noCnfg: false
+    nosnippet: false
     postfix:
-    - 'On'
     - 'Off'
+    - 'On'
+    snippet: ''
     tags: []
   - calc: true
     dataType: int
@@ -820,7 +938,9 @@
     list: false
     name: SetPntPrio
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: int
@@ -831,7 +951,9 @@
     list: false
     name: HighPrio
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: int
@@ -842,7 +964,9 @@
     list: false
     name: LowPrio
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -853,7 +977,9 @@
     list: false
     name: HighBackOff
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -864,7 +990,9 @@
     list: false
     name: LowBackOff
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -875,7 +1003,9 @@
     list: false
     name: Fulf
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -886,7 +1016,9 @@
     list: false
     name: HighPnlty
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -897,29 +1029,35 @@
     list: false
     name: LowPnlty
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
     default:
-    - '1000'
+    - '0'
     description: High constraint maximum relaxation
     enums: []
     list: false
     name: HighLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '1000'
     tags: []
   - calc: false
     dataType: float
     default:
-    - '1000'
+    - '0'
     description: Low constraint maximum relaxation
     enums: []
     list: false
     name: LowLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '1000'
     tags: []
   - calc: false
     dataType: int
@@ -932,7 +1070,9 @@
     list: true
     name: RelxParam
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -943,7 +1083,9 @@
     list: false
     name: FulfReScale
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -954,11 +1096,14 @@
     list: false
     name: FulfUniScale
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
-    default: []
+    default:
+    - FILTER
     description: '- for changes in set point. FILTER or RAMP'
     enums:
     - FILTER
@@ -966,7 +1111,9 @@
     list: false
     name: SetPntChangeMode
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -977,7 +1124,9 @@
     list: false
     name: SetpTref
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -988,7 +1137,9 @@
     list: false
     name: SetPntRocUp
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -999,7 +1150,9 @@
     list: false
     name: SetPntRocDn
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -1010,7 +1163,9 @@
     list: false
     name: BiasTfilt
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -1021,7 +1176,9 @@
     list: false
     name: BiasTpred
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -1032,7 +1189,9 @@
     list: false
     name: ConsTfilt
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -1043,7 +1202,9 @@
     list: false
     name: Integ
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1057,7 +1218,9 @@
     list: false
     name: TransformType
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -1068,7 +1231,9 @@
     list: false
     name: BadCntLim
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -1079,7 +1244,9 @@
     list: false
     name: DesHorz
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -1090,7 +1257,9 @@
     list: false
     name: Neval
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -1101,7 +1270,9 @@
     list: false
     name: EvalDT
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -1237,7 +1408,9 @@
     list: false
     name: KeepTargets
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1250,7 +1423,9 @@
     list: false
     name: MeasValidation
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1368,7 +1543,9 @@
     list: false
     name: MeasHighLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -1379,7 +1556,9 @@
     list: false
     name: MeasLowLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1392,7 +1571,9 @@
     list: false
     name: LockHL
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1405,7 +1586,9 @@
     list: false
     name: LockSP
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1418,7 +1601,9 @@
     list: false
     name: LockLL
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -1453,7 +1638,9 @@
     list: true
     name: RelxParam
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -1463,7 +1650,9 @@
     list: false
     name: SSval
     noCnfg: true
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -1499,7 +1688,9 @@
     list: false
     name: SetPntFilt
     noCnfg: true
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -1509,7 +1700,9 @@
     list: false
     name: NomVal
     noCnfg: true
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Controlled Variable
   name: Cvr
@@ -1526,18 +1719,9 @@
     list: false
     name: Text
     noCnfg: false
+    nosnippet: false
     postfix: []
-    tags: []
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: List of references to Cvrs to be included in list
-    enums: []
-    list: true
-    name: Cvrs
-    noCnfg: false
-    postfix: []
+    snippet: '"${2}"'
     tags: []
   description: List of control variables with associated values
   name: CvrList
@@ -1577,7 +1761,9 @@
     list: false
     name: GroupNo
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${2:1}
     tags: []
   - calc: false
     dataType: int
@@ -1601,7 +1787,9 @@
     list: false
     name: Locked
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -1624,18 +1812,22 @@
     list: false
     name: Rows
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
     default:
-    - '12'
+    - '-1'
     description: Cols to use in a gridded group
     enums: []
     list: false
     name: Cols
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1648,7 +1840,9 @@
     list: false
     name: xGrid
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1661,7 +1855,9 @@
     list: false
     name: yGrid
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1674,7 +1870,9 @@
     list: false
     name: xAxis
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1687,12 +1885,14 @@
     list: false
     name: yAxis
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
     default:
-    - 'ON'
+    - 'OFF'
     description: Use autoscaling in plots belonging to this group
     enums:
     - 'ON'
@@ -1700,7 +1900,9 @@
     list: false
     name: Autoscale
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1713,31 +1915,37 @@
     list: false
     name: Spanscale
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
     default:
-    - '4320'
+    - '-1'
     description: Length (in samples/steps) of history-part for plots belonging to
       this group
     enums: []
     list: false
     name: HistSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
     default:
-    - '180'
+    - '-1'
     description: Length (in samples/steps) of prediction-part for plots belonging
       to this group
     enums: []
     list: false
     name: PredSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Container-object for all display items in a view
   name: DisplayGroup
@@ -1753,7 +1961,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -1764,7 +1974,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -1775,7 +1987,9 @@
     list: false
     name: Nstep
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -1786,7 +2000,9 @@
     list: false
     name: PlotMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1799,7 +2015,9 @@
     list: false
     name: MasterOn
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1814,7 +2032,9 @@
     list: false
     name: DesMode
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -1825,7 +2045,9 @@
     list: false
     name: IterEachN
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Dummy Application
   name: DmmyAppl
@@ -1841,7 +2063,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -1852,7 +2076,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1865,7 +2091,9 @@
     list: false
     name: Mode
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -1876,7 +2104,9 @@
     list: false
     name: PlotMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -1887,7 +2117,9 @@
     list: false
     name: PlotMin
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -1898,7 +2130,9 @@
     list: false
     name: PlotSpan
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -1909,7 +2143,9 @@
     list: false
     name: Nfix
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${2:1}
     tags: []
   - calc: false
     dataType: string
@@ -1920,7 +2156,9 @@
     list: false
     name: Unit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3}"'
     tags: []
   - calc: true
     dataType: float
@@ -1931,9 +2169,11 @@
     list: false
     name: Meas
     noCnfg: false
+    nosnippet: false
     postfix:
     - ''
     - Bad
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit31
@@ -1944,7 +2184,9 @@
     list: false
     name: GrpMask
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit31
@@ -1955,7 +2197,9 @@
     list: false
     name: GrpType
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -1966,7 +2210,9 @@
     list: false
     name: Span
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -1979,7 +2225,9 @@
     list: false
     name: MeasValidation
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -1990,7 +2238,9 @@
     list: false
     name: MeasHighLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -2001,7 +2251,9 @@
     list: false
     name: MeasLowLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Disturbance Variable
   name: Dvr
@@ -2018,18 +2270,9 @@
     list: false
     name: Text
     noCnfg: false
+    nosnippet: false
     postfix: []
-    tags: []
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: List of references to Dvrs to be included in list
-    enums: []
-    list: true
-    name: Dvrs
-    noCnfg: false
-    postfix: []
+    snippet: '"${2}"'
     tags: []
   description: List of disturbance variables with associated values
   name: DvrList
@@ -2045,7 +2288,9 @@
     list: false
     name: ObjId
     noCnfg: false
+    nosnippet: true
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -2056,7 +2301,9 @@
     list: false
     name: Color
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2:black}"'
     tags: []
   - calc: false
     dataType: string
@@ -2067,7 +2314,9 @@
     list: false
     name: Text
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3}"'
     tags: []
   - calc: false
     dataType: int
@@ -2078,7 +2327,9 @@
     list: false
     name: Width
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -2089,7 +2340,9 @@
     list: false
     name: Type
     noCnfg: false
+    nosnippet: true
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -2104,7 +2357,9 @@
     list: false
     name: Style
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${4|Solid,Dash,Dot,DashDot|}
     tags: []
   description: Dynamic Curve
   name: DynCurve
@@ -2120,7 +2375,9 @@
     list: false
     name: Color
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2:black}"'
     tags: []
   - calc: false
     dataType: string
@@ -2131,7 +2388,9 @@
     list: false
     name: Text
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3}"'
     tags: []
   - calc: false
     dataType: int
@@ -2142,7 +2401,9 @@
     list: false
     name: Width
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -2153,7 +2414,9 @@
     list: false
     name: HistSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: variable
@@ -2164,7 +2427,9 @@
     list: false
     name: xXvr
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${4:xXvr}"'
     tags: []
   - calc: false
     dataType: variable
@@ -2175,7 +2440,9 @@
     list: false
     name: yXvr
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${5:yXvr}"'
     tags: []
   description: Dynamic Point (scatter plot)
   name: DynPoint
@@ -2191,7 +2458,9 @@
     list: false
     name: N
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${2:1}
     tags: []
   - calc: false
     dataType: int
@@ -2202,7 +2471,9 @@
     list: false
     name: Ncycle
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -2213,7 +2484,9 @@
     list: false
     name: Cmd
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3}"'
     tags: []
   description: Events/triggers for change of SEPTIC parameters
   name: Event
@@ -2234,7 +2507,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -2302,7 +2577,9 @@
     list: false
     name: Nfix
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -2313,7 +2590,9 @@
     list: false
     name: PlotMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -2324,7 +2603,9 @@
     list: false
     name: PlotMin
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -2335,7 +2616,9 @@
     list: false
     name: PlotSpan
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -2346,7 +2629,9 @@
     list: false
     name: Nfix
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${2:1}
     tags: []
   - calc: false
     dataType: string
@@ -2357,20 +2642,9 @@
     list: false
     name: Unit
     noCnfg: false
+    nosnippet: false
     postfix: []
-    tags: []
-  - calc: true
-    dataType: float
-    default:
-    - '0'
-    description: Measurement
-    enums: []
-    list: false
-    name: Meas
-    noCnfg: false
-    postfix:
-    - ''
-    - Bad
+    snippet: '"${3}"'
     tags: []
   - calc: false
     dataType: bit31
@@ -2381,7 +2655,9 @@
     list: false
     name: GrpMask
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit31
@@ -2392,7 +2668,9 @@
     list: false
     name: GrpType
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -2403,57 +2681,24 @@
     list: false
     name: Span
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Initial state of measurement validation
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: MeasValidation
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
-    - 1e+10
-    description: Measurement validation high limit
+    - '0'
+    description: Measurement
     enums: []
     list: false
-    name: MeasHighLimit
+    name: Meas
     noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - -1e+10
-    description: Measurement validation low limit
-    enums: []
-    list: false
-    name: MeasLowLimit
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default: []
-    description: Color used in plot for the variable
-    enums:
-    - BLACK
-    - GREEN
-    - RED
-    - YELLOW
-    - MAGENTA
-    list: false
-    name: Color
-    noCnfg: false
-    postfix: []
+    nosnippet: false
+    postfix:
+    - ''
+    - Bad
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -2466,10 +2711,26 @@
     - ENUM
     - INT
     - DOUBLE
+    - 'ON'
     list: false
     name: UserInput
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${4|OFF,BOOL,ENUM,INT,DOUBLE,ON|}
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: List of enum-strings to use with UserInput= ENUM
+    enums: []
+    list: true
+    name: UserEnums
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -2487,7 +2748,9 @@
     list: false
     name: UserAccess
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -2526,7 +2789,9 @@
     list: false
     name: UserMeas
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -2537,7 +2802,9 @@
     list: false
     name: MinInput
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -2548,18 +2815,9 @@
     list: false
     name: MaxInput
     noCnfg: false
+    nosnippet: false
     postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: List of enum-strings to use with UserInput= ENUM
-    enums: []
-    list: true
-    name: UserEnums
-    noCnfg: false
-    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -2571,7 +2829,27 @@
     list: false
     name: ValidationLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - BLACK
+    description: Color used in plots for the variable
+    enums:
+    - BLACK
+    - GREEN
+    - RED
+    - YELLOW
+    - MAGENTA
+    list: false
+    name: Color
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   description: Estimated/calculated Variable
   name: Evr
@@ -2588,18 +2866,9 @@
     list: false
     name: Text
     noCnfg: false
+    nosnippet: false
     postfix: []
-    tags: []
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: List of references to Evrs to be included in list
-    enums: []
-    list: true
-    name: Evrs
-    noCnfg: false
-    postfix: []
+    snippet: '"${2}"'
     tags: []
   description: List of environmental/calculated variables with associated values
   name: EvrList
@@ -2626,7 +2895,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -2637,7 +2908,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -2648,7 +2921,9 @@
     list: false
     name: FMUname
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.fmu"'
     tags: []
   description: FMUModl
   name: FMUModl
@@ -2664,7 +2939,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -2675,7 +2952,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -2686,7 +2965,9 @@
     list: false
     name: FMUname
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.fmu"'
     tags: []
   description: FMUProc
   name: FMUProc
@@ -2694,6 +2975,18 @@
   - SmpcAppl
   - MPCAppl
 - attributes:
+  - calc: false
+    dataType: string
+    default: []
+    description: Description
+    enums: []
+    list: false
+    name: Separator
+    noCnfg: false
+    nosnippet: true
+    postfix: []
+    snippet: ''
+    tags: []
   - calc: false
     dataType: enum
     default:
@@ -2706,7 +2999,9 @@
     list: false
     name: Mode
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${2|Playback,PlayBack_nomode,BaseCase|
     tags: []
   - calc: false
     dataType: string
@@ -2744,7 +3039,9 @@
     list: false
     name: Heading
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}"'
     tags: []
   - calc: false
     dataType: variable
@@ -2755,7 +3052,9 @@
     list: false
     name: StatusXvr
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -2766,7 +3065,9 @@
     list: false
     name: ColPos
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -2777,7 +3078,9 @@
     list: false
     name: SizeOffset
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Present Meas of Xvr below the preceding element in a Table, adding
     a new row to the table
@@ -2794,7 +3097,9 @@
     list: false
     name: Heading
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}"'
     tags: []
   - calc: false
     dataType: int
@@ -2805,28 +3110,35 @@
     list: false
     name: TextNo
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
-    default: []
+    default:
+    - '-1'
     description: Placement of value, related to table item placement
     enums: []
     list: false
     name: ColPos
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
     default:
     - '0'
-    description: text size offset from normal
+    description: Text size offset from normal
     enums: []
     list: false
     name: SizeOffset
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Present Text1/Text2 from a Xvr below the preceding element in a Table,
     adding a new row to the table
@@ -2843,7 +3155,9 @@
     list: false
     name: Text
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}"'
     tags: []
   - calc: false
     dataType: int
@@ -2854,7 +3168,9 @@
     list: false
     name: SizeOffset
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Heading
   name: Heading
@@ -2870,7 +3186,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -2881,7 +3199,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -2892,7 +3212,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -2903,7 +3225,9 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -2914,7 +3238,9 @@
     list: false
     name: FileName
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Image
   name: Image
@@ -2930,7 +3256,9 @@
     list: false
     name: TargetGroup
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -2941,7 +3269,9 @@
     list: false
     name: LineWidth
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -2952,7 +3282,9 @@
     list: false
     name: Color
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2:black}"'
     tags: []
   description: Image Area
   name: ImageArea
@@ -2969,7 +3301,9 @@
     list: false
     name: X1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -2981,7 +3315,9 @@
     list: false
     name: Y1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -2993,7 +3329,9 @@
     list: false
     name: X2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3005,7 +3343,9 @@
     list: false
     name: Y2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -3016,7 +3356,9 @@
     list: false
     name: PlotMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -3027,7 +3369,9 @@
     list: false
     name: PlotMin
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: variable
@@ -3038,7 +3382,9 @@
     list: true
     name: Xvrs
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -3049,7 +3395,9 @@
     list: true
     name: Colors
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: MultiXvrPlot overlaid image
   name: ImageMultiXvrPlot
@@ -3066,7 +3414,9 @@
     list: false
     name: X1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3078,7 +3428,9 @@
     list: false
     name: Y1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3090,7 +3442,9 @@
     list: false
     name: X2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3102,61 +3456,18 @@
     list: false
     name: Y2
     noCnfg: false
+    nosnippet: false
     postfix: []
     tags: []
   description: MultiXvrPlot overlaid image
   name: ImageMultiXvrPlot
+    snippet: ''
+    tags: []
+  description: Image Status Label
+  name: ImageStatusLabel
   parents:
   - Image
 - attributes:
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: X-position of upper left corner of label relative to image in pixels.
-      X1 < X2
-    enums: []
-    list: false
-    name: X1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Y-position of upper left corner of label relative to image in pixels.
-      Y1 < Y2
-    enums: []
-    list: false
-    name: Y1
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: X-position of lower right corner of label relative to image in pixels.
-      X1 < X2
-    enums: []
-    list: false
-    name: X2
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '-1'
-    description: Y-position of lower right corner of label relative to image in pixels.
-      Y1 < Y2
-    enums: []
-    list: false
-    name: Y2
-    noCnfg: false
-    postfix: []
-    tags: []
   - calc: false
     dataType: string
     default:
@@ -3166,7 +3477,9 @@
     list: false
     name: TextColor
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2:black}"'
     tags: []
   - calc: false
     dataType: string
@@ -3177,13 +3490,10 @@
     list: false
     name: BackgroundColor
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3:white}"'
     tags: []
-  description: Image Text Xvr
-  name: ImageTextXvr
-  parents:
-  - Image
-- attributes:
   - calc: false
     dataType: int
     default:
@@ -3194,7 +3504,9 @@
     list: false
     name: X1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3206,7 +3518,9 @@
     list: false
     name: Y1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3218,7 +3532,9 @@
     list: false
     name: X2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3230,8 +3546,15 @@
     list: false
     name: Y2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
+  description: Image Text Xvr
+  name: ImageTextXvr
+  parents:
+  - Image
+- attributes:
   - calc: false
     dataType: string
     default:
@@ -3241,7 +3564,65 @@
     list: false
     name: BackgroundColor
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: X-position of upper left corner of label relative to image in pixels.
+      X1 < X2
+    enums: []
+    list: false
+    name: X1
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Y-position of upper left corner of label relative to image in pixels.
+      Y1 < Y2
+    enums: []
+    list: false
+    name: Y1
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: X-position of lower right corner of label relative to image in pixels.
+      X1 < X2
+    enums: []
+    list: false
+    name: X2
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Y-position of lower right corner of label relative to image in pixels.
+      Y1 < Y2
+    enums: []
+    list: false
+    name: Y2
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   description: Xvr value overlaid on image
   name: ImageXvr
@@ -3258,7 +3639,9 @@
     list: false
     name: X1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3270,7 +3653,9 @@
     list: false
     name: Y1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3282,7 +3667,9 @@
     list: false
     name: X2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3294,7 +3681,9 @@
     list: false
     name: Y2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Xvr value overlaid on image
   name: ImageXvr
@@ -3321,7 +3710,9 @@
     list: false
     name: Heading
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: variable
@@ -3332,18 +3723,22 @@
     list: false
     name: StatusXvr
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"white"'
     description: Background color
     enums: []
     list: false
     name: BackgroundColor
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: variable
@@ -3354,7 +3749,9 @@
     list: true
     name: Xvrs
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -3365,7 +3762,9 @@
     list: true
     name: Texts
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Collection of xvrs overlaid image
   name: ImageXvrCollection
@@ -3382,7 +3781,9 @@
     list: false
     name: X1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3394,7 +3795,9 @@
     list: false
     name: Y1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3406,7 +3809,9 @@
     list: false
     name: X2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3418,7 +3823,9 @@
     list: false
     name: Y2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: XvrPlot overlaid image. Name of object = Xvr to plot
   name: ImageXvrPlot
@@ -3433,7 +3840,9 @@
     list: false
     name: ColPos
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -3444,7 +3853,9 @@
     list: false
     name: Heading
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}"'
     tags: []
   - calc: false
     dataType: variable
@@ -3454,7 +3865,9 @@
     list: false
     name: StatusXvr
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3}"'
     tags: []
   description: Present Meas of Xvr below the preceding element in a Table, adding
     a row to the table
@@ -3531,7 +3944,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -3542,7 +3957,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: SEPTIC MPC Application, MPCAppl version
   name: MPCAppl
@@ -3580,7 +3997,9 @@
     list: false
     name: Nhorz
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3591,7 +4010,9 @@
     list: false
     name: Npred
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -3602,7 +4023,9 @@
     list: false
     name: FeasTol
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3614,7 +4037,9 @@
     list: false
     name: FailMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -3629,7 +4054,9 @@
     list: false
     name: DesMode
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: SEPTIC MPC Application, MPCAppl version
   name: MPCAppl
@@ -3639,13 +4066,15 @@
   - calc: false
     dataType: int
     default:
-    - '12030'
+    - '0'
     description: Master application socket port
     enums: []
     list: false
     name: MasterPort
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${2:12030}
     tags: []
   - calc: false
     dataType: enum
@@ -3658,7 +4087,9 @@
     list: false
     name: InitOn
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -3671,7 +4102,9 @@
     list: false
     name: HistOn
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -3684,7 +4117,9 @@
     list: false
     name: InitOn
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3695,6 +4130,7 @@
     list: false
     name: MasterPort
     noCnfg: false
+    nosnippet: false
     postfix: []
     tags: []
   - calc: false
@@ -3709,6 +4145,7 @@
     name: ModlOn
     noCnfg: false
     postfix: []
+    snippet: ''
     tags: []
   description: Master TCIP
   name: MasterTcip
@@ -3724,7 +4161,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3735,7 +4174,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3746,7 +4187,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3757,7 +4200,9 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Message View
   name: MessageView
@@ -3773,7 +4218,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3784,7 +4231,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3795,7 +4244,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3806,8 +4257,16 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
     tags: []
+    snippet: ''
+    tags: []
+  description: Model matrix between Mvrs/Dvrs and Cvrs
+  name: ModelMatrix
+  parents:
+  - DisplayGroup
+- attributes:
   - calc: false
     dataType: int
     default:
@@ -3817,7 +4276,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3828,7 +4289,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3839,7 +4302,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3850,13 +4315,27 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Plot model corresponding to Id, format cvr_mvr/dvr
   name: ModelPlot
   parents:
   - DisplayGroup
 - attributes:
+  - calc: false
+    dataType: int
+    default: []
+    description: Sample number
+    enums: []
+    list: false
+    name: Ix
+    noCnfg: true
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
   - calc: false
     dataType: int
     default:
@@ -3866,7 +4345,9 @@
     list: false
     name: MaxLvl
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3877,7 +4358,9 @@
     list: false
     name: MinLvl
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: path
@@ -3888,17 +4371,9 @@
     list: false
     name: Obj
     noCnfg: false
+    nosnippet: false
     postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default: []
-    description: Sample number
-    enums: []
-    list: false
-    name: Ix
-    noCnfg: true
-    postfix: []
+    snippet: ''
     tags: []
   description: Message Box
   name: MsgBox
@@ -3914,7 +4389,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3925,7 +4402,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3936,7 +4415,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -3947,7 +4428,22 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Plot title/heading
+    enums: []
+    list: false
+    name: Title
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: '"${2}"'
     tags: []
   - calc: false
     dataType: float
@@ -3958,7 +4454,9 @@
     list: false
     name: PlotMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -3969,6 +4467,7 @@
     list: false
     name: PlotMin
     noCnfg: false
+    nosnippet: false
     postfix: []
     tags: []
   - calc: false
@@ -4003,6 +4502,7 @@
     name: Title
     noCnfg: false
     postfix: []
+    snippet: ''
     tags: []
   description: "MultiXvrPlot, plot Meas from multiple Xvr in same plot. Cnfg wih optional\
     \ position and size if the group is\r\n  gridded"
@@ -4019,7 +4519,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -4030,7 +4532,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4044,7 +4548,9 @@
     list: false
     name: Mode
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4057,7 +4563,9 @@
     list: false
     name: Auto
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4068,7 +4576,9 @@
     list: false
     name: PlotMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4079,7 +4589,9 @@
     list: false
     name: PlotMin
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4090,7 +4602,9 @@
     list: false
     name: PlotSpan
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4101,7 +4615,9 @@
     list: false
     name: Nfix
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4112,7 +4628,9 @@
     list: false
     name: MaxChg
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -4123,7 +4641,9 @@
     list: false
     name: Unit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -4134,9 +4654,11 @@
     list: false
     name: Meas
     noCnfg: false
+    nosnippet: false
     postfix:
     - ''
     - Bad
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit31
@@ -4147,7 +4669,9 @@
     list: false
     name: GrpMask
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit31
@@ -4158,7 +4682,9 @@
     list: false
     name: GrpType
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4169,7 +4695,9 @@
     list: false
     name: Span
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -4180,9 +4708,11 @@
     list: false
     name: High
     noCnfg: false
+    nosnippet: false
     postfix:
     - 'On'
     - 'Off'
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -4193,9 +4723,11 @@
     list: false
     name: Low
     noCnfg: false
+    nosnippet: false
     postfix:
     - 'On'
     - 'Off'
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -4206,9 +4738,11 @@
     list: false
     name: ProcessValue
     noCnfg: false
+    nosnippet: false
     postfix:
     - ''
     - BAD
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -4219,9 +4753,11 @@
     list: false
     name: Iv
     noCnfg: false
+    nosnippet: false
     postfix:
     - 'On'
     - 'Off'
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -4232,7 +4768,9 @@
     list: false
     name: MaxUp
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -4243,7 +4781,9 @@
     list: false
     name: MaxDn
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4254,7 +4794,53 @@
     list: false
     name: MovePnlty
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: true
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: WUpHi
+    noCnfg: true
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: true
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: WUpLo
+    noCnfg: true
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1'
+    description: Time constant for filtered change towards new IV. Interlocked with
+      IvRoc
+    enums: []
+    list: false
+    name: IvFilt
+    noCnfg: true
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4266,19 +4852,9 @@
     list: false
     name: IvRoc
     noCnfg: false
+    nosnippet: false
     postfix: []
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '1'
-    description: Time constant for filtered change towards new IV. Interlocked with
-      IvRoc
-    enums: []
-    list: false
-    name: IvFilt
-    noCnfg: false
-    postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: int
@@ -4289,7 +4865,9 @@
     list: false
     name: IvPrio
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -4300,7 +4878,9 @@
     list: false
     name: Fulf
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4311,7 +4891,9 @@
     list: false
     name: FulfReScale
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4336,7 +4918,9 @@
     list: false
     name: IvFilt
     noCnfg: true
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4352,7 +4936,9 @@
     list: true
     name: Blocking
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4365,7 +4951,9 @@
     list: false
     name: MeasValidation
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4376,7 +4964,9 @@
     list: false
     name: MeasHighLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4387,7 +4977,9 @@
     list: false
     name: MeasLowLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4400,7 +4992,9 @@
     list: false
     name: LockHL
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4413,7 +5007,9 @@
     list: false
     name: LockIV
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4426,6 +5022,7 @@
     list: false
     name: LockLL
     noCnfg: false
+    nosnippet: false
     postfix: []
     tags: []
   - calc: false
@@ -4474,6 +5071,7 @@
     name: WUpLo
     noCnfg: true
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4487,7 +5085,34 @@
     list: false
     name: PVPred
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Scaling of use factor weight based on application importance
+    enums: []
+    list: false
+    name: UseFactorWeight
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: true
+    dataType: float
+    default: []
+    description: Steady state prediction
+    enums: []
+    list: false
+    name: SSval
+    noCnfg: true
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   description: Manipulated Variable
   name: Mvr
@@ -4504,18 +5129,9 @@
     list: false
     name: Text
     noCnfg: false
+    nosnippet: false
     postfix: []
-    tags: []
-  - calc: false
-    dataType: variable
-    default:
-    - '""'
-    description: List of references to Mvrs to be included in list
-    enums: []
-    list: true
-    name: Mvrs
-    noCnfg: false
-    postfix: []
+    snippet: '"${2}"'
     tags: []
   description: List of manipulated variables with associated values
   name: MvrList
@@ -4531,7 +5147,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -4542,7 +5160,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Simulate noise process
   name: NoisProc
@@ -4558,7 +5178,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -4569,7 +5191,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4583,7 +5207,9 @@
     list: false
     name: Sine
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4594,7 +5220,9 @@
     list: false
     name: SineT
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4605,7 +5233,9 @@
     list: false
     name: SineA
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4616,7 +5246,9 @@
     list: false
     name: BiasA
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4629,7 +5261,9 @@
     list: false
     name: Ramp
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4640,7 +5274,9 @@
     list: false
     name: RampR
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4651,7 +5287,9 @@
     list: false
     name: RampMaxA
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4664,7 +5302,9 @@
     list: false
     name: Wite
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4675,7 +5315,9 @@
     list: false
     name: WiteMaxA
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4686,7 +5328,9 @@
     list: false
     name: WiteNon
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4697,7 +5341,9 @@
     list: false
     name: WiteA
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4710,7 +5356,9 @@
     list: false
     name: Iwite
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4721,7 +5369,9 @@
     list: false
     name: IwiteMaxA
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4732,7 +5382,9 @@
     list: false
     name: IwiteNon
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4743,7 +5395,9 @@
     list: false
     name: IwiteA
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4756,7 +5410,9 @@
     list: false
     name: Filt
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4767,7 +5423,9 @@
     list: false
     name: FiltT1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4778,7 +5436,9 @@
     list: false
     name: FiltNon
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -4789,7 +5449,9 @@
     list: false
     name: FiltA
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Noise variable
   name: NoisXvr
@@ -4805,7 +5467,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4816,7 +5480,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4827,7 +5493,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4838,7 +5506,9 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: OPC Process Plot
   name: OPCProcPlot
@@ -4854,7 +5524,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4865,7 +5537,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4876,7 +5550,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4887,7 +5563,9 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Table of priority levels for cvrs and mvrs
   name: PriorityTable
@@ -4897,24 +5575,28 @@
   - calc: false
     dataType: int
     default:
-    - '12035'
+    - '0'
     description: Master application socket port
     enums: []
     list: false
     name: MasterPort
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${2:12030}
     tags: []
   - calc: false
     dataType: string
     default:
-    - '"127.0.0.1"'
+    - '""'
     description: Master application ip address
     enums: []
     list: false
     name: MasterAddr
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3:127.0.0.1}"'
     tags: []
   - calc: false
     dataType: int
@@ -4925,7 +5607,9 @@
     list: false
     name: HistSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -4938,7 +5622,9 @@
     list: false
     name: FillMsg
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4960,7 +5646,9 @@
     list: false
     name: MasterAddr
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -4971,7 +5659,9 @@
     list: false
     name: MasterBufferSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5042,7 +5732,9 @@
     list: false
     name: LowLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -5065,7 +5757,9 @@
     list: false
     name: MaxDiff
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5179,7 +5873,9 @@
     list: false
     name: PlotMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5190,7 +5886,9 @@
     list: false
     name: PlotMin
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5201,7 +5899,9 @@
     list: false
     name: PlotSpan
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5212,7 +5912,9 @@
     list: false
     name: Nfix
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -5223,7 +5925,9 @@
     list: false
     name: Unit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -5234,9 +5938,11 @@
     list: false
     name: Meas
     noCnfg: false
+    nosnippet: false
     postfix:
     - ''
     - Bad
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit31
@@ -5247,7 +5953,9 @@
     list: false
     name: GrpMask
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit31
@@ -5258,7 +5966,9 @@
     list: false
     name: GrpType
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5269,7 +5979,9 @@
     list: false
     name: Span
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -5282,7 +5994,9 @@
     list: false
     name: MeasValidation
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5293,7 +6007,9 @@
     list: false
     name: MeasHighLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5304,7 +6020,9 @@
     list: false
     name: MeasLowLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5315,7 +6033,9 @@
     list: false
     name: HighLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5326,7 +6046,9 @@
     list: false
     name: LowLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5338,7 +6060,9 @@
     list: false
     name: MaxDiff
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5349,7 +6073,9 @@
     list: false
     name: MaxSdev
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5360,7 +6086,9 @@
     list: false
     name: UpdateFrac
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5371,13 +6099,15 @@
     list: false
     name: RampTime
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
     default:
     - NONE
-    description: Value transformation for difference calcluation
+    description: Value transformation for difference calculation
     enums:
     - NONE
     - LN
@@ -5385,7 +6115,9 @@
     list: false
     name: Transform
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5396,18 +6128,9 @@
     list: false
     name: RecievedTime
     noCnfg: true
+    nosnippet: false
     postfix: []
-    tags: []
-  - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: Status info code for sample, presented in SampleTvr and table
-    enums: []
-    list: false
-    name: SampleInfo
-    noCnfg: true
-    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5418,51 +6141,92 @@
     list: false
     name: SampleTime
     noCnfg: true
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
     default:
-    - 0, NoCnfg
+    - '0'
+    description: Status info code for sample, presented in SampleTvr and table
+    enums: []
+    list: false
+    name: SampleInfo
+    noCnfg: true
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Time offset [samples] since last sample was taken
+    enums: []
+    list: false
+    name: SampleTime
+    noCnfg: true
+    description: Status info code for model, presented in SampleTvr and table
+    enums: []
+    list: false
+    name: ModelInfo
+    noCnfg: true
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
     description: Flag for model use
     enums: []
     list: false
     name: HasModel
-    noCnfg: false
+    noCnfg: true
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: double
     default:
-    - 0, NoCnfg
+    - '0'
     description: Value of model variable
     enums: []
     list: false
     name: ModelVal
-    noCnfg: false
+    noCnfg: true
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: double
     default:
-    - 0, NoCnfg
+    - '0'
     description: Value of sdev variable
     enums: []
     list: false
     name: NormSdev
-    noCnfg: false
+    noCnfg: true
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
     default:
-    - '"", NoCnfg'
+    - '""'
     description: Cnfg handling of manual sample
     enums: []
     list: false
     name: ManualSample
-    noCnfg: false
+    noCnfg: true
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: "Trend Variable for lab and online sampling values\r\n  Has parameters\
     \ that are used by"
@@ -5479,7 +6243,9 @@
     list: false
     name: Text
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -5493,7 +6259,9 @@
     list: false
     name: SortBy
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: variable
@@ -5504,7 +6272,9 @@
     list: true
     name: SampleTvrs
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: List of sample based variables with associated values
   name: SampleTvrList
@@ -5520,7 +6290,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -5531,7 +6303,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5556,7 +6330,9 @@
     list: false
     name: Npred
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5567,7 +6343,9 @@
     list: false
     name: Nstep
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5578,18 +6356,22 @@
     list: false
     name: PlotMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
     default:
     - '80'
-    description: Lenght of model optimisation horizon
+    description: Length of model optimisation horizon
     enums: []
     list: false
     name: Nhorz
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5600,7 +6382,24 @@
     list: false
     name: Nstart
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: MasterOn
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -5615,7 +6414,9 @@
     list: false
     name: DesMode
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: STOPPED
     tags: []
   - calc: false
     dataType: int
@@ -5627,7 +6428,9 @@
     list: false
     name: FailMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -5693,16 +6496,6 @@
     description: Description
     enums:
     - 'ON'
-    - 'OFF'
-    list: false
-    name: MasterOn
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
     description: Description
     enums:
     - 'ON'
@@ -5710,7 +6503,9 @@
     list: false
     name: PriceOn
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: 'OFF'
     tags: []
   - calc: false
     dataType: float
@@ -5721,7 +6516,9 @@
     list: false
     name: PriceScale
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -5734,7 +6531,9 @@
     list: false
     name: IterOpt
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -5747,7 +6546,9 @@
     list: false
     name: IterNewSens
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5758,7 +6559,9 @@
     list: false
     name: IterQpMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5769,7 +6572,9 @@
     list: false
     name: IterLineMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -5782,7 +6587,24 @@
     list: false
     name: DoStdSolve
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - QP
+    description: Solver used for steady state
+    enums:
+    - QP
+    - SQP
+    list: false
+    name: SteadySolver
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5793,7 +6615,9 @@
     list: false
     name: MajItLim
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5804,7 +6628,9 @@
     list: false
     name: MajPrint
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -5817,7 +6643,9 @@
     list: false
     name: ObjConPrint
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -5830,29 +6658,35 @@
     list: false
     name: VerifyGrads
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
     default:
-    - '9.9999999e-09'
+    - 1e-08
     description: Description
     enums: []
     list: false
     name: FuncPrec
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
     default:
-    - '9.9999997e-06'
+    - 1e-05
     description: Description
     enums: []
     list: false
     name: FeTol
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5863,7 +6697,9 @@
     list: false
     name: OptimTol
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5874,7 +6710,9 @@
     list: false
     name: FdifIntv
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -5885,7 +6723,9 @@
     list: false
     name: MaxSeconds
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -5896,7 +6736,9 @@
     list: false
     name: LmPrio
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -6071,7 +6913,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -6084,7 +6928,24 @@
     list: false
     name: UnConstrnd
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - CONSTMVR
+    description: Mvr to be used for open-loop prediction. Constant or optimized Mvrs
+    enums:
+    - CONSTMVR
+    - OPTMVR
+    list: false
+    name: OpenFlag
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -6095,7 +6956,9 @@
     list: false
     name: UpdFilt
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -6106,7 +6969,22 @@
     list: false
     name: RelPert
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-10
+    description: QP feasibility tolerance
+    enums: []
+    list: false
+    name: FeasTol
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -6119,7 +6997,9 @@
     list: false
     name: EachParam
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -6130,7 +7010,9 @@
     list: false
     name: LinErrorLim
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -6143,7 +7025,9 @@
     list: false
     name: ColdStart
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -6156,7 +7040,22 @@
     list: false
     name: SimOptimal
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Print sensitivity matrix to out-file (toggle number of samples)
+    enums: []
+    list: false
+    name: PrintSens
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -6167,7 +7066,9 @@
     list: false
     name: SensLimSS
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -6178,7 +7079,9 @@
     list: false
     name: SensLimDyn
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Description of Septic MPC Application
   name: SmpcAppl
@@ -6194,7 +7097,9 @@
     list: false
     name: BaseName
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6205,7 +7110,9 @@
     list: false
     name: IdTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6216,7 +7123,9 @@
     list: false
     name: MeasTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6227,7 +7136,9 @@
     list: false
     name: NotValidTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6238,7 +7149,9 @@
     list: false
     name: PPSTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: SopcChangeEvr
   name: SopcChangeEvr
@@ -6254,7 +7167,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6265,7 +7180,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6276,7 +7193,9 @@
     list: false
     name: CvrTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6287,7 +7206,9 @@
     list: false
     name: MeasTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YX"'
     tags: []
   - calc: false
     dataType: string
@@ -6298,7 +7219,9 @@
     list: false
     name: IdTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6309,7 +7232,9 @@
     list: false
     name: SpTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YR"'
     tags: []
   - calc: false
     dataType: string
@@ -6320,7 +7245,9 @@
     list: false
     name: CvLowTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: string
@@ -6331,7 +7258,9 @@
     list: false
     name: CvHighTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: string
@@ -6342,7 +7271,9 @@
     list: false
     name: CvSetpointTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: string
@@ -6353,7 +7284,9 @@
     list: false
     name: NotValidTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YXF"'
     tags: []
   - calc: false
     dataType: string
@@ -6364,7 +7297,9 @@
     list: false
     name: CvSwitchTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YADA"'
     tags: []
   - calc: false
     dataType: string
@@ -6375,7 +7310,9 @@
     list: false
     name: CvActiveTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.XAPC"'
     tags: []
   - calc: false
     dataType: string
@@ -6386,7 +7323,9 @@
     list: false
     name: LoTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YWRL"'
     tags: []
   - calc: false
     dataType: string
@@ -6397,7 +7336,9 @@
     list: false
     name: HiTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YWRH"'
     tags: []
   - calc: false
     dataType: float
@@ -6408,7 +7349,9 @@
     list: false
     name: Scale
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -6419,7 +7362,9 @@
     list: false
     name: Offset
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Control Variable OPC Connection
   name: SopcCvr
@@ -6435,7 +7380,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6446,7 +7393,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6457,7 +7406,9 @@
     list: false
     name: DvrTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6468,7 +7419,9 @@
     list: false
     name: MeasTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YX"'
     tags: []
   - calc: false
     dataType: string
@@ -6479,7 +7432,9 @@
     list: false
     name: IdTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6490,7 +7445,9 @@
     list: false
     name: NotValidTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YXF"'
     tags: []
   - calc: false
     dataType: string
@@ -6501,7 +7458,9 @@
     list: false
     name: DvSwitchTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: string
@@ -6512,7 +7471,9 @@
     list: false
     name: DvTrackTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: float
@@ -6523,7 +7484,9 @@
     list: false
     name: Scale
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -6534,7 +7497,9 @@
     list: false
     name: Offset
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Disturbance variable OPC connection
   name: SopcDvr
@@ -6550,7 +7515,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6561,7 +7528,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6572,7 +7541,9 @@
     list: false
     name: EvrTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6583,7 +7554,9 @@
     list: false
     name: MeasTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YX"'
     tags: []
   - calc: false
     dataType: string
@@ -6594,7 +7567,9 @@
     list: false
     name: IdTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6605,7 +7580,9 @@
     list: false
     name: NotValidTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YXF"'
     tags: []
   description: Enviromental/Calculated Variable OPC Connection (Only Write)
   name: SopcEvr
@@ -6621,7 +7598,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6632,7 +7611,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6643,7 +7624,9 @@
     list: false
     name: MvrTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6654,7 +7637,9 @@
     list: false
     name: MeasTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YXSP"'
     tags: []
   - calc: false
     dataType: string
@@ -6665,7 +7650,9 @@
     list: false
     name: PVTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YX"'
     tags: []
   - calc: false
     dataType: string
@@ -6676,7 +7663,9 @@
     list: false
     name: IdTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6687,7 +7676,9 @@
     list: false
     name: NotValidTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YXF"'
     tags: []
   - calc: false
     dataType: string
@@ -6698,7 +7689,9 @@
     list: false
     name: SpCalcTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.XOUT"'
     tags: []
   - calc: false
     dataType: string
@@ -6709,7 +7702,9 @@
     list: false
     name: HiTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.XWRH|NotUsed"'
     tags: []
   - calc: false
     dataType: string
@@ -6720,7 +7715,9 @@
     list: false
     name: LoTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.XWRL|NotUsed"'
     tags: []
   - calc: false
     dataType: string
@@ -6731,7 +7728,9 @@
     list: false
     name: IvTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YR"'
     tags: []
   - calc: false
     dataType: string
@@ -6742,7 +7741,9 @@
     list: false
     name: MvLowTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: string
@@ -6753,7 +7754,9 @@
     list: false
     name: MvHighTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: string
@@ -6764,7 +7767,9 @@
     list: false
     name: MvIvTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: string
@@ -6775,7 +7780,9 @@
     list: false
     name: MaxUpTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YWCU"'
     tags: []
   - calc: false
     dataType: string
@@ -6786,7 +7793,9 @@
     list: false
     name: MaxDownTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YWCD"'
     tags: []
   - calc: false
     dataType: string
@@ -6797,7 +7806,9 @@
     list: false
     name: AutoTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YBA"'
     tags: []
   - calc: false
     dataType: string
@@ -6808,7 +7819,9 @@
     list: false
     name: WhiTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YXWH|NotUsed"'
     tags: []
   - calc: false
     dataType: string
@@ -6819,7 +7832,9 @@
     list: false
     name: WloTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YXWL|NotUsed"'
     tags: []
   - calc: false
     dataType: string
@@ -6830,7 +7845,9 @@
     list: false
     name: CompTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YADA"'
     tags: []
   - calc: false
     dataType: string
@@ -6841,7 +7858,9 @@
     list: false
     name: CaraTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: string
@@ -6852,7 +7871,9 @@
     list: false
     name: TrakTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: string
@@ -6863,7 +7884,9 @@
     list: false
     name: ToCompTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: string
@@ -6874,7 +7897,9 @@
     list: false
     name: ToLocalTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: string
@@ -6885,7 +7910,9 @@
     list: false
     name: MvActiveTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.XAPC"'
     tags: []
   - calc: false
     dataType: string
@@ -6896,7 +7923,9 @@
     list: false
     name: MvSwitchTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: string
@@ -6907,7 +7936,9 @@
     list: false
     name: CompStatusTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"DUMMY_TAG"'
     tags: []
   - calc: false
     dataType: float
@@ -6918,7 +7949,9 @@
     list: false
     name: Scale
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -6929,7 +7962,9 @@
     list: false
     name: Offset
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Manipulated Variable OPC Connection
   name: SopcMvr
@@ -6945,7 +7980,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -6956,25 +7993,39 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
     default:
-    - AIM_AIMGUI
+    - SITENONE
     description: Name of site for automatic extension generation
     enums:
-    - AIM_AIMGUI
     - SITENONE
     - OPCSIMUL
+    - KOLLSNES
+    - TORDIS
+    - MONGSTAD
+    - KARSTO
+    - KARSTO_CP
+    - SNOHVIT
+    - KALUNDBORG
+    - KALUNDBORG_IP21
+    - KALUNDBORG_SGUI
     - AIM
+    - AIM_GUI
+    - ROCKWELL
     - SIEMENS_APC
     - HARMONYOPC
     - ROCKWELL
     list: false
     name: BlockWritingIfBad
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${2|AIM_AIMGUI,AIM,OPCSIMUL,SIEMENS_APC,SITENONE,HARMONYOPC|}
     tags: []
   - calc: false
     dataType: string
@@ -7130,7 +8181,9 @@
     list: false
     name: ServName
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3:Statoil.OPC.Server}"'
     tags: []
   - calc: false
     dataType: string
@@ -7141,29 +8194,35 @@
     list: false
     name: ServNode
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
-    dataType: ''
+    dataType: float
     default:
-    - '1'
+    - '1.0'
     description: Real time simulation factor, cycle time is Nsecs*RealTimeFac if SITENONE
     enums: []
     list: false
     name: RealTimeFac
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: Basic Sopc tag name
     enums: []
     list: false
     name: ProcTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -7174,29 +8233,35 @@
     list: false
     name: AllowActiveTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${4:AllowActiveTag}"'
     tags: []
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"NotUsed"'
     description: Tag for status of application 1 = ACT, 0 = all other modes
     enums: []
     list: false
     name: StatusTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: Tag for setting desired mode of application 1 = ACTIVE 0=INACTIVE
     enums: []
     list: false
     name: DesModeTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -7207,52 +8272,62 @@
     list: false
     name: PulsTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${5:PulsTag}"'
     tags: []
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: For check of control loop, write tag to PCS
     enums: []
     list: false
     name: LoopcheckWriteTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: For check of control loop, read this tag to PCS, verify that it follows
       Write
     enums: []
     list: false
     name: LoopcheckReadTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: Report application service factor, write to OPC
     enums: []
     list: false
     name: ServFactorTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: Report CPU time used in last step, write to OPC
     enums: []
     list: false
     name: CPUTimeTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -7263,18 +8338,22 @@
     list: false
     name: IdTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
     default:
-    - '""'
+    - '"DUMMY_TAG"'
     description: Description
     enums: []
     list: false
     name: ScheduleTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7285,7 +8364,9 @@
     list: false
     name: RunSec
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7296,7 +8377,9 @@
     list: false
     name: RequestRate
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7307,7 +8390,9 @@
     list: false
     name: BadCountLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7319,7 +8404,9 @@
     list: false
     name: SampleAgeLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -7347,7 +8434,9 @@
     list: false
     name: BlockWritingIfBad
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7358,7 +8447,9 @@
     list: false
     name: WriteGroups
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7369,7 +8460,24 @@
     list: false
     name: WriteGroupPause
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: SkipWriteBlocking
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -7382,6 +8490,7 @@
     list: false
     name: UseDCOMAUTHN
     noCnfg: false
+    nosnippet: false
     postfix: []
     tags: []
   - calc: false
@@ -7396,6 +8505,7 @@
     name: SkipWriteBlocking
     noCnfg: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -7417,7 +8527,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -7428,7 +8540,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -7439,7 +8553,9 @@
     list: false
     name: TvrTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -7450,7 +8566,9 @@
     list: false
     name: MeasTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YX"'
     tags: []
   - calc: false
     dataType: string
@@ -7461,7 +8579,9 @@
     list: false
     name: NotValidTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}.YXF"'
     tags: []
   - calc: false
     dataType: string
@@ -7472,7 +8592,9 @@
     list: false
     name: Text1Tag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -7483,7 +8605,9 @@
     list: false
     name: Scale
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -7494,7 +8618,9 @@
     list: false
     name: Offset
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Trending variable OPC connection
   name: SopcTvr
@@ -7510,7 +8636,9 @@
     list: false
     name: Size
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Spacer
   name: Spacer
@@ -7526,7 +8654,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -7537,7 +8667,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -7548,7 +8680,9 @@
     list: false
     name: DtaIx
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}"'
     tags: []
   - calc: false
     dataType: float
@@ -7559,7 +8693,9 @@
     list: false
     name: Init
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: SubrXvr
   name: SubrXvr
@@ -7575,7 +8711,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -7586,7 +8724,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: SubrXvr
   name: SubrXvr
@@ -7673,7 +8813,9 @@
     list: false
     name: PlotMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -7684,7 +8826,9 @@
     list: false
     name: PlotMin
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -7695,7 +8839,9 @@
     list: false
     name: PlotSpan
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7706,7 +8852,9 @@
     list: false
     name: Nfix
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -7717,7 +8865,9 @@
     list: false
     name: Unit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: true
     dataType: float
@@ -7728,9 +8878,11 @@
     list: false
     name: Meas
     noCnfg: false
+    nosnippet: false
     postfix:
     - ''
     - Bad
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -7739,10 +8891,12 @@
     enums: []
     list: false
     name: ModelValue
-    noCnfg: false
+    noCnfg: true
+    nosnippet: false
     postfix:
     - ''
     - Bad
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -7753,7 +8907,9 @@
     list: false
     name: Span
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -7766,7 +8922,9 @@
     list: false
     name: MeasValidation
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -7777,7 +8935,9 @@
     list: false
     name: MeasHighLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -7788,7 +8948,9 @@
     list: false
     name: MeasLowLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: "State Variable\r\n  Use with subroutine model (SubrModl) for a variable\
     \ with nominal response calulated by the model. Transport mechanism\r\n  to/from\
@@ -7807,7 +8969,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -7818,7 +8982,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7829,7 +8995,9 @@
     list: false
     name: Nsecs
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -7840,7 +9008,9 @@
     list: false
     name: PlotMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7851,7 +9021,9 @@
     list: false
     name: Nhist
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7862,7 +9034,9 @@
     list: false
     name: Npred
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7873,7 +9047,9 @@
     list: false
     name: Nmodl
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -7886,7 +9062,117 @@
     list: false
     name: ChngLogOn
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Plotting groups
+    enums: []
+    list: true
+    name: Grps
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: bit31
+    default:
+    - '0'
+    description: Groups locked for update
+    enums: []
+    list: false
+    name: GrpLock
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - ROOT
+    description: Maximum logon level for application
+    enums:
+    - ROOT
+    - MNGR
+    - OPER
+    - USER
+    list: false
+    name: MaxLogon
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Password for login into as ROOT
+    enums: []
+    list: false
+    name: RootPwd
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Password for login into as MNGR
+    enums: []
+    list: false
+    name: MngrPwd
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Password for login into as OPER
+    enums: []
+    list: false
+    name: OperPwd
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Password for login into as USER
+    enums: []
+    list: false
+    name: UserPwd
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Tsec correction for ctime if T error
+    enums: []
+    list: false
+    name: Terr
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7897,7 +9183,9 @@
     list: false
     name: DebugNR
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit8
@@ -7908,7 +9196,9 @@
     list: false
     name: DebugOn
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7919,7 +9209,9 @@
     list: false
     name: FontSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit31
@@ -7941,7 +9233,9 @@
     list: true
     name: Grps
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -7954,7 +9248,9 @@
     list: false
     name: ShowText1WithName
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7965,7 +9261,9 @@
     list: false
     name: MinXPos
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7976,7 +9274,9 @@
     list: false
     name: MinYPos
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7987,7 +9287,9 @@
     list: false
     name: MaxXPos
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -7998,7 +9300,9 @@
     list: false
     name: MaxYPos
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8009,7 +9313,9 @@
     list: false
     name: InitScreen
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8020,7 +9326,9 @@
     list: false
     name: InitXPos
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8031,7 +9339,9 @@
     list: false
     name: InitYPos
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8042,7 +9352,9 @@
     list: false
     name: InitWidth
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8053,7 +9365,9 @@
     list: false
     name: InitHeight
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -8066,7 +9380,9 @@
     list: false
     name: MinimizeByHide
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -8079,7 +9395,9 @@
     list: false
     name: MngrPwd
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8145,7 +9463,9 @@
     list: false
     name: OPCSampleTimeOffset
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8170,6 +9490,10 @@
     name: ClipOn
     noCnfg: false
     postfix: []
+    noCnfg: true
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   description: Description of system object
   name: System
@@ -8184,7 +9508,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8195,7 +9521,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8206,7 +9534,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8217,7 +9547,9 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: SystemPlot
   name: SystemPlot
@@ -8277,7 +9609,22 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: position in a gridded display group
+    enums: []
+    list: false
+    name: Col
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8288,7 +9635,35 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1'
+    description: Width of item in a gridded group
+    enums: []
+    list: false
+    name: ColSize
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '-1'
+    description: Width of Name/Id column for table items (number of chars)
+    enums: []
+    list: false
+    name: NameColSize
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8299,7 +9674,9 @@
     list: false
     name: TextColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8310,18 +9687,22 @@
     list: false
     name: ValueColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
     default:
-    - '16'
+    - '-1'
     description: Width of Group column for table items (number of chars)
     enums: []
     list: false
     name: GroupsColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Defines table, setting parameters affecting all table configured as
     children
@@ -8343,7 +9724,9 @@
     list: false
     name: Text1
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8354,7 +9737,9 @@
     list: false
     name: Text2
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -8365,7 +9750,9 @@
     list: false
     name: PlotMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -8376,7 +9763,9 @@
     list: false
     name: PlotMin
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -8387,7 +9776,9 @@
     list: false
     name: PlotSpan
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -8398,7 +9789,9 @@
     list: false
     name: Nfix
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ${2:1}
     tags: []
   - calc: false
     dataType: string
@@ -8409,7 +9802,9 @@
     list: false
     name: Unit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3}"'
     tags: []
   - calc: true
     dataType: float
@@ -8420,9 +9815,11 @@
     list: false
     name: Meas
     noCnfg: false
+    nosnippet: false
     postfix:
     - ''
     - Bad
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit31
@@ -8433,7 +9830,9 @@
     list: false
     name: GrpMask
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: bit31
@@ -8444,7 +9843,9 @@
     list: false
     name: GrpType
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -8455,7 +9856,9 @@
     list: false
     name: Span
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -8468,7 +9871,9 @@
     list: false
     name: MeasValidation
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -8479,7 +9884,9 @@
     list: false
     name: MeasHighLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -8490,12 +9897,15 @@
     list: false
     name: MeasLowLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
-    default: []
-    description: Color used in plot for the variable
+    default:
+    - BLACK
+    description: Color used in plots for the variable
     enums:
     - BLACK
     - GREEN
@@ -8505,7 +9915,9 @@
     list: false
     name: Color
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Trend Variable Description
   name: Tvr
@@ -8522,7 +9934,9 @@
     list: false
     name: Text
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}"'
     tags: []
   description: List of trend variables with associated values
   name: TvrList
@@ -8538,7 +9952,9 @@
     list: false
     name: xAllowActive
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8549,7 +9965,9 @@
     list: false
     name: xDesiredMode
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8561,6 +9979,8 @@
     name: yStatus
     noCnfg: false
     postfix: []
+    nosnippet: false
+    snippet: ''
     tags: []
   description: Application OPC connection
   name: UAAppl
@@ -8609,7 +10029,9 @@
     list: false
     name: xMeas
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8620,18 +10042,22 @@
     list: false
     name: xNotValid
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
     default:
     - '""'
-    description: Set point
+    description: CV desired active from PCDA. 1 = Active 0 = Tracking
     enums: []
     list: false
-    name: xSetpoint
+    name: xDesiredActive
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8642,7 +10068,22 @@
     list: false
     name: yActive
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Set point
+    enums: []
+    list: false
+    name: xSetpoint
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8651,9 +10092,11 @@
     description: High limit
     enums: []
     list: false
-    name: yHighLimit
+    name: xHighLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8662,9 +10105,11 @@
     description: Low limit
     enums: []
     list: false
-    name: yLowLimit
+    name: xLowLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8675,7 +10120,35 @@
     list: false
     name: ySetpoint
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: High limit
+    enums: []
+    list: false
+    name: yHighLimit
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Low limit
+    enums: []
+    list: false
+    name: yLowLimit
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   description: Control Variable (CV) OPC Connection
   name: UACvr
@@ -8686,23 +10159,14 @@
     dataType: string
     default:
     - '""'
-    description: DV desired active from PCDA. 1 = Active 0 = OFF
-    enums: []
-    list: false
-    name: xDesiredTracking
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
     description: Measurement
     enums: []
     list: false
     name: xMeas
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8713,7 +10177,22 @@
     list: false
     name: xNotValid
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: DV desired active from PCDA. 1 = Active 0 = OFF
+    enums: []
+    list: false
+    name: xDesiredTracking
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8724,7 +10203,9 @@
     list: false
     name: yTracking
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Disturbance variable (DV) OPC connection
   name: UADvr
@@ -8740,7 +10221,9 @@
     list: false
     name: yMeas
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8751,7 +10234,9 @@
     list: false
     name: yNotValid
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Enviromental/Calculated Variable (EV) OPC Connection
   name: UAEvr
@@ -8762,100 +10247,14 @@
     dataType: string
     default:
     - '""'
-    description: Meas and CV model connected, AUTO = 1
-    enums: []
-    list: false
-    name: xAuto
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Mv desired active from PCDA. 1 = Active 0 = limited to Tracking
-    enums: []
-    list: false
-    name: xDesiredActive
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Controller in computer mode 1 = COMP
-    enums: []
-    list: false
-    name: xExtern
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: High limit
-    enums: []
-    list: false
-    name: xHighLimit
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Ideal value
-    enums: []
-    list: false
-    name: xIdealValue
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Low limit
-    enums: []
-    list: false
-    name: xLowLimit
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Max down of manipulated variable
-    enums: []
-    list: false
-    name: xMaxMoveDown
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Max up of manipulated variable
-    enums: []
-    list: false
-    name: xMaxMoveUp
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
     description: Measurement
     enums: []
     list: false
     name: xMeas
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8866,7 +10265,9 @@
     list: false
     name: xNotValid
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8877,40 +10278,9 @@
     list: false
     name: xProcessValue
     noCnfg: false
+    nosnippet: false
     postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Windup high tag. 1 = Windup high
-    enums: []
-    list: false
-    name: xWindupHigh
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Windup low tag. 1 = Windup low
-    enums: []
-    list: false
-    name: xWindupLow
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Mv active written to PCDA. 1 = Active
-    enums: []
-    list: false
-    name: yActive
-    noCnfg: false
-    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8921,18 +10291,100 @@
     list: false
     name: yCalcSetpoint
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
     default:
     - '""'
-    description: High limit of manipulated variable
+    description: Mv desired active from PCDA. 1 = Active 0 = limited to Tracking
     enums: []
     list: false
-    name: yHighLimit
+    name: xDesiredActive
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Mv active written to PCDA. 1 = Active
+    enums: []
+    list: false
+    name: yActive
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Meas and CV model connected, AUTO = 1
+    enums: []
+    list: false
+    name: xAuto
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Controller in computer mode 1 = COMP
+    enums: []
+    list: false
+    name: xExtern
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Ideal value
+    enums: []
+    list: false
+    name: xIdealValue
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: High limit
+    enums: []
+    list: false
+    name: xHighLimit
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Low limit
+    enums: []
+    list: false
+    name: xLowLimit
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8943,7 +10395,22 @@
     list: false
     name: yIdealValue
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: High limit of manipulated variable
+    enums: []
+    list: false
+    name: yHighLimit
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8954,7 +10421,61 @@
     list: false
     name: yLowLimit
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Max up of manipulated variable
+    enums: []
+    list: false
+    name: xMaxMoveUp
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Max down of manipulated variable
+    enums: []
+    list: false
+    name: xMaxMoveDown
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Windup high tag. 1 = Windup high
+    enums: []
+    list: false
+    name: xWindupHigh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Windup low tag. 1 = Windup low
+    enums: []
+    list: false
+    name: xWindupLow
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8965,7 +10486,9 @@
     list: false
     name: yToComp
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -8976,7 +10499,9 @@
     list: false
     name: yToLocal
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Manipulated Variable (MV) OPCUA Connection
   name: UAMvr
@@ -8986,35 +10511,28 @@
   - calc: false
     dataType: string
     default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: DefaultNameSpaceURI
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Description
-    enums: []
-    list: false
-    name: Password
-    noCnfg: false
-    postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
     - '"opc.tcp://localhost:4840"'
     description: OPC server adress
     enums: []
     list: false
     name: ServerURL
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Tag for SEPTIC puls (toggled each step)
+    enums: []
+    list: false
+    name: yPulse
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -9025,7 +10543,35 @@
     list: false
     name: UserName
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: Password
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: false
+    name: DefaultNameSpaceURI
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -9036,7 +10582,9 @@
     list: false
     name: credentialsPath
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -9049,7 +10597,9 @@
     list: false
     name: useSubscription
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -9062,18 +10612,9 @@
     list: false
     name: writeOnChangeOnly
     noCnfg: false
+    nosnippet: false
     postfix: []
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Tag for SEPTIC puls (toggled each step)
-    enums: []
-    list: false
-    name: yPulse
-    noCnfg: false
-    postfix: []
+    snippet: ''
     tags: []
   description: UAProc description
   name: UAProc
@@ -9089,7 +10630,9 @@
     list: false
     name: MeasTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -9100,7 +10643,9 @@
     list: false
     name: NotValidTag
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Trending variable (TV) OPC connection
   name: UATvr
@@ -9116,7 +10661,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -9127,7 +10674,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -9138,7 +10687,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -9149,7 +10700,9 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -9160,7 +10713,9 @@
     list: false
     name: Title
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}"'
     tags: []
   - calc: false
     dataType: enum
@@ -9173,7 +10728,9 @@
     list: false
     name: Legend
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: enum
@@ -9186,7 +10743,9 @@
     list: false
     name: SpanScale
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -9197,7 +10756,9 @@
     list: false
     name: xTitle
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${3}"'
     tags: []
   - calc: false
     dataType: string
@@ -9208,7 +10769,9 @@
     list: false
     name: yTitle
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${4}"'
     tags: []
   - calc: false
     dataType: float
@@ -9219,7 +10782,9 @@
     list: false
     name: xMin
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -9230,7 +10795,9 @@
     list: false
     name: xMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -9241,7 +10808,9 @@
     list: false
     name: yMin
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -9252,7 +10821,9 @@
     list: false
     name: yMax
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -9263,7 +10834,9 @@
     list: false
     name: xSpan
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: float
@@ -9274,7 +10847,9 @@
     list: false
     name: ySpan
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: XYPlot
   name: XYPlot
@@ -9296,7 +10871,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -9307,7 +10884,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -9318,7 +10897,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -9329,7 +10910,9 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -9340,7 +10923,9 @@
     list: false
     name: Heading
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: '"${2}"'
     tags: []
   - calc: false
     dataType: string
@@ -9351,7 +10936,9 @@
     list: true
     name: ColIds
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -9362,7 +10949,9 @@
     list: true
     name: ColTips
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -9373,7 +10962,9 @@
     list: true
     name: ColSizes
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -9384,7 +10975,9 @@
     list: true
     name: RowIds
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -9395,7 +10988,9 @@
     list: true
     name: RowTips
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: string
@@ -9406,7 +11001,9 @@
     list: true
     name: RowUnits
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: variable
@@ -9418,7 +11015,9 @@
     list: true
     name: Xvrs
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: Matrix display for xvr values
   name: XvrMatrix
@@ -9434,7 +11033,9 @@
     list: false
     name: Row
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -9445,7 +11046,9 @@
     list: false
     name: Col
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -9456,7 +11059,9 @@
     list: false
     name: RowSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   - calc: false
     dataType: int
@@ -9467,7 +11072,9 @@
     list: false
     name: ColSize
     noCnfg: false
+    nosnippet: false
     postfix: []
+    snippet: ''
     tags: []
   description: XvrPlot cnfg wih optional position and size if the group is gridded
   name: XvrPlot
