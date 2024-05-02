@@ -256,7 +256,7 @@ export function getObjectCompletion(
             ...references,
         ];
     }
-    return [];
+    return references;
 }
 
 function getCurrentAttr(

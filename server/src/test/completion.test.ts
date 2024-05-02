@@ -135,7 +135,10 @@ describe("Test completion of object attributes", () => {
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         const metaInfoProvider = SepticMetaInfoProvider.getInstance();
         const mvrDoc = metaInfoProvider.getObjectDocumentation("Mvr");
-        expect(compItems.length).to.equal(mvrDoc!.attributes.length);
+        const compItemsFiltered = compItems.filter(
+            (item) => item.kind !== CompletionItemKind.Snippet
+        );
+        expect(compItemsFiltered.length).to.equal(mvrDoc!.attributes.length);
     });
     it("Completion item is inserted on same line when completing on empty line", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\n   \n`;
