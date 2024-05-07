@@ -327,6 +327,8 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
                         postfix: [],
                         noCnfg: false,
                         default: attr.default,
+                        snippet: attr.snippet,
+                        noSnippet: attr.noSnippet,
                     });
                 });
                 continue;
@@ -388,6 +390,8 @@ export interface SepticAttributeDocumentation {
     postfix: string[];
     noCnfg: boolean;
     default: string[];
+    snippet: string;
+    noSnippet: boolean;
 }
 
 export interface SepticCalcInfoInput {

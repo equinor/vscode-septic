@@ -902,6 +902,8 @@ describe("Test validation of attribute data type", () => {
             name: "",
             tags: [],
             default: [""],
+            snippet: "",
+            noSnippet: false,
         };
     };
     it("Check valid bitmask", () => {
