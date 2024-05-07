@@ -53,6 +53,7 @@
   - '          yMax=  100'
   - '    LegendPosX=  -1'
   - '    LegendPosY=  100'
+  - '         Types=  1\n                 "${5}"'
   description: Chart
   prefix: chart
 - body:
@@ -62,12 +63,15 @@
   - '         Width=  1'
   - '         Style=  ${3|Solid,Dash,Dot,DashDot|}'
   - '        Marker=  ${4|Cross,XCross,Diamond,Triangle,UpTriangle,Circle,Rect,NoMarker|}'
+  - '        Values=  1\n                 "${5:value}"'
   description: Chart Serie
   prefix: chartserie
 - body:
   - '  ColumnList:    ${1:ColumnListName}'
   - '       Heading=  "${2}"'
   - '       Tooltip=  ""'
+  - '          Xvrs=  1\n                 "${3}"'
+  - '    StatusXvrs=  1\n                 "${4}"'
   description: "The Xvrs listed are placed in a new column to the right of the corresponding\
     \ XvrList\r\n  The heading text is used as heading for the new column"
   prefix: columnlist
@@ -139,6 +143,7 @@
 - body:
   - '  CvrList:       ${1:CvrListName}'
   - '          Text=  "${2}"'
+  - '          Cvrs=  1\n                 "${3}"'
   description: List of control variables with associated values
   prefix: cvrlist
 - body:
@@ -190,6 +195,7 @@
 - body:
   - '  DvrList:       ${1:DvrListName}'
   - '          Text=  "${2}"'
+  - '          Dvrs=  1\n                 "${3}"'
   description: List of disturbance variables with associated values
   prefix: dvrlist
 - body:
@@ -198,6 +204,8 @@
   - '          Text=  "${3}"'
   - '         Width=  1'
   - '         Style=  ${4|Solid,Dash,Dot,DashDot|}'
+  - '         xXvrs=  1\n                 "${5:xXvr}"'
+  - '         yXvrs=  1\n                 "${6:yXvr}"'
   description: Dynamic Curve
   prefix: dyncurve
 - body:
@@ -244,6 +252,7 @@
 - body:
   - '  EvrList:       ${1:EvrListName}'
   - '          Text=  "${2}"'
+  - '          Evrs=  1\n                 "${3}"'
   description: List of environmental/calculated variables with associated values
   prefix: evrlist
 - body:
@@ -313,6 +322,8 @@
   - '   TargetGroup=  1'
   - '     LineWidth=  1'
   - '         Color=  "${2:black}"'
+  - '       xPoints=  "4\n                 ${3:0   10  10  0}"'
+  - '       yPoints=  "4\n                 ${4:20  20  40  40}"'
   description: Image Area
   prefix: imagearea
 - body:
@@ -335,6 +346,8 @@
   - '            Y1=  -1'
   - '            X2=  -1'
   - '            Y2=  -1'
+  - '         Texts=  1\n                 "${2}"'
+  - BackgroundColors=  1\n                 "${3}"
   description: Image Status Label
   prefix: imagestatuslabel
 - body:
@@ -405,6 +418,7 @@
   - '        HistOn=  ON'
   - '        ModlOn=  ON'
   - '    BufferSize=  64512'
+  - '    WriteHosts=  1\n                 "${3:127.0.0.1"'
   description: Master TCIP
   prefix: mastertcip
 - body:
@@ -421,6 +435,8 @@
   - '           Col=  -1'
   - '       RowSize=  1'
   - '       ColSize=  1'
+  - '        CvrIds=  1\n                 "${2}"'
+  - '     MvrDvrIds=  1\n                 "${3}"'
   description: Model matrix between Mvrs/Dvrs and Cvrs
   prefix: modelmatrix
 - body:
@@ -447,6 +463,8 @@
   - '         Title=  "${2}"'
   - '       PlotMax=  100'
   - '       PlotMin=  0'
+  - '          Xvrs=  1\n                 "${3}"'
+  - '        Colors=  1\n                 "${4}"'
   description: "MultiXvrPlot, plot Meas from multiple Xvr in same plot. Cnfg wih optional\
     \ position and size if the group is\r\n  gridded"
   prefix: multixvrplot
@@ -492,6 +510,7 @@
 - body:
   - '  MvrList:       ${1:MvrListName}'
   - '          Text=  "${2}"'
+  - '          Mvrs=  1\n                 "${3}"'
   description: List of manipulated variables with associated values
   prefix: mvrlist
 - body:
@@ -870,6 +889,7 @@
 - body:
   - '  TvrList:       ${1:TvrListName}'
   - '          Text=  "${2}"'
+  - '          Tvrs=  1\n                 "${3}"'
   description: List of trend variables with associated values
   prefix: tvrlist
 - body:

@@ -408,6 +408,19 @@
     postfix: []
     snippet: ''
     tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Description
+    enums: []
+    list: true
+    name: Types
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${5}"
+    tags: []
   description: Chart
   name: Chart
   parents:
@@ -490,6 +503,19 @@
     postfix: []
     snippet: ${4|Cross,XCross,Diamond,Triangle,UpTriangle,Circle,Rect,NoMarker|}
     tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Values
+    enums: []
+    list: true
+    name: Values
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${5:value}"
+    tags: []
   description: Chart Serie
   name: ChartSerie
   parents:
@@ -520,6 +546,32 @@
     nosnippet: false
     postfix: []
     snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Xvrs
+    enums: []
+    list: true
+    name: Xvrs
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${3}"
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Status xvrs
+    enums: []
+    list: true
+    name: StatusXvrs
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${4}"
     tags: []
   description: "The Xvrs listed are placed in a new column to the right of the corresponding\
     \ XvrList\r\n  The heading text is used as heading for the new column"
@@ -1362,6 +1414,19 @@
     postfix: []
     snippet: '"${2}"'
     tags: []
+  - calc: false
+    dataType: variable
+    default:
+    - '""'
+    description: List of references to Cvrs to be included in list
+    enums: []
+    list: true
+    name: Cvrs
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${3}"
+    tags: []
   description: List of control variables with associated values
   name: CvrList
   parents:
@@ -1865,6 +1930,19 @@
     postfix: []
     snippet: '"${2}"'
     tags: []
+  - calc: false
+    dataType: variable
+    default:
+    - '""'
+    description: List of references to Dvrs to be included in list
+    enums: []
+    list: true
+    name: Dvrs
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${3}"
+    tags: []
   description: List of disturbance variables with associated values
   name: DvrList
   parents:
@@ -1951,6 +2029,32 @@
     nosnippet: false
     postfix: []
     snippet: ${4|Solid,Dash,Dot,DashDot|}
+    tags: []
+  - calc: false
+    dataType: variable
+    default:
+    - '""'
+    description: Name of variables along x-axis
+    enums: []
+    list: true
+    name: xXvrs
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${5:xXvr}"
+    tags: []
+  - calc: false
+    dataType: variable
+    default:
+    - '""'
+    description: Name of variables along y-axis
+    enums: []
+    list: true
+    name: yXvrs
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${6:yXvr}"
     tags: []
   description: Dynamic Curve
   name: DynCurve
@@ -2371,6 +2475,19 @@
     postfix: []
     snippet: '"${2}"'
     tags: []
+  - calc: false
+    dataType: variable
+    default:
+    - '""'
+    description: List of references to Evrs to be included in list
+    enums: []
+    list: true
+    name: Evrs
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${3}"
+    tags: []
   description: List of environmental/calculated variables with associated values
   name: EvrList
   parents:
@@ -2767,6 +2884,32 @@
     postfix: []
     snippet: '"${2:black}"'
     tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '[]'
+    description: X-points. Number of points needs to match y-points
+    enums: []
+    list: true
+    name: xPoints
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: '"4\n                 ${3:0   10  10  0}"'
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '[]'
+    description: Y-points. Number of points needs to match x-points
+    enums: []
+    list: true
+    name: yPoints
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: '"4\n                 ${4:20  20  40  40}"'
+    tags: []
   description: Image Area
   name: ImageArea
   parents:
@@ -2940,6 +3083,32 @@
     nosnippet: false
     postfix: []
     snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Texts to be displayed
+    enums: []
+    list: true
+    name: Texts
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${2}"
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Background colors of corresponding texts
+    enums: []
+    list: true
+    name: BackgroundColors
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${3}"
     tags: []
   description: Image Status Label
   name: ImageStatusLabel
@@ -3509,6 +3678,19 @@
     postfix: []
     snippet: ''
     tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: IP address for RUIs which is allowed to write
+    enums: []
+    list: true
+    name: WriteHosts
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${3:127.0.0.1"
+    tags: []
   description: Master TCIP
   name: MasterTcip
   parents:
@@ -3622,6 +3804,32 @@
     nosnippet: false
     postfix: []
     snippet: ''
+    tags: []
+  - calc: false
+    dataType: variable
+    default:
+    - '""'
+    description: Ids of cvrs to include in matrix
+    enums: []
+    list: true
+    name: CvrIds
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${2}"
+    tags: []
+  - calc: false
+    dataType: variable
+    default:
+    - '""'
+    description: Ids of mvrs/dvrs to include in matrix
+    enums: []
+    list: true
+    name: MvrDvrIds
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${3}"
     tags: []
   description: Model matrix between Mvrs/Dvrs and Cvrs
   name: ModelMatrix
@@ -3831,6 +4039,32 @@
     nosnippet: false
     postfix: []
     snippet: ''
+    tags: []
+  - calc: false
+    dataType: variable
+    default:
+    - '""'
+    description: Number and names of items
+    enums: []
+    list: true
+    name: Xvrs
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${3}"
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Number and names of colors for each curve
+    enums: []
+    list: true
+    name: Colors
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${4}"
     tags: []
   description: "MultiXvrPlot, plot Meas from multiple Xvr in same plot. Cnfg wih optional\
     \ position and size if the group is\r\n  gridded"
@@ -4399,6 +4633,19 @@
     nosnippet: false
     postfix: []
     snippet: '"${2}"'
+    tags: []
+  - calc: false
+    dataType: variable
+    default:
+    - '""'
+    description: List of references to Mvrs to be included in list
+    enums: []
+    list: true
+    name: Mvrs
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${3}"
     tags: []
   description: List of manipulated variables with associated values
   name: MvrList
@@ -8395,6 +8642,19 @@
     nosnippet: false
     postfix: []
     snippet: '"${2}"'
+    tags: []
+  - calc: false
+    dataType: variable
+    default:
+    - '""'
+    description: List of references to tvrs to be included in list
+    enums: []
+    list: true
+    name: Tvrs
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: 1\n                 "${3}"
     tags: []
   description: List of trend variables with associated values
   name: TvrList
