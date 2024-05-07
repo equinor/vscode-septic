@@ -2380,6 +2380,7 @@
   name: ExprModl
   parents:
   - SmpcAppl
+  - MPCAppl
 - attributes: []
   description: Experimental process, where the models are taken from the SmpcAppl
     with same ID
