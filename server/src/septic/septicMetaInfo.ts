@@ -209,7 +209,9 @@ export class SepticMetaInfoProvider {
                 label: obj.prefix,
                 kind: CompletionItemKind.Snippet,
                 insertTextFormat: InsertTextFormat.Snippet,
-                insertText: obj.body.join("\n"),
+                insertText: obj.body
+                    .map((line) => line.replace(/\\n/g, "\n"))
+                    .join("\n"),
                 insertTextMode: InsertTextMode.asIs,
                 detail: obj.description,
             };
