@@ -91,7 +91,7 @@ def parse_object_doxygen_doc(doxygen: str) -> Optional[SepticObject]:
         else []
     )
 
-    attr_regex = r"\\param\s*[\S\s]*?(?:(?=(?:\r?\n){2})|(?=\\|\*\/))"
+    attr_regex = r"\\param\s*[\S\s]*?(?:(?=(?:\r?\n){2})|(?=\\[^n]|\*\/))"
     attr_matches = re.findall(attr_regex, doxygen)
     attributes: List[Attribute] = []
     for attr_dox in attr_matches:
@@ -343,45 +343,15 @@ def test_calc(calc: Calc) -> bool:
 
 if __name__ == "__main__":
     doxygen = r"""
-    \vscode SopcMvr
-    \brief Manipulated Variable OPC Connection
-    \param Text1 Free text description of object {datatype: String; default: ""}
-    \param Text2 Free text description of object {datatype: String; default: ""}
-    \param MvrTag Description {datatype: String; default: ""}
-    \param MeasTag Measurement tag {datatype: String; default: ""; snippet: "${2}.YXSP"}
-    \param PVTag Process Value tag {datatype: String; default: ""; snippet: "${2}.YX"}
-    \param IdTag Description {datatype: String; default: ""}
-    \param NotValidTag Not valid tag 1 = Not valid {datatype: String; default: ""; snippet: "${2}.YXF"}
-    \param SpCalcTag Calculated set point written to PCDA {datatype: String; default: ""; snippet: "${2}.XOUT"}
-    \param HiTag High limit read from controller {datatype: String; default: ""; snippet: "${2}.XWRH|NotUsed"}
-    \param LoTag Low limit read from controller {datatype: String; default: ""; snippet: "${2}.XWRL|NotUsed"}
-    \param IvTag Ideal value tag {datatype: String; default: ""; snippet: "${2}.YR"}
-    \param MvLowTag Low limit of manipulated variable written to OPC {datatype: String; default: "";
-    snippet: "DUMMY_TAG"}
-    \param MvHighTag High limit of manipulated variable written to OPC {datatype: String; default: "";
-    snippet: "DUMMY_TAG"}
-    \param MvIvTag Ideal value of manipulated variable written to OPC {datatype: String; default: "";
-    snippet: "DUMMY_TAG"}
-    \param MaxUpTag Max up of manipulated variable written to OPC {datatype: String; default: "";
-    snippet: "${2}.YWCU"}
-    \param MaxDownTag Max down of manipulated variable written to OPC {datatype: String; default: "";
-    snippet: "${2}.YWCD"}
-    \param AutoTag AUTO = 1 {datatype: String; default: ""; snippet: "${2}.YBA"}
-    \param WhiTag Windup high tag. 1 = Windup high {datatype: String; default: ""; snippet: "${2}.YXWH|NotUsed"}
-    \param WloTag Windup low tag. 1 = Windup low {datatype: String; default: ""; snippet: "${2}.YXWL|NotUsed"}
-    \param CompTag Controller in computer mode 1 = COMP {datatype: String; default: ""; snippet: "${2}.YADA"}
-    \param CaraTag Cascade/Ratio = 0 {datatype: String; default: ""; snippet: "DUMMY_TAG"}
-    \param TrakTag Output tracking {datatype: String; default: ""; snippet: "DUMMY_TAG"}
-    \param ToCompTag Command controller to computer mode {datatype: String; default: ""; snippet: "DUMMY_TAG"}
-    \param ToLocalTag Command controller to local mode {datatype: String; default: ""; snippet: "DUMMY_TAG"}
-    \param MvActiveTag Mv active written to PCDA. 1 = Active {datatype: String; default: ""; snippet: "${2}.XAPC"}
-    \param MvSwitchTag Mv desired active from PCDA. 1 = Active 0 = Tracking {datatype: String; default: "";
-    snippet: "DUMMY_TAG"}
-    \param CompStatusTag Watchdog/keepalive for HarmonyOPC Watchdog/keepalive for HarmonyOPC {datatype: String;
-    default: ""; snippet: "DUMMY_TAG"}
-    \param Scale Scaling of values on read/write {datatype: Float; default: 1}
-    \param Offset Offset of values on read/write {datatype: Float; default: 0}
-    \containers [SopcProc]
+  \vscode MvrList
+
+  \brief List of manipulated variables with associated values
+
+  \param Text Free text description {datatype: String; default: ""; snippet: "${2}"}
+  \param Mvrs List of references to Mvrs to be included in list {datatype: Variable[]; default: [""];
+  snippet: '1\n                 "${3}"'}
+
+  \containers [Table]
     """
     obj = parse_object_doxygen_doc(doxygen)
     print(obj)
