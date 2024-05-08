@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.19.1](https://github.com/equinor/vscode-septic/compare/v1.19.0...v1.19.1) (2024-05-08)
+
+
+### 📚 Documentation
+
+* update SEPTIC documentation for latest ([#557](https://github.com/equinor/vscode-septic/issues/557)) ([176ffc5](https://github.com/equinor/vscode-septic/commit/176ffc5471fc0248312ee93adef45b2f1b5ae5ce))
+
+
+### 🐛 Bug Fixes
+
+* error parsing object documentation and snippets ([#561](https://github.com/equinor/vscode-septic/issues/561)) ([ed5654a](https://github.com/equinor/vscode-septic/commit/ed5654ae0c4258eac2498443f01fbf396a43d73f))
+
 ## [1.19.0](https://github.com/equinor/vscode-septic/compare/v1.18.1...v1.19.0) (2024-05-02)
 
 
