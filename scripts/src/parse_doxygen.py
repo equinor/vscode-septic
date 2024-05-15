@@ -241,7 +241,9 @@ def parse_calc_doxygen_doc(calc: str) -> Optional[Calc]:
         parsedParam = parse_parameter(param)
         if parsedParam:
             parameters.append(parsedParam)
-    return_match = re.search(r"\\return([\S ]+)", calc)
+    return_match = re.search(
+        r"\\return([\s\S]*?)(?:(?=(?:\r?\n){3})|(?=\\|\*\/))", calc
+    )
     retr = return_match.group(1).strip() if return_match else ""
     detailed_description_match = re.search(
         r"\\details([\s\S]*?)(?:(?=(?:\r?\n){3})|(?=\\|\*\/))", calc
