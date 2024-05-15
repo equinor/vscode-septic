@@ -1181,6 +1181,66 @@ describe("Test validation of object references", () => {
         );
         expect(diag.length).to.equal(0);
     });
+    it("Expect diagnostics for xvrs with duplicate names", () => {
+        const text = `
+            Evr: TestEvr
+            
+            Tvr: TestEvr
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSepticSync(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("MvrList");
+        let diag = validateObjectReferences(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        let diagFilterd = diag.filter(
+            (d) => d.code === DiagnosticCode.duplicate
+        );
+        expect(diagFilterd.length).to.equal(1);
+    });
+    it("Expect diagnostics for sopcxvrs with duplicate names", () => {
+        const text = `
+            SopcEvr: TestEvr
+            
+            SopcTvr: TestEvr
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSepticSync(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("MvrList");
+        let diag = validateObjectReferences(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        let diagFilterd = diag.filter(
+            (d) => d.code === DiagnosticCode.duplicate
+        );
+        expect(diagFilterd.length).to.equal(1);
+    });
+    it("Expect no duplicate diagnostics for sopcxvr and xvr with same name", () => {
+        const text = `
+            SopcEvr: TestEvr
+            
+            Evr: TestEvr
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSepticSync(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("MvrList");
+        let diag = validateObjectReferences(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        let diagFilterd = diag.filter(
+            (d) => d.code === DiagnosticCode.duplicate
+        );
+        expect(diagFilterd.length).to.equal(0);
+    });
 });
 
 describe("Test validation of object structure", () => {

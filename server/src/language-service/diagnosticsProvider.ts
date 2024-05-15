@@ -84,6 +84,7 @@ export enum DiagnosticCode {
     missingReference = "W501",
     invalidReference = "W502",
     unusedEvr = "W503",
+    duplicate = "W504",
     invalidComment = "W601",
 }
 
@@ -703,6 +704,7 @@ export function validateObjectReferences(
         return [];
     }
     const diagnostics: Diagnostic[] = [];
+    diagnostics.push(...validateDuplicateIdentifiers(obj, refProvider, doc));
     if (obj.isType("Evr")) {
         diagnostics.push(...validateEvrReferences(obj, refProvider, doc));
     }
@@ -791,6 +793,64 @@ function validateIdentifierReferences(
             },
             `Reference to undefined Xvr ${obj.identifier!.name}`,
             DiagnosticCode.missingReference
+        ),
+    ];
+}
+
+const hasDuplicateReferenceXvr: RefValidationFunction = (
+    refs: SepticReference[]
+) => {
+    let xvrsCount = 0;
+    for (const ref of refs) {
+        if (ref.obj?.isXvr()) {
+            xvrsCount += 1;
+        }
+    }
+    return xvrsCount < 2;
+};
+
+const hasDuplicateReferenceSopcXvr: RefValidationFunction = (
+    refs: SepticReference[]
+) => {
+    let sopcXvrsCount = 0;
+    for (const ref of refs) {
+        if (ref.obj?.isSopcXvr()) {
+            sopcXvrsCount += 1;
+        }
+    }
+    return sopcXvrsCount < 2;
+};
+
+function validateDuplicateIdentifiers(
+    obj: SepticObject,
+    refProvider: SepticReferenceProvider,
+    doc: ITextDocument
+): Diagnostic[] {
+    let validationFunction: RefValidationFunction;
+    if (obj.isXvr()) {
+        validationFunction = hasDuplicateReferenceXvr;
+    } else if (obj.isSopcXvr()) {
+        validationFunction = hasDuplicateReferenceSopcXvr;
+    } else {
+        return [];
+    }
+    let validRef = refProvider.validateRef(
+        obj.identifier!.name,
+        validationFunction
+    );
+    if (validRef) {
+        return [];
+    }
+    let severity = DiagnosticSeverity.Warning;
+    return [
+        createDiagnostic(
+            severity,
+            {
+                start: doc.positionAt(obj.identifier!.start),
+                end: doc.positionAt(obj.identifier!.end),
+            },
+            `Duplicate Xvr with name: ${obj.identifier!.name}`,
+            DiagnosticCode.duplicate
         ),
     ];
 }
