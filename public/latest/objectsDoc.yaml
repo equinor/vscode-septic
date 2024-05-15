@@ -1663,21 +1663,6 @@
   - calc: false
     dataType: enum
     default:
-    - 'ON'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: MasterOn
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ''
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
     - ACTIVE
     description: Desired Mode
     enums:
@@ -5703,21 +5688,6 @@
   - calc: false
     dataType: enum
     default:
-    - 'ON'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: MasterOn
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ''
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
     - ACTIVE
     description: Desired mode for MPC
     enums:
@@ -7105,7 +7075,7 @@
     - KALUNDBORG_IP21
     - KALUNDBORG_SGUI
     - AIM
-    - AIM_GUI
+    - AIM_AIMGUI
     - ROCKWELL
     - SIEMENS_APC
     - HARMONYOPC

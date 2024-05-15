@@ -290,8 +290,8 @@
     direction: in
     name: tol
   quality: GOOD
-  retr: 'Active control spec.: -1: CV not active, 0: ssval not equal to any of SetPnt,
-    High, Low,'
+  retr: "Active control spec.: -1: CV not active, 0: ssval not equal to any of SetPnt,\
+    \ High, Low,\r\n  1: ssval = SetPnt, 2: ssval = Low, 3: ssval = High"
   signature: cvdynkpistate(cvr, tol?)
 - detailedDescription: Computes the moving average deviation between measurement and
     highlimit for given cvr.
@@ -594,8 +594,8 @@
     direction: in
     name: THP
   quality: GOOD if all supplied parameters are GOOD
-  retr: Gradient multiplied by a/2, thus multiply by 2/a to get a correct value of
-    gradient. Calculated quality of
+  retr: "Gradient multiplied by a/2, thus multiply by 2/a to get a correct value of\
+    \ gradient. Calculated quality of\r\n  mix, 0 if sum of volumes = 0"
   signature: escgrad(J,sine,THP,TLP,Ts,sineOn)
 - detailedDescription: Computes the exponential with base e
   name: exp
@@ -640,8 +640,8 @@
     name: Apply
   quality: GOOD if CV and IV belongs to same SmpcAppl with an ExprModl and Amodl exists,
     else BAD
-  retr: steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl
-    with an ExprModl and Amodl
+  retr: "steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl\
+    \ with an ExprModl and Amodl\r\n  exists, else 0"
   signature: exprprocmodset(CVRTAG,IVRTAG,Scale,Apply)
 - detailedDescription: First order filter. Resets to first good value after bad raw
     values
@@ -1253,7 +1253,7 @@
   retr: 'Final status: 0/1/2/3 for STOPPED/TRACKING/ADVISORY/ACTIVE'
   signature: getfinalstatus(xvr)
 - detailedDescription: "Gets the history from buffer. Computes the average over the\
-    \ buffer starting on the given point back and until\r\n  the specified number\
+    \ buffer starting on the given point back and\r\n  until the specified number\
     \ of samples\r\n\r\n  CalcPvr: T1MA     Alg= gethist(T1,10,5)\r\n  CalcPvr: T1SPMA\
     \   Alg= gethist(T1.SetPnt,10)\r\n\r\n  T1MA will get the 5-samples average for\
     \ the 14-10 samples back in time of T1.Meas, while T1SPMA\r\n  will get the single\
@@ -1325,8 +1325,8 @@
     direction: in
     name: mvr
   quality: GOOD if valid mvr otherwise BAD
-  retr: 'Status of windup: 0: No Mvr windup, 1: Mvr in windup low, 2: Mvr in windup
-    high, 3: Mvr in windup high and low'
+  retr: "Status of windup: 0: No Mvr windup, 1: Mvr in windup low, 2: Mvr in windup\
+    \ high, 3: Mvr in windup high and\r\n  low"
   signature: getwindup(mvr)
 - detailedDescription: Check if quality of given value is GOOD
   name: good
@@ -1525,6 +1525,20 @@
   quality: GOOD only if ALL arguments are GOOD and  else BAD
   retr: Interpolated value. 0 when quality=BAD, Y1 when x <= X1, YN when x >= XN
   signature: intpoltype1(x, X1, Y1, X2, Y2, ..., XN, YN)
+- detailedDescription: "Check if quality of all given values are BAD. Returned Quality\
+    \ is GOOD with parameter(s), BAD if empty. PS!\r\n  Returns TRUE with nonexisting\
+    \ XVRs (check .out file)"
+  name: isbad
+  parameters:
+  - arity: +
+    datatype:
+    - value
+    description: Values
+    direction: in
+    name: xN
+  quality: GOOD if at least one argument, else BAD
+  retr: 1 if quality of all inputs are BAD, 0 otherwise
+  signature: isbad(x1, x2, ..., xN)
 - detailedDescription: Check for equality for multiple values
   name: isequal
   parameters:
@@ -1543,19 +1557,20 @@
   quality: GOOD
   retr: 'Evaluated equalities: 1 if at least one equal x, 0 otherwise'
   signature: isequal(x, x1, ..., xN)
-- detailedDescription: Check if quality of given value is GOOD. Returned Quality is
-    always GOOD
+- detailedDescription: "Check if quality of all given values are GOOD. Returned Quality\
+    \ is GOOD with parameter(s), BAD if empty.\r\n  PS! Returns FALSE with nonexisting\
+    \ XVRs (check .out file)"
   name: isgood
   parameters:
-  - arity: '1'
+  - arity: +
     datatype:
     - value
-    description: Value
+    description: Values
     direction: in
-    name: x
-  quality: GOOD
-  retr: 1 if quality is GOOD, 0 otherwise
-  signature: isgood(x)
+    name: xN
+  quality: GOOD if at least one argument, else BAD
+  retr: 1 if quality if all inputs are GOOD, 0 otherwise
+  signature: isgood(x1, x2, ..., xN)
 - detailedDescription: "Perform checks for validity of SAMPLETVR, high limit, low\
     \ limit etc.\r\n  The calc reports accepted and rejected sampled to the file 'labupdates.log'.\r\
     \n  Also, it searches for an Xvr for reporting of rejected samples. First it searches\r\
@@ -1586,8 +1601,8 @@
   quality: Something ???
   retr: Something ???
   signature: labupdt(sampletvr, model?, stddev?)
-- detailedDescription: Perform a linear mix of the given input streams, where each
-    stream is given with volume and quality/property.
+- detailedDescription: "Perform a linear mix of the given input streams, where each\
+    \ stream is given with volume and\r\n  quality/property."
   name: linmix
   parameters:
   - arity: '1'
@@ -1880,7 +1895,7 @@
   retr: Minimum value vN with corresponding useN set to 1
   signature: minselection(n, v1, v2, ..., vN, use1, use2, ..., useN)
 - detailedDescription: "Lower all Xvr.Mode to TRACKING if not sufficiently many of\
-    \ them are ACTIVE. Typical use is to assure at least\r\n  minimum number of Mvrs\
+    \ them are ACTIVE. Typical use is to assure at\r\n  least minimum number of Mvrs\
     \ ACTIVE to run SmpcAppl"
   name: modechk
   parameters:
@@ -2113,8 +2128,8 @@
     direction: in
     name: TAG
   quality: GOOD if TAG found and MVR
-  retr: Dynamic dynamic end prediction (Npred). if Mvr.Mode >= ADVISORY, V = Mvr.mget(pAppl->Npred)
-    else V =
+  retr: "Dynamic dynamic end prediction (Npred). if Mvr.Mode >= ADVISORY, V = Mvr.mget(pAppl->Npred)\
+    \ else V =\r\n  Mvr.Meas(pAppl->N)"
   signature: mvpred(TAG)
 - detailedDescription: Changes sign
   name: neg
@@ -2296,8 +2311,9 @@
   name: savedata
   parameters: []
   quality: 'BAD:  Nothing saved'
-  retr: '0:  Nothing saved. Q = BAD: Reason printed on application .out file, 1: Current
-    sample successfully saved on'
+  retr: "0:  Nothing saved. Q = BAD: Reason printed on application .out file, 1: Current\
+    \ sample successfully saved\r\n  on data file XVRID.txt. May be printouts on .out\
+    \ reflecting file actions"
   signature: savedata(XVR,SAVE)
 - detailedDescription: Selects the value of index from list of elements
   name: selectvalue
@@ -2837,7 +2853,7 @@
   retr: 'Updated meas validation mode: 1/0 for ON/OFF'
   signature: setmeasvalidation(xvr, mode)
 - detailedDescription: "Sets the mode of the given Xvr. If given mode is higher than\
-    \ possible mode for Xvr, it is set to the highest\r\n  possible."
+    \ possible mode for Xvr, it is set to the\r\n  highest possible."
   name: setmode
   parameters:
   - arity: '1'
@@ -3141,8 +3157,9 @@
     direction: in
     name: MVRTAG
   quality: GOOD if calculations are ok, else BAD
-  retr: the current steady state gain from the Mvr to the Cvr if (CVRTAG is a Cvr)
-    and (MVRTAG is an MVR)
+  retr: "the current steady state gain from the Mvr to the Cvr if (CVRTAG is a Cvr)\
+    \ and (MVRTAG is an MVR)\r\n  and (CVRTAG and MVRTAG belongs to same appl) and\
+    \ (appl is SmpcAppl) and (the model is an SubrModl), else 0"
   signature: subrmpcgain(CVRTAG,MVRTAG)
 - detailedDescription: "Set element of matrix ZeroSensitivity to 1/0 in the MPC using\
     \ a SUBR type model<br>\r\n  Typical use: Zero sensitivity to avoid undesired\
@@ -3164,8 +3181,10 @@
     direction: in
     name: ZEROFLAG
   quality: GOOD if calculations are ok, else BAD
-  retr: if (CVRTAG is a Cvr) and (MVRTAG is an MVR) and (CVRTAG and MVRTAG belongs
-    to same appl) and (appl is
+  retr: "if (CVRTAG is a Cvr) and (MVRTAG is an MVR) and (CVRTAG and MVRTAG belongs\
+    \ to same appl) and (appl is\r\n  SmpcAppl) <br> and (the model is an SubrModl),\
+    \ then the corr element of ZeroSensitivity is set according to ZEROFLAG\r\n  (1\
+    \ means that it is zeroed), else 0"
   signature: subrzerosens(CVRTAG,MVRTAG,ZEROFLAG)
 - detailedDescription: Computes the hyperbolic tangent of x
   name: tanh
@@ -3267,8 +3286,8 @@
     direction: in
     name: selectorxvr
   quality: GOOD if xvr(s) ok, else BAD
-  retr: 1 if xvr(s) ok, 0 if any inputs are illegal when using selector, the Meas
-    of the selector must be positive and
+  retr: "1 if xvr(s) ok, 0 if any inputs are illegal when using selector, the Meas\
+    \ of the selector must be positive\r\n  and less or equal to number of xvrtext"
   signature: xvrtext1tosystemtext2(xvr)
 - detailedDescription: "Calculates gas compressibility factor (z factor) for real\
     \ gasses.<br>\r\n\r\n  Based on correlations from \"An efficient correlation for\
