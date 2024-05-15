@@ -265,8 +265,8 @@
     direction: in
     name: tol
   quality: GOOD
-  retr: 'Active control spec.: -1: CV not active, 0: ssval not equal to any of SetPnt,
-    High, Low,'
+  retr: "Active control spec.: -1: CV not active, 0: ssval not equal to any of SetPnt,\
+    \ High, Low,\r\n  1: ssval = SetPnt, 2: ssval = Low, 3: ssval = High"
   signature: cvdynkpistate(cvr, tol?)
 - detailedDescription: Computes the moving average deviation between measurement and
     highlimit for given cvr.
@@ -561,8 +561,8 @@
     direction: in
     name: THP
   quality: GOOD if all supplied parameters are GOOD
-  retr: Gradient multiplied by a/2, thus multiply by 2/a to get a correct value of
-    gradient. Calculated quality of
+  retr: "Gradient multiplied by a/2, thus multiply by 2/a to get a correct value of\
+    \ gradient. Calculated quality of\r\n  mix, 0 if sum of volumes = 0"
   signature: escgrad(J,sine,THP,TLP,Ts,sineOn)
 - detailedDescription: Computes the exponential with base e
   name: exp
@@ -607,8 +607,8 @@
     name: Apply
   quality: GOOD if CV and IV belongs to same SmpcAppl with an ExprModl and Amodl exists,
     else BAD
-  retr: steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl
-    with an ExprModl and Amodl
+  retr: "steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl\
+    \ with an ExprModl and Amodl\r\n  exists, else 0"
   signature: exprprocmodset(CVRTAG,IVRTAG,Scale,Apply)
 - detailedDescription: First order filter
   name: filt
@@ -2052,8 +2052,8 @@
     direction: in
     name: TAG
   quality: GOOD if TAG found and MVR
-  retr: Dynamic dynamic end prediction (Npred). if Mvr.Mode >= ADVISORY, V = Mvr.mget(pAppl->Npred)
-    else V =
+  retr: "Dynamic dynamic end prediction (Npred). if Mvr.Mode >= ADVISORY, V = Mvr.mget(pAppl->Npred)\
+    \ else V =\r\n  Mvr.Meas(pAppl->N)"
   signature: mvpred(TAG)
 - detailedDescription: Changes sign
   name: neg
@@ -2235,8 +2235,9 @@
   name: savedata
   parameters: []
   quality: 'BAD:  Nothing saved'
-  retr: '0:  Nothing saved. Q = BAD: Reason printed on application .out file, 1: Current
-    sample successfully saved on'
+  retr: "0:  Nothing saved. Q = BAD: Reason printed on application .out file, 1: Current\
+    \ sample successfully saved on\r\n  data file XVRID.txt. May be printouts on .out\
+    \ reflecting file actions"
   signature: savedata(XVR,SAVE)
 - detailedDescription: Selects the value of index from list of elements
   name: selectvalue
@@ -3080,8 +3081,9 @@
     direction: in
     name: MVRTAG
   quality: GOOD if calculations are ok, else BAD
-  retr: the current steady state gain from the Mvr to the Cvr if (CVRTAG is a Cvr)
-    and (MVRTAG is an MVR)
+  retr: "the current steady state gain from the Mvr to the Cvr if (CVRTAG is a Cvr)\
+    \ and (MVRTAG is an MVR)\r\n  and (CVRTAG and MVRTAG belongs to same appl) and\
+    \ (appl is SmpcAppl) and (the model is an SubrModl), else 0"
   signature: subrmpcgain(CVRTAG,MVRTAG)
 - detailedDescription: "Set element of matrix ZeroSensitivity to 1/0 in the MPC using\
     \ a SUBR type model<br>\r\n  Typical use: Zero sensitivity to avoid undesired\
@@ -3103,8 +3105,10 @@
     direction: in
     name: ZEROFLAG
   quality: GOOD if calculations are ok, else BAD
-  retr: if (CVRTAG is a Cvr) and (MVRTAG is an MVR) and (CVRTAG and MVRTAG belongs
-    to same appl) and (appl is
+  retr: "if (CVRTAG is a Cvr) and (MVRTAG is an MVR) and (CVRTAG and MVRTAG belongs\
+    \ to same appl) and (appl is\r\n  SmpcAppl) <br> and (the model is an SubrModl),\
+    \ then the corr element of ZeroSensitivity is set according to ZEROFLAG\r\n  (1\
+    \ means that it is zeroed), else 0"
   signature: subrzerosens(CVRTAG,MVRTAG,ZEROFLAG)
 - detailedDescription: Computes the hyperbolic tangent of x
   name: tanh
@@ -3206,8 +3210,8 @@
     direction: in
     name: selectorxvr
   quality: GOOD if xvr(s) ok, else BAD
-  retr: 1 if xvr(s) ok, 0 if any inputs are illegal when using selector, the Meas
-    of the selector must be positive and
+  retr: "1 if xvr(s) ok, 0 if any inputs are illegal when using selector, the Meas\
+    \ of the selector must be positive and\r\n  less or equal to number of xvrtext"
   signature: xvrtext1tosystemtext2(xvr)
 - detailedDescription: "Calculates gas compressibility factor (z factor) for real\
     \ gasses.<br>\r\n\r\n  Based on correlations from \"An efficient correlation for\
