@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.20.0](https://github.com/equinor/vscode-septic/compare/v1.19.1...v1.20.0) (2024-05-15)
+
+
+### 📚 Documentation
+
+* update SEPTIC documentation for latest ([#562](https://github.com/equinor/vscode-septic/issues/562)) ([421061a](https://github.com/equinor/vscode-septic/commit/421061aae6924d70778a5af55b52211c109b36c2))
+
+
+### ✨ Features
+
+* add diagnostics for duplicate xvr identifiers ([#564](https://github.com/equinor/vscode-septic/issues/564)) ([c60ae41](https://github.com/equinor/vscode-septic/commit/c60ae41277c3bdcad0199b5303a104ea342f12cd))
+
+
+### 🐛 Bug Fixes
+
+* update regex for parsing return value of calc ([#568](https://github.com/equinor/vscode-septic/issues/568)) ([c75f0da](https://github.com/equinor/vscode-septic/commit/c75f0da360a6bc91c7e7da24e1db01ed1d1b3461))
+
 ## [1.19.1](https://github.com/equinor/vscode-septic/compare/v1.19.0...v1.19.1) (2024-05-08)
 
 
