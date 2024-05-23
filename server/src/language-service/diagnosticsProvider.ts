@@ -826,6 +826,9 @@ function validateDuplicateIdentifiers(
     refProvider: SepticReferenceProvider,
     doc: ITextDocument
 ): Diagnostic[] {
+    if (!obj.identifier) {
+        return [];
+    }
     let validationFunction: RefValidationFunction;
     if (obj.isXvr()) {
         validationFunction = hasDuplicateReferenceXvr;
@@ -834,6 +837,7 @@ function validateDuplicateIdentifiers(
     } else {
         return [];
     }
+
     let validRef = refProvider.validateRef(
         obj.identifier!.name,
         validationFunction

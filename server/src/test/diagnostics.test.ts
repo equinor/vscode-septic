@@ -1241,6 +1241,26 @@ describe("Test validation of object references", () => {
         );
         expect(diagFilterd.length).to.equal(0);
     });
+    it("Expect no diagnostics for sopcxvr without identifier", () => {
+        const text = `
+            SopcEvr: 
+            
+            Evr: TestEvr
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSepticSync(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("MvrList");
+        let diag = validateObjectReferences(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        let diagFilterd = diag.filter(
+            (d) => d.code === DiagnosticCode.duplicate
+        );
+        expect(diagFilterd.length).to.equal(0);
+    });
 });
 
 describe("Test validation of object structure", () => {
