@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.20.1](https://github.com/equinor/vscode-septic/compare/v1.20.0...v1.20.1) (2024-05-23)
+
+
+### 🐛 Bug Fixes
+
+* bug in diagnostics for objects with no identifier ([#572](https://github.com/equinor/vscode-septic/issues/572)) ([76e9b5f](https://github.com/equinor/vscode-septic/commit/76e9b5f6084c4e21a8f4af4e0e06b31535236fd4))
+
 ## [1.20.0](https://github.com/equinor/vscode-septic/compare/v1.19.1...v1.20.0) (2024-05-15)
 
 
