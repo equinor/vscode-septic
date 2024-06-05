@@ -389,8 +389,9 @@
   quality: GOOD if valid cvr else BAD
   retr: 'Standard deviation between measurement and nominal value: 0 if BAD'
   signature: cvmodeldevstd(cvr, nsamp)
-- detailedDescription: Gets the last generated open loop prediction generated in an
-    iterative sequence
+- detailedDescription: "Gets the open loop prediction point n sample ahead. If n<1,\
+    \ current value (n=0, nomval + bias) is given, if\r\n  n>last evaluation point,\
+    \ then prediction at last evaluation (end value) is given"
   name: cvopenloop
   parameters:
   - arity: '1'
@@ -399,10 +400,16 @@
     description: Cvr
     direction: in
     name: cvr
+  - arity: '?'
+    datatype:
+    - value
+    description: npred
+    direction: in
+    name: n
   quality: GOOD
-  retr: 'Most future open loop prediction point for Cvr: Cvr.OpenLoop(last evaluation
-    point)'
-  signature: cvopenloop(cvr)
+  retr: "Open loop prediction point for Cvr: Cvr.OpenLoop(n) - end value if npred\
+    \ is not given or npred is bad or\r\n  nonexisting Xvr"
+  signature: cvopenloop(cvr, n?)
 - detailedDescription: Gets the most future prediction point (last point in the prediction)
   name: cvpo
   parameters:
@@ -2312,7 +2319,7 @@
   parameters: []
   quality: 'BAD:  Nothing saved'
   retr: "0:  Nothing saved. Q = BAD: Reason printed on application .out file, 1: Current\
-    \ sample successfully saved\r\n  on data file XVRID.txt. May be printouts on .out\
+    \ sample successfully saved on\r\n  data file XVRID.txt. May be printouts on .out\
     \ reflecting file actions"
   signature: savedata(XVR,SAVE)
 - detailedDescription: Selects the value of index from list of elements
@@ -2474,6 +2481,25 @@
   quality: GOOD if valid xvr and value otherwise BAD
   retr: Resulting fulf
   signature: setfulf(xvr, value)
+- detailedDescription: Sets the fulfdynscale property for given xvr
+  name: setfulfdynscale
+  parameters:
+  - arity: '1'
+    datatype:
+    - mvr
+    - cvr
+    description: Xvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set. Range 0 to 1
+    direction: in
+    name: value
+  quality: GOOD if valid xvr and value otherwise BAD
+  retr: Resulting fulfdynscale value
+  signature: setfulfdynscale(xvr, value)
 - detailedDescription: Sets the fulf rescale property for given xvr
   name: setfulfrescale
   parameters:
@@ -2852,8 +2878,8 @@
   quality: GOOD if valid xvr
   retr: 'Updated meas validation mode: 1/0 for ON/OFF'
   signature: setmeasvalidation(xvr, mode)
-- detailedDescription: "Sets the mode of the given Xvr. If given mode is higher than\
-    \ possible mode for Xvr, it is set to the\r\n  highest possible."
+- detailedDescription: Sets the mode of the given Xvr. If given mode is higher than
+    possible, it is set to the highest possible
   name: setmode
   parameters:
   - arity: '1'
@@ -3104,13 +3130,19 @@
   quality: quality(x)
   retr: Sine value of x
   signature: sin(x)
-- detailedDescription: "Debugging code. Will sleep for sleepmsecs\r\n  Not part of\
-    \ release-builds, intended for debugging of Master<->RUI issues to introduce a\
-    \ long \"exe-time\" in Master"
+- detailedDescription: "Debugging code. Will sleep for sleepmsecs. Not part of release-builds,\
+    \ intended for debugging of Master<->RUI\r\n  issues to introduce a long \"exe-time\"\
+    \ in Master"
   name: sleep
-  parameters: []
-  quality: BAD if input sleepmsecs is BAD, else GOOD
-  retr: sleeptime [msec]
+  parameters:
+  - arity: '1'
+    datatype:
+    - value
+    description: Time to sleep [msecs]
+    direction: in
+    name: sleepmsecs
+  quality: BAD if input sleepmsecs is BAD or empty input, else GOOD
+  retr: max(0, sleepmsecs), 0 if BAD input
   signature: sleep(sleepmsecs)
 - detailedDescription: Sets the desired mode for Cvr.SetPnt or Mvr.Iv. If MODE is
     not exactly 0 or 1, no action is performed
@@ -3267,7 +3299,7 @@
     description: Mvr
     direction: in,out
     name: mvr
-  quality: GOOD if valid mvr otherwise BAD
+  quality: GOOD if valid mvr, otherwise BAD
   retr: Status of windup. Set Mvr.Mode to min of Mode and TRACKING if status is 3
   signature: windup(mvr)
 - detailedDescription: ''

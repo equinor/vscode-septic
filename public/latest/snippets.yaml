@@ -112,11 +112,10 @@
   - '          Fulf=  1'
   - '     HighPnlty=  1'
   - '      LowPnlty=  1'
-  - '     HighLimit=  1000'
-  - '      LowLimit=  1000'
   - '     RelxParam=  3    1    30    90'
   - '   FulfReScale=  0.001'
   - '  FulfUniScale=  1'
+  - '  FulfDynScale=  1'
   - SetPntChangeMode=  FILTER
   - '      SetpTref=  0'
   - '   SetPntRocUp=  1'
@@ -494,6 +493,7 @@
   - '        IvPrio=  99'
   - '          Fulf=  1'
   - '   FulfReScale=  0'
+  - '  FulfDynScale=  1'
   - '         Price=  0'
   - '      Blocking=  6    2     4     7    11    16    22'
   - MeasValidation=  OFF
@@ -955,16 +955,18 @@
   - '        yPulse=  ""'
   - '      UserName=  ""'
   - '      Password=  ""'
+  - '  SecurityMode=  UA_MESSAGESECURITYMODE_SIGN'
   - DefaultNameSpaceURI=  ""
   - credentialsPath=  ""
   - useSubscription=  OFF
+  - '     xSchedule=  ""'
   - writeOnChangeOnly=  OFF
   description: UAProc description
   prefix: uaproc
 - body:
   - '  UATvr:         ${1:UATvrName}'
-  - '       MeasTag=  ""'
-  - '   NotValidTag=  ""'
+  - '         xMeas=  ""'
+  - '     xNotValid=  ""'
   description: Trending variable (TV) OPC connection
   prefix: uatvr
 - body:
