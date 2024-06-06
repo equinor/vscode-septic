@@ -51,7 +51,12 @@
         "septic.documentation.version": {
           "scope": "window",
           "type": "string",
-          "enum": [],
+          "enum": [
+            "latest",
+            "v2.88",
+            "v2.89",
+            "v2.90"
+          ],
           "default": "latest",
           "description": "Select which version of Septic to use for documentation and diagnostics."
         },
