@@ -278,9 +278,15 @@
   prefix: fmuproc
 - body:
   - '  FdtaProc:      ${1:FdtaProcName}'
-  - '          Mode=  ${2|Playback,PlayBack_nomode,BaseCase|'
-  description: Filedata process, playback or basecase comparison of .dta file. ID
-    of FdtaProc is the filename
+  description: "Filedata process, playback or basecase comparison of .dta file. ID\
+    \ of FdtaProc is the filename.\r\n  Mode control data transport from dta file\
+    \ into SEPTIC variables Mode= BaseCase: Meas values found in the datafile will\r\
+    \n  be handed over to the correct Xvr, the porpose of BaseCase is to compare the\
+    \ effect on the MPC controller with\r\n  different tuning. Mode= Playback:  the\
+    \ purpose is to perform a full playback of the data found on the logfile, Meas,\r\
+    \n  High/Low, Mode etc are transported into Xvr Mode= Playback_nomode, [.Mode,\
+    \ .FS, .DesMode] on dta is ignored. Use data\r\n  from file as input, but skip\
+    \ mode settings"
   prefix: fdtaproc
 - body:
   - '  FreeMeas:      ${1:FreeMeasName}'
@@ -419,6 +425,15 @@
   - '    WriteHosts=  1\n                 "${3:127.0.0.1"'
   description: Master TCIP
   prefix: mastertcip
+- body:
+  - '  Mdl4Modl:      ${1:Mdl4ModlName}'
+  description: Nonlinear model in a SmpcAppl
+  prefix: mdl4modl
+- body:
+  - '  Mdl4Proc:      ${1:Mdl4ProcName}'
+  description: Nonlinear process, where the models are taken from the subr with same
+    ID
+  prefix: mdl4proc
 - body:
   - '  MessageView:   ${1:MessageViewName}'
   - '           Row=  -1'

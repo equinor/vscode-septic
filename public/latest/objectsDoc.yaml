@@ -2565,37 +2565,16 @@
   parents:
   - SmpcAppl
   - MPCAppl
-- attributes:
-  - calc: false
-    dataType: string
-    default: []
-    description: Description
-    enums: []
-    list: false
-    name: Separator
-    noCnfg: false
-    nosnippet: true
-    postfix: []
-    snippet: ''
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - Playback
-    description: Controls data transport to SEPTIC
-    enums:
-    - BaseCase
-    - Playback
-    - Playback_nomode
-    list: false
-    name: Mode
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ${2|Playback,PlayBack_nomode,BaseCase|
-    tags: []
-  description: Filedata process, playback or basecase comparison of .dta file. ID
-    of FdtaProc is the filename
+- attributes: []
+  description: "Filedata process, playback or basecase comparison of .dta file. ID\
+    \ of FdtaProc is the filename.\r\n  Mode control data transport from dta file\
+    \ into SEPTIC variables Mode= BaseCase: Meas values found in the datafile will\r\
+    \n  be handed over to the correct Xvr, the porpose of BaseCase is to compare the\
+    \ effect on the MPC controller with\r\n  different tuning. Mode= Playback:  the\
+    \ purpose is to perform a full playback of the data found on the logfile, Meas,\r\
+    \n  High/Low, Mode etc are transported into Xvr Mode= Playback_nomode, [.Mode,\
+    \ .FS, .DesMode] on dta is ignored. Use data\r\n  from file as input, but skip\
+    \ mode settings"
   name: FdtaProc
   parents:
   - System
@@ -3665,6 +3644,17 @@
     tags: []
   description: Master TCIP
   name: MasterTcip
+  parents:
+  - System
+- attributes: []
+  description: Nonlinear model in a SmpcAppl
+  name: Mdl4Modl
+  parents:
+  - SmpcAppl
+- attributes: []
+  description: Nonlinear process, where the models are taken from the subr with same
+    ID
+  name: Mdl4Proc
   parents:
   - System
 - attributes:
