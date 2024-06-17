@@ -454,17 +454,19 @@ export class SepticScanner {
     }
 
     private jinja(type: string): void {
-        while (!this.isAtEnd() && !this.match(type)) {
+        while (
+            !this.isAtEnd() && !(
+            this.peek() === type &&
+            this.peekNext() === "}")
+        ) {
             this.advance();
         }
         if (this.isAtEnd()) {
             this.addComment(SepticTokenType.jinjaComment);
             return;
         }
-        if (!this.match("}")) {
-            this.error("Invalid jinja expression");
-            return;
-        }
+        this.advance();
+        this.advance();
         if (type === "%") {
             this.addComment(SepticTokenType.jinjaExpression);
         } else if (type === "#") {
