@@ -1,13 +1,5 @@
 import { SepticReferenceProvider } from "../septic";
 
-export class OpcTagListProvider {
-    constructor() {}
-
-    public generateOpcTagList(refProvider: SepticReferenceProvider): string {
-        return "";
-    }
-}
-
 export function generateOpcReport(
     refProvider: SepticReferenceProvider
 ): string {
@@ -25,12 +17,22 @@ export function generateOpcReport(
         "SopcAsyncEvr",
         "SopcTimeTvr",
         "SopcTextTvr",
-        "SopcSvr"
+        "SopcSvr",
+        "UATvr",
+        "UAEvr",
+        "UACvr",
+        "UADvr",
+        "UAMvr",
+        "UAAppl",
+        "UAProc"
     );
     for (let obj of opcObjects) {
         let objectName = obj.identifier?.id ?? "unknown";
-        let tagAttributes = obj.attributes.filter((attr) =>
-            attr.key.endsWith("Tag")
+        let tagAttributes = obj.attributes.filter(
+            (attr) =>
+                attr.key.endsWith("Tag") ||
+                attr.key.startsWith("x") ||
+                attr.key.startsWith("y")
         );
         for (let tagAttr of tagAttributes) {
             let value = tagAttr.getAttrValue()?.getValue() ?? "";

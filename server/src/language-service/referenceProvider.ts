@@ -81,7 +81,7 @@ export function getDefinition(
         return [];
     }
 
-    if (ref.obj?.isXvr()) {
+    if (ref.obj?.isXvr) {
         return [];
     }
 
@@ -90,7 +90,7 @@ export function getDefinition(
         return [];
     }
     let definitions = xvrRefs.filter((xvrRef) => {
-        return xvrRef.obj?.isXvr();
+        return xvrRef.obj?.isXvr;
     });
 
     return definitions.map((def) => {
@@ -132,7 +132,7 @@ export function getDeclaration(
         return [];
     }
 
-    if (ref.obj?.isSopcXvr()) {
+    if (ref.obj?.isOpcXvr) {
         return [];
     }
     const xvrRefs = refProvider.getXvrRefs(ref.identifier);
@@ -140,7 +140,7 @@ export function getDeclaration(
         return [];
     }
     let declarations = xvrRefs.filter((xvrRef) => {
-        return xvrRef.obj?.isSopcXvr();
+        return xvrRef.obj?.isOpcXvr;
     });
     return declarations.map((ref) => {
         return refToLocationLinkOffset(ref);

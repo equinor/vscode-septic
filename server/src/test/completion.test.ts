@@ -21,6 +21,15 @@ describe("Test completion of identifier", () => {
         expect(compItems.length).to.equal(1);
         expect(compItems[0].label).to.equal("TestCvr");
     });
+    it("Completion of UACvr identifier for Cvr", () => {
+        const text = "SopcMvr: TestMvr\nUACvr: TestCvr\nCvr:        \n";
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSepticSync(doc.getText());
+        const offset = doc.offsetAt(Position.create(2, 6));
+        const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
+        expect(compItems.length).to.equal(1);
+        expect(compItems[0].label).to.equal("TestCvr");
+    });
     it("Completion of SopcMvr identifier for Mvr", () => {
         const text = "SopcMvr: TestMvr\nSopcCvr: TestCvr\nMvr:        \n";
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
@@ -35,6 +44,15 @@ describe("Test completion of identifier", () => {
         const doc = TextDocument.create("test.cnfg", "septic", 0, text);
         const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(2, 10));
+        const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
+        expect(compItems.length).to.equal(1);
+        expect(compItems[0].label).to.equal("TestMvr");
+    });
+    it("Completion of Mvr identifier for UAMvr", () => {
+        const text = "Mvr: TestMvr\nCvr: TestCvr\nUAMvr:        \n";
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSepticSync(doc.getText());
+        const offset = doc.offsetAt(Position.create(2, 8));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.equal(1);
         expect(compItems[0].label).to.equal("TestMvr");

@@ -55,6 +55,10 @@ export class SepticObject extends SepticBase {
     attributes: Attribute[];
     parent: SepticObject | undefined;
     children: SepticObject[] = [];
+    isXvr: boolean;
+    isSopcXvr: boolean;
+    isUaXvr: boolean;
+    isOpcXvr: boolean;
 
     constructor(
         type: string,
@@ -67,6 +71,10 @@ export class SepticObject extends SepticBase {
         this.identifier = variable;
         this.attributes = [];
         this.parent = undefined;
+        this.isXvr = /^[CDEMT]vr$/.test(this.type);
+        this.isSopcXvr = /^Sopc[CDEMT]vr$/.test(this.type);
+        this.isUaXvr = /^UA[CDEMT]vr$/.test(this.type);
+        this.isOpcXvr = this.isSopcXvr || this.isUaXvr;
     }
 
     addAttribute(attr: Attribute) {
@@ -100,14 +108,6 @@ export class SepticObject extends SepticBase {
             elements.push(...attr.getElements());
         });
         return elements;
-    }
-
-    isXvr(): boolean {
-        return /^[CDEMT]vr$/.test(this.type);
-    }
-
-    isSopcXvr(): boolean {
-        return /^Sopc[CDEMT]vr$/.test(this.type);
     }
 
     isType(...type: string[]) {

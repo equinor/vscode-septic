@@ -1221,11 +1221,51 @@ describe("Test validation of object references", () => {
         );
         expect(diagFilterd.length).to.equal(1);
     });
+    it("Expect diagnostics for uaxvrs with duplicate names", () => {
+        const text = `
+            UAEvr: TestEvr
+            
+            UATvr: TestEvr
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSepticSync(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("MvrList");
+        let diag = validateObjectReferences(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        let diagFilterd = diag.filter(
+            (d) => d.code === DiagnosticCode.duplicate
+        );
+        expect(diagFilterd.length).to.equal(1);
+    });
     it("Expect no duplicate diagnostics for sopcxvr and xvr with same name", () => {
         const text = `
             SopcEvr: TestEvr
             
             Evr: TestEvr
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSepticSync(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("MvrList");
+        let diag = validateObjectReferences(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        let diagFilterd = diag.filter(
+            (d) => d.code === DiagnosticCode.duplicate
+        );
+        expect(diagFilterd.length).to.equal(0);
+    });
+    it("Expect no duplicate diagnostics for sopcxvr and uaxvr with same name", () => {
+        const text = `
+            SopcEvr: TestEvr
+            
+            UAEvr: TestEvr
 		`;
         const doc = new MockDocument(text);
         const cnfg = parseSepticSync(doc.getText());

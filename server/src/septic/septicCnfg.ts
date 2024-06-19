@@ -80,7 +80,7 @@ export class SepticCnfg implements SepticReferenceProvider {
     }
 
     public getAllXvrObjects(): SepticObject[] {
-        return this.objects.filter((obj) => obj.isXvr() || obj.isSopcXvr());
+        return this.objects.filter((obj) => obj.isXvr || obj.isOpcXvr);
     }
 
     public getObjectsByType(...types: string[]): SepticObject[] {
@@ -231,7 +231,7 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
     }
 
     if (objectDef.refs.identifier && obj.identifier) {
-        let isObjRef = obj.isXvr() || obj.isSopcXvr();
+        let isObjRef = obj.isXvr || obj.isOpcXvr;
         let isCalcPvr = obj.isType("CalcPvr");
         let ref: SepticReference = createSepticReference(
             obj.identifier.name,
