@@ -404,12 +404,14 @@ function getExistingCompletion(
 }
 
 function xvrToCompletionItem(obj: SepticObject, range: Range): CompletionItem {
+    let priority = obj.isType("Mvr", "Cvr") ? 1 : 2;
     return {
         label: obj.identifier!.name,
         kind: CompletionItemKind.Variable,
         detail: obj.type,
         data: obj.identifier!.name,
-        filterText: obj.identifier!.name,
+        filterText: obj.identifier!.id,
+        sortText: priority + obj.identifier!.id,
         textEdit: TextEdit.replace(range, obj.identifier!.name),
     };
 }
