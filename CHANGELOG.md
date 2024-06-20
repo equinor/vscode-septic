@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.20.4](https://github.com/equinor/vscode-septic/compare/v1.20.3...v1.20.4) (2024-06-20)
+
+
+### 🐛 Bug Fixes
+
+* add support for opcua objects ([#592](https://github.com/equinor/vscode-septic/issues/592)) ([f7405d7](https://github.com/equinor/vscode-septic/commit/f7405d7ad548ce66e7d817535a130ae2a71c609e))
+* parsing of jinja code with modulus operator ([#587](https://github.com/equinor/vscode-septic/issues/587)) ([95aa929](https://github.com/equinor/vscode-septic/commit/95aa929977f204184c9f2e43c4a04e2f3684212b))
+
 ## [1.20.3](https://github.com/equinor/vscode-septic/compare/v1.20.2...v1.20.3) (2024-06-07)
 
 
