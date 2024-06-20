@@ -25,7 +25,7 @@ import { FormattingProvider } from "./formatProvider";
 import { SignatureHelpProvider } from "./signatureHelpProvider";
 import { CodeActionProvider } from "./codeActionProvider";
 import { CycleReportProvider } from "./cycleReportProvider";
-import { OpcTagListProvider, generateOpcReport } from "./opctagListProvider";
+import { generateOpcReport } from "./opctagListProvider";
 
 export * from "./types/textDocument";
 

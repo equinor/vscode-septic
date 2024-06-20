@@ -49,7 +49,7 @@ export const defaultRefValidationFunction: RefValidationFunction = (
     refs: SepticReference[]
 ) => {
     for (const ref of refs) {
-        if (ref.obj?.isXvr()) {
+        if (ref.obj?.isXvr) {
             return true;
         }
     }

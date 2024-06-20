@@ -324,7 +324,7 @@ export function validateAlgVariable(
     let referencedObjects = refProvider.getObjectsByIdentifier(
         variableParts[0]
     );
-    referencedObjects = referencedObjects.filter((obj) => obj.isXvr());
+    referencedObjects = referencedObjects.filter((obj) => obj.isXvr);
     if (!referencedObjects.length) {
         return [];
     }
@@ -597,7 +597,7 @@ function checkValidValueParam(
         exprLiteral.value.split(".")[0]
     );
     for (let obj of objects) {
-        if (obj.isXvr()) {
+        if (obj.isXvr) {
             return true;
         }
     }
@@ -765,7 +765,7 @@ function shouldValidateIdentifier(
     objectMetaInfo: SepticObjectInfo,
     obj: SepticObject
 ) {
-    return objectMetaInfo.refs.identifier && obj.identifier && !obj.isXvr();
+    return objectMetaInfo.refs.identifier && obj.identifier && !obj.isXvr;
 }
 
 function validateIdentifierReferences(
@@ -802,7 +802,7 @@ const hasDuplicateReferenceXvr: RefValidationFunction = (
 ) => {
     let xvrsCount = 0;
     for (const ref of refs) {
-        if (ref.obj?.isXvr()) {
+        if (ref.obj?.isXvr) {
             xvrsCount += 1;
         }
     }
@@ -814,11 +814,23 @@ const hasDuplicateReferenceSopcXvr: RefValidationFunction = (
 ) => {
     let sopcXvrsCount = 0;
     for (const ref of refs) {
-        if (ref.obj?.isSopcXvr()) {
+        if (ref.obj?.isSopcXvr) {
             sopcXvrsCount += 1;
         }
     }
     return sopcXvrsCount < 2;
+};
+
+const hasDuplicateReferenceUaXvr: RefValidationFunction = (
+    refs: SepticReference[]
+) => {
+    let uaXvrsCount = 0;
+    for (const ref of refs) {
+        if (ref.obj?.isUaXvr) {
+            uaXvrsCount += 1;
+        }
+    }
+    return uaXvrsCount < 2;
 };
 
 function validateDuplicateIdentifiers(
@@ -830,14 +842,15 @@ function validateDuplicateIdentifiers(
         return [];
     }
     let validationFunction: RefValidationFunction;
-    if (obj.isXvr()) {
+    if (obj.isXvr) {
         validationFunction = hasDuplicateReferenceXvr;
-    } else if (obj.isSopcXvr()) {
+    } else if (obj.isSopcXvr) {
         validationFunction = hasDuplicateReferenceSopcXvr;
+    } else if (obj.isUaXvr) {
+        validationFunction = hasDuplicateReferenceUaXvr;
     } else {
         return [];
     }
-
     let validRef = refProvider.validateRef(
         obj.identifier!.name,
         validationFunction

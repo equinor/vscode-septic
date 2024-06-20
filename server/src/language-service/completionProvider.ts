@@ -105,7 +105,7 @@ export function getCalcPublicPropertiesCompletion(
         let variableCore = variable.value.slice(0, variable.value.length - 1);
         let objects = refProvider.getObjectsByIdentifier(variableCore);
         for (let obj of objects) {
-            if (!obj.isXvr()) {
+            if (!obj.isXvr) {
                 continue;
             }
             let metaInfoProvider = SepticMetaInfoProvider.getInstance();
@@ -415,21 +415,25 @@ function xvrToCompletionItem(obj: SepticObject, range: Range): CompletionItem {
 }
 
 function getRelevantXvrsCalc(objects: SepticObject[]) {
-    return objects.filter((obj) => obj.isXvr());
+    return objects.filter((obj) => obj.isXvr);
 }
 
 function getRelevantXvrsIdentifier(
     obj: SepticObject,
     objects: SepticObject[]
 ): SepticObject[] {
-    if (obj.isXvr()) {
-        return objects.filter((xvr) => xvr.isType("Sopc" + obj.type));
-    } else if (obj.isSopcXvr()) {
-        return objects.filter((xvr) => xvr.isType(obj.type.slice(4)));
+    if (obj.isXvr) {
+        return objects.filter((xvr) =>
+            xvr.isType("Sopc" + obj.type, "UA" + obj.type)
+        );
+    } else if (obj.isOpcXvr) {
+        return objects.filter((xvr) =>
+            xvr.isType(obj.type.slice(obj.type.length - 3))
+        );
     } else if (obj.isType("CalcPvr")) {
         return objects.filter((xvr) => xvr.isType("Evr"));
     } else {
-        return objects.filter((xvr) => xvr.isXvr());
+        return objects.filter((xvr) => xvr.isXvr);
     }
 }
 
@@ -452,6 +456,6 @@ function getRelevantXvrsAttributes(
         case "MvrDvrIds":
             return objects.filter((obj) => obj.isType("Mvr", "Dvr"));
         default:
-            return objects.filter((obj) => obj.isXvr());
+            return objects.filter((obj) => obj.isXvr);
     }
 }

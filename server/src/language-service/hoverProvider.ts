@@ -74,10 +74,10 @@ export function getReferenceHover(
         return undefined;
     }
     const xvr = allRefs.filter((value) => {
-        return value.obj?.isXvr();
+        return value.obj?.isXvr;
     });
     const sopcXvr = allRefs.filter((value) => {
-        return value.obj?.isSopcXvr();
+        return value.obj?.isOpcXvr;
     });
 
     if (xvr.length) {
