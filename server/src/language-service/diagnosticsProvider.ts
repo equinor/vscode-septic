@@ -713,6 +713,10 @@ export function validateObjectReferences(
             diagnostics.push(
                 ...validateCalcPvrIdentifierReferences(obj, refProvider, doc)
             );
+        } else if (obj.isType("UAAppl")) {
+            diagnostics.push(
+                ...validateUAApplReferences(obj, refProvider, doc)
+            );
         } else {
             diagnostics.push(
                 ...validateIdentifierReferences(
@@ -906,6 +910,31 @@ function validateCalcPvrIdentifierReferences(
             },
             message,
             code
+        ),
+    ];
+}
+
+function validateUAApplReferences(
+    obj: SepticObject,
+    refProvider: SepticReferenceProvider,
+    doc: ITextDocument
+): Diagnostic[] {
+    for (const object of refProvider.getObjectsByIdentifier(
+        obj.identifier!.name
+    )) {
+        if (object.isType("SmpcAppl", "MPCAppl")) {
+            return [];
+        }
+    }
+    return [
+        createDiagnostic(
+            DiagnosticSeverity.Warning,
+            {
+                start: doc.positionAt(obj.identifier!.start),
+                end: doc.positionAt(obj.identifier!.end),
+            },
+            "Missing reference to SmpcAppl or MPCAppl",
+            DiagnosticCode.missingReference
         ),
     ];
 }
