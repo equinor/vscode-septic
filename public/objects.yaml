@@ -100,6 +100,9 @@
   refs:
     attributes: [CvrIds, MvrDvrIds]
 - name: ModelPlot
+- name: MPCAppl
+  level: 1
+  symbolKind: Namespace
 - name: MsgBox
 - name: MultiXvrPlot
   refs:
