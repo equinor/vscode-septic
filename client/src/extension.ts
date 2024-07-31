@@ -103,6 +103,28 @@ export function activate(context: vscode.ExtensionContext) {
         });
     });
 
+    vscode.commands.registerCommand("septic.compareCnfg", async () => {
+        let contexts = await client.sendRequest(protocol.contexts, {});
+        let prevVersion = await vscode.window.showQuickPick(contexts, {
+            title: "Select previous version of cnfg",
+            canPickMany: false,
+        });
+        if (!prevVersion) {
+            return;
+        }
+        contexts = contexts.filter((item) => item !== prevVersion);
+        let currentVersion = await vscode.window.showQuickPick(contexts, {
+            title: "Select current version of cnfg",
+            canPickMany: false,
+        });
+        if (!currentVersion) {
+            return;
+        }
+        vscode.window.showInformationMessage(
+            `You picked prev version ${prevVersion} and current version ${currentVersion}`
+        );
+    });
+
     vscode.commands.registerCommand("septic.opcTagList", async () => {
         let contexts = await client.sendRequest(protocol.contexts, {});
         let choice = await vscode.window.showQuickPick(contexts);
