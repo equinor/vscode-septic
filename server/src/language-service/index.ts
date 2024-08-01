@@ -18,7 +18,7 @@ import {
     ReferenceProvider,
 } from "./referenceProvider";
 import { DocumentProvider } from "../documentProvider";
-import { SepticReferenceProvider } from "../septic";
+import { SepticCnfg, SepticReferenceProvider } from "../septic";
 import { RenameProvider } from "./renameProvider";
 import { HoverProvider } from "./hoverProvider";
 import { FormattingProvider } from "./formatProvider";
@@ -26,6 +26,7 @@ import { SignatureHelpProvider } from "./signatureHelpProvider";
 import { CodeActionProvider } from "./codeActionProvider";
 import { CycleReportProvider } from "./cycleReportProvider";
 import { generateOpcReport } from "./opctagListProvider";
+import { CnfgComparisionProvider } from "./cnfgComparisonProvider";
 
 export * from "./types/textDocument";
 
@@ -100,6 +101,11 @@ export interface ILanguageService {
         refProvider: SepticReferenceProvider
     ): Promise<string>;
 
+    provideCnfgComparison(
+        prevVersion: SepticCnfg,
+        currentVersion: SepticCnfg
+    ): Promise<string>;
+
     provideOpcTagList(refProvider: SepticReferenceProvider): string;
 }
 
@@ -136,6 +142,10 @@ export function createLanguageService(
 
     const cycleReportProvider = new CycleReportProvider(documentProvider);
 
+    const cnfgComparisionProvider = new CnfgComparisionProvider(
+        documentProvider
+    );
+
     return Object.freeze<ILanguageService>({
         cnfgProvider,
         provideFoldingRanges:
@@ -170,5 +180,8 @@ export function createLanguageService(
         provideCycleReport:
             cycleReportProvider.generateCycleReport.bind(cycleReportProvider),
         provideOpcTagList: generateOpcReport,
+        provideCnfgComparison: cnfgComparisionProvider.compareCnfgs.bind(
+            cnfgComparisionProvider
+        ),
     });
 }

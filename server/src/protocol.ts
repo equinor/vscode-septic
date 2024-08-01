@@ -25,4 +25,10 @@ export const opcTagList = new RequestType<{ uri: string }, string, any>(
     "septic/opcTagList"
 );
 
+export const compareCnfg = new RequestType<
+    { prevVersion: string; currentVersion: string },
+    string,
+    any
+>("septic/compareCnfg");
+
 export const contexts = new RequestType<{}, string[], any>("septic/contexts");

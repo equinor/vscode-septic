@@ -33,6 +33,7 @@ import {
     ScgContext,
     SepticReferenceProvider,
     SepticMetaInfoProvider,
+    SepticCnfg,
 } from "./septic";
 import { getIgnorePatterns, isPathIgnored } from "./ignorePath";
 
@@ -162,6 +163,18 @@ connection.onRequest(protocol.cylceReport, async (param) => {
     }
     const report = await langService.provideCycleReport(param.uri, context);
     return report;
+});
+
+connection.onRequest(protocol.compareCnfg, async (param) => {
+    let prevCnfg: SepticCnfg | undefined = await langService.cnfgProvider.get(
+        param.prevVersion
+    );
+    let currentCnfg: SepticCnfg | undefined =
+        await langService.cnfgProvider.get(param.currentVersion);
+    if (!prevCnfg || !currentCnfg) {
+        return "";
+    }
+    return langService.provideCnfgComparison(prevCnfg, currentCnfg);
 });
 
 connection.onRequest(protocol.contexts, async () => {

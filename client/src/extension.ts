@@ -120,9 +120,25 @@ export function activate(context: vscode.ExtensionContext) {
         if (!currentVersion) {
             return;
         }
-        vscode.window.showInformationMessage(
-            `You picked prev version ${prevVersion} and current version ${currentVersion}`
-        );
+        let diff = await client.sendRequest(protocol.compareCnfg, {
+            prevVersion: prevVersion,
+            currentVersion: currentVersion,
+        });
+        if (!diff.length) {
+            vscode.window.showInformationMessage(`No diff identified`);
+            return;
+        }
+        const wsedit = new vscode.WorkspaceEdit();
+        const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        const filePath = vscode.Uri.file(wsPath + `/comparison.txt`);
+        wsedit.createFile(filePath, {
+            contents: Buffer.from(diff),
+            overwrite: true,
+        });
+        await vscode.workspace.applyEdit(wsedit);
+        await vscode.window.showTextDocument(filePath, {
+            preserveFocus: false,
+        });
     });
 
     vscode.commands.registerCommand("septic.opcTagList", async () => {
