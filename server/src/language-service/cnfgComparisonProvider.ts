@@ -31,7 +31,7 @@ export class CnfgComparisionProvider {
         if (isNoDiff(rootObjectDiff)) {
             return "";
         }
-        let report = await this.generateDiffReport(rootObjectDiff);
+        let report = await this.generateDiffReportFlat(rootObjectDiff);
         return report;
     }
 
@@ -130,6 +130,90 @@ export class CnfgComparisionProvider {
         return report.join("\n");
     }
 
+    public async generateDiffReportFlat(rootDiff: ObjectDiff): Promise<string> {
+        let report: string[] = [];
+        let padding = "    ";
+        let objectDiff: ObjectDiff[] = flattenObjectDiff(rootDiff);
+        let updatedObjects: ObjectDiff[] = objectDiff.filter(
+            (item) => item.attributeDiff.length
+        );
+        if (updatedObjects.length) {
+            report.push("Updated objects:");
+        }
+        for (const updatedObj of updatedObjects) {
+            let linkPrev = await this.getLink(
+                updatedObj.prevObject,
+                updatedObj.prevObject.uri
+            );
+            linkPrev = linkPrev ? "  " + linkPrev : "";
+            let linkCurrent = await this.getLink(
+                updatedObj.currentObject,
+                updatedObj.currentObject.uri
+            );
+            linkCurrent = linkCurrent ? "  " + linkCurrent : "";
+            report.push(
+                `\n${updatedObj.prevObject.type}: ${updatedObj.prevObject.identifier?.name}`
+            );
+            report.push("Prev:" + linkPrev);
+            report.push("Current:" + linkCurrent);
+            report.push("Updated Attributes:");
+            for (const attrDiff of updatedObj.attributeDiff) {
+                let linkPrev = attrDiff.prevAttr
+                    ? await this.getLink(
+                          attrDiff.prevAttr,
+                          updatedObj.prevObject.uri
+                      )
+                    : "";
+                linkPrev = linkPrev ? "  " + linkPrev : "";
+                let linkCurrent = attrDiff.prevAttr
+                    ? await this.getLink(
+                          attrDiff.prevAttr,
+                          updatedObj.prevObject.uri
+                      )
+                    : "";
+                linkCurrent = linkCurrent ? "  " + linkCurrent : "";
+                report.push(padding + `${attrDiff.name}`);
+                report.push(
+                    padding.repeat(2) +
+                        "Prev Value: " +
+                        `${attrDiff.prevValue}` +
+                        linkPrev
+                );
+                report.push(
+                    padding.repeat(2) +
+                        "Current Value: " +
+                        `${attrDiff.currentValue}` +
+                        linkCurrent
+                );
+            }
+        }
+        let addedObjects: SepticObject[] = [];
+        objectDiff.forEach((item) => addedObjects.push(...item.addedObjects));
+        if (addedObjects.length) {
+            report.push("\nAdded objects:\n");
+        }
+        for (const addedObj of addedObjects) {
+            let link = await this.getLink(addedObj, addedObj.uri);
+            link = link ? "  " + link : "";
+            report.push(`${addedObj.type}: ${addedObj.identifier?.id}` + link);
+        }
+        let removedObjects: SepticObject[] = [];
+        objectDiff.forEach((item) =>
+            removedObjects.push(...item.removedObjects)
+        );
+        if (removedObjects.length) {
+            report.push("\nRemoved objects:\n");
+        }
+        for (const removedObj of removedObjects) {
+            let link = await this.getLink(removedObj, removedObj.uri);
+            link = link ? "  " + link : "";
+            report.push(
+                `${removedObj.type}: ${removedObj.identifier?.id}` + link
+            );
+        }
+        return report.join("\n");
+    }
+
     public async getLink(element: SepticBase, uri: string): Promise<string> {
         let doc = await this.docProvider.getDocument(uri);
         if (!doc) {
@@ -207,6 +291,15 @@ export function compareAttributes(
         }
     }
     return diff;
+}
+
+function flattenObjectDiff(objectDiff: ObjectDiff): ObjectDiff[] {
+    let flatDiff: ObjectDiff[] = [];
+    flatDiff.push(objectDiff);
+    for (const updatedChilds of objectDiff.updatedObjects) {
+        flatDiff.push(...flattenObjectDiff(updatedChilds));
+    }
+    return flatDiff;
 }
 
 export interface ObjectDiff {
