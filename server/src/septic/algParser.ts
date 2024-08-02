@@ -388,11 +388,11 @@ export class AlgGrouping extends AlgExpr {
 }
 
 export interface IAlgVisitor {
-    visitBinary(expr: AlgBinary): void;
-    visitLiteral(expr: AlgLiteral): void;
-    visitGrouping(expr: AlgGrouping): void;
-    visitCalc(expr: AlgCalc): void;
-    visitUnary(expr: AlgUnary): void;
+    visitBinary(expr: AlgBinary): any;
+    visitLiteral(expr: AlgLiteral): any;
+    visitGrouping(expr: AlgGrouping): any;
+    visitCalc(expr: AlgCalc): any;
+    visitUnary(expr: AlgUnary): any;
 }
 
 export class AlgVisitor implements IAlgVisitor {
@@ -408,22 +408,22 @@ export class AlgVisitor implements IAlgVisitor {
         expr.accept(this);
     }
 
-    visitBinary(expr: AlgBinary): void {
+    visitBinary(expr: AlgBinary): any {
         expr.left.accept(this);
         expr.right?.accept(this);
     }
 
-    visitLiteral(expr: AlgLiteral): void {
+    visitLiteral(expr: AlgLiteral): any {
         if (expr.type === AlgTokenType.identifier) {
             this.variables.push(expr);
         }
     }
 
-    visitGrouping(expr: AlgGrouping): void {
+    visitGrouping(expr: AlgGrouping): any {
         expr.expr.accept(this);
     }
 
-    visitCalc(expr: AlgCalc): void {
+    visitCalc(expr: AlgCalc): any {
         this.calcs.push(expr);
         for (let param of expr.params) {
             if (
@@ -437,11 +437,60 @@ export class AlgVisitor implements IAlgVisitor {
         }
     }
 
-    visitUnary(expr: AlgUnary): void {
+    visitUnary(expr: AlgUnary): any {
         expr.right.accept(this);
     }
 }
 
+export class AlgComparison implements IAlgVisitor {
+    constructor() {}
+
+    visit(prevExpr: AlgExpr, currentExpr: AlgExpr): boolean {
+        let prev = prevExpr.accept(this);
+        let current = currentExpr.accept(this);
+        return prev === current;
+    }
+
+    visitBinary(expr: AlgBinary) {
+        let left: string = expr.left.accept(this);
+        let operator: string = expr.operator?.content ?? "";
+        let right: string = expr.right?.accept(this) ?? "";
+        if (
+            expr.operator &&
+            expr.right &&
+            (expr.operator.type === AlgTokenType.mul ||
+                expr.operator.type === AlgTokenType.plus ||
+                expr.operator.type === AlgTokenType.equalEqual)
+        ) {
+            return left < right
+                ? left + operator + right
+                : right + operator + left;
+        }
+        return left + operator + right;
+    }
+
+    visitCalc(expr: AlgCalc) {
+        let calc = expr.identifier + "(";
+        for (const param of expr.params) {
+            calc += param.accept(this) + ",";
+        }
+        calc = calc.endsWith(",") ? calc.slice(0, calc.length - 1) : calc;
+        return calc + ")";
+    }
+
+    visitGrouping(expr: AlgGrouping) {
+        return "(" + expr.accept(this) + ")";
+    }
+
+    visitLiteral(expr: AlgLiteral) {
+        return expr.value;
+    }
+
+    visitUnary(expr: AlgUnary) {
+        let right = expr.right.accept(this);
+        return expr.operator.content + right;
+    }
+}
 export class AlgScanner {
     private readonly source: string;
     private tokens: AlgToken[] = [];

@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import {
+    compareAlg,
     compareAttributes,
     compareObjects,
     isNoDiff,
@@ -89,6 +90,45 @@ describe("Test compare attributes", () => {
         let diff = compareAttributes(prevObject, currentObject);
         expect(diff.length).to.equal(1);
         expect(diff[0].name).to.equal("Fulf");
+    });
+});
+
+describe("Test alg comparison", () => {
+    it("Expect no difference for identical binary expr", () => {
+        let prevAlg = "1+2";
+        let currentAlg = "1+2";
+        let result = compareAlg(prevAlg, currentAlg);
+        expect(result).to.equal(true);
+    });
+    it("Expect difference for non-identical binary expr", () => {
+        let prevAlg = "1+2";
+        let currentAlg = "2+2";
+        let result = compareAlg(prevAlg, currentAlg);
+        expect(result).to.equal(false);
+    });
+    it("Expect no difference for identical algs with extra white space", () => {
+        let prevAlg = "1+  2";
+        let currentAlg = "1+2";
+        let result = compareAlg(prevAlg, currentAlg);
+        expect(result).to.equal(true);
+    });
+    it("Expect no difference for binary expr with commutative operator", () => {
+        let prevAlg = "2+1";
+        let currentAlg = "1+2";
+        let result = compareAlg(prevAlg, currentAlg);
+        expect(result).to.equal(true);
+    });
+    it("Expect no difference for identical calcs", () => {
+        let prevAlg = "if(1 > 2, 1, 2)";
+        let currentAlg = "if(1>2, 1,  2)";
+        let result = compareAlg(prevAlg, currentAlg);
+        expect(result).to.equal(true);
+    });
+    it("Expect difference for non identical calcs", () => {
+        let prevAlg = "if(1 > 2, 2, 1)";
+        let currentAlg = "if(1>2, 1,  2)";
+        let result = compareAlg(prevAlg, currentAlg);
+        expect(result).to.equal(false);
     });
 });
 

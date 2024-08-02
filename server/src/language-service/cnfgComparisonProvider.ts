@@ -1,6 +1,8 @@
 import { DocumentProvider } from "../documentProvider";
 import {
+    AlgComparison,
     Attribute,
+    parseAlg,
     SepticBase,
     SepticCnfg,
     SepticMetaInfoProvider,
@@ -261,11 +263,12 @@ export function compareObjects(
 }
 
 const ignoredAttributes: string[] = ["Text1", "Text2"];
+
 export function compareAttributes(
     prevObj: SepticObject,
     currentObj: SepticObject
 ): AttributeDiff[] {
-    let diff: AttributeDiff[] = [];
+    let attrDiff: AttributeDiff[] = [];
     let objectDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation(
         prevObj.type
     );
@@ -280,8 +283,14 @@ export function compareAttributes(
         let prevValue = prevAttr?.getValues() ?? attr.default;
         let currentAttr = currentObj.getAttribute(attr.name);
         let currentValue = currentAttr?.getValues() ?? attr.default;
-        if (prevValue.toString() !== currentValue.toString()) {
-            diff.push({
+        let isDiff = false;
+        if (prevObj.type === "CalcPvr" && attr.name === "Alg") {
+            isDiff = !compareAlg(prevValue[0], currentValue[0]);
+        } else {
+            isDiff = prevValue.toString() !== currentValue.toString();
+        }
+        if (isDiff) {
+            attrDiff.push({
                 name: attr.name,
                 prevAttr: prevAttr,
                 prevValue: prevValue,
@@ -290,7 +299,26 @@ export function compareAttributes(
             });
         }
     }
-    return diff;
+    return attrDiff;
+}
+
+export function compareAlg(prevAlg: string, currentAlg: string): boolean {
+    if (prevAlg === currentAlg) {
+        return true;
+    }
+    let prevExpr;
+    try {
+        prevExpr = parseAlg(prevAlg);
+    } catch (error: any) {}
+    let currentExpr;
+    try {
+        currentExpr = parseAlg(currentAlg);
+    } catch (error: any) {}
+    if (!prevExpr || !currentExpr) {
+        return false;
+    }
+    let algComparator = new AlgComparison();
+    return algComparator.visit(prevExpr, currentExpr);
 }
 
 function flattenObjectDiff(objectDiff: ObjectDiff): ObjectDiff[] {
