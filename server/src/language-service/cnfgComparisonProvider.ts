@@ -140,7 +140,7 @@ export class CnfgComparisionProvider {
             (item) => item.attributeDiff.length
         );
         if (updatedObjects.length) {
-            report.push("Updated objects:");
+            report.push("## Updated objects\n");
         }
         for (const updatedObj of updatedObjects) {
             let linkPrev = await this.getLink(
@@ -152,47 +152,21 @@ export class CnfgComparisionProvider {
                 updatedObj.currentObject,
                 updatedObj.currentObject.uri
             );
-            linkCurrent = linkCurrent ? "  " + linkCurrent : "";
+            linkCurrent = linkCurrent ? linkCurrent : "";
             report.push(
-                `\n${updatedObj.prevObject.type}: ${updatedObj.prevObject.identifier?.name}`
+                `${updatedObj.prevObject.type}: ${updatedObj.prevObject.identifier?.id} ${linkPrev} -> ${linkCurrent}`
             );
-            report.push("Prev:" + linkPrev);
-            report.push("Current:" + linkCurrent);
-            report.push("Updated Attributes:");
             for (const attrDiff of updatedObj.attributeDiff) {
-                let linkPrev = attrDiff.prevAttr
-                    ? await this.getLink(
-                          attrDiff.prevAttr,
-                          updatedObj.prevObject.uri
-                      )
-                    : "";
-                linkPrev = linkPrev ? "  " + linkPrev : "";
-                let linkCurrent = attrDiff.prevAttr
-                    ? await this.getLink(
-                          attrDiff.prevAttr,
-                          updatedObj.prevObject.uri
-                      )
-                    : "";
-                linkCurrent = linkCurrent ? "  " + linkCurrent : "";
-                report.push(padding + `${attrDiff.name}`);
                 report.push(
-                    padding.repeat(2) +
-                        "Prev Value: " +
-                        `${attrDiff.prevValue}` +
-                        linkPrev
-                );
-                report.push(
-                    padding.repeat(2) +
-                        "Current Value: " +
-                        `${attrDiff.currentValue}` +
-                        linkCurrent
+                    padding +
+                        `${attrDiff.name}: ${attrDiff.prevValue} -> ${attrDiff.currentValue}`
                 );
             }
         }
         let addedObjects: SepticObject[] = [];
         objectDiff.forEach((item) => addedObjects.push(...item.addedObjects));
         if (addedObjects.length) {
-            report.push("\nAdded objects:\n");
+            report.push("\n## Added objects\n");
         }
         for (const addedObj of addedObjects) {
             let link = await this.getLink(addedObj, addedObj.uri);
@@ -204,7 +178,7 @@ export class CnfgComparisionProvider {
             removedObjects.push(...item.removedObjects)
         );
         if (removedObjects.length) {
-            report.push("\nRemoved objects:\n");
+            report.push("\n## Removed objects\n");
         }
         for (const removedObj of removedObjects) {
             let link = await this.getLink(removedObj, removedObj.uri);
