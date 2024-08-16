@@ -105,17 +105,18 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand("septic.compareCnfg", async () => {
         let contexts = await client.sendRequest(protocol.contexts, {});
-        let prevVersion = await vscode.window.showQuickPick(contexts, {
-            title: "Select previous version of cnfg",
-            canPickMany: false,
+        let prevVersion = await vscode.window.showOpenDialog({
+            canSelectMany: false,
+            filters: { Septic: ["cnfg"] },
+            title: "Select previous version",
         });
         if (!prevVersion) {
             return;
         }
-        contexts = contexts.filter((item) => item !== prevVersion);
-        let currentVersion = await vscode.window.showQuickPick(contexts, {
-            title: "Select current version of cnfg",
-            canPickMany: false,
+        let currentVersion = await vscode.window.showOpenDialog({
+            canSelectMany: false,
+            filters: { Septic: ["cnfg"] },
+            title: "Select previous version",
         });
         if (!currentVersion) {
             return;
@@ -134,8 +135,8 @@ export function activate(context: vscode.ExtensionContext) {
             return;
         }
         let diff = await client.sendRequest(protocol.compareCnfg, {
-            prevVersion: prevVersion,
-            currentVersion: currentVersion,
+            prevVersion: prevVersion[0].toString(),
+            currentVersion: currentVersion[0].toString(),
             settingsFile: settings,
         });
         if (!diff.length) {
