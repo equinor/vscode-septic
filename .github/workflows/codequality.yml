@@ -13,7 +13,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
 
       - name: 📦 Install dependencies
         run: npm ci
@@ -25,4 +25,4 @@ jobs:
         run: xvfb-run --auto-servernum npm run e2e-test
 
       - name: 🧪 Test Building of Artifact
-        run: npx vsce package
+        run: npx @vscode/vsce package
