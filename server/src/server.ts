@@ -174,7 +174,11 @@ connection.onRequest(protocol.compareCnfg, async (param) => {
     if (!prevCnfg || !currentCnfg) {
         return "";
     }
-    return langService.provideCnfgComparison(prevCnfg, currentCnfg);
+    return langService.provideCnfgComparison(
+        prevCnfg,
+        currentCnfg,
+        param.settingsFile
+    );
 });
 
 connection.onRequest(protocol.contexts, async () => {

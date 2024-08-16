@@ -26,7 +26,7 @@ export const opcTagList = new RequestType<{ uri: string }, string, any>(
 );
 
 export const compareCnfg = new RequestType<
-    { prevVersion: string; currentVersion: string },
+    { prevVersion: string; currentVersion: string; settingsFile: string },
     string,
     any
 >("septic/compareCnfg");

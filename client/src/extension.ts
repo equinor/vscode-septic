@@ -120,12 +120,31 @@ export function activate(context: vscode.ExtensionContext) {
         if (!currentVersion) {
             return;
         }
+        let possibleSettingsFiles = (
+            await vscode.workspace.findFiles("*.yaml")
+        ).map((item) => item.fsPath.toString());
+        let settings = await vscode.window.showQuickPick(
+            ["Default", ...possibleSettingsFiles],
+            {
+                title: "Select settings file",
+                canPickMany: false,
+            }
+        );
+        if (!settings) {
+            return;
+        }
         let diff = await client.sendRequest(protocol.compareCnfg, {
             prevVersion: prevVersion,
             currentVersion: currentVersion,
+            settingsFile: settings,
         });
         if (!diff.length) {
             vscode.window.showInformationMessage(`No diff identified`);
+            return;
+        } else if (diff === "error") {
+            vscode.window.showInformationMessage(
+                "Not able to read settings file"
+            );
             return;
         }
         const wsedit = new vscode.WorkspaceEdit();

@@ -3,15 +3,16 @@ import {
     compareAlg,
     compareAttributes,
     compareObjects,
+    ComparisonSettings,
     isNoDiff,
 } from "../language-service/cnfgComparisonProvider";
-import {
-    Attribute,
-    Identifier,
-    parseSepticSync,
-    SepticMetaInfoProvider,
-    SepticObject,
-} from "../septic";
+import { parseSepticSync, SepticMetaInfoProvider } from "../septic";
+
+const settings: ComparisonSettings = {
+    ignoredAttributes: [],
+    ignoredObjectTypes: [],
+    ignoredVariables: [],
+};
 
 describe("Test compare attributes", () => {
     it("Expect no difference for identical objects", () => {
@@ -26,7 +27,7 @@ describe("Test compare attributes", () => {
 
         let prevObject = parseSepticSync(prevText).objects[0];
         let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareAttributes(prevObject, currentObject);
+        let diff = compareAttributes(prevObject, currentObject, undefined);
         expect(diff.length).to.equal(0);
     });
     it("Expect difference for non identical objects", () => {
@@ -41,7 +42,7 @@ describe("Test compare attributes", () => {
 
         let prevObject = parseSepticSync(prevText).objects[0];
         let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareAttributes(prevObject, currentObject);
+        let diff = compareAttributes(prevObject, currentObject, undefined);
         expect(diff.length).to.equal(1);
         expect(diff[0].name).to.equal("Fulf");
     });
@@ -56,7 +57,7 @@ describe("Test compare attributes", () => {
 
         let prevObject = parseSepticSync(prevText).objects[0];
         let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareAttributes(prevObject, currentObject);
+        let diff = compareAttributes(prevObject, currentObject, undefined);
         expect(diff.length).to.equal(0);
     });
     it("Expect difference for missing attribute with non default value", () => {
@@ -70,7 +71,7 @@ describe("Test compare attributes", () => {
 
         let prevObject = parseSepticSync(prevText).objects[0];
         let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareAttributes(prevObject, currentObject);
+        let diff = compareAttributes(prevObject, currentObject, undefined);
         expect(diff.length).to.equal(1);
         expect(diff[0].name).to.equal("Fulf");
     });
@@ -87,7 +88,7 @@ describe("Test compare attributes", () => {
 
         let prevObject = parseSepticSync(prevText).objects[0];
         let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareAttributes(prevObject, currentObject);
+        let diff = compareAttributes(prevObject, currentObject, undefined);
         expect(diff.length).to.equal(1);
         expect(diff[0].name).to.equal("Fulf");
     });
@@ -148,7 +149,7 @@ describe("Test compare objects", () => {
 		`;
         let prevObject = parseSepticSync(prevText).objects[0];
         let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareObjects(prevObject, currentObject);
+        let diff = compareObjects(prevObject, currentObject, settings);
         let noDiff = isNoDiff(diff);
         expect(noDiff).to.equal(true);
     });
@@ -201,7 +202,7 @@ ValidationLimit=  -1
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
         let currentObject = currentCnfg.objects[0];
-        let diff = compareObjects(prevObject, currentObject);
+        let diff = compareObjects(prevObject, currentObject, settings);
         let noDiff = isNoDiff(diff);
         expect(noDiff).to.equal(true);
     });
@@ -220,7 +221,7 @@ ValidationLimit=  -1
 		`;
         let prevObject = parseSepticSync(prevText).objects[0];
         let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareObjects(prevObject, currentObject);
+        let diff = compareObjects(prevObject, currentObject, settings);
         expect(diff.attributeDiff.length).to.equal(1);
     });
     it("Expect difference between identical objects with non-identical children", () => {
@@ -272,7 +273,7 @@ ValidationLimit=  -1
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
         let currentObject = currentCnfg.objects[0];
-        let diff = compareObjects(prevObject, currentObject);
+        let diff = compareObjects(prevObject, currentObject, settings);
         expect(diff.updatedObjects.length).to.equal(1);
     });
     it("Expect difference between identical objects with added child", () => {
@@ -337,7 +338,7 @@ ValidationLimit=  -1
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
         let currentObject = currentCnfg.objects[0];
-        let diff = compareObjects(prevObject, currentObject);
+        let diff = compareObjects(prevObject, currentObject, settings);
         expect(diff.addedObjects.length).to.equal(1);
     });
     it("Expect difference between identical objects with removed child", () => {
@@ -402,7 +403,7 @@ ValidationLimit=  -1
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
         let currentObject = currentCnfg.objects[0];
-        let diff = compareObjects(prevObject, currentObject);
+        let diff = compareObjects(prevObject, currentObject, settings);
         expect(diff.removedObjects.length).to.equal(1);
     });
 });

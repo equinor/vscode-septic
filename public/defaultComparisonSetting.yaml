@@ -1,0 +1,8 @@
+ignoredVariables:
+  - ^CA1.*
+ignoredObjectTypes:
+  - DisplayGroup
+ignoredAttributes:
+  - objectName: Evr
+    attributes:
+    - Meas

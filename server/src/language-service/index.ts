@@ -103,7 +103,8 @@ export interface ILanguageService {
 
     provideCnfgComparison(
         prevVersion: SepticCnfg,
-        currentVersion: SepticCnfg
+        currentVersion: SepticCnfg,
+        settingsFile: string
     ): Promise<string>;
 
     provideOpcTagList(refProvider: SepticReferenceProvider): string;
