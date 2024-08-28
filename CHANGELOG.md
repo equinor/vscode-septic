@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.21.1](https://github.com/equinor/vscode-septic/compare/v1.21.0...v1.21.1) (2024-08-28)
+
+
+### 🐛 Bug Fixes
+
+* update node version build workflow ([#618](https://github.com/equinor/vscode-septic/issues/618)) ([492455f](https://github.com/equinor/vscode-septic/commit/492455f1752ec3c3590b19374258eda47c05bf6f))
+
 ## [1.21.0](https://github.com/equinor/vscode-septic/compare/v1.20.4...v1.21.0) (2024-08-28)
 
 
