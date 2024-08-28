@@ -116,7 +116,7 @@ export function activate(context: vscode.ExtensionContext) {
         let currentVersion = await vscode.window.showOpenDialog({
             canSelectMany: false,
             filters: { Septic: ["cnfg"] },
-            title: "Select previous version",
+            title: "Select current version",
         });
         if (!currentVersion) {
             return;
