@@ -616,6 +616,66 @@
   quality: quality(x)
   retr: The exponential for x
   signature: exp(x)
+- detailedDescription: "Construct the experimental model for use in ExprProc simulator\
+    \ from parameters. Cvr and Mvr/Dvr needs to be\r\n  contained in same SmpcAppl/MPCAppl.\r\
+    \n  The Laplace transform model is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1\
+    \ + lag2*s) where lead1, delay, lag1 and\r\n  lag2 are given in minutes."
+  name: exprprocmodsched
+  parameters:
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - mvr
+    - dvr
+    description: Mvr or Dvr
+    direction: in
+    name: xvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Gain modifier to be used
+    direction: in
+    name: gain
+  - arity: '1'
+    datatype:
+    - value
+    description: First time constant for model
+    direction: in
+    name: lag1
+  - arity: '1'
+    datatype:
+    - value
+    description: Second time constant for model
+    direction: in
+    name: lag2
+  - arity: '1'
+    datatype:
+    - value
+    description: Time constant of the lead term (used to generate inverse response
+      and overshoot)
+    direction: in
+    name: lead1
+  - arity: '1'
+    datatype:
+    - value
+    description: Dead time
+    direction: in
+    name: delay
+  - arity: '1'
+    datatype:
+    - value
+    description: Flag for allowing update (1)
+    direction: in
+    name: apply
+  quality: GOOD if valid model between cvr and xvr, and all inputs are GOOD, else
+    BAD
+  retr: Value of apply paramter
+  signature: exprprocmodsched(cvr, xvr, gain, lag1, lag2, lead1, delay, apply)
 - detailedDescription: Set the gain modifier in the active experimental model (ExprIvr.Scale)
     of ExprProc
   name: exprprocmodset
@@ -846,65 +906,65 @@
   - arity: '1'
     datatype:
     - value
-    description: = Bottom hole pressure [bar]
+    description: Bottom hole pressure (>UCP) [bara]
     direction: in
     name: BHP
   - arity: '1'
     datatype:
     - value
-    description: = Pressure upstream choke [bar]
+    description: Pressure upstream choke (>DCP) [bara]
     direction: in
     name: UCP
   - arity: '1'
     datatype:
     - value
-    description: = Pressure downstream choke [bar]
+    description: Pressure downstream choke (>0) [bara]
     direction: in
     name: DCP
   - arity: '1'
     datatype:
     - value
-    description: = Temperature upstream choke [C]
+    description: Temperature upstream choke (>-273) [C]
     direction: in
     name: UCT
   - arity: '1'
     datatype:
     - value
-    description: = Flow coefficient (US) [USG/(min*psi^0.5)] - from choke pos and
+    description: Flow coefficient (US) (>0) [USG/(min*psi^0.5)] - from choke pos and
       Cv-curve w intpoltype1
     direction: in
     name: Cv
   - arity: '1'
     datatype:
     - value
-    description: = Vertical height from UCP to BHP [m]
+    description: Vertical height from UCP to BHP (>0) [m]
     direction: in
     name: h
   - arity: '1'
     datatype:
     - value
-    description: = Fluid density [kg/m^3]. E.g (893+1038)/2=965.5
+    description: Fluid density (>0) [kg/m^3]. E.g (893+1038)/2=965.5
     direction: in
     name: rhoL
   - arity: '1'
     datatype:
     - value
-    description: = Slip factor
+    description: Slip factor (0-1)
     direction: in
     name: alpha
   - arity: '1'
     datatype:
     - value
-    description: = Gas compressibility (typ. 0.9)
+    description: Gas compressibility (0-1, typ. 0.9)
     direction: in
     name: zG
   - arity: '1'
     datatype:
     - value
-    description: = Gas mol weight (typ. 17.06)
+    description: Gas mol weight (>0, typ. 17.06)
     direction: in
     name: Mw
-  quality: GOOD if BHP, UCP, DCP, UCT and Cv are GOOD
+  quality: GOOD if BHP, UCP, DCP, UCT and Cv are GOOD and parameters are valid
   retr: Calculated gas rate, previous if BAD
   signature: gasrateChokeWell(BHP, UCP, DCP, UCT, Cv, h, rhoL, alpha, zG, Mw)
 - detailedDescription: "Implements a gas rate estimator using venturi from multiphase\
@@ -1507,6 +1567,34 @@
   retr: 'Value of evaluated expression according to condition: condition ? trueExpr
     : falseExpr'
   signature: if(condition, trueExpr, falseExpr, debug?)
+- detailedDescription: "Evaluates the boolean conditions and perform the corresponding\
+    \ conditional expressions. Expects odd number of\r\n  arguments >= 3"
+  name: ifelif
+  parameters:
+  - arity: +
+    datatype:
+    - value
+    description: Conditions to evaluate
+    direction: in
+    name: condn
+  - arity: =condN
+    datatype:
+    - value
+    description: Expressions to evaluate when condition is true
+    direction: in
+    name: exprn
+  - arity: '1'
+    datatype:
+    - value
+    description: Expression to evaluate when condition is false
+    direction: in
+    name: default
+  quality: "GOOD if number of arguments is odd and >= 3 and all conditions and expressions\
+    \ up to and including the last\r\n  (returned) evaluated expression are GOOD,\
+    \ else BAD."
+  retr: "Value of evaluated expressions according to condition: if(cond1, expr1, if(cond2,\
+    \ expr2, ..., if(condN, exprN,\r\n  default)...))"
+  signature: ifelif(cond1, expr1, cond2, expr2, ..., condN, exprN, default)
 - detailedDescription: "Function calculates y by linear interpolation of the X,Y pairs.\r\
     \n  Assumes that the sequence of X1, X2, ..., XN values are monotonically increasing.<br>"
   name: intpoltype1
@@ -2340,14 +2428,6 @@
   quality: quality(xN) if 1 <= n <= N (length of list) else BAD
   retr: 'Value of element n in list: value(xN) if  1 <= n <= N (length of list)'
   signature: selectvalue(n, x1, x2, ..., xN)
-- detailedDescription: "Send mail message when Triggertag changes from 0 to 1. Message\
-    \ is sent from SEPTIC_<Applid> to recipients\r\n  listed in TriggerTag->Text2.\
-    \ Message subject is TriggerTag->Id, and message is TriggerTag->Text1"
-  name: sendMail
-  parameters: []
-  quality: GOOD
-  retr: '1'
-  signature: sendMail(TriggerTag)
 - detailedDescription: "Intended for Xvr, change PlotSpan value based on criteria<br>\r\
     \n  When an Xvr is added to a MultiXvrPlot which uses Span-scaling, scaling is\
     \ based on first Xvr with PlotSpan set (not\r\n  -1) For some applications where\
@@ -3131,7 +3211,7 @@
   retr: Sine value of x
   signature: sin(x)
 - detailedDescription: "Debugging code. Will sleep for sleepmsecs. Not part of release-builds,\
-    \ intended for debugging of Master<->RUI\r\n  issues to introduce a long \"exe-time\"\
+    \ intended for debugging of\r\n  Master<->RUI issues to introduce a long \"exe-time\"\
     \ in Master"
   name: sleep
   parameters:
