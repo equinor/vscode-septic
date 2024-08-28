@@ -34,6 +34,9 @@
 -   Documentation: Built in documentation of objects/attributes and calcs based on source code.
 -   SignatureHelp: Signature help for calcs
 -   Code actions for fixing references to unknown Evrs in calcs
+-   Command for extracting all OPC-tags used in the config/scg-context
+-   Command for detecting cycles in calcs
+-   Command for comparing configs
 
 ## Instructions
 
@@ -68,6 +71,22 @@ Adding the SEPTIC extension to VS Code allows you to do the following when loadi
 -   Search functionality for calcs are builtin into the completion. To start searching, start typing the search word into the CalcPvr.Alg field and all calcs that has the relevant search word in the documentation is included in the filtered results. Pressing `Ctrl + Space` starts the completion without a starting phrase and can be used to browse all available calcs and variables inside a CalcPvr.Alg.
 
 -   Code action for fixing references to unknown Xvrs are provided for CalcPvr. The code action can be activated by hovering over the relevant diagnostics in the file and pressing the `QuickFix` button. You can then select the `Insert Evr` code action. An Evr with the same name as the missing reference will then be inserted within the same DmmyAppl as the CalcPvr. The placement can be adjusted by changing the setting `septic.codeActions.insertEvrPosition`. `Top` means that the evr is inserted right below the DmmyAppl object, while `bottom` means right above the CalcModl object
+
+-   Commands can be run by pressing `Ctrl+Shift+P` and searching for `Septic`. 
+    - List OPC Tag: Select the desired config/scg-context from the list of available configs/scg-context. If the desired config is not listed, make sure that it is placed in the workspace folder and open the file. A csv file with the OPC-tags is generated in the root of the workspace.
+    - Detect cycles: Select the desired config/scg-context from the list of available configs/scg-context. If the desired config is not listed, make sure that it is placed in the workspace folder and open the file. A text file with all the detected cycles in the config/scg-context sorted by length is generated in the root of the workspace.
+    - Compare configs: Select the previous version of the config from the file explorer. Select the current version of the config from the file explorer. The user can select if the default settings for comparing configs or provide their own settings. Settings are provided in yaml-files and the user are promted to either select the default or a yaml file in the current workspace. A text file with the detected changes is generated in the root of the workspace. Tip: Press `Ctrl + k Ctrl + 0` to get a dense view of all updated objects. Example settings file:
+    
+        ```yaml
+        ignoredVariables: # List of regexes for variables that should be ignored
+        - ^A1.*
+        ignoredObjectTypes: # List of object types that should be ignored
+        - DisplayGroup
+        ignoredAttributes: # List of attributes pr object type that should be ignored
+        - objectName: Evr
+            attributes:
+            - Meas
+        ```
 
 The extension supports SEPTIC projects that uses the SEPTIC Config Generator (SCG). The SCG-config file for the project is loaded and the relevant `.cnfg` files (required to be in the templates folder) listed in the layout section are loaded into a common context that shares references etc.
 
