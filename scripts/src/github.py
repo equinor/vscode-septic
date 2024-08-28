@@ -36,7 +36,7 @@ def get_commit_id(branch: str):
 
 
 def get_calc_file(ref: str):
-    path = "src/Calc.cpp"
+    path = "src/calc.cpp"
     return get_file(ref, path)
 
 
@@ -48,7 +48,9 @@ def get_dir(ref: str, dir: str):
 
 
 def get_object_files(ref: str):
-    paths = get_dir(ref, "src")
+    paths_src = get_dir(ref, "src")
+    paths_fmu = get_dir(ref, "src/fmusrc")
+    paths = paths_src + paths_fmu
     paths = [x["path"] for x in paths if x["path"].endswith(".cpp")]
     for path in paths:
         try:
