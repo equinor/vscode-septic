@@ -31,6 +31,10 @@
       {
         "command": "septic.opcTagList",
         "title": "Septic: List all OPC-Tags"
+      },
+      {
+        "command": "septic.compareCnfg",
+        "title": "Septic: Compare config versions"
       }
     ],
     "configuration": {

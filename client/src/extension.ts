@@ -103,6 +103,64 @@ export function activate(context: vscode.ExtensionContext) {
         });
     });
 
+    vscode.commands.registerCommand("septic.compareCnfg", async () => {
+        let contexts = await client.sendRequest(protocol.contexts, {});
+        let prevVersion = await vscode.window.showOpenDialog({
+            canSelectMany: false,
+            filters: { Septic: ["cnfg"] },
+            title: "Select previous version",
+        });
+        if (!prevVersion) {
+            return;
+        }
+        let currentVersion = await vscode.window.showOpenDialog({
+            canSelectMany: false,
+            filters: { Septic: ["cnfg"] },
+            title: "Select current version",
+        });
+        if (!currentVersion) {
+            return;
+        }
+        let possibleSettingsFiles = (
+            await vscode.workspace.findFiles("*.yaml")
+        ).map((item) => item.fsPath.toString());
+        let settings = await vscode.window.showQuickPick(
+            ["Default", ...possibleSettingsFiles],
+            {
+                title: "Select settings file",
+                canPickMany: false,
+            }
+        );
+        if (!settings) {
+            return;
+        }
+        let diff = await client.sendRequest(protocol.compareCnfg, {
+            prevVersion: prevVersion[0].toString(),
+            currentVersion: currentVersion[0].toString(),
+            settingsFile: settings,
+        });
+        if (!diff.length) {
+            vscode.window.showInformationMessage(`No diff identified`);
+            return;
+        } else if (diff === "error") {
+            vscode.window.showInformationMessage(
+                "Not able to read settings file"
+            );
+            return;
+        }
+        const wsedit = new vscode.WorkspaceEdit();
+        const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        const filePath = vscode.Uri.file(wsPath + `/comparison.txt`);
+        wsedit.createFile(filePath, {
+            contents: Buffer.from(diff),
+            overwrite: true,
+        });
+        await vscode.workspace.applyEdit(wsedit);
+        await vscode.window.showTextDocument(filePath, {
+            preserveFocus: false,
+        });
+    });
+
     vscode.commands.registerCommand("septic.opcTagList", async () => {
         let contexts = await client.sendRequest(protocol.contexts, {});
         let choice = await vscode.window.showQuickPick(contexts);
