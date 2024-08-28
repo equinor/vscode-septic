@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.21.0](https://github.com/equinor/vscode-septic/compare/v1.20.4...v1.21.0) (2024-08-28)
+
+
+### 🧹 Chores
+
+* **deps:** bump chai and @types/chai ([#610](https://github.com/equinor/vscode-septic/issues/610)) ([095eed4](https://github.com/equinor/vscode-septic/commit/095eed421e7216b895afa49dca90f52256f56850))
+* **deps:** bump mocha and @types/mocha ([#616](https://github.com/equinor/vscode-septic/issues/616)) ([c141f7c](https://github.com/equinor/vscode-septic/commit/c141f7ccf2a3f6328758e7d0f72bdbeee5ef8c9d))
+
+
+### 📚 Documentation
+
+* update SEPTIC documentation for latest ([#596](https://github.com/equinor/vscode-septic/issues/596)) ([bc95e77](https://github.com/equinor/vscode-septic/commit/bc95e77a7f8783c9a8a272a1749c7b18c40b9dc9))
+
+
+### ✨ Features
+
+* add command for comparing cnfgs ([#613](https://github.com/equinor/vscode-septic/issues/613)) ([883d8c3](https://github.com/equinor/vscode-septic/commit/883d8c3ad75e9930a7f0af4b47c1505807bb148f))
+
+
+### 🐛 Bug Fixes
+
+* missing reference warning for UAAppl ([#611](https://github.com/equinor/vscode-septic/issues/611)) ([edbb9fd](https://github.com/equinor/vscode-septic/commit/edbb9fdd1a81a3d015a8e87f4159fcb50381de51))
+* update doc script to new file structure in septic ([#615](https://github.com/equinor/vscode-septic/issues/615)) ([acee9ba](https://github.com/equinor/vscode-septic/commit/acee9bafbe5dd416f9f0390b2c4e8c1dce3a2c28))
+* update documentation script ([#617](https://github.com/equinor/vscode-septic/issues/617)) ([5d63f4a](https://github.com/equinor/vscode-septic/commit/5d63f4ac4579afd0629c359d8234c3ee2faae486))
+
 ## [1.20.4](https://github.com/equinor/vscode-septic/compare/v1.20.3...v1.20.4) (2024-06-20)
 
 
