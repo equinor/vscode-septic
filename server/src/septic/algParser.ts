@@ -127,8 +127,7 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             let expr = this.comparison();
             if (!this.match(AlgTokenType.rightParen)) {
                 this.error(
-                    `Unexpected token: "${
-                        this.peek().content
+                    `Unexpected token: "${this.peek().content
                     }". Expected closing parenthesis at end of grouping.`,
                     this.peek()
                 );
@@ -443,7 +442,7 @@ export class AlgVisitor implements IAlgVisitor {
 }
 
 export class AlgComparison implements IAlgVisitor {
-    constructor() {}
+    constructor() { }
 
     visit(prevExpr: AlgExpr, currentExpr: AlgExpr): boolean {
         let prev = prevExpr.accept(this);
@@ -479,7 +478,7 @@ export class AlgComparison implements IAlgVisitor {
     }
 
     visitGrouping(expr: AlgGrouping) {
-        return "(" + expr.accept(this) + ")";
+        return "(" + expr.expr.accept(this) + ")";
     }
 
     visitLiteral(expr: AlgLiteral) {
