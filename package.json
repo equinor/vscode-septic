@@ -5,7 +5,7 @@
   "description": "Provides snippets, syntax highlighting and multi-level folding in Septic config files.",
   "author": "Equinor ASA",
   "license": "MIT",
-  "version": "1.21.1",
+  "version": "1.21.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/equinor/vscode-septic"

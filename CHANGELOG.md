@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.21.2](https://github.com/equinor/vscode-septic/compare/v1.21.1...v1.21.2) (2024-08-29)
+
+
+### 🐛 Bug Fixes
+
+* endless recursion in alg compare ([#624](https://github.com/equinor/vscode-septic/issues/624)) ([0090ef4](https://github.com/equinor/vscode-septic/commit/0090ef4f14131540cfa0c0f46aabf81b327aedc0))
+
 ## [1.21.1](https://github.com/equinor/vscode-septic/compare/v1.21.0...v1.21.1) (2024-08-28)
 
 
