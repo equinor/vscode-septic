@@ -131,6 +131,12 @@ describe("Test alg comparison", () => {
         let result = compareAlg(prevAlg, currentAlg);
         expect(result).to.equal(false);
     });
+    it("Expect no difference for identical calcs", () => {
+        let prevAlg = "A + 2*(A+B)";
+        let currentAlg = "A + 2 * (A + B)";
+        let result = compareAlg(prevAlg, currentAlg);
+        expect(result).to.equal(true);
+    });
 });
 
 describe("Test compare objects", () => {
