@@ -221,7 +221,7 @@
   - '             N=  ${2:1}'
   - '        Ncycle=  0'
   - '           Cmd=  "${3}"'
-  description: Events/triggers for change of SEPTIC parameters
+  description: Events/triggers for change of Septic parameters
   prefix: event
 - body:
   - '  Evr:           ${1:EvrName}'
@@ -284,7 +284,7 @@
   - '         Nstep=  1'
   description: "Filedata process, playback or basecase comparison of .dta file. ID\
     \ of FdtaProc is the filename.\r\n  Mode control data transport from dta file\
-    \ into SEPTIC variables Mode= BaseCase: Meas values found in the datafile will\r\
+    \ into Septic variables Mode= BaseCase: Meas values found in the datafile will\r\
     \n  be handed over to the correct Xvr, the porpose of BaseCase is to compare the\
     \ effect on the MPC controller with\r\n  different tuning. Mode= Playback:  the\
     \ purpose is to perform a full playback of the data found on the logfile, Meas,\r\
@@ -417,7 +417,7 @@
   - '       FeasTol=  1e-10'
   - '       FailMax=  0'
   - '       DesMode=  STOPPED'
-  description: SEPTIC MPC Application, MPCAppl version
+  description: Septic MPC Application, MPCAppl version
   prefix: mpcappl
 - body:
   - '  MasterTcip:    ${1:MasterTcipName}'
@@ -978,9 +978,12 @@
   - DefaultNameSpaceURI=  ""
   - credentialsPath=  ""
   - useSubscription=  OFF
+  - monitorItemFilterTrigger=  UA_DATACHANGETRIGGER_STATUSVALUE
+  - '       RunMenu=  OFF'
   - '     xSchedule=  ""'
+  - '       ySimTim=  ""'
   - writeOnChangeOnly=  OFF
-  description: UAProc description
+  description: UAProc handles the connection and interaction with the OPC UA server.
   prefix: uaproc
 - body:
   - '  UATvr:         ${1:UATvrName}'

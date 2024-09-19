@@ -2155,7 +2155,7 @@
     postfix: []
     snippet: '"${3}"'
     tags: []
-  description: Events/triggers for change of SEPTIC parameters
+  description: Events/triggers for change of Septic parameters
   name: Event
   parents:
   - System
@@ -2608,7 +2608,7 @@
     dataType: enum
     default:
     - Playback
-    description: Controls data transport to SEPTIC
+    description: Controls data transport to Septic
     enums:
     - BaseCase
     - Playback
@@ -2636,7 +2636,7 @@
     tags: []
   description: "Filedata process, playback or basecase comparison of .dta file. ID\
     \ of FdtaProc is the filename.\r\n  Mode control data transport from dta file\
-    \ into SEPTIC variables Mode= BaseCase: Meas values found in the datafile will\r\
+    \ into Septic variables Mode= BaseCase: Meas values found in the datafile will\r\
     \n  be handed over to the correct Xvr, the porpose of BaseCase is to compare the\
     \ effect on the MPC controller with\r\n  different tuning. Mode= Playback:  the\
     \ purpose is to perform a full playback of the data found on the logfile, Meas,\r\
@@ -3621,7 +3621,7 @@
     postfix: []
     snippet: ''
     tags: []
-  description: SEPTIC MPC Application, MPCAppl version
+  description: Septic MPC Application, MPCAppl version
   name: MPCAppl
   parents:
   - System
@@ -7240,7 +7240,7 @@
     dataType: string
     default:
     - '""'
-    description: Tag for SEPTIC puls (toggled each step)
+    description: Tag for Septic puls (toggled each step)
     enums: []
     list: false
     name: PulsTag
@@ -8160,7 +8160,7 @@
     dataType: int
     default:
     - '-1'
-    description: Initial positioning of SEPTIC window on screen. -1 = No preferences
+    description: Initial positioning of Septic window on screen. -1 = No preferences
     enums: []
     list: false
     name: InitScreen
@@ -8173,7 +8173,7 @@
     dataType: int
     default:
     - '-1'
-    description: Initial x position of SEPTIC window on screen. -1 = No preferences
+    description: Initial x position of Septic window on screen. -1 = No preferences
     enums: []
     list: false
     name: InitXPos
@@ -8186,7 +8186,7 @@
     dataType: int
     default:
     - '-1'
-    description: Initial y position of SEPTIC window on screen. -1 = No preferences
+    description: Initial y position of Septic window on screen. -1 = No preferences
     enums: []
     list: false
     name: InitYPos
@@ -8199,7 +8199,7 @@
     dataType: int
     default:
     - '-1'
-    description: Initial width of SEPTIC window on screen. -1 = No preferences
+    description: Initial width of Septic window on screen. -1 = No preferences
     enums: []
     list: false
     name: InitWidth
@@ -8212,7 +8212,7 @@
     dataType: int
     default:
     - '-1'
-    description: Initial height of SEPTIC window on screen. -1 = No preferences
+    description: Initial height of Septic window on screen. -1 = No preferences
     enums: []
     list: false
     name: InitHeight
@@ -9225,7 +9225,7 @@
     dataType: string
     default:
     - '"opc.tcp://localhost:4840"'
-    description: OPC server adress
+    description: The URL of the OPC UA server to connect to.
     enums: []
     list: false
     name: ServerURL
@@ -9238,7 +9238,8 @@
     dataType: string
     default:
     - '""'
-    description: Tag for SEPTIC puls (toggled each step)
+    description: The tag is toggled each step to indicate activity. (toggled each
+      step)
     enums: []
     list: false
     name: yPulse
@@ -9251,7 +9252,7 @@
     dataType: string
     default:
     - '""'
-    description: For user
+    description: The username for authentication with the OPC UA server.
     enums: []
     list: false
     name: UserName
@@ -9264,7 +9265,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: The password for authentication with the OPC UA server.
     enums: []
     list: false
     name: Password
@@ -9277,7 +9278,7 @@
     dataType: enum
     default:
     - UA_MESSAGESECURITYMODE_SIGN
-    description: Security Mode
+    description: The security mode for the OPC UA connection.
     enums:
     - UA_MESSAGESECURITYMODE_NONE
     - UA_MESSAGESECURITYMODE_SIGN
@@ -9293,7 +9294,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: The default namespace URI used by the OPC UA server.
     enums: []
     list: false
     name: DefaultNameSpaceURI
@@ -9306,7 +9307,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: The path to the file containing credentials for authentication.
     enums: []
     list: false
     name: credentialsPath
@@ -9319,7 +9320,7 @@
     dataType: enum
     default:
     - 'OFF'
-    description: Description
+    description: Use subscriptions for monitoring data changes.
     enums:
     - 'ON'
     - 'OFF'
@@ -9331,13 +9332,15 @@
     snippet: ''
     tags: []
   - calc: false
-    dataType: string
+    dataType: enum
     default:
-    - '""'
-    description: Schedule time tag
-    enums: []
+    - UA_DATACHANGETRIGGER_STATUSVALUE
+    description: The trigger condition for monitoring item changes.
+    enums:
+    - UA_DATACHANGETRIGGER_STATUSVALUE
+    - UA_DATACHANGETRIGGER_STATUSVALUETIMESTAMP
     list: false
-    name: xSchedule
+    name: monitorItemFilterTrigger
     noCnfg: false
     nosnippet: false
     postfix: []
@@ -9347,7 +9350,48 @@
     dataType: enum
     default:
     - 'OFF'
-    description: Description
+    description: Enables the run menu in the GUI if not scheduled.
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: RunMenu
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: The tag for scheduling time, used to synchronize with OPC time.
+    enums: []
+    list: false
+    name: xSchedule
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: The tag for simulated time, calculated as N * sample time.
+    enums: []
+    list: false
+    name: ySimTim
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Whether to write data only when changes occur.
     enums:
     - 'ON'
     - 'OFF'
@@ -9358,7 +9402,7 @@
     postfix: []
     snippet: ''
     tags: []
-  description: UAProc description
+  description: UAProc handles the connection and interaction with the OPC UA server.
   name: UAProc
   parents:
   - System
@@ -9367,7 +9411,7 @@
     dataType: string
     default:
     - '""'
-    description: Measurement tag to write
+    description: Measurement tag to read
     enums: []
     list: false
     name: xMeas
