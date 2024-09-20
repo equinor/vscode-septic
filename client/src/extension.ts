@@ -7,7 +7,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as protocol from "./protocol";
 import { getSearchPattern } from "./util";
-
+import { chatHandler } from "./chat"
 import {
     LanguageClient,
     LanguageClientOptions,
@@ -16,6 +16,8 @@ import {
 } from "vscode-languageclient/node";
 
 let client: LanguageClient;
+
+
 
 export function activate(context: vscode.ExtensionContext) {
     const serverModule = context.asAbsolutePath(
@@ -190,6 +192,8 @@ export function activate(context: vscode.ExtensionContext) {
             preserveFocus: false,
         });
     });
+
+    const septicChat = vscode.chat.createChatParticipant("septic.chat", chatHandler);
 
     client.start();
 }
