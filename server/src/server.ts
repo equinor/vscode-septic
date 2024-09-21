@@ -198,6 +198,15 @@ connection.onRequest(protocol.contexts, async () => {
     return contexts;
 });
 
+
+connection.onRequest(protocol.documentation, async () => {
+    const metaInfo = SepticMetaInfoProvider.getInstance();
+    return {
+        objects: metaInfo.getObjectsDoc(),
+        calcs: metaInfo.getCalcs(),
+    };
+});
+
 connection.onInitialize((params: InitializeParams) => {
     const capabilities = params.capabilities;
     // Does the client support the `workspace/configuration` request?

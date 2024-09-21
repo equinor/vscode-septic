@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
+import { SepticCalcInfo } from './protocol';
 
-const MODEL_SELECTOR: vscode.LanguageModelChatSelector = { vendor: 'copilot', family: 'gpt-4o' };
+export const MODEL_SELECTOR: vscode.LanguageModelChatSelector = { vendor: 'copilot', family: 'gpt-4o' };
 
-const septicPrePromt: vscode.LanguageModelChatMessage = vscode.LanguageModelChatMessage.User(
+export const septicPrePrompt: string =
 	`You are an expert on the Septic advanced process control software. Septic is a MPC that support custom applications. The custom application is described in a configuration file that have the following format:
 
 	<- start configuration format ->
@@ -17,28 +18,29 @@ const septicPrePromt: vscode.LanguageModelChatMessage = vscode.LanguageModelChat
 	Attributes: have different names and values. 
 	Available attribute values are:
 		string: "..."
-		numerical: 0.01, 1, 1e-3 etc
+		int: 1, 2, 3 etc
+		float: 1.0, 2.0, 3.0 etc (with a decimal point) and scientific notation 1e-3, 2e-3, 3e-3 etc
+		bitmask: 0000000000000000000000000000001 (32 bits), 0001 (4 bits) etc
 		enums: ENUM1, ENUM2, ENUM3 etc (capital letters)
 		list: number of items followed by the items in the list separated by spaces
 	<- end configuration format ->
-	`
-);
+	`;
 
-export async function chatHandler(request: vscode.ChatRequest, context: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken): Promise<vscode.ChatResult | void> {
-	try {
-		const [model] = await vscode.lm.selectChatModels(MODEL_SELECTOR)
-		if (model) {
-			const messages = [
-				septicPrePromt,
-				vscode.LanguageModelChatMessage.User(request.prompt)
-			];
-			const chatResponse = await model.sendRequest(messages, {}, token);
-			for await (const fragment of chatResponse.text) {
-				stream.markdown(fragment);
-			}
-		}
-	} catch (e) {
-		stream.markdown(vscode.l10n.t('I\'m sorry, unable to find the model.'));
-	}
-	return;
-}
+export function calcChatPrompt(calcs: SepticCalcInfo[]): vscode.LanguageModelChatMessage {
+	let description: string = `
+	Septic configuration supports execution of calculations. Calculations are defined in the configuration file as follows: Alg= "..."
+
+	The content of the string is executed by the MPC. The algorithm is written in a simple language that supports basic arithmetic operations, variables, and functions. The following rules apply:
+	- Supported operators: +, -, *, /, %
+	- Grouping with parentheses: (...)
+	- Variables: Refers to objects in the configuration file. It is allowed with jinja expressions in variable names, but not only jinja. Example: {{ Jinja }}VariableName
+	- All non-zero values are considered true
+	- All functions returns a float
+	- Arguments are separated by commas
+	- Insensitive to whitespace
+	- The following functions are available with descriptions afterwards:
+	`
+
+	let functions: string[] = calcs.map((calc) => `\t - ${calc.signature}: ${calc.detailedDescription}`);
+	return vscode.LanguageModelChatMessage.User([septicPrePrompt, description, ...functions].join('\n'));
+} 

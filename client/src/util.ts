@@ -13,3 +13,4 @@ export function getSearchPattern(workspacePath: string, templatePath: string) {
 
     return "**/" + parts.join("/") + "/*.cnfg";
 }
+

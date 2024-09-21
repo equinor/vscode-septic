@@ -4,6 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { RequestType } from "vscode-languageserver";
+import { SepticCalcInfo, SepticObjectDoc } from './septic';
+
 
 export const fsReadFile = new RequestType<{ uri: string }, number[], unknown>(
     "septic/fs_readfile"
@@ -32,3 +34,5 @@ export const compareCnfg = new RequestType<
 >("septic/compareCnfg");
 
 export const contexts = new RequestType<object, string[], unknown>("septic/contexts");
+
+export const documentation = new RequestType<object, { objects: SepticObjectDoc[], calcs: SepticCalcInfo[] }, unknown>("septic/documentation");

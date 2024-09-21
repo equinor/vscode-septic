@@ -11,7 +11,10 @@
     "url": "https://github.com/equinor/vscode-septic"
   },
   "publisher": "EinarSIdso",
-  "categories": [],
+  "categories": [
+    "AI",
+    "Chat"
+  ],
   "keywords": [
     "multi-root ready"
   ],
@@ -157,7 +160,13 @@
         "name": "septic",
         "fullName": "Septic Chat",
         "description": "Chatbot for Septic related topics",
-        "isSticky": true
+        "isSticky": true,
+        "commands": [
+          {
+            "name": "calcs",
+            "description": "Ask about the calcs in Septic"
+          }
+        ]
       }
     ]
   },

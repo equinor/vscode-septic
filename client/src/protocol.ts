@@ -5,6 +5,48 @@
 
 import { RequestType } from "vscode-languageclient";
 
+export interface SepticCalcInfo {
+    name: string;
+    signature: string;
+    parameters: SepticCalcParameterInfo[];
+    retr: string;
+    briefDescription: string;
+    detailedDescription: string;
+    quality: string;
+}
+
+export interface SepticCalcParameterInfo {
+    name: string;
+    description: string;
+    direction: string;
+    datatype: string[];
+    arity: string;
+}
+
+export interface SepticObjectDoc {
+    name: string;
+    attributes: SepticAttributeDocumentation[];
+    description: string;
+    parents: string[];
+    publicAttributes: string[];
+}
+
+export interface SepticAttributeDocumentation {
+    description: string;
+    dataType: string;
+    enums: string[];
+    list: boolean;
+    name: string;
+    tags: string[];
+    calc: boolean;
+    postfix: string[];
+    noCnfg: boolean;
+    default: string[];
+    snippet: string;
+    noSnippet: boolean;
+}
+
+
 export const fsReadFile = new RequestType<{ uri: string }, number[], unknown>(
     "septic/fs_readfile"
 );
@@ -32,3 +74,5 @@ export const compareCnfg = new RequestType<
 >("septic/compareCnfg");
 
 export const contexts = new RequestType<object, string[], unknown>("septic/contexts");
+
+export const documentation = new RequestType<object, { objects: SepticObjectDoc[], calcs: SepticCalcInfo[] }, unknown>("septic/documentation");
