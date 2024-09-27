@@ -207,6 +207,22 @@ connection.onRequest(protocol.documentation, async () => {
     };
 });
 
+connection.onRequest(protocol.variables, async (param) => {
+    let context: SepticReferenceProvider | undefined =
+        await contextManager.getContext(param.uri);
+    if (!context) {
+        context = await langService.cnfgProvider.get(param.uri);
+        if (!context) {
+            return undefined;
+        }
+    }
+    return context.getObjectsByType("Evr", "Cvr", "Dvr", "Tvr", "Mvr").map((xvr) => {
+        let description: string = xvr.getAttribute("Text1")?.getAttrValue()?.getValue() ?? "None";
+        return { name: xvr.identifier?.id, description: description, type: xvr.type };
+    });
+}
+)
+
 connection.onInitialize((params: InitializeParams) => {
     const capabilities = params.capabilities;
     // Does the client support the `workspace/configuration` request?

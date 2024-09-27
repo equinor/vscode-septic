@@ -6,6 +6,12 @@
 import { RequestType } from "vscode-languageserver";
 import { SepticCalcInfo, SepticObjectDoc } from './septic';
 
+export interface SepticVariable {
+    name: string;
+    description: string;
+    type: string;
+}
+
 
 export const fsReadFile = new RequestType<{ uri: string }, number[], unknown>(
     "septic/fs_readfile"
@@ -36,3 +42,5 @@ export const compareCnfg = new RequestType<
 export const contexts = new RequestType<object, string[], unknown>("septic/contexts");
 
 export const documentation = new RequestType<object, { objects: SepticObjectDoc[], calcs: SepticCalcInfo[] }, unknown>("septic/documentation");
+
+export const variables = new RequestType<{ uri: string }, SepticVariable[] | undefined, unknown>("septic/variables");
