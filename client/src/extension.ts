@@ -219,7 +219,6 @@ export function activate(context: vscode.ExtensionContext) {
         return;
     }
     const septicChat = vscode.chat.createChatParticipant("septic.chat", chatHandler);
-
     client.start();
 }
 

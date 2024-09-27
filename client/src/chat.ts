@@ -37,10 +37,19 @@ export function calcChatPrompt(calcs: SepticCalcInfo[]): vscode.LanguageModelCha
 	- All non-zero values are considered true
 	- All functions returns a float
 	- Arguments are separated by commas
+	- The if function is written as follows: if(condition, true_value, false_value) both true_value and false_value are evaluated, but only the correct one is returned, thus functions that sets values should not be used within the if function and instaed be used before the if function get the result as an argurment.
+		- Correct usaage: setmeas(Variable1, if(Variable2 > 0, 1, 0))
+		- Incorrect usage: if(Variable2 > 0, setmeas(Variable1, 1), setmeas(Variable1, 0))
 	- Insensitive to whitespace
-	- The following functions are available with descriptions afterwards:
+	- The only allowed functions are listed with descriptions below:
 	`
-
+	let output: string = `The output when suggesting an algorithm should be on the following format:
+		CalcPvr: <variable name>
+		   Text1= ""
+		   Text2= ""
+		     Alg= "<algorithm>"
+	
+	`
 	let functions: string[] = calcs.map((calc) => `\t - ${calc.signature}: ${calc.detailedDescription}`);
-	return vscode.LanguageModelChatMessage.User([septicPrePrompt, description, ...functions].join('\n'));
+	return vscode.LanguageModelChatMessage.Assistant([septicPrePrompt, description, ...functions, output].join('\n'));
 } 
