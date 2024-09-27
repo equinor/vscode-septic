@@ -7,13 +7,13 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as protocol from "./protocol";
 import { getSearchPattern } from "./util";
-import { calcChatPrompt, MODEL_SELECTOR } from "./chat"
 import {
     LanguageClient,
     LanguageClientOptions,
     ServerOptions,
     TransportKind,
 } from "vscode-languageclient/node";
+import { calcChat } from './chat';
 
 let client: LanguageClient;
 
@@ -194,27 +194,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
     const chatHandler: vscode.ChatRequestHandler = async (request, context, stream, token): Promise<vscode.ChatResult | void> => {
         if (request.command === 'calcs') {
-            const documentation = await client.sendRequest(protocol.documentation, {});
-            if (!documentation) {
-                return;
-            }
-            const prompt = calcChatPrompt(documentation.calcs);
-            try {
-                const [model] = await vscode.lm.selectChatModels(MODEL_SELECTOR)
-                if (model) {
-                    const messages = [
-                        prompt,
-                        vscode.LanguageModelChatMessage.User(request.prompt)
-                    ];
-                    const chatResponse = await model.sendRequest(messages, {}, token);
-                    for await (const fragment of chatResponse.text) {
-                        stream.markdown(fragment);
-                    }
-                }
-            } catch (e) {
-                stream.markdown(vscode.l10n.t('I\'m sorry, unable to find the model.'));
-            }
-            return;
+            await calcChat(client, request, context, stream, token);
         }
         return;
     }
