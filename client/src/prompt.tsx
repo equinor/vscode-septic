@@ -23,19 +23,17 @@ export class SepticCalcPrompt extends PromptElement<SepticCalcPromptProps> {
 				<UserMessage priority={10}>
 					The output when suggesting an calculation should be on the following format, where the output is stored in the named variable: <br />
 					CalcPvr: %variable name% <br />
-					\t Text1= "%describe calculation%" <br />
-					\t Text2= "" <br />
-					\t Alg= "%calculation%" <br />
-				</UserMessage>
-				<UserMessage>
+					{'   '}Text1= "%describe calculation%" <br />
+					{'   '}Text2= "" <br />
+					{'     '}Alg= "%calculation%" <br />
 					If you use variables outside of the defined list, you need to define them on the following format: <br />
 					Evr:           %variable name% <br />
-					Text1=  "%description%" <br />
-					PlotMax=  0 <br />
-					PlotMin= 100 <br />
-					Nfix=  1 <br />
-					Unit=  "" <br />
-					Meas=  %value% <br />
+					{'     '}Text1=  "%description%" <br />
+					{'   '}PlotMax=  0 <br />
+					{'   '}PlotMin= 100 <br />
+					{'      '}Nfix=  1 <br />
+					{'      '}Unit=  "" <br />
+					{'      '}Meas=  1.0 <br />
 				</UserMessage>
 				<UserMessage>
 					Return your suggested calculation(s) and new variable(s) in two separate Markdown code blocks that begins with ``` and ends with ```. <br />

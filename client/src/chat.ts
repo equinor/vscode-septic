@@ -10,7 +10,9 @@ import { SepticCalcPrompt } from './prompt';
 export const MODEL_SELECTOR: vscode.LanguageModelChatSelector = { vendor: 'copilot', family: 'gpt-4o' };
 
 export async function calcChat(client: LanguageClient, request: vscode.ChatRequest, context: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken) {
+	stream.progress("Retriveing documentation...");
 	const documentation = await client.sendRequest(protocol.documentation, {});
+	stream.progress("Looking for available variables...");
 	const uri = vscode.window.activeTextEditor?.document.uri.toString();
 	let variables;
 	if (uri) {
@@ -22,6 +24,7 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 	try {
 		const [model] = await vscode.lm.selectChatModels(MODEL_SELECTOR)
 		if (model) {
+			stream.progress("Creating calculation...");
 			const { messages, tokenCount } = await renderPrompt(SepticCalcPrompt, { userQuery: request.prompt, calcs: documentation.calcs, variables: variables }, { modelMaxPromptTokens: model.maxInputTokens }, model);
 			console.log(`Max Tokens: ${model.maxInputTokens}`);
 			console.log(`Tokens: ${tokenCount}`);
