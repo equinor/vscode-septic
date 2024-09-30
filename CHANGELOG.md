@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.21.3](https://github.com/equinor/vscode-septic/compare/v1.21.2...v1.21.3) (2024-09-30)
+
+
+### 📚 Documentation
+
+* add documentation for v3.0.0 ([#641](https://github.com/equinor/vscode-septic/issues/641)) ([9809ee3](https://github.com/equinor/vscode-septic/commit/9809ee3635450dd604d7193c60faa9b155aa3162))
+* update SEPTIC documentation for latest ([#629](https://github.com/equinor/vscode-septic/issues/629)) ([17ec41c](https://github.com/equinor/vscode-septic/commit/17ec41c36a63e15e7dfb77a091f404f48848ad00))
+
 ## [1.21.2](https://github.com/equinor/vscode-septic/compare/v1.21.1...v1.21.2) (2024-08-29)
 
 
