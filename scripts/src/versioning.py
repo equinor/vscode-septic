@@ -24,8 +24,6 @@ def read_meta_file(path: Path):
 
 
 def get_major(version: tuple):
-    if version[0] > 2:
-        return (version[0],)
     return (version[0], version[1])
 
 
@@ -60,7 +58,6 @@ def get_versions_from_tag(tag: str):
         int(ver_match.group(1)),
         int(ver_match.group(2)),
         int(ver_match.group(3)) if ver_match.group(3) else 0,
-        int(ver_match.group(4)) if ver_match.group(4) else 0,
     )
 
 
