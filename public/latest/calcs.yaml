@@ -2226,6 +2226,13 @@
   retr: "Dynamic dynamic end prediction (Npred). if Mvr.Mode >= ADVISORY, V = Mvr.mget(pAppl->Npred)\
     \ else V =\r\n  Mvr.Meas(pAppl->N)"
   signature: mvpred(TAG)
+- detailedDescription: returns value(NaN, GOOD). Not part of release-builds, intended
+    for debugging and testing of calc-routines
+  name: nan
+  parameters: []
+  quality: GOOD
+  retr: NaN
+  signature: nan()
 - detailedDescription: Changes sign
   name: neg
   parameters:
