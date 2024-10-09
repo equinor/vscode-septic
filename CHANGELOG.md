@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.21.4](https://github.com/equinor/vscode-septic/compare/v1.21.3...v1.21.4) (2024-10-09)
+
+
+### 🧹 Chores
+
+* **deps:** bump braces from 3.0.2 to 3.0.3 ([#595](https://github.com/equinor/vscode-septic/issues/595)) ([896f5e4](https://github.com/equinor/vscode-septic/commit/896f5e4b06be82c38b83872946279d38db20f2bd))
+* update branding to new style ([#649](https://github.com/equinor/vscode-septic/issues/649)) ([aa0d209](https://github.com/equinor/vscode-septic/commit/aa0d209716dae4f92fc1990fb47d4f0f9dcfbd73))
+
+
+### 🐛 Bug Fixes
+
+* diagnostics for calcs with fixed number of params at end ([#651](https://github.com/equinor/vscode-septic/issues/651)) ([b87eef8](https://github.com/equinor/vscode-septic/commit/b87eef824fa8c4997d83466d53db01de9d28cdb0))
+
 ## [1.21.3](https://github.com/equinor/vscode-septic/compare/v1.21.2...v1.21.3) (2024-09-30)
 
 
