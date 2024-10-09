@@ -110,7 +110,11 @@
         "extensions": [
           ".cnfg"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./images/septic.svg",
+          "dark": "./images/septic.svg"
+        }
       },
       {
         "id": "jinja",
