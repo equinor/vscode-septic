@@ -1,4 +1,4 @@
-# SEPTIC file format support for Visual Studio Code
+# Septic config file support for Visual Studio Code
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://dev.azure.com/EIIDS/vscode-septic/_apis/build/status/equinor.vscode-septic?branchName=master)](https://dev.azure.com/EIIDS/vscode-septic/_build/latest?definitionId=1&branchName=master)
@@ -18,15 +18,15 @@
 -   Diagnostics
     -   Disable diagnostics for certain lines using
     -   Report errors if unable to parse calc (missing parenthesis, incomplete expression, unexpected tokens etc.)
-    -   Verify that the used calcs are valid SEPTIC calcs
+    -   Verify that the used calcs are valid Septic calcs
     -   Verify that referenced Xvrs exist in the file
 -   Hover:
     -   Display the Text1 and Text2 if non empty from the associated xvr when hovering over an (Sopc)Xvr reference.
     -   Display documentation for object type when hovering over object type (e.g. Evr:)
     -   Display documentation for object attribute when hovering over object type (e.g. Meas=)
     -   Display documentation for calc when hovering over calc identifier (e.g. intpoltype1(...) )
--   Ensures correct encoding (Windows 1252) for SEPTIC files
--   Formatting: Formats files similar to formatting done by SEPTIC. See instructions for more info,
+-   Ensures correct encoding (Windows 1252) for Septic files
+-   Formatting: Formats files similar to formatting done by Septic. See instructions for more info,
 -   GoToDefinition: Goes to the declaration of the connected Xvr when referenced (e.g. in calcs, SopcXvr etc.)
 -   GoToDeclaration: Goes to the declaration of the connected SopcXvr when referenced (e.g. in calcs, Xvr etc.)
 -   Find References: Finds all references to a (Sopc)Xvr (e.g. in calcs, object declaration, XvrPlot etc.)
@@ -40,9 +40,9 @@
 
 ## Instructions
 
-If you don't know what the SEPTIC file format is, then you don't need this extension.
+If you don't know what the Septic file format is, then you don't need this extension.
 
-Adding the SEPTIC extension to VS Code allows you to do the following when loading a SEPTIC .cnfg file:
+Adding the Septic extension to VS Code allows you to do the following when loading a Septic .cnfg file:
 
 -   Auto-complete for references to other objects (identifiers and attributes), object attributes and calcs.
 -   Diagnose certain fault modes (missing parenthesis in calcs, mistyped Calc or Xvr names etc.)
@@ -88,7 +88,7 @@ Adding the SEPTIC extension to VS Code allows you to do the following when loadi
             - Meas
         ```
 
-The extension supports SEPTIC projects that uses the SEPTIC Config Generator (SCG). The SCG-config file for the project is loaded and the relevant `.cnfg` files (required to be in the templates folder) listed in the layout section are loaded into a common context that shares references etc.
+The extension supports Septic projects that uses the Septic Config Generator (SCG). The SCG-config file for the project is loaded and the relevant `.cnfg` files (required to be in the templates folder) listed in the layout section are loaded into a common context that shares references etc.
 
 ## Feedback and contributions
 
@@ -96,7 +96,7 @@ Please let us know of any issues, bugs or requests for modification or new featu
 
 Use the [Issue tracker](https://github.com/equinor/vscode-septic/issues).
 
-## Additional recommended extensions for working with SEPTIC config files
+## Additional recommended extensions for working with Septic config files
 
 -   [Snippet Creator][snippet-creator]: For creating your own snippets.
 -   [Color Highlight][color-highlight]: Handy if you want to experiment with colors since it can display the color of hex triplets, e.g. "#f0f0f0", inside VSCode.
