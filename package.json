@@ -1,7 +1,7 @@
 {
   "name": "septic-config",
-  "displayName": "SEPTIC",
-  "icon": "images/SEPTIC_logo.jfif",
+  "displayName": "Septic",
+  "icon": "images/septic_128.png",
   "description": "Provides snippets, syntax highlighting and multi-level folding in Septic config files.",
   "author": "Equinor ASA",
   "license": "MIT",
@@ -110,7 +110,11 @@
         "extensions": [
           ".cnfg"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./images/septic_light.svg",
+          "dark": "./images/septic_dark.svg"
+        }
       },
       {
         "id": "jinja",
