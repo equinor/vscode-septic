@@ -518,6 +518,32 @@ describe("Test parameter diagnostics in alg", () => {
         let diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
     });
+    it("Expect no diagnostics for calc with variable length parameters and fixed parameter at end of calc with correct number", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "ifelif(1 < 2, 1, 2 < 3, 3, 4)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSepticSync(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(0);
+    });
+    it("Expect diagnostics for calc with variable length parameters and fixed parameter at end of calc with incorrect number", () => {
+        const text = `
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "ifelif(1 < 2, 1, 2 < 3, 3)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSepticSync(doc.getText());
+        let diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+    });
 });
 
 describe("Test identifier diagnostics", () => {
