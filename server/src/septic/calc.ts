@@ -1,6 +1,13 @@
 import { AlgCalc, AlgExpr, AlgLiteral, AlgTokenType } from "./algParser";
 import { SepticCalcInfo } from "./septicMetaInfo";
 
+/* 
+    Assumptions:
+    1. All optional parameters are at the end of the parameter list
+    2. All variable length parameters are grouped together
+*/
+
+
 export function fromCalcIndexToParamIndex(
     calc: AlgCalc,
     calcInfo: SepticCalcInfo,
@@ -8,8 +15,8 @@ export function fromCalcIndexToParamIndex(
 ): number {
     let paramIndexInfo = getCalcParamIndexInfo(calcInfo);
     let i = 0;
-    while (i < paramIndexInfo.fixedLengthParams.length) {
-        if (index < paramIndexInfo.fixedLengthParams[i]) {
+    while (i < paramIndexInfo.fixedLengthParams.pre.length) {
+        if (index < paramIndexInfo.fixedLengthParams.pre[i]) {
             return i;
         }
         i += 1;
@@ -38,10 +45,10 @@ function getIndexAlternatingParams(
     paramIndexInfo: CalcParamIndexInfo,
     index: number
 ) {
-    let numFixedLengthParams = paramIndexInfo.fixedLengthParams.length
-        ? paramIndexInfo.fixedLengthParams[
-              paramIndexInfo.fixedLengthParams.length - 1
-          ]
+    let numFixedLengthParams = paramIndexInfo.fixedLengthParams.pre.length
+        ? paramIndexInfo.fixedLengthParams.pre[
+        paramIndexInfo.fixedLengthParams.pre.length - 1
+        ]
         : 0;
     return (
         ((index - numFixedLengthParams) %
@@ -57,10 +64,10 @@ function getIndexNonAlternatingParams(
     index: number
 ) {
     let paramName = paramIndexInfo.variableLengthParams.exactLength;
-    let numFixedLengthParams = paramIndexInfo.fixedLengthParams.length
-        ? paramIndexInfo.fixedLengthParams[
-              paramIndexInfo.fixedLengthParams.length - 1
-          ]
+    let numFixedLengthParams = paramIndexInfo.fixedLengthParams.pre.length
+        ? paramIndexInfo.fixedLengthParams.pre[
+        paramIndexInfo.fixedLengthParams.pre.length - 1
+        ]
         : 0;
     if (!paramName) {
         return 0;
@@ -116,8 +123,7 @@ function arityToNum(arity: string): number {
 }
 
 export interface CalcParamIndexInfo {
-    fixedLengthParams: number[];
-    numOptionalParams: number;
+    fixedLengthParams: FixedLengthParamsInfo;
     variableLengthParams: VariableLengthParamsInfo;
 }
 
@@ -126,26 +132,38 @@ interface VariableLengthParamsInfo {
     exactLength: string | undefined;
 }
 
+interface FixedLengthParamsInfo {
+    pre: number[];
+    post: number[];
+    numOptional: number
+}
+
 export function getCalcParamIndexInfo(
     calc: SepticCalcInfo
 ): CalcParamIndexInfo {
     return {
         fixedLengthParams: getFixedLengthParamsIndexes(calc),
-        numOptionalParams: getNumberOfOptionalParams(calc),
         variableLengthParams: getVariableLengthParamsInfo(calc),
     };
 }
 
-function getFixedLengthParamsIndexes(calc: SepticCalcInfo): number[] {
+function getFixedLengthParamsIndexes(calc: SepticCalcInfo): FixedLengthParamsInfo {
     let indexParam = 0;
-    let indexList = [];
+    let preIndexList = [];
+    let postIndexList = [];
+    let post = false
     for (let param of calc.parameters) {
         switch (param.arity) {
             case "+":
-                return indexList;
+                post = true;
+                break
             case "?":
                 indexParam += 1;
-                indexList.push(indexParam);
+                if (post) {
+                    postIndexList.push(indexParam);
+                } else {
+                    preIndexList.push(indexParam);
+                }
                 break;
 
             default:
@@ -153,14 +171,19 @@ function getFixedLengthParamsIndexes(calc: SepticCalcInfo): number[] {
                     param.arity.charAt(0) === "=" ||
                     param.arity.charAt(0) === "$"
                 ) {
-                    return indexList;
+                    post = true;
+                    break;
                 }
                 indexParam += parseInt(param.arity);
-                indexList.push(indexParam);
+                if (post) {
+                    postIndexList.push(indexParam);
+                } else {
+                    preIndexList.push(indexParam);
+                }
                 break;
         }
     }
-    return indexList;
+    return { pre: preIndexList, post: postIndexList, numOptional: getNumberOfOptionalParams(calc) };
 }
 
 function getNumberOfOptionalParams(calc: SepticCalcInfo): number {

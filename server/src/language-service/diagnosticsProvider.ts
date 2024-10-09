@@ -339,9 +339,9 @@ export function validateAlgVariable(
                 {
                     start: doc.positionAt(
                         offsetStartAlg +
-                            variable.start +
-                            variableParts[0].length +
-                            1
+                        variable.start +
+                        variableParts[0].length +
+                        1
                     ),
                     end: doc.positionAt(offsetStartAlg + variable.end),
                 },
@@ -442,29 +442,14 @@ function validateCalcParamsLength(
     offsetStartAlg: number
 ): Diagnostic[] {
     let paramInfo = getCalcParamIndexInfo(calcInfo);
-    let numFixedParams = paramInfo.fixedLengthParams.length
-        ? paramInfo.fixedLengthParams[paramInfo.fixedLengthParams.length - 1]
+    let numFixedParamsPre = paramInfo.fixedLengthParams.pre.length
+        ? paramInfo.fixedLengthParams.pre[paramInfo.fixedLengthParams.pre.length - 1]
         : 0;
+    let numFixedParamsPost = paramInfo.fixedLengthParams.post.length ? paramInfo.fixedLengthParams.post[paramInfo.fixedLengthParams.post.length - 1] - numFixedParamsPre : 0;
     let numVariableParams = paramInfo.variableLengthParams.num;
     let numParams = calc.getNumParams();
-
-    if (numParams < numFixedParams - paramInfo.numOptionalParams) {
-        return [
-            createDiagnostic(
-                DiagnosticSeverity.Warning,
-                {
-                    start: doc.positionAt(offsetStartAlg + calc.start),
-                    end: doc.positionAt(offsetStartAlg + calc.end),
-                },
-                `Missing parameter(s). Expected min ${
-                    numFixedParams - paramInfo.numOptionalParams
-                } params but got ${numParams}`,
-                DiagnosticCode.invalidNumberOfParams
-            ),
-        ];
-    }
     if (!numVariableParams) {
-        if (numParams > numFixedParams) {
+        if (numParams < numFixedParamsPre - paramInfo.fixedLengthParams.numOptional) {
             return [
                 createDiagnostic(
                     DiagnosticSeverity.Warning,
@@ -472,7 +457,21 @@ function validateCalcParamsLength(
                         start: doc.positionAt(offsetStartAlg + calc.start),
                         end: doc.positionAt(offsetStartAlg + calc.end),
                     },
-                    `Too many parameters. Expected max ${numFixedParams} params but got ${numParams}`,
+                    `Missing parameter(s). Expected min ${numFixedParamsPre - paramInfo.fixedLengthParams.numOptional
+                    } params but got ${numParams}`,
+                    DiagnosticCode.invalidNumberOfParams
+                ),
+            ];
+        }
+        if (numParams > numFixedParamsPre) {
+            return [
+                createDiagnostic(
+                    DiagnosticSeverity.Warning,
+                    {
+                        start: doc.positionAt(offsetStartAlg + calc.start),
+                        end: doc.positionAt(offsetStartAlg + calc.end),
+                    },
+                    `Too many parameters. Expected max ${numFixedParamsPre} params but got ${numParams}`,
                     DiagnosticCode.invalidNumberOfParams
                 ),
             ];
@@ -497,7 +496,7 @@ function validateCalcParamsLength(
             return [];
         }
         let expectedNumParams =
-            numVariableParams * designatorValue + numFixedParams;
+            numVariableParams * designatorValue + numFixedParamsPre + numFixedParamsPost;
         if (numParams !== expectedNumParams) {
             return [
                 createDiagnostic(
@@ -515,7 +514,7 @@ function validateCalcParamsLength(
     }
 
     if (
-        (numParams - numFixedParams) % numVariableParams !== 0 ||
+        (numParams - numFixedParamsPre - numFixedParamsPost) % numVariableParams !== 0 ||
         numParams === 0
     ) {
         return [
@@ -1124,8 +1123,7 @@ function validateAttributeNumValues(
                     createDiagnostic(
                         DiagnosticSeverity.Error,
                         range,
-                        `Incorrect number of values given. Expected: ${numValues} Actual: ${
-                            attrValues.length - 1
+                        `Incorrect number of values given. Expected: ${numValues} Actual: ${attrValues.length - 1
                         }.`,
                         DiagnosticCode.mismatchLengthList
                     ),
