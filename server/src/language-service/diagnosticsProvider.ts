@@ -515,8 +515,10 @@ function validateCalcParamsLength(
 
     if (
         (numParams - numFixedParamsPre - numFixedParamsPost) % numVariableParams !== 0 ||
-        numParams === 0
+        numParams === 0 || numParams < numFixedParamsPre + numFixedParamsPost + numVariableParams
     ) {
+        let minNumParams = numFixedParamsPre + numFixedParamsPost + numVariableParams;
+        let oddOrEven = (numVariableParams + numFixedParamsPre + numFixedParamsPost) % 2 === 0 ? "even" : "odd";
         return [
             createDiagnostic(
                 DiagnosticSeverity.Warning,
@@ -524,7 +526,7 @@ function validateCalcParamsLength(
                     start: doc.positionAt(offsetStartAlg + calc.start),
                     end: doc.positionAt(offsetStartAlg + calc.end),
                 },
-                `Invalid number of parameters.`,
+                `Invalid number of parameters. Expected min ${minNumParams} parameters and an ${oddOrEven} number of parameters but got ${numParams}`,
                 DiagnosticCode.invalidNumberOfParams
             ),
         ];
