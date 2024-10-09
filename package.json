@@ -112,8 +112,8 @@
         ],
         "configuration": "./language-configuration.json",
         "icon": {
-          "light": "./images/septic.svg",
-          "dark": "./images/septic.svg"
+          "light": "./images/septic_light.svg",
+          "dark": "./images/septic_dark.svg"
         }
       },
       {

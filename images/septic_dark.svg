@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 256 256">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+
+      .cls-3 {
+        clip-path: url(#clippath-1);
+      }
+
+      .cls-4 {
+        fill: #7D0023;
+      }
+
+      .cls-5 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <path class="cls-2" d="M127.8,219.7h-61.3c-3.8,0-6.8-3-6.8-6.8v-51.8h-27.9c-3.8,0-6.8-3.1-6.8-6.8s3.1-6.8,6.8-6.8h34.6c3.8,0,6.8,3,6.8,6.8v51.8h47.8V42.2c0-3.8,3.1-6.8,6.8-6.8h62.3c3.8,0,6.8,3,6.8,6.8l.3,52.5h27.9c3.8,0,6.8,3.1,6.8,6.8s-3.1,6.8-6.8,6.8h-34.7c-3.8,0-6.8-3-6.8-6.8l-.3-52.5h-48.7v163.8c0,3.8-3.1,6.8-6.8,6.8Z"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <rect class="cls-2" x="19.8" y="30.4" width="217.1" height="194.3"/>
+    </clipPath>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.6.0, SVG Export Plug-In . SVG Version: 1.2.0 Build 709)  -->
+  <g>
+    <g id="Layer_1">
+      <g>
+        <rect class="cls-4" x=".4" y="-.4" width="256" height="256" rx="61.4" ry="61.4"/>
+        <g class="cls-5">
+          <g class="cls-3">
+            <rect class="cls-1" x="18.4" y="25.1" width="220" height="221"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
