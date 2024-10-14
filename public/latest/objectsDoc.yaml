@@ -9381,7 +9381,7 @@
     description: The tag for simulated time, calculated as N * sample time.
     enums: []
     list: false
-    name: ySimTim
+    name: ySimTime
     noCnfg: false
     nosnippet: false
     postfix: []

@@ -981,7 +981,7 @@
   - monitorItemFilterTrigger=  UA_DATACHANGETRIGGER_STATUSVALUE
   - '       RunMenu=  OFF'
   - '     xSchedule=  ""'
-  - '       ySimTim=  ""'
+  - '      ySimTime=  ""'
   - writeOnChangeOnly=  OFF
   description: UAProc handles the connection and interaction with the OPC UA server.
   prefix: uaproc
