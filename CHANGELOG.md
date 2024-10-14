@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.22.0](https://github.com/equinor/vscode-septic/compare/v1.21.4...v1.22.0) (2024-10-14)
+
+
+### 📚 Documentation
+
+* update SEPTIC documentation for latest ([#653](https://github.com/equinor/vscode-septic/issues/653)) ([ce00cb7](https://github.com/equinor/vscode-septic/commit/ce00cb7e416c2c4b6fb8122c2c6e5fdc16e2b706))
+
+
+### ✨ Features
+
+* support refs in algs with jinja for and if ([#654](https://github.com/equinor/vscode-septic/issues/654)) ([7d8c1ee](https://github.com/equinor/vscode-septic/commit/7d8c1ee8e43b54c9af3eb14444e3b86dd46cfc2d))
+
 ## [1.21.4](https://github.com/equinor/vscode-septic/compare/v1.21.3...v1.21.4) (2024-10-09)
 
 
