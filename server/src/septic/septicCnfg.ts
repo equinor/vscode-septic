@@ -23,7 +23,7 @@ import {
     createSepticReference,
     ReferenceType,
 } from "./reference";
-import { removeSpaces } from "../util";
+import { removeJinjaLoopsAndIfs, removeSpaces, transformPositionsToOriginal } from "../util";
 import { updateParentObjects } from "./hierarchy";
 import { Alg, Cycle, findAlgCycles } from "./cycle";
 
@@ -64,7 +64,7 @@ export class SepticCnfg implements SepticReferenceProvider {
     }
 
     public getXvrRefs(name: string): SepticReference[] | undefined {
-        this.extractXvrRefs();
+        this.extractReferences();
         return this.xvrRefs.get(removeSpaces(name));
     }
 
@@ -162,7 +162,7 @@ export class SepticCnfg implements SepticReferenceProvider {
     }
 
     public getXvrRefFromOffset(offset: number): SepticReference | undefined {
-        this.extractXvrRefs();
+        this.extractReferences();
         for (const xvrRef of this.xvrRefs.values()) {
             let validRef = xvrRef.find((ref) => {
                 return (
@@ -183,13 +183,13 @@ export class SepticCnfg implements SepticReferenceProvider {
         return Promise.resolve();
     }
 
-    private extractXvrRefs(): void {
+    private extractReferences(): void {
         if (this.xvrRefsExtracted) {
             return;
         }
         this.xvrRefsExtracted = true;
         this.objects.forEach((obj) => {
-            extractXvrRefs(obj).forEach((xvr) => {
+            extractReferencesFromObj(obj).forEach((xvr) => {
                 xvr.location.uri = this.uri;
                 this.addXvrRef(xvr);
             });
@@ -222,7 +222,7 @@ export class SepticCnfg implements SepticReferenceProvider {
     }
 }
 
-export function extractXvrRefs(obj: SepticObject): SepticReference[] {
+export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
     const xvrRefs: SepticReference[] = [];
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const objectDef = metaInfoProvider.getObject(obj.type);
@@ -244,31 +244,33 @@ export function extractXvrRefs(obj: SepticObject): SepticReference[] {
             isObjRef
                 ? ReferenceType.xvr
                 : isCalcPvr
-                ? ReferenceType.calc
-                : ReferenceType.identifier
+                    ? ReferenceType.calc
+                    : ReferenceType.identifier
         );
         xvrRefs.push(ref);
     }
 
     objectDef.refs.attributes.forEach((attr) => {
-        xvrRefs.push(...attrXvrRefs(obj, attr));
+        xvrRefs.push(...attributeReferences(obj, attr));
     });
 
     if (obj.isType("CalcPvr")) {
-        xvrRefs.push(...calcPvrXvrRefs(obj));
+        xvrRefs.push(...calcPvrReferences(obj));
     }
     return xvrRefs;
 }
 
-function calcPvrXvrRefs(obj: SepticObject): SepticReference[] {
-    const xvrs: SepticReference[] = [];
+function calcPvrReferences(obj: SepticObject): SepticReference[] {
+    const refs: SepticReference[] = [];
     let alg = obj.getAttribute("Alg");
     if (!alg) {
         return [];
     }
     let expr;
+    let algString = alg.getValue() || "";
+    let { strippedString, positionsMap } = removeJinjaLoopsAndIfs(algString);
     try {
-        expr = parseAlg(alg.getValue() ?? "");
+        expr = parseAlg(strippedString);
     } catch (e: any) {
         return [];
     }
@@ -277,22 +279,29 @@ function calcPvrXvrRefs(obj: SepticObject): SepticReference[] {
 
     visitor.variables.forEach((xvr) => {
         let identifier = xvr.value.split(".")[0];
+        let start = xvr.start;
+        let end = xvr.end;
+        if (positionsMap.length) {
+            let originalPositions = transformPositionsToOriginal([start, end], positionsMap);
+            start = originalPositions[0];
+            end = originalPositions[1];
+        }
         const ref: SepticReference = createSepticReference(
             identifier,
             {
                 uri: "",
-                start: alg!.getAttrValue()!.start + xvr.start + 1,
-                end: alg!.getAttrValue()!.start + xvr.end + 1,
+                start: alg!.getAttrValue()!.start + start + 1,
+                end: alg!.getAttrValue()!.start + end + 1,
             },
             undefined,
             ReferenceType.calc
         );
-        xvrs.push(ref);
+        refs.push(ref);
     });
-    return xvrs;
+    return refs;
 }
 
-function attrXvrRefs(obj: SepticObject, attrName: string): SepticReference[] {
+function attributeReferences(obj: SepticObject, attrName: string): SepticReference[] {
     let attr = obj.getAttribute(attrName);
     if (!attr) {
         return [];
