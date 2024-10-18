@@ -1,6 +1,5 @@
-import { BasePromptElementProps, PromptElement, AssistantMessage, UserMessage, TextChunk, ToolChatMessage } from '@vscode/prompt-tsx';
+import { BasePromptElementProps, PromptElement, UserMessage, TextChunk } from '@vscode/prompt-tsx';
 import { SepticCalcInfo, SepticVariable } from './protocol';
-import { ToolMessage } from '@vscode/prompt-tsx/dist/base/promptElements';
 
 export interface SepticCalcPromptProps extends BasePromptElementProps {
 	userQuery: string;

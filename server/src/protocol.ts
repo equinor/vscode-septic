@@ -33,6 +33,10 @@ export const opcTagList = new RequestType<{ uri: string }, string, unknown>(
     "septic/opcTagList"
 );
 
+export const getContext = new RequestType<{ uri: string }, string, any>(
+    "septic/getContext"
+);
+
 export const compareCnfg = new RequestType<
     { prevVersion: string; currentVersion: string; settingsFile: string },
     string,

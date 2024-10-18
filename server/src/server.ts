@@ -198,6 +198,16 @@ connection.onRequest(protocol.contexts, async () => {
     return contexts;
 });
 
+connection.onRequest(protocol.getContext, async (param) => {
+    let context = await contextManager.getContext(param.uri);
+    if (context) {
+        return context.filePath;
+    }
+    if (param.uri.endsWith(".cnfg")) {
+        return param.uri;
+    }
+    return "";
+});
 
 connection.onRequest(protocol.documentation, async () => {
     const metaInfo = SepticMetaInfoProvider.getInstance();
