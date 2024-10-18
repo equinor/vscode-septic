@@ -26,9 +26,18 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 		if (model) {
 			stream.progress("Creating calculation...");
 			const { messages, tokenCount } = await renderPrompt(SepticCalcPrompt, { userQuery: request.prompt, calcs: documentation.calcs, variables: variables }, { modelMaxPromptTokens: model.maxInputTokens }, model);
-			console.log(`Max Tokens: ${model.maxInputTokens}`);
-			console.log(`Tokens: ${tokenCount}`);
-			const chatResponse = await model.sendRequest(messages, {}, token);
+			const messagesUpdated = messages as vscode.LanguageModelChatMessage[];
+			const previousMessages = context.history.filter(h => h instanceof vscode.ChatResponseTurn) as vscode.ChatResponseTurn[];
+			previousMessages.forEach(m => {
+				let fullMessage = "";
+				m.response.forEach(r => {
+					const mdPart = r as vscode.ChatResponseMarkdownPart;
+					fullMessage += mdPart.value.value;
+				})
+				messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(fullMessage));
+			})
+			messagesUpdated.push(vscode.LanguageModelChatMessage.User(request.prompt));
+			const chatResponse = await model.sendRequest(messagesUpdated, {}, token);
 			for await (const fragment of chatResponse.text) {
 				stream.markdown(fragment);
 			}

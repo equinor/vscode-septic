@@ -1,5 +1,6 @@
-import { BasePromptElementProps, PromptElement, AssistantMessage, UserMessage, TextChunk } from '@vscode/prompt-tsx';
+import { BasePromptElementProps, PromptElement, AssistantMessage, UserMessage, TextChunk, ToolChatMessage } from '@vscode/prompt-tsx';
 import { SepticCalcInfo, SepticVariable } from './protocol';
+import { ToolMessage } from '@vscode/prompt-tsx/dist/base/promptElements';
 
 export interface SepticCalcPromptProps extends BasePromptElementProps {
 	userQuery: string;
@@ -37,11 +38,8 @@ export class SepticCalcPrompt extends PromptElement<SepticCalcPromptProps> {
 				</UserMessage>
 				<UserMessage>
 					Return your suggested calculation(s) and new variable(s) in two separate Markdown code blocks that begins with ``` and ends with ```. <br />
-					Multiple partial calculations can be included if necessary and the partial result can be stored in variables. <br />
-				</UserMessage>
-				<UserMessage priority={10}>
-					Here is a description of the calculations I want you to create: <br />
-					{this.props.userQuery} <br />
+					Multiple partial calculations can be included if necessary and the partial result should be stored in variables. <br />
+					Please create a calculation that meets the requirements of the user. <br />
 				</UserMessage>
 			</>
 		)
