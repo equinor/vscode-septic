@@ -26,17 +26,27 @@ export async function generateCalc(client: LanguageClient, description: string, 
 			const messagesUpdated = messages as vscode.LanguageModelChatMessage[];
 			messagesUpdated.push(vscode.LanguageModelChatMessage.User(description));
 			let attempts = 0
-			while (attempts < 3) {
+			while (true) {
 				const chatResponse = await model.sendRequest(messagesUpdated, {});
 				let response = await parseChatResponse(chatResponse);
 				if (response.calculation) {
-					insertCalculation(response.calculation.calculation, start, end);
-					console.log(attempts);
+					let diagnostics = await client.sendRequest(protocol.validateAlg, { calc: response.calculation.calculation, uri: uri });
+					if (!diagnostics.length) {
+						insertCalculation(response.calculation.calculation, start, end);
+						break;
+					}
+					messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(response.response));
+					let diagnosticMessages = diagnostics.map((diagnostic) => `${diagnostic.message} Start: ${diagnostic.range.start.character - 1} End: ${diagnostic.range.end.character - 1}`).join('\n');
+					messagesUpdated.push(vscode.LanguageModelChatMessage.User(`Invalid calculation. The following errors in the calculation was found (with position in):\n ${diagnosticMessages}\nPlease generate a new calculation that fixes the errors.`));
+				} else {
+					messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(response.response))
+					messagesUpdated.push(vscode.LanguageModelChatMessage.User("Unable to construct JSON object. Please try again."));
+				}
+				attempts++;
+				if (attempts > 3) {
+					vscode.window.showWarningMessage('Unable to generate calculation');
 					break;
 				}
-				messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(response.response))
-				messagesUpdated.push(vscode.LanguageModelChatMessage.User("Unable to construct JSON object. Please try again."));
-				attempts++;
 			}
 		}
 
