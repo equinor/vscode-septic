@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { RequestType } from "vscode-languageclient";
+import { RequestType, Diagnostic } from "vscode-languageclient";
 
 export interface SepticCalcInfo {
     name: string;
@@ -88,3 +88,5 @@ export const contexts = new RequestType<object, string[], unknown>("septic/conte
 export const documentation = new RequestType<object, { objects: SepticObjectDoc[], calcs: SepticCalcInfo[] }, unknown>("septic/documentation");
 
 export const variables = new RequestType<{ uri: string }, SepticVariable[] | undefined, unknown>("septic/variables");
+
+export const validateAlg = new RequestType<{ calc: string, uri: string }, Diagnostic[], unknown>("septic/validateCalc");

@@ -5,6 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Diagnostic, DiagnosticSeverity, Range } from "vscode-languageserver";
+import { TextDocument } from "vscode-languageserver-textdocument";
 import { ISepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
@@ -41,6 +42,7 @@ import {
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
+import { DocumentProvider } from '../documentProvider';
 
 export const disableDiagnosticRegex =
     /\/\/\s+noqa\b(?::([ \w,]*))?|\{#\s+noqa\b(?::([ \w,]*))?\s*#\}/i;
@@ -121,29 +123,35 @@ function createDiagnostic(
 
 export class DiagnosticProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
+    private readonly docProvider: DocumentProvider;
     private readonly settingsManager: SettingsManager;
 
     /* istanbul ignore next */
     constructor(
         cnfgProvider: ISepticConfigProvider,
+        docProvider: DocumentProvider,
         settingsManager: SettingsManager
     ) {
         this.cnfgProvider = cnfgProvider;
+        this.docProvider = docProvider;
         this.settingsManager = settingsManager;
     }
 
     /* istanbul ignore next */
     public async provideDiagnostics(
-        doc: ITextDocument,
+        uri: string,
         refProvider: SepticReferenceProvider
     ): Promise<Diagnostic[]> {
-        const cnfg = await this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(uri);
         if (cnfg === undefined) {
             return [];
         }
-
-        const settingsWorkspace = await this.settingsManager.getSettings();
-        const settings =
+        const doc = await this.docProvider.getDocument(uri);
+        if (doc === undefined) {
+            return [];
+        }
+        let settingsWorkspace = await this.settingsManager.getSettings();
+        let settings =
             settingsWorkspace?.diagnostics ?? defaultDiagnosticsSettings;
 
         if (!settings.enabled) {
@@ -152,6 +160,12 @@ export class DiagnosticProvider {
         await refProvider.load();
         return getDiagnostics(cnfg, doc, refProvider);
     }
+}
+
+export function validateStandAloneCalc(alg: string, refProvider: SepticReferenceProvider): Diagnostic[] {
+    let doc = TextDocument.create("", "", 0, `"${alg}"`);
+    let algAttrValue = new AttributeValue(`"${alg}"`, SepticTokenType.string);
+    return validateAlg(algAttrValue, doc, refProvider);
 }
 
 export function getDiagnostics(
@@ -227,57 +241,60 @@ export function validateAlgs(
         if (!algAttrValue) {
             continue;
         }
-        if (!checkAlgLength(algAttrValue.getValue())) {
-            diagnostics.push(
-                createDiagnostic(
-                    DiagnosticSeverity.Error,
-                    {
-                        start: doc.positionAt(algAttrValue.start),
-                        end: doc.positionAt(algAttrValue.end),
-                    },
-                    `Alg exceed the maximum length of ${maxAlgLength} chars`,
-                    DiagnosticCode.algMaxLength
-                )
-            );
-        }
-        const offsetStartAlg = algAttrValue.start + 1;
-        let expr;
-        try {
-            expr = parseAlg(algAttrValue.getValue());
-        } catch (error: unknown) {
-            const algParsingError = error as AlgParsingError;
-            const diagnostic = createDiagnostic(
+        diagnostics.push(...validateAlg(algAttrValue, doc, refProvider));
+    }
+    return diagnostics;
+}
+
+export function validateAlg(alg: AttributeValue, doc: ITextDocument, refProvider: SepticReferenceProvider): Diagnostic[] {
+    const diagnostics: Diagnostic[] = [];
+    if (!checkAlgLength(alg.getValue())) {
+        diagnostics.push(
+            createDiagnostic(
                 DiagnosticSeverity.Error,
                 {
-                    start: doc.positionAt(offsetStartAlg + algParsingError.token.start),
-                    end: doc.positionAt(offsetStartAlg + algParsingError.token.end),
+                    start: doc.positionAt(alg.start),
+                    end: doc.positionAt(alg.end),
                 },
-                algParsingError.message,
-                DiagnosticCode.invalidAlg
-            );
-            diagnostics.push(diagnostic);
-            continue;
-        }
-        const visitor = new AlgVisitor(true);
-        visitor.visit(expr);
-
-        visitor.calcs.forEach((calc) => {
-            diagnostics.push(
-                ...validateCalc(calc, doc, refProvider, offsetStartAlg)
-            );
-        });
-
-        visitor.variables.forEach((variable) => {
-            diagnostics.push(
-                ...validateAlgVariable(
-                    variable,
-                    doc,
-                    refProvider,
-                    offsetStartAlg
-                )
-            );
-        });
+                `Alg exceed the maximum length of ${maxAlgLength} chars`,
+                DiagnosticCode.algMaxLength
+            )
+        );
     }
+    const offsetStartAlg = alg.start + 1;
+    let expr;
+    try {
+        expr = parseAlg(alg.getValue());
+    } catch (error: any) {
+        const diagnostic = createDiagnostic(
+            DiagnosticSeverity.Error,
+            {
+                start: doc.positionAt(offsetStartAlg + error.token.start),
+                end: doc.positionAt(offsetStartAlg + error.token.end),
+            },
+            error.message,
+            DiagnosticCode.invalidAlg
+        );
+        diagnostics.push(diagnostic);
+        return diagnostics;
+    }
+    const visitor = new AlgVisitor(true);
+    visitor.visit(expr);
+    visitor.calcs.forEach((calc) => {
+        diagnostics.push(
+            ...validateCalc(calc, doc, refProvider, offsetStartAlg)
+        );
+    });
+    visitor.variables.forEach((variable) => {
+        diagnostics.push(
+            ...validateAlgVariable(
+                variable,
+                doc,
+                refProvider,
+                offsetStartAlg
+            )
+        );
+    });
     return diagnostics;
 }
 

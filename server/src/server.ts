@@ -35,6 +35,7 @@ import {
     SepticCnfg,
 } from "./septic";
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
+import { validateStandAloneCalc } from './language-service/diagnosticsProvider';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -71,21 +72,17 @@ async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
     await context.updateObjectParents(
         SepticMetaInfoProvider.getInstance().getObjectHierarchy()
     );
-    const diagnosticsPromises = context.files.map(async (file) => {
-        const codes = getIgnoredCodes(file, ignorePatterns);
+    const diagnosticsPromises = context.files.map(async (uri) => {
+        const codes = getIgnoredCodes(uri, ignorePatterns);
         if (codes !== undefined && codes.length == 0) {
-            connection.sendDiagnostics({ uri: file, diagnostics: [] });
+            connection.sendDiagnostics({ uri: uri, diagnostics: [] });
             return;
         }
-        const doc = await documentProvider.getDocument(file);
-        if (!doc) {
-            return null;
-        }
-        let diagnostics = await langService.provideDiagnostics(doc, context!);
+        let diagnostics = await langService.provideDiagnostics(uri, context);
         if (codes) {
             diagnostics = diagnostics.filter((diag) => diag.code && !codes.includes(diag.code as string));
         }
-        connection.sendDiagnostics({ uri: file, diagnostics: diagnostics });
+        connection.sendDiagnostics({ uri: uri, diagnostics: diagnostics });
     });
 
     await Promise.all(diagnosticsPromises);
@@ -102,18 +99,14 @@ async function publishDiagnosticsCnfg(uri: string): Promise<void> {
     if (!cnfg) {
         return;
     }
-    const doc = await documentProvider.getDocument(uri);
-    if (!doc) {
-        return;
-    }
     await cnfg.updateObjectParents(
         SepticMetaInfoProvider.getInstance().getObjectHierarchy()
     );
-    let diagnostics = await langService.provideDiagnostics(doc, cnfg);
+    let diagnostics = await langService.provideDiagnostics(uri, cnfg);
     if (codes) {
         diagnostics = diagnostics.filter((diag) => diag.code && codes.includes(diag.code as string));
     }
-    connection.sendDiagnostics({ uri: doc.uri, diagnostics: diagnostics });
+    connection.sendDiagnostics({ uri: uri, diagnostics: diagnostics });
 }
 
 async function publishDiagnostics(uri: string) {
@@ -232,6 +225,18 @@ connection.onRequest(protocol.variables, async (param) => {
     });
 }
 )
+
+connection.onRequest(protocol.validateAlg, async (param) => {
+    let context: SepticReferenceProvider | undefined =
+        await contextManager.getContext(param.uri);
+    if (!context) {
+        context = await langService.cnfgProvider.get(param.uri);
+        if (!context) {
+            return [];
+        }
+    }
+    return validateStandAloneCalc(param.calc, context);
+});
 
 connection.onInitialize((params: InitializeParams) => {
     const capabilities = params.capabilities;
