@@ -14,6 +14,7 @@ import {
     TransportKind,
 } from "vscode-languageclient/node";
 import { calcChat } from './chat';
+import { generateCalc } from './lm';
 
 let client: LanguageClient;
 
@@ -192,6 +193,11 @@ export function activate(context: vscode.ExtensionContext) {
             preserveFocus: false,
         });
     });
+
+    vscode.commands.registerCommand("septic.generateCalc", async (description: string, start: vscode.Position, end: vscode.Position) => {
+        generateCalc(client, description, start, end);
+    })
+
     const chatHandler: vscode.ChatRequestHandler = async (request, context, stream, token): Promise<vscode.ChatResult | void> => {
         if (request.command === 'calcs') {
             await calcChat(client, request, context, stream, token);

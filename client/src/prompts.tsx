@@ -2,24 +2,31 @@ import { BasePromptElementProps, PromptElement, UserMessage, TextChunk } from '@
 import { SepticCalcInfo, SepticVariable } from './protocol';
 
 export interface SepticCalcPromptProps extends BasePromptElementProps {
-	userQuery: string;
 	calcs: SepticCalcInfo[];
 	variables: SepticVariable[] | undefined;
 }
 
-export class SepticCalcPrompt extends PromptElement<SepticCalcPromptProps> {
-	override async prepare(): Promise<void> {
-	}
+export class SepticGenerateCalcPrompt extends PromptElement<SepticCalcPromptProps> {
 	async render() {
-		const calcElements = [];
-		for (let i = 0; i < this.props.calcs.length; i++) {
-			calcElements.push(<CalcFunctions calc={this.props.calcs[i]} />);
-		}
+		return (
+			<>
+				<UserMessage>You are an expert on the Septic advanced process control software and creating calculations that follows the given set of rules for calculations. You follow the instructions of the user carefully and always check your work towards the given rules and iterate through multiple solutions to find the best one.</UserMessage>
+				<SepticCalcPrompt calcs={this.props.calcs} variables={this.props.variables} />
+				<UserMessage priority={10}>
+					Format the calculation as a single JSON object. It is not necessary to wrap your response in triple backticks. Here is examples of what your response should look like <br />
+					{'{ "calculation":  "setfulf(if(Zpc > 10, 10, 1)" }'} {'{ "calculation":  "max(1, Zpc - Zpc.Low, Pdh)" }'} <br />
+					Please create a calculation that meets the requirements of the user that only uses the available variables and functions. <br />
+				</UserMessage>
+			</>
+		)
+	}
+}
+export class SepticChatCalcPrompt extends PromptElement<SepticCalcPromptProps> {
+	async render() {
 		return (
 			<>
 				<SepticInformation priority={10} />
-				<SepticVariables variables={this.props.variables} priority={100} />
-				<CalcInformation calcs={this.props.calcs} priority={20} />
+				<SepticCalcPrompt calcs={this.props.calcs} variables={this.props.variables} />
 				<UserMessage priority={10}>
 					The output when suggesting an calculation should be on the following format, where the output is stored in the named variable: <br />
 					CalcPvr: %variable name% <br />
@@ -34,12 +41,29 @@ export class SepticCalcPrompt extends PromptElement<SepticCalcPromptProps> {
 					{'      '}Nfix=  1 <br />
 					{'      '}Unit=  "" <br />
 					{'      '}Meas=  1.0 <br />
-				</UserMessage>
-				<UserMessage>
+
 					Return your suggested calculation(s) and new variable(s) in two separate Markdown code blocks that begins with ``` and ends with ```. <br />
 					Multiple partial calculations can be included if necessary and the partial result should be stored in variables. <br />
 					Please create a calculation that meets the requirements of the user. <br />
 				</UserMessage>
+			</>
+		)
+	}
+}
+
+export class SepticCalcPrompt extends PromptElement<SepticCalcPromptProps> {
+	override async prepare(): Promise<void> {
+	}
+	async render() {
+		const calcElements = [];
+		for (let i = 0; i < this.props.calcs.length; i++) {
+			calcElements.push(<CalcFunctions calc={this.props.calcs[i]} />);
+		}
+		return (
+			<>
+				<CalcInformation calcs={this.props.calcs} priority={20} />
+				<SepticVariables variables={this.props.variables} priority={100} />
+
 			</>
 		)
 	}

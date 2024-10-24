@@ -1,13 +1,12 @@
 import * as vscode from 'vscode';
-import { SepticCalcInfo } from './protocol';
 import { renderPrompt } from '@vscode/prompt-tsx';
 import {
 	LanguageClient,
 } from "vscode-languageclient/node";
 import * as protocol from "./protocol";
-import { SepticCalcPrompt } from './prompt';
+import { SepticChatCalcPrompt } from './prompts';
 
-export const MODEL_SELECTOR: vscode.LanguageModelChatSelector = { vendor: 'copilot', family: 'gpt-4o' };
+const MODEL_SELECTOR: vscode.LanguageModelChatSelector = { vendor: 'copilot', family: 'gpt-4o' };
 
 export async function calcChat(client: LanguageClient, request: vscode.ChatRequest, context: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken) {
 	const uri = vscode.window.activeTextEditor?.document.uri.toString();
@@ -30,7 +29,7 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 		const [model] = await vscode.lm.selectChatModels(MODEL_SELECTOR)
 		if (model) {
 			stream.progress("Creating calculation...");
-			const { messages, tokenCount } = await renderPrompt(SepticCalcPrompt, { userQuery: request.prompt, calcs: documentation.calcs, variables: variables }, { modelMaxPromptTokens: model.maxInputTokens }, model);
+			const { messages, tokenCount } = await renderPrompt(SepticChatCalcPrompt, { calcs: documentation.calcs, variables: variables }, { modelMaxPromptTokens: model.maxInputTokens }, model);
 			const messagesUpdated = messages as vscode.LanguageModelChatMessage[];
 			const previousMessages = context.history.filter(h => h instanceof vscode.ChatResponseTurn) as vscode.ChatResponseTurn[];
 			previousMessages.forEach(m => {

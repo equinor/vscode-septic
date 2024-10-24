@@ -161,6 +161,12 @@ export class SepticCnfg implements SepticReferenceProvider {
         return this.objects[this.objects.length - 1];
     }
 
+    public getObjectsInRange(start: number, end: number): SepticObject[] {
+        return this.objects.filter((obj) => {
+            return obj.start >= start && obj.end <= end;
+        });
+    }
+
     public getXvrRefFromOffset(offset: number): SepticReference | undefined {
         this.extractReferences();
         for (const xvrRef of this.xvrRefs.values()) {

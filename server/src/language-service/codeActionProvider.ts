@@ -2,6 +2,7 @@ import {
     CodeAction,
     CodeActionKind,
     CodeActionParams,
+    Command,
     Diagnostic,
     Position,
     Range,
@@ -58,6 +59,7 @@ export class CodeActionProvider {
         );
         codeActions.push(...insertEvrActions);
         codeActions.push(...getCodeActionIgnoreDiagnostics(params, cnfg, doc));
+        codeActions.push(...getCodeActionGenerateCalc(params, cnfg, doc));
         return codeActions;
     }
 
@@ -199,6 +201,32 @@ export function getCodeActionIgnoreDiagnostics(
     }
     return codeActions;
 }
+
+export function getCodeActionGenerateCalc(params: CodeActionParams, cnfg: SepticCnfg, doc: ITextDocument): CodeAction[] {
+    let codeActions = []
+    let start = doc.offsetAt(params.range.start);
+    let end = doc.offsetAt(params.range.end);
+    let objects = cnfg.getObjectsInRange(start, end).filter(obj => obj.isType("CalcPvr"));
+    for (let obj of objects) {
+        let algAttr = obj.getAttribute("Alg");
+        let textAttr = obj.getAttribute("Text1");
+        if (algAttr?.getValue() === undefined || textAttr?.getValue() === undefined) {
+            continue;
+        }
+        if (textAttr.getValue() === "") {
+            continue;
+        }
+        let start = doc.positionAt(algAttr.getAttrValue()!.start + 1);
+        let end = doc.positionAt(algAttr.getAttrValue()!.end - 1);
+        let codeAction = CodeAction.create(`Generate Calc: ${obj.identifier?.name}`);
+        codeAction.kind = CodeActionKind.QuickFix;
+        codeAction.command = Command.create(`Generate calc`, "septic.generateCalc", textAttr.getValue(), start, end);
+        codeActions.push(codeAction);
+
+    }
+    return codeActions;
+}
+
 
 function isOnlyIgnoreCommentsOnSameLine(
     comments: SepticComment[],

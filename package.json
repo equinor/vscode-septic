@@ -38,6 +38,10 @@
       {
         "command": "septic.compareCnfg",
         "title": "Septic: Compare config versions"
+      },
+      {
+        "command": "septic.generateCalc",
+        "title": "Septic: Generate Calc"
       }
     ],
     "configuration": {
