@@ -4,7 +4,7 @@ import {
 	LanguageClient,
 } from "vscode-languageclient/node";
 import * as protocol from "./protocol";
-import { SepticChatCalcPrompt } from './prompts';
+import { SepticChatCalcOutputPrompt, SepticChatCalcPrompt } from './prompts';
 
 const MODEL_SELECTOR: vscode.LanguageModelChatSelector = { vendor: 'copilot', family: 'gpt-4o' };
 
@@ -28,7 +28,7 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 	try {
 		const [model] = await vscode.lm.selectChatModels(MODEL_SELECTOR)
 		if (model) {
-			stream.progress("Creating calculation...");
+			let attempts = 0;
 			const { messages, tokenCount } = await renderPrompt(SepticChatCalcPrompt, { calcs: documentation.calcs, variables: variables }, { modelMaxPromptTokens: model.maxInputTokens }, model);
 			const messagesUpdated = messages as vscode.LanguageModelChatMessage[];
 			const previousMessages = context.history.filter(h => h instanceof vscode.ChatResponseTurn) as vscode.ChatResponseTurn[];
@@ -41,13 +41,72 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 				messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(fullMessage));
 			})
 			messagesUpdated.push(vscode.LanguageModelChatMessage.User(request.prompt));
-			const chatResponse = await model.sendRequest(messagesUpdated, {}, token);
-			for await (const fragment of chatResponse.text) {
-				stream.markdown(fragment);
+			stream.progress("Creating calculation...");
+			while (true) {
+				const chatResponse = await model.sendRequest(messagesUpdated, {}, token);
+				const response = await parseChatResponse(chatResponse);
+				if (response.json) {
+					stream.progress("Validating calculation...");
+					let feedback = await validateCalculations(response, client, uri);
+					if (!feedback.length) {
+						const { messages, tokenCount } = await renderPrompt(SepticChatCalcOutputPrompt, { jsonInput: response.response }, { modelMaxPromptTokens: model.maxInputTokens }, model);
+						const formatedResponse = await model.sendRequest(messages, {});
+						for await (const fragment of formatedResponse.text) {
+							stream.markdown(fragment);
+						}
+						break;
+					}
+					messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(response.response));
+					messagesUpdated.push(vscode.LanguageModelChatMessage.User("Invalid calculation. Please try again. The following errors were found:"));
+					messagesUpdated.push(vscode.LanguageModelChatMessage.User(JSON.stringify(feedback)));
+
+				} else {
+					messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(response.response));
+					messagesUpdated.push(vscode.LanguageModelChatMessage.User("Unable to construct JSON object. Please try again."));
+				}
+				attempts++;
+				if (attempts > 3) {
+					stream.markdown(vscode.l10n.t('Unable to generate calculation'));
+					break;
+				}
+				stream.progress("Re-attempting to create calculation...");
 			}
+
 		}
 	} catch (e) {
 		stream.markdown(vscode.l10n.t('I\'m sorry, unable to find the model.'));
 	}
 	return;
+}
+
+async function validateCalculations(response: { json?: any; response: string; }, client: LanguageClient, uri: string) {
+	let feedback = [];
+	const regexPattern = response.json.variables.join("|");
+	const regex = new RegExp(regexPattern);
+	for (const calc of response.json.calculations) {
+		let diagnostics = await client.sendRequest(protocol.validateAlg, { calc: calc.calculation, uri: uri });
+		diagnostics = diagnostics.filter(d => !((d.code.toString() === "W501" && d.message.search(regex)) || d.code.toString() === "W203"));
+		if (!diagnostics.length) {
+			continue;
+		} else {
+			let diagnosticMessages = diagnostics.map((diagnostic) => `${diagnostic.message} Start: ${diagnostic.range.start.character - 1} End: ${diagnostic.range.end.character - 1}`).join('\n');
+			feedback.push({ "name": calc.name, "message": `Invalid calculation. The following errors in the calculation was found (with position in):\n ${diagnosticMessages}\nPlease generate a new calculation that fixes the errors.` });
+		}
+	}
+	return feedback;
+}
+
+async function parseChatResponse(
+	chatResponse: vscode.LanguageModelChatResponse,
+): Promise<{ json?: any, response: string }> {
+	let accumulatedResponse = '';
+	for await (const fragment of chatResponse.text) {
+		accumulatedResponse += fragment;
+	}
+	try {
+		const calculation = JSON.parse(accumulatedResponse);
+		return { json: calculation, response: accumulatedResponse };
+	} catch (e) {
+		return { response: accumulatedResponse };
+	}
 }
