@@ -205,6 +205,9 @@ export function activate(context: vscode.ExtensionContext) {
         return;
     }
     const septicChat = vscode.chat.createChatParticipant("septic.chat", chatHandler);
+    let iconPathDark = vscode.Uri.joinPath(context.extensionUri, "images/septic_dark.svg")
+    let iconPathLight = vscode.Uri.joinPath(context.extensionUri, "images/septic_light.svg")
+    septicChat.iconPath = { light: iconPathLight, dark: iconPathDark }
     client.start();
 }
 

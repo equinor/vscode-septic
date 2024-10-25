@@ -79,7 +79,7 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 	return;
 }
 
-async function validateCalculations(response: { json?: any; response: string; }, client: LanguageClient, uri: string) {
+async function validateCalculations(response: { json?: any; response: string; }, client: LanguageClient, uri: string): Promise<any[]> {
 	let feedback = [];
 	const regexPattern = response.json.variables.join("|");
 	const regex = new RegExp(regexPattern);
