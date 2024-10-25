@@ -33,7 +33,8 @@
 -   Ignore Diagnostics for specified paths.
 -   Documentation: Built in documentation of objects/attributes and calcs based on source code.
 -   SignatureHelp: Signature help for calcs
--   Code actions for fixing references to unknown Evrs in calcs
+-   Code Actions: Fixing references to unknown Evrs in calcs
+-   Co-Pilot: Chat interface with specialized chat participant for generating Septic calculations. Quick fix for generating calculation for selected CalcPvr based on Text1 description
 -   Command for extracting all OPC-tags used in the config/scg-context
 -   Command for detecting cycles in calcs
 -   Command for comparing configs
@@ -87,6 +88,12 @@ Adding the Septic extension to VS Code allows you to do the following when loadi
             attributes:
             - Meas
         ```
+
+-   Septic Co-Pilot features powered by Large Language Models (LLM): 
+    - Chat participant `@septic`. The following commands are available:
+        - `\calcs` which is specialized in generating calculations based on the description from the user. The suggested calculations are quality checked by the Septic diagnostics provider to increase the quality of the output. Co-Pilot reiterate up to 3 times based on the feedback from the diagnostics provider.
+    - Code action for generating Alg attribute for a CalcPvr based on the Text1 description is available by selecting the relevant CalcPvr with the cursor and selecting `Generate Calc: CalcPvrName` in the code action options. The generated calc is filled in the Alg field.The suggested calculation is quality checked by the Septic diagnostics provider to increase the quality of the output. Co-Pilot reiterate up to 3 times based on the feedback from the diagnostics provider.
+    -  Septic documentation is used as input to the Large Language Models (LLM) powering the Co-Pilot and is selected based on the selected version in the workspace. The context (available variables etc.) is also provided to the chat participant. The current active editor is used to select the right context (i.e. the scg-context or standalone cnfg).
 
 The extension supports Septic projects that uses the Septic Config Generator (SCG). The SCG-config file for the project is loaded and the relevant `.cnfg` files (required to be in the templates folder) listed in the layout section are loaded into a common context that shares references etc.
 
