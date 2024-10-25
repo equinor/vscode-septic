@@ -85,7 +85,7 @@
         },
         "septic.ignored.paths": {
           "scope": "window",
-          "type": "array",
+          "type": "object",
           "default": [],
           "description": "Path(s) to files/folders that should be ignored when publishing diagnostics."
         },

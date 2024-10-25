@@ -18,7 +18,7 @@ interface FormattingSettings {
 }
 
 interface IgnoredSettings {
-    paths: string[];
+    paths: { [key: string]: string[] };
 }
 
 interface CodeActions {
