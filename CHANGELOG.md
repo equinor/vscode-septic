@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.22.1](https://github.com/equinor/vscode-septic/compare/v1.22.0...v1.22.1) (2024-11-04)
+
+
+### 🧹 Chores
+
+* add ignore diagnostic code setting ([#665](https://github.com/equinor/vscode-septic/issues/665)) ([ae18860](https://github.com/equinor/vscode-septic/commit/ae188606e7b0bfd6faacd12066d7297a2ca0f54b))
+
+
+### 📚 Documentation
+
+* update SEPTIC documentation for latest ([#659](https://github.com/equinor/vscode-septic/issues/659)) ([38341bc](https://github.com/equinor/vscode-septic/commit/38341bcd6fcd795cb508956828716338398d7c2f))
+
 ## [1.22.0](https://github.com/equinor/vscode-septic/compare/v1.21.4...v1.22.0) (2024-10-14)
 
 
