@@ -705,10 +705,10 @@
     description: = 1 commands to set Scale, any other value gives an unaffected Scale
     direction: in
     name: Apply
-  quality: GOOD if CV and IV belongs to same SmpcAppl with an ExprModl and Amodl exists,
-    else BAD
-  retr: "steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl\
-    \ with an ExprModl and Amodl\r\n  exists, else 0"
+  quality: GOOD if CV and IV belongs to same SmpcAppl/MPCAppl with an ExprModl and
+    Amodl exists, else BAD
+  retr: "steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl/MPCAppl\
+    \ with an ExprModl\r\n  and Amodl exists, else 0"
   signature: exprprocmodset(CVRTAG,IVRTAG,Scale,Apply)
 - detailedDescription: First order filter. Resets to first good value after bad raw
     values
@@ -1224,6 +1224,8 @@
   - arity: '1'
     datatype:
     - smpcappl
+    - mpcappl
+    - dmmyappl
     description: Application of id for application to check
     direction: in
     name: applID
@@ -1237,6 +1239,8 @@
   - arity: '1'
     datatype:
     - smpcappl
+    - mpcappl
+    - dmmyappl
     description: Application id of application to check
     direction: in
     name: applID
@@ -1567,8 +1571,8 @@
   retr: 'Value of evaluated expression according to condition: condition ? trueExpr
     : falseExpr'
   signature: if(condition, trueExpr, falseExpr, debug?)
-- detailedDescription: "Evaluates the boolean conditions and perform the corresponding\
-    \ conditional expressions. Expects odd number of\r\n  arguments >= 3"
+- detailedDescription: Evaluate bool cond's and perform corresponding expressions.
+    Expect odd number of arguments >= 3
   name: ifelif
   parameters:
   - arity: +
@@ -1589,11 +1593,12 @@
     description: Expression to evaluate when condition is false
     direction: in
     name: default
-  quality: "GOOD if number of arguments is odd and >= 3 and all conditions and expressions\
-    \ up to and including the last\r\n  (returned) evaluated expression are GOOD,\
-    \ else BAD."
+  quality: "GOOD if number of arguments is odd and >= 3 and all cond's and selected\
+    \ expressions up to and including the\r\n  last (returned) evaluated expression\
+    \ are GOOD, else BAD."
   retr: "Value of evaluated expressions according to condition: if(cond1, expr1, if(cond2,\
-    \ expr2, ..., if(condN, exprN,\r\n  default)...))"
+    \ expr2, ..., if(condN, exprN,\r\n  default)...)). Retain old value if condition\
+    \ is BAD"
   signature: ifelif(cond1, expr1, cond2, expr2, ..., condN, exprN, default)
 - detailedDescription: "Function calculates y by linear interpolation of the X,Y pairs.\r\
     \n  Assumes that the sequence of X1, X2, ..., XN values are monotonically increasing.<br>"
@@ -1991,7 +1996,7 @@
   signature: minselection(n, v1, v2, ..., vN, use1, use2, ..., useN)
 - detailedDescription: "Lower all Xvr.Mode to TRACKING if not sufficiently many of\
     \ them are ACTIVE. Typical use is to assure at\r\n  least minimum number of Mvrs\
-    \ ACTIVE to run SmpcAppl"
+    \ ACTIVE to run SmpcAppl/MPCAppl."
   name: modechk
   parameters:
   - arity: '1'
@@ -2012,7 +2017,7 @@
   retr: Number of active Xvrs
   signature: modechk(numMinActive, xvr1, xvr2, ..., xvrN)
 - detailedDescription: "Set the gain modifier in the active experimental model. Cvr\
-    \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl"
+    \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl."
   name: modgain
   parameters:
   - arity: '1'
@@ -2045,7 +2050,7 @@
   signature: modgain(cvr, xvr, gain, apply)
 - detailedDescription: "Get the steady state gain from the active experimental model,\
     \ including the scaling by\r\n  the gain modifier (Scale) set by CalcModSet. Cvr\
-    \ and Mvr/Dvr needs to be contained in same SmpcAppl"
+    \ and Mvr/Dvr needs to be contained in same SmpcAppl/MPCAppl."
   name: modget
   parameters:
   - arity: '1'
@@ -2065,9 +2070,9 @@
   retr: Steady state gain from xvr towards cvr if valid model, else 0
   signature: modget(cvr, xvr)
 - detailedDescription: "Construct the experimental model from parameters. Cvr and\
-    \ Mvr/Dvr needs to be contained in same SmpcAppl\r\n  The Laplace transform model\
-    \ is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1 + lag2*s)\r\n  where lead1,\
-    \ delay, lag1 and lag2 are given in minutes."
+    \ Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl. The Laplace transform\
+    \ model is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1 + lag2*s)\r\n  where\
+    \ lead1, delay, lag1 and lag2 are given in minutes."
   name: modsched
   parameters:
   - arity: '1'
@@ -2124,7 +2129,7 @@
   retr: Update the model between given cvr and xvr
   signature: modsched(cvr, xvr, gain, lag1, lag2, lead1, delay, apply)
 - detailedDescription: "Set the gain modifier in the active experimental model. Cvr\
-    \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl"
+    \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl."
   name: modset
   parameters:
   - arity: '1'
@@ -2199,8 +2204,8 @@
   quality: GOOD if valid Xvr (Optionally member variable), otherwise BAD
   retr: Moving standard deviation over given time horizon, 0 if quality BAD
   signature: movestd(xvr, nsamp)
-- detailedDescription: "Gets the calculated Mvr from an SmpcAppl.\r\n  Mvr.Mode ==\
-    \ ACTIVE -> Mvr.mget(pAppl->N+1) else Mvr.Meas(pAppl->N)"
+- detailedDescription: "Gets the calculated Mvr from an SmpcAppl or MPCAppl.\r\n \
+    \ Mvr.Mode == ACTIVE -> Mvr.mget(pAppl->N+1) else Mvr.Meas(pAppl->N)"
   name: mvmget
   parameters:
   - arity: '1'
@@ -2465,6 +2470,8 @@
   - arity: '1'
     datatype:
     - smpcappl
+    - mpcappl
+    - dmmyappl
     description: Application id for application to update
     direction: in
     name: applID
