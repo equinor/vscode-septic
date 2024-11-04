@@ -35,7 +35,7 @@ import {
     SepticMetaInfoProvider,
     SepticCnfg,
 } from "./septic";
-import { getIgnorePatterns, isPathIgnored } from "./ignorePath";
+import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -74,7 +74,8 @@ async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
         SepticMetaInfoProvider.getInstance().getObjectHierarchy()
     );
     const diagnosticsPromises = context.files.map(async (file) => {
-        if (isPathIgnored(file, ignorePatterns)) {
+        const codes = getIgnoredCodes(file, ignorePatterns);
+        if (codes !== undefined && codes.length == 0) {
             connection.sendDiagnostics({ uri: file, diagnostics: [] });
             return;
         }
@@ -82,7 +83,10 @@ async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
         if (!doc) {
             return null;
         }
-        const diagnostics = await langService.provideDiagnostics(doc, context!);
+        let diagnostics = await langService.provideDiagnostics(doc, context!);
+        if (codes) {
+            diagnostics = diagnostics.filter((diag) => diag.code && !codes.includes(diag.code as string));
+        }
         connection.sendDiagnostics({ uri: file, diagnostics: diagnostics });
     });
 
@@ -91,7 +95,8 @@ async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
 
 async function publishDiagnosticsCnfg(uri: string): Promise<void> {
     const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
-    if (isPathIgnored(uri, ignorePatterns)) {
+    const codes = getIgnoredCodes(uri, ignorePatterns);
+    if (codes !== undefined && codes.length == 0) {
         connection.sendDiagnostics({ uri: uri, diagnostics: [] });
         return;
     }
@@ -107,6 +112,9 @@ async function publishDiagnosticsCnfg(uri: string): Promise<void> {
         SepticMetaInfoProvider.getInstance().getObjectHierarchy()
     );
     let diagnostics = await langService.provideDiagnostics(doc, cnfg);
+    if (codes) {
+        diagnostics = diagnostics.filter((diag) => diag.code && codes.includes(diag.code as string));
+    }
     connection.sendDiagnostics({ uri: doc.uri, diagnostics: diagnostics });
 }
 

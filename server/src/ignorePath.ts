@@ -1,38 +1,45 @@
-import { Connection, WorkspaceFolder } from "vscode-languageserver";
+import { Connection, } from 'vscode-languageserver';
 import { SettingsManager } from "./settings";
+
+
+export interface IgnoredPaths {
+    regex: RegExp;
+    codes: string[];
+}
 
 export async function getIgnorePatterns(
     connection: Connection,
     settingsManager: SettingsManager
-): Promise<string[]> {
+): Promise<IgnoredPaths[]> {
     const settings = await settingsManager.getSettings();
-    const ignoredPaths = settings?.ignored.paths ?? [];
-    const ignorePatterns: string[] = [];
-    for (let path of ignoredPaths) {
-        ignorePatterns.push(pathToRegex(path));
+    if (!settings) {
+        return [];
     }
+    const folders = await connection.workspace.getWorkspaceFolders();
+    const workspace = folders ? folders[0].uri : "*";
+    const ignoredPaths: { [key: string]: string[] } = settings.ignored.paths;
+    const ignorePatterns: IgnoredPaths[] = [];
+    Object.keys(ignoredPaths).forEach((path) => {
+        ignorePatterns.push({ regex: pathToRegex(workspace, path), codes: ignoredPaths[path] });
+    })
     return ignorePatterns;
 }
 
-export function isPathIgnored(path: string, ignorePatterns: string[]): boolean {
+export function getIgnoredCodes(path: string, ignorePatterns: IgnoredPaths[]): string[] | undefined {
     for (const ignorePattern of ignorePatterns) {
-        const regexPattern = new RegExp(ignorePattern);
-        if (regexPattern.test(path)) {
-            return true;
+        if (ignorePattern.regex.test(path)) {
+            return ignorePattern.codes;
         }
     }
-    return false;
+    return undefined;
 }
 
-function pathToRegex(path: string): string {
-    // Convert path to a regex pattern
-    let workspacePath = "*" + path;
-    let pattern = workspacePath.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"); // Escape special characters
-    pattern = pattern.replace(/\\\*/g, ".*"); // Replace * with .*
-    pattern = pattern.replace(/\\\?/g, "."); // Replace ? with .
-
-    // Ensure the pattern matches the whole path
+function pathToRegex(workspace: string, path: string): RegExp {
+    path = path.replace(/^\./, "").replace(/^\//, "");
+    let absPath = workspace + "/" + path;
+    let pattern = absPath.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"); // Escape special characters
+    pattern = pattern.replace(/\\\*/g, ".*");
+    pattern = pattern.replace(/\\\?/g, ".");
     pattern = `^${pattern}$`;
-
-    return pattern;
+    return new RegExp(pattern)
 }
