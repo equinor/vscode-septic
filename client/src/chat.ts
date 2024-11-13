@@ -8,14 +8,20 @@ import { SepticChatCalcOutputPrompt, SepticChatCalcPrompt } from './prompts';
 
 const MODEL_SELECTOR: vscode.LanguageModelChatSelector = { vendor: 'copilot', family: 'gpt-4o' };
 
-export async function calcChat(client: LanguageClient, request: vscode.ChatRequest, context: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken) {
+interface SepticCalcResult extends vscode.ChatResult {
+	metadata: {
+		command: string;
+		output: any;
+	}
+}
+export async function calcChat(client: LanguageClient, request: vscode.ChatRequest, context: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken): Promise<SepticCalcResult> {
 	const uri = vscode.window.activeTextEditor?.document.uri.toString();
 	let septicContext = await client.sendRequest(protocol.getContext, { uri: uri });
 	if (septicContext.length) {
 		const fileUri = vscode.Uri.parse(septicContext);
 		stream.reference(fileUri);
 	}
-	stream.progress("Retriveing documentation...");
+	stream.progress("Retrieving documentation...");
 	const documentation = await client.sendRequest(protocol.documentation, {});
 	if (!documentation) {
 		return;
@@ -26,7 +32,7 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 		variables = await client.sendRequest(protocol.variables, { uri: uri });
 	}
 	try {
-		const [model] = await vscode.lm.selectChatModels(MODEL_SELECTOR)
+		const [model] = await vscode.lm.selectChatModels(MODEL_SELECTOR);
 		if (model) {
 			let attempts = 0;
 			const { messages, tokenCount } = await renderPrompt(SepticChatCalcPrompt, { calcs: documentation.calcs, variables: variables }, { modelMaxPromptTokens: model.maxInputTokens }, model);
@@ -37,9 +43,9 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 				m.response.forEach(r => {
 					const mdPart = r as vscode.ChatResponseMarkdownPart;
 					fullMessage += mdPart.value.value;
-				})
+				});
 				messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(fullMessage));
-			})
+			});
 			messagesUpdated.push(vscode.LanguageModelChatMessage.User(request.prompt));
 			stream.progress("Creating calculation...");
 			while (true) {
@@ -50,11 +56,13 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 					let feedback = await validateCalculations(response, client, uri);
 					if (!feedback.length) {
 						const { messages, tokenCount } = await renderPrompt(SepticChatCalcOutputPrompt, { jsonInput: response.response }, { modelMaxPromptTokens: model.maxInputTokens }, model);
-						const formatedResponse = await model.sendRequest(messages, {});
-						for await (const fragment of formatedResponse.text) {
+						const formattedResponse = await model.sendRequest(messages, {});
+						let accumulatedResponse = "";
+						for await (const fragment of formattedResponse.text) {
 							stream.markdown(fragment);
+							accumulatedResponse += fragment;
 						}
-						break;
+						return { metadata: { command: request.command, output: response.json.calculations } };
 					}
 					messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(response.response));
 					messagesUpdated.push(vscode.LanguageModelChatMessage.User("Invalid calculation. Please try again. The following errors were found:"));
@@ -76,7 +84,7 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 	} catch (e) {
 		stream.markdown(vscode.l10n.t('I\'m sorry, unable to find the model.'));
 	}
-	return;
+	return { metadata: { command: request.command, output: {} } };
 }
 
 async function validateCalculations(response: { json?: any; response: string; }, client: LanguageClient, uri: string): Promise<any[]> {
