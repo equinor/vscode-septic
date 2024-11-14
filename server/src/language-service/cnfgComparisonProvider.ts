@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Equinor ASA
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import { DocumentProvider } from "../documentProvider";
 import {
     AlgComparison,
@@ -231,15 +236,12 @@ export function compareAlg(prevAlg: string, currentAlg: string): boolean {
     try {
         prevExpr = parseAlg(prevAlg);
     } catch {
-        prevExpr = undefined;
+        return false;
     }
     let currentExpr;
     try {
         currentExpr = parseAlg(currentAlg);
     } catch {
-        currentExpr = undefined;
-    }
-    if (!prevExpr || !currentExpr) {
         return false;
     }
     const algComparator = new AlgComparison();

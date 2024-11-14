@@ -1,3 +1,8 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Equinor ASA
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 import { BasePromptElementProps, PromptElement, UserMessage, TextChunk } from '@vscode/prompt-tsx';
 import { SepticCalcInfo, SepticVariable } from './protocol';
 
