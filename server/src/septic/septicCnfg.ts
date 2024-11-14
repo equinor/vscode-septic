@@ -54,7 +54,7 @@ export class SepticCnfg implements SepticReferenceProvider {
         const objects: Attribute[] = [];
         this.objects.forEach((obj) => {
             if (obj.isType("CalcPvr")) {
-                let algAttr = obj.getAttribute("Alg");
+                const algAttr = obj.getAttribute("Alg");
                 if (algAttr) {
                     objects.push(algAttr);
                 }
@@ -72,7 +72,7 @@ export class SepticCnfg implements SepticReferenceProvider {
         name: string,
         validationFunction: RefValidationFunction = defaultRefValidationFunction
     ): boolean {
-        let xvrRefs = this.getXvrRefs(name);
+        const xvrRefs = this.getXvrRefs(name);
         if (!xvrRefs) {
             return false;
         }
@@ -88,7 +88,7 @@ export class SepticCnfg implements SepticReferenceProvider {
     }
 
     public getObjectsByIdentifier(identifier: string): SepticObject[] {
-        let identifierSpacesRemoved = removeSpaces(identifier);
+        const identifierSpacesRemoved = removeSpaces(identifier);
         return this.objects.filter((obj) => {
             if (!obj.identifier) {
                 return false;
@@ -101,8 +101,8 @@ export class SepticCnfg implements SepticReferenceProvider {
         identifier: string,
         type: string
     ): SepticObject | undefined {
-        let identifierSpacesRemoved = removeSpaces(identifier);
-        return this.objects.find((val, ind, obj) => {
+        const identifierSpacesRemoved = removeSpaces(identifier);
+        return this.objects.find((val) => {
             if (!val.identifier) {
                 return false;
             }
@@ -119,7 +119,7 @@ export class SepticCnfg implements SepticReferenceProvider {
             return undefined;
         }
         const alg = obj.getAttribute("Alg");
-        let algValue = alg?.getAttrValue();
+        const algValue = alg?.getAttrValue();
         if (!algValue) {
             return undefined;
         }
@@ -136,7 +136,7 @@ export class SepticCnfg implements SepticReferenceProvider {
             return undefined;
         }
         const alg = obj.getAttribute("Alg");
-        let algValue = alg?.getAttrValue();
+        const algValue = alg?.getAttrValue();
         if (!algValue) {
             return undefined;
         }
@@ -164,7 +164,7 @@ export class SepticCnfg implements SepticReferenceProvider {
     public getXvrRefFromOffset(offset: number): SepticReference | undefined {
         this.extractReferences();
         for (const xvrRef of this.xvrRefs.values()) {
-            let validRef = xvrRef.find((ref) => {
+            const validRef = xvrRef.find((ref) => {
                 return (
                     offset >= ref.location.start && offset <= ref.location.end
                 );
@@ -205,16 +205,16 @@ export class SepticCnfg implements SepticReferenceProvider {
     }
 
     public findAlgCycles(): Cycle[] {
-        let calcPvrs = this.objects.filter((obj) => obj.isType("CalcPvr"));
-        let algs: Alg[] = [];
-        for (let calcPvr of calcPvrs) {
-            let alg = calcPvr.getAttribute("Alg");
-            let content = alg?.getAttrValue()?.getValue();
+        const calcPvrs = this.objects.filter((obj) => obj.isType("CalcPvr"));
+        const algs: Alg[] = [];
+        for (const calcPvr of calcPvrs) {
+            const alg = calcPvr.getAttribute("Alg");
+            const content = alg?.getAttrValue()?.getValue();
             if (!content || !calcPvr.identifier?.name) {
                 continue;
             }
             algs.push({
-                calcPvrName: removeSpaces(calcPvr.identifier?.name!),
+                calcPvrName: removeSpaces(calcPvr.identifier.name),
                 content: content,
             });
         }
@@ -231,9 +231,9 @@ export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
     }
 
     if (objectDef.refs.identifier && obj.identifier) {
-        let isObjRef = obj.isXvr || obj.isOpcXvr;
-        let isCalcPvr = obj.isType("CalcPvr");
-        let ref: SepticReference = createSepticReference(
+        const isObjRef = obj.isXvr || obj.isOpcXvr;
+        const isCalcPvr = obj.isType("CalcPvr");
+        const ref: SepticReference = createSepticReference(
             obj.identifier.name,
             {
                 uri: "",
@@ -262,27 +262,27 @@ export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
 
 function calcPvrReferences(obj: SepticObject): SepticReference[] {
     const refs: SepticReference[] = [];
-    let alg = obj.getAttribute("Alg");
+    const alg = obj.getAttribute("Alg");
     if (!alg) {
         return [];
     }
     let expr;
-    let algString = alg.getValue() || "";
-    let { strippedString, positionsMap } = removeJinjaLoopsAndIfs(algString);
+    const algString = alg.getValue() || "";
+    const { strippedString, positionsMap } = removeJinjaLoopsAndIfs(algString);
     try {
         expr = parseAlg(strippedString);
-    } catch (e: any) {
+    } catch {
         return [];
     }
     const visitor = new AlgVisitor();
     visitor.visit(expr);
 
     visitor.variables.forEach((xvr) => {
-        let identifier = xvr.value.split(".")[0];
+        const identifier = xvr.value.split(".")[0];
         let start = xvr.start;
         let end = xvr.end;
         if (positionsMap.length) {
-            let originalPositions = transformPositionsToOriginal([start, end], positionsMap);
+            const originalPositions = transformPositionsToOriginal([start, end], positionsMap);
             start = originalPositions[0];
             end = originalPositions[1];
         }
@@ -302,12 +302,12 @@ function calcPvrReferences(obj: SepticObject): SepticReference[] {
 }
 
 function attributeReferences(obj: SepticObject, attrName: string): SepticReference[] {
-    let attr = obj.getAttribute(attrName);
+    const attr = obj.getAttribute(attrName);
     if (!attr) {
         return [];
     }
-    let sliceIndex = attr.values.length < 2 ? 0 : 1;
-    let refs = attr.values.slice(sliceIndex).filter((val) => {
+    const sliceIndex = attr.values.length < 2 ? 0 : 1;
+    const refs = attr.values.slice(sliceIndex).filter((val) => {
         return (
             val.type === SepticTokenType.string ||
             val.type === SepticTokenType.identifier

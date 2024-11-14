@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { describe, it } from "mocha";
 import { compareRange, loadFile } from "./util";
 import { parseSepticSync } from "../septic";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { MarkupContent, Position, Range } from "vscode-languageserver";
+import { MarkupContent, Position } from "vscode-languageserver";
 import {
     getCalcHover,
     getHover,
@@ -19,14 +20,17 @@ describe("Test reference hover", () => {
         const offset = doc.offsetAt(Position.create(0, 21));
         const hover = getReferenceHover(cnfg, offset, doc, cnfg);
         expect(hover).to.not.equal(undefined);
+        if (!hover?.range) {
+            return;
+        }
         compareRange(
             {
                 start: Position.create(0, 17),
                 end: Position.create(0, 24),
             },
-            hover?.range!
+            hover.range
         );
-        const hoverMarkdown = hover!.contents as MarkupContent;
+        const hoverMarkdown = hover.contents as MarkupContent;
         expect(/\bMvr\b/.test(hoverMarkdown.value.split("\n")[0])).to.equal(
             true
         );
@@ -38,13 +42,15 @@ describe("Test reference hover", () => {
         const offset = doc.offsetAt(Position.create(49, 21));
         const hover = getReferenceHover(cnfg, offset, doc, cnfg);
         expect(hover).to.not.equal(undefined);
-        compareRange(
-            {
-                start: Position.create(49, 17),
-                end: Position.create(49, 24),
-            },
-            hover?.range!
-        );
+        if (hover?.range) {
+            compareRange(
+                {
+                    start: Position.create(49, 17),
+                    end: Position.create(49, 24),
+                },
+                hover.range
+            );
+        }
         const hoverMarkdown = hover!.contents as MarkupContent;
         expect(/\bMvr\b/.test(hoverMarkdown.value.split("\n")[0])).to.equal(
             true

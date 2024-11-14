@@ -17,16 +17,16 @@ export class CycleReportProvider {
         const reports: string[] = [`Cycle Report:  ${name}`];
         const cycles = refProvider.findAlgCycles();
         cycles.sort((a, b) => b.nodes.length - a.nodes.length);
-        for (let cycle of cycles) {
+        for (const cycle of cycles) {
             reports.push(
                 "\n" +
-                    [...cycle.nodes, cycle.nodes[0]]
-                        .map((node) => node.name)
-                        .join("->")
+                [...cycle.nodes, cycle.nodes[0]]
+                    .map((node) => node.name)
+                    .join("->")
             );
-            for (let node of cycle.nodes) {
+            for (const node of cycle.nodes) {
                 let nodeStr = `CalcPvr: ${node.calcpvr}`;
-                let nodeObj = refProvider.getObjectByIdentifierAndType(
+                const nodeObj = refProvider.getObjectByIdentifierAndType(
                     node.calcpvr,
                     "CalcPvr"
                 );
@@ -34,13 +34,13 @@ export class CycleReportProvider {
                     reports.push(nodeStr);
                     continue;
                 }
-                let doc = await this.docProvider.getDocument(nodeObj.uri);
+                const doc = await this.docProvider.getDocument(nodeObj.uri);
                 if (!doc) {
                     reports.push(nodeStr);
                     continue;
                 }
-                let position = doc.positionAt(nodeObj.identifier!.start);
-                let numSpaces = Math.max(1, spacesToLink - nodeStr.length);
+                const position = doc.positionAt(nodeObj.identifier!.start);
+                const numSpaces = Math.max(1, spacesToLink - nodeStr.length);
                 nodeStr +=
                     " ".repeat(numSpaces) +
                     `${nodeObj.uri}#${position.line + 1}`;

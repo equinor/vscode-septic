@@ -100,7 +100,7 @@ export class SepticObject extends SepticBase {
     }
 
     getElements(): SepticBase[] {
-        let elements: SepticBase[] = [this];
+        const elements: SepticBase[] = [this];
         if (this.identifier) {
             elements.push(...this.identifier.getElements());
         }
@@ -152,7 +152,7 @@ export class Attribute extends SepticBase {
     }
 
     getElements(): SepticBase[] {
-        let elements: SepticBase[] = [this];
+        const elements: SepticBase[] = [this];
         this.values.forEach((attrValue) => {
             elements.push(...attrValue.getElements());
         });

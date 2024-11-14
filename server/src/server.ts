@@ -18,7 +18,6 @@ import {
     Location,
     DidChangeWatchedFilesNotification,
     CompletionParams,
-    Diagnostic,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -65,7 +64,6 @@ const contextManager = new ContextManager(
 
 let hasConfigurationCapability = true;
 let hasWorkspaceFolderCapability = false;
-let hasDiagnosticRelatedInformationCapability = false;
 
 async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
     await context.load();
@@ -79,7 +77,7 @@ async function publishDiagnosticsContext(context: ScgContext): Promise<void> {
             connection.sendDiagnostics({ uri: file, diagnostics: [] });
             return;
         }
-        let doc = await documentProvider.getDocument(file);
+        const doc = await documentProvider.getDocument(file);
         if (!doc) {
             return null;
         }
@@ -100,11 +98,11 @@ async function publishDiagnosticsCnfg(uri: string): Promise<void> {
         connection.sendDiagnostics({ uri: uri, diagnostics: [] });
         return;
     }
-    let cnfg = await langService.cnfgProvider.get(uri);
+    const cnfg = await langService.cnfgProvider.get(uri);
     if (!cnfg) {
         return;
     }
-    let doc = await documentProvider.getDocument(uri);
+    const doc = await documentProvider.getDocument(uri);
     if (!doc) {
         return;
     }
@@ -119,7 +117,7 @@ async function publishDiagnosticsCnfg(uri: string): Promise<void> {
 }
 
 async function publishDiagnostics(uri: string) {
-    let context: ScgContext | undefined = await contextManager.getContext(uri);
+    const context: ScgContext | undefined = await contextManager.getContext(uri);
     if (context) {
         publishDiagnosticsContext(context);
         return;
@@ -140,7 +138,7 @@ async function updateDiagnosticsAllContexts() {
 
 async function updateDiagnosticsAllStandaloneCnfgs() {
     for (const uri of documentProvider.getAllDocumentUris()) {
-        let context = await contextManager.getContext(uri);
+        const context = await contextManager.getContext(uri);
         if (!context) {
             publishDiagnostics(uri);
         }
@@ -174,10 +172,10 @@ connection.onRequest(protocol.cylceReport, async (param) => {
 });
 
 connection.onRequest(protocol.compareCnfg, async (param) => {
-    let prevCnfg: SepticCnfg | undefined = await langService.cnfgProvider.get(
+    const prevCnfg: SepticCnfg | undefined = await langService.cnfgProvider.get(
         param.prevVersion
     );
-    let currentCnfg: SepticCnfg | undefined =
+    const currentCnfg: SepticCnfg | undefined =
         await langService.cnfgProvider.get(param.currentVersion);
     if (!prevCnfg || !currentCnfg) {
         return "";
@@ -190,9 +188,9 @@ connection.onRequest(protocol.compareCnfg, async (param) => {
 });
 
 connection.onRequest(protocol.contexts, async () => {
-    let contexts = contextManager.getAllContexts().map((val) => val.name);
+    const contexts = contextManager.getAllContexts().map((val) => val.name);
     for (const uri of documentProvider.getAllDocumentUris()) {
-        let context = await contextManager.getContext(uri);
+        const context = await contextManager.getContext(uri);
         if (!context && uri.endsWith(".cnfg")) {
             contexts.push(uri);
         }
@@ -209,11 +207,6 @@ connection.onInitialize((params: InitializeParams) => {
     );
     hasWorkspaceFolderCapability = !!(
         capabilities.workspace && !!capabilities.workspace.workspaceFolders
-    );
-    hasDiagnosticRelatedInformationCapability = !!(
-        capabilities.textDocument &&
-        capabilities.textDocument.publishDiagnostics &&
-        capabilities.textDocument.publishDiagnostics.relatedInformation
     );
 
     const result: InitializeResult = {
@@ -259,7 +252,7 @@ connection.onInitialized(async () => {
         connection.client.register(DidChangeWatchedFilesNotification.type);
     }
     if (hasWorkspaceFolderCapability) {
-        connection.workspace.onDidChangeWorkspaceFolders((_event) => {
+        connection.workspace.onDidChangeWorkspaceFolders(() => {
             connection.console.log("Workspace folder change event received.");
         });
     }
@@ -295,7 +288,7 @@ documentProvider.onDidDeleteDoc(async (uri) => {
 });
 
 contextManager.onDidUpdateContext(async (uri) => {
-    let context = contextManager.getContextByName(uri);
+    const context = contextManager.getContextByName(uri);
     if (!context) {
         return;
     }
@@ -303,31 +296,31 @@ contextManager.onDidUpdateContext(async (uri) => {
     updateDiagnosticsAllStandaloneCnfgs();
 });
 
-contextManager.onDidDeleteContext(async (uri) => {
+contextManager.onDidDeleteContext(async () => {
     updateAllDiagnostics();
 });
 
-connection.onDidChangeConfiguration((change) => {
+connection.onDidChangeConfiguration(() => {
     settingsManager.invalidate();
     updateAllDiagnostics();
 });
 
-connection.onFoldingRanges(async (params, token): Promise<FoldingRange[]> => {
+connection.onFoldingRanges(async (params): Promise<FoldingRange[]> => {
     const document = documents.get(params.textDocument.uri);
     if (!document) {
         return [];
     }
     await settingsManager.getSettings();
-    return langService.provideFoldingRanges(document, token);
+    return langService.provideFoldingRanges(document);
 });
 
 connection.onDocumentSymbol(
-    async (params, token): Promise<DocumentSymbol[]> => {
+    async (params): Promise<DocumentSymbol[]> => {
         const document = documents.get(params.textDocument.uri);
         if (!document) {
             return [];
         }
-        return langService.provideDocumentSymbols(document, token);
+        return langService.provideDocumentSymbols(document);
     }
 );
 
@@ -352,7 +345,7 @@ connection.onCompletion(
     }
 );
 
-connection.onDefinition(async (params, token) => {
+connection.onDefinition(async (params) => {
     const document = documents.get(params.textDocument.uri);
     if (!document) {
         return [];
@@ -367,14 +360,14 @@ connection.onDefinition(async (params, token) => {
         return [];
     }
 
-    let refsOffset = await langService.provideDefinition(
+    const refsOffset = await langService.provideDefinition(
         params,
         document,
         context
     );
     const refs: LocationLink[] = [];
-    for (let ref of refsOffset) {
-        let doc = await documentProvider.getDocument(ref.targetUri);
+    for (const ref of refsOffset) {
+        const doc = await documentProvider.getDocument(ref.targetUri);
         if (!doc) {
             continue;
         }
@@ -404,14 +397,14 @@ connection.onDeclaration(async (params) => {
     if (!context) {
         return [];
     }
-    let refsOffset = await langService.provideDeclaration(
+    const refsOffset = await langService.provideDeclaration(
         params,
         document,
         context
     );
     const refs: LocationLink[] = [];
-    for (let ref of refsOffset) {
-        let doc = await documentProvider.getDocument(ref.targetUri);
+    for (const ref of refsOffset) {
+        const doc = await documentProvider.getDocument(ref.targetUri);
         if (!doc) {
             continue;
         }
@@ -441,15 +434,15 @@ connection.onReferences(async (params) => {
     if (!context) {
         return [];
     }
-    let refsOffset = await langService.provideReferences(
+    const refsOffset = await langService.provideReferences(
         params,
         document,
         context
     );
 
     const refs: Location[] = [];
-    for (let ref of refsOffset) {
-        let doc = await documentProvider.getDocument(ref.uri);
+    for (const ref of refsOffset) {
+        const doc = await documentProvider.getDocument(ref.uri);
         if (!doc) {
             continue;
         }
@@ -488,7 +481,7 @@ connection.onPrepareRename((params) => {
 });
 
 connection.onHover(async (params) => {
-    let doc = await documentProvider.getDocument(params.textDocument.uri);
+    const doc = await documentProvider.getDocument(params.textDocument.uri);
     if (!doc) {
         return undefined;
     }
@@ -506,11 +499,11 @@ connection.onHover(async (params) => {
 });
 
 connection.onDocumentFormatting(async (params) => {
-    let settings = await settingsManager.getSettings();
+    const settings = await settingsManager.getSettings();
     if (!settings?.formatting.enabled) {
         return [];
     }
-    let doc = documents.get(params.textDocument.uri);
+    const doc = documents.get(params.textDocument.uri);
     if (!doc) {
         return [];
     }
@@ -518,7 +511,7 @@ connection.onDocumentFormatting(async (params) => {
 });
 
 connection.onSignatureHelp(async (params) => {
-    let doc = await documentProvider.getDocument(params.textDocument.uri);
+    const doc = await documentProvider.getDocument(params.textDocument.uri);
     if (!doc) {
         return undefined;
     }
@@ -526,11 +519,11 @@ connection.onSignatureHelp(async (params) => {
 });
 
 connection.onCodeAction(async (params) => {
-    let context: ScgContext | undefined = await contextManager.getContext(
+    const context: ScgContext | undefined = await contextManager.getContext(
         params.textDocument.uri
     );
     if (!context) {
-        let cnfg = await langService.cnfgProvider.get(params.textDocument.uri);
+        const cnfg = await langService.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return undefined;
         }
@@ -543,7 +536,7 @@ connection.onCodeAction(async (params) => {
         );
     }
 
-    let codeActions = await langService.provideCodeAction(params);
+    const codeActions = await langService.provideCodeAction(params);
     return codeActions;
 });
 // Make the text document manager listen on the connection

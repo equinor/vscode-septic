@@ -15,7 +15,6 @@ import {
     AlgExpr,
     AlgCalc,
     AlgVisitor,
-    SepticCalcInfo,
     SepticCalcParameterInfo,
     SepticMetaInfoProvider,
     formatCalcParameter,
@@ -37,11 +36,11 @@ export class SignatureHelpProvider {
         param: SignatureHelpParams,
         doc: ITextDocument
     ): Promise<SignatureHelp> {
-        let cnfg = await this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(doc.uri);
         if (!cnfg) {
             return { signatures: [] };
         }
-        let offset = doc.offsetAt(param.position);
+        const offset = doc.offsetAt(param.position);
         return getSignatureHelp(cnfg, offset);
     }
 }
@@ -50,7 +49,7 @@ export function getSignatureHelp(
     cnfg: SepticCnfg,
     offset: number
 ): SignatureHelp {
-    let alg = cnfg.getAlgFromOffset(offset);
+    const alg = cnfg.getAlgFromOffset(offset);
     if (!alg) {
         return { signatures: [] };
     }
@@ -60,12 +59,12 @@ export function getSignatureHelp(
     } catch {
         return { signatures: [] };
     }
-    let algVisitor = new AlgVisitor();
+    const algVisitor = new AlgVisitor();
     algVisitor.visit(parsedAlg);
-    let offsetAlg = offset - (alg.getAttrValue()!.start + 1);
+    const offsetAlg = offset - (alg.getAttrValue()!.start + 1);
     let currentCalc: AlgCalc | undefined = undefined;
-    for (let calc of algVisitor.calcs) {
-        let start = calc.start + calc.identifier.length + 1;
+    for (const calc of algVisitor.calcs) {
+        const start = calc.start + calc.identifier.length + 1;
         if (offsetAlg >= start && offsetAlg <= calc.end) {
             currentCalc = calc;
         }
@@ -73,13 +72,13 @@ export function getSignatureHelp(
     if (!currentCalc) {
         return { signatures: [] };
     }
-    let metaInfoProvider = SepticMetaInfoProvider.getInstance();
-    let calcMetaInfo = metaInfoProvider.getCalc(currentCalc.identifier);
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
+    const calcMetaInfo = metaInfoProvider.getCalc(currentCalc.identifier);
     if (!calcMetaInfo) {
         return { signatures: [] };
     }
-    let currentIndexCalc = getIndexParamCalc(currentCalc, offsetAlg);
-    let activeParameterIndex = fromCalcIndexToParamIndex(
+    const currentIndexCalc = getIndexParamCalc(currentCalc, offsetAlg);
+    const activeParameterIndex = fromCalcIndexToParamIndex(
         currentCalc,
         calcMetaInfo,
         currentIndexCalc
@@ -112,7 +111,7 @@ function paramMetaInfoToParameterInformation(
 function getIndexParamCalc(calc: AlgCalc, offset: number) {
     let index = 0;
     for (let i = 0; i < calc.getNumParams(); i++) {
-        let param = calc.params[i];
+        const param = calc.params[i];
         if (param.end < offset) {
             index += 1;
         } else {

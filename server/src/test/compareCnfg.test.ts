@@ -16,79 +16,79 @@ const settings: ComparisonSettings = {
 
 describe("Test compare attributes", () => {
     it("Expect no difference for identical objects", () => {
-        let prevText: string = `
+        const prevText: string = `
             Cvr: Prev
             Fulf= 1 
             BiasTFilt= 1`;
-        let currentText: string = `
+        const currentText: string = `
             Cvr: Prev
             Fulf= 1 
             BiasTFilt= 1`;
 
-        let prevObject = parseSepticSync(prevText).objects[0];
-        let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareAttributes(prevObject, currentObject, undefined);
+        const prevObject = parseSepticSync(prevText).objects[0];
+        const currentObject = parseSepticSync(currentText).objects[0];
+        const diff = compareAttributes(prevObject, currentObject, undefined);
         expect(diff.length).to.equal(0);
     });
     it("Expect difference for non identical objects", () => {
-        let prevText: string = `
+        const prevText: string = `
             Cvr: Prev
             Fulf= 2 
             BiasTFilt= 1`;
-        let currentText: string = `
+        const currentText: string = `
             Cvr: Prev
             Fulf= 1 
             BiasTFilt= 1`;
 
-        let prevObject = parseSepticSync(prevText).objects[0];
-        let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareAttributes(prevObject, currentObject, undefined);
+        const prevObject = parseSepticSync(prevText).objects[0];
+        const currentObject = parseSepticSync(currentText).objects[0];
+        const diff = compareAttributes(prevObject, currentObject, undefined);
         expect(diff.length).to.equal(1);
         expect(diff[0].name).to.equal("Fulf");
     });
     it("Expect no difference for missing attribute with default value", () => {
-        let prevText: string = `
+        const prevText: string = `
             Cvr: Prev
             BiasTFilt= 1`;
-        let currentText: string = `
+        const currentText: string = `
             Cvr: Prev
             Fulf= 1 
             BiasTFilt= 1`;
 
-        let prevObject = parseSepticSync(prevText).objects[0];
-        let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareAttributes(prevObject, currentObject, undefined);
+        const prevObject = parseSepticSync(prevText).objects[0];
+        const currentObject = parseSepticSync(currentText).objects[0];
+        const diff = compareAttributes(prevObject, currentObject, undefined);
         expect(diff.length).to.equal(0);
     });
     it("Expect difference for missing attribute with non default value", () => {
-        let prevText: string = `
+        const prevText: string = `
             Cvr: Prev
             BiasTFilt= 1`;
-        let currentText: string = `
+        const currentText: string = `
             Cvr: Prev
             Fulf= 2 
             BiasTFilt= 1`;
 
-        let prevObject = parseSepticSync(prevText).objects[0];
-        let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareAttributes(prevObject, currentObject, undefined);
+        const prevObject = parseSepticSync(prevText).objects[0];
+        const currentObject = parseSepticSync(currentText).objects[0];
+        const diff = compareAttributes(prevObject, currentObject, undefined);
         expect(diff.length).to.equal(1);
         expect(diff[0].name).to.equal("Fulf");
     });
     it("Expect no difference for diff in ignored attribute", () => {
-        let prevText: string = `
+        const prevText: string = `
             Cvr: Prev
 			Text1= "Prev"
             BiasTFilt= 1`;
-        let currentText: string = `
+        const currentText: string = `
             Cvr: Prev
 			Text1= "Current"
             Fulf= 2 
             BiasTFilt= 1`;
 
-        let prevObject = parseSepticSync(prevText).objects[0];
-        let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareAttributes(prevObject, currentObject, undefined);
+        const prevObject = parseSepticSync(prevText).objects[0];
+        const currentObject = parseSepticSync(currentText).objects[0];
+        const diff = compareAttributes(prevObject, currentObject, undefined);
         expect(diff.length).to.equal(1);
         expect(diff[0].name).to.equal("Fulf");
     });
@@ -96,71 +96,71 @@ describe("Test compare attributes", () => {
 
 describe("Test alg comparison", () => {
     it("Expect no difference for identical binary expr", () => {
-        let prevAlg = "1+2";
-        let currentAlg = "1+2";
-        let result = compareAlg(prevAlg, currentAlg);
+        const prevAlg = "1+2";
+        const currentAlg = "1+2";
+        const result = compareAlg(prevAlg, currentAlg);
         expect(result).to.equal(true);
     });
     it("Expect difference for non-identical binary expr", () => {
-        let prevAlg = "1+2";
-        let currentAlg = "2+2";
-        let result = compareAlg(prevAlg, currentAlg);
+        const prevAlg = "1+2";
+        const currentAlg = "2+2";
+        const result = compareAlg(prevAlg, currentAlg);
         expect(result).to.equal(false);
     });
     it("Expect no difference for identical algs with extra white space", () => {
-        let prevAlg = "1+  2";
-        let currentAlg = "1+2";
-        let result = compareAlg(prevAlg, currentAlg);
+        const prevAlg = "1+  2";
+        const currentAlg = "1+2";
+        const result = compareAlg(prevAlg, currentAlg);
         expect(result).to.equal(true);
     });
     it("Expect no difference for binary expr with commutative operator", () => {
-        let prevAlg = "2+1";
-        let currentAlg = "1+2";
-        let result = compareAlg(prevAlg, currentAlg);
+        const prevAlg = "2+1";
+        const currentAlg = "1+2";
+        const result = compareAlg(prevAlg, currentAlg);
         expect(result).to.equal(true);
     });
     it("Expect no difference for identical calcs", () => {
-        let prevAlg = "if(1 > 2, 1, 2)";
-        let currentAlg = "if(1>2, 1,  2)";
-        let result = compareAlg(prevAlg, currentAlg);
+        const prevAlg = "if(1 > 2, 1, 2)";
+        const currentAlg = "if(1>2, 1,  2)";
+        const result = compareAlg(prevAlg, currentAlg);
         expect(result).to.equal(true);
     });
     it("Expect difference for non identical calcs", () => {
-        let prevAlg = "if(1 > 2, 2, 1)";
-        let currentAlg = "if(1>2, 1,  2)";
-        let result = compareAlg(prevAlg, currentAlg);
+        const prevAlg = "if(1 > 2, 2, 1)";
+        const currentAlg = "if(1>2, 1,  2)";
+        const result = compareAlg(prevAlg, currentAlg);
         expect(result).to.equal(false);
     });
     it("Expect no difference for identical calcs", () => {
-        let prevAlg = "A + 2*(A+B)";
-        let currentAlg = "A + 2 * (A + B)";
-        let result = compareAlg(prevAlg, currentAlg);
+        const prevAlg = "A + 2*(A+B)";
+        const currentAlg = "A + 2 * (A + B)";
+        const result = compareAlg(prevAlg, currentAlg);
         expect(result).to.equal(true);
     });
 });
 
 describe("Test compare objects", () => {
     it("Expect no difference between identical objects", () => {
-        let prevText: string = `
+        const prevText: string = `
 		DmmyAppl: Prev
 		Text1= "Prev"
 		Nstep= 1
 		DesMode= ACTIVE
 		`;
-        let currentText: string = `
+        const currentText: string = `
 		DmmyAppl: Prev
 		Text1= "Prev"
 		Nstep= 1
 		DesMode= ACTIVE
 		`;
-        let prevObject = parseSepticSync(prevText).objects[0];
-        let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareObjects(prevObject, currentObject, settings);
-        let noDiff = isNoDiff(diff);
+        const prevObject = parseSepticSync(prevText).objects[0];
+        const currentObject = parseSepticSync(currentText).objects[0];
+        const diff = compareObjects(prevObject, currentObject, settings);
+        const noDiff = isNoDiff(diff);
         expect(noDiff).to.equal(true);
     });
     it("Expect no difference between identical objects with identical children", () => {
-        let prevText: string = `
+        const prevText: string = `
 		DmmyAppl: Prev
 		Text1= "Prev"
 		Nstep= 1
@@ -179,7 +179,7 @@ describe("Test compare objects", () => {
 ValidationLimit=  -1
          Color=  BLACK 
 		`;
-        let currentText: string = `
+        const currentText: string = `
 		DmmyAppl: Prev
 		Text1= "Prev"
 		Nstep= 1
@@ -198,40 +198,40 @@ ValidationLimit=  -1
 ValidationLimit=  -1
          Color=  BLACK 
 		`;
-        let prevCnfg = parseSepticSync(prevText);
+        const prevCnfg = parseSepticSync(prevText);
         prevCnfg.updateObjectParents(
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
-        let prevObject = prevCnfg.objects[0];
-        let currentCnfg = parseSepticSync(currentText);
+        const prevObject = prevCnfg.objects[0];
+        const currentCnfg = parseSepticSync(currentText);
         currentCnfg.updateObjectParents(
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
-        let currentObject = currentCnfg.objects[0];
-        let diff = compareObjects(prevObject, currentObject, settings);
-        let noDiff = isNoDiff(diff);
+        const currentObject = currentCnfg.objects[0];
+        const diff = compareObjects(prevObject, currentObject, settings);
+        const noDiff = isNoDiff(diff);
         expect(noDiff).to.equal(true);
     });
     it("Expect difference between objects with different attributes", () => {
-        let prevText: string = `
+        const prevText: string = `
 		DmmyAppl: Prev
 		Text1= "Prev"
 		Nstep= 1
 		DesMode= ACTIVE
 		`;
-        let currentText: string = `
+        const currentText: string = `
 		DmmyAppl: Prev
 		Text1= "Prev"
 		Nstep= 2
 		DesMode= ACTIVE
 		`;
-        let prevObject = parseSepticSync(prevText).objects[0];
-        let currentObject = parseSepticSync(currentText).objects[0];
-        let diff = compareObjects(prevObject, currentObject, settings);
+        const prevObject = parseSepticSync(prevText).objects[0];
+        const currentObject = parseSepticSync(currentText).objects[0];
+        const diff = compareObjects(prevObject, currentObject, settings);
         expect(diff.attributeDiff.length).to.equal(1);
     });
     it("Expect difference between identical objects with non-identical children", () => {
-        let prevText: string = `
+        const prevText: string = `
 		DmmyAppl: Prev
 		Text1= "Prev"
 		Nstep= 1
@@ -250,7 +250,7 @@ ValidationLimit=  -1
 ValidationLimit=  -1
          Color=  BLACK 
 		`;
-        let currentText: string = `
+        const currentText: string = `
 		DmmyAppl: Prev
 		Text1= "Prev"
 		Nstep= 1
@@ -269,21 +269,21 @@ ValidationLimit=  -1
 ValidationLimit=  -1
          Color=  BLACK 
 		`;
-        let prevCnfg = parseSepticSync(prevText);
+        const prevCnfg = parseSepticSync(prevText);
         prevCnfg.updateObjectParents(
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
-        let prevObject = prevCnfg.objects[0];
-        let currentCnfg = parseSepticSync(currentText);
+        const prevObject = prevCnfg.objects[0];
+        const currentCnfg = parseSepticSync(currentText);
         currentCnfg.updateObjectParents(
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
-        let currentObject = currentCnfg.objects[0];
-        let diff = compareObjects(prevObject, currentObject, settings);
+        const currentObject = currentCnfg.objects[0];
+        const diff = compareObjects(prevObject, currentObject, settings);
         expect(diff.updatedObjects.length).to.equal(1);
     });
     it("Expect difference between identical objects with added child", () => {
-        let prevText: string = `
+        const prevText: string = `
 		DmmyAppl: Prev
 		Text1= "Prev"
 		Nstep= 1
@@ -302,7 +302,7 @@ ValidationLimit=  -1
 ValidationLimit=  -1
          Color=  BLACK 
 		`;
-        let currentText: string = `
+        const currentText: string = `
 		DmmyAppl: Prev
 		Text1= "Prev"
 		Nstep= 1
@@ -334,21 +334,21 @@ ValidationLimit=  -1
 ValidationLimit=  -1
          Color=  BLACK 
 		`;
-        let prevCnfg = parseSepticSync(prevText);
+        const prevCnfg = parseSepticSync(prevText);
         prevCnfg.updateObjectParents(
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
-        let prevObject = prevCnfg.objects[0];
-        let currentCnfg = parseSepticSync(currentText);
+        const prevObject = prevCnfg.objects[0];
+        const currentCnfg = parseSepticSync(currentText);
         currentCnfg.updateObjectParents(
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
-        let currentObject = currentCnfg.objects[0];
-        let diff = compareObjects(prevObject, currentObject, settings);
+        const currentObject = currentCnfg.objects[0];
+        const diff = compareObjects(prevObject, currentObject, settings);
         expect(diff.addedObjects.length).to.equal(1);
     });
     it("Expect difference between identical objects with removed child", () => {
-        let prevText: string = `
+        const prevText: string = `
 		DmmyAppl: Prev
 		Text1= "Prev"
 		Nstep= 1
@@ -380,7 +380,7 @@ ValidationLimit=  -1
 ValidationLimit=  -1
          Color=  BLACK 
 		`;
-        let currentText: string = `
+        const currentText: string = `
 		DmmyAppl: Prev
 		Text1= "Prev"
 		Nstep= 1
@@ -399,17 +399,17 @@ ValidationLimit=  -1
 ValidationLimit=  -1
          Color=  BLACK 
 		`;
-        let prevCnfg = parseSepticSync(prevText);
+        const prevCnfg = parseSepticSync(prevText);
         prevCnfg.updateObjectParents(
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
-        let prevObject = prevCnfg.objects[0];
-        let currentCnfg = parseSepticSync(currentText);
+        const prevObject = prevCnfg.objects[0];
+        const currentCnfg = parseSepticSync(currentText);
         currentCnfg.updateObjectParents(
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
-        let currentObject = currentCnfg.objects[0];
-        let diff = compareObjects(prevObject, currentObject, settings);
+        const currentObject = currentCnfg.objects[0];
+        const diff = compareObjects(prevObject, currentObject, settings);
         expect(diff.removedObjects.length).to.equal(1);
     });
 });

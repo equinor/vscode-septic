@@ -5,7 +5,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import {
-    CancellationToken,
     DocumentSymbol,
     SymbolKind,
 } from "vscode-languageserver";
@@ -30,7 +29,6 @@ export class DocumentSymbolProvider {
     /* istanbul ignore next */
     public async provideDocumentSymbols(
         document: ITextDocument,
-        token: CancellationToken | undefined
     ): Promise<DocumentSymbol[]> {
         const cnfg = await this.cnfgProvider.get(document.uri);
         if (!cnfg) {
@@ -42,7 +40,7 @@ export class DocumentSymbolProvider {
 
 export function getDocumentSymbols(doc: ITextDocument, cnfg: SepticCnfg) {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
-    let symbols = cnfg.objects.map((obj) => {
+    const symbols = cnfg.objects.map((obj) => {
         const level = metaInfoProvider.getObjectDefault(obj.type).level;
         const symbolKind = metaInfoProvider.getObjectDefault(
             obj.type
@@ -50,13 +48,13 @@ export function getDocumentSymbols(doc: ITextDocument, cnfg: SepticCnfg) {
         return createSepticSymbol(obj, doc, symbolKind, level);
     });
 
-    let root = {
+    const root = {
         level: -1,
         parent: undefined,
         symbol: dummySymbol(),
     };
     let parent;
-    for (let symbol of symbols) {
+    for (const symbol of symbols) {
         if (!parent) {
             parent = updateParent(root, symbol);
         } else {
@@ -93,7 +91,7 @@ function updateRange(parent: DocumentSymbol) {
         updateRange(child);
     });
 
-    let end = parent.children[parent.children.length - 1].range.end;
+    const end = parent.children[parent.children.length - 1].range.end;
     parent.range.end = end;
     parent.selectionRange.end = end;
 }
@@ -104,8 +102,8 @@ function createSepticSymbol(
     symbolKind: SymbolKind,
     level: number
 ): SepticSymbol {
-    let name = obj.type + ": " + obj.identifier?.name;
-    let range = {
+    const name = obj.type + ": " + obj.identifier?.name;
+    const range = {
         start: doc.positionAt(obj.start),
         end: doc.positionAt(obj.end),
     };
@@ -124,7 +122,7 @@ function createSepticSymbol(
 }
 
 function dummySymbol(): DocumentSymbol {
-    let range = {
+    const range = {
         start: { character: 0, line: 0 },
         end: { character: 0, line: 0 },
     };

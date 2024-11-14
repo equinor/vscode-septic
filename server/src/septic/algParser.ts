@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Equinor ASA
  *  Copyright (c) 2015 Robert Nystrom [CraftingInterpreters]
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { CancellationToken } from "vscode-languageserver";
 import { IToken, Parser, ParserError } from "./parser";
 
 export enum AlgTokenType {
@@ -67,8 +67,8 @@ export function parseAlg(input: string): AlgExpr {
 }
 
 export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
-    parse(token: CancellationToken | undefined = undefined): AlgExpr {
-        let expr = this.comparison();
+    parse(): AlgExpr {
+        const expr = this.comparison();
         if (!this.isAtEnd()) {
             this.error("Alg can only contain a single expression", {
                 start: this.tokens[0].start,
@@ -91,8 +91,8 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
                 AlgTokenType.lessEqual
             )
         ) {
-            let operator = this.previous();
-            let right = this.term();
+            const operator = this.previous();
+            const right = this.term();
             expr = new AlgBinary(expr, operator, right);
         }
         return expr;
@@ -101,8 +101,8 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
     private term(): AlgExpr {
         let expr = this.factor();
         while (this.match(AlgTokenType.plus, AlgTokenType.minus)) {
-            let operator = this.previous();
-            let right = this.factor();
+            const operator = this.previous();
+            const right = this.factor();
             expr = new AlgBinary(expr, operator, right);
         }
         return expr;
@@ -112,8 +112,8 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
         let expr = this.unary();
 
         while (this.match(AlgTokenType.div, AlgTokenType.mul)) {
-            let operator = this.previous();
-            let right = this.unary();
+            const operator = this.previous();
+            const right = this.unary();
             expr = new AlgBinary(expr, operator, right);
         }
         return expr;
@@ -124,7 +124,7 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             return new AlgLiteral(this.previous());
         }
         if (this.match(AlgTokenType.leftParen)) {
-            let expr = this.comparison();
+            const expr = this.comparison();
             if (!this.match(AlgTokenType.rightParen)) {
                 this.error(
                     `Unexpected token: "${this.peek().content
@@ -141,18 +141,18 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             ) {
                 return this.func();
             }
-            let variable = this.variable();
+            const variable = this.variable();
             return new AlgLiteral(variable);
         }
         if (this.match(AlgTokenType.jinja)) {
-            let variable = this.variable();
+            const variable = this.variable();
             return new AlgLiteral(variable);
         }
         this.error(`Unexpected token: ${this.peek().content}`, this.peek());
     }
 
     private variable(): AlgToken {
-        let token = this.previous();
+        const token = this.previous();
         let content = token.content;
         let end = token.end;
         while (
@@ -167,14 +167,14 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
             this.advance();
             end = this.previous().end;
             content += ".";
-            let nextToken = this.peek();
+            const nextToken = this.peek();
             if (nextToken?.start === end) {
                 if (
                     nextToken?.type === AlgTokenType.identifier ||
                     nextToken?.type === AlgTokenType.jinja
                 ) {
                     this.advance();
-                    let nextVariable = this.variable();
+                    const nextVariable = this.variable();
                     content += nextVariable.content;
                     end = nextVariable.end;
                 }
@@ -189,8 +189,8 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
     }
 
     private func(): AlgExpr {
-        let identifierToken = this.previous();
-        let args: AlgExpr[] = [];
+        const identifierToken = this.previous();
+        const args: AlgExpr[] = [];
         this.advance();
         let startArgToken = this.previous();
         let expr: AlgExpr | undefined = undefined;
@@ -271,8 +271,8 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
 
     private unary(): AlgExpr {
         if (this.match(AlgTokenType.minus)) {
-            let operator = this.previous();
-            let right = this.unary();
+            const operator = this.previous();
+            const right = this.unary();
             return new AlgUnary(right, operator);
         }
         return this.primary();
@@ -363,9 +363,9 @@ export class AlgCalc extends AlgExpr {
         if (!this.params.length) {
             return 0;
         }
-        let lastParam = this.params[this.params.length - 1];
+        const lastParam = this.params[this.params.length - 1];
         if (lastParam instanceof AlgLiteral) {
-            let literal = lastParam as AlgLiteral;
+            const literal = lastParam as AlgLiteral;
             if (literal.type === AlgTokenType.empty) {
                 return this.params.length - 1;
             }
@@ -424,7 +424,7 @@ export class AlgVisitor implements IAlgVisitor {
 
     visitCalc(expr: AlgCalc): any {
         this.calcs.push(expr);
-        for (let param of expr.params) {
+        for (const param of expr.params) {
             if (
                 this.ignoreIdentifierCalcParams &&
                 param instanceof AlgLiteral &&
@@ -445,15 +445,15 @@ export class AlgComparison implements IAlgVisitor {
     constructor() { }
 
     visit(prevExpr: AlgExpr, currentExpr: AlgExpr): boolean {
-        let prev = prevExpr.accept(this);
-        let current = currentExpr.accept(this);
+        const prev = prevExpr.accept(this);
+        const current = currentExpr.accept(this);
         return prev === current;
     }
 
     visitBinary(expr: AlgBinary) {
-        let left: string = expr.left.accept(this);
-        let operator: string = expr.operator?.content ?? "";
-        let right: string = expr.right?.accept(this) ?? "";
+        const left: string = expr.left.accept(this);
+        const operator: string = expr.operator?.content ?? "";
+        const right: string = expr.right?.accept(this) ?? "";
         if (
             expr.operator &&
             expr.right &&
@@ -486,7 +486,7 @@ export class AlgComparison implements IAlgVisitor {
     }
 
     visitUnary(expr: AlgUnary) {
-        let right = expr.right.accept(this);
+        const right = expr.right.accept(this);
         return expr.operator.content + right;
     }
 }
@@ -514,7 +514,7 @@ export class AlgScanner {
     }
 
     private scanToken(): void {
-        let c = this.advance();
+        const c = this.advance();
         switch (c) {
             case "(":
                 this.addToken(AlgTokenType.leftParen);
@@ -567,7 +567,6 @@ export class AlgScanner {
             case "{":
                 if (this.peek() === "{") {
                     this.jinja();
-                    break;
                 } else if (this.peek() === "#" || this.peek() === "%") {
                     this.error(
                         "Parsing of Algs containing jinja expressions/comments are not supported",
@@ -576,6 +575,7 @@ export class AlgScanner {
                 } else {
                     this.error(`Unexpected token: ${c}`);
                 }
+                break;
             default:
                 if (this.isAlphaNumeric(c)) {
                     this.alphaNumeric();

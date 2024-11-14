@@ -3,9 +3,9 @@ import { SepticReferenceProvider } from "../septic";
 export function generateOpcReport(
     refProvider: SepticReferenceProvider
 ): string {
-    let header: string = "ObjectId;ObjectType;ObjectAttribute;OPCTag";
-    let entries: string[] = [];
-    let opcObjects = refProvider.getObjectsByType(
+    const header: string = "ObjectId;ObjectType;ObjectAttribute;OPCTag";
+    const entries: string[] = [];
+    const opcObjects = refProvider.getObjectsByType(
         "SopcTvr",
         "SopcEvr",
         "SopcCvr",
@@ -26,16 +26,16 @@ export function generateOpcReport(
         "UAAppl",
         "UAProc"
     );
-    for (let obj of opcObjects) {
-        let objectName = obj.identifier?.id ?? "unknown";
-        let tagAttributes = obj.attributes.filter(
+    for (const obj of opcObjects) {
+        const objectName = obj.identifier?.id ?? "unknown";
+        const tagAttributes = obj.attributes.filter(
             (attr) =>
                 attr.key.endsWith("Tag") ||
                 attr.key.startsWith("x") ||
                 attr.key.startsWith("y")
         );
-        for (let tagAttr of tagAttributes) {
-            let value = tagAttr.getAttrValue()?.getValue() ?? "";
+        for (const tagAttr of tagAttributes) {
+            const value = tagAttr.getAttrValue()?.getValue() ?? "";
             if (
                 value.trim() === "" ||
                 value === "DUMMY_TAG" ||

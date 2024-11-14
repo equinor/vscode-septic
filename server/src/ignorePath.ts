@@ -36,8 +36,8 @@ export function getIgnoredCodes(path: string, ignorePatterns: IgnoredPaths[]): s
 
 function pathToRegex(workspace: string, path: string): RegExp {
     path = path.replace(/^\./, "").replace(/^\//, "");
-    let absPath = workspace + "/" + path;
-    let pattern = absPath.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"); // Escape special characters
+    const absPath = workspace + "/" + path;
+    let pattern = absPath.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"); // Escape special characters
     pattern = pattern.replace(/\\\*/g, ".*");
     pattern = pattern.replace(/\\\?/g, ".");
     pattern = `^${pattern}$`;

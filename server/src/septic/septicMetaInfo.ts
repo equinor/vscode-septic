@@ -97,7 +97,7 @@ export class SepticMetaInfoProvider {
     }
 
     public updateObjectLevel(objectType: string, level: number): void {
-        let obj = this.objectsMap.get(objectType);
+        const obj = this.objectsMap.get(objectType);
         if (!obj) {
             return;
         }
@@ -139,8 +139,8 @@ export class SepticMetaInfoProvider {
                 quality: calc.quality?.replace(/\r?\n/g, "") ?? "",
             };
         });
-        let calcsMap = new Map<string, SepticCalcInfo>();
-        for (let calc of calcs) {
+        const calcsMap = new Map<string, SepticCalcInfo>();
+        for (const calc of calcs) {
             calcsMap.set(calc.name, calc);
         }
         return calcsMap;
@@ -170,8 +170,8 @@ export class SepticMetaInfoProvider {
                 },
             };
         });
-        let objectsMap = new Map<string, SepticObjectInfo>();
-        for (let obj of objects) {
+        const objectsMap = new Map<string, SepticObjectInfo>();
+        for (const obj of objects) {
             objectsMap.set(obj.name, obj);
         }
         return objectsMap;
@@ -188,8 +188,8 @@ export class SepticMetaInfoProvider {
         const objectsDoc: SepticObjectDocumentationInput[] = YAML.load(
             file
         ) as SepticObjectDocumentationInput[];
-        let objectsDocMap = new Map<string, ISepticObjectDocumentation>();
-        for (let obj of objectsDoc) {
+        const objectsDocMap = new Map<string, ISepticObjectDocumentation>();
+        for (const obj of objectsDoc) {
             objectsDocMap.set(obj.name, new SepticObjectDocumentation(obj));
         }
         return objectsDocMap;
@@ -204,8 +204,8 @@ export class SepticMetaInfoProvider {
         const objectSnippets: SepticObjectSnippet[] = YAML.load(
             file
         ) as SepticObjectSnippet[];
-        let snippets: CompletionItem[] = objectSnippets.map((obj) => {
-            let compItem: CompletionItem = {
+        const snippets: CompletionItem[] = objectSnippets.map((obj) => {
+            const compItem: CompletionItem = {
                 label: obj.prefix,
                 kind: CompletionItemKind.Snippet,
                 insertTextFormat: InsertTextFormat.Snippet,
@@ -223,7 +223,7 @@ export class SepticMetaInfoProvider {
     private loadObjectHierarchy(
         objectsDoc: ISepticObjectDocumentation[]
     ): SepticObjectHierarchy {
-        let objectTree = createSepticObjectTree(objectsDoc);
+        const objectTree = createSepticObjectTree(objectsDoc);
         updateObjectHierarchyLevels(objectTree);
         return objectTree;
     }
@@ -258,7 +258,7 @@ const objectNameMap = new Map<string, string>([
 export const VALUE = "Value";
 
 function datatypeToObjectName(type: string) {
-    let objectName = objectNameMap.get(type);
+    const objectName = objectNameMap.get(type);
     if (!objectName) {
         return VALUE;
     }
@@ -309,7 +309,7 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
     }
 
     private setAttributes(attrs: SepticAttributeDocumentation[]) {
-        for (let attr of attrs) {
+        for (const attr of attrs) {
             if (attr.calc) {
                 this.publicAttributes.push(attr.name);
             }
@@ -481,7 +481,7 @@ export function createSepticObjectTree(
         string,
         SepticObjectNode
     >();
-    for (let obj of objects) {
+    for (const obj of objects) {
         let node = nodes.get(obj.name);
         if (!node) {
             node = new SepticObjectNode(obj.name);
@@ -490,7 +490,7 @@ export function createSepticObjectTree(
         obj.parents.forEach((parent) => {
             node?.addParent(parent);
         });
-        for (let parent of obj.parents) {
+        for (const parent of obj.parents) {
             let parentNode = nodes.get(parent);
             if (!parentNode) {
                 parentNode = new SepticObjectNode(parent);
@@ -499,7 +499,7 @@ export function createSepticObjectTree(
             parentNode.addChild(obj.name);
         }
     }
-    let roots: SepticObjectNode[] = [];
+    const roots: SepticObjectNode[] = [];
     nodes.forEach((value) => {
         if (!value.parents.length) {
             roots.push(value);
@@ -522,7 +522,7 @@ function updateObjectLevel(
 ) {
     node.setLevel(level);
     node.children.forEach((child) => {
-        let childNode = nodes.get(child);
+        const childNode = nodes.get(child);
         updateObjectLevel(childNode!, level + 1, nodes);
     });
 }

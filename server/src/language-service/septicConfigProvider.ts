@@ -9,7 +9,7 @@ import {
     CancellationTokenSource,
     URI,
 } from "vscode-languageserver";
-import { SepticCnfg, parseSepticAsync, parseSepticSync } from "../septic";
+import { SepticCnfg, parseSepticAsync } from "../septic";
 import { ResourceMap } from "../util/resourceMap";
 import { ITextDocument } from ".";
 import { Lazy, lazy } from "../util/lazy";
@@ -30,7 +30,7 @@ async function getValueCnfg(
     token: CancellationToken
 ): Promise<SepticCnfg> {
     const text = document.getText();
-    let cnfg = await parseSepticAsync(text, token);
+    const cnfg = await parseSepticAsync(text, token);
     cnfg.setUri(document.uri);
     return cnfg;
 }
@@ -67,7 +67,7 @@ export class SepticConfigProvider implements ISepticConfigProvider {
             return undefined;
         }
 
-        let existing = this.cache.get(resource);
+        const existing = this.cache.get(resource);
         if (existing) {
             return existing.value.value;
         }
@@ -95,10 +95,10 @@ export class SepticConfigProvider implements ISepticConfigProvider {
     }
 
     private set(doc: ITextDocument) {
-        let cts = new CancellationTokenSource();
+        const cts = new CancellationTokenSource();
         this.cache.set(doc.uri, {
             value: lazy<Promise<SepticCnfg>>(async () => {
-                let cnfg = await this.getValue(doc, cts.token);
+                const cnfg = await this.getValue(doc, cts.token);
                 return cnfg;
             }),
             cts: cts,
@@ -106,12 +106,12 @@ export class SepticConfigProvider implements ISepticConfigProvider {
     }
 
     private loadDocument(uri: string): Promise<ITextDocument | undefined> {
-        let exsisting = this.loadingDocuments.get(uri);
+        const exsisting = this.loadingDocuments.get(uri);
         if (exsisting) {
             return exsisting;
         }
 
-        let p = this.docProvider.getDocument(uri);
+        const p = this.docProvider.getDocument(uri);
         p.finally(() => {
             this.loadingDocuments.delete(uri);
         });

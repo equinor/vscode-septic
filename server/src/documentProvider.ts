@@ -224,7 +224,7 @@ export class DocumentProvider {
         }
         const matchingDoc = this.documents.get(uri);
         if (matchingDoc) {
-            let doc = new Document(uri, { inMemoryDoc: matchingDoc });
+            const doc = new Document(uri, { inMemoryDoc: matchingDoc });
             this.cache.set(uri, doc);
             return doc;
         }
@@ -235,7 +235,7 @@ export class DocumentProvider {
         if (this.cache.has(uri)) {
             return;
         }
-        let doc = await this.openDocumentFromFs(uri);
+        const doc = await this.openDocumentFromFs(uri);
         if (doc) {
             this._onDidLoadDoc.fire(uri);
         }
@@ -265,7 +265,7 @@ export class DocumentProvider {
             });
             this.cache.set(uri, doc);
             return doc;
-        } catch (e) {
+        } catch {
             return undefined;
         }
     }

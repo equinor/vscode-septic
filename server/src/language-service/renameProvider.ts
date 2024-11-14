@@ -88,7 +88,7 @@ export async function getRenameEdits(
     }
     const builder = new WorkspaceEditBuilder();
     for (const ref of refs) {
-        let docRef = await getDocumentFunction(ref.location.uri);
+        const docRef = await getDocumentFunction(ref.location.uri);
         if (!docRef) {
             continue;
         }

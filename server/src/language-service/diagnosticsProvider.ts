@@ -37,6 +37,7 @@ import {
     RefValidationFunction,
     SepticReference,
     ReferenceType,
+    AlgParsingError,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -141,8 +142,8 @@ export class DiagnosticProvider {
             return [];
         }
 
-        let settingsWorkspace = await this.settingsManager.getSettings();
-        let settings =
+        const settingsWorkspace = await this.settingsManager.getSettings();
+        const settings =
             settingsWorkspace?.diagnostics ?? defaultDiagnosticsSettings;
 
         if (!settings.enabled) {
@@ -162,16 +163,16 @@ export function getDiagnostics(
     diagnostics.push(...validateObjects(cnfg, doc, refProvider));
     diagnostics.push(...validateAlgs(cnfg, doc, refProvider));
     diagnostics.push(...validateComments(cnfg, doc));
-    let disabledLines = getDisabledLines(cnfg.comments, doc);
-    let filteredDiags = diagnostics.filter((diag) => {
-        let disabledLine = disabledLines.get(diag.range.start.line);
+    const disabledLines = getDisabledLines(cnfg.comments, doc);
+    const filteredDiags = diagnostics.filter((diag) => {
+        const disabledLine = disabledLines.get(diag.range.start.line);
         if (!disabledLine) {
             return true;
         }
         if (disabledLine.all) {
             return false;
         }
-        for (let code of disabledLine.diagnosticCodes) {
+        for (const code of disabledLine.diagnosticCodes) {
             if (code === diag.code) {
                 return false;
             }
@@ -186,7 +187,7 @@ export function validateComments(
     doc: ITextDocument
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    for (let comment of cnfg.comments) {
+    for (const comment of cnfg.comments) {
         if (!checkSepticComment(comment)) {
             diagnostics.push(
                 createDiagnostic(
@@ -219,10 +220,10 @@ export function validateAlgs(
     refProvider: SepticReferenceProvider
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    let algAttrs = cnfg.getAlgAttrs();
+    const algAttrs = cnfg.getAlgAttrs();
 
     for (let i = 0; i < algAttrs.length; i++) {
-        let algAttrValue = algAttrs[i].getAttrValue();
+        const algAttrValue = algAttrs[i].getAttrValue();
         if (!algAttrValue) {
             continue;
         }
@@ -243,14 +244,15 @@ export function validateAlgs(
         let expr;
         try {
             expr = parseAlg(algAttrValue.getValue());
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const algParsingError = error as AlgParsingError;
             const diagnostic = createDiagnostic(
                 DiagnosticSeverity.Error,
                 {
-                    start: doc.positionAt(offsetStartAlg + error.token.start),
-                    end: doc.positionAt(offsetStartAlg + error.token.end),
+                    start: doc.positionAt(offsetStartAlg + algParsingError.token.start),
+                    end: doc.positionAt(offsetStartAlg + algParsingError.token.end),
                 },
-                error.message,
+                algParsingError.message,
                 DiagnosticCode.invalidAlg
             );
             diagnostics.push(diagnostic);
@@ -288,7 +290,7 @@ export function validateAlgVariable(
     if (isPureJinja(variable.value)) {
         return [];
     }
-    let variableParts = variable.value.split(".");
+    const variableParts = variable.value.split(".");
     if (
         !refProvider.validateRef(variableParts[0], defaultRefValidationFunction)
     ) {
@@ -394,11 +396,11 @@ function validateCalcParams(
     doc: ITextDocument,
     offsetStartAlg: number
 ): Diagnostic[] {
-    let diagnostics: Diagnostic[] = [];
+    const diagnostics: Diagnostic[] = [];
     for (let index = 0; index < calc.getNumParams(); index++) {
-        let paramExpr = calc.params[index];
-        let calcParamIndex = fromCalcIndexToParamIndex(calc, calcInfo, index);
-        let paramInfo = calcInfo.parameters[calcParamIndex];
+        const paramExpr = calc.params[index];
+        const calcParamIndex = fromCalcIndexToParamIndex(calc, calcInfo, index);
+        const paramInfo = calcInfo.parameters[calcParamIndex];
         if (!paramInfo) {
             continue;
         }
@@ -441,13 +443,13 @@ function validateCalcParamsLength(
     doc: ITextDocument,
     offsetStartAlg: number
 ): Diagnostic[] {
-    let paramInfo = getCalcParamIndexInfo(calcInfo);
-    let numFixedParamsPre = paramInfo.fixedLengthParams.pre.length
+    const paramInfo = getCalcParamIndexInfo(calcInfo);
+    const numFixedParamsPre = paramInfo.fixedLengthParams.pre.length
         ? paramInfo.fixedLengthParams.pre[paramInfo.fixedLengthParams.pre.length - 1]
         : 0;
-    let numFixedParamsPost = paramInfo.fixedLengthParams.post.length ? paramInfo.fixedLengthParams.post[paramInfo.fixedLengthParams.post.length - 1] - numFixedParamsPre : 0;
-    let numVariableParams = paramInfo.variableLengthParams.num;
-    let numParams = calc.getNumParams();
+    const numFixedParamsPost = paramInfo.fixedLengthParams.post.length ? paramInfo.fixedLengthParams.post[paramInfo.fixedLengthParams.post.length - 1] - numFixedParamsPre : 0;
+    const numVariableParams = paramInfo.variableLengthParams.num;
+    const numParams = calc.getNumParams();
     if (!numVariableParams) {
         if (numParams < numFixedParamsPre - paramInfo.fixedLengthParams.numOptional) {
             return [
@@ -479,7 +481,7 @@ function validateCalcParamsLength(
         return [];
     }
     if (paramInfo.variableLengthParams.exactLength) {
-        let indexDesignatorParam = getIndexOfParam(
+        const indexDesignatorParam = getIndexOfParam(
             paramInfo.variableLengthParams.exactLength,
             calcInfo
         );
@@ -489,13 +491,13 @@ function validateCalcParamsLength(
         if (indexDesignatorParam >= calc.params.length) {
             return [];
         }
-        let designatorValue = getValueOfAlgExpr(
+        const designatorValue = getValueOfAlgExpr(
             calc.params[indexDesignatorParam]
         );
         if (designatorValue === undefined) {
             return [];
         }
-        let expectedNumParams =
+        const expectedNumParams =
             numVariableParams * designatorValue + numFixedParamsPre + numFixedParamsPost;
         if (numParams !== expectedNumParams) {
             return [
@@ -517,8 +519,8 @@ function validateCalcParamsLength(
         (numParams - numFixedParamsPre - numFixedParamsPost) % numVariableParams !== 0 ||
         numParams === 0 || numParams < numFixedParamsPre + numFixedParamsPost + numVariableParams
     ) {
-        let minNumParams = numFixedParamsPre + numFixedParamsPost + numVariableParams;
-        let oddOrEven = (numVariableParams + numFixedParamsPre + numFixedParamsPost) % 2 === 0 ? "even" : "odd";
+        const minNumParams = numFixedParamsPre + numFixedParamsPost + numVariableParams;
+        const oddOrEven = (numVariableParams + numFixedParamsPre + numFixedParamsPost) % 2 === 0 ? "even" : "odd";
         return [
             createDiagnostic(
                 DiagnosticSeverity.Warning,
@@ -571,11 +573,11 @@ function checkValidObjectParam(
     types: string[],
     refProvider: SepticReferenceProvider
 ) {
-    let exprLiteral = expr as AlgLiteral;
-    let objects = refProvider.getObjectsByIdentifier(
+    const exprLiteral = expr as AlgLiteral;
+    const objects = refProvider.getObjectsByIdentifier(
         exprLiteral.value.split(".")[0]
     );
-    for (let obj of objects) {
+    for (const obj of objects) {
         if (obj.isType(...types)) {
             return true;
         }
@@ -590,14 +592,14 @@ function checkValidValueParam(
     if (!isAlgExprObjectReference(expr)) {
         return true;
     }
-    let exprLiteral = expr as AlgLiteral;
+    const exprLiteral = expr as AlgLiteral;
     if (isPureJinja(exprLiteral.value)) {
         return true;
     }
-    let objects = refProvider.getObjectsByIdentifier(
+    const objects = refProvider.getObjectsByIdentifier(
         exprLiteral.value.split(".")[0]
     );
-    for (let obj of objects) {
+    for (const obj of objects) {
         if (obj.isXvr) {
             return true;
         }
@@ -615,8 +617,8 @@ export function validateObjects(
     refProvider: SepticReferenceProvider
 ): Diagnostic[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
-    let diagnostics: Diagnostic[] = [];
-    for (let obj of cnfg.objects) {
+    const diagnostics: Diagnostic[] = [];
+    for (const obj of cnfg.objects) {
         const objectDoc = metaInfoProvider.getObjectDocumentation(obj.type);
         const objectInfo = metaInfoProvider.getObject(obj.type);
         if (!objectDoc) {
@@ -653,7 +655,7 @@ export function validateObject(
     diagnostics.push(
         ...validateObjectReferences(obj, doc, refProvider, objectInfo)
     );
-    for (let attr of obj.attributes) {
+    for (const attr of obj.attributes) {
         diagnostics.push(...validateAttribute(attr, doc, objectDoc));
     }
     return diagnostics;
@@ -729,7 +731,7 @@ export function validateObjectReferences(
             );
         }
     }
-    for (let attr of objectMetaInfo.refs.attributes) {
+    for (const attr of objectMetaInfo.refs.attributes) {
         let attrValues = obj.getAttribute(attr)?.getAttrValues();
         if (!attrValues) {
             continue;
@@ -738,12 +740,12 @@ export function validateObjectReferences(
             attrValues = attrValues.slice(1);
         }
 
-        for (let attrValue of attrValues) {
-            let refName = attrValue.getValue();
+        for (const attrValue of attrValues) {
+            const refName = attrValue.getValue();
             if (refName.length < 1) {
                 continue;
             }
-            let validRef = refProvider.validateRef(
+            const validRef = refProvider.validateRef(
                 refName,
                 defaultRefValidationFunction
             );
@@ -779,14 +781,14 @@ function validateIdentifierReferences(
     objectMetaInfo: SepticObjectInfo,
     doc: ITextDocument
 ): Diagnostic[] {
-    let validRef = refProvider.validateRef(
+    const validRef = refProvider.validateRef(
         obj.identifier!.name,
         defaultRefValidationFunction
     );
     if (validRef) {
         return [];
     }
-    let severity = objectMetaInfo.refs.identifierOptional
+    const severity = objectMetaInfo.refs.identifierOptional
         ? DiagnosticSeverity.Hint
         : DiagnosticSeverity.Warning;
     return [
@@ -856,14 +858,14 @@ function validateDuplicateIdentifiers(
     } else {
         return [];
     }
-    let validRef = refProvider.validateRef(
+    const validRef = refProvider.validateRef(
         obj.identifier!.name,
         validationFunction
     );
     if (validRef) {
         return [];
     }
-    let severity = DiagnosticSeverity.Warning;
+    const severity = DiagnosticSeverity.Warning;
     return [
         createDiagnostic(
             severity,
@@ -882,24 +884,24 @@ function validateCalcPvrIdentifierReferences(
     refProvider: SepticReferenceProvider,
     doc: ITextDocument
 ): Diagnostic[] {
-    let referenceToEvr = refProvider.validateRef(
+    const referenceToEvr = refProvider.validateRef(
         obj.identifier!.name,
         hasReferenceToEvr
     );
     if (referenceToEvr) {
         return [];
     }
-    let referenceToXvr = refProvider.validateRef(
+    const referenceToXvr = refProvider.validateRef(
         obj.identifier!.name,
         defaultRefValidationFunction
     );
-    let severity = referenceToXvr
+    const severity = referenceToXvr
         ? DiagnosticSeverity.Warning
         : DiagnosticSeverity.Hint;
-    let message = referenceToXvr
+    const message = referenceToXvr
         ? `CalcPvr references non Evr ${obj.identifier!.name}`
         : `No reference to Evr`;
-    let code = referenceToXvr
+    const code = referenceToXvr
         ? DiagnosticCode.invalidReference
         : DiagnosticCode.missingReference;
     return [
@@ -1002,7 +1004,7 @@ export function validateAttribute(
             ),
         ];
     }
-    let attrValues = attr.getAttrValues();
+    const attrValues = attr.getAttrValues();
     diagnostics.push(
         ...validateAttributeNumValues(
             attrValues,
@@ -1025,10 +1027,10 @@ function validateAttributeValue(
     doc: ITextDocument
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    for (let attrValue of attrValues) {
+    for (const attrValue of attrValues) {
         if (!checkAttributeDataType(attrValue, attrDoc)) {
-            let datatypeFormatted = formatDataType(attrDoc);
-            let errorMessage = `Wrong data type for attribute. Expected DataType: ${datatypeFormatted}`;
+            const datatypeFormatted = formatDataType(attrDoc);
+            const errorMessage = `Wrong data type for attribute. Expected DataType: ${datatypeFormatted}`;
             diagnostics.push(
                 createDiagnostic(
                     DiagnosticSeverity.Error,
@@ -1042,7 +1044,7 @@ function validateAttributeValue(
             );
         }
         if (attrValue.type === SepticTokenType.string) {
-            let indexInvalid = attrValue.getValue().indexOf("'");
+            const indexInvalid = attrValue.getValue().indexOf("'");
             if (indexInvalid !== -1) {
                 diagnostics.push(
                     createDiagnostic(
@@ -1099,39 +1101,41 @@ function validateAttributeNumValues(
                 ),
             ];
         default:
-            if (!attrDoc.list) {
-                return [
-                    createDiagnostic(
-                        DiagnosticSeverity.Error,
-                        range,
-                        `Attribute does not expect list of values`,
-                        DiagnosticCode.unexpectedList
-                    ),
-                ];
+            {
+                if (!attrDoc.list) {
+                    return [
+                        createDiagnostic(
+                            DiagnosticSeverity.Error,
+                            range,
+                            `Attribute does not expect list of values`,
+                            DiagnosticCode.unexpectedList
+                        ),
+                    ];
+                }
+                if (!isInt(attrValues[0].value)) {
+                    return [
+                        createDiagnostic(
+                            DiagnosticSeverity.Error,
+                            range,
+                            `First value needs to be positive int when multiple values are provided for attribute`,
+                            DiagnosticCode.missingListLengthValue
+                        ),
+                    ];
+                }
+                const numValues = parseInt(attrValues[0].value);
+                if (attrValues.length - 1 !== numValues) {
+                    return [
+                        createDiagnostic(
+                            DiagnosticSeverity.Error,
+                            range,
+                            `Incorrect number of values given. Expected: ${numValues} Actual: ${attrValues.length - 1
+                            }.`,
+                            DiagnosticCode.mismatchLengthList
+                        ),
+                    ];
+                }
+                return [];
             }
-            if (!isInt(attrValues[0].value)) {
-                return [
-                    createDiagnostic(
-                        DiagnosticSeverity.Error,
-                        range,
-                        `First value needs to be positive int when multiple values are provided for attribute`,
-                        DiagnosticCode.missingListLengthValue
-                    ),
-                ];
-            }
-            let numValues = parseInt(attrValues[0].value);
-            if (attrValues.length - 1 !== numValues) {
-                return [
-                    createDiagnostic(
-                        DiagnosticSeverity.Error,
-                        range,
-                        `Incorrect number of values given. Expected: ${numValues} Actual: ${attrValues.length - 1
-                        }.`,
-                        DiagnosticCode.mismatchLengthList
-                    ),
-                ];
-            }
-            return [];
     }
 }
 
@@ -1155,7 +1159,7 @@ export function validateObjectParent(
             ),
         ];
     }
-    let parent = obj.parent?.type ?? "";
+    const parent = obj.parent?.type ?? "";
     if (expectedParents.length && !expectedParents.includes(parent)) {
         return [
             createDiagnostic(
@@ -1196,12 +1200,14 @@ export function checkAttributeDataType(
                 attrValue.type === SepticTokenType.identifier
             );
         default:
-            let bitMaskMatch = attrDoc.dataType.match(/^bit([0-9]+)$/);
-            if (!bitMaskMatch) {
-                return true;
+            {
+                const bitMaskMatch = attrDoc.dataType.match(/^bit([0-9]+)$/);
+                if (!bitMaskMatch) {
+                    return true;
+                }
+                const number = parseInt(bitMaskMatch[1]);
+                return RegExp(`^[01]{1,${number}}$`).test(attrValue.value);
             }
-            let number = parseInt(bitMaskMatch[1]);
-            return RegExp(`^[01]{1,${number}}$`).test(attrValue.value);
     }
 }
 
@@ -1210,7 +1216,7 @@ function isInt(str: string) {
 }
 
 export function checkIdentifier(identifier: string): boolean {
-    const ignoredPattern = /\{\{\s*[\w\-]+\s*\}\}/g;
+    const ignoredPattern = /\{\{\s*[\w-]+\s*\}\}/g;
 
     const filteredIdentifier = identifier.replace(ignoredPattern, "");
 
@@ -1232,17 +1238,17 @@ function getDisabledLines(
     comments: SepticComment[],
     doc: ITextDocument
 ): Map<number, { all: boolean; diagnosticCodes: string[] }> {
-    let disabledLinesMap = new Map<
+    const disabledLinesMap = new Map<
         number,
         { all: boolean; diagnosticCodes: string[] }
     >();
-    for (let comment of comments) {
-        let match = comment.content.match(disableDiagnosticRegex);
+    for (const comment of comments) {
+        const match = comment.content.match(disableDiagnosticRegex);
         if (!match) {
             continue;
         }
-        let line = doc.positionAt(comment.start).line;
-        let matchCode = match[1] ?? match[2];
+        const line = doc.positionAt(comment.start).line;
+        const matchCode = match[1] ?? match[2];
         if (matchCode) {
             disabledLinesMap.set(line, {
                 all: false,
@@ -1256,10 +1262,10 @@ function getDisabledLines(
 }
 
 function getDiagnosticCodes(codes: string): string[] {
-    let splitCodes = codes.split(",");
-    let diagnosticCodes: string[] = [];
+    const splitCodes = codes.split(",");
+    const diagnosticCodes: string[] = [];
     splitCodes.forEach((code) => {
-        let trimedCode = code.trim();
+        const trimedCode = code.trim();
         if (diagnosticCodeRegex.test(trimedCode)) {
             diagnosticCodes.push(trimedCode);
         }

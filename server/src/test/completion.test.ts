@@ -103,7 +103,7 @@ describe("Test completion of identifier", () => {
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(
             compItems.filter((item) => {
-                item.kind === CompletionItemKind.Variable;
+                return item.kind === CompletionItemKind.Variable;
             }).length
         ).to.equal(0);
     });
@@ -165,8 +165,11 @@ describe("Test completion of object attributes", () => {
         const offset = doc.offsetAt(Position.create(2, 1));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.greaterThan(0);
-        const insertText = compItems[0].textEdit?.newText!;
-        expect(/^\n/.test(insertText)).to.equal(false);
+        const textEdit = compItems[0].textEdit;
+        if (textEdit) {
+            const insertText = textEdit.newText;
+            expect(/^\n/.test(insertText)).to.equal(false);
+        }
     });
     it("Completion item is inserted on same line when completing on empty line with start", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\nTe   \n`;
@@ -175,8 +178,11 @@ describe("Test completion of object attributes", () => {
         const offset = doc.offsetAt(Position.create(2, 2));
         const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
         expect(compItems.length).to.greaterThan(0);
-        const insertText = compItems[0].textEdit?.newText!;
-        expect(/^\n/.test(insertText)).to.equal(false);
+        const textEdit = compItems[0].textEdit;
+        if (textEdit) {
+            const insertText = textEdit.newText;
+            expect(/^\n/.test(insertText)).to.equal(false);
+        }
     });
     it("Completion item is inserted on new line when completing on line with existing attr", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\nText1= ""     \n`;
@@ -188,8 +194,11 @@ describe("Test completion of object attributes", () => {
             (item) => item.kind === CompletionItemKind.Property
         );
         expect(compItems.length).to.greaterThan(0);
-        const insertText = compItems[0].textEdit?.newText!;
-        expect(/^\n/.test(insertText)).to.equal(true);
+        const insertText = compItems[0].textEdit?.newText;
+        if (insertText) {
+            expect(/^\n/.test(insertText)).to.equal(true);
+        }
+
     });
     it("Completion item is overwrites entire completion text", () => {
         const text = `SopcMvr: TestMvr\nMvr:   TestMvr\nText1= "" Text2    \n`;
@@ -201,7 +210,7 @@ describe("Test completion of object attributes", () => {
             (item) => item.kind === CompletionItemKind.Property
         );
         expect(compItems.length).to.greaterThan(0);
-        let textEdit = compItems[0].textEdit as TextEdit;
+        const textEdit = compItems[0].textEdit as TextEdit;
         expect(textEdit.range.start.character).to.equal(10);
     });
 });

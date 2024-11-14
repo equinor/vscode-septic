@@ -48,11 +48,11 @@ export function getHover(
     doc: ITextDocument,
     refProvider: SepticReferenceProvider
 ): Hover | undefined {
-    let objectHover = getObjectHover(cnfg, offset, doc);
+    const objectHover = getObjectHover(cnfg, offset, doc);
     if (objectHover) {
         return objectHover;
     }
-    let refHover = getReferenceHover(cnfg, offset, doc, refProvider);
+    const refHover = getReferenceHover(cnfg, offset, doc, refProvider);
     if (refHover) {
         return refHover;
     }
@@ -81,7 +81,7 @@ export function getReferenceHover(
     });
 
     if (xvr.length) {
-        let text = getMarkdownXvr(xvr[0].obj!);
+        const text = getMarkdownXvr(xvr[0].obj!);
         return {
             contents: text,
             range: {
@@ -92,7 +92,7 @@ export function getReferenceHover(
     }
 
     if (sopcXvr.length) {
-        let text = getMarkdownXvr(sopcXvr[0].obj!);
+        const text = getMarkdownXvr(sopcXvr[0].obj!);
         return {
             contents: text,
             range: {
@@ -130,12 +130,12 @@ export function getObjectHover(
             },
         };
     }
-    for (let attr of obj.attributes) {
+    for (const attr of obj.attributes) {
         if (
             offset >= attr.start &&
             offset <= attr.start + attr.key.length + 1
         ) {
-            let attrDoc = objDoc.attributes.find(
+            const attrDoc = objDoc.attributes.find(
                 (attrDoc) => attrDoc.name === attr.key
             );
             if (!attrDoc) {
@@ -167,7 +167,7 @@ export function getCalcHover(
     if (obj.type !== "CalcPvr") {
         return undefined;
     }
-    let algAttr = obj.getAttribute("Alg");
+    const algAttr = obj.getAttribute("Alg");
     if (!algAttr) {
         return undefined;
     }
@@ -185,11 +185,11 @@ export function getCalcHover(
     const visitor = new AlgVisitor();
     visitor.visit(alg);
 
-    let startAlg = algAttr.values[0].start + 1;
+    const startAlg = algAttr.values[0].start + 1;
     let currentCalc;
-    for (let calc of visitor.calcs) {
-        let startCalc = startAlg + calc.start;
-        let endCalc = startAlg + calc.end;
+    for (const calc of visitor.calcs) {
+        const startCalc = startAlg + calc.start;
+        const endCalc = startAlg + calc.end;
         if (offset <= endCalc && offset >= startCalc) {
             currentCalc = calc;
         }
@@ -211,8 +211,8 @@ export function getCalcHover(
 }
 
 function getCalcDocumentation(name: string): MarkupContent | undefined {
-    let metaInfoProvider = SepticMetaInfoProvider.getInstance();
-    let calcInfo = metaInfoProvider.getCalc(name);
+    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
+    const calcInfo = metaInfoProvider.getCalc(name);
     if (!calcInfo) {
         return undefined;
     }
@@ -223,8 +223,8 @@ function getCalcDocumentation(name: string): MarkupContent | undefined {
 }
 
 function getMarkdownXvr(obj: SepticObject): MarkupContent {
-    let text1 = obj.getAttribute("Text1")?.getValue() ?? "";
-    let text2 = obj.getAttribute("Text2")?.getValue() ?? "";
+    const text1 = obj.getAttribute("Text1")?.getValue() ?? "";
+    const text2 = obj.getAttribute("Text2")?.getValue() ?? "";
     let text = `${obj.type}: ${obj.identifier?.name}`;
     if (text1 !== "") {
         text += `\n\nText1= ${text1}`;

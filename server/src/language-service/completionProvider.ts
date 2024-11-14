@@ -85,7 +85,7 @@ export function getCalcPublicPropertiesCompletion(
     cnfg: SepticCnfg,
     refProvider: SepticReferenceProvider
 ): CompletionItem[] {
-    let algValue = cnfg.offsetInAlg(offset);
+    const algValue = cnfg.offsetInAlg(offset);
     if (!algValue) {
         return [];
     }
@@ -97,19 +97,19 @@ export function getCalcPublicPropertiesCompletion(
     }
     const visitor = new AlgVisitor();
     visitor.visit(expr);
-    let offsetCharInAlg = offset - (algValue.start + 1);
-    for (let variable of visitor.variables) {
+    const offsetCharInAlg = offset - (algValue.start + 1);
+    for (const variable of visitor.variables) {
         if (offsetCharInAlg !== variable.end) {
             continue;
         }
-        let variableCore = variable.value.slice(0, variable.value.length - 1);
-        let objects = refProvider.getObjectsByIdentifier(variableCore);
-        for (let obj of objects) {
+        const variableCore = variable.value.slice(0, variable.value.length - 1);
+        const objects = refProvider.getObjectsByIdentifier(variableCore);
+        for (const obj of objects) {
             if (!obj.isXvr) {
                 continue;
             }
-            let metaInfoProvider = SepticMetaInfoProvider.getInstance();
-            let objDoc = metaInfoProvider.getObjectDocumentation(obj.type);
+            const metaInfoProvider = SepticMetaInfoProvider.getInstance();
+            const objDoc = metaInfoProvider.getObjectDocumentation(obj.type);
             if (!objDoc) {
                 continue;
             }
@@ -143,7 +143,7 @@ export function getCalcCompletion(
 ): CompletionItem[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const compItems: CompletionItem[] = [];
-    let ref = cnfg.getXvrRefFromOffset(offset);
+    const ref = cnfg.getXvrRefFromOffset(offset);
     let range: Range;
     if (ref) {
         range = {
@@ -151,12 +151,12 @@ export function getCalcCompletion(
             end: doc.positionAt(ref.location.end),
         };
     } else {
-        let pos = doc.positionAt(offset);
-        let line = doc.getText({
+        const pos = doc.positionAt(offset);
+        const line = doc.getText({
             start: Position.create(pos.line, 0),
             end: Position.create(pos.line, Infinity),
         });
-        let existing = getExistingCompletion(line, pos.character - 1);
+        const existing = getExistingCompletion(line, pos.character - 1);
         range = {
             start: doc.positionAt(offset - existing.str.length),
             end: pos,
@@ -167,8 +167,8 @@ export function getCalcCompletion(
         compItems.push(xvrToCompletionItem(xvr, range));
     });
 
-    let calcs = metaInfoProvider.getCalcs();
-    for (let calc of calcs) {
+    const calcs = metaInfoProvider.getCalcs();
+    for (const calc of calcs) {
         compItems.push({
             label: calc.name,
             kind: CompletionItemKind.Function,
@@ -205,17 +205,17 @@ export function getObjectCompletion(
     if (!obj) {
         return snippets;
     }
-    let ref = cnfg.getXvrRefFromOffset(offset);
+    const ref = cnfg.getXvrRefFromOffset(offset);
     if (isIdentifierCompletion(offset, obj)) {
-        let range: Range = ref
+        const range: Range = ref
             ? {
-                  start: doc.positionAt(ref.location.start),
-                  end: doc.positionAt(ref.location.end),
-              }
+                start: doc.positionAt(ref.location.start),
+                end: doc.positionAt(ref.location.end),
+            }
             : {
-                  start: doc.positionAt(offset),
-                  end: doc.positionAt(offset),
-              };
+                start: doc.positionAt(offset),
+                end: doc.positionAt(offset),
+            };
         return getRelevantXvrsIdentifier(
             obj,
             refProvider.getAllXvrObjects()
@@ -226,15 +226,15 @@ export function getObjectCompletion(
         return [...snippets, ...getObjectAttributeCompletion(obj, offset, doc)];
     }
     if (isReferenceAttribute(obj, currentAttr.attr)) {
-        let range: Range = ref
+        const range: Range = ref
             ? {
-                  start: doc.positionAt(ref.location.start),
-                  end: doc.positionAt(ref.location.end),
-              }
+                start: doc.positionAt(ref.location.start),
+                end: doc.positionAt(ref.location.end),
+            }
             : {
-                  start: doc.positionAt(offset),
-                  end: doc.positionAt(offset),
-              };
+                start: doc.positionAt(offset),
+                end: doc.positionAt(offset),
+            };
 
         references.push(
             ...getRelevantXvrsAttributes(
@@ -289,11 +289,11 @@ function getObjectAttributeCompletion(
     }
     const compItems: CompletionItem[] = [];
     const rangeNewLine = getRangeAttrTextEdit(offset, doc);
-    for (let attr of objDoc.attributes) {
+    for (const attr of objDoc.attributes) {
         if (obj.getAttribute(attr.name)) {
             continue;
         }
-        let text = rangeNewLine.addNewLine
+        const text = rangeNewLine.addNewLine
             ? "\n" + getTextAttrTextEdit(attr)
             : getTextAttrTextEdit(attr);
         compItems.push({
@@ -313,7 +313,7 @@ function getObjectAttributeCompletion(
 }
 
 function isIdentifierCompletion(offset: number, obj: SepticObject) {
-    let objectInfo = SepticMetaInfoProvider.getInstance().getObject(obj.type);
+    const objectInfo = SepticMetaInfoProvider.getInstance().getObject(obj.type);
     if (!objectInfo?.refs.identifier) {
         return false;
     }
@@ -348,7 +348,7 @@ function isEndAttribute(offset: number, attr: Attribute): boolean {
 }
 
 function getTextAttrTextEdit(attr: SepticAttributeDocumentation) {
-    let hasDefault = attr.default.length > 0;
+    const hasDefault = attr.default.length > 0;
     let attrFormatted =
         " ".repeat(Math.max(indentsAttributesDelimiter - attr.name.length, 0)) +
         attr.name +
@@ -364,16 +364,16 @@ function getRangeAttrTextEdit(
     offset: number,
     doc: ITextDocument
 ): { range: Range; addNewLine: boolean } {
-    let pos = doc.positionAt(offset);
-    let line = doc.getText({
+    const pos = doc.positionAt(offset);
+    const line = doc.getText({
         start: Position.create(pos.line, 0),
         end: Position.create(pos.line, Infinity),
     });
-    let existing = getExistingCompletion(line, pos.character - 1);
-    let isOnlyTextOnLine =
+    const existing = getExistingCompletion(line, pos.character - 1);
+    const isOnlyTextOnLine =
         existing.endIndex < 0 ||
         line.slice(0, existing.endIndex).trim().length === 0;
-    let startChar = isOnlyTextOnLine ? 0 : pos.character - existing.str.length;
+    const startChar = isOnlyTextOnLine ? 0 : pos.character - existing.str.length;
     return {
         range: {
             start: Position.create(pos.line, startChar),

@@ -92,7 +92,7 @@ export class SepticCnfgFormatter {
     public format(): TextEdit[] {
         this.advance();
         while (!this.isAtEnd()) {
-            let element = this.previous();
+            const element = this.previous();
             if (element instanceof SepticObject) {
                 this.formatObject(element);
             } else if (element instanceof Attribute) {
@@ -111,17 +111,17 @@ export class SepticCnfgFormatter {
 
     private formatObject(object: SepticObject) {
         this.setCurrentObject(object);
-        let editedFlag = this.getEditedFlag();
-        let existingWhitespaces = 0;
+        const editedFlag = this.getEditedFlag();
+        const existingWhitespaces = 0;
         if (editedFlag) {
             this.addEmptyLine();
-            let pos = this.doc.positionAt(this.start);
-            let currentLineText = this.doc.getText({
+            const pos = this.doc.positionAt(this.start);
+            const currentLineText = this.doc.getText({
                 start: Position.create(pos.line, 0),
                 end: pos,
             });
             if (lineCommentRegex.test(currentLineText)) {
-                let prevLineText = this.doc.getText({
+                const prevLineText = this.doc.getText({
                     start: Position.create(pos.line - 1, 0),
                     end: Position.create(pos.line - 1, 999),
                 });
@@ -140,12 +140,12 @@ export class SepticCnfgFormatter {
                 this.addEmptyLine();
             }
         }
-        let indentsDeclaration = indentsObjectDeclaration - existingWhitespaces;
-        let objectTypeFormatted =
+        const indentsDeclaration = indentsObjectDeclaration - existingWhitespaces;
+        const objectTypeFormatted =
             " ".repeat(indentsDeclaration) + object?.type + ":";
         this.currentLine += objectTypeFormatted;
 
-        let indentsName = Math.max(
+        const indentsName = Math.max(
             startObjectName - objectTypeFormatted.length - existingWhitespaces,
             2
         );
@@ -157,33 +157,33 @@ export class SepticCnfgFormatter {
         ) {
             return;
         }
-        let identifier = this.previous() as Identifier;
+        const identifier = this.previous() as Identifier;
         this.currentLine += " ".repeat(indentsName) + identifier.name;
     }
 
     private formatAttribute(attr: Attribute) {
         this.setCurrentAttribute(attr);
         this.addLine();
-        let editedFlag = this.getEditedFlag();
-        let existingWhitespaces = 0;
+        const editedFlag = this.getEditedFlag();
+        const existingWhitespaces = 0;
         if (editedFlag) {
             this.addEmptyLine();
         }
-        let indentsStart = Math.max(
+        const indentsStart = Math.max(
             indentsAttributesDelimiter - attr.key.length - existingWhitespaces,
             0
         );
-        let attrDefFormatted = " ".repeat(indentsStart) + attr.key + "=";
+        const attrDefFormatted = " ".repeat(indentsStart) + attr.key + "=";
         this.currentLine += attrDefFormatted;
         this.setAttrValueFormattingState(attr);
     }
 
     private formatAttrValue(attrValue: AttributeValue) {
-        let editedFlag = this.getEditedFlag();
+        const editedFlag = this.getEditedFlag();
         let resetDoToEdit = false;
         if (editedFlag) {
-            let pos = this.doc.positionAt(this.start);
-            let lineText = this.doc.getText({
+            const pos = this.doc.positionAt(this.start);
+            const lineText = this.doc.getText({
                 start: Position.create(pos.line, 0),
                 end: pos,
             });
@@ -207,7 +207,7 @@ export class SepticCnfgFormatter {
             this.currentLine +=
                 " ".repeat(
                     indentsAttributeValuesStart -
-                        (indentsAttributesDelimiter + 1)
+                    (indentsAttributesDelimiter + 1)
                 ) + attrValue.value;
             this.attrValueState.first = false;
             if (this.attrValueState.type === ValueTypes.stringList) {
@@ -300,8 +300,8 @@ export class SepticCnfgFormatter {
         if (!this.lines.length) {
             return true;
         }
-        let lastLine = this.lines[this.lines.length - 1];
-        let isComment = lineCommentRegex.test(lastLine);
+        const lastLine = this.lines[this.lines.length - 1];
+        const isComment = lineCommentRegex.test(lastLine);
         return !lastLine.length || isComment;
     }
 
@@ -309,7 +309,7 @@ export class SepticCnfgFormatter {
         if (!element) {
             return false;
         }
-        let isComment = element instanceof SepticComment;
+        const isComment = element instanceof SepticComment;
         if (!isComment) {
             return false;
         }
@@ -320,7 +320,7 @@ export class SepticCnfgFormatter {
         if (!element) {
             return false;
         }
-        let isComment = element instanceof SepticComment;
+        const isComment = element instanceof SepticComment;
         if (!isComment) {
             return false;
         }
@@ -331,7 +331,7 @@ export class SepticCnfgFormatter {
         if (!element) {
             return false;
         }
-        let isComment = element instanceof SepticComment;
+        const isComment = element instanceof SepticComment;
         if (!isComment) {
             return false;
         }
@@ -355,12 +355,12 @@ export class SepticCnfgFormatter {
             this.setEditedFlag();
             return;
         }
-        let previousElement = this.previousPrevious();
+        const previousElement = this.previousPrevious();
         let endPos;
         if (!previousElement || this.isAtEnd()) {
             endPos = Position.create(this.doc.lineCount, 99);
         } else {
-            let currentElement = this.previous();
+            const currentElement = this.previous();
             if (previousElement.end > currentElement.end) {
                 endPos = this.doc.positionAt(currentElement.start);
             } else {
@@ -371,7 +371,7 @@ export class SepticCnfgFormatter {
             this.currentLine += "  ";
         }
         this.addLine();
-        let edit = TextEdit.replace(
+        const edit = TextEdit.replace(
             {
                 start: this.doc.positionAt(this.start),
                 end: endPos,
@@ -456,8 +456,8 @@ export class SepticCnfgFormatter {
             return;
         }
 
-        let pos = this.doc.positionAt(this.start);
-        let lineText = this.doc.getText({
+        const pos = this.doc.positionAt(this.start);
+        const lineText = this.doc.getText({
             start: Position.create(pos.line, 0),
             end: pos,
         });
@@ -509,15 +509,15 @@ export class SepticCnfgFormatter {
             return maxNumberAttrValuesPerLine;
         }
 
-        let cols = this.object!.getAttribute("ColIds");
+        const cols = this.object!.getAttribute("ColIds");
         if (!cols) {
             return maxNumberAttrValuesPerLine;
         }
-        let numCols = cols.getValue();
+        const numCols = cols.getValue();
         if (!numCols) {
             return maxNumberAttrValuesPerLine;
         }
-        let numColsInt = parseInt(numCols);
+        const numColsInt = parseInt(numCols);
         if (isNaN(numColsInt)) {
             return maxNumberAttrValuesPerLine;
         }
