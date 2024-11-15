@@ -11,7 +11,9 @@
                 "panel": "dedicated",
                 "reveal": "never"
             },
-            "problemMatcher": ["$tsc"]
+            "problemMatcher": [
+                "$tsc"
+            ]
         },
         {
             "type": "npm",
@@ -26,6 +28,15 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "type": "npm",
+            "script": "lint",
+            "problemMatcher": [
+                "$eslint-stylish"
+            ],
+            "label": "npm: lint",
+            "detail": "eslint -c eslint.config.mjs ./client/src ./server/src"
         }
     ]
 }

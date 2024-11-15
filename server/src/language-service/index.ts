@@ -34,7 +34,6 @@ export interface ILanguageService {
     cnfgProvider: SepticConfigProvider;
     provideFoldingRanges(
         doc: ITextDocument,
-        token: lsp.CancellationToken | undefined
     ): Promise<lsp.FoldingRange[]>;
 
     provideDiagnostics(
@@ -44,7 +43,6 @@ export interface ILanguageService {
 
     provideDocumentSymbols(
         doc: ITextDocument,
-        token: lsp.CancellationToken | undefined
     ): Promise<lsp.DocumentSymbol[]>;
 
     provideCompletion(

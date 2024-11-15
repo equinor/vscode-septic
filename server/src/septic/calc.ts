@@ -13,7 +13,7 @@ export function fromCalcIndexToParamIndex(
     calcInfo: SepticCalcInfo,
     index: number
 ): number {
-    let paramIndexInfo = getCalcParamIndexInfo(calcInfo);
+    const paramIndexInfo = getCalcParamIndexInfo(calcInfo);
     let i = 0;
     while (i < paramIndexInfo.fixedLengthParams.pre.length) {
         if (index < paramIndexInfo.fixedLengthParams.pre[i]) {
@@ -45,7 +45,7 @@ function getIndexAlternatingParams(
     paramIndexInfo: CalcParamIndexInfo,
     index: number
 ) {
-    let numFixedLengthParams = paramIndexInfo.fixedLengthParams.pre.length
+    const numFixedLengthParams = paramIndexInfo.fixedLengthParams.pre.length
         ? paramIndexInfo.fixedLengthParams.pre[
         paramIndexInfo.fixedLengthParams.pre.length - 1
         ]
@@ -63,8 +63,8 @@ function getIndexNonAlternatingParams(
     calc: AlgCalc,
     index: number
 ) {
-    let paramName = paramIndexInfo.variableLengthParams.exactLength;
-    let numFixedLengthParams = paramIndexInfo.fixedLengthParams.pre.length
+    const paramName = paramIndexInfo.variableLengthParams.exactLength;
+    const numFixedLengthParams = paramIndexInfo.fixedLengthParams.pre.length
         ? paramIndexInfo.fixedLengthParams.pre[
         paramIndexInfo.fixedLengthParams.pre.length - 1
         ]
@@ -72,11 +72,11 @@ function getIndexNonAlternatingParams(
     if (!paramName) {
         return 0;
     }
-    let paramIndex = getIndexOfParam(paramName, calcInfo);
+    const paramIndex = getIndexOfParam(paramName, calcInfo);
     if (paramIndex === undefined) {
         return 0;
     }
-    let value = getValueOfAlgExpr(calc.params[paramIndex]);
+    const value = getValueOfAlgExpr(calc.params[paramIndex]);
     if (!value) {
         return 0;
     }
@@ -96,7 +96,7 @@ export function getIndexOfParam(
         if (calcInfo.parameters[indexParam].name === paramName) {
             return index;
         }
-        let arityNum = arityToNum(calcInfo.parameters[indexParam].arity);
+        const arityNum = arityToNum(calcInfo.parameters[indexParam].arity);
         if (arityNum === -1) {
             return undefined;
         }
@@ -149,10 +149,10 @@ export function getCalcParamIndexInfo(
 
 function getFixedLengthParamsIndexes(calc: SepticCalcInfo): FixedLengthParamsInfo {
     let indexParam = 0;
-    let preIndexList = [];
-    let postIndexList = [];
+    const preIndexList = [];
+    const postIndexList = [];
     let post = false
-    for (let param of calc.parameters) {
+    for (const param of calc.parameters) {
         switch (param.arity) {
             case "+":
                 post = true;
@@ -199,7 +199,7 @@ function getVariableLengthParamsInfo(
 ): VariableLengthParamsInfo {
     let numVariableLengthParams = 0;
     let exactLength = undefined;
-    for (let param of calcInfo.parameters) {
+    for (const param of calcInfo.parameters) {
         if (param.arity.charAt(0) === "+" || param.arity.charAt(0) === "=") {
             numVariableLengthParams += 1;
         } else if (param.arity.charAt(0) === "$") {
@@ -214,7 +214,7 @@ export function getValueOfAlgExpr(expr: AlgExpr): number | undefined {
     if (!(expr instanceof AlgLiteral)) {
         return undefined;
     }
-    let literal = expr as AlgLiteral;
+    const literal = expr as AlgLiteral;
     if (literal.type !== AlgTokenType.number) {
         return undefined;
     }

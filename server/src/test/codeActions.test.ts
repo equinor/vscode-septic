@@ -184,10 +184,10 @@ describe("Test codeaction for ignoring warning", () => {
         const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg, doc);
         expect(codeActions.length).to.equal(1);
         expect(codeActions[0].title === `E202: Update disable diagnostics`);
-        let textEdits = codeActions[0].edit?.documentChanges?.at(
+        const textEdits = codeActions[0].edit?.documentChanges?.at(
             0
         ) as TextDocumentEdit;
-        let updatedeContent = TextDocument.applyEdits(doc, textEdits.edits);
+        const updatedeContent = TextDocument.applyEdits(doc, textEdits.edits);
         const updatedCnfg = parseSepticSync(updatedeContent);
         expect(updatedCnfg.comments[0].content).to.equal(
             "{# noqa: W501, E202 #}"
@@ -218,10 +218,10 @@ describe("Test codeaction for ignoring warning", () => {
         const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg, doc);
         expect(codeActions.length).to.equal(1);
         expect(codeActions[0].title === `E202: Update disable diagnostics`);
-        let textEdits = codeActions[0].edit?.documentChanges?.at(
+        const textEdits = codeActions[0].edit?.documentChanges?.at(
             0
         ) as TextDocumentEdit;
-        let updatedeContent = TextDocument.applyEdits(doc, textEdits.edits);
+        const updatedeContent = TextDocument.applyEdits(doc, textEdits.edits);
         const updatedCnfg = parseSepticSync(updatedeContent);
         expect(updatedCnfg.comments[1].content).to.equal("// noqa: W501, E202");
     });

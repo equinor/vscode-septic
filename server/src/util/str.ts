@@ -11,9 +11,9 @@ export function isAlphaNumeric(char: string): boolean {
 }
 
 export function removeJinjaLoopsAndIfs(input: string): { strippedString: string, positionsMap: number[] } {
-    let positionsMap: number[] = [];
-    let regex = /{%\s*for .*?\s*%}|{%\s*endfor\s*%}|{%\s*if .*?\s*%}.*?{%\s*endif\s*%}/g
-    let strippedString = input.replace(regex, (match, offset) => {
+    const positionsMap: number[] = [];
+    const regex = /{%\s*for .*?\s*%}|{%\s*endfor\s*%}|{%\s*if .*?\s*%}.*?{%\s*endif\s*%}/g
+    const strippedString = input.replace(regex, (match, offset) => {
         positionsMap.push(offset, offset + match.length);
         return '';
     });
@@ -21,8 +21,8 @@ export function removeJinjaLoopsAndIfs(input: string): { strippedString: string,
 }
 
 export function transformPositionsToOriginal(positions: number[], positionsMap: number[]): number[] {
-    let originalPositions: number[] = [];
-    for (let pos of positions) {
+    const originalPositions: number[] = [];
+    for (const pos of positions) {
         let orignalPosition = pos;
         for (let i = 0; i < positionsMap.length; i += 2) {
             if (orignalPosition >= positionsMap[i] && orignalPosition <= positionsMap[i + 1]) {

@@ -89,7 +89,7 @@ export function getDefinition(
     if (!xvrRefs) {
         return [];
     }
-    let definitions = xvrRefs.filter((xvrRef) => {
+    const definitions = xvrRefs.filter((xvrRef) => {
         return xvrRef.obj?.isXvr;
     });
 
@@ -139,7 +139,7 @@ export function getDeclaration(
     if (!xvrRefs) {
         return [];
     }
-    let declarations = xvrRefs.filter((xvrRef) => {
+    const declarations = xvrRefs.filter((xvrRef) => {
         return xvrRef.obj?.isOpcXvr;
     });
     return declarations.map((ref) => {

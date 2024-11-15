@@ -49,7 +49,7 @@ export class ContextManager {
     }
 
     public async getContext(uri: string): Promise<ScgContext | undefined> {
-        for (let context of this.contexts.values()) {
+        for (const context of this.contexts.values()) {
             if (context.fileInContext(uri)) {
                 return context;
             }
@@ -79,7 +79,7 @@ export class ContextManager {
 
         try {
             await this.updateScgContext(uri);
-        } catch (e) {
+        } catch {
             console.log(
                 `Error updating context ${context.name}. Removing context from manager!`
             );
@@ -101,7 +101,7 @@ export class ContextManager {
     public async createScgContext(uri: string): Promise<void> {
         try {
             await this.updateScgContext(uri);
-        } catch (e) {
+        } catch {
             return;
         }
     }
@@ -127,7 +127,7 @@ export class ContextManager {
         );
         this.contexts.set(scgContext.name, scgContext);
 
-        let loadDocuments = scgContext.files.map((f) => {
+        const loadDocuments = scgContext.files.map((f) => {
             this.docProvider.loadDocument(f);
         });
 

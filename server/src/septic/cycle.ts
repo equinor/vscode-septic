@@ -1,4 +1,3 @@
-import { removeSpaces } from "../util";
 import {
     AlgBinary,
     AlgExpr,
@@ -93,16 +92,16 @@ interface Node {
 
 export function findAlgCycles(algs: Alg[]): Cycle[] {
     const graph: Map<string, Node> = new Map<string, Node>();
-    for (let alg of algs) {
+    for (const alg of algs) {
         let expr;
         try {
             expr = parseAlg(alg.content);
         } catch {
             continue;
         }
-        let cycleVisitor = new CycleDetectorVisitor();
+        const cycleVisitor = new CycleDetectorVisitor();
         cycleVisitor.visit(expr);
-        for (let measNode of cycleVisitor.nodes) {
+        for (const measNode of cycleVisitor.nodes) {
             let existingNode = graph.get(measNode.name);
             if (!existingNode) {
                 existingNode = {
@@ -112,7 +111,7 @@ export function findAlgCycles(algs: Alg[]): Cycle[] {
                 };
                 graph.set(existingNode.name, existingNode);
             }
-            for (let variable of measNode.neighbors) {
+            for (const variable of measNode.neighbors) {
                 let node = graph.get(variable);
                 if (!node) {
                     node = {
@@ -125,7 +124,7 @@ export function findAlgCycles(algs: Alg[]): Cycle[] {
                 node.neighbors.add(measNode.name);
             }
         }
-        for (let variable of cycleVisitor.variables) {
+        for (const variable of cycleVisitor.variables) {
             let node = graph.get(variable.value);
             if (!node) {
                 node = {
@@ -137,7 +136,7 @@ export function findAlgCycles(algs: Alg[]): Cycle[] {
             }
             node.neighbors.add(alg.calcPvrName);
         }
-        let algNode = graph.get(alg.calcPvrName);
+        const algNode = graph.get(alg.calcPvrName);
         if (algNode) {
             algNode.calcpvr = alg.calcPvrName;
         }
@@ -145,7 +144,7 @@ export function findAlgCycles(algs: Alg[]): Cycle[] {
 
     const visited: Map<string, boolean> = new Map<string, boolean>();
     const cycles: Cycle[] = [];
-    for (let node of graph.values()) {
+    for (const node of graph.values()) {
         if (!visited.get(node.name)) {
             dfs(graph, node, visited, [], cycles);
         }
@@ -162,8 +161,8 @@ function dfs(
 ) {
     visited.set(node.name, true);
     stack.push(node);
-    for (let neighbor of node.neighbors) {
-        let neighborNode = graph.get(neighbor);
+    for (const neighbor of node.neighbors) {
+        const neighborNode = graph.get(neighbor);
         if (!neighborNode) {
             continue;
         }

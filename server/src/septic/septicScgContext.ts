@@ -99,7 +99,7 @@ export class ScgContext implements SepticReferenceProvider {
     public async load(): Promise<void> {
         await Promise.all(
             this.files.map(async (file) => {
-                let cnfg = await this.cnfgProvider.get(file);
+                const cnfg = await this.cnfgProvider.get(file);
                 if (!cnfg) {
                     return;
                 }
@@ -109,9 +109,9 @@ export class ScgContext implements SepticReferenceProvider {
     }
 
     public getObjectsByIdentifier(identifier: string): SepticObject[] {
-        let objects: SepticObject[] = [];
-        for (let file of this.files) {
-            let cnfg = this.cnfgCache.get(file);
+        const objects: SepticObject[] = [];
+        for (const file of this.files) {
+            const cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
                 continue;
             }
@@ -123,12 +123,12 @@ export class ScgContext implements SepticReferenceProvider {
         identifier: string,
         type: string
     ): SepticObject | undefined {
-        for (let file of this.files) {
-            let cnfg = this.cnfgCache.get(file);
+        for (const file of this.files) {
+            const cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
                 continue;
             }
-            let obj = cnfg.getObjectByIdentifierAndType(identifier, type);
+            const obj = cnfg.getObjectByIdentifierAndType(identifier, type);
             if (obj) {
                 return obj;
             }
@@ -137,16 +137,16 @@ export class ScgContext implements SepticReferenceProvider {
     }
 
     public getXvrRefs(name: string): SepticReference[] | undefined {
-        let xvrRefs: SepticReference[] = [];
+        const xvrRefs: SepticReference[] = [];
         for (const file of this.files) {
-            let cnfg = this.cnfgCache.get(file);
+            const cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
                 console.log(
                     `Could not get config for ${file} in context ${this.name}`
                 );
                 continue;
             }
-            let localRefs = cnfg.getXvrRefs(name);
+            const localRefs = cnfg.getXvrRefs(name);
             if (localRefs) {
                 xvrRefs.push(...localRefs);
             }
@@ -161,7 +161,7 @@ export class ScgContext implements SepticReferenceProvider {
         name: string,
         validationFunction: RefValidationFunction = defaultRefValidationFunction
     ): boolean {
-        let xvrRefs = this.getXvrRefs(name);
+        const xvrRefs = this.getXvrRefs(name);
         if (!xvrRefs) {
             return false;
         }
@@ -169,9 +169,9 @@ export class ScgContext implements SepticReferenceProvider {
     }
 
     public getAllXvrObjects(): SepticObject[] {
-        let xvrObjs: SepticObject[] = [];
+        const xvrObjs: SepticObject[] = [];
         for (const file of this.files) {
-            let cnfg = this.cnfgCache.get(file);
+            const cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
                 continue;
             }
@@ -181,9 +181,9 @@ export class ScgContext implements SepticReferenceProvider {
     }
 
     getObjectsByType(...types: string[]): SepticObject[] {
-        let objects: SepticObject[] = [];
+        const objects: SepticObject[] = [];
         for (const file of this.files) {
-            let cnfg = this.cnfgCache.get(file);
+            const cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
                 continue;
             }
@@ -197,8 +197,8 @@ export class ScgContext implements SepticReferenceProvider {
     ): Promise<void> {
         await this.load();
         const objects: SepticObject[] = [];
-        for (let file of this.files) {
-            let cnfg = this.cnfgCache.get(file);
+        for (const file of this.files) {
+            const cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
                 continue;
             }
@@ -208,9 +208,9 @@ export class ScgContext implements SepticReferenceProvider {
     }
 
     public findAlgCycles(): Cycle[] {
-        let calcPvrs: SepticObject[] = [];
-        for (let file of this.files) {
-            let cnfg = this.cnfgCache.get(file);
+        const calcPvrs: SepticObject[] = [];
+        for (const file of this.files) {
+            const cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
                 continue;
             }
@@ -218,15 +218,15 @@ export class ScgContext implements SepticReferenceProvider {
                 ...cnfg.objects.filter((obj) => obj.type === "CalcPvr")
             );
         }
-        let algs: Alg[] = [];
-        for (let calcPvr of calcPvrs) {
-            let alg = calcPvr.getAttribute("Alg");
-            let content = alg?.getAttrValue()?.getValue();
+        const algs: Alg[] = [];
+        for (const calcPvr of calcPvrs) {
+            const alg = calcPvr.getAttribute("Alg");
+            const content = alg?.getAttrValue()?.getValue();
             if (!content || !calcPvr.identifier?.name) {
                 continue;
             }
             algs.push({
-                calcPvrName: removeSpaces(calcPvr.identifier?.name!),
+                calcPvrName: removeSpaces(calcPvr.identifier?.name),
                 content: content,
             });
         }

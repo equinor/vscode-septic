@@ -40,20 +40,20 @@ export class CodeActionProvider {
     public async provideCodeAction(
         params: CodeActionParams
     ): Promise<CodeAction[]> {
-        let codeActions: CodeAction[] = [];
-        let doc = await this.documentProvider.getDocument(
+        const codeActions: CodeAction[] = [];
+        const doc = await this.documentProvider.getDocument(
             params.textDocument.uri
         );
         if (!doc) {
             return [];
         }
-        let cnfg = await this.cnfgProvider.get(params.textDocument.uri);
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
-        let settings = await this.settingsManager.getSettings();
-        let insertPos = settings?.codeActions.insertEvrPosition ?? "bottom";
-        let insertEvrActions = await this.createCodeActionsInsertEvr(
+        const settings = await this.settingsManager.getSettings();
+        const insertPos = settings?.codeActions.insertEvrPosition ?? "bottom";
+        const insertEvrActions = await this.createCodeActionsInsertEvr(
             getCodeActionInsertEvr(params, cnfg, doc, insertPos)
         );
         codeActions.push(...insertEvrActions);
@@ -65,9 +65,9 @@ export class CodeActionProvider {
     private async createCodeActionsInsertEvr(
         codeActionsInsert: CodeActionInsert[]
     ) {
-        let codeActions = [];
-        for (let cai of codeActionsInsert) {
-            let doc = await this.documentProvider.getDocument(cai.uri);
+        const codeActions = [];
+        for (const cai of codeActionsInsert) {
+            const doc = await this.documentProvider.getDocument(cai.uri);
             if (!doc) {
                 continue;
             }
@@ -90,29 +90,29 @@ export function getCodeActionInsertEvr(
     doc: ITextDocument,
     insertEvrPos: "top" | "bottom"
 ): CodeActionInsert[] {
-    let diag = params.context.diagnostics.find(
+    const diag = params.context.diagnostics.find(
         (diag) => diag.code === DiagnosticCode.missingReference
     );
     if (!diag) {
         return [];
     }
-    let currentObject = cnfg.getObjectFromOffset(
+    const currentObject = cnfg.getObjectFromOffset(
         doc.offsetAt(params.range.start)
     );
     if (!currentObject?.isType("CalcPvr")) {
         return [];
     }
-    let referencedVariable = cnfg.getXvrRefFromOffset(
+    const referencedVariable = cnfg.getXvrRefFromOffset(
         doc.offsetAt(params.range.start)
     );
     if (!referencedVariable) {
         return [];
     }
-    let dmmyAppl = getDmmyApplAncestor(currentObject);
+    const dmmyAppl = getDmmyApplAncestor(currentObject);
     if (!dmmyAppl) {
         return [];
     }
-    let insertPos = getInsertOffsetAndUri(dmmyAppl, insertEvrPos);
+    const insertPos = getInsertOffsetAndUri(dmmyAppl, insertEvrPos);
     if (!insertPos) {
         return [];
     }
@@ -159,22 +159,22 @@ export function getCodeActionIgnoreDiagnostics(
     cnfg: SepticCnfg,
     doc: ITextDocument
 ): CodeAction[] {
-    let codeActions: CodeAction[] = [];
+    const codeActions: CodeAction[] = [];
     if (
         !isOnlyIgnoreCommentsOnSameLine(cnfg.comments, params.range.start, doc)
     ) {
         return codeActions;
     }
-    let comment = getIgnoreCommentSameLine(
+    const comment = getIgnoreCommentSameLine(
         params.range.start,
         cnfg.comments,
         doc
     );
-    let codes = [
+    const codes = [
         ...new Set(params.context.diagnostics.map((diag) => diag.code)),
     ];
-    for (let code of codes) {
-        let applicableDiagnostics = params.context.diagnostics.filter(
+    for (const code of codes) {
+        const applicableDiagnostics = params.context.diagnostics.filter(
             (diag) => diag.code === code
         );
         if (comment) {
@@ -232,7 +232,7 @@ function createCodeActionInsertIgnoreComment(
     diagnostics: Diagnostic[],
     doc: ITextDocument
 ): CodeAction[] {
-    let codeActionJinja = CodeAction.create(
+    const codeActionJinja = CodeAction.create(
         `${code}: Disable with {# noqa: .... #}`
     );
     codeActionJinja.diagnostics = diagnostics;
@@ -242,7 +242,7 @@ function createCodeActionInsertIgnoreComment(
         pos,
         doc
     );
-    let codeAction = CodeAction.create(`${code}: Disable with // noqa: ....`);
+    const codeAction = CodeAction.create(`${code}: Disable with // noqa: ....`);
     codeAction.diagnostics = diagnostics;
     codeAction.kind = CodeActionKind.QuickFix;
     codeAction.edit = createCodeActionInsertIgnoreCommentEdit(
@@ -258,7 +258,7 @@ function createCodeActionInsertIgnoreCommentEdit(
     pos: Position,
     doc: ITextDocument
 ) {
-    let editBuilder = new WorkspaceEditBuilder();
+    const editBuilder = new WorkspaceEditBuilder();
     editBuilder.insert(doc.uri, Position.create(pos.line, 9999), text);
     return editBuilder.getEdit();
 }
@@ -269,7 +269,7 @@ function createCodeActionUpdateIgnoreComment(
     diagnostics: Diagnostic[],
     doc: ITextDocument
 ): CodeAction {
-    let codeAction = CodeAction.create(`${code}: Update disable diagnostics`);
+    const codeAction = CodeAction.create(`${code}: Update disable diagnostics`);
     codeAction.diagnostics = diagnostics;
     codeAction.kind = CodeActionKind.QuickFix;
     codeAction.edit = createUpdateIgnoreCommentEdit(code, comment, doc);
@@ -281,11 +281,11 @@ function createUpdateIgnoreCommentEdit(
     comment: SepticComment,
     doc: ITextDocument
 ): WorkspaceEdit {
-    let match = comment.content.match(disableDiagnosticRegex);
-    let existingCodes = (match![1] ?? match![2])
+    const match = comment.content.match(disableDiagnosticRegex);
+    const existingCodes = (match![1] ?? match![2])
         .split(",")
         .map((code) => code.trim());
-    let editBuilder = new WorkspaceEditBuilder();
+    const editBuilder = new WorkspaceEditBuilder();
     let text = "";
     if (comment.type === SepticTokenType.jinjaComment) {
         text = `{# noqa: ${[...existingCodes, code].join(", ")} #}`;
@@ -307,7 +307,7 @@ function createCodeActionInsertEvr(
     action: CodeActionInsert,
     doc: ITextDocument
 ): CodeAction {
-    let codeAction = CodeAction.create("Insert Evr");
+    const codeAction = CodeAction.create("Insert Evr");
     codeAction.diagnostics = [action.diag];
     codeAction.isPreferred = true;
     codeAction.kind = CodeActionKind.QuickFix;
@@ -320,14 +320,14 @@ function createInsertEvrEdit(
     offset: number,
     doc: ITextDocument
 ): WorkspaceEdit {
-    let editBuilder = new WorkspaceEditBuilder();
-    let text = getTextEvr(name);
+    const editBuilder = new WorkspaceEditBuilder();
+    const text = getTextEvr(name);
     editBuilder.insert(doc.uri, doc.positionAt(offset), text);
     return editBuilder.getEdit();
 }
 
 function getTextEvr(name: string) {
-    let textList = [
+    const textList = [
         "\n",
         `  Evr:           ${name}`,
         '         Text1=  ""',

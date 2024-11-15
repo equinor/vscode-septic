@@ -35,7 +35,7 @@ export class CnfgComparisionProvider {
         currentVersion.updateObjectParents(
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
-        let rootObjectDiff: ObjectDiff = compareObjects(
+        const rootObjectDiff: ObjectDiff = compareObjects(
             prevVersion.objects[0],
             currentVersion.objects[0],
             settings
@@ -43,7 +43,7 @@ export class CnfgComparisionProvider {
         if (isNoDiff(rootObjectDiff)) {
             return "";
         }
-        let report = await this.generateDiffReportFlat(
+        const report = await this.generateDiffReportFlat(
             rootObjectDiff,
             settings
         );
@@ -54,10 +54,10 @@ export class CnfgComparisionProvider {
         rootDiff: ObjectDiff,
         settings: ComparisonSettings
     ): Promise<string> {
-        let report: string[] = [];
-        let padding = "    ";
-        let objectDiff: ObjectDiff[] = flattenObjectDiff(rootDiff);
-        let updatedObjects: ObjectDiff[] = objectDiff.filter(
+        const report: string[] = [];
+        const padding = "    ";
+        const objectDiff: ObjectDiff[] = flattenObjectDiff(rootDiff);
+        const updatedObjects: ObjectDiff[] = objectDiff.filter(
             (item) =>
                 item.attributeDiff.length &&
                 !settings.ignoredObjectTypes.includes(
@@ -88,7 +88,7 @@ export class CnfgComparisionProvider {
             for (const attrDiff of updatedObj.attributeDiff) {
                 report.push(
                     padding +
-                        `${attrDiff.name}: ${attrDiff.prevValue} -> ${attrDiff.currentValue}`
+                    `${attrDiff.name}: ${attrDiff.prevValue} -> ${attrDiff.currentValue}`
                 );
             }
         }
@@ -126,7 +126,7 @@ export class CnfgComparisionProvider {
     }
 
     public async getLink(element: SepticBase, uri: string): Promise<string> {
-        let doc = await this.docProvider.getDocument(uri);
+        const doc = await this.docProvider.getDocument(uri);
         if (!doc) {
             return "";
         }
@@ -139,17 +139,17 @@ export function compareObjects(
     currentObj: SepticObject,
     settings: ComparisonSettings
 ): ObjectDiff {
-    let removedObjects: SepticObject[] = [];
-    let updatedObjects: ObjectDiff[] = [];
-    let ignoredAttributes = settings.ignoredAttributes.find(
+    const removedObjects: SepticObject[] = [];
+    const updatedObjects: ObjectDiff[] = [];
+    const ignoredAttributes = settings.ignoredAttributes.find(
         (item) => item.objectName === prevObj.type
     )?.attributes;
-    let attributeDiff: AttributeDiff[] = compareAttributes(
+    const attributeDiff: AttributeDiff[] = compareAttributes(
         prevObj,
         currentObj,
         ignoredAttributes
     );
-    let currentMatchedChildren: SepticObject[] = [];
+    const currentMatchedChildren: SepticObject[] = [];
     for (const prevChild of prevObj.children) {
         const currentChild = currentObj.children.find(
             (item) =>
@@ -161,12 +161,12 @@ export function compareObjects(
             continue;
         }
         currentMatchedChildren.push(currentChild);
-        let objectDiff = compareObjects(prevChild, currentChild, settings);
+        const objectDiff = compareObjects(prevChild, currentChild, settings);
         if (!isNoDiff(objectDiff)) {
             updatedObjects.push(objectDiff);
         }
     }
-    let addedObjects: SepticObject[] = currentObj.children.filter(
+    const addedObjects: SepticObject[] = currentObj.children.filter(
         (item) => !currentMatchedChildren.find((it) => it === item)
     );
     return {
@@ -186,8 +186,8 @@ export function compareAttributes(
     currentObj: SepticObject,
     ignoredAttributes: string[] | undefined
 ): AttributeDiff[] {
-    let attrDiff: AttributeDiff[] = [];
-    let objectDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation(
+    const attrDiff: AttributeDiff[] = [];
+    const objectDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation(
         prevObj.type
     );
     if (!objectDoc) {
@@ -200,10 +200,10 @@ export function compareAttributes(
         ) {
             continue;
         }
-        let prevAttr = prevObj.getAttribute(attr.name);
-        let prevValue = prevAttr?.getValues() ?? attr.default;
-        let currentAttr = currentObj.getAttribute(attr.name);
-        let currentValue = currentAttr?.getValues() ?? attr.default;
+        const prevAttr = prevObj.getAttribute(attr.name);
+        const prevValue = prevAttr?.getValues() ?? attr.default;
+        const currentAttr = currentObj.getAttribute(attr.name);
+        const currentValue = currentAttr?.getValues() ?? attr.default;
         let isDiff = false;
         if (prevObj.type === "CalcPvr" && attr.name === "Alg") {
             isDiff = !compareAlg(prevValue[0], currentValue[0]);
@@ -230,20 +230,24 @@ export function compareAlg(prevAlg: string, currentAlg: string): boolean {
     let prevExpr;
     try {
         prevExpr = parseAlg(prevAlg);
-    } catch (error: any) {}
+    } catch {
+        prevExpr = undefined;
+    }
     let currentExpr;
     try {
         currentExpr = parseAlg(currentAlg);
-    } catch (error: any) {}
+    } catch {
+        currentExpr = undefined;
+    }
     if (!prevExpr || !currentExpr) {
         return false;
     }
-    let algComparator = new AlgComparison();
+    const algComparator = new AlgComparison();
     return algComparator.visit(prevExpr, currentExpr);
 }
 
 function flattenObjectDiff(objectDiff: ObjectDiff): ObjectDiff[] {
-    let flatDiff: ObjectDiff[] = [];
+    const flatDiff: ObjectDiff[] = [];
     flatDiff.push(objectDiff);
     for (const updatedChilds of objectDiff.updatedObjects) {
         flatDiff.push(...flattenObjectDiff(updatedChilds));
@@ -252,9 +256,9 @@ function flattenObjectDiff(objectDiff: ObjectDiff): ObjectDiff[] {
 }
 
 function getAddedObjects(objectDiff: ObjectDiff[]): SepticObject[] {
-    let addedObjects: SepticObject[] = [];
-    for (let diff of objectDiff) {
-        for (let addedObj of diff.addedObjects) {
+    const addedObjects: SepticObject[] = [];
+    for (const diff of objectDiff) {
+        for (const addedObj of diff.addedObjects) {
             addedObjects.push(addedObj);
             addedObjects.push(...getDescendants(addedObj));
         }
@@ -263,9 +267,9 @@ function getAddedObjects(objectDiff: ObjectDiff[]): SepticObject[] {
 }
 
 function getRemovedObjects(objectDiff: ObjectDiff[]): SepticObject[] {
-    let addedObjects: SepticObject[] = [];
-    for (let diff of objectDiff) {
-        for (let removedObj of diff.removedObjects) {
+    const addedObjects: SepticObject[] = [];
+    for (const diff of objectDiff) {
+        for (const removedObj of diff.removedObjects) {
             addedObjects.push(removedObj);
             addedObjects.push(...getDescendants(removedObj));
         }
@@ -274,8 +278,8 @@ function getRemovedObjects(objectDiff: ObjectDiff[]): SepticObject[] {
 }
 
 function getDescendants(obj: SepticObject): SepticObject[] {
-    let children: SepticObject[] = [];
-    for (let child of obj.children) {
+    const children: SepticObject[] = [];
+    for (const child of obj.children) {
         children.push(child);
         children.push(...getDescendants(child));
     }
@@ -339,7 +343,7 @@ function loadComparisonSettings(
     const comparisonSettingsInput: ComparisonSettingsInput = YAML.load(
         fileStream
     ) as ComparisonSettings;
-    let comparisonSettings: ComparisonSettings = {
+    const comparisonSettings: ComparisonSettings = {
         ignoredVariables: comparisonSettingsInput.ignoredVariables ?? [],
         ignoredObjectTypes: comparisonSettingsInput.ignoredObjectTypes ?? [],
         ignoredAttributes: comparisonSettingsInput.ignoredAttributes ?? [],
@@ -355,7 +359,7 @@ function ignoreVariable(
         return false;
     }
     for (const pattern of ignoredVariables) {
-        let regex = new RegExp(pattern);
+        const regex = new RegExp(pattern);
         if (regex.test(id)) {
             return true;
         }

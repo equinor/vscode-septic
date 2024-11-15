@@ -10,7 +10,7 @@ import {
 import { ITextDocument } from "../language-service";
 
 const getDocumentFunction = (doc: ITextDocument): GetDocument => {
-    return (uri: string): Promise<ITextDocument | undefined> => {
+    return (): Promise<ITextDocument | undefined> => {
         return Promise.resolve(doc);
     };
 };
@@ -134,8 +134,8 @@ describe("Test renaming", () => {
 function compareRanges(expectedRanges: Range[], actualRanges: Range[]) {
     expect(actualRanges.length).to.equal(expectedRanges.length);
     for (let i = 0; i < expectedRanges.length; i++) {
-        let e = expectedRanges[i];
-        let a = actualRanges[i];
+        const e = expectedRanges[i];
+        const a = actualRanges[i];
         compareRange(e, a);
     }
 }

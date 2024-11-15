@@ -7,8 +7,9 @@ export class MockDocument implements ITextDocument {
     version: number = 0;
     lineCount: number = 0;
 
-    constructor(private readonly text: string) {}
+    constructor(private readonly text: string) { }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getText(range?: Range | undefined): string {
         return this.text;
     }
@@ -17,6 +18,7 @@ export class MockDocument implements ITextDocument {
         return getPosition(this.text, offset);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     offsetAt(position: Position): number {
         return -1;
     }

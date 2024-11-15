@@ -22,7 +22,7 @@ export function updateParentObjects(
     };
 
     let parent;
-    for (let obj of objects) {
+    for (const obj of objects) {
         if (!parent) {
             parent = updateParent(root, obj, objectHierarchy);
         } else {
@@ -36,7 +36,7 @@ function updateParent(
     obj: SepticObject,
     objectHierarchy: SepticObjectHierarchy
 ): ObjectNode {
-    let node: ObjectNode = {
+    const node: ObjectNode = {
         obj: obj,
         parent: undefined,
         level: objectHierarchy.nodes.get(obj.type)?.level ?? 100,

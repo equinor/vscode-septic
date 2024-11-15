@@ -27,7 +27,7 @@ export function parseSepticSync(
     }
     const parser = new SepticParser(tokens.tokens);
 
-    let cnfg = parser.parse(token);
+    const cnfg = parser.parse(token);
     cnfg.comments = tokens.comments.map((comment) => {
         return new SepticComment(
             comment.content,
@@ -50,7 +50,7 @@ export async function parseSepticAsync(
     }
     await sleep(1); // Short sleep to prevent starvation of other processes
     const parser = new SepticParser(tokens.tokens);
-    let cnfg = parser.parse(token);
+    const cnfg = parser.parse(token);
     cnfg.comments = tokens.comments.map((comment) => {
         return new SepticComment(
             comment.content,
@@ -62,7 +62,7 @@ export async function parseSepticAsync(
     return cnfg;
 }
 
-let validAttributeTokens = [
+const validAttributeTokens = [
     SepticTokenType.numeric,
     SepticTokenType.string,
     SepticTokenType.identifier,
@@ -73,13 +73,13 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
     public errors: ParserError<SepticTokenType>[] = [];
 
     parse(token: CancellationToken | undefined = undefined): SepticCnfg {
-        let septicObjects = [];
+        const septicObjects = [];
         while (!this.isAtEnd()) {
             if (token?.isCancellationRequested) {
                 return new SepticCnfg([]);
             }
             if (this.match(SepticTokenType.object)) {
-                let septicObj = this.septicObject();
+                const septicObj = this.septicObject();
                 septicObjects.push(septicObj);
             } else {
                 this.synchronize(
@@ -92,7 +92,7 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
     }
 
     septicObject(): SepticObject {
-        let token: SepticToken = this.previous();
+        const token: SepticToken = this.previous();
         this.synchronize(
             "Unexpected token. Expected idenifier token",
             SepticTokenType.identifier,
@@ -111,7 +111,7 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
             identifier = undefined;
         }
 
-        let septicObject: SepticObject = new SepticObject(
+        const septicObject: SepticObject = new SepticObject(
             token.content,
             identifier,
             token.start,
@@ -125,7 +125,7 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
         );
 
         while (this.match(SepticTokenType.attribute)) {
-            let attr = this.attribute();
+            const attr = this.attribute();
             septicObject.addAttribute(attr);
         }
         septicObject.updateEnd();
@@ -133,11 +133,11 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
     }
 
     attribute(): Attribute {
-        let token: SepticToken = this.previous();
-        let attr = new Attribute(token.content, token.start, token.end);
+        const token: SepticToken = this.previous();
+        const attr = new Attribute(token.content, token.start, token.end);
         while (!this.isAtEnd()) {
             if (this.match(...validAttributeTokens)) {
-                let value = this.attributeValue();
+                const value = this.attributeValue();
                 attr.addValue(value);
                 continue;
             }
@@ -160,13 +160,13 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
     }
 
     identifier(): Identifier {
-        let token = super.previous();
-        let identifier = new Identifier(token.content, token.start, token.end);
+        const token = super.previous();
+        const identifier = new Identifier(token.content, token.start, token.end);
         return identifier;
     }
 
     attributeValue(): AttributeValue {
-        let token = this.previous();
+        const token = this.previous();
         return new AttributeValue(
             token.content,
             token.type,
@@ -219,7 +219,7 @@ export class SepticScanner {
     }
 
     private scanToken(): void {
-        let c = this.advance();
+        const c = this.advance();
         switch (c) {
             case " ":
             case "\r":
@@ -227,15 +227,17 @@ export class SepticScanner {
             case "\t":
                 break;
             case "{":
-                let next = this.advance();
-                if (next === "{") {
-                    this.jinja("}");
-                } else if (next === "#" || next === "%") {
-                    this.jinja(next);
-                } else {
-                    this.error(`Unexpected token: ${next}`);
+                {
+                    const next = this.advance();
+                    if (next === "{") {
+                        this.jinja("}");
+                    } else if (next === "#" || next === "%") {
+                        this.jinja(next);
+                    } else {
+                        this.error(`Unexpected token: ${next}`);
+                    }
+                    break;
                 }
-                break;
             case `"`:
                 this.string();
                 break;
@@ -456,8 +458,8 @@ export class SepticScanner {
     private jinja(type: string): void {
         while (
             !this.isAtEnd() && !(
-            this.peek() === type &&
-            this.peekNext() === "}")
+                this.peek() === type &&
+                this.peekNext() === "}")
         ) {
             this.advance();
         }
@@ -524,7 +526,7 @@ export class SepticScanner {
                 updatedTokens.push(tokens[i]);
                 continue;
             }
-            let identifierToken = tokens[i];
+            const identifierToken = tokens[i];
             let j = i + 1;
             let nextToken = j < tokens.length ? tokens[j] : undefined;
             while (nextToken) {

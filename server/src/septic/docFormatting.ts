@@ -9,7 +9,7 @@ import {
 export function formatObjectDocumentationMarkdown(
     objDoc: ISepticObjectDocumentation
 ) {
-    let markdown: string[] = [];
+    const markdown: string[] = [];
     markdown.push(h4(objDoc.name));
     markdown.push(horizontalRule());
     markdown.push(`${bold("Description:")} ${objDoc.description}`);
@@ -36,7 +36,7 @@ export function formatObjectAttribute(
         return "`" + attrDoc.name + "`" + `: ${attrDoc.description}`;
     }
     let doc = h4(attrDoc.name);
-    let newline = "\n\n";
+    const newline = "\n\n";
     doc += newline + horizontalRule();
     doc += newline + attrDoc.description;
     doc += newline + code("DataType:") + " " + formatDataType(attrDoc);
@@ -60,13 +60,13 @@ export function formatObjectAttribute(
 }
 
 export function formatCalcMarkdown(calc: SepticCalcInfo) {
-    let markdown = [
+    const markdown = [
         "```js\n" + `function ${calc.signature}` + "\n```",
         horizontalRule(),
         `${calc.detailedDescription.replace(/\r\n/g, "\n")}`,
     ];
 
-    let formattedParameters = calc.parameters.map((param) => {
+    const formattedParameters = calc.parameters.map((param) => {
         return formatCalcParameter(param);
     });
     if (formattedParameters.length) {

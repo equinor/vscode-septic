@@ -88,7 +88,7 @@ export class SettingsManager {
     }
 
     private updateMetaInfo(): void {
-        let level = this.settings?.folding.calcModl
+        const level = this.settings?.folding.calcModl
             ? updatedFoldingLevel
             : defaultFoldingLevelCalcModl;
         if (this.settings) {
@@ -96,7 +96,7 @@ export class SettingsManager {
                 this.settings.documentation.version
             );
         }
-        let metaInfoProvider = SepticMetaInfoProvider.getInstance();
+        const metaInfoProvider = SepticMetaInfoProvider.getInstance();
 
         metaInfoProvider.updateObjectLevel("CalcModl", level);
     }

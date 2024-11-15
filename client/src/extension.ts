@@ -22,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
         path.join("server", "out", "server.js")
     );
 
-    let debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] };
+    const debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] };
     const serverOptions: ServerOptions = {
         run: { module: serverModule, transport: TransportKind.ipc },
         debug: {
@@ -49,14 +49,14 @@ export function activate(context: vscode.ExtensionContext) {
         serverOptions,
         clientOptions
     );
-    client.onRequest(protocol.globFiles, async (params, cts) => {
-        let parsedUri = vscode.Uri.parse(params.uri);
-        let folder = vscode.workspace.getWorkspaceFolder(parsedUri);
+    client.onRequest(protocol.globFiles, async (params) => {
+        const parsedUri = vscode.Uri.parse(params.uri);
+        const folder = vscode.workspace.getWorkspaceFolder(parsedUri);
         if (!folder) {
             return [];
         }
-        let pattern = getSearchPattern(folder.uri.path, parsedUri.path);
-        let files = await vscode.workspace.findFiles(pattern);
+        const pattern = getSearchPattern(folder.uri.path, parsedUri.path);
+        const files = await vscode.workspace.findFiles(pattern);
         return files
             .filter((f) => f.fsPath.includes(folder.uri.fsPath))
             .map((f) => f.toString());
@@ -64,7 +64,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     client.onRequest(
         protocol.fsReadFile,
-        async (e, token): Promise<number[]> => {
+        async (e): Promise<number[]> => {
             const uri = vscode.Uri.parse(e.uri);
             return Array.from(await vscode.workspace.fs.readFile(uri));
         }
@@ -77,12 +77,12 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     vscode.commands.registerCommand("septic.detectCycles", async () => {
-        let contexts = await client.sendRequest(protocol.contexts, {});
-        let choice = await vscode.window.showQuickPick(contexts);
+        const contexts = await client.sendRequest(protocol.contexts, {});
+        const choice = await vscode.window.showQuickPick(contexts);
         if (!choice) {
             return;
         }
-        let report = await client.sendRequest(protocol.cylceReport, {
+        const report = await client.sendRequest(protocol.cylceReport, {
             uri: choice,
         });
         if (!report) {
@@ -104,8 +104,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     vscode.commands.registerCommand("septic.compareCnfg", async () => {
-        let contexts = await client.sendRequest(protocol.contexts, {});
-        let prevVersion = await vscode.window.showOpenDialog({
+        const prevVersion = await vscode.window.showOpenDialog({
             canSelectMany: false,
             filters: { Septic: ["cnfg"] },
             title: "Select previous version",
@@ -113,7 +112,7 @@ export function activate(context: vscode.ExtensionContext) {
         if (!prevVersion) {
             return;
         }
-        let currentVersion = await vscode.window.showOpenDialog({
+        const currentVersion = await vscode.window.showOpenDialog({
             canSelectMany: false,
             filters: { Septic: ["cnfg"] },
             title: "Select current version",
@@ -121,10 +120,10 @@ export function activate(context: vscode.ExtensionContext) {
         if (!currentVersion) {
             return;
         }
-        let possibleSettingsFiles = (
+        const possibleSettingsFiles = (
             await vscode.workspace.findFiles("*.yaml")
         ).map((item) => item.fsPath.toString());
-        let settings = await vscode.window.showQuickPick(
+        const settings = await vscode.window.showQuickPick(
             ["Default", ...possibleSettingsFiles],
             {
                 title: "Select settings file",
@@ -134,7 +133,7 @@ export function activate(context: vscode.ExtensionContext) {
         if (!settings) {
             return;
         }
-        let diff = await client.sendRequest(protocol.compareCnfg, {
+        const diff = await client.sendRequest(protocol.compareCnfg, {
             prevVersion: prevVersion[0].toString(),
             currentVersion: currentVersion[0].toString(),
             settingsFile: settings,
@@ -162,12 +161,12 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     vscode.commands.registerCommand("septic.opcTagList", async () => {
-        let contexts = await client.sendRequest(protocol.contexts, {});
-        let choice = await vscode.window.showQuickPick(contexts);
+        const contexts = await client.sendRequest(protocol.contexts, {});
+        const choice = await vscode.window.showQuickPick(contexts);
         if (!choice) {
             return;
         }
-        let report = await client.sendRequest(protocol.opcTagList, {
+        const report = await client.sendRequest(protocol.opcTagList, {
             uri: choice,
         });
         if (!report) {
