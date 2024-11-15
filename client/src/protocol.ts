@@ -73,7 +73,7 @@ export const opcTagList = new RequestType<{ uri: string }, string, unknown>(
     "septic/opcTagList"
 );
 
-export const getContext = new RequestType<{ uri: string }, string, any>(
+export const getContext = new RequestType<{ uri: string }, string, unknown>(
     "septic/getContext"
 );
 

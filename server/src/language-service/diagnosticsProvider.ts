@@ -38,7 +38,6 @@ import {
     RefValidationFunction,
     SepticReference,
     ReferenceType,
-    AlgParsingError,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -150,8 +149,8 @@ export class DiagnosticProvider {
         if (doc === undefined) {
             return [];
         }
-        let settingsWorkspace = await this.settingsManager.getSettings();
-        let settings =
+        const settingsWorkspace = await this.settingsManager.getSettings();
+        const settings =
             settingsWorkspace?.diagnostics ?? defaultDiagnosticsSettings;
 
         if (!settings.enabled) {
@@ -163,8 +162,8 @@ export class DiagnosticProvider {
 }
 
 export function validateStandAloneCalc(alg: string, refProvider: SepticReferenceProvider): Diagnostic[] {
-    let doc = TextDocument.create("", "", 0, `"${alg}"`);
-    let algAttrValue = new AttributeValue(`"${alg}"`, SepticTokenType.string);
+    const doc = TextDocument.create("", "", 0, `"${alg}"`);
+    const algAttrValue = new AttributeValue(`"${alg}"`, SepticTokenType.string);
     return validateAlg(algAttrValue, doc, refProvider);
 }
 
@@ -265,6 +264,7 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, refProvider
     let expr;
     try {
         expr = parseAlg(alg.getValue());
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         const diagnostic = createDiagnostic(
             DiagnosticSeverity.Error,

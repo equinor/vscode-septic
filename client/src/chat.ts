@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Equinor ASA
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
@@ -21,7 +22,7 @@ interface SepticCalcResult extends vscode.ChatResult {
 }
 export async function calcChat(client: LanguageClient, request: vscode.ChatRequest, context: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken): Promise<SepticCalcResult> {
 	const uri = vscode.window.activeTextEditor?.document.uri.toString();
-	let septicContext = await client.sendRequest(protocol.getContext, { uri: uri });
+	const septicContext = await client.sendRequest(protocol.getContext, { uri: uri });
 	if (septicContext.length) {
 		const fileUri = vscode.Uri.parse(septicContext);
 		stream.reference(fileUri);
@@ -40,7 +41,7 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 		const [model] = await vscode.lm.selectChatModels(MODEL_SELECTOR);
 		if (model) {
 			let attempts = 0;
-			const { messages, tokenCount } = await renderPrompt(SepticChatCalcPrompt, { calcs: documentation.calcs, variables: variables }, { modelMaxPromptTokens: model.maxInputTokens }, model);
+			const { messages } = await renderPrompt(SepticChatCalcPrompt, { calcs: documentation.calcs, variables: variables }, { modelMaxPromptTokens: model.maxInputTokens }, model);
 			const messagesUpdated = messages as vscode.LanguageModelChatMessage[];
 			const previousMessages = context.history.filter(h => h instanceof vscode.ChatResponseTurn) as vscode.ChatResponseTurn[];
 			previousMessages.forEach(m => {
@@ -58,14 +59,12 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 				const response = await parseChatResponse(chatResponse);
 				if (response.json) {
 					stream.progress("Validating calculation...");
-					let feedback = await validateCalculations(response, client, uri);
+					const feedback = await validateCalculations(response, client, uri);
 					if (!feedback.length) {
-						const { messages, tokenCount } = await renderPrompt(SepticChatCalcOutputPrompt, { jsonInput: response.response }, { modelMaxPromptTokens: model.maxInputTokens }, model);
+						const { messages } = await renderPrompt(SepticChatCalcOutputPrompt, { jsonInput: response.response }, { modelMaxPromptTokens: model.maxInputTokens }, model);
 						const formattedResponse = await model.sendRequest(messages, {});
-						let accumulatedResponse = "";
 						for await (const fragment of formattedResponse.text) {
 							stream.markdown(fragment);
-							accumulatedResponse += fragment;
 						}
 						return { metadata: { command: request.command, output: response.json.calculations } };
 					}
@@ -86,14 +85,14 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 			}
 
 		}
-	} catch (e) {
+	} catch {
 		stream.markdown(vscode.l10n.t('I\'m sorry, unable to find the model.'));
 	}
 	return { metadata: { command: request.command, output: {} } };
 }
 
 async function validateCalculations(response: { json?: any; response: string; }, client: LanguageClient, uri: string): Promise<any[]> {
-	let feedback = [];
+	const feedback = [];
 	const regexPattern = response.json.variables.join("|");
 	const regex = new RegExp(regexPattern);
 	for (const calc of response.json.calculations) {
@@ -102,7 +101,7 @@ async function validateCalculations(response: { json?: any; response: string; },
 		if (!diagnostics.length) {
 			continue;
 		} else {
-			let diagnosticMessages = diagnostics.map((diagnostic) => `${diagnostic.message} Start: ${diagnostic.range.start.character - 1} End: ${diagnostic.range.end.character - 1}`).join('\n');
+			const diagnosticMessages = diagnostics.map((diagnostic) => `${diagnostic.message} Start: ${diagnostic.range.start.character - 1} End: ${diagnostic.range.end.character - 1}`).join('\n');
 			feedback.push({ "name": calc.name, "message": `Invalid calculation. The following errors in the calculation was found (with position in):\n ${diagnosticMessages}\nPlease generate a new calculation that fixes the errors.` });
 		}
 	}
@@ -119,7 +118,7 @@ async function parseChatResponse(
 	try {
 		const calculation = JSON.parse(accumulatedResponse);
 		return { json: calculation, response: accumulatedResponse };
-	} catch (e) {
+	} catch {
 		return { response: accumulatedResponse };
 	}
 }
