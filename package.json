@@ -11,12 +11,15 @@
     "url": "https://github.com/equinor/vscode-septic"
   },
   "publisher": "EinarSIdso",
-  "categories": [],
+  "categories": [
+    "AI",
+    "Chat"
+  ],
   "keywords": [
     "multi-root ready"
   ],
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.95.0"
   },
   "activationEvents": [
     "onLanguage:septic"
@@ -35,6 +38,10 @@
       {
         "command": "septic.compareCnfg",
         "title": "Septic: Compare config versions"
+      },
+      {
+        "command": "septic.generateCalc",
+        "title": "Septic: Generate Calc"
       }
     ],
     "configuration": {
@@ -150,7 +157,22 @@
         "editor.wordWrap": "on",
         "editor.insertSpaces": true
       }
-    }
+    },
+    "chatParticipants": [
+      {
+        "id": "septic.chat",
+        "name": "septic",
+        "fullName": "Septic Chat",
+        "description": "Chatbot for Septic related topics",
+        "isSticky": true,
+        "commands": [
+          {
+            "name": "calcs",
+            "description": "Ask about the calcs in Septic"
+          }
+        ]
+      }
+    ]
   },
   "nyc": {
     "extension": [
@@ -201,7 +223,7 @@
     "@types/eslint__js": "^8.42.3",
     "@types/mocha": "^10.0.7",
     "@types/node": "^16.18.96",
-    "@types/vscode": "^1.85.0",
+    "@types/vscode": "^1.95.0",
     "@typescript-eslint/eslint-plugin": "8.14.0",
     "@typescript-eslint/parser": "8.14.0",
     "chai": "^4.5.0",

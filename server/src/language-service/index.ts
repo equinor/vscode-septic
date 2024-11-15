@@ -37,7 +37,7 @@ export interface ILanguageService {
     ): Promise<lsp.FoldingRange[]>;
 
     provideDiagnostics(
-        doc: ITextDocument,
+        uri: string,
         refProvider: SepticReferenceProvider
     ): Promise<lsp.Diagnostic[]>;
 
@@ -79,6 +79,7 @@ export interface ILanguageService {
         params: lsp.PrepareRenameParams,
         doc: ITextDocument
     ): Promise<lsp.Range | null>;
+
     provideHover(
         params: lsp.HoverParams,
         doc: ITextDocument,
@@ -116,6 +117,7 @@ export function createLanguageService(
     const foldingRangeProvider = new FoldingRangeProvider(cnfgProvider);
     const diagnosticProvider = new DiagnosticProvider(
         cnfgProvider,
+        documentProvider,
         configurationManager
     );
 
@@ -181,6 +183,6 @@ export function createLanguageService(
         provideOpcTagList: generateOpcReport,
         provideCnfgComparison: cnfgComparisionProvider.compareCnfgs.bind(
             cnfgComparisionProvider
-        ),
+        )
     });
 }

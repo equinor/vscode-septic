@@ -84,6 +84,10 @@ export class SepticMetaInfoProvider {
         return this.objectsMap.get(objectType);
     }
 
+    public getObjectsDoc(): SepticObjectDoc[] {
+        return [...this.objectsDocMap.values()].map((doc) => doc.getObjectDoc());
+    }
+
     public getObjectDefault(objectType: string): SepticObjectInfo {
         const obj = this.objectsMap.get(objectType);
         if (obj) {
@@ -308,6 +312,16 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
         return this.attrMap.get(attr);
     }
 
+    public getObjectDoc(): SepticObjectDoc {
+        return {
+            name: this.name,
+            attributes: this.attributes,
+            description: this.description,
+            parents: this.parents,
+            publicAttributes: this.publicAttributes,
+        };
+    }
+
     private setAttributes(attrs: SepticAttributeDocumentation[]) {
         for (const attr of attrs) {
             if (attr.calc) {
@@ -372,6 +386,15 @@ export interface ISepticObjectDocumentation {
     parents: string[];
     publicAttributes: string[];
     getAttribute(attr: string): SepticAttributeDocumentation | undefined;
+    getObjectDoc(): SepticObjectDoc;
+}
+
+export interface SepticObjectDoc {
+    name: string;
+    attributes: SepticAttributeDocumentation[];
+    description: string;
+    parents: string[];
+    publicAttributes: string[];
 }
 
 export interface SepticObjectDocumentationInput {

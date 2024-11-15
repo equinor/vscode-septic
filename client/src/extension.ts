@@ -7,15 +7,20 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as protocol from "./protocol";
 import { getSearchPattern } from "./util";
-
 import {
     LanguageClient,
     LanguageClientOptions,
     ServerOptions,
     TransportKind,
 } from "vscode-languageclient/node";
+import { calcChat } from './chat';
+import { generateCalc } from './lm';
+import { FileTelemetrySender } from './logger';
+import * as fs from 'fs';
 
 let client: LanguageClient;
+
+
 
 export function activate(context: vscode.ExtensionContext) {
     const serverModule = context.asAbsolutePath(
@@ -189,6 +194,33 @@ export function activate(context: vscode.ExtensionContext) {
         await vscode.window.showTextDocument(filePath, {
             preserveFocus: false,
         });
+    });
+
+    vscode.commands.registerCommand("septic.generateCalc", async (description: string, start: vscode.Position, end: vscode.Position) => {
+        generateCalc(client, description, start, end);
+    });
+    if (!fs.existsSync(context.logUri.fsPath)) {
+        fs.mkdirSync(context.logUri.fsPath);
+    }
+    const chatLogFilePath = path.join(context.logUri.fsPath, 'chat.log');
+    const sender = new FileTelemetrySender(chatLogFilePath);
+    const chatLogger = vscode.env.createTelemetryLogger(sender);
+
+    const chatHandler: vscode.ChatRequestHandler = async (request, context, stream, token): Promise<vscode.ChatResult | void> => {
+        chatLogger.logUsage('chat', { command: request.command });
+        if (request.command === 'calcs') {
+            return await calcChat(client, request, context, stream, token);
+        }
+        return;
+    };
+    const septicChat = vscode.chat.createChatParticipant("septic.chat", chatHandler);
+
+    const iconPathDark = vscode.Uri.joinPath(context.extensionUri, "images/septic_dark.svg");
+    const iconPathLight = vscode.Uri.joinPath(context.extensionUri, "images/septic_light.svg");
+    septicChat.iconPath = { light: iconPathLight, dark: iconPathDark };
+
+    septicChat.onDidReceiveFeedback((feedback: vscode.ChatResultFeedback) => {
+        chatLogger.logUsage('chatResultFeedback', { result: feedback.result, kind: feedback.kind });
     });
 
     client.start();
