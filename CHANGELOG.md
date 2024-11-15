@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.23.0](https://github.com/equinor/vscode-septic/compare/v1.22.1...v1.23.0) (2024-11-15)
+
+
+### 🧹 Chores
+
+* **deps:** bump nyc from 15.1.0 to 17.1.0 ([#635](https://github.com/equinor/vscode-septic/issues/635)) ([6075604](https://github.com/equinor/vscode-septic/commit/60756044f68a5defffb7a9833a9de478b3425c0b))
+
+
+### ✨ Features
+
+* add co-pilot ([#664](https://github.com/equinor/vscode-septic/issues/664)) ([142b3f9](https://github.com/equinor/vscode-septic/commit/142b3f9ab82d30bdcc3b5cf917debba53719b84c))
+
+
+### 🔨 Refactor
+
+* add ESLint config, remove lint warnings ([#677](https://github.com/equinor/vscode-septic/issues/677)) ([581aa00](https://github.com/equinor/vscode-septic/commit/581aa00bd9186eb8b3eedd824ec2dadb67bce542))
+
 ## [1.22.1](https://github.com/equinor/vscode-septic/compare/v1.22.0...v1.22.1) (2024-11-04)
 
 
