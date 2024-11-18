@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.23.1](https://github.com/equinor/vscode-septic/compare/v1.23.0...v1.23.1) (2024-11-18)
+
+
+### 🐛 Bug Fixes
+
+* issue with not finding prompt module ([#684](https://github.com/equinor/vscode-septic/issues/684)) ([84c9319](https://github.com/equinor/vscode-septic/commit/84c93196bda8df699e2e7f5de04e9913c06a5f22))
+
 ## [1.23.0](https://github.com/equinor/vscode-septic/compare/v1.22.1...v1.23.0) (2024-11-15)
 
 
