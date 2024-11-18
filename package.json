@@ -217,6 +217,9 @@
     "test": "mocha --require ts-node/register server/src/test/**/*.test.ts ",
     "test_with_coverage": "npm run compile && nyc mocha --require ts-node/register --require source-map-support/register --recursive server/src/test/**/*.test.ts "
   },
+  "dependencies": {
+    "@vscode/prompt-tsx": "^0.3.0-alpha.13"
+  },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
     "@types/chai": "4.3.16",
