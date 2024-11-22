@@ -38,7 +38,6 @@ export function registerSepticChatParticipant(context: vscode.ExtensionContext, 
 		}
 		const references = request.references.filter(ref => typeof ref.value === 'string').map(ref => ref.value) as string[];
 		try {
-			let attempts = 0;
 			const previousResponses = getResponseHistory(context);
 			const { messages } = await renderPrompt(SepticChatCalcPrompt, { calcs: documentation.calcs, variables: variables, responses: previousResponses, references: references, prompt: request.prompt }, { modelMaxPromptTokens: request.model.maxInputTokens }, request.model);
 			const messagesUpdated = messages as vscode.LanguageModelChatMessage[];
@@ -57,20 +56,11 @@ export function registerSepticChatParticipant(context: vscode.ExtensionContext, 
 						}
 						return { metadata: { command: request.command, output: response.json.calculations } };
 					}
-					messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(response.response));
-					messagesUpdated.push(vscode.LanguageModelChatMessage.User("Invalid calculation. Please try again. The following errors were found:"));
-					messagesUpdated.push(vscode.LanguageModelChatMessage.User(JSON.stringify(feedback)));
+					return { metadata: { command: request.command, output: response.json.calculations } };
+				}
+				messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(response.response));
+				messagesUpdated.push(vscode.LanguageModelChatMessage.User("Invalid calculation. Please try again. The following errors were found:"));
 
-				} else {
-					messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(response.response));
-					messagesUpdated.push(vscode.LanguageModelChatMessage.User("Unable to construct JSON object. Please try again."));
-				}
-				attempts++;
-				if (attempts > 3) {
-					stream.markdown(vscode.l10n.t('Unable to generate calculation'));
-					break;
-				}
-				stream.progress("Re-attempting to create calculation...");
 			}
 		} catch {
 			stream.markdown(vscode.l10n.t('I\'m sorry, unable to find the model.'));
