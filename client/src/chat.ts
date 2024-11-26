@@ -35,21 +35,12 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 	if (uri) {
 		variables = await client.sendRequest(protocol.variables, { uri: uri });
 	}
+	const references = request.references.filter(ref => typeof ref.value === 'string').map(ref => ref.value) as string[];
 	try {
-
 		let attempts = 0;
-		const { messages } = await renderPrompt(SepticChatCalcPrompt, { calcs: documentation.calcs, variables: variables }, { modelMaxPromptTokens: request.model.maxInputTokens }, request.model);
+		const previousResponses = getResponseHistory(context);
+		const { messages } = await renderPrompt(SepticChatCalcPrompt, { calcs: documentation.calcs, variables: variables, responses: previousResponses, references: references, prompt: request.prompt }, { modelMaxPromptTokens: request.model.maxInputTokens }, request.model);
 		const messagesUpdated = messages as vscode.LanguageModelChatMessage[];
-		const previousMessages = context.history.filter(h => h instanceof vscode.ChatResponseTurn) as vscode.ChatResponseTurn[];
-		previousMessages.forEach(m => {
-			let fullMessage = "";
-			m.response.forEach(r => {
-				const mdPart = r as vscode.ChatResponseMarkdownPart;
-				fullMessage += mdPart.value.value;
-			});
-			messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(fullMessage));
-		});
-		messagesUpdated.push(vscode.LanguageModelChatMessage.User(request.prompt));
 		stream.progress("Creating calculation...");
 		while (true) {
 			const chatResponse = await request.model.sendRequest(messagesUpdated, {}, token);
@@ -84,6 +75,20 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 		stream.markdown(vscode.l10n.t('I\'m sorry, unable to find the model.'));
 	}
 	return { metadata: { command: request.command, output: {} } };
+}
+
+function getResponseHistory(context: vscode.ChatContext): string[] {
+	const messages: string[] = []
+	const previousMessages = context.history.filter(h => h instanceof vscode.ChatResponseTurn) as vscode.ChatResponseTurn[];
+	previousMessages.forEach(m => {
+		let fullMessage = "";
+		m.response.forEach(r => {
+			const mdPart = r as vscode.ChatResponseMarkdownPart;
+			fullMessage += mdPart.value.value;
+		});
+		messages.push(fullMessage);
+	});
+	return messages;
 }
 
 async function validateCalculations(response: { json?: any; response: string; }, client: LanguageClient, uri: string): Promise<any[]> {
