@@ -11,6 +11,12 @@ export interface SepticCalcPromptProps extends BasePromptElementProps {
 	variables: SepticVariable[] | undefined;
 }
 
+export interface SepticChatCalcPromptProps extends SepticCalcPromptProps {
+	prompt: string;
+	responses: string[];
+	references: string[];
+}
+
 export interface SepticCalcOutputProps extends BasePromptElementProps {
 	jsonInput: string;
 }
@@ -41,7 +47,7 @@ export class SepticChatCalcOutputPrompt extends PromptElement<SepticCalcOutputPr
 					{'   '}Text1= "%describe calculation%" <br />
 					{'   '}Text2= "" <br />
 					{'     '}Alg= "%calculation%" <br />
-					If you use variables outside of the defined list, you need to define them on the following format: <br />
+				    Variables should be formatted on the following format: <br />
 					Evr:           %variable name% <br />
 					{'     '}Text1=  "%description%" <br />
 					{'   '}PlotMax=  0 <br />
@@ -57,18 +63,22 @@ export class SepticChatCalcOutputPrompt extends PromptElement<SepticCalcOutputPr
 	}
 }
 
-export class SepticChatCalcPrompt extends PromptElement<SepticCalcPromptProps> {
+export class SepticChatCalcPrompt extends PromptElement<SepticChatCalcPromptProps> {
 	async render() {
 		return (
 			<>
 				<SepticInformation priority={10} />
 				<SepticCalcPrompt calcs={this.props.calcs} variables={this.props.variables} />
+				<UserMessage priority={1000}>{this.props.responses.join("\n")}</UserMessage>
+				<UserMessage priority={1000}>{this.props.references.join("\n")}</UserMessage>
 				<UserMessage priority={10}>
-					Format the output as a single JSON object containing a list of all calculations with names and list of all new variables that must be created (don't include variables that already exists). It is not necessary to wrap your response in triple backticks. Here is examples of what your response should look like <br />
+					Format the output as a single JSON object containing a list of all calculations with names and list of all new variables that is not in the list existing variables. Only add variables that are not in the list of variables between %%% start list of variables %%% and %%% end list of variables %%%.
+					It is not necessary to wrap your response in triple backticks. Here is examples of what your response should look like <br />
 					{'{ "calculations":  [{"name": "ClampedZpc", "calculation": "clamp(Zpc, 10, 90)"},{"name": "SetFulfCalc", "calculation": "setfulf(if(ClampedZpc * 2 > 10, 10, 1)"}], "variables": ["ClampedZpc"]}'} <br />
-					Multiple partial calculations can be included if it makes the calculations easier to understand. The partial result must be stored in variables that needs to be included in the list of new variables. <br />
-					Please create a calculation that meets the requirements of the user that only uses the available variables (or new variables) and functions. <br />
+					The partial result must be stored in variables that needs to be included in the list of new variables. <br />
+					Please create a calculation that meets the requirements of the user that only uses the available variables (or new variables) and functions. Follow the instructions of the user carefully <br />
 				</UserMessage>
+				<UserMessage>{this.props.prompt}</UserMessage>
 			</>
 		)
 	}
@@ -127,8 +137,6 @@ export class CalcInformation extends PromptElement<CalcInformationProps> {
 					%%% start list of functions %%% <br />
 					{calcElements}
 					%%% end list of functions %%% <br />
-				</UserMessage>
-				<UserMessage priority={1000}>
 					Examples of correct calculations: <br />
 					Alg= "setmeas(Var1, if(Var2 {'>'} Var1, Var2, Var3))" <br />
 					Alg= "setmode(Var1, if(getmode(Var1) {'>'} 3, 3, 0),1)" <br />
@@ -156,9 +164,14 @@ export class CalcFunctions extends PromptElement<CalcFunctionProps> {
 	override async prepare(): Promise<void> {
 	}
 	async render() {
+		let description = this.props.calc.detailedDescription;
+		if (description.length > 50) {
+			description = description.slice(0, 50) + "...";
+		}
+		description = description.replace((/(\r\n|\n|\r|<br>)/gm), "");
 		return (
 			<>
-				{this.props.calc.signature}: {this.props.calc.detailedDescription.replace("\n", " ")} <br />
+				{this.props.calc.signature}: {description} <br />
 			</>
 		)
 	}
@@ -181,7 +194,7 @@ export class SepticVariables extends PromptElement<SepticVariablesProps> {
 					Variables can be referenced in calculations. Only the name of the variable is used in the calculation.
 					You have access to the following variables. The following structure is used: Name;Type;Description  <br />
 					%%% start list of variables %%% <br />
-					<TextChunk breakOn='\n'>{variableElements}</TextChunk>
+					<TextChunk breakOn='\n'>{variableElements}</TextChunk><br />
 					%%% end list of variables %%% <br />
 				</UserMessage>
 			</>
@@ -190,7 +203,7 @@ export class SepticVariables extends PromptElement<SepticVariablesProps> {
 }
 
 
-export class SepticInformation extends PromptElement<{}> {
+export class SepticInformation extends PromptElement<object> {
 	override async prepare(): Promise<void> {
 	}
 	async render() {
