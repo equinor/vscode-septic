@@ -434,4 +434,58 @@ describe("Test snippet completion logic", () => {
             ).length
         ).to.equal(0);
     });
+    it("Expect to get no object snippets inside object", () => {
+        const text = `   \nDmmyAppl:  Test\nText1= ""  \nEvr: TestEvr\nText1= " "\nMeas= 2`;
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSepticSync(doc.getText());
+        const pos = Position.create(2, 0);
+        const compItems = getCompletion(pos, "", cnfg, doc, cnfg);
+        expect(
+            compItems.filter(
+                (item) => item.kind === CompletionItemKind.Snippet
+            ).length
+        ).to.equal(0);
+    });
+    it("Expect to get no calcpvr snippets inside dmmyappl", () => {
+        const text = `   \nDmmyAppl:  Test\nText1= ""  \nEvr: TestEvr\nText1= " "\nMeas= 2\n    `;
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSepticSync(doc.getText());
+        const pos = Position.create(6, 1);
+        const compItems = getCompletion(pos, "", cnfg, doc, cnfg);
+        expect(
+            compItems.filter(
+                (item) => item.label === "calcpvr"
+            ).length
+        ).to.equal(0);
+    });
+    it("Expect to get children as snippets inside object", () => {
+        const text = `   \nDmmyAppl:  Test\nText1= ""  \nEvr: TestEvr\nText1= " "\nMeas= 2\n    `;
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSepticSync(doc.getText());
+        const pos = Position.create(7, 1);
+        const compItems = getCompletion(pos, "", cnfg, doc, cnfg);
+        const objectHierarchy = SepticMetaInfoProvider.getInstance().getObjectHierarchy();
+        const dmmyApplNode = objectHierarchy.nodes.get("DmmyAppl");
+        const dmmyApplChildren = dmmyApplNode!.children.map((child) => child.toLowerCase());
+        expect(
+            compItems.filter(
+                (item) => dmmyApplChildren.includes(item.label)
+            ).length
+        ).to.equal(dmmyApplChildren.length);
+    });
+    it("Expect to get parents as snippets inside object", () => {
+        const text = `   \nDmmyAppl:  Test\nText1= ""  \nEvr: TestEvr\nText1= " "\nMeas= 2\n    `;
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSepticSync(doc.getText());
+        const pos = Position.create(7, 1);
+        const compItems = getCompletion(pos, "", cnfg, doc, cnfg);
+        const objectHierarchy = SepticMetaInfoProvider.getInstance().getObjectHierarchy();
+        const dmmyApplNode = objectHierarchy.nodes.get("DmmyAppl");
+        const dmmyApplParents = dmmyApplNode!.parents.map((child) => child.toLowerCase());
+        expect(
+            compItems.filter(
+                (item) => dmmyApplParents.includes(item.label)
+            ).length
+        ).to.equal(dmmyApplParents.length);
+    });
 });
