@@ -292,4 +292,20 @@ describe("Test getReferences", () => {
         expect(refs[0].type).to.equal(ReferenceType.calc);
 
     });
+    it("Expect references from alg that contain other jinja expressions", () => {
+        const alg = `"maxselection(6,{% for Wellname in (wells | unpack('Wellname'))[:5] %} {{ Wellname }}Priority,{% endfor %} -1,{% for Wellname in (wells | unpack('Wellname'))[:5] %} {{ Wellname }}Priority < {{ CurrentWell }}Priority,{% endfor %} 1)"`
+        const calcPvr = new SepticObject("CalcPvr", new Identifier("Test"), 0, 0);
+        const algAttribute = new Attribute("Alg");
+        algAttribute.addValue(new AttributeValue(alg, SepticTokenType.string));
+        calcPvr.addAttribute(algAttribute);
+        const refs = extractReferencesFromObj(calcPvr);
+        expect(refs.length).to.equal(4);
+        expect(refs[1].identifier).to.equal("{{Wellname}}Priority");
+        expect(refs[1].location.end - refs[1].location.start).to.equal("{{ Wellname }}Priority".length);
+        expect(refs[2].identifier).to.equal("{{Wellname}}Priority");
+        expect(refs[2].location.end - refs[2].location.start).to.equal("{{ Wellname }}Priority".length);
+        expect(refs[3].identifier).to.equal("{{CurrentWell}}Priority");
+        expect(refs[3].location.end - refs[3].location.start).to.equal("{{ CurrentWell }}Priority".length);
+
+    });
 });
