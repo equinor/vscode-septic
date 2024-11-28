@@ -178,7 +178,7 @@ export function getCodeActionIgnoreDiagnostics(
         doc
     );
     const codes = [
-        ...new Set(params.context.diagnostics.map((diag) => diag.code)),
+        ...new Set(params.context.diagnostics.filter((diag) => diag.code).map((diag) => diag.code)),
     ];
     for (const code of codes) {
         const applicableDiagnostics = params.context.diagnostics.filter(
@@ -208,22 +208,22 @@ export function getCodeActionIgnoreDiagnostics(
 }
 
 export function getCodeActionGenerateCalc(params: CodeActionParams, cnfg: SepticCnfg, doc: ITextDocument): CodeAction[] {
-    let codeActions = []
-    let start = doc.offsetAt(params.range.start);
-    let end = doc.offsetAt(params.range.end);
-    let objects = cnfg.getObjectsInRange(start, end).filter(obj => obj.isType("CalcPvr"));
-    for (let obj of objects) {
-        let algAttr = obj.getAttribute("Alg");
-        let textAttr = obj.getAttribute("Text1");
+    const codeActions = []
+    const start = doc.offsetAt(params.range.start);
+    const end = doc.offsetAt(params.range.end);
+    const objects = cnfg.getObjectsInRange(start, end).filter(obj => obj.isType("CalcPvr"));
+    for (const obj of objects) {
+        const algAttr = obj.getAttribute("Alg");
+        const textAttr = obj.getAttribute("Text1");
         if (algAttr?.getValue() === undefined || textAttr?.getValue() === undefined) {
             continue;
         }
         if (textAttr.getValue() === "") {
             continue;
         }
-        let start = doc.positionAt(algAttr.getAttrValue()!.start + 1);
-        let end = doc.positionAt(algAttr.getAttrValue()!.end - 1);
-        let codeAction = CodeAction.create(`Generate Calc: ${obj.identifier?.name}`);
+        const start = doc.positionAt(algAttr.getAttrValue()!.start + 1);
+        const end = doc.positionAt(algAttr.getAttrValue()!.end - 1);
+        const codeAction = CodeAction.create(`Generate Calc: ${obj.identifier?.name}`);
         codeAction.kind = CodeActionKind.QuickFix;
         codeAction.command = Command.create(`Generate calc`, "septic.generateCalc", textAttr.getValue(), start, end);
         codeActions.push(codeAction);
