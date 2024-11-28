@@ -147,8 +147,12 @@ export class SepticCnfg implements SepticReferenceProvider {
         return undefined;
     }
 
-    public getObjectFromOffset(offset: number): SepticObject | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public getObjectFromOffset(offset: number, uri: string = ""): SepticObject | undefined {
         if (!this.objects.length) {
+            return undefined;
+        }
+        if (offset < this.objects[0].start) {
             return undefined;
         }
         let index = 1;

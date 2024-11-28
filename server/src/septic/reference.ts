@@ -66,6 +66,7 @@ export interface SepticReferenceProvider {
         identifier: string,
         type: string
     ): SepticObject | undefined;
+    getObjectFromOffset(offset: number, uri: string): SepticObject | undefined;
     validateRef(
         name: string,
         validationFunction: RefValidationFunction

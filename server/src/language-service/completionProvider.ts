@@ -19,6 +19,7 @@ import { ITextDocument } from "./types/textDocument";
 import {
     AlgVisitor,
     Attribute,
+    SepticObjectHierarchy,
     SepticAttributeDocumentation,
     SepticCnfg,
     SepticMetaInfoProvider,
@@ -197,9 +198,9 @@ export function getObjectCompletion(
     refProvider: SepticReferenceProvider,
     doc: ITextDocument
 ): CompletionItem[] {
-    const snippets: CompletionItem[] = SepticMetaInfoProvider.getInstance()
-        .getSnippets()
-        .slice();
+    cnfg.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
+    refProvider.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
+    const snippets: CompletionItem[] = getRelevantSnippets(offset, refProvider, doc);
     const references: CompletionItem[] = [];
     const obj = cnfg.getObjectFromOffset(offset);
     if (!obj) {
@@ -458,4 +459,41 @@ function getRelevantXvrsAttributes(
         default:
             return objects.filter((obj) => obj.isXvr);
     }
+}
+
+function getRelevantSnippets(offset: number, refProvider: SepticReferenceProvider, doc: ITextDocument): CompletionItem[] {
+    const snippets = SepticMetaInfoProvider.getInstance().getSnippets().slice();
+    const obj = refProvider.getObjectFromOffset(offset, doc.uri);
+    if (!obj) {
+        return snippets.filter((snippet) => snippet.label.startsWith("system"));
+    }
+    const objectHierarchy = SepticMetaInfoProvider.getInstance().getObjectHierarchy();
+    const relevantObjects = getObjectsSnippets(objectHierarchy, obj);
+    return snippets.filter((snippet) => relevantObjects.includes(snippet.label));
+}
+
+function getObjectsSnippets(objectHierarchy: SepticObjectHierarchy, obj: SepticObject): string[] {
+    let node = objectHierarchy.nodes.get(obj.type);
+    let currentObject: SepticObject | undefined = obj;
+    if (!node) {
+        return [];
+    }
+    const relevantObjects: string[] = [];
+    relevantObjects.push(...node.children);
+    while (node) {
+        let parentType = ""
+        if (currentObject?.parent) {
+            parentType = currentObject.parent.type;
+        } else {
+            parentType = node.parents.length ? node.parents[0] : "";
+        }
+        node = objectHierarchy.nodes.get(parentType);
+        if (node) {
+            relevantObjects.push(node.name);
+            relevantObjects.push(...node.children)
+        }
+        currentObject = currentObject?.parent;
+    }
+
+    return relevantObjects.map((val) => val.toLowerCase());
 }
