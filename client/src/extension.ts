@@ -12,7 +12,6 @@ import {
     TransportKind,
 } from "vscode-languageclient/node";
 import { registerSepticChatParticipant } from './chat';
-
 import { registerAllCommands } from './commands';
 import { registerRequestHandlers } from "./requests";
 
