@@ -11,9 +11,8 @@ import {
     ServerOptions,
     TransportKind,
 } from "vscode-languageclient/node";
-import { calcChat } from './chat';
-import { FileTelemetrySender } from './logger';
-import * as fs from 'fs';
+import { registerSepticChatParticipant } from './chat';
+
 import { registerAllCommands } from './commands';
 import { registerRequestHandlers } from "./requests";
 
@@ -56,30 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     registerAllCommands(context, client);
     registerRequestHandlers(client);
-
-    if (!fs.existsSync(context.logUri.fsPath)) {
-        fs.mkdirSync(context.logUri.fsPath);
-    }
-    const chatLogFilePath = path.join(context.logUri.fsPath, 'chat.log');
-    const sender = new FileTelemetrySender(chatLogFilePath);
-    const chatLogger = vscode.env.createTelemetryLogger(sender);
-
-    const chatHandler: vscode.ChatRequestHandler = async (request, context, stream, token): Promise<vscode.ChatResult | void> => {
-        chatLogger.logUsage('chat', { command: request.command });
-        if (request.command === 'calcs') {
-            return await calcChat(client, request, context, stream, token);
-        }
-        return;
-    };
-    const septicChat = vscode.chat.createChatParticipant("septic.chat", chatHandler);
-
-    const iconPathDark = vscode.Uri.joinPath(context.extensionUri, "images/septic_dark.svg");
-    const iconPathLight = vscode.Uri.joinPath(context.extensionUri, "images/septic_light.svg");
-    septicChat.iconPath = { light: iconPathLight, dark: iconPathDark };
-
-    septicChat.onDidReceiveFeedback((feedback: vscode.ChatResultFeedback) => {
-        chatLogger.logUsage('chatResultFeedback', { result: feedback.result, kind: feedback.kind });
-    });
+    registerSepticChatParticipant(context, client);
 
     client.start();
 }
