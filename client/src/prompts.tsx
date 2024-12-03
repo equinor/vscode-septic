@@ -122,16 +122,16 @@ export class CalcInformation extends PromptElement<CalcInformationProps> {
 					Septic configuration supports execution of calculations. Calculations are defined in the configuration file as follows: Alg= "..." <br />
 					The content of the string is executed by the MPC. The calculation is written in a simple language that supports basic arithmetic operations, variables, and functions. The following rules apply and most be strictly followed: <br />
 					%%% start rules %%% <br />
-					Supported operators: +, -, *, /, % <br />
-					Supported comparison operators: ==, {'>'}, {'>='}, {'<='}, {'<'} <br />
-					Supported logical functions: and(condition1, condition2, ..., conditionN), or(condition1, condition2, ..., conditionN), not(condition) <br />
-					Grouping with parentheses: (...) <br />
-					Variables: Refers to objects in the configuration file. It is allowed with jinja expressions in variable names, but not only jinja. Example: {`{{ Jinja }}`}VariableName <br />
-					All non-zero values are considered true <br />
-					All functions returns a float <br />
-					Arguments are separated by commas <br />
-					Insensitive to whitespace <br />
-					The if function is written as follows: if(condition, true_value, false_value) both true_value and false_value are evaluated, but only the correct one is returned, thus functions that sets values must not be used within the if function and instead get the result of the if function as input. <br />
+					- Supported operators: +, -, *, /, % <br />
+					- Supported comparison operators: ==, {'>'}, {'>='}, {'<='}, {'<'} <br />
+					- Supported logical functions: and(condition1, condition2, ..., conditionN), or(condition1, condition2, ..., conditionN), not(condition) <br />
+					- Grouping with parentheses: (...) <br />
+					- Variables: Refers to objects in the configuration file. It is allowed with jinja expressions in variable names, but not only jinja. Example: {`{{ Jinja }}`}VariableName <br />
+					- All non-zero values are considered true <br />
+					- All functions returns a float <br />
+					- Arguments to function are separated by commas <br />
+					- Calculations are insensitive to whitespace <br />
+					- The if function is written as follows: if(condition, true_value, false_value) both true_value and false_value are evaluated, but only the correct one is returned, thus functions that sets values must not be used within the if function and instead get the result of the if function as input. <br />
 					%%% end rules %%% <br />
 					The only allowed functions are listed with descriptions below: <br />
 					%%% start list of functions %%% <br />
