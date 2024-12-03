@@ -6,6 +6,7 @@
 
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import * as path from 'path';
 
 export class FileTelemetrySender implements vscode.TelemetrySender {
 	private logFilePath: string;
@@ -35,4 +36,14 @@ export class FileTelemetrySender implements vscode.TelemetrySender {
 		};
 		fs.appendFileSync(this.logFilePath, JSON.stringify(logEntry) + '\n');
 	}
+}
+
+export function createChatLogger(context: vscode.ExtensionContext) {
+	if (!fs.existsSync(context.logUri.fsPath)) {
+		fs.mkdirSync(context.logUri.fsPath);
+	}
+	const chatLogFilePath = path.join(context.logUri.fsPath, 'chat.log');
+	const sender = new FileTelemetrySender(chatLogFilePath);
+	const chatLogger = vscode.env.createTelemetryLogger(sender);
+	return chatLogger;
 }

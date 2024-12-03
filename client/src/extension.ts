@@ -11,12 +11,11 @@ import {
     ServerOptions,
     TransportKind,
 } from "vscode-languageclient/node";
-import { registerSepticChatParticipant } from './chat';
 
 import { registerAllCommands } from './commands';
 import { registerRequestHandlers } from "./requests";
 import { registerChatTools } from './tools';
-import { registerToolUserChatParticipant } from './toolParticipant';
+import { registerSepticChatParticipant } from './chatParticipant';
 
 let client: LanguageClient;
 
@@ -57,8 +56,7 @@ export function activate(context: vscode.ExtensionContext) {
     registerChatTools(context, client)
     registerAllCommands(context, client);
     registerRequestHandlers(client);
-    registerSepticChatParticipant(context, client);
-    registerToolUserChatParticipant(context)
+    registerSepticChatParticipant(context)
     client.start();
 }
 

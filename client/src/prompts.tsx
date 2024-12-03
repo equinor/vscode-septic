@@ -11,16 +11,6 @@ export interface SepticCalcPromptProps extends BasePromptElementProps {
 	variables: SepticVariable[] | undefined;
 }
 
-export interface SepticChatCalcPromptProps extends SepticCalcPromptProps {
-	prompt: string;
-	responses: string[];
-	references: string[];
-}
-
-export interface SepticCalcOutputProps extends BasePromptElementProps {
-	jsonInput: string;
-}
-
 export class SepticGenerateCalcPrompt extends PromptElement<SepticCalcPromptProps> {
 	async render() {
 		return (
@@ -32,53 +22,6 @@ export class SepticGenerateCalcPrompt extends PromptElement<SepticCalcPromptProp
 					{'{ "calculation":  "setfulf(if(Zpc > 10, 10, 1)" }'} {'{ "calculation":  "max(1, Zpc - Zpc.Low, Pdh)" }'} <br />
 					Please create a calculation that meets the requirements of the user that only uses the available variables and functions. <br />
 				</UserMessage>
-			</>
-		)
-	}
-}
-
-export class SepticChatCalcOutputPrompt extends PromptElement<SepticCalcOutputProps> {
-	async render() {
-		return (
-			<>
-				<UserMessage>You are given a list of calculations and new variables in a JSON string format. Format the output and insert descriptions as follows: <br />
-					Calculation should be on the following format, where the output is stored in the named variable: <br />
-					CalcPvr: %calculation name% <br />
-					{'   '}Text1= "%describe calculation%" <br />
-					{'   '}Text2= "" <br />
-					{'     '}Alg= "%calculation%" <br />
-				    Variables should be formatted on the following format: <br />
-					Evr:           %variable name% <br />
-					{'     '}Text1=  "%description%" <br />
-					{'   '}PlotMax=  0 <br />
-					{'   '}PlotMin= 100 <br />
-					{'      '}Nfix=  1 <br />
-					{'      '}Unit=  "" <br />
-					{'      '}Meas=  1.0 <br />
-					Return calculation(s) and variable(s) in two separate Markdown code blocks that begins with ``` and ends with ```. <br />
-					{this.props.jsonInput}
-				</UserMessage>
-			</>
-		)
-	}
-}
-
-export class SepticChatCalcPrompt extends PromptElement<SepticChatCalcPromptProps> {
-	async render() {
-		return (
-			<>
-				<SepticInformation priority={10} />
-				<SepticCalcPrompt calcs={this.props.calcs} variables={this.props.variables} />
-				<UserMessage priority={1000}>{this.props.responses.join("\n")}</UserMessage>
-				<UserMessage priority={1000}>{this.props.references.join("\n")}</UserMessage>
-				<UserMessage priority={10}>
-					Format the output as a single JSON object containing a list of all calculations with names and list of all new variables that is not in the list existing variables. Only add variables that are not in the list of variables between %%% start list of variables %%% and %%% end list of variables %%%.
-					It is not necessary to wrap your response in triple backticks. Here is examples of what your response should look like <br />
-					{'{ "calculations":  [{"name": "ClampedZpc", "calculation": "clamp(Zpc, 10, 90)"},{"name": "SetFulfCalc", "calculation": "setfulf(if(ClampedZpc * 2 > 10, 10, 1)"}], "variables": ["ClampedZpc"]}'} <br />
-					The partial result must be stored in variables that needs to be included in the list of new variables. <br />
-					Please create a calculation that meets the requirements of the user that only uses the available variables (or new variables) and functions. Follow the instructions of the user carefully <br />
-				</UserMessage>
-				<UserMessage>{this.props.prompt}</UserMessage>
 			</>
 		)
 	}
@@ -102,7 +45,6 @@ export class SepticCalcPrompt extends PromptElement<SepticCalcPromptProps> {
 	}
 
 }
-
 
 export interface CalcInformationProps extends BasePromptElementProps {
 	calcs: SepticCalcInfo[]
@@ -148,7 +90,6 @@ export class CalcInformation extends PromptElement<CalcInformationProps> {
 					Alg= "Var2 {'>'} Var1 and Var3 == 1" <br />
 					Alg= "Var2 {'>'} Var1 or Var3 == 1" <br />
 				</UserMessage>
-
 			</>
 		)
 	}
