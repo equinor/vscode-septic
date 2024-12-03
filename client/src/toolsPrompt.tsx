@@ -51,7 +51,6 @@ export class ToolUserPrompt extends PromptElement<ToolUserProps, void> {
 					- Septic configuration supports execution of calculations. A calculation is written as a string inside a calculation object and the content of the string is executed by the MPC.<br />
 					- Format of calculation object: <br />
 					CalcPvr:  %%% calculation name %%% <br />
-							Text1=
 					Text1=  "%%% description %%%" <br />
 					Text2=  "" <br />
 					Alg= "%%% calculation %%%"
