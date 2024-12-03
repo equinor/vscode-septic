@@ -6,6 +6,7 @@
 import { renderPrompt } from '@vscode/prompt-tsx';
 import * as vscode from 'vscode';
 import { ToolCallRound, ToolResultMetadata, ToolUserPrompt } from './toolsPrompt';
+import { createChatLogger } from './logger';
 
 export interface TsxToolUserMetadata {
     toolCallsMetadata: ToolCallsMetadata;
@@ -23,13 +24,10 @@ export function isTsxToolUserMetadata(obj: unknown): obj is TsxToolUserMetadata 
         Array.isArray((obj as TsxToolUserMetadata).toolCallsMetadata.toolCallRounds);
 }
 
-export function registerToolUserChatParticipant(context: vscode.ExtensionContext) {
+export function registerSepticChatParticipant(context: vscode.ExtensionContext) {
+    const logger = createChatLogger(context);
     const handler: vscode.ChatRequestHandler = async (request: vscode.ChatRequest, chatContext: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken) => {
-        if (request.command === 'list') {
-            stream.markdown(`Available tools: ${vscode.lm.tools.map(tool => tool.name).join(', ')}\n\n`);
-            return;
-        }
-
+        logger.logUsage('chatRequest', { command: request.command, model: request.model });
         let model = request.model;
         if (model.vendor === 'copilot' && model.family.startsWith('o1')) {
             // The o1 models do not currently support tools
@@ -40,9 +38,7 @@ export function registerToolUserChatParticipant(context: vscode.ExtensionContext
             model = models[0];
         }
 
-        // Use all tools, or tools with the tags that are relevant.
-        const tools = request.command === 'all' ?
-            vscode.lm.tools :
+        const tools =
             vscode.lm.tools.filter(tool => tool.tags.includes('septic'));
         const options: vscode.LanguageModelChatRequestOptions = {
             justification: 'To make a request to @toolsTSX',
@@ -137,7 +133,14 @@ export function registerToolUserChatParticipant(context: vscode.ExtensionContext
         };
     };
 
-    const toolUser = vscode.chat.createChatParticipant('septic.tools', handler);
-    toolUser.iconPath = new vscode.ThemeIcon('tools');
-    context.subscriptions.push(toolUser);
+    const septicChat = vscode.chat.createChatParticipant('septic.chat', handler);
+
+    const iconPathDark = vscode.Uri.joinPath(context.extensionUri, "images/septic_dark.svg");
+    const iconPathLight = vscode.Uri.joinPath(context.extensionUri, "images/septic_light.svg");
+    septicChat.iconPath = { light: iconPathLight, dark: iconPathDark };
+
+    septicChat.onDidReceiveFeedback(feedback => {
+        logger.logUsage('chatResultFeedback', { result: feedback.result, kind: feedback.kind });
+    });
+    context.subscriptions.push(septicChat);
 }

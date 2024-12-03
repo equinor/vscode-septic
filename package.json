@@ -168,32 +168,9 @@
       {
         "id": "septic.chat",
         "name": "septic",
-        "fullName": "Septic Chat",
-        "description": "Chatbot for Septic related topics",
-        "isSticky": true,
-        "commands": [
-          {
-            "name": "calcs",
-            "description": "Ask about the calcs in Septic"
-          }
-        ]
-      },
-      {
-        "id": "septic.tools",
-        "name": "septic-tools",
-        "fullName": "Septic Tools",
+        "fullName": "Septic",
         "description": "Chatbot for Septic related topics using tools",
-        "isSticky": true,
-        "commands": [
-          {
-            "name": "list",
-            "description": "List all available tools"
-          },
-          {
-            "name": "all",
-            "description": "Use all registered tools. By default, only this extension's tools are used."
-          }
-        ]
+        "isSticky": true
       }
     ],
     "languageModelTools": [
