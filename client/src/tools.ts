@@ -43,17 +43,7 @@ export class ValidateCalculationTool implements vscode.LanguageModelTool<IValida
 		options: vscode.LanguageModelToolInvocationPrepareOptions<IValidateCalculationParameters>,
 		_token: vscode.CancellationToken
 	) {
-		const newVariables = options.input.newVariables ? `\n New variables: ${options.input.newVariables.join(", ")}` : "";
-		const confirmationMessages = {
-			title: "Validate calculation",
-			message: new vscode.MarkdownString(
-				`Provide diagnostics for the calculation:\n ${options.input.calculation}` + newVariables
-			)
-		}
-		return {
-			invocationMessage: 'Validating calculation',
-			confirmationMessages,
-		};
+		return {};
 	}
 }
 
@@ -84,17 +74,7 @@ export class GetFunctions implements vscode.LanguageModelTool<object> {
 		options: vscode.LanguageModelToolInvocationPrepareOptions<object>,
 		_token: vscode.CancellationToken
 	) {
-
-		const confirmationMessages = {
-			title: "Get available functions",
-			message: new vscode.MarkdownString(
-				`Get all available functions to use in calculation?`
-			)
-		}
-		return {
-			invocationMessage: 'Getting all available functions',
-			confirmationMessages,
-		};
+		return {};
 	}
 }
 
@@ -119,17 +99,7 @@ export class GetVariables implements vscode.LanguageModelTool<object> {
 		options: vscode.LanguageModelToolInvocationPrepareOptions<object>,
 		_token: vscode.CancellationToken
 	) {
-
-		const confirmationMessages = {
-			title: "Get variables",
-			message: new vscode.MarkdownString(
-				`Get all variables in the current context?`
-			)
-		}
-		return {
-			invocationMessage: 'Getting all variables',
-			confirmationMessages,
-		};
+		return {};
 	}
 }
 
