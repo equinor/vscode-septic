@@ -50,10 +50,10 @@ export class ToolUserPrompt extends PromptElement<ToolUserProps, void> {
 					Calculation instructions: <br />
 					- Septic configuration supports execution of calculations. A calculation is written as a string inside a calculation object and the content of the string is executed by the MPC.<br />
 					- Format of calculation object: <br />
-					CalcPvr:  %%% calculation name %%% <br />
-					Text1=  "%%% description %%%" <br />
+					CalcPvr:   %calculation name % <br />
+					Text1=  "% description %" <br />
 					Text2=  "" <br />
-					Alg= "%%% calculation %%%"
+					Alg= "% calculation %"
 					- The calculation is written in a simple language that supports basic arithmetic operations, variables, and functions. The following rules apply and most be strictly followed: <br />
 					%%% start rules %%% <br />
 					- Supported operators: +, -, *, /, % <br />
@@ -82,7 +82,9 @@ export class ToolUserPrompt extends PromptElement<ToolUserProps, void> {
 					- Use the available tools to get the relevant functions and variables. Never ask for confirmation to use the tools. <br />
 					- Always validate all calculations. Repeat the validation after each change. Never ask for confirmation to use the tool. <br />
 					- If the calculation require new variables not in the context, provide a list of the new variables that needs to be added when validating the calculation. <br />
-					- Write the whole calculation object in markdown when the calculation is finished and have been validated. <br />
+					- The calculation result is stored in a variable if a variable with the same name as the calculation object is defined in the configuration as an Evr. Always add new variables to store the result of the calculations <br />
+					- Summarize the all calculations and new variables when the results are ready. Format new variables as Evr objects. Group variables and calculation such that it is easy for the user to insert into the configuration  <br />
+					- Always validate all calculations. Repeat the validation after each change. Never ask for confirmation to use the tool. <br />
 				</UserMessage>
 				<UserMessage priority={100}>
 					Instructions: <br />
