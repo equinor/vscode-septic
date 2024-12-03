@@ -177,6 +177,78 @@
             "description": "Ask about the calcs in Septic"
           }
         ]
+      },
+      {
+        "id": "septic.tools",
+        "name": "septic-tools",
+        "fullName": "Septic Tools",
+        "description": "Chatbot for Septic related topics using tools",
+        "isSticky": true,
+        "commands": [
+          {
+            "name": "list",
+            "description": "List all available tools"
+          },
+          {
+            "name": "all",
+            "description": "Use all registered tools. By default, only this extension's tools are used."
+          }
+        ]
+      }
+    ],
+    "languageModelTools": [
+      {
+        "name": "septic-tools_validate_calculation",
+        "tags": [
+          "septic"
+        ],
+        "toolReferenceName": "validateCalculation",
+        "displayName": "Validate Calculation",
+        "modelDescription": "Validates a given calculation and outputs the diagnostic messages that describes the errors and warnings in the calculation.",
+        "canBeReferencedInPrompt": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "calculation": {
+              "type": "string",
+              "description": "The calculation to validate."
+            },
+            "newVariables": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "A variable to be added to the context."
+              },
+              "description": "New variables in calculation to be added to the context."
+            }
+          }
+        }
+      },
+      {
+        "name": "septic-tools_get_functions",
+        "tags": [
+          "septic"
+        ],
+        "toolReferenceName": "getFunctions",
+        "displayName": "Get functions",
+        "modelDescription": "Returns a list of all available functions for use in calculations with description.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "septic-tools_get_variables",
+        "tags": [
+          "septic"
+        ],
+        "toolReferenceName": "getVariables",
+        "displayName": "Get variables in context",
+        "modelDescription": "Returns a list of all available variables in the current context with description.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
       }
     ]
   },

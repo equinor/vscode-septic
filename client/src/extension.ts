@@ -14,6 +14,8 @@ import {
 import { registerSepticChatParticipant } from './chat';
 import { registerAllCommands } from './commands';
 import { registerRequestHandlers } from "./requests";
+import { registerChatTools } from './tools';
+import { registerToolUserChatParticipant } from './toolParticipant';
 
 let client: LanguageClient;
 
@@ -51,11 +53,11 @@ export function activate(context: vscode.ExtensionContext) {
         serverOptions,
         clientOptions
     );
-
+    registerChatTools(context, client)
     registerAllCommands(context, client);
     registerRequestHandlers(client);
     registerSepticChatParticipant(context, client);
-
+    registerToolUserChatParticipant(context)
     client.start();
 }
 
