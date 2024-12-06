@@ -7,6 +7,7 @@ import { renderPrompt } from '@vscode/prompt-tsx';
 import * as vscode from 'vscode';
 import { ToolCallRound, ToolResultMetadata, ToolUserPrompt } from './toolsPrompt';
 import { createChatLogger } from './logger';
+import { LanguageClient } from 'vscode-languageclient/node';
 
 export interface TsxToolUserMetadata {
     toolCallsMetadata: ToolCallsMetadata;
@@ -24,7 +25,7 @@ export function isTsxToolUserMetadata(obj: unknown): obj is TsxToolUserMetadata 
         Array.isArray((obj as TsxToolUserMetadata).toolCallsMetadata.toolCallRounds);
 }
 
-export function registerSepticChatParticipant(context: vscode.ExtensionContext) {
+export function registerSepticChatParticipant(context: vscode.ExtensionContext, client: LanguageClient) {
     const logger = createChatLogger(context);
     const handler: vscode.ChatRequestHandler = async (request: vscode.ChatRequest, chatContext: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken) => {
         logger.logUsage('chatRequest', { command: request.command, model: request.model });
@@ -38,8 +39,10 @@ export function registerSepticChatParticipant(context: vscode.ExtensionContext) 
             model = models[0];
         }
 
-        const tools =
-            vscode.lm.tools.filter(tool => tool.tags.includes('septic'));
+        const tools = vscode.lm.tools.filter(tool =>
+            tool.tags.includes('septic') &&
+            (request.command ? tool.tags.includes(request.command) : true)
+        );
         const options: vscode.LanguageModelChatRequestOptions = {
             justification: 'To make a request to @toolsTSX',
         };
@@ -50,6 +53,7 @@ export function registerSepticChatParticipant(context: vscode.ExtensionContext) 
             {
                 context: chatContext,
                 request,
+                client,
                 toolCallRounds: [],
                 toolCallResults: {}
             },
@@ -103,6 +107,7 @@ export function registerSepticChatParticipant(context: vscode.ExtensionContext) 
                     {
                         context: chatContext,
                         request,
+                        client,
                         toolCallRounds,
                         toolCallResults: accumulatedToolResults
                     },
