@@ -55,7 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
     registerChatTools(context, client)
     registerAllCommands(context, client);
     registerRequestHandlers(client);
-    registerSepticChatParticipant(context)
+    registerSepticChatParticipant(context, client)
     client.start();
 }
 

@@ -170,14 +170,25 @@
         "name": "septic",
         "fullName": "Septic",
         "description": "Chatbot for Septic related topics using tools",
-        "isSticky": true
+        "isSticky": true,
+        "commands": [
+          {
+            "name": "calculation",
+            "description": "Generate and update calculations in Septic configs"
+          },
+          {
+            "name": "scg",
+            "description": "Documentation, updates and answers realted to Septic Config Generator tool and contexts"
+          }
+        ]
       }
     ],
     "languageModelTools": [
       {
         "name": "septic-tools_validate_calculation",
         "tags": [
-          "septic"
+          "septic",
+          "calculation"
         ],
         "toolReferenceName": "validateCalculation",
         "displayName": "Validate Calculation",
@@ -204,7 +215,8 @@
       {
         "name": "septic-tools_get_functions",
         "tags": [
-          "septic"
+          "septic",
+          "calculation"
         ],
         "toolReferenceName": "getFunctions",
         "displayName": "Get functions",
@@ -217,7 +229,8 @@
       {
         "name": "septic-tools_get_variables",
         "tags": [
-          "septic"
+          "septic",
+          "calculation"
         ],
         "toolReferenceName": "getVariables",
         "displayName": "Get variables in context",
