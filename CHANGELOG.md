@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.23.2](https://github.com/equinor/vscode-septic/compare/v1.23.1...v1.23.2) (2024-12-06)
+
+
+### 📚 Documentation
+
+* update SEPTIC documentation for latest ([#678](https://github.com/equinor/vscode-septic/issues/678)) ([02b1369](https://github.com/equinor/vscode-septic/commit/02b1369377cebc6443c100c981b7291952628999))
+
+
+### 🐛 Bug Fixes
+
+* bug with refs in algs with jinja ([#695](https://github.com/equinor/vscode-septic/issues/695)) ([51de40b](https://github.com/equinor/vscode-septic/commit/51de40bce8e9704e307ac50de668a335ef98571c))
+* bug with snippets at start of file ([#693](https://github.com/equinor/vscode-septic/issues/693)) ([069bc45](https://github.com/equinor/vscode-septic/commit/069bc4547e06b905856a9739d30c514b30cc0d2c))
+* failed code action ([#692](https://github.com/equinor/vscode-septic/issues/692)) ([dd33770](https://github.com/equinor/vscode-septic/commit/dd3377012060419371a15bd4e7e771d732eba2d0))
+* update diagnostic messages for calculations ([#701](https://github.com/equinor/vscode-septic/issues/701)) ([fd74d15](https://github.com/equinor/vscode-septic/commit/fd74d1571ce841a3c19e99728c906a6be2468e05))
+
+
+### 🔨 Refactor
+
+* client registration ([#699](https://github.com/equinor/vscode-septic/issues/699)) ([27b5216](https://github.com/equinor/vscode-septic/commit/27b52169d1bfdb58c6878406b46c15e43ce6fb51))
+
 ## [1.23.1](https://github.com/equinor/vscode-septic/compare/v1.23.0...v1.23.1) (2024-11-18)
 
 
