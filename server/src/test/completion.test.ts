@@ -395,3 +395,43 @@ describe("Test completion logic", () => {
         ).to.greaterThan(0);
     });
 });
+
+
+describe("Test snippet completion logic", () => {
+    it("Expect to get object snippets on top of file", () => {
+        const text = `   \nDmmyAppl:  Test\nText1= ""  \nEvr: TestEvr\nText1= " "\nMeas= 2`;
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSepticSync(doc.getText());
+        const pos = Position.create(0, 1);
+        const compItems = getCompletion(pos, "", cnfg, doc, cnfg);
+        expect(
+            compItems.filter(
+                (item) => item.kind === CompletionItemKind.Snippet
+            ).length
+        ).to.greaterThan(0);
+    });
+    it("Expect to get object snippets at end of object", () => {
+        const text = `   \nDmmyAppl:  Test\nText1= ""  \nEvr: TestEvr\nText1= " "\nMeas= 2`;
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSepticSync(doc.getText());
+        const pos = Position.create(2, 9);
+        const compItems = getCompletion(pos, "", cnfg, doc, cnfg);
+        expect(
+            compItems.filter(
+                (item) => item.kind === CompletionItemKind.Snippet
+            ).length
+        ).to.greaterThan(0);
+    });
+    it("Expect to get no object snippets inside object", () => {
+        const text = `   \nDmmyAppl:  Test\nText1= ""  \nEvr: TestEvr\nText1= " "\nMeas= 2`;
+        const doc = TextDocument.create("test.cnfg", "septic", 0, text);
+        const cnfg = parseSepticSync(doc.getText());
+        const pos = Position.create(2, 0);
+        const compItems = getCompletion(pos, "", cnfg, doc, cnfg);
+        expect(
+            compItems.filter(
+                (item) => item.kind === CompletionItemKind.Snippet
+            ).length
+        ).to.equal(0);
+    });
+});
