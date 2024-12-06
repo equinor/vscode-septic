@@ -1141,6 +1141,32 @@
   - calc: false
     dataType: float
     default:
+    - 1e10
+    description: Maximum positive effect of BiasTpred
+    enums: []
+    list: false
+    name: BiasTpredMaxUp
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - -1e10
+    description: Maximum negative effect of BiasTpred
+    enums: []
+    list: false
+    name: BiasTpredMaxDn
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
     - '-1'
     description: Constraint filter time constant
     enums: []
@@ -2433,6 +2459,7 @@
   parents:
   - DmmyAppl
   - SmpcAppl
+  - MPCAppl
 - attributes:
   - calc: false
     dataType: string
@@ -7820,7 +7847,6 @@
     \ model is identical to a Cvr"
   name: Svr
   parents:
-  - DmmyAppl
   - SmpcAppl
 - attributes:
   - calc: false
@@ -8657,6 +8683,7 @@
   parents:
   - DmmyAppl
   - SmpcAppl
+  - MPCAppl
 - attributes:
   - calc: false
     dataType: string

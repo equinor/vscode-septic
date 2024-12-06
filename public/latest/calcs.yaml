@@ -1539,8 +1539,10 @@
   quality: GOOD if all supplied parameters are GOOD
   retr: Calculated quality of mix, 0 if sum of volumes = 0
   signature: ibpmix(kk1, kk2, kk3, ns, vol1, qual1, ..., volN, qualN)
-- detailedDescription: Evaluates the condition and perform the corresponding conditional
-    expression
+- detailedDescription: "Evaluates the condition and perform the corresponding conditional\
+    \ expression.\r\n  NB! The if calc does not perform unselected expression anymore\
+    \ (Nov 2024, versions after 3.0.1)\r\n  NB! The fourth parameter is not in use\
+    \ anymore and will be removed in a future edition"
   name: if
   parameters:
   - arity: '1'
@@ -1548,31 +1550,27 @@
     - value
     description: Condition to evaluate
     direction: in
-    name: condition
+    name: cond
   - arity: '1'
     datatype:
     - value
     description: Expression to evaluate when condition is true
     direction: in
-    name: trueExpr
+    name: trueexpr
   - arity: '1'
     datatype:
     - value
     description: Expression to evaluate when condition is false
     direction: in
-    name: falseExpr
-  - arity: '?'
-    datatype:
-    - value
-    description: Flag for debugging of calc
-    direction: in
-    name: debug
-  quality: Quality of selected expression
-  retr: 'Value of evaluated expression according to condition: condition ? trueExpr
-    : falseExpr'
-  signature: if(condition, trueExpr, falseExpr, debug?)
-- detailedDescription: Evaluate bool cond's and perform corresponding expressions.
-    Expect odd number of arguments >= 3
+    name: falseexpr
+  quality: GOOD if number of arguments is 3 or 4 and condition and selected expression
+    is GOOD, else BAD.
+  retr: "Value of evaluated expression according to condition: condition ? trueexpr\
+    \ : falseexpr.\r\n  Retain old value if condition is BAD"
+  signature: if(condition, trueexpr, falseexpr, notinuse)
+- detailedDescription: "Evaluate bool cond's and perform corresponding expressions.\
+    \ Expect odd number of arguments >= 3\r\n  NB! The ifelif calc does not perform\
+    \ unselected expressions anymore (Nov 2024, versions after 3.0.1)"
   name: ifelif
   parameters:
   - arity: +
@@ -1592,14 +1590,14 @@
     - value
     description: Expression to evaluate when condition is false
     direction: in
-    name: default
+    name: exprf
   quality: "GOOD if number of arguments is odd and >= 3 and all cond's and selected\
     \ expressions up to and including the\r\n  last (returned) evaluated expression\
     \ are GOOD, else BAD."
   retr: "Value of evaluated expressions according to condition: if(cond1, expr1, if(cond2,\
-    \ expr2, ..., if(condN, exprN,\r\n  default)...)). Retain old value if condition\
+    \ expr2, ..., if(condN, exprN,\r\n  exprf)...)). Retain old value if condition\
     \ is BAD"
-  signature: ifelif(cond1, expr1, cond2, expr2, ..., condN, exprN, default)
+  signature: ifelif(cond1, expr1, cond2, expr2, ..., condN, exprN, exprf)
 - detailedDescription: "Function calculates y by linear interpolation of the X,Y pairs.\r\
     \n  Assumes that the sequence of X1, X2, ..., XN values are monotonically increasing.<br>"
   name: intpoltype1
@@ -2422,13 +2420,15 @@
     \ sample successfully saved on\r\n  data file XVRID.txt. May be printouts on .out\
     \ reflecting file actions"
   signature: savedata(XVR,SAVE)
-- detailedDescription: Selects the value of index from list of elements
+- detailedDescription: "Selects the value of index from list of elements\r\n  NB!\
+    \ The selectvalue calc does not perform unselected expressions anymore (Nov 2024,\
+    \ versions after 3.0.1)"
   name: selectvalue
   parameters:
   - arity: '1'
     datatype:
     - value
-    description: Index of element in list to select
+    description: Index of element in list to select, casted to integer
     direction: in
     name: n
   - arity: +
@@ -2526,12 +2526,48 @@
   - arity: '1'
     datatype:
     - value
-    description: Value to set [min]
+    description: Time constant BiasTpred to set [min]
+    direction: in
+    name: tau
+  quality: GOOD if arguments are GOOD and nonnegative tau - otherwise BAD
+  retr: Resulting BiasTpred of GOOD, tau value if BAD or negative, otherwise 0
+  signature: setbiastpred(cvr, tau)
+- detailedDescription: Set limit for max negative effect of BiasTpred for given cvr
+  name: setbiastpredmaxdn
+  parameters:
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: BiasTpredMaxDn
     direction: in
     name: value
-  quality: GOOD if valid cvr and value otherwise BAD
-  retr: Resulting BiasTpred
-  signature: setbiastpred(cvr, value)
+  quality: GOOD if arguments are GOOD - otherwise BAD
+  retr: Resulting BiasTpredMaxDn if GOOD, value if BAD or positive, otherwise 0
+  signature: setbiastpredmaxdn(cvr, value)
+- detailedDescription: Set limit for max positive effect of BiasTpred for given cvr
+  name: setbiastpredmaxup
+  parameters:
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: BiasTpredMaxUp
+    direction: in
+    name: value
+  quality: GOOD if arguments are GOOD - otherwise BAD
+  retr: Resulting BiasTpredMaxUp if GOOD, value if BAD or negative, otherwise 0
+  signature: setbiastpredmaxup(cvr, value)
 - detailedDescription: Set deas for dvr
   name: setdeas
   parameters:
@@ -2857,12 +2893,12 @@
     name: mvr
   - arity: '1'
     datatype:
-    - value
-    description: Value to set
+    - value-
+    description: Value to set. value <= 0
     direction: in
     name: value
-  quality: GOOD if valid mvr and value otherwise BAD
-  retr: Resulting MaxDn if successful else 0
+  quality: GOOD if valid mvr, arguments GOOD and nonpositive value - otherwise BAD
+  retr: Resulting MaxDn if successful, input if value is bad or positive, else 0
   signature: setmaxdn(mvr, value)
 - detailedDescription: Set the MaxUp property for given Mvr
   name: setmaxup
@@ -2875,12 +2911,12 @@
     name: mvr
   - arity: '1'
     datatype:
-    - value
-    description: Value to set
+    - value+
+    description: Value to set. value >= 0
     direction: in
     name: value
-  quality: GOOD if valid mvr and value otherwise BAD
-  retr: Resulting MaxUp if successful else 0
+  quality: GOOD if valid mvr, arguments GOOD and nonnegative value - otherwise BAD
+  retr: Resulting MaxUp if successful, input if value is bad or negative, else 0
   signature: setmaxup(mvr, value)
 - detailedDescription: Sets measurement value for xvr
   name: setmeas
@@ -3004,12 +3040,12 @@
     name: mvr
   - arity: '1'
     datatype:
-    - value
-    description: Value to set
+    - value+
+    description: Value to set. value > 0
     direction: in
     name: value
-  quality: GOOD if valid mvr and value otherwise BAD
-  retr: Resulting MovePnlty if successful else 0
+  quality: GOOD if valid mvr, arguments GOOD and positive value - otherwise BAD
+  retr: Resulting MovePnlty if successful, value if bad or nonpositive, else 0
   signature: setmovepnlty(mvr, value)
 - detailedDescription: Set the ProcessValue property for given mvr
   name: setprocessvalue
@@ -3104,7 +3140,7 @@
     direction: in
     name: value
   quality: GOOD if valid cvr and value otherwise BAD
-  retr: Resulting SetpntRocDn
+  retr: Resulting SetpntRocDn, value if bad or positive, else 0
   signature: setsetpntrocdn(cvr, value)
 - detailedDescription: Sets the SetpntRocUp property of given cvr
   name: setsetpntrocup
@@ -3117,12 +3153,12 @@
     name: cvr
   - arity: '1'
     datatype:
-    - value
-    description: Value to set
+    - value+
+    description: Value to set. value >= 0
     direction: in
     name: value
-  quality: GOOD if valid cvr and value otherwise BAD
-  retr: Resulting SetpntRocUp
+  quality: GOOD if valid cvr, arguments GOOD and nonnegative value - otherwise BAD
+  retr: Resulting SetpntRocUp if successful, value if bad or negative, else 0
   signature: setsetpntrocup(cvr, value)
 - detailedDescription: Sets the SetpTref property of given cvr
   name: setsetptref
