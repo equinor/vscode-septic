@@ -53,7 +53,7 @@ export enum AlgParsingErrorType {
 
 export function parseAlg(input: string): AlgExpr {
     if (!input.length) {
-        throw new AlgParsingError("Missing alg expression for CalcPvr", {
+        throw new AlgParsingError("Empty alg expression for CalcPvr", {
             start: 0,
             end: 0,
             type: AlgTokenType.error,
@@ -70,7 +70,7 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
     parse(): AlgExpr {
         const expr = this.comparison();
         if (!this.isAtEnd()) {
-            this.error("Alg can only contain a single expression", {
+            this.error("Calculation can only contain a single expression", {
                 start: this.tokens[0].start,
                 end: this.tokens[this.tokens.length - 1].end,
                 type: AlgTokenType.error,
@@ -239,7 +239,7 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
         }
         if (!this.check(AlgTokenType.rightParen)) {
             this.error(
-                `Missing closing parenthesis for calc: ${identifierToken.content}`,
+                `Missing closing parenthesis for function: ${identifierToken.content}`,
                 {
                     start: identifierToken.start,
                     end: this.previous().end,

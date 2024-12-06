@@ -245,8 +245,11 @@ export function validateAlgs(
     return diagnostics;
 }
 
+type AlgPositionTransformer = (start: number, end: number) => Range;
+
 export function validateAlg(alg: AttributeValue, doc: ITextDocument, refProvider: SepticReferenceProvider): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
+
     if (!checkAlgLength(alg.getValue())) {
         diagnostics.push(
             createDiagnostic(
@@ -261,6 +264,12 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, refProvider
         );
     }
     const offsetStartAlg = alg.start + 1;
+    const algPositionTransformer: AlgPositionTransformer = (start: number, end: number): Range => {
+        return {
+            start: doc.positionAt(start + offsetStartAlg),
+            end: doc.positionAt(end + offsetStartAlg),
+        };
+    };
     let expr;
     try {
         expr = parseAlg(alg.getValue());
@@ -268,10 +277,7 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, refProvider
     } catch (error: any) {
         const diagnostic = createDiagnostic(
             DiagnosticSeverity.Error,
-            {
-                start: doc.positionAt(offsetStartAlg + error.token.start),
-                end: doc.positionAt(offsetStartAlg + error.token.end),
-            },
+            algPositionTransformer(error.token.start, error.token.end),
             error.message,
             DiagnosticCode.invalidAlg
         );
@@ -282,7 +288,7 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, refProvider
     visitor.visit(expr);
     visitor.calcs.forEach((calc) => {
         diagnostics.push(
-            ...validateCalc(calc, doc, refProvider, offsetStartAlg)
+            ...validateCalc(calc, refProvider, algPositionTransformer)
         );
     });
     visitor.variables.forEach((variable) => {
@@ -318,7 +324,7 @@ export function validateAlgVariable(
                     start: doc.positionAt(offsetStartAlg + variable.start),
                     end: doc.positionAt(offsetStartAlg + variable.end),
                 },
-                `Undefined Xvr '${variable.value}'`,
+                `Reference to undefined variable: ${variable.value}`,
                 DiagnosticCode.missingReference
             ),
         ];
@@ -375,9 +381,8 @@ export function validateAlgVariable(
 
 export function validateCalc(
     calc: AlgCalc,
-    doc: ITextDocument,
     refProvider: SepticReferenceProvider,
-    offsetStartAlg: number
+    algPositionTransformer: AlgPositionTransformer
 ): Diagnostic[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const diagnostics: Diagnostic[] = [];
@@ -385,11 +390,8 @@ export function validateCalc(
     if (!calcMetaInfo) {
         const diagnostic = createDiagnostic(
             DiagnosticSeverity.Warning,
-            {
-                start: doc.positionAt(offsetStartAlg + calc.start),
-                end: doc.positionAt(offsetStartAlg + calc.end),
-            },
-            `Calc with unknown identifier: ${calc.identifier}`,
+            algPositionTransformer(calc.start, calc.end),
+            `Unknown function: ${calc.identifier}`,
             DiagnosticCode.unknownCalc
         );
         return [diagnostic];
@@ -399,8 +401,7 @@ export function validateCalc(
             calc,
             calcMetaInfo,
             refProvider,
-            doc,
-            offsetStartAlg
+            algPositionTransformer
         )
     );
     return diagnostics;
@@ -410,8 +411,7 @@ function validateCalcParams(
     calc: AlgCalc,
     calcInfo: SepticCalcInfo,
     refProvider: SepticReferenceProvider,
-    doc: ITextDocument,
-    offsetStartAlg: number
+    algPositionTransformer: AlgPositionTransformer
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     for (let index = 0; index < calc.getNumParams(); index++) {
@@ -421,44 +421,37 @@ function validateCalcParams(
         if (!paramInfo) {
             continue;
         }
-        if (isEmptyNonOptionalParam(paramExpr, paramInfo)) {
-            diagnostics.push(
-                createDiagnostic(
-                    DiagnosticSeverity.Warning,
-                    {
-                        start: doc.positionAt(offsetStartAlg + paramExpr.start),
-                        end: doc.positionAt(offsetStartAlg + paramExpr.end),
-                    },
-                    `Missing value for non-optional parameter`,
-                    DiagnosticCode.missingValueNonOptionalArg
-                )
-            );
-        }
-        if (!checkValidParamType(paramExpr, paramInfo.datatype, refProvider)) {
-            diagnostics.push(
-                createDiagnostic(
-                    DiagnosticSeverity.Warning,
-                    {
-                        start: doc.positionAt(offsetStartAlg + paramExpr.start),
-                        end: doc.positionAt(offsetStartAlg + paramExpr.end),
-                    },
-                    `Wrong data type for parameter. Expected data type: ${paramInfo.datatype}`,
-                    DiagnosticCode.invalidDataTypeArg
-                )
-            );
-        }
+        diagnostics.push(...validateSingleParam(paramExpr, paramInfo, refProvider, algPositionTransformer));
     }
-    diagnostics.push(
-        ...validateCalcParamsLength(calc, calcInfo, doc, offsetStartAlg)
-    );
+    diagnostics.push(...validateCalcParamsLength(calc, calcInfo, algPositionTransformer));
+    return diagnostics;
+}
+
+function validateSingleParam(
+    paramExpr: AlgExpr,
+    paramInfo: SepticCalcParameterInfo,
+    refProvider: SepticReferenceProvider,
+    algPositionTransformer: AlgPositionTransformer
+): Diagnostic[] {
+    const diagnostics: Diagnostic[] = [];
+    if (isEmptyNonOptionalParam(paramExpr, paramInfo)) {
+        diagnostics.push(
+            createDiagnostic(
+                DiagnosticSeverity.Warning,
+                algPositionTransformer(paramExpr.start, paramExpr.end),
+                `Missing value for non-optional parameter`,
+                DiagnosticCode.missingValueNonOptionalArg
+            )
+        );
+    }
+    diagnostics.push(...validateParamType(paramExpr, paramInfo.datatype, refProvider, algPositionTransformer));
     return diagnostics;
 }
 
 function validateCalcParamsLength(
     calc: AlgCalc,
     calcInfo: SepticCalcInfo,
-    doc: ITextDocument,
-    offsetStartAlg: number
+    algPositionTransformer: AlgPositionTransformer
 ): Diagnostic[] {
     const paramInfo = getCalcParamIndexInfo(calcInfo);
     const numFixedParamsPre = paramInfo.fixedLengthParams.pre.length
@@ -472,10 +465,7 @@ function validateCalcParamsLength(
             return [
                 createDiagnostic(
                     DiagnosticSeverity.Warning,
-                    {
-                        start: doc.positionAt(offsetStartAlg + calc.start),
-                        end: doc.positionAt(offsetStartAlg + calc.end),
-                    },
+                    algPositionTransformer(calc.start, calc.end),
                     `Missing parameter(s). Expected min ${numFixedParamsPre - paramInfo.fixedLengthParams.numOptional
                     } params but got ${numParams}`,
                     DiagnosticCode.invalidNumberOfParams
@@ -486,10 +476,7 @@ function validateCalcParamsLength(
             return [
                 createDiagnostic(
                     DiagnosticSeverity.Warning,
-                    {
-                        start: doc.positionAt(offsetStartAlg + calc.start),
-                        end: doc.positionAt(offsetStartAlg + calc.end),
-                    },
+                    algPositionTransformer(calc.start, calc.end),
                     `Too many parameters. Expected max ${numFixedParamsPre} params but got ${numParams}`,
                     DiagnosticCode.invalidNumberOfParams
                 ),
@@ -520,10 +507,7 @@ function validateCalcParamsLength(
             return [
                 createDiagnostic(
                     DiagnosticSeverity.Warning,
-                    {
-                        start: doc.positionAt(offsetStartAlg + calc.start),
-                        end: doc.positionAt(offsetStartAlg + calc.end),
-                    },
+                    algPositionTransformer(calc.start, calc.end),
                     `Invalid number of parameters. Expected ${expectedNumParams} params but got ${numParams}`,
                     DiagnosticCode.invalidNumberOfParams
                 ),
@@ -541,10 +525,7 @@ function validateCalcParamsLength(
         return [
             createDiagnostic(
                 DiagnosticSeverity.Warning,
-                {
-                    start: doc.positionAt(offsetStartAlg + calc.start),
-                    end: doc.positionAt(offsetStartAlg + calc.end),
-                },
+                algPositionTransformer(calc.start, calc.end),
                 `Invalid number of parameters. Expected min ${minNumParams} parameters and an ${oddOrEven} number of parameters but got ${numParams}`,
                 DiagnosticCode.invalidNumberOfParams
             ),
@@ -571,57 +552,73 @@ function checkAlgLength(alg: string) {
     return alg.length <= maxAlgLength;
 }
 
-function checkValidParamType(
+function validateParamType(
     expr: AlgExpr,
     types: string[],
-    refProvider: SepticReferenceProvider
-): boolean {
+    refProvider: SepticReferenceProvider,
+    algPositionTransformer: AlgPositionTransformer
+): Diagnostic[] {
     if (types[0] === VALUE) {
-        return checkValidValueParam(expr, refProvider);
+        return validateValueParamType(expr, refProvider, algPositionTransformer);
     }
-    if (!isAlgExprObjectReference(expr)) {
-        return false;
-    }
-    return checkValidObjectParam(expr, types, refProvider);
+    return validateObjectParamType(expr, types, refProvider, algPositionTransformer);
 }
 
-function checkValidObjectParam(
+function validateObjectParamType(
     expr: AlgExpr,
     types: string[],
-    refProvider: SepticReferenceProvider
-) {
+    refProvider: SepticReferenceProvider,
+    algPositionTransformer: AlgPositionTransformer
+): Diagnostic[] {
+    if (!isAlgExprObjectReference(expr)) {
+        return [
+            createDiagnostic(
+                DiagnosticSeverity.Warning,
+                algPositionTransformer(expr.start, expr.end),
+                `Wrong data type for parameter. Expected data type for parameter: ${types.join(",")}}`,
+                DiagnosticCode.invalidDataTypeArg
+            )
+        ];
+    }
     const exprLiteral = expr as AlgLiteral;
     const objects = refProvider.getObjectsByIdentifier(
         exprLiteral.value.split(".")[0]
     );
     for (const obj of objects) {
         if (obj.isType(...types)) {
-            return true;
+            return [];
         }
     }
-    return false;
+    return [
+        createDiagnostic(
+            DiagnosticSeverity.Warning,
+            algPositionTransformer(expr.start, expr.end),
+            `Wrong data type for parameter: ${exprLiteral.value}. Expected data type for parameter: ${types.join(",")}}`,
+            DiagnosticCode.invalidDataTypeArg
+        )
+    ];
 }
 
-function checkValidValueParam(
+function validateValueParamType(
     expr: AlgExpr,
-    refProvider: SepticReferenceProvider
-) {
+    refProvider: SepticReferenceProvider,
+    algPositionTransformer: AlgPositionTransformer
+): Diagnostic[] {
     if (!isAlgExprObjectReference(expr)) {
-        return true;
+        return [];
     }
     const exprLiteral = expr as AlgLiteral;
     if (isPureJinja(exprLiteral.value)) {
-        return true;
+        return [];
     }
-    const objects = refProvider.getObjectsByIdentifier(
-        exprLiteral.value.split(".")[0]
-    );
-    for (const obj of objects) {
-        if (obj.isXvr) {
-            return true;
-        }
+    if (refProvider.validateRef(exprLiteral.value, defaultRefValidationFunction)) {
+        return [];
     }
-    return false;
+    return [createDiagnostic(
+        DiagnosticSeverity.Warning,
+        algPositionTransformer(expr.start, expr.end),
+        `Reference to undefined variable: ${exprLiteral.value}`,
+        DiagnosticCode.missingReference)];
 }
 
 function isAlgExprObjectReference(expr: AlgExpr) {

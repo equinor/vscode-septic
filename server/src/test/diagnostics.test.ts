@@ -308,6 +308,23 @@ describe("Test datatype diagnostics in algs", () => {
         const diag = validateAlgs(cnfg, doc, cnfg);
         expect(diag.length).to.equal(0);
     });
+    it("Expect missing reference diagnostics when giving non xvr object to param that expects value", () => {
+        const text = `
+            System: TestSomething
+                Text1= "Test"
+        
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "max(TestSomething)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSepticSync(doc.getText());
+        const diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0].code).to.equal(DiagnosticCode.missingReference);
+    });
 });
 
 describe("Test parameter diagnostics in alg", () => {
