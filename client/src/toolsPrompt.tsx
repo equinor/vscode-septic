@@ -405,13 +405,16 @@ class ScgInstructions extends PromptElement<ScgInstructionsProps> {
 					- counters (optional list of counter structs): Contains a list of global auto-incrementing counter functions. <br />
 					- sources (list of source structs): Contains a list of source file configurations. <br />
 					- layout (list of template structs): Contains a list of templates in the order they should be rendered. <br />
-					Instructions:
-					- Use the available tools to get the correct information to fullfill the user request. <br />
-					- Answer only based on the information in the context. <br />
-					- Always use jinja2 formatting in the templates. <br />
 					{'<' + "Active SCG context configuration" + '>'}<br />
 					{fileText}<br />
 					{'</' + "Active SCG context configuration" + '>'}<br />
+					Instructions:
+					- Use the available tools to get the correct information to fullfill the user request. <br />
+					- Always read in a source file before updating the values to check column and index names if not already in the context. <br />
+					- The content of a source file is in csv format. The first row of the source file is the header (column names) and the first column is the index (row names). <br />
+					- Always combine all updates to a source file in one call to the tool. <br /> 
+					- Answer only based on the information in the context. <br />
+					- Always use jinja2 formatting in the templates. <br />
 				</UserMessage>
 		);
 	}

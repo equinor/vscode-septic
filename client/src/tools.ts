@@ -11,6 +11,7 @@ export function registerChatTools(context: vscode.ExtensionContext, client: Lang
 	context.subscriptions.push(vscode.lm.registerTool("septic-tools_get_functions", new GetFunctions(client)));
 	context.subscriptions.push(vscode.lm.registerTool("septic-tools_get_variables", new GetVariables(client)));
 	context.subscriptions.push(vscode.lm.registerTool("septic-tools_get_scg_source", new GetScgSource(client)));
+	context.subscriptions.push(vscode.lm.registerTool("septic-tools_update_scg_source", new UpdateScgSource(client)));
 }
 
 interface IValidateCalculationParameters {
@@ -166,6 +167,82 @@ export class GetScgSource implements vscode.LanguageModelTool<IGetScgSourceParam
 	) {
 		return {
 
+		};
+	}
+}
+
+interface IUpdateScgSourceParameters {
+	sourceId: string;
+	updates: {
+		index: string;
+		column: string;
+		value: string;
+	}[];
+}
+
+export class UpdateScgSource implements vscode.LanguageModelTool<IUpdateScgSourceParameters> {
+	private client: LanguageClient;
+	constructor(client: LanguageClient) {
+		this.client = client;
+	}
+
+	async invoke(
+		options: vscode.LanguageModelToolInvocationOptions<IUpdateScgSourceParameters>,
+		_token: vscode.CancellationToken
+	) {
+		const uri = vscode.window.activeTextEditor?.document.uri.toString();
+		const context = await this.client.sendRequest(protocol.getContext, { uri: uri });
+		const fileContent = await vscode.workspace.fs.readFile(vscode.Uri.parse(context));
+		const scg = YAML.load(fileContent.toString()) as ScgConfig;
+		const source = scg.sources.find(source => source.id === options.input.sourceId);
+		if (!source) {
+			return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(`No scg source found with the id ${options.input.sourceId}`)]);
+		}
+		if (!source.filename.endsWith('.csv')) {
+			return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(`The source ${source.filename} is not a csv file`)]);
+		}
+		const contextUri = vscode.Uri.parse(context);
+		const contextDir = vscode.Uri.joinPath(contextUri, '..');
+		const sourcePath = vscode.Uri.joinPath(contextDir, source.filename);
+		const sourceContent = await vscode.workspace.fs.readFile(sourcePath);
+		const fileContentString = Buffer.from(sourceContent).toString('utf8');
+		const lines = fileContentString.split('\n');
+		const delimter = source.delimiter ? source.delimiter : ';';
+		const header = lines[0].split(delimter);
+		const messages: string[] = [];
+		options.input.updates.forEach((update) => {
+			const line = lines.find(line => line.split(delimter)[0] === update.index);
+			if (!line) {
+				messages.push(`Update: Index ${update.index} Column: ${update.column} Value: ${update.value}. Status: Unable to update! No row with index ${update.index} found`);
+			}
+			const columnIndex = header.findIndex(column => column === update.column);
+			if (columnIndex === -1) {
+				messages.push(`Update: Index ${update.index} Column: ${update.column} Value: ${update.value}. Status: Unable to update! No column with name ${update.index} found`);
+			}
+			const columns = line.split(delimter);
+			columns[columnIndex] = update.value;
+			lines[lines.indexOf(line)] = columns.join(delimter);
+			messages.push(`Update: Index ${update.index} Column: ${update.column} Value: ${update.value}. Status: Updated!`);
+		});
+		const updatedContent = lines.join('\n');
+		await vscode.workspace.fs.writeFile(sourcePath, Buffer.from(updatedContent));
+		return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(`The source file ${options.input.sourceId} has been updated: \n ${messages.join('\n')}`)]);
+
+	}
+
+	async prepareInvocation(
+		options: vscode.LanguageModelToolInvocationPrepareOptions<IUpdateScgSourceParameters>,
+		_token: vscode.CancellationToken) {
+		const confirmationMessages = {
+			title: `Update scg source: ${options.input.sourceId}`,
+			message: new vscode.MarkdownString(
+				`Update the source file with the following changes: \n` +
+				options.input.updates.map(update => `- Index: ${update.index}, Column: ${update.column}, Value: ${update.value}`).join('\n')
+			)
+		}
+		return {
+			invocationMessage: "Updateting SCG source",
+			confirmationMessages
 		};
 	}
 }

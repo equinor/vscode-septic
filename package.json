@@ -174,11 +174,13 @@
         "commands": [
           {
             "name": "calculation",
-            "description": "Generate and update calculations in Septic configs"
+            "description": "Generate and update calculations in Septic configs",
+            "isSticky": true
           },
           {
             "name": "scg",
-            "description": "Documentation, updates and answers realted to Septic Config Generator tool and contexts"
+            "description": "Documentation, updates and answers realted to Septic Config Generator tool and contexts",
+            "isSticky": true
           }
         ]
       }
@@ -255,6 +257,46 @@
             "sourceId": {
               "type": "string",
               "description": "The id of the scg source to read."
+            }
+          }
+        }
+      },
+      {
+        "name": "septic-tools_update_scg_source",
+        "tags": [
+          "septic",
+          "scg"
+        ],
+        "toolReferenceName": "updateScgSource",
+        "displayName": "Update the content of an scg source in csv format on disk",
+        "modelDescription": "Updates the given cell in the scg source on csv format with the new value.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "sourceId": {
+              "type": "string",
+              "description": "The id of the scg source to read."
+            },
+            "updates": {
+              "type": "array",
+              "description": "A set of updates to be applied to the scg source.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "index": {
+                    "type": "string",
+                    "description": "Index of the row to be updated"
+                  },
+                  "column": {
+                    "type": "string",
+                    "description": "Name of the column to be updated"
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "The new value for the cell"
+                  }
+                }
+              }
             }
           }
         }
