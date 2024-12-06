@@ -25,16 +25,13 @@ export function transformPositionsToOriginal(positions: number[], positionsMap: 
     for (const pos of positions) {
         let orignalPosition = pos;
         for (let i = 0; i < positionsMap.length; i += 2) {
-            if (orignalPosition >= positionsMap[i] && orignalPosition <= positionsMap[i + 1]) {
+            if (orignalPosition >= positionsMap[i]) {
                 orignalPosition += positionsMap[i + 1] - positionsMap[i];
-            } else if (i + 2 >= positionsMap.length) {
-                orignalPosition += positionsMap[i + 1] - positionsMap[i];
-            }
-            if (i + 2 >= positionsMap.length || orignalPosition < positionsMap[i + 2]) {
-                originalPositions.push(orignalPosition);
+            } else {
                 break;
             }
         }
+        originalPositions.push(orignalPosition);
     }
     return originalPositions;
 }
