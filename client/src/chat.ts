@@ -11,58 +11,47 @@ import {
 } from "vscode-languageclient/node";
 import * as protocol from "./protocol";
 import { SepticChatCalcOutputPrompt, SepticChatCalcPrompt } from './prompts';
+import { FileTelemetrySender } from './logger';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const MODEL_SELECTOR: vscode.LanguageModelChatSelector = { vendor: 'copilot', family: 'gpt-4o' };
-
-interface SepticCalcResult extends vscode.ChatResult {
-	metadata: {
-		command: string;
-		output: any;
-	}
-}
-export async function calcChat(client: LanguageClient, request: vscode.ChatRequest, context: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken): Promise<SepticCalcResult> {
-	const uri = vscode.window.activeTextEditor?.document.uri.toString();
-	const septicContext = await client.sendRequest(protocol.getContext, { uri: uri });
-	if (septicContext.length) {
-		const fileUri = vscode.Uri.parse(septicContext);
-		stream.reference(fileUri);
-	}
-	stream.progress("Retrieving documentation...");
-	const documentation = await client.sendRequest(protocol.documentation, {});
-	if (!documentation) {
-		return;
-	}
-	stream.progress("Looking for available variables...");
-	let variables;
-	if (uri) {
-		variables = await client.sendRequest(protocol.variables, { uri: uri });
-	}
-	try {
-		const [model] = await vscode.lm.selectChatModels(MODEL_SELECTOR);
-		if (model) {
+export function registerSepticChatParticipant(context: vscode.ExtensionContext, client: LanguageClient) {
+	const handler = async (request: vscode.ChatRequest, context: vscode.ChatContext, stream: vscode.ChatResponseStream, token: vscode.CancellationToken): Promise<vscode.ChatResult | void> => {
+		if (request.command !== 'calcs') {
+			return;
+		}
+		const uri = vscode.window.activeTextEditor?.document.uri.toString();
+		const septicContext = await client.sendRequest(protocol.getContext, { uri: uri });
+		if (septicContext.length) {
+			const fileUri = vscode.Uri.parse(septicContext);
+			stream.reference(fileUri);
+		}
+		stream.progress("Retrieving documentation...");
+		const documentation = await client.sendRequest(protocol.documentation, {});
+		if (!documentation) {
+			return;
+		}
+		stream.progress("Looking for available variables...");
+		let variables;
+		if (uri) {
+			variables = await client.sendRequest(protocol.variables, { uri: uri });
+		}
+		const references = request.references.filter(ref => typeof ref.value === 'string').map(ref => ref.value) as string[];
+		try {
 			let attempts = 0;
-			const { messages } = await renderPrompt(SepticChatCalcPrompt, { calcs: documentation.calcs, variables: variables }, { modelMaxPromptTokens: model.maxInputTokens }, model);
+			const previousResponses = getResponseHistory(context);
+			const { messages } = await renderPrompt(SepticChatCalcPrompt, { calcs: documentation.calcs, variables: variables, responses: previousResponses, references: references, prompt: request.prompt }, { modelMaxPromptTokens: request.model.maxInputTokens }, request.model);
 			const messagesUpdated = messages as vscode.LanguageModelChatMessage[];
-			const previousMessages = context.history.filter(h => h instanceof vscode.ChatResponseTurn) as vscode.ChatResponseTurn[];
-			previousMessages.forEach(m => {
-				let fullMessage = "";
-				m.response.forEach(r => {
-					const mdPart = r as vscode.ChatResponseMarkdownPart;
-					fullMessage += mdPart.value.value;
-				});
-				messagesUpdated.push(vscode.LanguageModelChatMessage.Assistant(fullMessage));
-			});
-			messagesUpdated.push(vscode.LanguageModelChatMessage.User(request.prompt));
 			stream.progress("Creating calculation...");
 			while (true) {
-				const chatResponse = await model.sendRequest(messagesUpdated, {}, token);
+				const chatResponse = await request.model.sendRequest(messagesUpdated, {}, token);
 				const response = await parseChatResponse(chatResponse);
 				if (response.json) {
 					stream.progress("Validating calculation...");
 					const feedback = await validateCalculations(response, client, uri);
 					if (!feedback.length) {
-						const { messages } = await renderPrompt(SepticChatCalcOutputPrompt, { jsonInput: response.response }, { modelMaxPromptTokens: model.maxInputTokens }, model);
-						const formattedResponse = await model.sendRequest(messages, {});
+						const { messages } = await renderPrompt(SepticChatCalcOutputPrompt, { jsonInput: response.response }, { modelMaxPromptTokens: request.model.maxInputTokens }, request.model);
+						const formattedResponse = await request.model.sendRequest(messages, {});
 						for await (const fragment of formattedResponse.text) {
 							stream.markdown(fragment);
 						}
@@ -83,12 +72,44 @@ export async function calcChat(client: LanguageClient, request: vscode.ChatReque
 				}
 				stream.progress("Re-attempting to create calculation...");
 			}
-
+		} catch {
+			stream.markdown(vscode.l10n.t('I\'m sorry, unable to find the model.'));
 		}
-	} catch {
-		stream.markdown(vscode.l10n.t('I\'m sorry, unable to find the model.'));
+		return { metadata: { command: request.command, output: {} } };
 	}
-	return { metadata: { command: request.command, output: {} } };
+	const septicChat = vscode.chat.createChatParticipant("septic.chat", handler);
+	const iconPathDark = vscode.Uri.joinPath(context.extensionUri, "images/septic_dark.svg");
+	const iconPathLight = vscode.Uri.joinPath(context.extensionUri, "images/septic_light.svg");
+	septicChat.iconPath = { light: iconPathLight, dark: iconPathDark };
+
+	const chatLogger = createChatLogger(context);
+	septicChat.onDidReceiveFeedback((feedback: vscode.ChatResultFeedback) => {
+		chatLogger.logUsage('chatResultFeedback', { result: feedback.result, kind: feedback.kind });
+	});
+}
+
+function createChatLogger(context: vscode.ExtensionContext) {
+	if (!fs.existsSync(context.logUri.fsPath)) {
+		fs.mkdirSync(context.logUri.fsPath);
+	}
+	const chatLogFilePath = path.join(context.logUri.fsPath, 'chat.log');
+	const sender = new FileTelemetrySender(chatLogFilePath);
+	const chatLogger = vscode.env.createTelemetryLogger(sender);
+	return chatLogger;
+}
+
+function getResponseHistory(context: vscode.ChatContext): string[] {
+	const messages: string[] = []
+	const previousMessages = context.history.filter(h => h instanceof vscode.ChatResponseTurn) as vscode.ChatResponseTurn[];
+	previousMessages.forEach(m => {
+		let fullMessage = "";
+		m.response.forEach(r => {
+			const mdPart = r as vscode.ChatResponseMarkdownPart;
+			fullMessage += mdPart.value.value;
+		});
+		messages.push(fullMessage);
+	});
+	return messages;
 }
 
 async function validateCalculations(response: { json?: any; response: string; }, client: LanguageClient, uri: string): Promise<any[]> {
