@@ -239,6 +239,25 @@
           "type": "object",
           "properties": {}
         }
+      },
+      {
+        "name": "septic-tools_get_scg_source",
+        "tags": [
+          "septic",
+          "scg"
+        ],
+        "toolReferenceName": "getScgSource",
+        "displayName": "Read content of scg source in csv format",
+        "modelDescription": "Returns the content of an septic config generator (scg) source in csv format.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "sourceId": {
+              "type": "string",
+              "description": "The id of the scg source to read."
+            }
+          }
+        }
       }
     ]
   },
