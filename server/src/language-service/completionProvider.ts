@@ -19,6 +19,7 @@ import { ITextDocument } from "./types/textDocument";
 import {
     AlgVisitor,
     Attribute,
+    SepticObjectHierarchy,
     SepticAttributeDocumentation,
     SepticCnfg,
     SepticMetaInfoProvider,
@@ -31,14 +32,17 @@ import {
 } from "../septic";
 import { indentsAttributesDelimiter } from "./formatProvider";
 import { isAlphaNumeric } from "../util";
+import { CompletionSettings, SettingsManager } from '../settings';
 
 const threeLettersOrLessWordsRegex = /\b[\w]{1,3}\b/;
 export class CompletionProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
+    private readonly settingsManager: SettingsManager;
 
     /* istanbul ignore next */
-    constructor(cnfgProvider: ISepticConfigProvider) {
+    constructor(cnfgProvider: ISepticConfigProvider, settingsManager: SettingsManager) {
         this.cnfgProvider = cnfgProvider;
+        this.settingsManager = settingsManager;
     }
 
     /* istanbul ignore next */
@@ -51,13 +55,15 @@ export class CompletionProvider {
         if (!cnfg) {
             return [];
         }
+        const settings = await this.settingsManager.getSettings();
         await refProvider.load();
         return getCompletion(
             params.position,
             params.context?.triggerCharacter,
             cnfg,
             doc,
-            refProvider
+            refProvider,
+            settings?.completion || { onlySuggestValidSnippets: false }
         );
     }
 }
@@ -67,7 +73,8 @@ export function getCompletion(
     triggerCharacter: string | undefined,
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    refProvider: SepticReferenceProvider,
+    settings: CompletionSettings = { onlySuggestValidSnippets: false }
 ): CompletionItem[] {
     const offset = doc.offsetAt(pos);
     const alg = cnfg.offsetInAlg(offset);
@@ -77,7 +84,7 @@ export function getCompletion(
         }
         return getCalcCompletion(offset, cnfg, doc, refProvider);
     }
-    return getObjectCompletion(offset, cnfg, refProvider, doc);
+    return getObjectCompletion(offset, cnfg, refProvider, doc, settings);
 }
 
 export function getCalcPublicPropertiesCompletion(
@@ -195,11 +202,12 @@ export function getObjectCompletion(
     offset: number,
     cnfg: SepticCnfg,
     refProvider: SepticReferenceProvider,
-    doc: ITextDocument
+    doc: ITextDocument,
+    settings: CompletionSettings = { onlySuggestValidSnippets: false }
 ): CompletionItem[] {
-    const snippets: CompletionItem[] = SepticMetaInfoProvider.getInstance()
-        .getSnippets()
-        .slice();
+    cnfg.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
+    refProvider.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
+    const snippets: CompletionItem[] = getRelevantSnippets(offset, refProvider, doc, settings.onlySuggestValidSnippets);
     const references: CompletionItem[] = [];
     const obj = cnfg.getObjectFromOffset(offset);
     if (!obj) {
@@ -458,4 +466,44 @@ function getRelevantXvrsAttributes(
         default:
             return objects.filter((obj) => obj.isXvr);
     }
+}
+
+function getRelevantSnippets(offset: number, refProvider: SepticReferenceProvider, doc: ITextDocument, onlySuggestValidSnippets: boolean): CompletionItem[] {
+    const snippets = SepticMetaInfoProvider.getInstance().getSnippets().slice();
+    if (!onlySuggestValidSnippets) {
+        return snippets;
+    }
+    const obj = refProvider.getObjectFromOffset(offset, doc.uri);
+    if (!obj) {
+        return snippets.filter((snippet) => snippet.label.startsWith("system"));
+    }
+    const objectHierarchy = SepticMetaInfoProvider.getInstance().getObjectHierarchy();
+    const relevantObjects = getObjectsSnippets(objectHierarchy, obj);
+    return snippets.filter((snippet) => relevantObjects.includes(snippet.label));
+}
+
+function getObjectsSnippets(objectHierarchy: SepticObjectHierarchy, obj: SepticObject): string[] {
+    let node = objectHierarchy.nodes.get(obj.type);
+    let currentObject: SepticObject | undefined = obj;
+    if (!node) {
+        return [];
+    }
+    const relevantObjects: string[] = [];
+    relevantObjects.push(...node.children);
+    while (node) {
+        let parentType = ""
+        if (currentObject?.parent) {
+            parentType = currentObject.parent.type;
+        } else {
+            parentType = node.parents.length ? node.parents[0] : "";
+        }
+        node = objectHierarchy.nodes.get(parentType);
+        if (node) {
+            relevantObjects.push(node.name);
+            relevantObjects.push(...node.children)
+        }
+        currentObject = currentObject?.parent;
+    }
+
+    return relevantObjects.map((val) => val.toLowerCase());
 }

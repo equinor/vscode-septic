@@ -21,12 +21,16 @@ interface IgnoredSettings {
     paths: { [key: string]: string[] };
 }
 
-interface CodeActions {
+interface CodeActionsSettings {
     insertEvrPosition: "top" | "bottom";
 }
 
-interface Documentation {
+interface DocumentationSettings {
     version: string;
+}
+
+export interface CompletionSettings {
+    onlySuggestValidSnippets: boolean;
 }
 
 export interface Settings {
@@ -35,8 +39,9 @@ export interface Settings {
     readonly formatting: FormattingSettings;
     readonly encoding: "utf8" | "windows1252";
     readonly ignored: IgnoredSettings;
-    readonly codeActions: CodeActions;
-    readonly documentation: Documentation;
+    readonly codeActions: CodeActionsSettings;
+    readonly documentation: DocumentationSettings;
+    readonly completion: CompletionSettings;
 }
 
 export class SettingsManager {
@@ -71,6 +76,7 @@ export class SettingsManager {
             ignored: settings["septic"].ignored,
             codeActions: settings["septic"].codeActions,
             documentation: settings["septic"].documentation,
+            completion: settings["septic"].completion,
         };
         this.updateMetaInfo();
     }

@@ -119,7 +119,7 @@ export class ScgContext implements SepticReferenceProvider {
         }
         return objects;
     }
-    getObjectByIdentifierAndType(
+    public getObjectByIdentifierAndType(
         identifier: string,
         type: string
     ): SepticObject | undefined {
@@ -180,7 +180,7 @@ export class ScgContext implements SepticReferenceProvider {
         return xvrObjs;
     }
 
-    getObjectsByType(...types: string[]): SepticObject[] {
+    public getObjectsByType(...types: string[]): SepticObject[] {
         const objects: SepticObject[] = [];
         for (const file of this.files) {
             const cnfg = this.cnfgCache.get(file);
@@ -190,6 +190,29 @@ export class ScgContext implements SepticReferenceProvider {
             objects.push(...cnfg.getObjectsByType(...types));
         }
         return objects;
+    }
+
+    public getObjectFromOffset(offset: number, uri: string = ""): SepticObject | undefined {
+        const cnfg = this.cnfgCache.get(uri);
+        if (!cnfg) {
+            return undefined;
+        }
+        const obj = cnfg.getObjectFromOffset(offset);
+        if (obj) {
+            return obj;
+        }
+        let ind = this.files.indexOf(uri);
+        while (ind >= 1) {
+            ind--;
+            const cnfg = this.cnfgCache.get(this.files[ind]);
+            if (!cnfg) {
+                continue;
+            }
+            if (cnfg.objects.length) {
+                return cnfg.objects[cnfg.objects.length - 1];
+            }
+        }
+        return undefined
     }
 
     public async updateObjectParents(

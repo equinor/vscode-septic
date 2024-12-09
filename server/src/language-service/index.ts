@@ -110,7 +110,7 @@ export interface ILanguageService {
 }
 
 export function createLanguageService(
-    configurationManager: SettingsManager,
+    settingsManager: SettingsManager,
     documentProvider: DocumentProvider
 ) {
     const cnfgProvider = new SepticConfigProvider(documentProvider);
@@ -118,12 +118,12 @@ export function createLanguageService(
     const diagnosticProvider = new DiagnosticProvider(
         cnfgProvider,
         documentProvider,
-        configurationManager
+        settingsManager
     );
 
     const documentSymbolProvider = new DocumentSymbolProvider(cnfgProvider);
 
-    const completionProvider = new CompletionProvider(cnfgProvider);
+    const completionProvider = new CompletionProvider(cnfgProvider, settingsManager);
 
     const referenceProvider = new ReferenceProvider(cnfgProvider);
 
@@ -137,7 +137,7 @@ export function createLanguageService(
 
     const codeActionProvider = new CodeActionProvider(
         cnfgProvider,
-        configurationManager,
+        settingsManager,
         documentProvider
     );
 
