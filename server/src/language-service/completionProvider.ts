@@ -32,14 +32,17 @@ import {
 } from "../septic";
 import { indentsAttributesDelimiter } from "./formatProvider";
 import { isAlphaNumeric } from "../util";
+import { CompletionSettings, SettingsManager } from '../settings';
 
 const threeLettersOrLessWordsRegex = /\b[\w]{1,3}\b/;
 export class CompletionProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
+    private readonly settingsManager: SettingsManager;
 
     /* istanbul ignore next */
-    constructor(cnfgProvider: ISepticConfigProvider) {
+    constructor(cnfgProvider: ISepticConfigProvider, settingsManager: SettingsManager) {
         this.cnfgProvider = cnfgProvider;
+        this.settingsManager = settingsManager;
     }
 
     /* istanbul ignore next */
@@ -52,13 +55,15 @@ export class CompletionProvider {
         if (!cnfg) {
             return [];
         }
+        const settings = await this.settingsManager.getSettings();
         await refProvider.load();
         return getCompletion(
             params.position,
             params.context?.triggerCharacter,
             cnfg,
             doc,
-            refProvider
+            refProvider,
+            settings?.completion || { onlySuggestValidSnippets: false }
         );
     }
 }
@@ -68,7 +73,8 @@ export function getCompletion(
     triggerCharacter: string | undefined,
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    refProvider: SepticReferenceProvider,
+    settings: CompletionSettings = { onlySuggestValidSnippets: false }
 ): CompletionItem[] {
     const offset = doc.offsetAt(pos);
     const alg = cnfg.offsetInAlg(offset);
@@ -78,7 +84,7 @@ export function getCompletion(
         }
         return getCalcCompletion(offset, cnfg, doc, refProvider);
     }
-    return getObjectCompletion(offset, cnfg, refProvider, doc);
+    return getObjectCompletion(offset, cnfg, refProvider, doc, settings);
 }
 
 export function getCalcPublicPropertiesCompletion(
@@ -196,11 +202,12 @@ export function getObjectCompletion(
     offset: number,
     cnfg: SepticCnfg,
     refProvider: SepticReferenceProvider,
-    doc: ITextDocument
+    doc: ITextDocument,
+    settings: CompletionSettings = { onlySuggestValidSnippets: false }
 ): CompletionItem[] {
     cnfg.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
     refProvider.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
-    const snippets: CompletionItem[] = getRelevantSnippets(offset, refProvider, doc);
+    const snippets: CompletionItem[] = getRelevantSnippets(offset, refProvider, doc, settings.onlySuggestValidSnippets);
     const references: CompletionItem[] = [];
     const obj = cnfg.getObjectFromOffset(offset);
     if (!obj) {
@@ -461,8 +468,11 @@ function getRelevantXvrsAttributes(
     }
 }
 
-function getRelevantSnippets(offset: number, refProvider: SepticReferenceProvider, doc: ITextDocument): CompletionItem[] {
+function getRelevantSnippets(offset: number, refProvider: SepticReferenceProvider, doc: ITextDocument, onlySuggestValidSnippets: boolean): CompletionItem[] {
     const snippets = SepticMetaInfoProvider.getInstance().getSnippets().slice();
+    if (!onlySuggestValidSnippets) {
+        return snippets;
+    }
     const obj = refProvider.getObjectFromOffset(offset, doc.uri);
     if (!obj) {
         return snippets.filter((snippet) => snippet.label.startsWith("system"));

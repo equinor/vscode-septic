@@ -105,6 +105,12 @@
           ],
           "default": "bottom",
           "description": "Position of inserted Evr. Bottom = Above CalcModl, Top = Below DmmyAppl"
+        },
+        "septic.completion.onlySuggestValidSnippets": {
+          "scope": "window",
+          "type": "boolean",
+          "default": "false",
+          "description": "Only suggest valid snippets based on the current object hierarchy."
         }
       }
     },

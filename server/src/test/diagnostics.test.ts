@@ -21,6 +21,8 @@ import {
 } from "../septic";
 import { MockDocument } from "./util";
 
+SepticMetaInfoProvider.setVersion("v3.0");
+
 describe("Test diagnostics for invalid algs", () => {
     it("Expect diagnostics for missing parenthesis in alg", () => {
         const text = `
