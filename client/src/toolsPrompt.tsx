@@ -19,13 +19,13 @@ import {
 	ToolCall,
 	ToolMessage,
 	UserMessage,
-	SystemMessage
 } from '@vscode/prompt-tsx';
 import { ToolResult } from '@vscode/prompt-tsx/dist/base/promptElements';
 import * as vscode from 'vscode';
 import { isTsxToolUserMetadata } from './chatParticipant';
 import { LanguageClient } from 'vscode-languageclient/node';
 import * as protocol from './protocol';
+import { isScgConfig } from './scg';
 
 export interface ToolCallRound {
 	response: string;
@@ -48,7 +48,7 @@ export class ToolUserPrompt extends PromptElement<ToolUserProps, void> {
 				instructions = <CalculationInstructions priority={100}/>;
 				break;
 			case 'scg':
-				instructions = <ScgInstructions client={this.props.client} priority={100}/>;
+				instructions = <ScgInstructions refs={this.props.request.references} client={this.props.client} priority={100}/>;
 				break;
 			// Add more cases here for different commands
 			default:
@@ -317,7 +317,7 @@ class CalculationInstructions extends PromptElement<object> {
 					Text1=  "% description %" <br />
 					Text2=  "" <br />
 					Alg= "% calculation %"
-					- The calculation is written in a simple language that supports basic arithmetic operations, variables, and functions. The following rules apply and most be strictly followed: <br />
+					- The calculation is written in a simple language that supports basic arithmetic operations, variables, and functions. The following rules apply and must be strictly followed: <br />
 					%%% start rules %%% <br />
 					- Supported operators: +, -, *, /, % <br />
 					- Supported comparison operators: ==, {'>'}, {'>='}, {'<='}, {'<'} <br />
@@ -355,14 +355,18 @@ class CalculationInstructions extends PromptElement<object> {
 
 interface ScgInstructionsProps extends BasePromptElementProps {
 	client: LanguageClient;
+	refs: ReadonlyArray<vscode.ChatPromptReference>;
 }
 
 class ScgInstructions extends PromptElement<ScgInstructionsProps> {
 	async render() {
 		const uri = vscode.window.activeTextEditor?.document.uri.toString();
 		const context = await this.props.client.sendRequest(protocol.getContext, {uri: uri});
-		const fileContent = await vscode.workspace.fs.readFile(vscode.Uri.parse(context));
-		const fileText = Buffer.from(fileContent).toString('utf8');
+		const scgInputRefs = this.props.refs.filter(ref => ref.value instanceof vscode.Uri && isScgConfig(ref.value.fsPath));
+		const refs = scgInputRefs.length > 0 ? undefined : context ? <PromptReferenceElement ref={{
+			value: vscode.Uri.parse(context),
+			id: "scg_context"
+		}} /> : undefined;
 		return (
 			<UserMessage priority={this.props.priority}>
 					Septic Config Generator: <br />
@@ -403,11 +407,9 @@ class ScgInstructions extends PromptElement<ScgInstructionsProps> {
 					- adjustspacing (boolean, default: true): Specifies whether to ensure exactly one newline between rendered template files. If false, then the rendering will default to MiniJinja's behaviour. <br />
 					- verifycontent (boolean, default: true): Whether to report differences from an already existing rendered file. Will ask before replacing with the new content. Set to false to overwrite existing file without checking for changes. <br />
 					- counters (optional list of counter structs): Contains a list of global auto-incrementing counter functions. <br />
-					- sources (list of source structs): Contains a list of source file configurations. <br />
+					- sources (list of source structs): Contains a list of source file configurations. Filename is relative to the configuration file. Always ensure that the path provided to the tools is correct by verifying it against the expected path based on the configuration file. For example, if the configuration file is located at `/path/to/config.yaml` and the filename is `data.csv`, the full path should be `/path/to/data.csv`. <br />
 					- layout (list of template structs): Contains a list of templates in the order they should be rendered. <br />
-					{'<' + "Active SCG context configuration" + '>'}<br />
-					{fileText}<br />
-					{'</' + "Active SCG context configuration" + '>'}<br />
+					{refs}
 					Instructions:
 					- Use the available tools to get the correct information to fullfill the user request. <br />
 					- Always read in a source file before updating the values to check column and index names if not already in the context. <br />
@@ -415,7 +417,9 @@ class ScgInstructions extends PromptElement<ScgInstructionsProps> {
 					- Always combine all updates to a source file in one call to the tool. <br /> 
 					- Answer only based on the information in the context. <br />
 					- Always use jinja2 formatting in the templates. <br />
-				</UserMessage>
+			</UserMessage>
 		);
 	}
 }
+
+

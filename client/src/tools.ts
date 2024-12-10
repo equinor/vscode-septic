@@ -5,13 +5,15 @@ import {
 } from "vscode-languageclient/node";
 import * as protocol from "./protocol";
 import * as YAML from "js-yaml";
+import { isScgConfig, ScgConfig, ScgSource } from './scg';
 
 export function registerChatTools(context: vscode.ExtensionContext, client: LanguageClient) {
 	context.subscriptions.push(vscode.lm.registerTool("septic-tools_validate_calculation", new ValidateCalculationTool(client)));
 	context.subscriptions.push(vscode.lm.registerTool("septic-tools_get_functions", new GetFunctions(client)));
 	context.subscriptions.push(vscode.lm.registerTool("septic-tools_get_variables", new GetVariables(client)));
 	context.subscriptions.push(vscode.lm.registerTool("septic-tools_get_scg_source", new GetScgSource(client)));
-	context.subscriptions.push(vscode.lm.registerTool("septic-tools_update_scg_source", new UpdateScgSource(client)));
+	context.subscriptions.push(vscode.lm.registerTool("septic-tools_update_scg_source", new UpdateScgSource()));
+	context.subscriptions.push(vscode.lm.registerTool("septic-tools_modify_scg_source", new ModifyScgSource()));
 }
 
 interface IValidateCalculationParameters {
@@ -107,30 +109,10 @@ export class GetVariables implements vscode.LanguageModelTool<object> {
 }
 
 interface IGetScgSourceParameters {
-	sourceId: string;
+	file: string;
 }
 
-interface ScgConfig {
-	outputfile?: string;
-	templatepath: string;
-	adjustspacing: boolean;
-	verifycontent: boolean;
-	counters?: {
-		name: string;
-		value: number;
-	}[]
-	sources: {
-		filename: string;
-		id: string;
-		sheet?: string;
-		delimiter?: string;
-	}[]
-	layout: {
-		name: string;
-		source?: string;
-		include?: object;
-	}[]
-}
+
 
 export class GetScgSource implements vscode.LanguageModelTool<IGetScgSourceParameters> {
 	private client: LanguageClient;
@@ -142,23 +124,16 @@ export class GetScgSource implements vscode.LanguageModelTool<IGetScgSourceParam
 		options: vscode.LanguageModelToolInvocationOptions<IGetScgSourceParameters>,
 		_token: vscode.CancellationToken
 	) {
-		const uri = vscode.window.activeTextEditor?.document.uri.toString();
-		const context = await this.client.sendRequest(protocol.getContext, { uri: uri });
-		const fileContent = await vscode.workspace.fs.readFile(vscode.Uri.parse(context));
-		const scg = YAML.load(fileContent.toString()) as ScgConfig;
-		const source = scg.sources.find(source => source.id === options.input.sourceId);
-		if (!source) {
-			return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(`No scg source found with the id ${options.input.sourceId}`)]);
+		try {
+			const source = new ScgSource(options.input.file);
+			await source.read();
+			const headers = source.getHeaders();
+			const indexes = source.getIndexes();
+			const content = source.data.map((line) => line.join(";")).join("\n");
+			return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(`Content of the source file ${options.input.file} in csv format with delimiter ';': \n ${content} \n Headers: ${headers.join(", ")} \n Indexes: ${indexes.join(", ")}`)]);
+		} catch (error) {
+			return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(error.message)]);
 		}
-		if (!source.filename.endsWith('.csv')) {
-			return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(`The source ${source.filename} is not a csv file`)]);
-		}
-		const contextUri = vscode.Uri.parse(context);
-		const contextDir = vscode.Uri.joinPath(contextUri, '..');
-		const sourcePath = vscode.Uri.joinPath(contextDir, source.filename);
-		const sourceContent = await vscode.workspace.fs.readFile(sourcePath);
-		const fileContentString = Buffer.from(sourceContent).toString('utf8');
-		return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(`Content of the source file ${options.input.sourceId} in csv format: \n ${fileContentString}`)]);
 	}
 
 	async prepareInvocation(
@@ -172,7 +147,7 @@ export class GetScgSource implements vscode.LanguageModelTool<IGetScgSourceParam
 }
 
 interface IUpdateScgSourceParameters {
-	sourceId: string;
+	file: string;
 	updates: {
 		index: string;
 		column: string;
@@ -181,52 +156,29 @@ interface IUpdateScgSourceParameters {
 }
 
 export class UpdateScgSource implements vscode.LanguageModelTool<IUpdateScgSourceParameters> {
-	private client: LanguageClient;
-	constructor(client: LanguageClient) {
-		this.client = client;
-	}
-
 	async invoke(
 		options: vscode.LanguageModelToolInvocationOptions<IUpdateScgSourceParameters>,
 		_token: vscode.CancellationToken
 	) {
-		const uri = vscode.window.activeTextEditor?.document.uri.toString();
-		const context = await this.client.sendRequest(protocol.getContext, { uri: uri });
-		const fileContent = await vscode.workspace.fs.readFile(vscode.Uri.parse(context));
-		const scg = YAML.load(fileContent.toString()) as ScgConfig;
-		const source = scg.sources.find(source => source.id === options.input.sourceId);
-		if (!source) {
-			return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(`No scg source found with the id ${options.input.sourceId}`)]);
+		let source: ScgSource;
+		try {
+			source = new ScgSource(options.input.file);
+			await source.read();
+		} catch (error) {
+			return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(error.message)]);
 		}
-		if (!source.filename.endsWith('.csv')) {
-			return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(`The source ${source.filename} is not a csv file`)]);
-		}
-		const contextUri = vscode.Uri.parse(context);
-		const contextDir = vscode.Uri.joinPath(contextUri, '..');
-		const sourcePath = vscode.Uri.joinPath(contextDir, source.filename);
-		const sourceContent = await vscode.workspace.fs.readFile(sourcePath);
-		const fileContentString = Buffer.from(sourceContent).toString('utf8');
-		const lines = fileContentString.split('\n');
-		const delimter = source.delimiter ? source.delimiter : ';';
-		const header = lines[0].split(delimter);
-		const messages: string[] = [];
+		const messages = [];
 		options.input.updates.forEach((update) => {
-			const line = lines.find(line => line.split(delimter)[0] === update.index);
-			if (!line) {
-				messages.push(`Update: Index ${update.index} Column: ${update.column} Value: ${update.value}. Status: Unable to update! No row with index ${update.index} found`);
+			try {
+				source.updateValue(update.index, update.column, update.value);
+				messages.push(`Succesfully update: Index: ${update.index}, Column: ${update.column}, Value: ${update.value}`);
+			} catch (error) {
+				messages.push(`Failed update: Index: ${update.index}, Column: ${update.column}, Value: ${update.value} - ${error.message}`);
 			}
-			const columnIndex = header.findIndex(column => column === update.column);
-			if (columnIndex === -1) {
-				messages.push(`Update: Index ${update.index} Column: ${update.column} Value: ${update.value}. Status: Unable to update! No column with name ${update.index} found`);
-			}
-			const columns = line.split(delimter);
-			columns[columnIndex] = update.value;
-			lines[lines.indexOf(line)] = columns.join(delimter);
-			messages.push(`Update: Index ${update.index} Column: ${update.column} Value: ${update.value}. Status: Updated!`);
+
 		});
-		const updatedContent = lines.join('\n');
-		await vscode.workspace.fs.writeFile(sourcePath, Buffer.from(updatedContent));
-		return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(`The source file ${options.input.sourceId} has been updated: \n ${messages.join('\n')}`)]);
+		await source.write();
+		return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(`The source file ${options.input.file} has been updated: \n ${messages.join('\n')}`)]);
 
 	}
 
@@ -234,7 +186,7 @@ export class UpdateScgSource implements vscode.LanguageModelTool<IUpdateScgSourc
 		options: vscode.LanguageModelToolInvocationPrepareOptions<IUpdateScgSourceParameters>,
 		_token: vscode.CancellationToken) {
 		const confirmationMessages = {
-			title: `Update scg source: ${options.input.sourceId}`,
+			title: `Update scg source: ${options.input.file}`,
 			message: new vscode.MarkdownString(
 				`Update the source file with the following changes: \n` +
 				options.input.updates.map(update => `- Index: ${update.index}, Column: ${update.column}, Value: ${update.value}`).join('\n')
@@ -242,6 +194,111 @@ export class UpdateScgSource implements vscode.LanguageModelTool<IUpdateScgSourc
 		}
 		return {
 			invocationMessage: "Updateting SCG source",
+			confirmationMessages
+		};
+	}
+}
+
+interface IModifyScgSourceParameters {
+	file: string;
+	direction: "row" | "column";
+	action: "add" | "delete";
+	id: string;
+	values?: string[];
+}
+
+export class ModifyScgSource implements vscode.LanguageModelTool<IModifyScgSourceParameters> {
+	async invoke(
+		options: vscode.LanguageModelToolInvocationOptions<IModifyScgSourceParameters>,
+		_token: vscode.CancellationToken
+	) {
+		let source: ScgSource;
+		try {
+			source = new ScgSource(options.input.file);
+			await source.read();
+		} catch (error) {
+			return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(error.message)]);
+		}
+		let message;
+		if (options.input.action === "add") {
+			if (options.input.direction === "row") {
+				try {
+					source.addRow(options.input.id, options.input.values);
+					message = new vscode.LanguageModelTextPart(`The source file ${options.input.file} has been modified. A new row with index ${options.input.id} has been added.`);
+				} catch (error) {
+					message = new vscode.LanguageModelTextPart(`Failed to add row - ${error.message}`);
+				}
+			} else {
+				try {
+					source.addColumn(options.input.id, options.input.values);
+					message = new vscode.LanguageModelTextPart(`The source file ${options.input.file} has been modified. A new column with name ${options.input.id} has been added.`);
+				} catch (error) {
+					message = new vscode.LanguageModelTextPart(`Failed to add column - ${error.message}`);
+				}
+			}
+		} else if (options.input.action === "delete" && options.input.id) {
+			if (options.input.direction === "column") {
+				try {
+					source.deleteRow(options.input.id);
+					message = new vscode.LanguageModelTextPart(`The source file ${options.input.file} has been modified. The row with index ${options.input.id} has been deleted.`);
+				} catch (error) {
+					message = new vscode.LanguageModelTextPart(`Failed to delete row - ${error.message}`);
+				}
+			} else {
+				try {
+					source.deleteColumn(options.input.id);
+					message = new vscode.LanguageModelTextPart(`The source file ${options.input.file} has been modified. The column with name ${options.input.id} has been deleted.`);
+				} catch (error) {
+					message = new vscode.LanguageModelTextPart(`Failed to delete column - ${error.message}`);
+				}
+			}
+		} else {
+			return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(`No row found with index ${options.input.id}`)]);
+		}
+		await source.write();
+		return new vscode.LanguageModelToolResult([message]);
+	}
+
+	async prepareInvocation(
+		options: vscode.LanguageModelToolInvocationPrepareOptions<IModifyScgSourceParameters>,
+		_token: vscode.CancellationToken
+	) {
+		let title: string;
+		let message: vscode.MarkdownString;
+
+		if (options.input.action === "add") {
+			if (options.input.direction === "row") {
+				title = `Add row to scg source: ${options.input.file}?`;
+				message = new vscode.MarkdownString(
+					`Add a new row with index ${options.input.id}: \n` +
+					options.input.values?.join(";")
+				);
+			} else {
+				title = `Add column to scg source: ${options.input.file}?`;
+				message = new vscode.MarkdownString(
+					`Add a new column with name ${options.input.id}: \n` +
+					options.input.values?.join(";")
+				);
+			}
+		} else {
+			if (options.input.direction === "row") {
+				title = `Delete row from scg source: ${options.input.file}?`;
+				message = new vscode.MarkdownString(
+					`Delete row with index ${options.input.id}`
+				);
+			} else {
+				title = `Delete column from scg source: ${options.input.file}?`;
+				message = new vscode.MarkdownString(
+					`Delete column with name ${options.input.id}`
+				);
+			}
+		}
+		const confirmationMessages = {
+			title: title,
+			message: message
+		};
+		return {
+			invocationMessage: "Modifying SCG source",
 			confirmationMessages
 		};
 	}

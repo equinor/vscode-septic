@@ -254,9 +254,9 @@
         "inputSchema": {
           "type": "object",
           "properties": {
-            "sourceId": {
+            "file": {
               "type": "string",
-              "description": "The id of the scg source to read."
+              "description": "The full file path of the scg source"
             }
           }
         }
@@ -273,9 +273,9 @@
         "inputSchema": {
           "type": "object",
           "properties": {
-            "sourceId": {
+            "file": {
               "type": "string",
-              "description": "The id of the scg source to read."
+              "description": "The full file path of the scg context"
             },
             "updates": {
               "type": "array",
@@ -296,6 +296,53 @@
                     "description": "The new value for the cell"
                   }
                 }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "septic-tools_modify_scg_source",
+        "tags": [
+          "septic",
+          "scg"
+        ],
+        "toolReferenceName": "modifyScgSource",
+        "displayName": "Modify an scg source in csv format",
+        "modelDescription": "Modify an scg source in csv format on disk by adding or deleting a row or column",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "The full file path of the scg source"
+            },
+            "direction": {
+              "type": "string",
+              "enum": [
+                "row",
+                "column"
+              ],
+              "description": "Select if you want to modify a row or column"
+            },
+            "action": {
+              "type": "string",
+              "enum": [
+                "add",
+                "delete"
+              ],
+              "description": "Select action to perform"
+            },
+            "id": {
+              "type": "string",
+              "description": "Index of the row or the column header to be added or deleted"
+            },
+            "values": {
+              "type": "array",
+              "description": "Values to be added to the row or column excluded the index or header.",
+              "optional": true,
+              "items": {
+                "type": "string"
               }
             }
           }
