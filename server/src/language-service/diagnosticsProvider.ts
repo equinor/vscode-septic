@@ -611,7 +611,7 @@ function validateValueParamType(
     if (isPureJinja(exprLiteral.value)) {
         return [];
     }
-    if (refProvider.validateRef(exprLiteral.value, defaultRefValidationFunction)) {
+    if (refProvider.validateRef(exprLiteral.value.split(".")[0], defaultRefValidationFunction)) {
         return [];
     }
     return [createDiagnostic(

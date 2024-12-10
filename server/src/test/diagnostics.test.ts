@@ -294,6 +294,22 @@ describe("Test datatype diagnostics in algs", () => {
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeArg);
     });
+    it("Expect no diagnostics when using public property on valid xvr on param that expects value", () => {
+        const text = `
+            Mvr: TestSomething
+                Text1= "Test"
+        
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "max(TestSomething.Meas)"
+		`;
+
+        const doc = new MockDocument(text);
+
+        const cnfg = parseSepticSync(doc.getText());
+        const diag = validateAlgs(cnfg, doc, cnfg);
+        expect(diag.length).to.equal(0);
+    });
     it("Expect no diagnostics when giving pure jinja expression to param that expects value", () => {
         const text = `
             Mvr: TestSomething
