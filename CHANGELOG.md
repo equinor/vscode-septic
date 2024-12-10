@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.24.0](https://github.com/equinor/vscode-septic/compare/v1.23.2...v1.24.0) (2024-12-10)
+
+
+### ✨ Features
+
+* suggest snippets based on object hierarchy ([#694](https://github.com/equinor/vscode-septic/issues/694)) ([5175833](https://github.com/equinor/vscode-septic/commit/51758334dbf908bf8d31f9039f9273063b9b12d9))
+
+
+### 🐛 Bug Fixes
+
+* wrong diagnostic message for xvrs using public properties ([#705](https://github.com/equinor/vscode-septic/issues/705)) ([741f979](https://github.com/equinor/vscode-septic/commit/741f979148c06760c5c5579a3422313b18886ad8))
+
 ## [1.23.2](https://github.com/equinor/vscode-septic/compare/v1.23.1...v1.23.2) (2024-12-06)
 
 
