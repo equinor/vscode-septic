@@ -114,7 +114,7 @@ export function registerSepticChatParticipant(context: vscode.ExtensionContext, 
                     { modelMaxPromptTokens: model.maxInputTokens },
                     model));
                 messages = result.messages;
-                const toolResultMetadata = result.metadatas.getAll(ToolResultMetadata);
+                const toolResultMetadata = result.metadata.getAll(ToolResultMetadata);
                 if (toolResultMetadata?.length) {
                     // Cache tool results for later, so they can be incorporated into later prompts without calling the tool again
                     toolResultMetadata.forEach(meta => accumulatedToolResults[meta.toolCallId] = meta.result);
@@ -145,7 +145,8 @@ export function registerSepticChatParticipant(context: vscode.ExtensionContext, 
     septicChat.iconPath = { light: iconPathLight, dark: iconPathDark };
 
     septicChat.onDidReceiveFeedback(feedback => {
-        logger.logUsage('chatResultFeedback', { result: feedback.result, kind: feedback.kind });
+        const toolCalls = feedback.result.metadata.toolCallsMetadata?.toolCallRounds.map(round => round.toolCalls.map(call => { return { name: call.name, input: call.input } })).flat();
+        logger.logUsage('chatResultFeedback', { result: toolCalls, kind: feedback.kind });
     });
     context.subscriptions.push(septicChat);
 }
