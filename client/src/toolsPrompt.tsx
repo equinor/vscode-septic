@@ -411,7 +411,7 @@ class ScgInstructions extends PromptElement<ScgInstructionsProps> {
 					- layout (list of template structs): Contains a list of templates in the order they should be rendered. <br />
 					{refs}
 					Instructions:
-					- Use the available tools to get the correct information to fullfill the user request. <br />
+					- Use the available tools to get the correct information to fulfill the user request. <br />
 					- Always read in a source file before updating the values to check column and index names if not already in the context. <br />
 					- The content of a source file is in csv format. The first row of the source file is the header (column names) and the first column is the index (row names). <br />
 					- Always combine all updates to a source file in one call to the tool. <br /> 

@@ -105,30 +105,6 @@ export class ScgSource {
 		this.delimiter = delimiter;
 	}
 
-	static async loadScgSource(scgConfigFile: string, sourceId: string) {
-		if (! await isScgConfig(scgConfigFile)) {
-			throw new Error(`The file ${scgConfigFile} is not a valid scg config file`);
-		}
-		const configUri = vscode.Uri.file(scgConfigFile);
-		let configContent;
-		try {
-			configContent = (await vscode.workspace.openTextDocument(configUri.fsPath)).getText();
-		} catch {
-			throw new Error(`Could not open the file ${scgConfigFile}`);
-		}
-		const scg = yaml.load(configContent) as ScgConfig;
-		const source = scg.sources.find(source => source.id === sourceId);
-		if (!source) {
-			throw new Error(`No scg source found with the id ${sourceId}`);
-		}
-		if (!source.filename.endsWith('.csv')) {
-			throw Error(`The source ${source.filename} is not a csv file`);
-		}
-		const configDir = vscode.Uri.joinPath(configUri, '..');
-		const sourcePath = vscode.Uri.joinPath(configDir, source.filename);
-		return new ScgSource(sourcePath.fsPath, source.delimiter || ';');
-	}
-
 	async read(): Promise<void> {
 		const uri = vscode.Uri.file(this.filename);
 		try {

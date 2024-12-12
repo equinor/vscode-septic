@@ -4,8 +4,7 @@ import {
 	LanguageClient,
 } from "vscode-languageclient/node";
 import * as protocol from "./protocol";
-import * as YAML from "js-yaml";
-import { isScgConfig, ScgConfig, ScgSource } from './scg';
+import { ScgSource } from './scg';
 
 export function registerChatTools(context: vscode.ExtensionContext, client: LanguageClient) {
 	context.subscriptions.push(vscode.lm.registerTool("septic-tools_validate_calculation", new ValidateCalculationTool(client)));
@@ -171,7 +170,7 @@ export class UpdateScgSource implements vscode.LanguageModelTool<IUpdateScgSourc
 		options.input.updates.forEach((update) => {
 			try {
 				source.updateValue(update.index, update.column, update.value);
-				messages.push(`Succesfully update: Index: ${update.index}, Column: ${update.column}, Value: ${update.value}`);
+				messages.push(`Successfully update: Index: ${update.index}, Column: ${update.column}, Value: ${update.value}`);
 			} catch (error) {
 				messages.push(`Failed update: Index: ${update.index}, Column: ${update.column}, Value: ${update.value} - ${error.message}`);
 			}
@@ -193,7 +192,7 @@ export class UpdateScgSource implements vscode.LanguageModelTool<IUpdateScgSourc
 			)
 		}
 		return {
-			invocationMessage: "Updateting SCG source",
+			invocationMessage: "Updating SCG source",
 			confirmationMessages
 		};
 	}
