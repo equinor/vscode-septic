@@ -168,15 +168,185 @@
       {
         "id": "septic.chat",
         "name": "septic",
-        "fullName": "Septic Chat",
-        "description": "Chatbot for Septic related topics",
+        "fullName": "Septic",
+        "description": "Chatbot for Septic related topics using tools",
         "isSticky": true,
         "commands": [
           {
-            "name": "calcs",
-            "description": "Ask about the calcs in Septic"
+            "name": "calculation",
+            "description": "Generate and update calculations in Septic configs",
+            "isSticky": true
+          },
+          {
+            "name": "scg",
+            "description": "Documentation, updates and answers realted to Septic Config Generator tool and contexts",
+            "isSticky": true
           }
         ]
+      }
+    ],
+    "languageModelTools": [
+      {
+        "name": "septic-tools_validate_calculation",
+        "tags": [
+          "septic",
+          "calculation"
+        ],
+        "toolReferenceName": "validateCalculation",
+        "displayName": "Validate Calculation",
+        "modelDescription": "Validates a given calculation and outputs the diagnostic messages that describes the errors and warnings in the calculation.",
+        "canBeReferencedInPrompt": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "calculation": {
+              "type": "string",
+              "description": "The calculation to validate."
+            },
+            "newVariables": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "A variable to be added to the context."
+              },
+              "description": "New variables in calculation to be added to the context."
+            }
+          }
+        }
+      },
+      {
+        "name": "septic-tools_get_functions",
+        "tags": [
+          "septic",
+          "calculation"
+        ],
+        "toolReferenceName": "getFunctions",
+        "displayName": "Get functions",
+        "modelDescription": "Returns a list of all available functions for use in calculations with description.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "septic-tools_get_variables",
+        "tags": [
+          "septic",
+          "calculation"
+        ],
+        "toolReferenceName": "getVariables",
+        "displayName": "Get variables in context",
+        "modelDescription": "Returns a list of all available variables in the current context with description.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "septic-tools_get_scg_source",
+        "tags": [
+          "septic",
+          "scg"
+        ],
+        "toolReferenceName": "getScgSource",
+        "displayName": "Read content of scg source in csv format",
+        "modelDescription": "Returns the content of an septic config generator (scg) source in csv format.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "The full file path of the scg source"
+            }
+          }
+        }
+      },
+      {
+        "name": "septic-tools_update_scg_source",
+        "tags": [
+          "septic",
+          "scg"
+        ],
+        "toolReferenceName": "updateScgSource",
+        "displayName": "Update the content of an scg source in csv format on disk",
+        "modelDescription": "Updates the given cell in the scg source on csv format with the new value.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "The full file path of the scg context"
+            },
+            "updates": {
+              "type": "array",
+              "description": "A set of updates to be applied to the scg source.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "index": {
+                    "type": "string",
+                    "description": "Index of the row to be updated"
+                  },
+                  "column": {
+                    "type": "string",
+                    "description": "Name of the column to be updated"
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "The new value for the cell"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "septic-tools_modify_scg_source",
+        "tags": [
+          "septic",
+          "scg"
+        ],
+        "toolReferenceName": "modifyScgSource",
+        "displayName": "Modify an scg source in csv format",
+        "modelDescription": "Modify an scg source in csv format on disk by adding or deleting a row or column",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "The full file path of the scg source"
+            },
+            "direction": {
+              "type": "string",
+              "enum": [
+                "row",
+                "column"
+              ],
+              "description": "Select if you want to modify a row or column"
+            },
+            "action": {
+              "type": "string",
+              "enum": [
+                "add",
+                "delete"
+              ],
+              "description": "Select action to perform"
+            },
+            "id": {
+              "type": "string",
+              "description": "Index of the row or the column header to be added or deleted"
+            },
+            "values": {
+              "type": "array",
+              "description": "Values to be added to the row or column excluded the index or header.",
+              "optional": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
       }
     ]
   },
