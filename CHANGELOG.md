@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.25.0](https://github.com/equinor/vscode-septic/compare/v1.24.0...v1.25.0) (2024-12-13)
+
+
+### ✨ Features
+
+* add tool based copilot ([#703](https://github.com/equinor/vscode-septic/issues/703)) ([f2cc7e6](https://github.com/equinor/vscode-septic/commit/f2cc7e699243c22162b3443072fa7f2ca08a9927))
+
 ## [1.24.0](https://github.com/equinor/vscode-septic/compare/v1.23.2...v1.24.0) (2024-12-10)
 
 
