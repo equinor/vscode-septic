@@ -394,7 +394,8 @@
     "test_with_coverage": "npm run compile && nyc mocha --require ts-node/register --require source-map-support/register --recursive server/src/test/**/*.test.ts "
   },
   "dependencies": {
-    "@vscode/prompt-tsx": "^0.3.0-alpha.13"
+    "@vscode/prompt-tsx": "^0.3.0-alpha.13",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",

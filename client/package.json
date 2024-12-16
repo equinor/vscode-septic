@@ -13,12 +13,11 @@
     "vscode": "^1.95.0"
   },
   "dependencies": {
-    "vscode-languageclient": "^8.1.0",
-    "@types/js-yaml": "^4.0.5",
-    "js-yaml": "^4.1.0"
+    "vscode-languageclient": "^8.1.0"
   },
   "devDependencies": {
     "@types/vscode": "^1.95.0",
-    "@vscode/test-electron": "^2.2.3"
+    "@vscode/test-electron": "^2.2.3",
+    "@types/js-yaml": "^4.0.5"
   }
 }
