@@ -12,13 +12,12 @@
     "url": "https://github.com/equinor/vscode-septic"
   },
   "dependencies": {
-    "@types/js-yaml": "^4.0.5",
-    "js-yaml": "^4.1.0",
     "vscode-languageserver": "^8.1.0",
     "vscode-languageserver-textdocument": "^1.0.8"
   },
   "scripts": {},
   "devDependencies": {
-    "@types/chai": "^4.3.5"
+    "@types/chai": "^4.3.5",
+    "@types/js-yaml": "^4.0.5"
   }
 }
