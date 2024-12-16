@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.25.1](https://github.com/equinor/vscode-septic/compare/v1.25.0...v1.25.1) (2024-12-16)
+
+
+### 🐛 Bug Fixes
+
+* update import of js-yaml ([#712](https://github.com/equinor/vscode-septic/issues/712)) ([4db06d6](https://github.com/equinor/vscode-septic/commit/4db06d61dce961aa3b941a960982f8aa759d0adc))
+
 ## [1.25.0](https://github.com/equinor/vscode-septic/compare/v1.24.0...v1.25.0) (2024-12-13)
 
 
