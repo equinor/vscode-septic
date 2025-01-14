@@ -548,7 +548,7 @@
     snippet: ''
     tags: []
   - calc: false
-    dataType: string
+    dataType: variable
     default:
     - '""'
     description: Xvrs
@@ -561,7 +561,7 @@
     snippet: 1\n                 "${3}"
     tags: []
   - calc: false
-    dataType: string
+    dataType: varialbe
     default:
     - '""'
     description: Status xvrs
@@ -574,7 +574,7 @@
     snippet: 1\n                 "${4}"
     tags: []
   description: "The Xvrs listed are placed in a new column to the right of the corresponding\
-    \ XvrList\r\n  The heading text is used as heading for the new column"
+    \ XvrList\r\n  The heading text is used as heading for the new column<br>"
   name: ColumnList
   parents:
   - Table
@@ -3715,7 +3715,7 @@
     dataType: int
     default:
     - '64512'
-    description: Buffer size for send and recieve buffers
+    description: Buffer size for send and receive buffers
     enums: []
     list: false
     name: BufferSize
@@ -4404,7 +4404,7 @@
     postfix: []
     snippet: ''
     tags: []
-  - calc: false
+  - calc: true
     dataType: float
     default:
     - '1'
@@ -5214,7 +5214,7 @@
     dataType: int
     default:
     - '64512'
-    description: Size of recieve buffer
+    description: Size of receive buffer
     enums: []
     list: false
     name: BufferSize
@@ -6169,21 +6169,6 @@
     - 'OFF'
     list: false
     name: ColdStart
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ''
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'OFF'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: SimOptimal
     noCnfg: false
     nosnippet: false
     postfix: []
@@ -9464,6 +9449,82 @@
   name: UATvr
   parents:
   - UAProc
+- attributes:
+  - calc: false
+    dataType: float
+    default:
+    - '100'
+    description: Well volume [m3]
+    enums: []
+    list: false
+    name: Volume
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '2000'
+    description: Well vertical height [m]
+    enums: []
+    list: false
+    name: Height
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '700'
+    description: Oil density [kg/m3]
+    enums: []
+    list: false
+    name: Density
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '500'
+    description: Oil compressibility [bar]
+    enums: []
+    list: false
+    name: Compressibility
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '8'
+    description: Production index [m3/h/bar]
+    enums: []
+    list: false
+    name: ProductionIndex
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  description: Nonlinear model in a SmpcAppl
+  name: WellModel
+  parents:
+  - SmpcAppl
+- attributes: []
+  description: Nonlinear process, where the models are taken from the subr with same
+    ID
+  name: WellProc
+  parents:
+  - System
 - attributes:
   - calc: false
     dataType: int
