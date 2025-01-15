@@ -73,7 +73,7 @@
   - '          Xvrs=  1\n                 "${3}"'
   - '    StatusXvrs=  1\n                 "${4}"'
   description: "The Xvrs listed are placed in a new column to the right of the corresponding\
-    \ XvrList\r\n  The heading text is used as heading for the new column"
+    \ XvrList\r\n  The heading text is used as heading for the new column<br>"
   prefix: columnlist
 - body:
   - '  Curve:         ${1:CurveName}'
@@ -662,7 +662,6 @@
   - '     EachParam=  OFF'
   - '   LinErrorLim=  1000'
   - '     ColdStart=  ON'
-  - '    SimOptimal=  OFF'
   - '     PrintSens=  0'
   - '     SensLimSS=  1e-06'
   - '    SensLimDyn=  1e-06'
@@ -993,6 +992,20 @@
   - '     xNotValid=  ""'
   description: Trending variable (TV) OPC connection
   prefix: uatvr
+- body:
+  - '  WellModel:     ${1:WellModelName}'
+  - '        Volume=  100'
+  - '        Height=  2000'
+  - '       Density=  700'
+  - Compressibility=  500
+  - ProductionIndex=  8
+  description: Nonlinear model in a SmpcAppl
+  prefix: wellmodel
+- body:
+  - '  WellProc:      ${1:WellProcName}'
+  description: Nonlinear process, where the models are taken from the subr with same
+    ID
+  prefix: wellproc
 - body:
   - '  XYPlot:        ${1:XYPlotName}'
   - '           Row=  1'
