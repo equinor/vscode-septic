@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.25.3](https://github.com/equinor/vscode-septic/compare/v1.25.2...v1.25.3) (2025-01-31)
+
+
+### 🧹 Chores
+
+* add CODEOWNERS ([#730](https://github.com/equinor/vscode-septic/issues/730)) ([6f2ba7c](https://github.com/equinor/vscode-septic/commit/6f2ba7c49ccb8a864f603826b5bbf79b7e26392e))
+
+
+### 👷 CI/CD
+
+* decapitalize Septic ([#729](https://github.com/equinor/vscode-septic/issues/729)) ([2f21b83](https://github.com/equinor/vscode-septic/commit/2f21b833c792d0e04495c444f2b280642db6303a))
+
 ## [1.25.2](https://github.com/equinor/vscode-septic/compare/v1.25.1...v1.25.2) (2025-01-15)
 
 
