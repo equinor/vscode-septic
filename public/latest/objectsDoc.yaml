@@ -1359,19 +1359,6 @@
     postfix: []
     snippet: ''
     tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Scaling of use factor weight based on application importance
-    enums: []
-    list: false
-    name: UseFactorWeight
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ''
-    tags: []
   - calc: true
     dataType: float
     default: []
@@ -1408,11 +1395,25 @@
     postfix: []
     snippet: ''
     tags: []
+  - calc: true
+    dataType: float
+    default:
+    - 'OFF'
+    description: Reset open loop when CV is activated
+    enums: []
+    list: false
+    name: ColdStart
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
   description: Controlled Variable
   name: Cvr
   parents:
   - SmpcAppl
   - MPCAppl
+  - NMPCAppl
 - attributes:
   - calc: false
     dataType: string
@@ -1460,7 +1461,8 @@
     tags: []
   - calc: false
     dataType: enum
-    default: []
+    default:
+    - 'OFF'
     description: Lock the group for changes
     enums:
     - 'ON'
@@ -1914,6 +1916,7 @@
   parents:
   - SmpcAppl
   - MPCAppl
+  - NMPCAppl
 - attributes:
   - calc: false
     dataType: string
@@ -2460,6 +2463,7 @@
   - DmmyAppl
   - SmpcAppl
   - MPCAppl
+  - NMPCAppl
 - attributes:
   - calc: false
     dataType: string
@@ -2497,6 +2501,7 @@
   parents:
   - SmpcAppl
   - MPCAppl
+  - NMPCAppl
 - attributes: []
   description: Experimental process, where the models are taken from the SmpcAppl
     with same ID
@@ -2592,6 +2597,7 @@
   parents:
   - SmpcAppl
   - MPCAppl
+  - NMPCAppl
 - attributes:
   - calc: false
     dataType: string
@@ -3155,6 +3161,20 @@
     nosnippet: false
     postfix: []
     snippet: 1\n                 "${3}"
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: "If value>0, the label will appear as a hotspot area with jump to\
+      \ target displaygroup on\r\n  click"
+    enums: []
+    list: false
+    name: TargetGroup
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
     tags: []
   description: Image Status Label
   name: ImageStatusLabel
@@ -3742,10 +3762,11 @@
   parents:
   - System
 - attributes: []
-  description: Nonlinear model in a SmpcAppl
+  description: Nonlinear model in a SmpcAppl or NMPCAppl
   name: Mdl4Modl
   parents:
   - SmpcAppl
+  - NMPCAppl
 - attributes: []
   description: Nonlinear process, where the models are taken from the subr with same
     ID
@@ -4528,19 +4549,6 @@
     snippet: ''
     tags: []
   - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Linear cost factor
-    enums: []
-    list: false
-    name: Price
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ''
-    tags: []
-  - calc: false
     dataType: int
     default:
     - '2'
@@ -4660,19 +4668,6 @@
     postfix: []
     snippet: ''
     tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '0'
-    description: Scaling of use factor weight based on application importance
-    enums: []
-    list: false
-    name: UseFactorWeight
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ''
-    tags: []
   - calc: true
     dataType: float
     default: []
@@ -4690,6 +4685,7 @@
   parents:
   - SmpcAppl
   - MPCAppl
+  - NMPCAppl
 - attributes:
   - calc: false
     dataType: string
@@ -4721,6 +4717,444 @@
   name: MvrList
   parents:
   - Table
+- attributes:
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text1
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
+    default:
+    - '""'
+    description: Free text description of object
+    enums: []
+    list: false
+    name: Text2
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '80'
+    description: Length of prediction horizon in samples
+    enums: []
+    list: false
+    name: Npred
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '1'
+    description: Description
+    enums: []
+    list: false
+    name: Nstep
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '25'
+    description: Description
+    enums: []
+    list: false
+    name: PlotMax
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '80'
+    description: Length of model optimisation horizon
+    enums: []
+    list: false
+    name: Nhorz
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - ACTIVE
+    description: Desired mode for MPC
+    enums:
+    - STOPPED
+    - TRACKING
+    - ADVISORY
+    - ACTIVE
+    list: false
+    name: DesMode
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: STOPPED
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Maximum number of subsequent failed steps before changing mode to
+      TRACKING
+    enums: []
+    list: false
+    name: FailMax
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: IterOpt
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: IterNewSens
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: IterQpMax
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: IterLineMax
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '200'
+    description: Description
+    enums: []
+    list: false
+    name: MajItLim
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: MajPrint
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: ObjConPrint
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: VerifyGrads
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-08
+    description: Description
+    enums: []
+    list: false
+    name: FuncPrec
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-05
+    description: Description
+    enums: []
+    list: false
+    name: FeTol
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-06
+    description: Description
+    enums: []
+    list: false
+    name: OptimTol
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0.001'
+    description: Description
+    enums: []
+    list: false
+    name: FdifIntv
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '10'
+    description: Description
+    enums: []
+    list: false
+    name: MaxSeconds
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '100'
+    description: Description
+    enums: []
+    list: false
+    name: LmPrio
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '100'
+    description: Description
+    enums: []
+    list: false
+    name: MaxPrioSQP
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - CONSTMVR
+    description: Mvr to be used for open-loop prediction. Constant or optimized Mvrs
+    enums:
+    - CONSTMVR
+    - OPTMVR
+    list: false
+    name: OpenFlag
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Description
+    enums: []
+    list: false
+    name: UpdFilt
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0.05'
+    description: Description
+    enums: []
+    list: false
+    name: RelPert
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-10
+    description: QP feasibility tolerance
+    enums: []
+    list: false
+    name: FeasTol
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'OFF'
+    description: Description
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: EachParam
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1000'
+    description: Description
+    enums: []
+    list: false
+    name: LinErrorLim
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Print sensitivity matrix to out-file (toggle number of samples)
+    enums: []
+    list: false
+    name: PrintSens
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-06
+    description: Description
+    enums: []
+    list: false
+    name: SensLimSS
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - 1e-06
+    description: Description
+    enums: []
+    list: false
+    name: SensLimDyn
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  description: Description of Septic Nonlin MPC Application
+  name: NMPCAppl
+  parents:
+  - System
 - attributes:
   - calc: false
     dataType: string
@@ -5758,19 +6192,6 @@
     snippet: ''
     tags: []
   - calc: false
-    dataType: int
-    default:
-    - '0'
-    description: First possible ACTIVE sample number
-    enums: []
-    list: false
-    name: Nstart
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ''
-    tags: []
-  - calc: false
     dataType: enum
     default:
     - ACTIVE
@@ -5796,34 +6217,6 @@
     enums: []
     list: false
     name: FailMax
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ''
-    tags: []
-  - calc: false
-    dataType: enum
-    default:
-    - 'ON'
-    description: Description
-    enums:
-    - 'ON'
-    - 'OFF'
-    list: false
-    name: PriceOn
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: 'OFF'
-    tags: []
-  - calc: false
-    dataType: float
-    default:
-    - '1'
-    description: Description
-    enums: []
-    list: false
-    name: PriceScale
     noCnfg: false
     nosnippet: false
     postfix: []
@@ -7833,6 +8226,7 @@
   name: Svr
   parents:
   - SmpcAppl
+  - NMPCAppl
 - attributes:
   - calc: false
     dataType: string
@@ -8288,6 +8682,32 @@
     postfix: []
     snippet: ''
     tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: Step interval between steps in milliseconds - only for simulation
+    enums: []
+    list: false
+    name: StepInterval
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: int
+    default:
+    - '0'
+    description: 'Run automatically # steps at startup -1 Run forever - only for simulation'
+    enums: []
+    list: false
+    name: AutoRun
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
   description: Description of system object
   name: System
   parents: []
@@ -8669,6 +9089,7 @@
   - DmmyAppl
   - SmpcAppl
   - MPCAppl
+  - NMPCAppl
 - attributes:
   - calc: false
     dataType: string
@@ -9519,7 +9940,73 @@
   name: WellModel
   parents:
   - SmpcAppl
-- attributes: []
+  - NMPCAppl
+- attributes:
+  - calc: false
+    dataType: float
+    default:
+    - '100'
+    description: Well volume [m3]
+    enums: []
+    list: false
+    name: Volume
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '2000'
+    description: Well vertical height [m]
+    enums: []
+    list: false
+    name: Height
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '700'
+    description: Oil density [kg/m3]
+    enums: []
+    list: false
+    name: Density
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '500'
+    description: Oil compressibility [bar]
+    enums: []
+    list: false
+    name: Compressibility
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '8'
+    description: Production index [m3/h/bar]
+    enums: []
+    list: false
+    name: ProductionIndex
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
   description: Nonlinear process, where the models are taken from the subr with same
     ID
   name: WellProc
