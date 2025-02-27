@@ -138,7 +138,7 @@
   - '        LockHL=  OFF'
   - '        LockSP=  OFF'
   - '        LockLL=  OFF'
-  - UseFactorWeight=  0
+  - '     ColdStart=  OFF'
   description: Controlled Variable
   prefix: cvr
 - body:
@@ -150,7 +150,7 @@
 - body:
   - '  DisplayGroup:  ${1:DisplayGroupName}'
   - '       GroupNo=  ${2:1}'
-  - '        Locked=  '
+  - '        Locked=  OFF'
   - '          Rows=  -1'
   - '          Cols=  -1'
   - '         xGrid=  OFF'
@@ -358,6 +358,7 @@
   - '            Y2=  -1'
   - '         Texts=  1\n                 "${2}"'
   - BackgroundColors=  1\n                 "${3}"
+  - '   TargetGroup=  0'
   description: Image Status Label
   prefix: imagestatuslabel
 - body:
@@ -433,7 +434,7 @@
   prefix: mastertcip
 - body:
   - '  Mdl4Modl:      ${1:Mdl4ModlName}'
-  description: Nonlinear model in a SmpcAppl
+  description: Nonlinear model in a SmpcAppl or NMPCAppl
   prefix: mdl4modl
 - body:
   - '  Mdl4Proc:      ${1:Mdl4ProcName}'
@@ -515,7 +516,6 @@
   - '          Fulf=  1'
   - '   FulfReScale=  0'
   - '  FulfDynScale=  1'
-  - '         Price=  0'
   - '      Blocking=  6    2     4     7    11    16    22'
   - MeasValidation=  OFF
   - ' MeasHighLimit=  1e+10'
@@ -524,7 +524,6 @@
   - '        LockIV=  OFF'
   - '        LockLL=  OFF'
   - '        PVPred=  OFF'
-  - UseFactorWeight=  0
   description: Manipulated Variable
   prefix: mvr
 - body:
@@ -533,6 +532,42 @@
   - '          Mvrs=  1\n                 "${3}"'
   description: List of manipulated variables with associated values
   prefix: mvrlist
+- body:
+  - '  NMPCAppl:      ${1:NMPCApplName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '         Npred=  80'
+  - '         Nstep=  1'
+  - '       PlotMax=  25'
+  - '         Nhorz=  80'
+  - '       DesMode=  STOPPED'
+  - '       FailMax=  0'
+  - '       IterOpt=  OFF'
+  - '   IterNewSens=  OFF'
+  - '     IterQpMax=  0'
+  - '   IterLineMax=  0'
+  - '      MajItLim=  200'
+  - '      MajPrint=  0'
+  - '   ObjConPrint=  OFF'
+  - '   VerifyGrads=  OFF'
+  - '      FuncPrec=  1e-08'
+  - '         FeTol=  1e-05'
+  - '      OptimTol=  1e-06'
+  - '      FdifIntv=  0.001'
+  - '    MaxSeconds=  10'
+  - '        LmPrio=  100'
+  - '    MaxPrioSQP=  100'
+  - '      OpenFlag=  CONSTMVR'
+  - '       UpdFilt=  0'
+  - '       RelPert=  0.05'
+  - '       FeasTol=  1e-10'
+  - '     EachParam=  OFF'
+  - '   LinErrorLim=  1000'
+  - '     PrintSens=  0'
+  - '     SensLimSS=  1e-06'
+  - '    SensLimDyn=  1e-06'
+  description: Description of Septic Nonlin MPC Application
+  prefix: nmpcappl
 - body:
   - '  NoisProc:      ${1:NoisProcName}'
   - '         Text1=  ""'
@@ -632,11 +667,8 @@
   - '         Nstep=  1'
   - '       PlotMax=  25'
   - '         Nhorz=  80'
-  - '        Nstart=  0'
   - '       DesMode=  STOPPED'
   - '       FailMax=  0'
-  - '       PriceOn=  OFF'
-  - '    PriceScale=  1'
   - '       IterOpt=  OFF'
   - '   IterNewSens=  OFF'
   - '     IterQpMax=  0'
@@ -862,6 +894,8 @@
   - MinimizeByHide=  OFF
   - HideCloseButton=  OFF
   - OPCSampleTimeOffset=  0
+  - '  StepInterval=  0'
+  - '       AutoRun=  0'
   description: Description of system object
   prefix: system
 - body:
@@ -1003,6 +1037,11 @@
   prefix: wellmodel
 - body:
   - '  WellProc:      ${1:WellProcName}'
+  - '        Volume=  100'
+  - '        Height=  2000'
+  - '       Density=  700'
+  - Compressibility=  500
+  - ProductionIndex=  8
   description: Nonlinear process, where the models are taken from the subr with same
     ID
   prefix: wellproc

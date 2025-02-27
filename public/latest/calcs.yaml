@@ -1260,31 +1260,6 @@
   quality: GOOD
   retr: Number of seconds per sample
   signature: getapplnsecs()
-- detailedDescription: Computes the sum of Mvr and Cvr use factor weight for application
-    with given id.
-  name: getapplufwsum
-  parameters:
-  - arity: '1'
-    datatype:
-    - smpcappl
-    description: Application id
-    direction: in
-    name: applID
-  quality: GOOD if valid applID
-  retr: Sum of Mvr and Cvr use factor weight
-  signature: getapplufwsum(applID)
-- detailedDescription: Gets the use factor for the application with the given id
-  name: getapplusefactor
-  parameters:
-  - arity: '1'
-    datatype:
-    - smpcappl
-    description: Application id
-    direction: in
-    name: applID
-  quality: GOOD if valid applid
-  retr: Use factor for application
-  signature: getapplusefactor(applID)
 - detailedDescription: Get base value for given xvr
   name: getbase
   parameters:
@@ -2452,18 +2427,6 @@
   quality: BAD if XVR tag is invalid, else GOOD
   retr: Spanvalue
   signature: setPlotSpan(XVRTAG,spanvalue)
-- detailedDescription: Sets the ActiveModifier for UseFactor calculations.
-  name: setactivemodifier
-  parameters:
-  - arity: '1'
-    datatype:
-    - mvr
-    description: Mvr to update
-    direction: in,out
-    name: mvr
-  quality: GOOD
-  retr: 'Updated value: value > 1 is set to  1, value < 0 is set to 0'
-  signature: setactivemodifier(mvr, value)
 - detailedDescription: Sets the desired mode for application with matching applID
   name: setappldesmode
   parameters:
