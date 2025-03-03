@@ -58,7 +58,7 @@
         ],
         "description": "Iterate over a list using a Jinja for loop"
     },
-	"SetVariableJinja": {
+    "SetVariableJinja": {
         "prefix": "set",
         "body": [
             "{%- set $1 = $2 -%}"
@@ -71,5 +71,19 @@
             "{%- include \"$1\" -%}"
         ],
         "description": "Include a template in Jinja"
+    },
+    "ForLoopInline": {
+        "prefix": "forinline",
+        "body": [
+            "{% for $1 in $2 | unpack('$1') %} $3 {% endfor %}"
+        ],
+        "description": "Iterate over a list using an inline for loop"
+    },
+    "LoopLast": {
+        "prefix": "looplastinline",
+        "body": [
+            "{% if not loop.last %}$1{% endif %}"
+        ],
+        "description": "Check if the current iteration is the last one"
     }
 }

@@ -11,6 +11,8 @@ import { expect } from "chai";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { loadFile } from "./util";
 
+SepticMetaInfoProvider.setVersion("v3.0");
+
 describe("Test completion of identifier", () => {
     it("Completion of SopcCvr identifier for Cvr", () => {
         const text = "SopcMvr: TestMvr\nSopcCvr: TestCvr\nCvr:        \n";
