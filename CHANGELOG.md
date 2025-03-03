@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.25.4](https://github.com/equinor/vscode-septic/compare/v1.25.3...v1.25.4) (2025-03-03)
+
+
+### 🧹 Chores
+
+* add snippets for inline for loop ([#738](https://github.com/equinor/vscode-septic/issues/738)) ([9e582b8](https://github.com/equinor/vscode-septic/commit/9e582b884b483f7f805eab770dd041af8c5a1c01))
+
 ## [1.25.3](https://github.com/equinor/vscode-septic/compare/v1.25.2...v1.25.3) (2025-02-27)
 
 
