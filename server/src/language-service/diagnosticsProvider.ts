@@ -694,7 +694,7 @@ export function validateIdentifier(
         return diagnostics;
     }
 
-    if (checkIdentifier(obj.identifier.name)) {
+    if (obj.isType("FdtaProc") || checkIdentifier(obj.identifier.name)) {
         return [];
     }
 

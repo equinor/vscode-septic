@@ -511,7 +511,8 @@ export class SepticScanner {
             this.isAlpha(char) ||
             this.isDigit(char) ||
             char === ":" ||
-            char === "="
+            char === "=" ||
+            char === "."
         );
     }
 

@@ -104,6 +104,16 @@ describe("Test tokenization of objects and identifiers", () => {
         expect(tokens[0].type).to.equal(SepticTokenType.object);
         expect(tokens[1].type).to.equal(SepticTokenType.identifier);
     });
+
+    it("Expect correct tokenization of object with . in identifier", () => {
+        const input = "FdtaProc:  test.dta";
+        const scanner = new SepticScanner(input);
+        const tokens = scanner.scanTokens().tokens;
+        expect(tokens.length).to.equal(3);
+        expect(tokens[0].type).to.equal(SepticTokenType.object);
+        expect(tokens[1].type).to.equal(SepticTokenType.identifier);
+        expect(tokens[1].content).to.equal("test.dta");
+    });
 });
 
 describe("Test tokenization of attributes", () => {
