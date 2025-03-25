@@ -411,13 +411,24 @@ function getExistingCompletion(
     };
 }
 
-function xvrToCompletionItem(obj: SepticObject, range: Range): CompletionItem {
+const priorityMapping: { [key: string]: number } = {
+    "Mvr": 1,
+    "Cvr": 2,
+    "Dvr": 3,
+    "Evr": 4,
+    "Tvr": 5,
+};
+
+function xvrToCompletionItem(obj: SepticObject, range: Range): CompletionItem {    
+    let priority = priorityMapping[obj.type] ?? 6;
     return {
         label: obj.identifier!.name,
+        labelDetails: { detail: ` ${obj.type}` },
         kind: CompletionItemKind.Variable,
         detail: obj.type,
         data: obj.identifier!.name,
-        filterText: obj.identifier!.name,
+        filterText: obj.identifier!.id + obj.identifier!.name,
+        sortText: priority + obj.identifier!.id,
         textEdit: TextEdit.replace(range, obj.identifier!.name),
     };
 }
