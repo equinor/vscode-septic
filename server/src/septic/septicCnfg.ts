@@ -290,18 +290,17 @@ function calcPvrReferences(obj: SepticObject): SepticReference[] {
     visitor.variables.forEach((xvr) => {
         const identifier = xvr.value.split(".")[0];
         let start = xvr.start;
-        let end = xvr.end;
+        const diff = xvr.end - xvr.start;
         if (positionsMap.length) {
-            const originalPositions = transformPositionsToOriginal([start, end], positionsMap);
+            const originalPositions = transformPositionsToOriginal([start], positionsMap);
             start = originalPositions[0];
-            end = originalPositions[1];
         }
         const ref: SepticReference = createSepticReference(
             identifier,
             {
                 uri: "",
                 start: alg!.getAttrValue()!.start + start + 1,
-                end: alg!.getAttrValue()!.start + end + 1,
+                end: alg!.getAttrValue()!.start + start + diff + 1,
             },
             undefined,
             ReferenceType.calc

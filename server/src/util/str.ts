@@ -15,7 +15,7 @@ export function removeJinjaLoopsAndIfs(input: string): { strippedString: string,
     const regex = /{%\s*for .*?\s*%}|{%\s*endfor\s*%}|{%\s*if .*?\s*%}.*?{%\s*endif\s*%}/g
     const strippedString = input.replace(regex, (match, offset) => {
         positionsMap.push(offset, offset + match.length);
-        return '';
+        return ' ';
     });
     return { strippedString, positionsMap };
 }
@@ -26,7 +26,7 @@ export function transformPositionsToOriginal(positions: number[], positionsMap: 
         let orignalPosition = pos;
         for (let i = 0; i < positionsMap.length; i += 2) {
             if (orignalPosition >= positionsMap[i]) {
-                orignalPosition += positionsMap[i + 1] - positionsMap[i];
+                orignalPosition += positionsMap[i + 1] - positionsMap[i] - 1;
             } else {
                 break;
             }

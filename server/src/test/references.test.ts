@@ -308,4 +308,17 @@ describe("Test getReferences", () => {
         expect(refs[3].location.end - refs[3].location.start).to.equal("{{ CurrentWell }}Priority".length);
 
     });
+    it("Expect references from alg when there are no spaces between variable and jinja expression", () => {
+        const alg = `"1{% for test in wells %}+Something{{ Test }}Y{% endfor %}+Perf"`
+        const calcPvr = new SepticObject("CalcPvr", new Identifier("Test"), 0, 0);
+        const algAttribute = new Attribute("Alg");
+        algAttribute.addValue(new AttributeValue(alg, SepticTokenType.string));
+        calcPvr.addAttribute(algAttribute);
+        const refs = extractReferencesFromObj(calcPvr);
+        expect(refs.length).to.equal(3);
+        expect(refs[1].identifier).to.equal("Something{{Test}}Y");
+        expect(refs[1].location.end - refs[1].location.start).to.equal("Something{{ Test }}Y".length);
+        expect(refs[2].identifier).to.equal("Perf");
+        expect(refs[2].location.end - refs[2].location.start).to.equal("Perf".length);
+    });
 });
