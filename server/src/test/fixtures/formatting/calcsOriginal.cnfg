@@ -1,0 +1,15 @@
+  CalcModl:      Test
+         Text1=  ""
+         Text2=  ""
+
+  CalcPvr:       CalcPvrName
+         Text1=  ""
+         Text2=  ""
+            Alg=  "and({% for Wellname in wells | unpack %}{{ Wellname }}Test,{% endfor %})" {# noqa: E201 #}
+
+
+
+  CalcPvr:       CalcPvrName
+         Text1=  ""
+         Text2=  ""
+           Alg=  "1 + 2" {# noqa #}
