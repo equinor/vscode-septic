@@ -33,7 +33,7 @@ export const jinjaIfEndRegex = /\{%-?\s+endif\s+%}$/;
 export const jinjaExpressionRegex = /\{%[\S\s]*%\}/;
 export const stopFormattingRegex = /^\{#\s+format:off\s+#}$/;
 export const startFormattingRegex = /^\{#\s+format:on\s+#}$/;
-export const lineCommentRegex = /^\s*\/\/\s|\*\/\s*$|#}\s*$/;
+export const lineCommentRegex = /^\s*\/\/\s|\*\/\s*$|#}\s*$|%}\s*$/;
 
 export class FormattingProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
@@ -134,16 +134,13 @@ export class SepticCnfgFormatter {
                     this.addEmptyLine();
                 }
             }
-            if (jinjaExpressionRegex.test(currentLineText)) {
-                this.addEmptyLine();
-            }
         } else {
             if (this.currentLine.length) {
                 this.addLine();
             }
-            if (!this.isPreviousLineEmptyOrComment()) {
-                this.addEmptyLine();
-            }
+        }
+        if (!this.isPreviousLineEmptyOrComment()) {
+            this.addEmptyLine();
         }
         const indentsDeclaration = indentsObjectDeclaration - existingWhitespaces;
         const objectTypeFormatted =

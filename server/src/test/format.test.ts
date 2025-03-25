@@ -68,4 +68,16 @@ describe("Test formatting", () => {
         );
         compareFiles(expectedContent, formattedContent);
     });
+    it("Expect correct formatting of calcs with jinja", () => {
+        const content = loadFile("formatting/calcsOriginal.cnfg");
+        const doc = TextDocument.create("", "", 0, content);
+        const cnfg = parseSepticSync(doc.getText());
+        const formatter = new SepticCnfgFormatter(cnfg, doc);
+        const edits = formatter.format();
+        const formattedContent = TextDocument.applyEdits(doc, edits);
+        const expectedContent = loadFile(
+            "formatting/calcsExpected.cnfg"
+        );
+        compareFiles(expectedContent, formattedContent);
+    });
 });
