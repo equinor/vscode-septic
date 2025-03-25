@@ -37,6 +37,7 @@ async function testCompletion(
     expect(filteredCompletion.length).to.equal(expectedCompletion.items.length);
     expectedCompletion.items.forEach((expectedItem, i) => {
         const actualItem = filteredCompletion[i];
-        expect(actualItem.label).to.equal(expectedItem.label);
+        const label = actualItem.label as vscode.CompletionItemLabel
+        expect(label.label).to.equal(expectedItem.label);
     });
 }
