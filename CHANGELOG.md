@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.25.5](https://github.com/equinor/vscode-septic/compare/v1.25.4...v1.25.5) (2025-03-25)
+
+
+### 🧹 Chores
+
+* **deps:** [Snyk] Upgrade vscode-languageserver-textdocument from 1.0.8 to 1.0.11 ([#741](https://github.com/equinor/vscode-septic/issues/741)) ([b803885](https://github.com/equinor/vscode-septic/commit/b803885f30b10314ea6ae12251f7278e9f497c0c))
+* **deps:** bump @types/node from 16.18.96 to 16.18.126 ([#732](https://github.com/equinor/vscode-septic/issues/732)) ([f9baec1](https://github.com/equinor/vscode-septic/commit/f9baec1699f6cf141f0a740e3a2e34aaac25d09c))
+* **deps:** bump mocha from 10.7.3 to 11.1.0 ([#725](https://github.com/equinor/vscode-septic/issues/725)) ([7ceb89c](https://github.com/equinor/vscode-septic/commit/7ceb89c6acd3bcbc0f4ce8e072870af759f1e107))
+* **deps:** bump peter-evans/create-pull-request from 6 to 7 ([#631](https://github.com/equinor/vscode-septic/issues/631)) ([5f266dc](https://github.com/equinor/vscode-septic/commit/5f266dc63da684bf6ea07adbc29e92dbd1ce4065))
+* **deps:** bump rimraf from 5.0.5 to 6.0.1 ([#681](https://github.com/equinor/vscode-septic/issues/681)) ([9bc9bb1](https://github.com/equinor/vscode-septic/commit/9bc9bb1a24e9e2ef01def229012f0becd7af7de6))
+* set default value ignore path setting to dict ([#743](https://github.com/equinor/vscode-septic/issues/743)) ([b5fd8f5](https://github.com/equinor/vscode-septic/commit/b5fd8f5375078e2647ce9bb5d48d51134681171c))
+* update error type for jinja in algs ([#745](https://github.com/equinor/vscode-septic/issues/745)) ([77fca5a](https://github.com/equinor/vscode-septic/commit/77fca5ae9f5ab531fe47a9d8f46bd03656bd280a))
+
+
+### 🐛 Bug Fixes
+
+* add priority to Mvrs and Cvrs in autocomplete ([#593](https://github.com/equinor/vscode-septic/issues/593)) ([f8ebd29](https://github.com/equinor/vscode-septic/commit/f8ebd2984773a1190068c1ea52bc06d4ecad3a13))
+* extraction of refs in jinja calc ([#744](https://github.com/equinor/vscode-septic/issues/744)) ([1bab083](https://github.com/equinor/vscode-septic/commit/1bab0838b0a81d6461efafd0c1c842f610a04e6e))
+* formatting of calcs containing jinja expressions ([#742](https://github.com/equinor/vscode-septic/issues/742)) ([710e809](https://github.com/equinor/vscode-septic/commit/710e809e055568fd30a2fe9bfbd126cd576847cd))
+* support fdtaproc identifiers ([#740](https://github.com/equinor/vscode-septic/issues/740)) ([9073c68](https://github.com/equinor/vscode-septic/commit/9073c68e675d0b9e8e791e0a0b0dda0cf76bf090))
+
 ## [1.25.4](https://github.com/equinor/vscode-septic/compare/v1.25.3...v1.25.4) (2025-03-03)
 
 
