@@ -38,6 +38,7 @@ import {
     RefValidationFunction,
     SepticReference,
     ReferenceType,
+    AlgParsingErrorType,
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
@@ -72,6 +73,7 @@ export enum DiagnosticCode {
     algMaxLength = "E206",
     missingPublicProperty = "E207", // Combine with under
     unknownPublicProperty = "E208",
+    jinjaExpressionInAlg = "W209",
     missingListLengthValue = "E301",
     mismatchLengthList = "E302",
     missingAttributeValue = "E303",
@@ -275,11 +277,17 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, refProvider
         expr = parseAlg(alg.getValue());
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
+        let code = DiagnosticCode.invalidAlg
+        let severity: DiagnosticSeverity = DiagnosticSeverity.Error
+        if (error.type === AlgParsingErrorType.unsupportedJinja) {
+            code = DiagnosticCode.jinjaExpressionInAlg
+            severity = DiagnosticSeverity.Warning
+        }
         const diagnostic = createDiagnostic(
-            DiagnosticSeverity.Error,
+            severity,
             algPositionTransformer(error.token.start, error.token.end),
             error.message,
-            DiagnosticCode.invalidAlg
+            code
         );
         diagnostics.push(diagnostic);
         return diagnostics;
