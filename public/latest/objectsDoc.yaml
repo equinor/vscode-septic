@@ -2627,6 +2627,19 @@
     tags: []
   - calc: false
     dataType: string
+    default:
+    - '""'
+    description: Path to *.dta file, accepts both absolute and relative paths
+    enums: []
+    list: false
+    name: Path
+    noCnfg: false
+    nosnippet: true
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
     default: []
     description: Description
     enums: []
@@ -2654,6 +2667,19 @@
     snippet: ${2|Playback,PlayBack_nomode,BaseCase|}
     tags: []
   - calc: false
+    dataType: bool
+    default:
+    - 'false'
+    description: Skip reading of all Evrs in playback, both Meas and State
+    enums: []
+    list: false
+    name: SkipEvr
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
     dataType: int
     default:
     - '1'
@@ -2667,15 +2693,8 @@
     postfix: []
     snippet: ''
     tags: []
-  description: "Filedata process, playback or basecase comparison of .dta file. ID\
-    \ of FdtaProc is the filename.\r\n  Mode control data transport from dta file\
-    \ into Septic variables Mode= BaseCase: Meas values found in the datafile will\r\
-    \n  be handed over to the correct Xvr, the porpose of BaseCase is to compare the\
-    \ effect on the MPC controller with\r\n  different tuning. Mode= Playback:  the\
-    \ purpose is to perform a full playback of the data found on the logfile, Meas,\r\
-    \n  High/Low, Mode etc are transported into Xvr Mode= Playback_nomode, [.Mode,\
-    \ .FS, .DesMode] on dta is ignored. Use data\r\n  from file as input, but skip\
-    \ mode settings"
+  description: "Filedata process, playback or basecase comparison of data file, *.dta\r\
+    \n  If configured, the filename is taken from Path, else the id is used for filename"
   name: FdtaProc
   parents:
   - System
