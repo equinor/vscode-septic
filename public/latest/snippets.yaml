@@ -283,16 +283,10 @@
   - '         Text1=  ""'
   - '         Text2=  ""'
   - '          Mode=  ${2|Playback,PlayBack_nomode,BaseCase|}'
+  - '       SkipEvr=  false'
   - '         Nstep=  1'
-  description: "Filedata process, playback or basecase comparison of .dta file. ID\
-    \ of FdtaProc is the filename.\r\n  Mode control data transport from dta file\
-    \ into Septic variables Mode= BaseCase: Meas values found in the datafile will\r\
-    \n  be handed over to the correct Xvr, the porpose of BaseCase is to compare the\
-    \ effect on the MPC controller with\r\n  different tuning. Mode= Playback:  the\
-    \ purpose is to perform a full playback of the data found on the logfile, Meas,\r\
-    \n  High/Low, Mode etc are transported into Xvr Mode= Playback_nomode, [.Mode,\
-    \ .FS, .DesMode] on dta is ignored. Use data\r\n  from file as input, but skip\
-    \ mode settings"
+  description: "Filedata process, playback or basecase comparison of data file, *.dta\r\
+    \n  If configured, the filename is taken from Path, else the id is used for filename"
   prefix: fdtaproc
 - body:
   - '  FreeMeas:      ${1:FreeMeasName}'
@@ -896,6 +890,7 @@
   - OPCSampleTimeOffset=  0
   - '  StepInterval=  0'
   - '       AutoRun=  0'
+  - ShowUpdateCounter=  ON
   description: Description of system object
   prefix: system
 - body:
