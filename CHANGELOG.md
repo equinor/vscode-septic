@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.25.6](https://github.com/equinor/vscode-septic/compare/v1.25.5...v1.25.6) (2025-04-30)
+
+
+### 🧹 Chores
+
+* **deps:** bump typescript from 5.7.3 to 5.8.3 ([#755](https://github.com/equinor/vscode-septic/issues/755)) ([3849352](https://github.com/equinor/vscode-septic/commit/38493527a5b03a5d6def110070bfc8820a1e83d2))
+
+
+### 📚 Documentation
+
+* update Septic documentation for latest ([#747](https://github.com/equinor/vscode-septic/issues/747)) ([aa87a81](https://github.com/equinor/vscode-septic/commit/aa87a81a055cf3a57d8342a04011d0bc4ac455b3))
+* update Septic documentation for v3.2.0 ([#758](https://github.com/equinor/vscode-septic/issues/758)) ([e0ca681](https://github.com/equinor/vscode-septic/commit/e0ca681f7968960ee00aabc1ff2582e41f7e2905))
+
 ## [1.25.5](https://github.com/equinor/vscode-septic/compare/v1.25.4...v1.25.5) (2025-03-25)
 
 
