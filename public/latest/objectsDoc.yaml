@@ -2627,6 +2627,19 @@
     tags: []
   - calc: false
     dataType: string
+    default:
+    - '""'
+    description: Path to *.dta file, accepts both absolute and relative paths
+    enums: []
+    list: false
+    name: Path
+    noCnfg: false
+    nosnippet: true
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: string
     default: []
     description: Description
     enums: []
@@ -2654,6 +2667,19 @@
     snippet: ${2|Playback,PlayBack_nomode,BaseCase|}
     tags: []
   - calc: false
+    dataType: bool
+    default:
+    - 'false'
+    description: Skip reading of all Evrs in playback, both Meas and State
+    enums: []
+    list: false
+    name: SkipEvr
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
     dataType: int
     default:
     - '1'
@@ -2667,15 +2693,8 @@
     postfix: []
     snippet: ''
     tags: []
-  description: "Filedata process, playback or basecase comparison of .dta file. ID\
-    \ of FdtaProc is the filename.\r\n  Mode control data transport from dta file\
-    \ into Septic variables Mode= BaseCase: Meas values found in the datafile will\r\
-    \n  be handed over to the correct Xvr, the porpose of BaseCase is to compare the\
-    \ effect on the MPC controller with\r\n  different tuning. Mode= Playback:  the\
-    \ purpose is to perform a full playback of the data found on the logfile, Meas,\r\
-    \n  High/Low, Mode etc are transported into Xvr Mode= Playback_nomode, [.Mode,\
-    \ .FS, .DesMode] on dta is ignored. Use data\r\n  from file as input, but skip\
-    \ mode settings"
+  description: "Filedata process, playback or basecase comparison of data file, *.dta\r\
+    \n  If configured, the filename is taken from Path, else the id is used for filename"
   name: FdtaProc
   parents:
   - System
@@ -5960,10 +5979,10 @@
     dataType: int
     default:
     - '0'
-    description: Time offset [samples] since last sample was recieved
+    description: Time offset [samples] since last sample was received
     enums: []
     list: false
-    name: RecievedTime
+    name: ReceivedTime
     noCnfg: true
     nosnippet: false
     postfix: []
@@ -6087,7 +6106,7 @@
     enums:
     - CONFIG
     - SAMPLETIME
-    - RECIEVEDTIME
+    - RECEIVEDTIME
     list: false
     name: SortBy
     noCnfg: false
@@ -6641,7 +6660,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Description WRITE
     enums: []
     list: false
     name: MeasTag
@@ -6654,7 +6673,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Description WRITE
     enums: []
     list: false
     name: NotValidTag
@@ -6667,7 +6686,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Description WRITE
     enums: []
     list: false
     name: PPSTag
@@ -6724,7 +6743,7 @@
     dataType: string
     default:
     - '""'
-    description: Measurement tag
+    description: Measurement tag READ
     enums: []
     list: false
     name: MeasTag
@@ -6737,7 +6756,7 @@
     dataType: string
     default:
     - '""'
-    description: Id tag
+    description: Id tag READ
     enums: []
     list: false
     name: IdTag
@@ -6750,7 +6769,7 @@
     dataType: string
     default:
     - '""'
-    description: Set point tag
+    description: Set point tag READ
     enums: []
     list: false
     name: SpTag
@@ -6763,7 +6782,7 @@
     dataType: string
     default:
     - '""'
-    description: Low limit write tag
+    description: Low limit write tag WRITE
     enums: []
     list: false
     name: CvLowTag
@@ -6776,7 +6795,7 @@
     dataType: string
     default:
     - '""'
-    description: High limit write tag
+    description: High limit write tag WRITE
     enums: []
     list: false
     name: CvHighTag
@@ -6789,7 +6808,7 @@
     dataType: string
     default:
     - '""'
-    description: Set point write tag
+    description: Set point write tag WRITE
     enums: []
     list: false
     name: CvSetpointTag
@@ -6802,7 +6821,7 @@
     dataType: string
     default:
     - '""'
-    description: Not valid tag 1 = Not valid
+    description: Not valid tag 1 = Not valid READ
     enums: []
     list: false
     name: NotValidTag
@@ -6815,7 +6834,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Description READ
     enums: []
     list: false
     name: CvSwitchTag
@@ -6828,7 +6847,7 @@
     dataType: string
     default:
     - '""'
-    description: Cv active tag
+    description: Cv active tag WRITE
     enums: []
     list: false
     name: CvActiveTag
@@ -6841,7 +6860,7 @@
     dataType: string
     default:
     - '""'
-    description: Low limit of Cv, read from system
+    description: Low limit of Cv READ
     enums: []
     list: false
     name: LoTag
@@ -6854,7 +6873,7 @@
     dataType: string
     default:
     - '""'
-    description: High limit of Cv, read from system
+    description: High limit of Cv READ
     enums: []
     list: false
     name: HiTag
@@ -6937,7 +6956,7 @@
     dataType: string
     default:
     - '""'
-    description: Measurement tag
+    description: Measurement tag READ
     enums: []
     list: false
     name: MeasTag
@@ -6950,7 +6969,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Description READ
     enums: []
     list: false
     name: IdTag
@@ -6963,7 +6982,7 @@
     dataType: string
     default:
     - '""'
-    description: Not valid tag. 1 = Not Valid
+    description: Not valid tag. 1 = Not Valid READ
     enums: []
     list: false
     name: NotValidTag
@@ -6976,7 +6995,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Description READ
     enums: []
     list: false
     name: DvSwitchTag
@@ -6989,7 +7008,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Description WRITE
     enums: []
     list: false
     name: DvTrackTag
@@ -7072,7 +7091,7 @@
     dataType: string
     default:
     - '""'
-    description: Measurement tag to write
+    description: Measurement tag to write WRITE
     enums: []
     list: false
     name: MeasTag
@@ -7085,7 +7104,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Description READ
     enums: []
     list: false
     name: IdTag
@@ -7098,7 +7117,7 @@
     dataType: string
     default:
     - '""'
-    description: Not valid tag. 1 = Not Valid
+    description: Not valid tag. 1 = Not Valid WRITE
     enums: []
     list: false
     name: NotValidTag
@@ -7155,7 +7174,7 @@
     dataType: string
     default:
     - '""'
-    description: Measurement tag
+    description: Measurement tag READ
     enums: []
     list: false
     name: MeasTag
@@ -7168,7 +7187,7 @@
     dataType: string
     default:
     - '""'
-    description: Process Value tag
+    description: Process Value tag  READ
     enums: []
     list: false
     name: PVTag
@@ -7181,7 +7200,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Description READ
     enums: []
     list: false
     name: IdTag
@@ -7194,7 +7213,7 @@
     dataType: string
     default:
     - '""'
-    description: Not valid tag 1 = Not valid
+    description: Not valid tag 1 = Not valid READ
     enums: []
     list: false
     name: NotValidTag
@@ -7207,7 +7226,7 @@
     dataType: string
     default:
     - '""'
-    description: Calculated set point written to PCDA
+    description: Calculated set point written to PCDA WRITE
     enums: []
     list: false
     name: SpCalcTag
@@ -7220,7 +7239,7 @@
     dataType: string
     default:
     - '""'
-    description: High limit read from controller
+    description: High limit read from controller READ
     enums: []
     list: false
     name: HiTag
@@ -7233,7 +7252,7 @@
     dataType: string
     default:
     - '""'
-    description: Low limit read from controller
+    description: Low limit read from controller READ
     enums: []
     list: false
     name: LoTag
@@ -7246,7 +7265,7 @@
     dataType: string
     default:
     - '""'
-    description: Ideal value tag
+    description: Ideal value tag READ
     enums: []
     list: false
     name: IvTag
@@ -7259,7 +7278,7 @@
     dataType: string
     default:
     - '""'
-    description: Low limit of manipulated variable written to OPC
+    description: Low limit of manipulated variable written to OPC WRITE
     enums: []
     list: false
     name: MvLowTag
@@ -7272,7 +7291,7 @@
     dataType: string
     default:
     - '""'
-    description: High limit of manipulated variable written to OPC
+    description: High limit of manipulated variable written to OPC WRITE
     enums: []
     list: false
     name: MvHighTag
@@ -7285,7 +7304,7 @@
     dataType: string
     default:
     - '""'
-    description: Ideal value of manipulated variable written to OPC
+    description: Ideal value of manipulated variable written to OPC WRITE
     enums: []
     list: false
     name: MvIvTag
@@ -7298,7 +7317,7 @@
     dataType: string
     default:
     - '""'
-    description: Max up of manipulated variable written to OPC
+    description: Max up of manipulated variable written to OPC WRITE
     enums: []
     list: false
     name: MaxUpTag
@@ -7311,7 +7330,7 @@
     dataType: string
     default:
     - '""'
-    description: Max down of manipulated variable written to OPC
+    description: Max down of manipulated variable written to OPC WRITE
     enums: []
     list: false
     name: MaxDownTag
@@ -7324,7 +7343,7 @@
     dataType: string
     default:
     - '""'
-    description: AUTO = 1
+    description: AUTO = 1 READ
     enums: []
     list: false
     name: AutoTag
@@ -7337,7 +7356,7 @@
     dataType: string
     default:
     - '""'
-    description: Windup high tag. 1 = Windup high
+    description: Windup high tag. 1 = Windup high READ
     enums: []
     list: false
     name: WhiTag
@@ -7350,7 +7369,7 @@
     dataType: string
     default:
     - '""'
-    description: Windup low tag. 1 = Windup low
+    description: Windup low tag. 1 = Windup low READ
     enums: []
     list: false
     name: WloTag
@@ -7363,7 +7382,7 @@
     dataType: string
     default:
     - '""'
-    description: Controller in computer mode 1 = COMP
+    description: Controller in computer mode 1 = COMP READ
     enums: []
     list: false
     name: CompTag
@@ -7376,7 +7395,7 @@
     dataType: string
     default:
     - '""'
-    description: Cascade/Ratio = 0
+    description: Cascade/Ratio = 0 READ
     enums: []
     list: false
     name: CaraTag
@@ -7389,7 +7408,7 @@
     dataType: string
     default:
     - '""'
-    description: Output tracking
+    description: Output tracking READ
     enums: []
     list: false
     name: TrakTag
@@ -7402,7 +7421,7 @@
     dataType: string
     default:
     - '""'
-    description: Command controller to computer mode
+    description: Command controller to computer mode WRITE
     enums: []
     list: false
     name: ToCompTag
@@ -7415,7 +7434,7 @@
     dataType: string
     default:
     - '""'
-    description: Command controller to local mode
+    description: Command controller to local mode WRITE
     enums: []
     list: false
     name: ToLocalTag
@@ -7428,7 +7447,7 @@
     dataType: string
     default:
     - '""'
-    description: Mv active written to PCDA. 1 = Active
+    description: Mv active written to PCDA. 1 = Active WRITE
     enums: []
     list: false
     name: MvActiveTag
@@ -7441,7 +7460,7 @@
     dataType: string
     default:
     - '""'
-    description: Mv desired active from PCDA. 1 = Active 0 = Tracking
+    description: Mv desired active from PCDA. 1 = Active 0 = Tracking READ
     enums: []
     list: false
     name: MvSwitchTag
@@ -7455,6 +7474,7 @@
     default:
     - '""'
     description: Watchdog/keepalive for HarmonyOPC Watchdog/keepalive for HarmonyOPC
+      WRITE
     enums: []
     list: false
     name: CompStatusTag
@@ -7593,7 +7613,7 @@
     dataType: string
     default:
     - '"DUMMY_TAG"'
-    description: Basic Sopc tag name
+    description: Basic Sopc tag name READ
     enums: []
     list: false
     name: ProcTag
@@ -7606,7 +7626,7 @@
     dataType: string
     default:
     - '""'
-    description: Application is allowed, controlled from PCDA
+    description: Application is allowed, controlled from PCDA READ
     enums: []
     list: false
     name: AllowActiveTag
@@ -7619,7 +7639,7 @@
     dataType: string
     default:
     - '"NotUsed"'
-    description: Tag for status of application 1 = ACT, 0 = all other modes
+    description: Tag for status of application 1 = ACT, 0 = all other modes WRITE
     enums: []
     list: false
     name: StatusTag
@@ -7632,7 +7652,8 @@
     dataType: string
     default:
     - '"DUMMY_TAG"'
-    description: Tag for setting desired mode of application 1 = ACTIVE 0=INACTIVE
+    description: Tag for setting desired mode of application 1 = ACTIVE 0 = INACTIVE
+      READ
     enums: []
     list: false
     name: DesModeTag
@@ -7645,7 +7666,7 @@
     dataType: string
     default:
     - '""'
-    description: Tag for Septic puls (toggled each step)
+    description: Tag for Septic puls (toggled each step) WRITE
     enums: []
     list: false
     name: PulsTag
@@ -7658,7 +7679,7 @@
     dataType: string
     default:
     - '"DUMMY_TAG"'
-    description: For check of control loop, write tag to PCS
+    description: For check of control loop, write tag to PCS WRITE
     enums: []
     list: false
     name: LoopcheckWriteTag
@@ -7672,7 +7693,7 @@
     default:
     - '"DUMMY_TAG"'
     description: For check of control loop, read this tag to PCS, verify that it follows
-      Write
+      Write READ
     enums: []
     list: false
     name: LoopcheckReadTag
@@ -7685,7 +7706,7 @@
     dataType: string
     default:
     - '"DUMMY_TAG"'
-    description: Report application service factor, write to OPC
+    description: Report application service factor, write to OPC WRITE
     enums: []
     list: false
     name: ServFactorTag
@@ -7698,7 +7719,7 @@
     dataType: string
     default:
     - '"DUMMY_TAG"'
-    description: Report CPU time used in last step, write to OPC
+    description: Report CPU time used in last step, write to OPC WRITE
     enums: []
     list: false
     name: CPUTimeTag
@@ -7711,7 +7732,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Description READ
     enums: []
     list: false
     name: IdTag
@@ -7724,7 +7745,7 @@
     dataType: string
     default:
     - '"DUMMY_TAG"'
-    description: Description
+    description: Description READ
     enums: []
     list: false
     name: ScheduleTag
@@ -7905,7 +7926,7 @@
     dataType: string
     default:
     - '""'
-    description: Measurement tag
+    description: Measurement tag READ
     enums: []
     list: false
     name: MeasTag
@@ -7918,7 +7939,7 @@
     dataType: string
     default:
     - '""'
-    description: Not valid tag. 1 = Not Valid
+    description: Not valid tag. 1 = Not Valid READ
     enums: []
     list: false
     name: NotValidTag
@@ -7931,7 +7952,7 @@
     dataType: string
     default:
     - '""'
-    description: Description
+    description: Description READ
     enums: []
     list: false
     name: Text1Tag
@@ -8708,6 +8729,22 @@
     postfix: []
     snippet: ''
     tags: []
+  - calc: false
+    dataType: enum
+    default:
+    - 'ON'
+    description: Enable counter on RUIs showing secs until next update is expected
+      from master
+    enums:
+    - 'ON'
+    - 'OFF'
+    list: false
+    name: ShowUpdateCounter
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
   description: Description of system object
   name: System
   parents: []
@@ -9126,7 +9163,7 @@
     dataType: string
     default:
     - '""'
-    description: Application allowed active
+    description: Application allowed active READ
     enums: []
     list: false
     name: xAllowActive
@@ -9139,7 +9176,7 @@
     dataType: string
     default:
     - '""'
-    description: Application desired active, 1 = Active
+    description: Application desired active, 1 = Active READ
     enums: []
     list: false
     name: xDesiredMode
@@ -9152,7 +9189,7 @@
     dataType: string
     default:
     - '""'
-    description: Application status, 1 = Active 0 = OFF
+    description: Application status, 1 = Active 0 = OFF WRITE
     enums: []
     list: false
     name: yStatus
@@ -9170,7 +9207,7 @@
     dataType: string
     default:
     - '""'
-    description: Measurement tag
+    description: Measurement tag READ
     enums: []
     list: false
     name: xMeas
@@ -9183,7 +9220,7 @@
     dataType: string
     default:
     - '""'
-    description: Not valid, 1 = Not valid
+    description: Not valid, 1 = Not valid READ
     enums: []
     list: false
     name: xNotValid
@@ -9196,7 +9233,7 @@
     dataType: string
     default:
     - '""'
-    description: CV desired active from PCDA. 1 = Active 0 = Tracking
+    description: CV desired active from PCDA. 1 = Active 0 = Tracking READ
     enums: []
     list: false
     name: xDesiredActive
@@ -9209,7 +9246,7 @@
     dataType: string
     default:
     - '""'
-    description: Cv active tag
+    description: Cv active tag WRITE
     enums: []
     list: false
     name: yActive
@@ -9222,7 +9259,7 @@
     dataType: string
     default:
     - '""'
-    description: Set point
+    description: Set point READ
     enums: []
     list: false
     name: xSetpoint
@@ -9235,7 +9272,7 @@
     dataType: string
     default:
     - '""'
-    description: High limit
+    description: High limit READ
     enums: []
     list: false
     name: xHighLimit
@@ -9248,7 +9285,7 @@
     dataType: string
     default:
     - '""'
-    description: Low limit
+    description: Low limit READ
     enums: []
     list: false
     name: xLowLimit
@@ -9261,7 +9298,7 @@
     dataType: string
     default:
     - '""'
-    description: Set point
+    description: Set point WRITE
     enums: []
     list: false
     name: ySetpoint
@@ -9274,7 +9311,7 @@
     dataType: string
     default:
     - '""'
-    description: High limit
+    description: High limit WRITE
     enums: []
     list: false
     name: yHighLimit
@@ -9287,7 +9324,7 @@
     dataType: string
     default:
     - '""'
-    description: Low limit
+    description: Low limit WRITE
     enums: []
     list: false
     name: yLowLimit
@@ -9305,7 +9342,7 @@
     dataType: string
     default:
     - '""'
-    description: Measurement
+    description: Measurement READ
     enums: []
     list: false
     name: xMeas
@@ -9318,7 +9355,7 @@
     dataType: string
     default:
     - '""'
-    description: Not valid tag. 1 = Not Valid
+    description: Not valid tag. 1 = Not Valid READ
     enums: []
     list: false
     name: xNotValid
@@ -9331,7 +9368,7 @@
     dataType: string
     default:
     - '""'
-    description: DV desired active from PCDA. 1 = Active 0 = OFF
+    description: DV desired active from PCDA. 1 = Active 0 = OFF READ
     enums: []
     list: false
     name: xDesiredTracking
@@ -9344,7 +9381,7 @@
     dataType: string
     default:
     - '""'
-    description: DV in tracking written to PCDA. 1 = Tracking
+    description: DV in tracking written to PCDA. 1 = Tracking WRITE
     enums: []
     list: false
     name: yTracking
@@ -9362,7 +9399,7 @@
     dataType: string
     default:
     - '""'
-    description: Measurement tag to write
+    description: Measurement WRITE
     enums: []
     list: false
     name: yMeas
@@ -9375,7 +9412,7 @@
     dataType: string
     default:
     - '""'
-    description: Not valid tag. 1 = Not Valid
+    description: Not valid tag. 1 = Not Valid WRITE
     enums: []
     list: false
     name: yNotValid
@@ -9393,7 +9430,7 @@
     dataType: string
     default:
     - '""'
-    description: Measurement
+    description: Measurement READ
     enums: []
     list: false
     name: xMeas
@@ -9406,7 +9443,7 @@
     dataType: string
     default:
     - '""'
-    description: Not valid, 1 = Not valid
+    description: Not valid, 1 = Not valid READ
     enums: []
     list: false
     name: xNotValid
@@ -9419,7 +9456,7 @@
     dataType: string
     default:
     - '""'
-    description: Process Value
+    description: Process Value READ
     enums: []
     list: false
     name: xProcessValue
@@ -9432,7 +9469,7 @@
     dataType: string
     default:
     - '""'
-    description: Calculated set point
+    description: Calculated set point WRITE
     enums: []
     list: false
     name: yCalcSetpoint
@@ -9445,7 +9482,7 @@
     dataType: string
     default:
     - '""'
-    description: Mv desired active from PCDA. 1 = Active 0 = limited to Tracking
+    description: Mv desired active from PCDA. 1 = Active 0 = limited to Tracking READ
     enums: []
     list: false
     name: xDesiredActive
@@ -9458,7 +9495,7 @@
     dataType: string
     default:
     - '""'
-    description: Mv active written to PCDA. 1 = Active
+    description: Mv active written to PCDA. 1 = Active WRITE
     enums: []
     list: false
     name: yActive
@@ -9471,7 +9508,7 @@
     dataType: string
     default:
     - '""'
-    description: Meas and CV model connected, AUTO = 1
+    description: Meas and CV model connected, AUTO = 1 READ
     enums: []
     list: false
     name: xAuto
@@ -9484,7 +9521,7 @@
     dataType: string
     default:
     - '""'
-    description: Controller in computer mode 1 = COMP
+    description: Controller in computer mode 1 = COMP READ
     enums: []
     list: false
     name: xExtern
@@ -9497,7 +9534,7 @@
     dataType: string
     default:
     - '""'
-    description: Ideal value
+    description: Ideal value READ
     enums: []
     list: false
     name: xIdealValue
@@ -9510,7 +9547,7 @@
     dataType: string
     default:
     - '""'
-    description: High limit
+    description: High limit READ
     enums: []
     list: false
     name: xHighLimit
@@ -9523,7 +9560,7 @@
     dataType: string
     default:
     - '""'
-    description: Low limit
+    description: Low limit READ
     enums: []
     list: false
     name: xLowLimit
@@ -9536,7 +9573,7 @@
     dataType: string
     default:
     - '""'
-    description: Ideal value of manipulated variable
+    description: Ideal value of manipulated variable WRITE
     enums: []
     list: false
     name: yIdealValue
@@ -9549,7 +9586,7 @@
     dataType: string
     default:
     - '""'
-    description: High limit of manipulated variable
+    description: High limit of manipulated variable WRITE
     enums: []
     list: false
     name: yHighLimit
@@ -9562,7 +9599,7 @@
     dataType: string
     default:
     - '""'
-    description: Low limit of manipulated variable
+    description: Low limit of manipulated variable WRITE
     enums: []
     list: false
     name: yLowLimit
@@ -9575,7 +9612,7 @@
     dataType: string
     default:
     - '""'
-    description: Max up of manipulated variable
+    description: Max up of manipulated variable READ
     enums: []
     list: false
     name: xMaxMoveUp
@@ -9588,7 +9625,7 @@
     dataType: string
     default:
     - '""'
-    description: Max down of manipulated variable
+    description: Max down of manipulated variable READ
     enums: []
     list: false
     name: xMaxMoveDown
@@ -9601,7 +9638,7 @@
     dataType: string
     default:
     - '""'
-    description: Windup high tag. 1 = Windup high
+    description: Windup high tag. 1 = Windup high READ
     enums: []
     list: false
     name: xWindupHigh
@@ -9614,7 +9651,7 @@
     dataType: string
     default:
     - '""'
-    description: Windup low tag. 1 = Windup low
+    description: Windup low tag. 1 = Windup low READ
     enums: []
     list: false
     name: xWindupLow
@@ -9627,7 +9664,7 @@
     dataType: string
     default:
     - '""'
-    description: Command controller to computer mode
+    description: Command controller to computer mode WRITE
     enums: []
     list: false
     name: yToComp
@@ -9640,7 +9677,7 @@
     dataType: string
     default:
     - '""'
-    description: Command controller to local mode
+    description: Command controller to local mode WRITE
     enums: []
     list: false
     name: yToLocal
@@ -9671,8 +9708,8 @@
     dataType: string
     default:
     - '""'
-    description: The tag is toggled each step to indicate activity. (toggled each
-      step)
+    description: The tag is toggled each step to indicate activity. WRITE (toggled
+      each step)
     enums: []
     list: false
     name: yPulse
@@ -9798,7 +9835,7 @@
     dataType: string
     default:
     - '""'
-    description: The tag for scheduling time, used to synchronize with OPC time.
+    description: The tag for scheduling time, used to synchronize with OPC time. READ
     enums: []
     list: false
     name: xSchedule
@@ -9811,7 +9848,7 @@
     dataType: string
     default:
     - '""'
-    description: The tag for simulated time, calculated as N * sample time.
+    description: The tag for simulated time, calculated as N * sample time. WRITE
     enums: []
     list: false
     name: ySimTime
@@ -9844,7 +9881,7 @@
     dataType: string
     default:
     - '""'
-    description: Measurement tag to read
+    description: Measurement READ
     enums: []
     list: false
     name: xMeas
@@ -9857,7 +9894,7 @@
     dataType: string
     default:
     - '""'
-    description: Not valid tag.1 = Not Valid
+    description: Not valid tag.1 = Not Valid READ
     enums: []
     list: false
     name: xNotValid
