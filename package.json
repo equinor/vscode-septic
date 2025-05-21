@@ -164,7 +164,14 @@
         "files.encoding": "windows1252",
         "editor.wordWrap": "on",
         "editor.insertSpaces": true
-      }
+      },
+      "hediet.vscode-drawio.customLibraries": [
+        {
+          "entryId": "Septic",
+          "libName": "Septic",
+          "url": "https://raw.githubusercontent.com/equinor/septic-config-generator/refs/heads/main/docs/septic_scratchpad.xml"
+        }
+      ]
     },
     "chatParticipants": [
       {
