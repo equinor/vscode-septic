@@ -41,7 +41,7 @@
         "body": [
             "{% if condition1 %}",
             "\t$1",
-            "{% elseif condition2 %}",
+            "{% elif condition2 %}",
             "\t$2",
             "{% else %}",
             "\t$3",
