@@ -283,7 +283,7 @@
   - '         Text1=  ""'
   - '         Text2=  ""'
   - '          Mode=  ${2|Playback,PlayBack_nomode,BaseCase|}'
-  - '       SkipEvr=  false'
+  - '       SkipEvr=  OFF'
   - '         Nstep=  1'
   description: "Filedata process, playback or basecase comparison of data file, *.dta\r\
     \n  If configured, the filename is taken from Path, else the id is used for filename"
