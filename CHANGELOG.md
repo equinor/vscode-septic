@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.25.7](https://github.com/equinor/vscode-septic/compare/v1.25.6...v1.25.7) (2025-05-21)
+
+
+### 🐛 Bug Fixes
+
+* jinja if else snippet ([#766](https://github.com/equinor/vscode-septic/issues/766)) ([545a084](https://github.com/equinor/vscode-septic/commit/545a0845df21afcbb2a1c2c4b2d8abbdebab32c5))
+
 ## [1.25.6](https://github.com/equinor/vscode-septic/compare/v1.25.5...v1.25.6) (2025-04-30)
 
 
