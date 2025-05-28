@@ -2667,11 +2667,13 @@
     snippet: ${2|Playback,PlayBack_nomode,BaseCase|}
     tags: []
   - calc: false
-    dataType: bool
+    dataType: enum
     default:
-    - 'false'
+    - 'OFF'
     description: Skip reading of all Evrs in playback, both Meas and State
-    enums: []
+    enums:
+    - 'ON'
+    - 'OFF'
     list: false
     name: SkipEvr
     noCnfg: false
