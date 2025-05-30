@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.25.7](https://github.com/equinor/vscode-septic/compare/v1.25.6...v1.25.7) (2025-05-30)
+
+
+### 📚 Documentation
+
+* update Septic documentation for latest ([#762](https://github.com/equinor/vscode-septic/issues/762)) ([8fadddd](https://github.com/equinor/vscode-septic/commit/8fadddd4043639fcb31d4f5d391a64c137544b8a))
+* update Septic documentation for v3.3.0 ([#769](https://github.com/equinor/vscode-septic/issues/769)) ([84db375](https://github.com/equinor/vscode-septic/commit/84db375ad4b99112dd42adf8fa89093050599fb7))
+* update Septic documentation for v3.3.1 ([#770](https://github.com/equinor/vscode-septic/issues/770)) ([d09dbbd](https://github.com/equinor/vscode-septic/commit/d09dbbdd156035817f960d34f94a2225d9c3b972))
+
+
+### 🐛 Bug Fixes
+
+* jinja if else snippet ([#766](https://github.com/equinor/vscode-septic/issues/766)) ([545a084](https://github.com/equinor/vscode-septic/commit/545a0845df21afcbb2a1c2c4b2d8abbdebab32c5))
+
 ## [1.25.6](https://github.com/equinor/vscode-septic/compare/v1.25.5...v1.25.6) (2025-04-30)
 
 
