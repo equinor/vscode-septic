@@ -2223,6 +2223,152 @@
   quality: quality(x)
   retr: -x, 0 if x missing
   signature: neg(x)
+- detailedDescription: "Calculates liquid and gas rates at downstream choke conditions\
+    \ (flash) and returns current Frms and the max\r\n  acceptable Frms.<br>\r\n\r\
+    \n  The calculation is a NeqSim routine that runs in a Graal isolate. The time\
+    \ to complete one calc is around 100ms, but\r\n  can vary widely. Therefore the\
+    \ Graal isolate routine is run in a separate thread.\r\n\r\n  The calc has three\
+    \ modes, selectable with the input parameter \"Mode\".\r\n  - Mode = 0: The calculation\
+    \ is initiated unless it is already running. If already running, nothing is done.\
+    \ The\r\n  returned value in mode 0 is the time spent so far in the thread. If\
+    \ the thread has completed, the calculated values\r\n  are available using modes\
+    \ 1 and 2, and a new calculation is initiated.\r\n  - Mode = 1: The last calculated\
+    \ Frms is returned.\r\n  - Mode = 2: The last calculated F_rms_max is returned."
+  name: neqsimjcafiv
+  parameters:
+  - arity: '1'
+    datatype:
+    - value
+    description: "Slot-index 1-32. Which slot to use for the calculation. Each well\
+      \ should use a dedicated and unique\r\n  slot."
+    direction: in
+    name: Slot
+  - arity: '1'
+    datatype:
+    - value
+    description: "Calc mode 0-2. 0=execute NeqSim calculation thread, 1=get last calculated\
+      \ Frms, 2=get last\r\n  calculated F_rms_max"
+    direction: in
+    name: Mode
+  - arity: '?'
+    datatype:
+    - value
+    description: Fluid index 0-3. 0=default, 1= Skrugard, 2= Havis, 3= Drivis
+    direction: in
+    name: FluidID
+  - arity: '?'
+    datatype:
+    - value
+    description: Gas rate std >= 0 [Sm3/h]
+    direction: in
+    name: Qg
+  - arity: '?'
+    datatype:
+    - value
+    description: Oil rate std >= 0 [Sm3/h]
+    direction: in
+    name: Qo
+  - arity: '?'
+    datatype:
+    - value
+    description: Water rate std >= 0 [Sm3/h]
+    direction: in
+    name: Qw
+  - arity: '?'
+    datatype:
+    - value
+    description: Pressure >= 0 [barg]
+    direction: in
+    name: PT
+  - arity: '?'
+    datatype:
+    - value
+    description: Temperature >= -100 [degC]
+    direction: in
+    name: TT
+  - arity: '?'
+    datatype:
+    - value
+    description: Pipe cross section area > 0.003 [m2]
+    direction: in
+    name: A
+  quality: 'Mode 0: GOOD if all inputs are GOOD, else BAD. Mode > 0: GOOD if the last
+    NeqSim calculation succeeded.'
+  retr: "Mode 0: Time spent performing the calculation. Mode > 0: Output variables\
+    \ from last valid result as defined\r\n  above."
+  signature: neqsimjcafiv()
+- detailedDescription: "Calculates mass balance error, TVP and RVP for export oil,\
+    \ dewpoint temperature for export gas,\r\n  methane content in export gas and\
+    \ the Wobbe index.<br>\r\n\r\n  The calculation is a NeqSim routine that runs\
+    \ in a Graal isolate. The time to complete one calc is around 45s, but\r\n  can\
+    \ vary widely. Therefore the Graal isolate routine is run in a separate thread.\r\
+    \n\r\n  The calc has eight modes, selectable with the input parameter \"Mode\"\
+    .\r\n  - Mode = -1: Detach the running thread and restart the calculation with\
+    \ updated input parameters. The detached\r\n  calculation thread will keep running\
+    \ until it (eventually) completes. Be careful doing this since it may tie up\r\
+    \n  the CPU if running many parallel simulations.\r\n  - Mode = 0: The calculation\
+    \ is initiated unless it is already running. If already running, nothing is done.\
+    \ The\r\n  returned value in mode 0 is the time spent so far in the thread. If\
+    \ the thread has completed, the calculated values\r\n  are available using modes\
+    \ 1-6, and a new calculation is initiated.\r\n  - Mode = 1: Return mass balance\
+    \ error [%]\r\n  - Mode = 2: Return TVP for export oil [bara]\r\n  - Mode = 3:\
+    \ Return RVP for export oil [bara]\r\n  - Mode = 4: Return dewpoint temperature\
+    \ for export gas [degC]\r\n  - Mode = 5: Return methane content in export gas\
+    \ [mol%]\r\n  - Mode = 6: Return Wobbe index of export gas [MJ/m3]"
+  name: neqsimraia
+  parameters:
+  - arity: '1'
+    datatype:
+    - value
+    description: Calc mode -1 to 6. Positive values return results.
+    direction: in
+    name: Mode
+  - arity: '1'
+    datatype:
+    - value
+    description: PDA flow rate [kg/h]
+    direction: in
+    name: Qpda
+  - arity: '1'
+    datatype:
+    - value
+    description: Seat flow rate [kg/h]
+    direction: in
+    name: Qseat
+  - arity: '1'
+    datatype:
+    - value
+    description: Gavea flow rate [kg/h]
+    direction: in
+    name: Qgavea
+  - arity: '1'
+    datatype:
+    - value
+    description: NGL column reboiler temperature [degC]
+    direction: in
+    name: Treboiler
+  - arity: '1'
+    datatype:
+    - value
+    description: 4th stg heater temperature [degC]
+    direction: in
+    name: Theater
+  - arity: '1'
+    datatype:
+    - value
+    description: Expander outlet pressure [bara]
+    direction: in
+    name: Pexpander
+  - arity: '1'
+    datatype:
+    - value
+    description: Number of heat exchangers in dew point process [1 or 2]
+    direction: in
+    name: Nexchangers
+  quality: GOOD
+  retr: Time spent performing the calculation if Mode <= 0, output variables as defined
+    above otherwise.
+  signature: neqsimraia()
 - detailedDescription: Computes the logical not operation on the given input
   name: not
   parameters:
