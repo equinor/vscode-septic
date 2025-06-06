@@ -1396,11 +1396,13 @@
     snippet: ''
     tags: []
   - calc: true
-    dataType: float
+    dataType: enum
     default:
     - 'OFF'
     description: Reset open loop when CV is activated
-    enums: []
+    enums:
+    - 'ON'
+    - 'OFF'
     list: false
     name: ColdStart
     noCnfg: false
