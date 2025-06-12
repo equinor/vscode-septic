@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.25.8](https://github.com/equinor/vscode-septic/compare/v1.25.7...v1.25.8) (2025-06-12)
+
+
+### 🧹 Chores
+
+* add septic library as default to drawio ([#765](https://github.com/equinor/vscode-septic/issues/765)) ([8199c81](https://github.com/equinor/vscode-septic/commit/8199c81a24a76feffb563509607062aaa5706caa))
+
+
+### 📚 Documentation
+
+* update Septic documentation for latest ([#772](https://github.com/equinor/vscode-septic/issues/772)) ([808fb5f](https://github.com/equinor/vscode-septic/commit/808fb5fc6d1a8a8069973809ec92cdfade632197))
+* update Septic documentation for v3.4.1 ([#775](https://github.com/equinor/vscode-septic/issues/775)) ([581f3b0](https://github.com/equinor/vscode-septic/commit/581f3b005dee02d325ff08ce207eb08f083bc52b))
+
 ## [1.25.7](https://github.com/equinor/vscode-septic/compare/v1.25.6...v1.25.7) (2025-05-30)
 
 
