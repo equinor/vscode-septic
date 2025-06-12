@@ -3563,7 +3563,7 @@
 - detailedDescription: "Calculates gas compressibility factor (z factor) for real\
     \ gasses.<br>\r\n\r\n  Based on correlations from \"An efficient correlation for\
     \ calculating compressibility\r\n  factor of natural gases\" by Azizi et al 2010<br>\r\
-    \n  Pseudo reduced properties are calculated by the sutton correlations"
+    \n  Pseudo reduced properties are calculated by the Sutton correlations"
   name: zfac
   parameters:
   - arity: '1'
