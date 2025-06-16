@@ -619,7 +619,7 @@
 - detailedDescription: "Construct the experimental model for use in ExprProc simulator\
     \ from parameters. Cvr and Mvr/Dvr needs to be\r\n  contained in same SmpcAppl/MPCAppl.\r\
     \n  The Laplace transform model is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1\
-    \ + lag2*s) where lead1, delay, lag1 and\r\n  lag2 are given in minutes."
+    \ + lag2*s) where lead1, delay, lag1\r\n  and lag2 are given in minutes."
   name: exprprocmodsched
   parameters:
   - arity: '1'
@@ -1570,7 +1570,7 @@
     \ expressions up to and including the\r\n  last (returned) evaluated expression\
     \ are GOOD, else BAD."
   retr: "Value of evaluated expressions according to condition: if(cond1, expr1, if(cond2,\
-    \ expr2, ..., if(condN, exprN,\r\n  exprf)...)). Retain old value if condition\
+    \ expr2, ..., if(condN,\r\n  exprN, exprf)...)). Retain old value if condition\
     \ is BAD"
   signature: ifelif(cond1, expr1, cond2, expr2, ..., condN, exprN, exprf)
 - detailedDescription: "Function calculates y by linear interpolation of the X,Y pairs.\r\
@@ -2538,7 +2538,7 @@
   parameters: []
   quality: 'BAD:  Nothing saved'
   retr: "0:  Nothing saved. Q = BAD: Reason printed on application .out file, 1: Current\
-    \ sample successfully saved on\r\n  data file XVRID.txt. May be printouts on .out\
+    \ sample successfully saved\r\n  on data file XVRID.txt. May be printouts on .out\
     \ reflecting file actions"
   signature: savedata(XVR,SAVE)
 - detailedDescription: "Selects the value of index from list of elements\r\n  NB!\
