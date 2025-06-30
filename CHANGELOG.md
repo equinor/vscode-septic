@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.25.9](https://github.com/equinor/vscode-septic/compare/v1.25.8...v1.25.9) (2025-06-30)
+
+
+### 👷 CI/CD
+
+* fix invalid path github scripts ([#786](https://github.com/equinor/vscode-septic/issues/786)) ([a00aa6a](https://github.com/equinor/vscode-septic/commit/a00aa6a05e02c8d2600b25e6d675b99af1ce52c8))
+* use bundling for extension ([#785](https://github.com/equinor/vscode-septic/issues/785)) ([e4e5e4c](https://github.com/equinor/vscode-septic/commit/e4e5e4c111554d772256aeb9108900e49c6d2b9d))
+
 ## [1.25.8](https://github.com/equinor/vscode-septic/compare/v1.25.7...v1.25.8) (2025-06-12)
 
 
