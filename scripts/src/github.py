@@ -49,8 +49,7 @@ def get_dir(ref: str, dir: str):
 
 def get_object_files(ref: str):
     paths_src = get_dir(ref, "src")
-    paths_fmu = get_dir(ref, "src/fmusrc")
-    paths = paths_src + paths_fmu
+    paths = paths_src
     paths = [x["path"] for x in paths if x["path"].endswith(".cpp")]
     for path in paths:
         try:
