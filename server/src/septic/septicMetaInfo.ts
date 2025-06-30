@@ -122,11 +122,20 @@ export class SepticMetaInfoProvider {
         return this.snippets;
     }
 
-    private loadCalcsInfo(version: string): Map<string, SepticCalcInfo> {
-        const filePath = path.join(
+    private getBasePublicPath(): string {
+        // Use a different base path for tests if NODE_ENV is 'test'
+        if (process.env.NODE_ENV === "test") {
+            return path.join(__dirname, `../../../public`);
+        }
+        return path.join(
             __dirname,
-            `../../../public/${version.replace(/\./g, "_")}/calcs.yaml`
+            `../public`
         );
+    }
+
+    private loadCalcsInfo(version: string): Map<string, SepticCalcInfo> {
+        const basePath = this.getBasePublicPath();
+        const filePath = path.join(basePath, `${version.replace(/\./g, "_")}`, "calcs.yaml");
         const file = fs.readFileSync(filePath, "utf-8");
         const calcInfo: SepticCalcInfoInput[] = YAML.load(
             file
@@ -151,7 +160,8 @@ export class SepticMetaInfoProvider {
     }
 
     private loadObjectsInfo(): Map<string, SepticObjectInfo> {
-        const filePath = path.join(__dirname, "../../../public/objects.yaml");
+        const basePath = this.getBasePublicPath();
+        const filePath = path.join(basePath, "objects.yaml");
         const file = fs.readFileSync(filePath, "utf-8");
         const objectsInfo: SepticObjectsInfoInput[] = YAML.load(
             file
@@ -184,10 +194,8 @@ export class SepticMetaInfoProvider {
     private loadObjectsDocumentation(
         version: string
     ): Map<string, ISepticObjectDocumentation> {
-        const filePath = path.join(
-            __dirname,
-            `../../../public/${version.replace(/\./g, "_")}/objectsDoc.yaml`
-        );
+        const basePath = this.getBasePublicPath();
+        const filePath = path.join(basePath, `${version.replace(/\./g, "_")}`, "objectsDoc.yaml");
         const file = fs.readFileSync(filePath, "utf-8");
         const objectsDoc: SepticObjectDocumentationInput[] = YAML.load(
             file
@@ -200,10 +208,8 @@ export class SepticMetaInfoProvider {
     }
 
     private loadSnippets(version: string): CompletionItem[] {
-        const filePath = path.join(
-            __dirname,
-            `../../../public/${version.replace(/\./g, "_")}/snippets.yaml`
-        );
+        const basePath = this.getBasePublicPath();
+        const filePath = path.join(basePath, `${version.replace(/\./g, "_")}`, "snippets.yaml");
         const file = fs.readFileSync(filePath, "utf-8");
         const objectSnippets: SepticObjectSnippet[] = YAML.load(
             file
