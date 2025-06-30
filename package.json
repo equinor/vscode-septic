@@ -24,7 +24,7 @@
   "activationEvents": [
     "onLanguage:septic"
   ],
-  "main": "./client/out/extension",
+  "main": "./dist/extension",
   "contributes": {
     "commands": [
       {
@@ -392,16 +392,21 @@
     "instrument": true
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run package",
+    "check-types": "tsc --noEmit",
     "clean": "rimraf ./server/out/public && rimraf ./client/out/test/fixtures",
     "copy-files": "copyfiles -u 2 ./server/src/public/** ./server/out",
     "copy-files-fixtures": "copyfiles -u 2 \"./client/src/test/fixtures/**/*\" ./client/out/",
-    "compile": "tsc -b && npm run clean && npm run copy-files && npm run copy-files-fixtures",
-    "watch": "tsc -b -w",
+    "compile": "npm run check-types && node esbuild.js",
+    "compile-tests": "tsc -p ./client && tsc -p ./server && npm run copy-files-fixtures && npm run copy-files",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && node esbuild.js --production",
     "lint": "eslint -c eslint.config.mjs ./client/src ./server/src",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-    "e2e-test": "npm run compile && node ./client/out/test/runTest",
-    "test": "mocha --require ts-node/register server/src/test/**/*.test.ts ",
+    "e2e-test": "npm run compile && npm run compile-tests && node ./client/out/test/runTest",
+    "test": "cross-env NODE_ENV=test mocha --require ts-node/register server/src/test/**/*.test.ts ",
     "test_with_coverage": "npm run compile && nyc mocha --require ts-node/register --require source-map-support/register --recursive server/src/test/**/*.test.ts "
   },
   "dependencies": {
@@ -419,8 +424,11 @@
     "@typescript-eslint/parser": "8.14.0",
     "chai": "^4.5.0",
     "copyfiles": "^2.4.1",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.25.5",
     "eslint": "^9.14.0",
     "mocha": "^11.1.0",
+    "npm-run-all": "^4.1.5",
     "nyc": "^17.1.0",
     "rimraf": "^6.0.1",
     "source-map-support": "^0.5.21",

@@ -17,7 +17,9 @@
             "name": "Attach to server",
             "port": 6009,
             "request": "attach",
-            "skipFiles": ["<node_internals>/**"],
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
             "type": "node"
         },
         {
@@ -25,8 +27,12 @@
             "type": "extensionHost",
             "request": "launch",
             "runtimeExecutable": "${execPath}",
-            "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
-            "outFiles": ["${workspaceRoot}/client/out/**/*.js"],
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}"
+            ],
+            "outFiles": [
+                "${workspaceRoot}/dist/**"
+            ],
             "preLaunchTask": "npm: watch"
         },
         {
@@ -39,13 +45,18 @@
                 "--extensionTestsPath=${workspaceFolder}/client/out/test/index",
                 "${workspaceRoot}/client/src/test/fixtures"
             ],
-            "outFiles": ["${workspaceFolder}/client/out/test/**/*.js"],
-            "preLaunchTask": "npm: watch"
+            "outFiles": [
+                "${workspaceFolder}/client/out/test/**/*.js"
+            ],
+            "preLaunchTask": "npm: compile-tests"
         },
         {
             "type": "node",
             "request": "launch",
             "name": "Unittest",
+            "env": {
+                "NODE_ENV": "test"
+            },
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
             "args": [
                 "-r",
