@@ -173,7 +173,10 @@
           "libName": "Septic",
           "url": "https://raw.githubusercontent.com/equinor/septic-config-generator/refs/heads/main/docs/septic_scratchpad.xml"
         }
-      ]
+      ],
+      "yaml.schemas": {
+        "https://raw.githubusercontent.com/equinor/septic-config-generator/refs/heads/main/docs/config.schema.json": "/*/scg/*.yaml"
+      }
     },
     "chatParticipants": [
       {
