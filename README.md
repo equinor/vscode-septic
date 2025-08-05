@@ -112,6 +112,8 @@ Use the [Issue tracker](https://github.com/equinor/vscode-septic/issues).
 
 -   [Snippet Creator][snippet-creator]: For creating your own snippets.
 -   [Color Highlight][color-highlight]: Handy if you want to experiment with colors since it can display the color of hex triplets, e.g. "#f0f0f0", inside VSCode.
+-   [YAML][vscode-yaml]: Useful for validating and providing help for SCG config files. Septic extension provides default configuration of schemas for this extension.
 
 [snippet-creator]: https://marketplace.visualstudio.com/items?itemName=wware.snippet-creator
 [color-highlight]: https://marketplace.visualstudio.com/items?itemName=naumovs.color-highlight
+[vscode-yaml]: https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml
