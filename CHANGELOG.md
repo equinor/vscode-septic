@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.25.10](https://github.com/equinor/vscode-septic/compare/v1.25.9...v1.25.10) (2025-08-06)
+
+
+### 🐛 Bug Fixes
+
+* ignore diagnostics paths for standalone cnfgs ([#794](https://github.com/equinor/vscode-septic/issues/794)) ([f82fc72](https://github.com/equinor/vscode-septic/commit/f82fc729b984981889ae8b6239258727452ca75f))
+
 ## [1.25.9](https://github.com/equinor/vscode-septic/compare/v1.25.8...v1.25.9) (2025-08-05)
 
 
