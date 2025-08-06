@@ -104,7 +104,7 @@ async function publishDiagnosticsCnfg(uri: string): Promise<void> {
     );
     let diagnostics = await langService.provideDiagnostics(uri, cnfg);
     if (codes) {
-        diagnostics = diagnostics.filter((diag) => diag.code && codes.includes(diag.code as string));
+        diagnostics = diagnostics.filter((diag) => diag.code && !codes.includes(diag.code as string));
     }
     connection.sendDiagnostics({ uri: uri, diagnostics: diagnostics });
 }
