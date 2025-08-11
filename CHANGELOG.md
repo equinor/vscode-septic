@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.25.11](https://github.com/equinor/vscode-septic/compare/v1.25.10...v1.25.11) (2025-08-11)
+
+
+### 🧹 Chores
+
+* **deps:** bump actions/download-artifact from 4 to 5 ([#797](https://github.com/equinor/vscode-septic/issues/797)) ([faa6ea8](https://github.com/equinor/vscode-septic/commit/faa6ea8aa5438ac8edeae44b8eebe960a0e8d8a9))
+
 ## [1.25.10](https://github.com/equinor/vscode-septic/compare/v1.25.9...v1.25.10) (2025-08-06)
 
 
