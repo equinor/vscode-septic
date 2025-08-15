@@ -265,20 +265,6 @@
     with same ID
   prefix: exprproc
 - body:
-  - '  FMUModl:       ${1:FMUModlName}'
-  - '         Text1=  ""'
-  - '         Text2=  ""'
-  - '       FMUname=  "${2}.fmu"'
-  description: FMUModl
-  prefix: fmumodl
-- body:
-  - '  FMUProc:       ${1:FMUProcName}'
-  - '         Text1=  ""'
-  - '         Text2=  ""'
-  - '       FMUname=  "${2}.fmu"'
-  description: FMUProc
-  prefix: fmuproc
-- body:
   - '  FdtaProc:      ${1:FdtaProcName}'
   - '         Text1=  ""'
   - '         Text2=  ""'
