@@ -328,7 +328,7 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
         };
     }
 
-    private setAttributes(attrs: SepticAttributeDocumentation[]) {
+    private setAttributes(attrs: SepticAttributeDocumentationInput[]) {
         for (const attr of attrs) {
             if (attr.calc) {
                 this.publicAttributes.push(attr.name);
@@ -346,7 +346,7 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
                         name: attr.name + pf,
                         tags: attr.tags,
                         calc: attr.calc,
-                        postfix: [],
+                        basename: attr.name,
                         noCnfg: false,
                         default: attr.default,
                         snippet: attr.snippet,
@@ -354,8 +354,23 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
                     });
                 });
                 continue;
+            } else {
+                this.attributes.push({
+                        description: attr.description,
+                        dataType: attr.dataType,
+                        enums: attr.enums,
+                        list: attr.list,
+                        name: attr.name,
+                        tags: attr.tags,
+                        calc: attr.calc,
+                        basename: attr.name,
+                        noCnfg: false,
+                        default: attr.default,
+                        snippet: attr.snippet,
+                        noSnippet: attr.noSnippet,
+                    });
             }
-            this.attributes.push(attr);
+            ;
         }
     }
 }
@@ -405,12 +420,27 @@ export interface SepticObjectDoc {
 
 export interface SepticObjectDocumentationInput {
     name: string;
-    attributes: SepticAttributeDocumentation[];
+    attributes: SepticAttributeDocumentationInput[];
     description: string;
     parents: string[];
 }
 
 export interface SepticAttributeDocumentation {
+    description: string;
+    dataType: string;
+    enums: string[];
+    list: boolean;
+    name: string;
+    tags: string[];
+    calc: boolean;
+    basename: string;
+    noCnfg: boolean;
+    default: string[];
+    snippet: string;
+    noSnippet: boolean;
+}
+
+export interface SepticAttributeDocumentationInput {
     description: string;
     dataType: string;
     enums: string[];

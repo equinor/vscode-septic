@@ -11,6 +11,7 @@ import {
     validateObjectParent,
     validateAttribute,
     validateComments,
+    validateObject,
 } from "../language-service/diagnosticsProvider";
 import {
     AttributeValue,
@@ -771,7 +772,8 @@ describe("Test validation of attributes", () => {
         const diag = validateAttribute(
             cnfg.objects[0].attributes[0],
             doc,
-            mvrDoc!
+            mvrDoc!,
+            new Map()
         );
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.missingAttributeValue);
@@ -786,7 +788,8 @@ describe("Test validation of attributes", () => {
         const diag = validateAttribute(
             cnfg.objects[0].attributes[0],
             doc,
-            mvrDoc!
+            mvrDoc!,
+            new Map()
         );
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
@@ -801,7 +804,8 @@ describe("Test validation of attributes", () => {
         const diag = validateAttribute(
             cnfg.objects[0].attributes[0],
             doc,
-            mvrDoc!
+            mvrDoc!,
+            new Map()
         );
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
@@ -816,7 +820,8 @@ describe("Test validation of attributes", () => {
         const diag = validateAttribute(
             cnfg.objects[0].attributes[0],
             doc,
-            mvrDoc!
+            mvrDoc!,
+            new Map()
         );
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
@@ -831,7 +836,8 @@ describe("Test validation of attributes", () => {
         const diag = validateAttribute(
             cnfg.objects[0].attributes[0],
             doc,
-            mvrDoc!
+            mvrDoc!,
+            new Map()
         );
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
@@ -846,7 +852,8 @@ describe("Test validation of attributes", () => {
         const diag = validateAttribute(
             cnfg.objects[0].attributes[0],
             doc,
-            mvrDoc!
+            mvrDoc!,
+            new Map()
         );
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.unexpectedList);
@@ -861,7 +868,8 @@ describe("Test validation of attributes", () => {
         const diag = validateAttribute(
             cnfg.objects[0].attributes[0],
             doc,
-            mvrDoc!
+            mvrDoc!,
+            new Map()
         );
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.missingListAttribute);
@@ -876,7 +884,8 @@ describe("Test validation of attributes", () => {
         const diag = validateAttribute(
             cnfg.objects[0].attributes[0],
             doc,
-            mvrDoc!
+            mvrDoc!,
+            new Map()
         );
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.mismatchLengthList);
@@ -892,7 +901,8 @@ describe("Test validation of attributes", () => {
         const diag = validateAttribute(
             cnfg.objects[0].attributes[0],
             doc,
-            mvrDoc!
+            mvrDoc!,
+            new Map()
         );
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.missingListLengthValue);
@@ -907,7 +917,8 @@ describe("Test validation of attributes", () => {
         const diag = validateAttribute(
             cnfg.objects[0].attributes[0],
             doc,
-            mvrDoc!
+            mvrDoc!,
+            new Map()
         );
         expect(diag.length).to.equal(0);
     });
@@ -921,7 +932,8 @@ describe("Test validation of attributes", () => {
         const diag = validateAttribute(
             cnfg.objects[0].attributes[0],
             doc,
-            mvrDoc!
+            mvrDoc!,
+            new Map()
         );
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.unknownAttribute);
@@ -937,10 +949,71 @@ describe("Test validation of attributes", () => {
         const diag = validateAttribute(
             cnfg.objects[0].attributes[0],
             doc,
-            mvrDoc!
+            mvrDoc!,
+            new Map()
         );
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidCharInString);
+    });
+});
+
+describe("Test check for duplicated attributes", () => {
+    it("Expect diagnostics for duplicated attributes", () => {
+        const text = `
+            Mvr: Test
+            Text1= ""
+            Text1= ""
+        `;
+        const objectDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation("Mvr");
+        const objectInfo = SepticMetaInfoProvider.getInstance().getObject("Mvr");
+        const doc = new MockDocument(text);
+        const cnfg = parseSepticSync(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectDoc!,
+            objectInfo
+        );
+        expect(diag.filter(d => d.code === DiagnosticCode.duplicatedAttribute).length).to.equal(2);
+    });
+    it("Expect diagnostics for duplicated attributes with different prefix", () => {
+        const text = `
+            Mvr: Test
+            HighOn= 10
+            HighOff= 12
+        `;
+        const objectDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation("Mvr");
+        const objectInfo = SepticMetaInfoProvider.getInstance().getObject("Mvr");
+        const doc = new MockDocument(text);
+        const cnfg = parseSepticSync(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectDoc!,
+            objectInfo
+        );
+        expect(diag.filter(d => d.code === DiagnosticCode.duplicatedAttribute).length).to.equal(2);
+    });
+    it("Expect no diagnostics for non duplicated attributes", () => {
+        const text = `
+            Mvr: Test
+            Text1= ""
+            Text2= ""
+        `;
+        const objectDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation("Mvr");
+        const objectInfo = SepticMetaInfoProvider.getInstance().getObject("Mvr");
+        const doc = new MockDocument(text);
+        const cnfg = parseSepticSync(doc.getText());
+        const diag = validateObject(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectDoc!,
+            objectInfo
+        );
+        expect(diag.filter(d => d.code === DiagnosticCode.duplicatedAttribute).length).to.equal(0);
     });
 });
 
@@ -956,7 +1029,7 @@ describe("Test validation of attribute data type", () => {
             list: false,
             calc: false,
             noCnfg: false,
-            postfix: [],
+            basename: "",
             name: "",
             tags: [],
             default: [""],
