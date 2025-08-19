@@ -70,12 +70,21 @@ export class AlgParser extends Parser<AlgTokenType, AlgExpr> {
     parse(): AlgExpr {
         const expr = this.comparison();
         if (!this.isAtEnd()) {
-            this.error("Calculation can only contain a single expression", {
-                start: this.tokens[0].start,
-                end: this.tokens[this.tokens.length - 1].end,
-                type: AlgTokenType.error,
-                content: "",
-            });
+            if (this.peek().type === AlgTokenType.rightParen) {
+                this.error("Mismatch in opening and closing parentheses", {
+                    start: this.tokens[0].start,
+                    end: this.peek().end,
+                    type: AlgTokenType.error,
+                    content: "",
+                });
+            } else {
+                this.error("Calculation can only contain a single expression", {
+                    start: this.tokens[0].start,
+                    end: this.tokens[this.tokens.length - 1].end,
+                    type: AlgTokenType.error,
+                    content: "",
+                });
+            }
         }
         return expr;
     }
