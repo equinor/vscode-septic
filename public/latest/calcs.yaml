@@ -617,7 +617,7 @@
   retr: The exponential for x
   signature: exp(x)
 - detailedDescription: "Construct the experimental model for use in ExprProc simulator\
-    \ from parameters. Cvr and Mvr/Dvr needs to be\r\n  contained in same SmpcAppl/MPCAppl.\r\
+    \ from parameters. Cvr and Mvr/Dvr needs to be\r\n  contained in same SmpcAppl/MPCAppl/NMPCAppl.\r\
     \n  The Laplace transform model is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1\
     \ + lag2*s) where lead1, delay, lag1 and\r\n  lag2 are given in minutes."
   name: exprprocmodsched
@@ -705,9 +705,9 @@
     description: = 1 commands to set Scale, any other value gives an unaffected Scale
     direction: in
     name: Apply
-  quality: GOOD if CV and IV belongs to same SmpcAppl/MPCAppl with an ExprModl and
-    Amodl exists, else BAD
-  retr: "steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl/MPCAppl\
+  quality: GOOD if CV and IV belongs to same SmpcAppl/MPCAppl/NMPCAppl with an ExprModl
+    and Amodl exists, else BAD
+  retr: "steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl/MPCAppl/NMPCAppl\
     \ with an ExprModl\r\n  and Amodl exists, else 0"
   signature: exprprocmodset(CVRTAG,IVRTAG,Scale,Apply)
 - detailedDescription: First order filter. Resets to first good value after bad raw
@@ -1225,6 +1225,7 @@
     datatype:
     - smpcappl
     - mpcappl
+    - nmpcappl
     - dmmyappl
     description: Application of id for application to check
     direction: in
@@ -1240,6 +1241,7 @@
     datatype:
     - smpcappl
     - mpcappl
+    - nmpcappl
     - dmmyappl
     description: Application id of application to check
     direction: in
@@ -1570,7 +1572,7 @@
     \ expressions up to and including the\r\n  last (returned) evaluated expression\
     \ are GOOD, else BAD."
   retr: "Value of evaluated expressions according to condition: if(cond1, expr1, if(cond2,\
-    \ expr2, ..., if(condN, exprN,\r\n  exprf)...)). Retain old value if condition\
+    \ expr2, ..., if(condN,\r\n  exprN, exprf)...)). Retain old value if condition\
     \ is BAD"
   signature: ifelif(cond1, expr1, cond2, expr2, ..., condN, exprN, exprf)
 - detailedDescription: "Function calculates y by linear interpolation of the X,Y pairs.\r\
@@ -1969,7 +1971,7 @@
   signature: minselection(n, v1, v2, ..., vN, use1, use2, ..., useN)
 - detailedDescription: "Lower all Xvr.Mode to TRACKING if not sufficiently many of\
     \ them are ACTIVE. Typical use is to assure at\r\n  least minimum number of Mvrs\
-    \ ACTIVE to run SmpcAppl/MPCAppl."
+    \ ACTIVE to run SmpcAppl/MPCAppl/NMPCAppl."
   name: modechk
   parameters:
   - arity: '1'
@@ -1990,7 +1992,7 @@
   retr: Number of active Xvrs
   signature: modechk(numMinActive, xvr1, xvr2, ..., xvrN)
 - detailedDescription: "Set the gain modifier in the active experimental model. Cvr\
-    \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl."
+    \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl/NMPCAppl."
   name: modgain
   parameters:
   - arity: '1'
@@ -2023,7 +2025,7 @@
   signature: modgain(cvr, xvr, gain, apply)
 - detailedDescription: "Get the steady state gain from the active experimental model,\
     \ including the scaling by\r\n  the gain modifier (Scale) set by CalcModSet. Cvr\
-    \ and Mvr/Dvr needs to be contained in same SmpcAppl/MPCAppl."
+    \ and Mvr/Dvr needs to be contained in same SmpcAppl/MPCAppl/NMPCAppl."
   name: modget
   parameters:
   - arity: '1'
@@ -2043,9 +2045,9 @@
   retr: Steady state gain from xvr towards cvr if valid model, else 0
   signature: modget(cvr, xvr)
 - detailedDescription: "Construct the experimental model from parameters. Cvr and\
-    \ Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl. The Laplace transform\
-    \ model is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1 + lag2*s)\r\n  where\
-    \ lead1, delay, lag1 and lag2 are given in minutes."
+    \ Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl/NMPCAppl. The Laplace\
+    \ transform model is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1 + lag2*s)\r\
+    \n  where lead1, delay, lag1 and lag2 are given in minutes."
   name: modsched
   parameters:
   - arity: '1'
@@ -2102,7 +2104,7 @@
   retr: Update the model between given cvr and xvr
   signature: modsched(cvr, xvr, gain, lag1, lag2, lead1, delay, apply)
 - detailedDescription: "Set the gain modifier in the active experimental model. Cvr\
-    \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl."
+    \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl/NMPCAppl."
   name: modset
   parameters:
   - arity: '1'
@@ -2177,8 +2179,8 @@
   quality: GOOD if valid Xvr (Optionally member variable), otherwise BAD
   retr: Moving standard deviation over given time horizon, 0 if quality BAD
   signature: movestd(xvr, nsamp)
-- detailedDescription: "Gets the calculated Mvr from an SmpcAppl or MPCAppl.\r\n \
-    \ Mvr.Mode == ACTIVE -> Mvr.mget(pAppl->N+1) else Mvr.Meas(pAppl->N)"
+- detailedDescription: "Gets the calculated Mvr from an SmpcAppl, MPCAppl or NMPCAppl.\r\
+    \n  Mvr.Mode == ACTIVE -> Mvr.mget(pAppl->N+1) else Mvr.Meas(pAppl->N)"
   name: mvmget
   parameters:
   - arity: '1'
@@ -2538,7 +2540,7 @@
   parameters: []
   quality: 'BAD:  Nothing saved'
   retr: "0:  Nothing saved. Q = BAD: Reason printed on application .out file, 1: Current\
-    \ sample successfully saved on\r\n  data file XVRID.txt. May be printouts on .out\
+    \ sample successfully saved\r\n  on data file XVRID.txt. May be printouts on .out\
     \ reflecting file actions"
   signature: savedata(XVR,SAVE)
 - detailedDescription: "Selects the value of index from list of elements\r\n  NB!\
@@ -2580,6 +2582,7 @@
     datatype:
     - smpcappl
     - mpcappl
+    - nmpcappl
     - dmmyappl
     description: Application id for application to update
     direction: in
@@ -2758,6 +2761,24 @@
   quality: GOOD if valid xvr and value otherwise BAD
   retr: Resulting fulf rescale value
   signature: setfulfrescale(xvr, value)
+- detailedDescription: Sets the FulfUniScale member of a Cvr object.
+  name: setfulfuniscale
+  parameters:
+  - arity: '1'
+    datatype:
+    - value
+    description: Cvr Tag
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Value to set
+    direction: in
+    name: value
+  quality: GOOD if valid cvr and value otherwise BAD
+  retr: Resulting fulfuniscale value
+  signature: setfulfuniscale(cvr, value)
 - detailedDescription: Sets the quality of the input to GOOD
   name: setgood
   parameters:
@@ -3469,8 +3490,9 @@
   quality: quality(x)
   retr: Hyperbolic tangent of x
   signature: tanh(x)
-- detailedDescription: Timer with delay on rising edge on condition. Output is TRUE
-    after N samples of TRUE input.
+- detailedDescription: "This function delays the activation of the output signal for\
+    \ a specific number of samples after a\r\n   rising edge condition. Output becomes\
+    \ TRUE at N samples of TRUE input."
   name: timeron
   parameters:
   - arity: '1'

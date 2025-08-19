@@ -1197,8 +1197,8 @@
     description: Description
     enums:
     - NOTRANS
-    - NONE
-    - LINDIST
+    - DISTLN
+    - LOG
     list: false
     name: TransformType
     noCnfg: false
@@ -2510,96 +2510,6 @@
   name: ExprProc
   parents:
   - System
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ''
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ''
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Name of FMU model
-    enums: []
-    list: false
-    name: FMUname
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: '"${2}.fmu"'
-    tags: []
-  description: FMUModl
-  name: FMUModl
-  parents:
-  - System
-- attributes:
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text
-    enums: []
-    list: false
-    name: Text1
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ''
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Free text
-    enums: []
-    list: false
-    name: Text2
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: ''
-    tags: []
-  - calc: false
-    dataType: string
-    default:
-    - '""'
-    description: Name of FMU model
-    enums: []
-    list: false
-    name: FMUname
-    noCnfg: false
-    nosnippet: false
-    postfix: []
-    snippet: '"${2}.fmu"'
-    tags: []
-  description: FMUProc
-  name: FMUProc
-  parents:
-  - SmpcAppl
-  - MPCAppl
-  - NMPCAppl
 - attributes:
   - calc: false
     dataType: string
