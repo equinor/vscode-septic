@@ -330,16 +330,22 @@ export interface ComparisonSettings {
         attributes: string[];
     }[];
 }
-const defaultFilePath = path.join(
-    __dirname,
-    `../../../public/defaultComparisonSetting.yaml`
-);
+
+function getDefaultSettingsPath(): string {
+    if (process.env.NODE_ENV === "test") {
+        return path.join(__dirname, `../../../public/defaultComparisonSetting.yaml`);
+    }
+    return path.join(
+        __dirname,
+        `../public/defaultComparisonSetting.yaml`
+    );
+}
 
 function loadComparisonSettings(
     filePath: string
 ): ComparisonSettings | undefined {
     if (filePath === "Default") {
-        filePath = defaultFilePath;
+        filePath = getDefaultSettingsPath();
     }
     const fileStream = fs.readFileSync(filePath, "utf-8");
     const comparisonSettingsInput: ComparisonSettingsInput = YAML.load(
