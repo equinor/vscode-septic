@@ -83,6 +83,7 @@ export enum DiagnosticCode {
     unexpectedList = "E307",
     invalidCharInString = "E308",
     badCycleInAlgs = "W308",
+    duplicatedAttribute = "W309",
     invalidParentObject = "W401",
     missingParentObject = "W402",
     missingReference = "W501",
@@ -677,10 +678,32 @@ export function validateObject(
     diagnostics.push(
         ...validateObjectReferences(obj, doc, refProvider, objectInfo)
     );
+    const baseAttributes: Map<string, Attribute[]> = new Map();
     for (const attr of obj.attributes) {
-        diagnostics.push(...validateAttribute(attr, doc, objectDoc));
+        diagnostics.push(...validateAttribute(attr, doc, objectDoc, baseAttributes));
     }
+    checkForDuplicateAttributes(baseAttributes, diagnostics, doc);
     return diagnostics;
+}
+
+function checkForDuplicateAttributes(baseAttributes: Map<string, Attribute[]>, diagnostics: Diagnostic[], doc: ITextDocument) {
+    for (const [key, attrs] of baseAttributes) {
+        if (attrs.length > 1) {
+            for (const attr of attrs) {
+                diagnostics.push(
+                    createDiagnostic(
+                        DiagnosticSeverity.Warning,
+                        {
+                            start: doc.positionAt(attr.start),
+                            end: doc.positionAt(attr.start + attr.key.length),
+                        },
+                        `Duplicated attribute ${key}`,
+                        DiagnosticCode.duplicatedAttribute
+                    )
+                );
+            }
+        }
+    }
 }
 
 export function validateIdentifier(
@@ -1009,7 +1032,8 @@ export function validateEvrReferences(
 export function validateAttribute(
     attr: Attribute,
     doc: ITextDocument,
-    objectDoc: ISepticObjectDocumentation
+    objectDoc: ISepticObjectDocumentation,
+    duplicates: Map<string, Attribute[]>
 ): Diagnostic[] {
     const attrDoc = objectDoc.getAttribute(attr.key);
     const diagnostics: Diagnostic[] = [];
@@ -1025,6 +1049,12 @@ export function validateAttribute(
                 DiagnosticCode.unknownAttribute
             ),
         ];
+    }
+    const duplicateAttrs = duplicates.get(attrDoc.basename);
+    if (duplicateAttrs) {
+        duplicateAttrs.push(attr);
+    } else {
+        duplicates.set(attrDoc.basename, [attr]);
     }
     const attrValues = attr.getAttrValues();
     diagnostics.push(
