@@ -241,8 +241,7 @@ export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
     }
 
     if (objectDef.refs.identifier && obj.identifier) {
-        const isObjRef = obj.isXvr || obj.isOpcXvr;
-        const isCalcPvr = obj.isType("CalcPvr");
+        const isObjRef = obj.isXvr || obj.isOpcXvr || obj.isType("CalcPvr");
         const ref: SepticReference = createSepticReference(
             obj.identifier.name,
             {
@@ -253,9 +252,7 @@ export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
             isObjRef ? obj : undefined,
             isObjRef
                 ? ReferenceType.xvr
-                : isCalcPvr
-                    ? ReferenceType.calc
-                    : ReferenceType.identifier
+                : ReferenceType.identifier
         );
         xvrRefs.push(ref);
     }

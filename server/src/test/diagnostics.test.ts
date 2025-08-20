@@ -1432,6 +1432,26 @@ describe("Test validation of object references", () => {
         );
         expect(diagFilterd.length).to.equal(0);
     });
+    it("Expect diagnostics for duplicate calcpvr", () => {
+        const text = `
+            CalcPvr:  Test 
+            
+            CalcPvr: Test
+		`;
+        const doc = new MockDocument(text);
+        const cnfg = parseSepticSync(doc.getText());
+        const objectInfo = metaInfoProvider.getObject("CalcPvr");
+        const diag = validateObjectReferences(
+            cnfg.objects[0],
+            doc,
+            cnfg,
+            objectInfo!
+        );
+        const diagFilterd = diag.filter(
+            (d) => d.code === DiagnosticCode.duplicate
+        );
+        expect(diagFilterd.length).to.equal(1);
+    });
 });
 
 describe("Test validation of object structure", () => {

@@ -4,7 +4,7 @@ import {
     getDeclaration,
     getReferences,
 } from "../language-service/referenceProvider";
-import { Attribute, AttributeValue, extractReferencesFromObj, Identifier, parseSepticSync, ReferenceType, SepticObject, SepticTokenType } from "../septic";
+import { Attribute, AttributeValue, extractReferencesFromObj, Identifier, parseSepticSync, SepticObject, SepticTokenType } from "../septic";
 import { MockDocument } from "./util";
 
 describe("Test extraction of refs from config file", () => {
@@ -289,8 +289,6 @@ describe("Test getReferences", () => {
         calcPvr.addAttribute(algAttribute);
         const refs = extractReferencesFromObj(calcPvr);
         expect(refs.length).to.equal(1);
-        expect(refs[0].type).to.equal(ReferenceType.calc);
-
     });
     it("Expect references from alg that contain other jinja expressions", () => {
         const alg = `"maxselection(6,{% for Wellname in (wells | unpack('Wellname'))[:5] %} {{ Wellname }}Priority,{% endfor %} -1,{% for Wellname in (wells | unpack('Wellname'))[:5] %} {{ Wellname }}Priority < {{ CurrentWell }}Priority,{% endfor %} 1)"`
