@@ -906,12 +906,26 @@ function validateCalcPvrIdentifierReferences(
     refProvider: SepticReferenceProvider,
     doc: ITextDocument
 ): Diagnostic[] {
+    const diagnostics: Diagnostic[] = [];
+    if (refProvider.validateRef(obj.identifier!.name, hasDuplicateCalcPvrRef)) {
+        diagnostics.push(
+            createDiagnostic(
+                DiagnosticSeverity.Warning,
+                {
+                    start: doc.positionAt(obj.identifier!.start),
+                    end: doc.positionAt(obj.identifier!.end),
+                },
+                `Duplicate CalcPvr with name: ${obj.identifier!.name}`,
+                DiagnosticCode.duplicate
+            )
+        );
+    }
     const referenceToEvr = refProvider.validateRef(
         obj.identifier!.name,
         hasReferenceToEvr
     );
     if (referenceToEvr) {
-        return [];
+        return diagnostics;
     }
     const referenceToXvr = refProvider.validateRef(
         obj.identifier!.name,
@@ -926,7 +940,7 @@ function validateCalcPvrIdentifierReferences(
     const code = referenceToXvr
         ? DiagnosticCode.invalidReference
         : DiagnosticCode.missingReference;
-    return [
+    diagnostics.push(
         createDiagnostic(
             severity,
             {
@@ -936,7 +950,8 @@ function validateCalcPvrIdentifierReferences(
             message,
             code
         ),
-    ];
+    );
+    return diagnostics;
 }
 
 function validateUAApplReferences(
@@ -968,6 +983,19 @@ const hasReferenceToEvr: RefValidationFunction = (refs: SepticReference[]) => {
     for (const ref of refs) {
         if (ref.obj?.isType("Evr")) {
             return true;
+        }
+    }
+    return false;
+};
+
+const hasDuplicateCalcPvrRef: RefValidationFunction = (refs: SepticReference[]) => {
+    let seen = false;
+    for (const ref of refs) {
+        if (ref.obj?.isType("CalcPvr")) {
+            if (seen) {
+                return true;
+            }
+            seen = true;
         }
     }
     return false;
