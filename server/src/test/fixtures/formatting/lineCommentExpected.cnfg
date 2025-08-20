@@ -1,0 +1,9 @@
+  CalcPvr:       Test
+         Text1=  ""
+         Text2=  ""
+           Alg=  "1+1" // Test line comment
+
+  CalcPvr:       Something
+         Text1=  ""
+         Text2=  ""
+           Alg=  "2"
