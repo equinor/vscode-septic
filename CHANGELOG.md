@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.26.0](https://github.com/equinor/vscode-septic/compare/v1.25.10...v1.26.0) (2025-08-20)
+
+
+### 🧹 Chores
+
+* **deps:** bump @vscode/prompt-tsx from 0.3.0-alpha.13 to 0.4.0-alpha.5 ([#805](https://github.com/equinor/vscode-septic/issues/805)) ([850e1d6](https://github.com/equinor/vscode-septic/commit/850e1d6d93e9a08d12f8da97eca043669e52bc55))
+* **deps:** bump actions/checkout from 4 to 5 ([#799](https://github.com/equinor/vscode-septic/issues/799)) ([369f4a4](https://github.com/equinor/vscode-septic/commit/369f4a4307c794fd7b77d9d20070c05ff3cfcdfa))
+* **deps:** bump actions/download-artifact from 4 to 5 ([#797](https://github.com/equinor/vscode-septic/issues/797)) ([faa6ea8](https://github.com/equinor/vscode-septic/commit/faa6ea8aa5438ac8edeae44b8eebe960a0e8d8a9))
+* **deps:** bump chai and @types/chai ([#750](https://github.com/equinor/vscode-septic/issues/750)) ([7b16dfa](https://github.com/equinor/vscode-septic/commit/7b16dfa28185646b009bccbac0a8d2fcc967ed50))
+* **deps:** bump cross-env from 7.0.3 to 10.0.0 ([#806](https://github.com/equinor/vscode-septic/issues/806)) ([c61bb9a](https://github.com/equinor/vscode-septic/commit/c61bb9a06934ed539ac03a1d6c42ba518bce6045))
+* **deps:** bump eslint from 9.14.0 to 9.33.0 ([#796](https://github.com/equinor/vscode-septic/issues/796)) ([1f7a5b4](https://github.com/equinor/vscode-septic/commit/1f7a5b448e68c209651aab6d685cb76b06f82653))
+* **deps:** security upgrade urllib3 from 2.0.7 to 2.5.0 ([#782](https://github.com/equinor/vscode-septic/issues/782)) ([749a1f1](https://github.com/equinor/vscode-septic/commit/749a1f1fd9a38ce552f9970ba25ca4b1911b3f28))
+
+
+### 📚 Documentation
+
+* update Septic documentation for latest ([#779](https://github.com/equinor/vscode-septic/issues/779)) ([00d3df0](https://github.com/equinor/vscode-septic/commit/00d3df08de498549ce1f4ee1d7b17936258ad690))
+
+
+### ✨ Features
+
+* add diagnostic for duplicated attributes ([#804](https://github.com/equinor/vscode-septic/issues/804)) ([f200099](https://github.com/equinor/vscode-septic/commit/f200099afb6c9ef36413234c235ea62a21c93a58))
+* add diagnostics for duplicate calcpvrs ([#810](https://github.com/equinor/vscode-septic/issues/810)) ([61f5c48](https://github.com/equinor/vscode-septic/commit/61f5c483e1550b45583adc662a9b56189ebf0cd5))
+
+
+### 🐛 Bug Fixes
+
+* formatting of line comments ([#803](https://github.com/equinor/vscode-septic/issues/803)) ([449b00c](https://github.com/equinor/vscode-septic/commit/449b00c3e2082dd07e845779a0d3c91bdc957102))
+* improve error message for extra parentheses ([#808](https://github.com/equinor/vscode-septic/issues/808)) ([659c42a](https://github.com/equinor/vscode-septic/commit/659c42a40e02ab2412320aac56d6dffa46339367))
+* path to default compare config ([#802](https://github.com/equinor/vscode-septic/issues/802)) ([6bc731a](https://github.com/equinor/vscode-septic/commit/6bc731a2bddf0e0b15cb9a2f4d2edd2bae9ac789))
+
 ## [1.25.10](https://github.com/equinor/vscode-septic/compare/v1.25.9...v1.25.10) (2025-08-06)
 
 
