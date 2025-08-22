@@ -1039,7 +1039,7 @@ export function validateEvrReferences(
     }
     const refs = refProvider.getXvrRefs(name);
     const calcPvrRef = refs?.find((ref) => {
-        return ref.type === ReferenceType.calc;
+        return ref.type === ReferenceType.calc || ref.obj?.type === "CalcPvr";
     });
     if (!calcPvrRef) {
         return [
