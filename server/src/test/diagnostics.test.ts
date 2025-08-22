@@ -1249,7 +1249,7 @@ describe("Test validation of object references", () => {
 		`;
         const doc = new MockDocument(text);
         const cnfg = parseSepticSync(doc.getText());
-        const objectInfo = metaInfoProvider.getObject("MvrList");
+        const objectInfo = metaInfoProvider.getObject("Evr");
         const diag = validateObjectReferences(
             cnfg.objects[0],
             doc,
@@ -1266,7 +1266,7 @@ describe("Test validation of object references", () => {
 		`;
         const doc = new MockDocument(text);
         const cnfg = parseSepticSync(doc.getText());
-        const objectInfo = metaInfoProvider.getObject("MvrList");
+        const objectInfo = metaInfoProvider.getObject("Evr");
         const diag = validateObjectReferences(
             cnfg.objects[0],
             doc,
@@ -1278,13 +1278,13 @@ describe("Test validation of object references", () => {
     it("Expect no diagnostics for evr used in calc", () => {
         const text = `
             Evr: TestEvr
-            UserInput= DOUBLE 
+            UserInput= OFF 
             
             CalcPvr: TestEvr
 		`;
         const doc = new MockDocument(text);
         const cnfg = parseSepticSync(doc.getText());
-        const objectInfo = metaInfoProvider.getObject("MvrList");
+        const objectInfo = metaInfoProvider.getObject("Evr");
         const diag = validateObjectReferences(
             cnfg.objects[0],
             doc,
@@ -1296,14 +1296,14 @@ describe("Test validation of object references", () => {
     it("Expect no diagnostics for evr used in calc", () => {
         const text = `
             Evr: TestEvr
-            UserInput= DOUBLE 
+            UserInput= OFF 
             
             CalcPvr: Test
             Alg= "TestEvr"
 		`;
         const doc = new MockDocument(text);
         const cnfg = parseSepticSync(doc.getText());
-        const objectInfo = metaInfoProvider.getObject("MvrList");
+        const objectInfo = metaInfoProvider.getObject("Evr");
         const diag = validateObjectReferences(
             cnfg.objects[0],
             doc,
