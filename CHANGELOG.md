@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.26.1](https://github.com/equinor/vscode-septic/compare/v1.26.0...v1.26.1) (2025-08-22)
+
+
+### 🐛 Bug Fixes
+
+* bug with incorrect missing usage diagnostics for evrs ([#814](https://github.com/equinor/vscode-septic/issues/814)) ([a25f9c8](https://github.com/equinor/vscode-septic/commit/a25f9c8fc23039dc5970c2a1e35672840e62dd33))
+
 ## [1.26.0](https://github.com/equinor/vscode-septic/compare/v1.25.10...v1.26.0) (2025-08-20)
 
 
