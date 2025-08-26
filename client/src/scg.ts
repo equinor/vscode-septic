@@ -23,43 +23,60 @@ export interface ScgConfig {
 	}[]
 }
 
+export async function readScgConfig(filePath: string): Promise<ScgConfig | undefined> {
+	try {
+		const uri = vscode.Uri.file(filePath);
+		const document = await vscode.workspace.openTextDocument(uri);
+		const fileContents = document.getText();
+		const data = yaml.load(fileContents) as ScgConfig;
+		if (!validateScgConfig(data)) {
+			return undefined;
+		}
+		return data;
+	} catch {
+		return undefined;
+	}
+}
+
+export function validateScgConfig(data: ScgConfig): boolean {
+	if (!data.templatepath || typeof data.templatepath !== 'string') return false;
+	if (data.adjustspacing && typeof data.adjustspacing !== 'boolean') return false;
+	if (data.verifycontent && typeof data.verifycontent !== 'boolean') return false;
+
+	// Validate optional fields
+	if (data.outputfile && typeof data.outputfile !== 'string') return false;
+
+	// Validate counters
+	if (data.counters) {
+		for (const counter of data.counters) {
+			if (typeof counter.name !== 'string' || typeof counter.value !== 'number') return false;
+		}
+	}
+
+	// Validate sources
+	for (const source of data.sources) {
+		if (typeof source.filename !== 'string' || typeof source.id !== 'string') return false;
+		if (source.sheet && typeof source.sheet !== 'string') return false;
+		if (source.delimiter && typeof source.delimiter !== 'string') return false;
+	}
+
+	// Validate layout
+	for (const layout of data.layout) {
+		if (typeof layout.name !== 'string') return false;
+		if (layout.source && typeof layout.source !== 'string') return false;
+		if (layout.include && typeof layout.include !== 'object') return false;
+	}
+
+	return true;
+}
+
 export async function isScgConfig(filePath: string): Promise<boolean> {
 	try {
 		const uri = vscode.Uri.file(filePath);
 		const document = await vscode.workspace.openTextDocument(uri);
 		const fileContents = document.getText();
 		const data = yaml.load(fileContents) as ScgConfig;
-
-		// Validate required fields
-		if (!data.templatepath || typeof data.templatepath !== 'string') return false;
-		if (data.adjustspacing && typeof data.adjustspacing !== 'boolean') return false;
-		if (data.verifycontent && typeof data.verifycontent !== 'boolean') return false;
-
-		// Validate optional fields
-		if (data.outputfile && typeof data.outputfile !== 'string') return false;
-
-		// Validate counters
-		if (data.counters) {
-			for (const counter of data.counters) {
-				if (typeof counter.name !== 'string' || typeof counter.value !== 'number') return false;
-			}
-		}
-
-		// Validate sources
-		for (const source of data.sources) {
-			if (typeof source.filename !== 'string' || typeof source.id !== 'string') return false;
-			if (source.sheet && typeof source.sheet !== 'string') return false;
-			if (source.delimiter && typeof source.delimiter !== 'string') return false;
-		}
-
-		// Validate layout
-		for (const layout of data.layout) {
-			if (typeof layout.name !== 'string') return false;
-			if (layout.source && typeof layout.source !== 'string') return false;
-			if (layout.include && typeof layout.include !== 'object') return false;
-		}
-
-		return true;
+		return validateScgConfig(data);
 	} catch {
 		return false;
 	}

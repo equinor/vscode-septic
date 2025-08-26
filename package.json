@@ -178,6 +178,29 @@
         "https://raw.githubusercontent.com/equinor/septic-config-generator/refs/heads/main/docs/config.schema.json": "/*/scg/*.yaml"
       }
     },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "septic",
+          "title": "Septic",
+          "icon": "./images/septic_black_and_white.svg"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "septic-scg",
+        "contents": "This view give an overview of the current Septic Config Generator project."
+      }
+    ],
+    "views": {
+      "septic": [
+        {
+          "id": "septic-scg",
+          "name": "SCG"
+        }
+      ]
+    },
     "chatParticipants": [
       {
         "id": "septic.chat",

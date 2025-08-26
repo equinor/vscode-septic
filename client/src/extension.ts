@@ -15,6 +15,7 @@ import { registerAllCommands } from './commands';
 import { registerRequestHandlers } from "./requests";
 import { registerChatTools } from './tools';
 import { registerSepticChatParticipant } from './chatParticipant';
+import { SCGProjectProvider } from './scgProject';
 
 let client: LanguageClient;
 
@@ -52,6 +53,18 @@ export function activate(context: vscode.ExtensionContext) {
         serverOptions,
         clientOptions
     );
+
+    const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
+        ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
+    const scgProjectProvider = new SCGProjectProvider(context, rootPath);
+    vscode.window.registerTreeDataProvider('septic-scg', scgProjectProvider);
+    vscode.window.onDidChangeActiveTextEditor((e) => {
+        if (!e) {
+            return;
+        }
+        scgProjectProvider.refresh();
+    })
+    vscode.commands.registerCommand('septic.refreshEntry', () => scgProjectProvider.refresh());
     registerChatTools(context, client)
     registerAllCommands(context, client);
     registerRequestHandlers(client);
