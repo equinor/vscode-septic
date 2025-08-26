@@ -25,6 +25,10 @@ export class SCGProjectProvider implements vscode.TreeDataProvider<SCG> {
 			return Promise.resolve(this.getSCGFiles());
 		}
 		if (element.type === SCGType.Config && element.config) {
+			const layout = new SCG("Layout", SCGType.Layout, vscode.TreeItemCollapsibleState.Expanded, element.config, element.file);
+			const sources = new SCG("Sources", SCGType.Sources, vscode.TreeItemCollapsibleState.Collapsed, element.config, element.file);
+			return Promise.resolve([layout, sources]);
+		} else if (element.type === SCGType.Layout) {
 			const items: SCG[] = [];
 			for (const layout of element.config.layout) {
 				const fileDir = element.file ? path.dirname(element.file) : '';
@@ -35,7 +39,19 @@ export class SCGProjectProvider implements vscode.TreeDataProvider<SCG> {
 				}));
 			}
 			return Promise.resolve(items);
-		} else {
+		} else if (element.type === SCGType.Sources) {
+			const items: SCG[] = [];
+			for (const source of element.config.sources) {
+				const fileDir = element.file ? path.dirname(element.file) : '';
+				items.push(new SCG(source.id, SCGType.Source, vscode.TreeItemCollapsibleState.None, undefined, undefined, {
+					command: 'vscode.open',
+					title: 'Open Source',
+					arguments: [vscode.Uri.file(fileDir + "/" + source.filename)]
+				}));
+			}
+			return Promise.resolve(items);
+		}
+		else {
 			return Promise.resolve([]);
 		}
 
@@ -63,7 +79,10 @@ export class SCGProjectProvider implements vscode.TreeDataProvider<SCG> {
 
 enum SCGType {
 	Config = "Config",
-	Template = "Template"
+	Template = "Template",
+	Layout = "Layout",
+	Sources = "Sources",
+	Source = "Source"
 }
 
 export class SCG extends vscode.TreeItem {
@@ -83,8 +102,14 @@ export class SCG extends vscode.TreeItem {
 		this.contextValue = this.type;
 		if (type === SCGType.Config && file) {
 			this.iconPath = new vscode.ThemeIcon("settings-view-bar-icon");
-		} else {
+		} else if (type === SCGType.Layout) {
+			this.iconPath = new vscode.ThemeIcon("folder");
+		} else if (type === SCGType.Template) {
 			this.iconPath = new vscode.ThemeIcon("file");
+		} else if (type === SCGType.Sources) {
+			this.iconPath = new vscode.ThemeIcon("folder");
+		} else if (type === SCGType.Source) {
+			this.iconPath = new vscode.ThemeIcon("outline-view-icon");
 		}
 	}
 }
