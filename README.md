@@ -91,16 +91,14 @@ Adding the Septic extension to VS Code allows you to do the following when loadi
 
 The extension supports Septic projects that uses the Septic Config Generator (SCG). The SCG-config file for the project is loaded and the relevant `.cnfg` files (required to be in the templates folder) listed in the layout section are loaded into a common context that shares references etc.
 
-Septic Co-Pilot features powered by Large Language Models (LLM): 
-- Chat participant `@septic`. The following commands are available:
-    - `/calculation` which is specialized in generating calculations based on the description from the user. The suggested calculations are quality checked by the Septic diagnostics provider to increase the quality of the output.
-    - `/scg` which is specialized in understanding Septic Config Generator (scg) contexts and sources. The participant can be used to modify scg sources on csv format e.g. add a new well to an scg source or update the values of certain cells. Use the scg-configs that are attached to the context or select the scg-config based on the open Septic config if non is attached.
-- Code action for generating Alg attribute for a CalcPvr based on the Text1 description is available by selecting the relevant CalcPvr with the cursor and selecting `Generate Calc: CalcPvrName` in the code action options. The generated calc is filled in the Alg field.The suggested calculation is quality checked by the Septic diagnostics provider to increase the quality of the output. Co-Pilot reiterate up to 3 times based on the feedback from the diagnostics provider.
+Septic extension also contributes a set of tools that can be used for enhancing the capablities of the Github Co-Pilot for Septic configuration
 
-`@septic` use tools to perform different actions. The different commands acts as agents with a given set of tools that it can call. A tool can be used to gather more context (e.g. get documentation of all functions), perform non-modifying actions (e.g. validate a given calculation) or perform modifying actions (e.g. add/delete a row to an scg source). The participant will always ask for permission before using a tool with a modifying action, while all tools related to gathering context and non-modifying actions will be called without asking for permission.
+Tools:
 
-Septic documentation is used as input to the Large Language Models (LLM) powering the Co-Pilot and is selected based on the selected version in the workspace.
+-   #getSepticFunctionDocumentation: Gets documentation of all functions available for use in calculations
+-   #getSepticVariables: Gets all valid references to objects in the current Septic context selected based on the open file
 
+Septic extension also contributes a set of pre-made prompts and instruction files for Github Co-Pilot. The command `Septic: Copy Instructions and Prompts to .github` can be used to copy the files into the current workspace.
 
 ## Feedback and contributions
 
