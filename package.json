@@ -206,9 +206,9 @@
           "septic",
           "calculation"
         ],
-        "toolReferenceName": "validateCalculation",
+        "toolReferenceName": "validateSepticCalculation",
         "displayName": "Validate Calculation",
-        "modelDescription": "Validates a given calculation and outputs the diagnostic messages that describes the errors and warnings in the calculation.",
+        "modelDescription": "Validates a given calculation in the Septic config language and returns a list of diagnostic messages that describes the errors in the calculation. Should only be used for Septic calculations in .cnfg files.",
         "canBeReferencedInPrompt": true,
         "inputSchema": {
           "type": "object",
@@ -234,9 +234,10 @@
           "septic",
           "calculation"
         ],
-        "toolReferenceName": "getFunctions",
-        "displayName": "Get functions",
-        "modelDescription": "Returns a list of all available functions for use in calculations with description.",
+        "toolReferenceName": "getSepticFunctionDocumentation",
+        "displayName": "Get Septic functions documentation",
+        "modelDescription": "Get the documentation for all functions that can be used in Septic calculations. Returns a list with all function with documentation of arguments and functional description.",
+        "canBeReferencedInPrompt": true,
         "inputSchema": {
           "type": "object",
           "properties": {}
@@ -248,9 +249,10 @@
           "septic",
           "calculation"
         ],
-        "toolReferenceName": "getVariables",
-        "displayName": "Get variables in context",
-        "modelDescription": "Returns a list of all available variables in the current context with description.",
+        "toolReferenceName": "getSepticVariables",
+        "displayName": "Get Septic variables in context",
+        "modelDescription": "Gets all valid references to objects in the current Septic context. Returns a list of all available variables in the current context with description.",
+        "canBeReferencedInPrompt": true,
         "inputSchema": {
           "type": "object",
           "properties": {}
