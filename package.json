@@ -178,27 +178,6 @@
         "https://raw.githubusercontent.com/equinor/septic-config-generator/refs/heads/main/docs/config.schema.json": "/*/scg/*.yaml"
       }
     },
-    "chatParticipants": [
-      {
-        "id": "septic.chat",
-        "name": "septic",
-        "fullName": "Septic",
-        "description": "Chatbot for Septic related topics using tools",
-        "isSticky": true,
-        "commands": [
-          {
-            "name": "calculation",
-            "description": "Generate and update calculations in Septic configs",
-            "isSticky": true
-          },
-          {
-            "name": "scg",
-            "description": "Documentation, updates and answers realted to Septic Config Generator tool and contexts",
-            "isSticky": true
-          }
-        ]
-      }
-    ],
     "languageModelTools": [
       {
         "name": "septic-tools_validate_calculation",
