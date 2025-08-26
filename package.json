@@ -42,6 +42,10 @@
       {
         "command": "septic.generateCalc",
         "title": "Septic: Generate Calc"
+      },
+      {
+        "command": "septic.copyInstructionsAndPrompts",
+        "title": "Septic: Copy Instructions and Prompts to .github"
       }
     ],
     "configuration": {
