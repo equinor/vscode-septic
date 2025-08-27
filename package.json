@@ -42,6 +42,11 @@
       {
         "command": "septic.generateCalc",
         "title": "Septic: Generate Calc"
+      },
+      {
+        "command": "septic.scgtree.addTemplate",
+        "title": "Septic: Insert template below",
+        "icon": "$(add)"
       }
     ],
     "configuration": {
@@ -198,6 +203,15 @@
         {
           "id": "septic-scg",
           "name": "SCG"
+        }
+      ]
+    },
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "septic.scgtree.addTemplate",
+          "when": "view == septic-scg && (viewItem == Template || viewItem == Layout)",
+          "group": "inline"
         }
       ]
     },

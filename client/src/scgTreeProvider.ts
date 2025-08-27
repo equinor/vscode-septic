@@ -24,13 +24,13 @@ export class ScgTreeProvider implements vscode.TreeDataProvider<ScgNode> {
 			return Promise.resolve(this.getScgConfigs());
 		}
 		if (element.type === ScgTreeItemType.Config && element.config) {
-			const layout = new ScgNode("Layout", ScgTreeItemType.Layout, vscode.TreeItemCollapsibleState.Expanded, element.config, element.file);
-			const sources = new ScgNode("Sources", ScgTreeItemType.Sources, vscode.TreeItemCollapsibleState.Collapsed, element.config, element.file);
+			const layout = new ScgNode("Layout", ScgTreeItemType.Layout, vscode.TreeItemCollapsibleState.Expanded, element.config);
+			const sources = new ScgNode("Sources", ScgTreeItemType.Sources, vscode.TreeItemCollapsibleState.Collapsed, element.config);
 			return Promise.resolve([layout, sources]);
 		} else if (element.type === ScgTreeItemType.Layout) {
 			const items: ScgNode[] = [];
 			for (const layout of element.config.layout) {
-				items.push(new ScgNode(layout.name, ScgTreeItemType.Template, vscode.TreeItemCollapsibleState.None, undefined, undefined, {
+				items.push(new ScgNode(layout.name, ScgTreeItemType.Template, vscode.TreeItemCollapsibleState.None, element.config, {
 					command: 'vscode.open',
 					title: 'Open Template',
 					arguments: [vscode.Uri.file(element.config.templatepath + "/" + layout.name || '')]
@@ -41,7 +41,7 @@ export class ScgTreeProvider implements vscode.TreeDataProvider<ScgNode> {
 			const items: ScgNode[] = [];
 			const sources = await element.config.getSources();
 			for (const source of sources) {
-				items.push(new ScgNode(source.id, ScgTreeItemType.Source, vscode.TreeItemCollapsibleState.Collapsed, element.config, element.file, {
+				items.push(new ScgNode(source.id, ScgTreeItemType.Source, vscode.TreeItemCollapsibleState.Collapsed, element.config, {
 					command: 'vscode.open',
 					title: 'Open Source',
 					arguments: [vscode.Uri.file(source.filename)]
@@ -71,7 +71,7 @@ export class ScgTreeProvider implements vscode.TreeDataProvider<ScgNode> {
 		const treeItems: ScgNode[] = [];
 		scgConfigs.sort((a, b) => a.name.localeCompare(b.name));
 		for (const config of scgConfigs) {
-			treeItems.push(new ScgNode(config.name, ScgTreeItemType.Config, vscode.TreeItemCollapsibleState.Expanded, config, config.path, {
+			treeItems.push(new ScgNode(config.name, ScgTreeItemType.Config, vscode.TreeItemCollapsibleState.Expanded, config, {
 				command: 'vscode.open',
 				title: 'Open Config',
 				arguments: [vscode.Uri.file(config.path)]
@@ -79,21 +79,9 @@ export class ScgTreeProvider implements vscode.TreeDataProvider<ScgNode> {
 		}
 		return treeItems;
 	}
-
-	private async getScgSourceColumns(file: string, delimiter: string): Promise<string[]> {
-		try {
-			const content = await vscode.workspace.fs.readFile(vscode.Uri.file(file));
-			const lines = content.toString().split('\n');
-			const headers = lines[0].split(delimiter);
-			return headers.map(header => header.trim());
-		} catch (error) {
-			console.error('Error reading source columns:', error);
-			return [];
-		}
-	}
 }
 
-enum ScgTreeItemType {
+export enum ScgTreeItemType {
 	Config = "Config",
 	Template = "Template",
 	Layout = "Layout",
@@ -108,8 +96,7 @@ export class ScgNode extends vscode.TreeItem {
 		public readonly label: string,
 		public readonly type: ScgTreeItemType,
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-		public readonly config?: ScgConfig,
-		public readonly file?: string,
+		public readonly config: ScgConfig,
 		public readonly command?: vscode.Command
 	) {
 		super(label, collapsibleState);
@@ -117,7 +104,7 @@ export class ScgNode extends vscode.TreeItem {
 		this.tooltip = `${this.label}`;
 		this.description = this.type;
 		this.contextValue = this.type;
-		if (type === ScgTreeItemType.Config && file) {
+		if (type === ScgTreeItemType.Config) {
 			this.iconPath = new vscode.ThemeIcon("settings-view-bar-icon");
 		} else if (type === ScgTreeItemType.Layout) {
 			this.iconPath = new vscode.ThemeIcon("folder");

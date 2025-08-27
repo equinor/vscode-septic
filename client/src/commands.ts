@@ -7,6 +7,7 @@ import * as vscode from "vscode";
 import * as protocol from "./protocol";
 import { LanguageClient } from "vscode-languageclient/node";
 import { generateCalc } from './lm';
+import { ScgNode, ScgTreeItemType } from './scgTreeProvider';
 
 export function registerCommandDetectCycles(context: vscode.ExtensionContext, client: LanguageClient) {
 	vscode.commands.registerCommand("septic.detectCycles", async () => {
@@ -129,17 +130,44 @@ export function registerCommandOpcTagList(context: vscode.ExtensionContext, clie
 	});
 }
 
+export function registerCommandAddTemplate() {
+	vscode.commands.registerCommand('septic.scgtree.addTemplate', async (node: ScgNode) => {
+		if (!node) {
+			return;
+		}
+		const template = await vscode.window.showInputBox({
+			placeHolder: "Enter template name"
+		});
+		const sources = (await node.config.getSources()).map(s => ({ label: s.id, value: s.id }));
+		const source = await vscode.window.showQuickPick([{ label: 'No source', value: undefined }, ...sources]);
+		if (!template || !source) {
+			return;
+		}
+		const elementToInsertAfter = node.type === ScgTreeItemType.Template ? node.label : undefined;
+		node.config.addTemplate(template, source.value, elementToInsertAfter);
+		await node.config.save()
+		const wsedit = new vscode.WorkspaceEdit();
+		const filePath = vscode.Uri.file(node.config.templatepath + "/" + template);
+		wsedit.createFile(filePath);
+		await vscode.workspace.applyEdit(wsedit);
+		await vscode.window.showTextDocument(filePath, {
+			preserveFocus: false,
+		});
+	});
+}
+
 export function registerCommandGenerateCalc(context: vscode.ExtensionContext, client: LanguageClient) {
 	vscode.commands.registerCommand("septic.generateCalc", async (description: string, start: vscode.Position, end: vscode.Position) => {
 		generateCalc(client, description, start, end);
 	});
 }
 
-export function registerAllCommands(context: vscode.ExtensionContext, client: LanguageClient) {
+export function registerCommands(context: vscode.ExtensionContext, client: LanguageClient) {
 	registerCommandDetectCycles(context, client);
 	registerCommandCompareCnfg(context, client);
 	registerCommandOpcTagList(context, client);
 	registerCommandGenerateCalc(context, client);
+	registerCommandAddTemplate();
 }
 
 

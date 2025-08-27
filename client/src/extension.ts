@@ -11,7 +11,7 @@ import {
     ServerOptions,
     TransportKind,
 } from "vscode-languageclient/node";
-import { registerAllCommands } from './commands';
+import { registerCommands } from './commands';
 import { registerRequestHandlers } from "./requests";
 import { registerChatTools } from './tools';
 import { registerSepticChatParticipant } from './chatParticipant';
@@ -64,9 +64,8 @@ export function activate(context: vscode.ExtensionContext) {
         }
         scgProjectProvider.refresh();
     })
-    vscode.commands.registerCommand('septic.refreshEntry', () => scgProjectProvider.refresh());
     registerChatTools(context, client)
-    registerAllCommands(context, client);
+    registerCommands(context, client);
     registerRequestHandlers(client);
     registerSepticChatParticipant(context, client)
     client.start();

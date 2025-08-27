@@ -68,6 +68,28 @@ export class ScgConfig {
 		return sources;
 	}
 
+	public addTemplate(name: string, source: string | undefined, elementToInsertAfter: string | undefined = undefined): void {
+		if (elementToInsertAfter) {
+			const index = this.config.layout.findIndex(item => item.name === elementToInsertAfter);
+			if (index !== -1) {
+				this.config.layout.splice(index + 1, 0, {
+					name,
+					source: source,
+				});
+			} else {
+				this.config.layout.push({
+					name,
+					source: source,
+				});
+			}
+		} else {
+			this.config.layout.push({
+				name,
+				source: source,
+			});
+		}
+	}
+
 	get name(): string {
 		return path.basename(this.path);
 	}
