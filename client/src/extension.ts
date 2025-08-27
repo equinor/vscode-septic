@@ -54,7 +54,6 @@ export function activate(context: vscode.ExtensionContext) {
         serverOptions,
         clientOptions
     );
-
     const appManager = new SepticApplicationManager(context);
     const scgProjectProvider = new ScgTreeProvider(appManager);
     vscode.window.registerTreeDataProvider('septic-scg', scgProjectProvider);
@@ -65,7 +64,7 @@ export function activate(context: vscode.ExtensionContext) {
         scgProjectProvider.refresh();
     })
     registerChatTools(context, client)
-    registerCommands(context, client);
+    registerCommands(context, client, scgProjectProvider);
     registerRequestHandlers(client);
     registerSepticChatParticipant(context, client)
     client.start();

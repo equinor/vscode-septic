@@ -7,7 +7,7 @@ import * as vscode from "vscode";
 import * as protocol from "./protocol";
 import { LanguageClient } from "vscode-languageclient/node";
 import { generateCalc } from './lm';
-import { ScgNode, ScgTreeItemType } from './scgTreeProvider';
+import { ScgNode, ScgTreeItemType, ScgTreeProvider } from './scgTreeProvider';
 
 export function registerCommandDetectCycles(context: vscode.ExtensionContext, client: LanguageClient) {
 	vscode.commands.registerCommand("septic.detectCycles", async () => {
@@ -130,7 +130,7 @@ export function registerCommandOpcTagList(context: vscode.ExtensionContext, clie
 	});
 }
 
-export function registerCommandAddTemplate() {
+export function registerCommandAddTemplate(scgTreeProvider: ScgTreeProvider) {
 	vscode.commands.registerCommand('septic.scgtree.addTemplate', async (node: ScgNode) => {
 		if (!node) {
 			return;
@@ -139,7 +139,7 @@ export function registerCommandAddTemplate() {
 			placeHolder: "Enter template name"
 		});
 		const sources = (await node.config.getSources()).map(s => ({ label: s.id, value: s.id }));
-		const source = await vscode.window.showQuickPick([{ label: 'No source', value: undefined }, ...sources]);
+		const source = await vscode.window.showQuickPick([{ label: 'No source', value: undefined }, ...sources], { title: "Select source for template" });
 		if (!template || !source) {
 			return;
 		}
@@ -153,6 +153,22 @@ export function registerCommandAddTemplate() {
 		await vscode.window.showTextDocument(filePath, {
 			preserveFocus: false,
 		});
+		scgTreeProvider.refresh();
+	});
+}
+
+export function registerCommandDeleteTemplate(scgTreeProvider: ScgTreeProvider) {
+	vscode.commands.registerCommand('septic.scgtree.removeTemplate', async (node: ScgNode) => {
+		if (!node) {
+			return;
+		}
+		const confirmation = await vscode.window.showQuickPick([{ label: 'No', value: false, picked: true }, { label: 'Yes', value: true }], { title: "Confirm removal" });
+		if (!confirmation || !confirmation.value) {
+			return;
+		}
+		node.config.removeTemplate(node.label);
+		await node.config.save()
+		scgTreeProvider.refresh();
 	});
 }
 
@@ -162,12 +178,13 @@ export function registerCommandGenerateCalc(context: vscode.ExtensionContext, cl
 	});
 }
 
-export function registerCommands(context: vscode.ExtensionContext, client: LanguageClient) {
+export function registerCommands(context: vscode.ExtensionContext, client: LanguageClient, scgTreeProvider: ScgTreeProvider) {
 	registerCommandDetectCycles(context, client);
 	registerCommandCompareCnfg(context, client);
 	registerCommandOpcTagList(context, client);
 	registerCommandGenerateCalc(context, client);
-	registerCommandAddTemplate();
+	registerCommandAddTemplate(scgTreeProvider);
+	registerCommandDeleteTemplate(scgTreeProvider);
 }
 
 

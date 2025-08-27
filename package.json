@@ -47,6 +47,11 @@
         "command": "septic.scgtree.addTemplate",
         "title": "Septic: Insert template below",
         "icon": "$(add)"
+      },
+      {
+        "command": "septic.scgtree.removeTemplate",
+        "title": "Septic: Remove template",
+        "icon": "$(remove)"
       }
     ],
     "configuration": {
@@ -211,6 +216,11 @@
         {
           "command": "septic.scgtree.addTemplate",
           "when": "view == septic-scg && (viewItem == Template || viewItem == Layout)",
+          "group": "inline"
+        },
+        {
+          "command": "septic.scgtree.removeTemplate",
+          "when": "view == septic-scg && (viewItem == Template)",
           "group": "inline"
         }
       ]

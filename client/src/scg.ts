@@ -90,6 +90,13 @@ export class ScgConfig {
 		}
 	}
 
+	public removeTemplate(name: string): void {
+		const index = this.config.layout.findIndex(item => item.name === name);
+		if (index !== -1) {
+			this.config.layout.splice(index, 1);
+		}
+	}
+
 	get name(): string {
 		return path.basename(this.path);
 	}
