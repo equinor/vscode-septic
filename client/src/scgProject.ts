@@ -2,57 +2,57 @@ import * as vscode from 'vscode';
 import { findScgConfigFiles, readScgConfig, ScgConfig } from './scg';
 import * as path from 'path';
 
-export class SCGProjectProvider implements vscode.TreeDataProvider<SCG> {
+export class SCGProjectProvider implements vscode.TreeDataProvider<SCGNode> {
 
-	private _onDidChangeTreeData: vscode.EventEmitter<SCG | undefined | void> = new vscode.EventEmitter<SCG | undefined | void>();
-	readonly onDidChangeTreeData: vscode.Event<SCG | undefined | void> = this._onDidChangeTreeData.event;
+	private _onDidChangeTreeData: vscode.EventEmitter<SCGNode | undefined | void> = new vscode.EventEmitter<SCGNode | undefined | void>();
+	readonly onDidChangeTreeData: vscode.Event<SCGNode | undefined | void> = this._onDidChangeTreeData.event;
 
 	refresh(): void {
 		this._onDidChangeTreeData.fire();
 	}
 
-	getTreeItem(element: SCG): vscode.TreeItem {
+	getTreeItem(element: SCGNode): vscode.TreeItem {
 		return element;
 	}
 
-	async getChildren(element?: SCG): Promise<SCG[]> {
+	async getChildren(element?: SCGNode): Promise<SCGNode[]> {
 		if (!element) {
 			return Promise.resolve(this.getSCGFiles());
 		}
-		if (element.type === SCGType.Config && element.config) {
-			const layout = new SCG("Layout", SCGType.Layout, vscode.TreeItemCollapsibleState.Expanded, element.config, element.file);
-			const sources = new SCG("Sources", SCGType.Sources, vscode.TreeItemCollapsibleState.Collapsed, element.config, element.file);
+		if (element.type === SCGTreeItemType.Config && element.config) {
+			const layout = new SCGNode("Layout", SCGTreeItemType.Layout, vscode.TreeItemCollapsibleState.Expanded, element.config, element.file);
+			const sources = new SCGNode("Sources", SCGTreeItemType.Sources, vscode.TreeItemCollapsibleState.Collapsed, element.config, element.file);
 			return Promise.resolve([layout, sources]);
-		} else if (element.type === SCGType.Layout) {
-			const items: SCG[] = [];
+		} else if (element.type === SCGTreeItemType.Layout) {
+			const items: SCGNode[] = [];
 			for (const layout of element.config.layout) {
 				const fileDir = element.file ? path.dirname(element.file) : '';
-				items.push(new SCG(layout.name, SCGType.Template, vscode.TreeItemCollapsibleState.None, undefined, undefined, {
+				items.push(new SCGNode(layout.name, SCGTreeItemType.Template, vscode.TreeItemCollapsibleState.None, undefined, undefined, {
 					command: 'vscode.open',
 					title: 'Open Template',
 					arguments: [vscode.Uri.file(fileDir + "/" + element.config.templatepath + "/" + layout.name || '')]
 				}));
 			}
 			return Promise.resolve(items);
-		} else if (element.type === SCGType.Sources) {
-			const items: SCG[] = [];
+		} else if (element.type === SCGTreeItemType.Sources) {
+			const items: SCGNode[] = [];
 			for (const source of element.config.sources) {
 				const fileDir = element.file ? path.dirname(element.file) : '';
-				items.push(new SCG(source.id, SCGType.Source, vscode.TreeItemCollapsibleState.Collapsed, element.config, element.file, {
+				items.push(new SCGNode(source.id, SCGTreeItemType.Source, vscode.TreeItemCollapsibleState.Collapsed, element.config, element.file, {
 					command: 'vscode.open',
 					title: 'Open Source',
 					arguments: [vscode.Uri.file(fileDir + "/" + source.filename)]
 				}));
 			}
 			return Promise.resolve(items);
-		} else if (element.type === SCGType.Source) {
+		} else if (element.type === SCGTreeItemType.Source) {
 			const source = element.config.sources.find((s) => s.id === element.label);
 			if (!source) {
 				return Promise.resolve([]);
 			}
 			const filePath = path.dirname(element.file) + "/" + source.filename;
 			const columns = await this.getScgSourceColumns(filePath, source.delimiter || ';');
-			return Promise.resolve(columns.map(column => new SCG(column, SCGType.SourceColumn, vscode.TreeItemCollapsibleState.None, undefined, undefined,)));
+			return Promise.resolve(columns.map(column => new SCGNode(column, SCGTreeItemType.SourceColumn, vscode.TreeItemCollapsibleState.None, undefined, undefined,)));
 		}
 		else {
 			return Promise.resolve([]);
@@ -60,9 +60,9 @@ export class SCGProjectProvider implements vscode.TreeDataProvider<SCG> {
 
 	}
 
-	private async getSCGFiles(): Promise<SCG[]> {
+	private async getSCGFiles(): Promise<SCGNode[]> {
 		const files = await findScgConfigFiles();
-		const treeItems: SCG[] = [];
+		const treeItems: SCGNode[] = [];
 		files.sort((a, b) => path.basename(a.fsPath).localeCompare(path.basename(b.fsPath)));
 		for (const file of files) {
 			const config = await readScgConfig(file.fsPath);
@@ -70,7 +70,7 @@ export class SCGProjectProvider implements vscode.TreeDataProvider<SCG> {
 				continue;
 			}
 			const outputFileName = path.parse(config.outputfile).name;
-			treeItems.push(new SCG(outputFileName, SCGType.Config, vscode.TreeItemCollapsibleState.Expanded, config, file.fsPath, {
+			treeItems.push(new SCGNode(outputFileName, SCGTreeItemType.Config, vscode.TreeItemCollapsibleState.Expanded, config, file.fsPath, {
 				command: 'vscode.open',
 				title: 'Open Config',
 				arguments: [vscode.Uri.file(file.fsPath)]
@@ -92,7 +92,7 @@ export class SCGProjectProvider implements vscode.TreeDataProvider<SCG> {
 	}
 }
 
-enum SCGType {
+enum SCGTreeItemType {
 	Config = "Config",
 	Template = "Template",
 	Layout = "Layout",
@@ -101,11 +101,11 @@ enum SCGType {
 	SourceColumn = "Column"
 }
 
-export class SCG extends vscode.TreeItem {
+export class SCGNode extends vscode.TreeItem {
 
 	constructor(
 		public readonly label: string,
-		public readonly type: SCGType,
+		public readonly type: SCGTreeItemType,
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
 		public readonly config?: ScgConfig,
 		public readonly file?: string,
@@ -116,15 +116,15 @@ export class SCG extends vscode.TreeItem {
 		this.tooltip = `${this.label}`;
 		this.description = this.type;
 		this.contextValue = this.type;
-		if (type === SCGType.Config && file) {
+		if (type === SCGTreeItemType.Config && file) {
 			this.iconPath = new vscode.ThemeIcon("settings-view-bar-icon");
-		} else if (type === SCGType.Layout) {
+		} else if (type === SCGTreeItemType.Layout) {
 			this.iconPath = new vscode.ThemeIcon("folder");
-		} else if (type === SCGType.Template) {
+		} else if (type === SCGTreeItemType.Template) {
 			this.iconPath = new vscode.ThemeIcon("file");
-		} else if (type === SCGType.Sources) {
+		} else if (type === SCGTreeItemType.Sources) {
 			this.iconPath = new vscode.ThemeIcon("folder");
-		} else if (type === SCGType.Source) {
+		} else if (type === SCGTreeItemType.Source) {
 			this.iconPath = new vscode.ThemeIcon("outline-view-icon");
 		}
 	}
