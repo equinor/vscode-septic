@@ -54,9 +54,7 @@ export function activate(context: vscode.ExtensionContext) {
         clientOptions
     );
 
-    const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
-        ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
-    const scgProjectProvider = new SCGProjectProvider(context, rootPath);
+    const scgProjectProvider = new SCGProjectProvider();
     vscode.window.registerTreeDataProvider('septic-scg', scgProjectProvider);
     vscode.window.onDidChangeActiveTextEditor((e) => {
         if (!e) {

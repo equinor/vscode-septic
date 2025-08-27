@@ -7,11 +7,6 @@ export class SCGProjectProvider implements vscode.TreeDataProvider<SCG> {
 	private _onDidChangeTreeData: vscode.EventEmitter<SCG | undefined | void> = new vscode.EventEmitter<SCG | undefined | void>();
 	readonly onDidChangeTreeData: vscode.Event<SCG | undefined | void> = this._onDidChangeTreeData.event;
 
-	constructor(
-		private readonly context: vscode.ExtensionContext,
-		private readonly workspaceRoot: string | undefined
-	) { }
-
 	refresh(): void {
 		this._onDidChangeTreeData.fire();
 	}
@@ -20,7 +15,7 @@ export class SCGProjectProvider implements vscode.TreeDataProvider<SCG> {
 		return element;
 	}
 
-	getChildren(element?: SCG): Promise<SCG[]> {
+	async getChildren(element?: SCG): Promise<SCG[]> {
 		if (!element) {
 			return Promise.resolve(this.getSCGFiles());
 		}
@@ -43,13 +38,21 @@ export class SCGProjectProvider implements vscode.TreeDataProvider<SCG> {
 			const items: SCG[] = [];
 			for (const source of element.config.sources) {
 				const fileDir = element.file ? path.dirname(element.file) : '';
-				items.push(new SCG(source.id, SCGType.Source, vscode.TreeItemCollapsibleState.None, undefined, undefined, {
+				items.push(new SCG(source.id, SCGType.Source, vscode.TreeItemCollapsibleState.Collapsed, element.config, element.file, {
 					command: 'vscode.open',
 					title: 'Open Source',
 					arguments: [vscode.Uri.file(fileDir + "/" + source.filename)]
 				}));
 			}
 			return Promise.resolve(items);
+		} else if (element.type === SCGType.Source) {
+			const source = element.config.sources.find((s) => s.id === element.label);
+			if (!source) {
+				return Promise.resolve([]);
+			}
+			const filePath = path.dirname(element.file) + "/" + source.filename;
+			const columns = await this.getScgSourceColumns(filePath, source.delimiter || ';');
+			return Promise.resolve(columns.map(column => new SCG(column, SCGType.SourceColumn, vscode.TreeItemCollapsibleState.None, undefined, undefined,)));
 		}
 		else {
 			return Promise.resolve([]);
@@ -75,6 +78,18 @@ export class SCGProjectProvider implements vscode.TreeDataProvider<SCG> {
 		}
 		return treeItems;
 	}
+
+	private async getScgSourceColumns(file: string, delimiter: string): Promise<string[]> {
+		try {
+			const content = await vscode.workspace.fs.readFile(vscode.Uri.file(file));
+			const lines = content.toString().split('\n');
+			const headers = lines[0].split(delimiter);
+			return headers.map(header => header.trim());
+		} catch (error) {
+			console.error('Error reading source columns:', error);
+			return [];
+		}
+	}
 }
 
 enum SCGType {
@@ -82,7 +97,8 @@ enum SCGType {
 	Template = "Template",
 	Layout = "Layout",
 	Sources = "Sources",
-	Source = "Source"
+	Source = "Source",
+	SourceColumn = "Column"
 }
 
 export class SCG extends vscode.TreeItem {
