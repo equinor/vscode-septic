@@ -46,12 +46,12 @@
       {
         "command": "septic.scgtree.addTemplate",
         "title": "Septic: Insert template below",
-        "icon": "$(add)"
+        "icon": "$(new-file)"
       },
       {
         "command": "septic.scgtree.removeTemplate",
         "title": "Septic: Remove template",
-        "icon": "$(remove)"
+        "icon": "$(trash)"
       },
       {
         "command": "septic.applicationTree.refresh",
