@@ -191,7 +191,7 @@ export function registerCommandStartApplication(applicationManager: SepticApplic
 		try {
 			await vscode.workspace.fs.stat(makeAndStartPath);
 		} catch {
-			vscode.window.showErrorMessage("makeandstart.bat not found in the run folder.");
+			vscode.window.showErrorMessage(`No makeandstart.bat found in run catalog for ${application.name}`);
 			return;
 		}
 		const existingTerminal = vscode.window.terminals.find(t => t.name === `Septic: ${application.name}`);
