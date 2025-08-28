@@ -7,7 +7,8 @@ import * as vscode from "vscode";
 import * as protocol from "./protocol";
 import { LanguageClient } from "vscode-languageclient/node";
 import { generateCalc } from './lm';
-import { ScgNode, ScgTreeItemType, ScgTreeProvider } from './treeProviders';
+import { ApplicationTreeItem, ApplicationTreeItemType, ApplicationTreeProvider } from './treeProviders';
+import { SepticApplicationManager } from './applicationManager';
 
 export function registerCommandDetectCycles(context: vscode.ExtensionContext, client: LanguageClient) {
 	vscode.commands.registerCommand("septic.detectCycles", async () => {
@@ -130,8 +131,8 @@ export function registerCommandOpcTagList(context: vscode.ExtensionContext, clie
 	});
 }
 
-export function registerCommandAddTemplate(scgTreeProvider: ScgTreeProvider) {
-	vscode.commands.registerCommand('septic.scgtree.addTemplate', async (node: ScgNode) => {
+export function registerCommandAddTemplate(scgTreeProvider: ApplicationTreeProvider) {
+	vscode.commands.registerCommand('septic.scgtree.addTemplate', async (node: ApplicationTreeItem) => {
 		if (!node) {
 			return;
 		}
@@ -143,7 +144,7 @@ export function registerCommandAddTemplate(scgTreeProvider: ScgTreeProvider) {
 		if (!template || !source) {
 			return;
 		}
-		const elementToInsertAfter = node.type === ScgTreeItemType.Template ? node.label : undefined;
+		const elementToInsertAfter = node.type === ApplicationTreeItemType.Template ? node.label : undefined;
 		node.config.addTemplate(template, source.value, elementToInsertAfter);
 		await node.config.save()
 		const wsedit = new vscode.WorkspaceEdit();
@@ -157,8 +158,8 @@ export function registerCommandAddTemplate(scgTreeProvider: ScgTreeProvider) {
 	});
 }
 
-export function registerCommandDeleteTemplate(scgTreeProvider: ScgTreeProvider) {
-	vscode.commands.registerCommand('septic.scgtree.removeTemplate', async (node: ScgNode) => {
+export function registerCommandRemoveTemplate(applicationTreeProvider: ApplicationTreeProvider) {
+	vscode.commands.registerCommand('septic.scgtree.removeTemplate', async (node: ApplicationTreeItem) => {
 		if (!node) {
 			return;
 		}
@@ -168,7 +169,13 @@ export function registerCommandDeleteTemplate(scgTreeProvider: ScgTreeProvider) 
 		}
 		node.config.removeTemplate(node.label);
 		await node.config.save()
-		scgTreeProvider.refresh();
+		applicationTreeProvider.refresh();
+	});
+}
+
+export function registerCommandRefreshApplications(applicationManager: SepticApplicationManager) {
+	vscode.commands.registerCommand('septic.applicationTree.refresh', async () => {
+		applicationManager.refreshApplications();
 	});
 }
 
@@ -178,13 +185,14 @@ export function registerCommandGenerateCalc(context: vscode.ExtensionContext, cl
 	});
 }
 
-export function registerCommands(context: vscode.ExtensionContext, client: LanguageClient, scgTreeProvider: ScgTreeProvider) {
+export function registerCommands(context: vscode.ExtensionContext, client: LanguageClient, applicationTreeProvider: ApplicationTreeProvider, applicationManager: SepticApplicationManager) {
 	registerCommandDetectCycles(context, client);
 	registerCommandCompareCnfg(context, client);
 	registerCommandOpcTagList(context, client);
 	registerCommandGenerateCalc(context, client);
-	registerCommandAddTemplate(scgTreeProvider);
-	registerCommandDeleteTemplate(scgTreeProvider);
+	registerCommandAddTemplate(applicationTreeProvider);
+	registerCommandRemoveTemplate(applicationTreeProvider);
+	registerCommandRefreshApplications(applicationManager);
 }
 
 

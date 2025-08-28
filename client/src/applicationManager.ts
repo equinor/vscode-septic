@@ -11,6 +11,8 @@ export interface SepticApplication {
 }
 
 export class SepticApplicationManager {
+	private _onDidChangeApplication: vscode.EventEmitter<undefined | undefined | void> = new vscode.EventEmitter<undefined | undefined | void>();
+	readonly onDidChangeApplication: vscode.Event<undefined | undefined | void> = this._onDidChangeApplication.event;
 	private readonly context: vscode.ExtensionContext;
 	private applications: SepticApplication[] | undefined = undefined;
 
@@ -23,6 +25,11 @@ export class SepticApplicationManager {
 			this.applications = await this.findApplications();
 		}
 		return this.applications;
+	}
+
+	public async getApplicationByName(name: string): Promise<SepticApplication | undefined> {
+		const applications = await this.getApplications();
+		return applications?.find(app => app.name === name);
 	}
 
 	public async findApplications(): Promise<SepticApplication[]> {
@@ -93,5 +100,8 @@ export class SepticApplicationManager {
 		return application.scgConfigs.find(config => filePath.startsWith(config.templatepath));
 	}
 
+	public async refreshApplications(): Promise<void> {
+		this.applications = await this.findApplications();
+		this._onDidChangeApplication.fire();
+	}
 }
-

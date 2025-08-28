@@ -1,55 +1,64 @@
 import * as vscode from 'vscode';
 import { ScgConfig, ScgSource } from './scg';
-import { SepticApplicationManager } from './applicationManager';
+import { SepticApplication, SepticApplicationManager } from './applicationManager';
 import * as path from 'path';
 
-export class ScgTreeProvider implements vscode.TreeDataProvider<ScgNode> {
+export class ApplicationTreeProvider implements vscode.TreeDataProvider<ApplicationTreeItem> {
 
-	private _onDidChangeTreeData: vscode.EventEmitter<ScgNode | undefined | void> = new vscode.EventEmitter<ScgNode | undefined | void>();
-	readonly onDidChangeTreeData: vscode.Event<ScgNode | undefined | void> = this._onDidChangeTreeData.event;
+	private _onDidChangeTreeData: vscode.EventEmitter<ApplicationTreeItem | undefined | void> = new vscode.EventEmitter<ApplicationTreeItem | undefined | void>();
+	readonly onDidChangeTreeData: vscode.Event<ApplicationTreeItem | undefined | void> = this._onDidChangeTreeData.event;
 	private appManager: SepticApplicationManager;
 
 	constructor(appManager: SepticApplicationManager) {
 		this.appManager = appManager;
+		this.appManager.onDidChangeApplication(() => {
+			this.refresh();
+		})
 	}
 	refresh(): void {
 		this._onDidChangeTreeData.fire();
 	}
 
-	getTreeItem(element: ScgNode): vscode.TreeItem {
+	getTreeItem(element: ApplicationTreeItem): vscode.TreeItem {
 		return element;
 	}
 
-	async getChildren(element?: ScgNode): Promise<ScgNode[]> {
+	async getChildren(element?: ApplicationTreeItem): Promise<ApplicationTreeItem[]> {
 		if (!element) {
-			return Promise.resolve(this.getScgConfigs());
+			return Promise.resolve(this.getApplications());
 		}
-		if (element.type === ScgTreeItemType.Config && element.config) {
-			const layout = new ScgNode("Layout", ScgTreeItemType.Layout, vscode.TreeItemCollapsibleState.Expanded, element.config);
-			const sources = new ScgNode("Sources", ScgTreeItemType.Sources, vscode.TreeItemCollapsibleState.Collapsed, element.config);
+		if (element.type === ApplicationTreeItemType.Application) {
+			const application = await this.appManager.getApplicationByName(element.label);
+			if (!application) {
+				return Promise.resolve([]);
+			}
+			return Promise.resolve(this.getApplicationConfigTreeItems(application));
+		} else if (element.type === ApplicationTreeItemType.Config && element.config) {
+			const layout = new ApplicationTreeItem("Layout", ApplicationTreeItemType.Layout, vscode.TreeItemCollapsibleState.Expanded, element.config);
+			const sources = new ApplicationTreeItem("Sources", ApplicationTreeItemType.Sources, vscode.TreeItemCollapsibleState.Collapsed, element.config);
 			return Promise.resolve([layout, sources]);
-		} else if (element.type === ScgTreeItemType.Layout) {
-			const items: ScgNode[] = [];
+		} else if (element.type === ApplicationTreeItemType.Layout) {
+			const items: ApplicationTreeItem[] = [];
 			for (const layout of element.config.layout) {
-				items.push(new ScgNode(layout.name, ScgTreeItemType.Template, vscode.TreeItemCollapsibleState.None, element.config, {
+				items.push(new ApplicationTreeItem(layout.name, ApplicationTreeItemType.Template, vscode.TreeItemCollapsibleState.None, element.config, {
 					command: 'vscode.open',
 					title: 'Open Template',
 					arguments: [vscode.Uri.file(element.config.templatepath + "/" + layout.name || '')]
 				}));
 			}
 			return Promise.resolve(items);
-		} else if (element.type === ScgTreeItemType.Sources) {
-			const items: ScgNode[] = [];
+		} else if (element.type === ApplicationTreeItemType.Sources) {
+			const items: ApplicationTreeItem[] = [];
 			const sources = await element.config.getSources();
 			for (const source of sources) {
-				items.push(new ScgNode(source.id, ScgTreeItemType.Source, vscode.TreeItemCollapsibleState.Collapsed, element.config, {
+				items.push(new ApplicationTreeItem(source.id, ApplicationTreeItemType.Source, vscode.TreeItemCollapsibleState.Collapsed, element.config, {
 					command: 'vscode.open',
 					title: 'Open Source',
 					arguments: [vscode.Uri.file(source.filename)]
 				}));
 			}
 			return Promise.resolve(items);
-		} else if (element.type === ScgTreeItemType.Source) {
+		} else if (element.type === ApplicationTreeItemType.Source) {
 			const source = await element.config.getSourceById(element.label);
 			if (!source) {
 				return Promise.resolve([]);
@@ -58,7 +67,7 @@ export class ScgTreeProvider implements vscode.TreeDataProvider<ScgNode> {
 			if (!columns) {
 				return Promise.resolve([]);
 			}
-			return Promise.resolve(columns.map(column => new ScgNode(column, ScgTreeItemType.SourceColumn, vscode.TreeItemCollapsibleState.None, undefined, undefined,)));
+			return Promise.resolve(columns.map(column => new ApplicationTreeItem(column, ApplicationTreeItemType.SourceColumn, vscode.TreeItemCollapsibleState.None, undefined, undefined,)));
 		}
 		else {
 			return Promise.resolve([]);
@@ -66,13 +75,23 @@ export class ScgTreeProvider implements vscode.TreeDataProvider<ScgNode> {
 
 	}
 
-	private async getScgConfigs(): Promise<ScgNode[]> {
-		const application = await this.appManager.getCurrentApplication();
+	private async getApplications(): Promise<ApplicationTreeItem[]> {
+		const applications = await this.appManager.getApplications();
+		const currentApplication = await this.appManager.getCurrentApplication();
+		const applicationTreeItems = [];
+		for (const app of applications) {
+			const itemState = app === currentApplication ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
+			applicationTreeItems.push(new ApplicationTreeItem(app.name, ApplicationTreeItemType.Application, itemState, undefined));
+		}
+		return applicationTreeItems;
+	}
+
+	private async getApplicationConfigTreeItems(application: SepticApplication): Promise<ApplicationTreeItem[]> {
 		const scgConfigs = application.scgConfigs;
-		const treeItems: ScgNode[] = [];
+		const treeItems: ApplicationTreeItem[] = [];
 		scgConfigs.sort((a, b) => a.name.localeCompare(b.name));
 		for (const config of scgConfigs) {
-			treeItems.push(new ScgNode(config.name, ScgTreeItemType.Config, vscode.TreeItemCollapsibleState.Expanded, config, {
+			treeItems.push(new ApplicationTreeItem(config.name, ApplicationTreeItemType.Config, vscode.TreeItemCollapsibleState.Expanded, config, {
 				command: 'vscode.open',
 				title: 'Open Config',
 				arguments: [vscode.Uri.file(config.path)]
@@ -82,7 +101,8 @@ export class ScgTreeProvider implements vscode.TreeDataProvider<ScgNode> {
 	}
 }
 
-export enum ScgTreeItemType {
+export enum ApplicationTreeItemType {
+	Application = "Application",
 	Config = "Config",
 	Template = "Template",
 	Layout = "Layout",
@@ -91,11 +111,11 @@ export enum ScgTreeItemType {
 	SourceColumn = "Column"
 }
 
-export class ScgNode extends vscode.TreeItem {
+export class ApplicationTreeItem extends vscode.TreeItem {
 
 	constructor(
 		public readonly label: string,
-		public readonly type: ScgTreeItemType,
+		public readonly type: ApplicationTreeItemType,
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
 		public readonly config: ScgConfig,
 		public readonly command?: vscode.Command
@@ -105,15 +125,17 @@ export class ScgNode extends vscode.TreeItem {
 		this.tooltip = `${this.label}`;
 		this.description = this.type;
 		this.contextValue = this.type;
-		if (type === ScgTreeItemType.Config) {
+		if (type === ApplicationTreeItemType.Config) {
 			this.iconPath = new vscode.ThemeIcon("settings-view-bar-icon");
-		} else if (type === ScgTreeItemType.Layout) {
+		} else if (type === ApplicationTreeItemType.Application) {
+			this.iconPath = new vscode.ThemeIcon("application");
+		} else if (type === ApplicationTreeItemType.Layout) {
 			this.iconPath = new vscode.ThemeIcon("folder");
-		} else if (type === ScgTreeItemType.Template) {
+		} else if (type === ApplicationTreeItemType.Template) {
 			this.iconPath = new vscode.ThemeIcon("file");
-		} else if (type === ScgTreeItemType.Sources) {
+		} else if (type === ApplicationTreeItemType.Sources) {
 			this.iconPath = new vscode.ThemeIcon("folder");
-		} else if (type === ScgTreeItemType.Source) {
+		} else if (type === ApplicationTreeItemType.Source) {
 			this.iconPath = new vscode.ThemeIcon("outline-view-icon");
 		}
 	}

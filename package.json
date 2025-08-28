@@ -52,6 +52,11 @@
         "command": "septic.scgtree.removeTemplate",
         "title": "Septic: Remove template",
         "icon": "$(remove)"
+      },
+      {
+        "command": "septic.applicationTree.refresh",
+        "title": "Septic: Refresh Applications",
+        "icon": "$(refresh)"
       }
     ],
     "configuration": {
@@ -199,15 +204,19 @@
     },
     "viewsWelcome": [
       {
-        "view": "septic-scg",
-        "contents": "This view give an overview of the current Septic Config Generator project."
+        "view": "septic-applications",
+        "contents": "This view give an overview of the current Septic Applications in the workspace. An application is defined as a folder containing a `scg` folder with a `config.yaml` file. Click the refresh button to update the list."
+      },
+      {
+        "view": "septic-scg-variables",
+        "contents": "This view give an overview of the current Septic Scg/Jinja variables for the current configuration file based on the sources used in the Scg config file"
       }
     ],
     "views": {
       "septic": [
         {
-          "id": "septic-scg",
-          "name": "Scg"
+          "id": "septic-applications",
+          "name": "Applications"
         },
         {
           "id": "septic-scg-variables",
@@ -216,15 +225,22 @@
       ]
     },
     "menus": {
+      "view/title": [
+        {
+          "command": "septic.applicationTree.refresh",
+          "when": "view == septic-applications",
+          "group": "navigation"
+        }
+      ],
       "view/item/context": [
         {
           "command": "septic.scgtree.addTemplate",
-          "when": "view == septic-scg && (viewItem == Template || viewItem == Layout)",
+          "when": "view == septic-applications && (viewItem == Template || viewItem == Layout)",
           "group": "inline"
         },
         {
           "command": "septic.scgtree.removeTemplate",
-          "when": "view == septic-scg && (viewItem == Template)",
+          "when": "view == septic-applications && (viewItem == Template)",
           "group": "inline"
         }
       ]
