@@ -11,10 +11,12 @@ import {
     ServerOptions,
     TransportKind,
 } from "vscode-languageclient/node";
-import { registerAllCommands } from './commands';
+import { registerCommands } from './commands';
 import { registerRequestHandlers } from "./requests";
 import { registerChatTools } from './tools';
 import { registerSepticChatParticipant } from './chatParticipant';
+import { ApplicationTreeProvider, JinjaVariablesTreeProvider } from './treeProviders';
+import { SepticApplicationManager } from './applicationManager';
 
 let client: LanguageClient;
 
@@ -45,15 +47,31 @@ export function activate(context: vscode.ExtensionContext) {
             ],
         },
     };
-
     client = new LanguageClient(
         "septic",
         "Septic",
         serverOptions,
         clientOptions
     );
+    const appManager = new SepticApplicationManager(context);
+    const applicationsTreeProvider = new ApplicationTreeProvider(appManager);
+    const jinjaVariablesTreeProvider = new JinjaVariablesTreeProvider(appManager);
+    vscode.window.registerTreeDataProvider('septic-applications', applicationsTreeProvider);
+    vscode.window.registerTreeDataProvider('septic-scg-variables', jinjaVariablesTreeProvider);
+    vscode.window.onDidChangeActiveTextEditor((e) => {
+        if (!e) {
+            return;
+        }
+        applicationsTreeProvider.refresh();
+        jinjaVariablesTreeProvider.refresh();
+    })
+    vscode.workspace.onDidSaveTextDocument((e) => {
+        if (path.extname(e.fileName) === '.yaml' || path.extname(e.fileName) === '.yml') {
+            appManager.updateScgConfig(e.fileName);
+        }
+    })
     registerChatTools(context, client)
-    registerAllCommands(context, client);
+    registerCommands(context, client, applicationsTreeProvider, appManager);
     registerRequestHandlers(client);
     registerSepticChatParticipant(context, client)
     client.start();

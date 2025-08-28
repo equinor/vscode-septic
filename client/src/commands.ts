@@ -5,8 +5,11 @@
 
 import * as vscode from "vscode";
 import * as protocol from "./protocol";
+import * as path from "path";
 import { LanguageClient } from "vscode-languageclient/node";
 import { generateCalc } from './lm';
+import { ApplicationTreeItem, ApplicationTreeItemType, ApplicationTreeProvider } from './treeProviders';
+import { SepticApplicationManager } from './applicationManager';
 
 export function registerCommandDetectCycles(context: vscode.ExtensionContext, client: LanguageClient) {
 	vscode.commands.registerCommand("septic.detectCycles", async () => {
@@ -129,17 +132,119 @@ export function registerCommandOpcTagList(context: vscode.ExtensionContext, clie
 	});
 }
 
+export function registerCommandAddTemplate(scgTreeProvider: ApplicationTreeProvider) {
+	vscode.commands.registerCommand('septic.scgtree.addTemplate', async (node: ApplicationTreeItem) => {
+		if (!node) {
+			return;
+		}
+		const template = await vscode.window.showInputBox({
+			placeHolder: "Enter template name"
+		});
+		const sources = (await node.config.getSources()).map(s => ({ label: s.id, value: s.id }));
+		const source = await vscode.window.showQuickPick([{ label: 'No source', value: undefined }, ...sources], { title: "Select source for template" });
+		if (!template || !source) {
+			return;
+		}
+		const elementToInsertAfter = node.type === ApplicationTreeItemType.Template ? node.label : undefined;
+		node.config.addTemplate(template, source.value, elementToInsertAfter);
+		await node.config.save()
+		const wsedit = new vscode.WorkspaceEdit();
+		const filePath = vscode.Uri.file(node.config.templatepath + "/" + template);
+		wsedit.createFile(filePath);
+		await vscode.workspace.applyEdit(wsedit);
+		await vscode.window.showTextDocument(filePath, {
+			preserveFocus: false,
+		});
+		scgTreeProvider.refresh();
+	});
+}
+
+export function registerCommandRemoveTemplate(applicationTreeProvider: ApplicationTreeProvider) {
+	vscode.commands.registerCommand('septic.scgtree.removeTemplate', async (node: ApplicationTreeItem) => {
+		if (!node) {
+			return;
+		}
+		const confirmation = await vscode.window.showQuickPick([{ label: 'No', value: false, picked: true }, { label: 'Yes', value: true }], { title: "Confirm removal" });
+		if (!confirmation || !confirmation.value) {
+			return;
+		}
+		node.config.removeTemplate(node.label);
+		await node.config.save()
+		applicationTreeProvider.refresh();
+	});
+}
+
+export function registerCommandRefreshApplications(applicationManager: SepticApplicationManager) {
+	vscode.commands.registerCommand('septic.applicationTree.refresh', async () => {
+		applicationManager.refreshApplications();
+	});
+}
+
+export function registerCommandStartApplication(applicationManager: SepticApplicationManager) {
+	vscode.commands.registerCommand('septic.applicationTree.start', async (e: ApplicationTreeItem) => {
+		const application = await applicationManager.getApplicationByName(e.label);
+		if (!application) {
+			return;
+		}
+		const runFolderPath = vscode.Uri.joinPath(vscode.Uri.file(application.path), "run");
+		const makeAndStartPath = vscode.Uri.joinPath(runFolderPath, "makeandstart.bat");
+		try {
+			await vscode.workspace.fs.stat(makeAndStartPath);
+		} catch {
+			vscode.window.showErrorMessage(`No makeandstart.bat found in run catalog for ${application.name}`);
+			return;
+		}
+		const existingTerminal = vscode.window.terminals.find(t => t.name === `Septic: ${application.name}`);
+		const terminal = existingTerminal || vscode.window.createTerminal({
+			name: `Septic: ${application.name}`,
+			cwd: runFolderPath
+		});
+		terminal.show();
+		terminal.sendText(`.\\makeandstart.bat`)
+	});
+}
+
+export function registerCommandMakeConfig() {
+	vscode.commands.registerCommand('septic.applicationTree.make', async (e: ApplicationTreeItem) => {
+		vscode.window.terminals.find(t => t.name === `Septic: Make scg config`)?.dispose();
+		const args = await vscode.window.showInputBox({
+			prompt: "Enter run time arguments (leave empty for none)",
+			placeHolder: "Arguments",
+			value: "",
+			validateInput: (input: string) => {
+				const regex = /^$|^(--var\s+\w+\s+\S+\s*)*$/;
+				if (!regex.test(input.trim())) {
+					return "Input must follow the format: --var <name> <value>";
+				}
+				return null;
+			}
+		});
+		const terminal = vscode.window.createTerminal({
+			name: `Septic: Make scg config`,
+			cwd: path.dirname(e.config.path)
+		});
+		terminal.show()
+		terminal.sendText(`scg make ${e.label} ${args}`);
+		vscode.window.showTextDocument(vscode.Uri.file(e.config.outputfile))
+	});
+}
+
 export function registerCommandGenerateCalc(context: vscode.ExtensionContext, client: LanguageClient) {
 	vscode.commands.registerCommand("septic.generateCalc", async (description: string, start: vscode.Position, end: vscode.Position) => {
 		generateCalc(client, description, start, end);
 	});
 }
 
-export function registerAllCommands(context: vscode.ExtensionContext, client: LanguageClient) {
+export function registerCommands(context: vscode.ExtensionContext, client: LanguageClient, applicationTreeProvider: ApplicationTreeProvider, applicationManager: SepticApplicationManager) {
 	registerCommandDetectCycles(context, client);
 	registerCommandCompareCnfg(context, client);
 	registerCommandOpcTagList(context, client);
 	registerCommandGenerateCalc(context, client);
+	registerCommandAddTemplate(applicationTreeProvider);
+	registerCommandRemoveTemplate(applicationTreeProvider);
+	registerCommandStartApplication(applicationManager);
+	registerCommandRefreshApplications(applicationManager);
+	registerCommandMakeConfig();
 }
 
 
