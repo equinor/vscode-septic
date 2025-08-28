@@ -5,6 +5,7 @@
 
 import * as vscode from "vscode";
 import * as protocol from "./protocol";
+import * as path from "path";
 import { LanguageClient } from "vscode-languageclient/node";
 import { generateCalc } from './lm';
 import { ApplicationTreeItem, ApplicationTreeItemType, ApplicationTreeProvider } from './treeProviders';
@@ -203,6 +204,31 @@ export function registerCommandStartApplication(applicationManager: SepticApplic
 	});
 }
 
+export function registerCommandMakeConfig() {
+	vscode.commands.registerCommand('septic.applicationTree.make', async (e: ApplicationTreeItem) => {
+		vscode.window.terminals.find(t => t.name === `Septic: Make scg config`)?.dispose();
+		const args = await vscode.window.showInputBox({
+			prompt: "Enter run time arguments (leave empty for none)",
+			placeHolder: "Arguments",
+			value: "",
+			validateInput: (input: string) => {
+				const regex = /^$|^(--var\s+\w+\s+\S+\s*)*$/;
+				if (!regex.test(input.trim())) {
+					return "Input must follow the format: --var <name> <value>";
+				}
+				return null;
+			}
+		});
+		const terminal = vscode.window.createTerminal({
+			name: `Septic: Make scg config`,
+			cwd: path.dirname(e.config.path)
+		});
+		terminal.show()
+		terminal.sendText(`scg make ${e.label} ${args}`);
+		vscode.window.showTextDocument(vscode.Uri.file(e.config.outputfile))
+	});
+}
+
 export function registerCommandGenerateCalc(context: vscode.ExtensionContext, client: LanguageClient) {
 	vscode.commands.registerCommand("septic.generateCalc", async (description: string, start: vscode.Position, end: vscode.Position) => {
 		generateCalc(client, description, start, end);
@@ -218,6 +244,7 @@ export function registerCommands(context: vscode.ExtensionContext, client: Langu
 	registerCommandRemoveTemplate(applicationTreeProvider);
 	registerCommandStartApplication(applicationManager);
 	registerCommandRefreshApplications(applicationManager);
+	registerCommandMakeConfig();
 }
 
 

@@ -62,6 +62,11 @@
         "command": "septic.applicationTree.start",
         "title": "Septic: Start Application",
         "icon": "$(play)"
+      },
+      {
+        "command": "septic.applicationTree.make",
+        "title": "Septic: Make scg config",
+        "icon": "$(output)"
       }
     ],
     "configuration": {
@@ -251,6 +256,11 @@
         {
           "command": "septic.applicationTree.start",
           "when": "view == septic-applications && (viewItem == Application)",
+          "group": "inline"
+        },
+        {
+          "command": "septic.applicationTree.make",
+          "when": "view == septic-applications && (viewItem == Config)",
           "group": "inline"
         }
       ]
