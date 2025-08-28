@@ -179,6 +179,30 @@ export function registerCommandRefreshApplications(applicationManager: SepticApp
 	});
 }
 
+export function registerCommandStartApplication(applicationManager: SepticApplicationManager) {
+	vscode.commands.registerCommand('septic.applicationTree.start', async (e: ApplicationTreeItem) => {
+		const application = await applicationManager.getApplicationByName(e.label);
+		if (!application) {
+			return;
+		}
+		const runFolderPath = vscode.Uri.joinPath(vscode.Uri.file(application.path), "run");
+		const makeAndStartPath = vscode.Uri.joinPath(runFolderPath, "makeandstart.bat");
+		try {
+			await vscode.workspace.fs.stat(makeAndStartPath);
+		} catch {
+			vscode.window.showErrorMessage("makeandstart.bat not found in the run folder.");
+			return;
+		}
+		const existingTerminal = vscode.window.terminals.find(t => t.name === `Septic: ${application.name}`);
+		const terminal = existingTerminal || vscode.window.createTerminal({
+			name: `Septic: ${application.name}`,
+			cwd: runFolderPath
+		});
+		terminal.show();
+		terminal.sendText(`.\\makeandstart.bat`)
+	});
+}
+
 export function registerCommandGenerateCalc(context: vscode.ExtensionContext, client: LanguageClient) {
 	vscode.commands.registerCommand("septic.generateCalc", async (description: string, start: vscode.Position, end: vscode.Position) => {
 		generateCalc(client, description, start, end);
@@ -192,6 +216,7 @@ export function registerCommands(context: vscode.ExtensionContext, client: Langu
 	registerCommandGenerateCalc(context, client);
 	registerCommandAddTemplate(applicationTreeProvider);
 	registerCommandRemoveTemplate(applicationTreeProvider);
+	registerCommandStartApplication(applicationManager);
 	registerCommandRefreshApplications(applicationManager);
 }
 

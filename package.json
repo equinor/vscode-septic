@@ -57,6 +57,11 @@
         "command": "septic.applicationTree.refresh",
         "title": "Septic: Refresh Applications",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "septic.applicationTree.start",
+        "title": "Septic: Start Application",
+        "icon": "$(play)"
       }
     ],
     "configuration": {
@@ -241,6 +246,11 @@
         {
           "command": "septic.scgtree.removeTemplate",
           "when": "view == septic-applications && (viewItem == Template)",
+          "group": "inline"
+        },
+        {
+          "command": "septic.applicationTree.start",
+          "when": "view == septic-applications && (viewItem == Application)",
           "group": "inline"
         }
       ]
