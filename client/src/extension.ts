@@ -65,6 +65,11 @@ export function activate(context: vscode.ExtensionContext) {
         applicationsTreeProvider.refresh();
         jinjaVariablesTreeProvider.refresh();
     })
+    vscode.workspace.onDidSaveTextDocument((e) => {
+        if (path.extname(e.fileName) === '.yaml' || path.extname(e.fileName) === '.yml') {
+            appManager.updateScgConfig(e.fileName);
+        }
+    })
     registerChatTools(context, client)
     registerCommands(context, client, applicationsTreeProvider, appManager);
     registerRequestHandlers(client);

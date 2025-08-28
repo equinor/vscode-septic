@@ -26,7 +26,7 @@ export interface ScgConfigSchema {
 
 export class ScgConfig {
 	public readonly path: string;
-	public readonly config: ScgConfigSchema;
+	public config: ScgConfigSchema;
 	public sources: ScgSource[] | undefined = undefined;
 
 	constructor(path: string, data: ScgConfigSchema) {
@@ -95,6 +95,10 @@ export class ScgConfig {
 		if (index !== -1) {
 			this.config.layout.splice(index, 1);
 		}
+	}
+
+	public async updateConfig() {
+		this.config = await readScgConfig(this.path);
 	}
 
 	get name(): string {

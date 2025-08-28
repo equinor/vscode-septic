@@ -104,4 +104,18 @@ export class SepticApplicationManager {
 		this.applications = await this.findApplications();
 		this._onDidChangeApplication.fire();
 	}
+
+	public async updateScgConfig(filename: string): Promise<void> {
+		const applications = await this.getApplications();
+		if (!applications) {
+			return;
+		}
+		const config = applications.flatMap(app => app.scgConfigs).find(config => config.path === filename);
+		if (!config) {
+			return;
+		}
+		config.updateConfig();
+		this._onDidChangeApplication.fire();
+	}
+
 }
