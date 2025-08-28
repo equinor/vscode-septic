@@ -15,7 +15,7 @@ import { registerCommands } from './commands';
 import { registerRequestHandlers } from "./requests";
 import { registerChatTools } from './tools';
 import { registerSepticChatParticipant } from './chatParticipant';
-import { ScgTreeProvider } from './scgTreeProvider';
+import { ScgTreeProvider, JinjaVariablesTreeProvider } from './treeProviders';
 import { SepticApplicationManager } from './applicationManager';
 
 let client: LanguageClient;
@@ -56,12 +56,15 @@ export function activate(context: vscode.ExtensionContext) {
     );
     const appManager = new SepticApplicationManager(context);
     const scgProjectProvider = new ScgTreeProvider(appManager);
+    const jinjaVariablesProvider = new JinjaVariablesTreeProvider(appManager);
     vscode.window.registerTreeDataProvider('septic-scg', scgProjectProvider);
+    vscode.window.registerTreeDataProvider('septic-scg-variables', jinjaVariablesProvider);
     vscode.window.onDidChangeActiveTextEditor((e) => {
         if (!e) {
             return;
         }
         scgProjectProvider.refresh();
+        jinjaVariablesProvider.refresh();
     })
     registerChatTools(context, client)
     registerCommands(context, client, scgProjectProvider);

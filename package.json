@@ -207,7 +207,11 @@
       "septic": [
         {
           "id": "septic-scg",
-          "name": "SCG"
+          "name": "Scg"
+        },
+        {
+          "id": "septic-scg-variables",
+          "name": "Scg/Jinja variables"
         }
       ]
     },

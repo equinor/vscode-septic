@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
-import { ScgConfig } from './scg';
+import { ScgConfig, ScgSource } from './scg';
 import { SepticApplicationManager } from './applicationManager';
+import * as path from 'path';
 
 export class ScgTreeProvider implements vscode.TreeDataProvider<ScgNode> {
 
@@ -115,5 +116,75 @@ export class ScgNode extends vscode.TreeItem {
 		} else if (type === ScgTreeItemType.Source) {
 			this.iconPath = new vscode.ThemeIcon("outline-view-icon");
 		}
+	}
+}
+
+
+export class JinjaVariablesTreeProvider implements vscode.TreeDataProvider<JinjaVariableNode> {
+
+	private _onDidChangeTreeData: vscode.EventEmitter<JinjaVariableNode | undefined | void> = new vscode.EventEmitter<JinjaVariableNode | undefined | void>();
+	readonly onDidChangeTreeData: vscode.Event<JinjaVariableNode | undefined | void> = this._onDidChangeTreeData.event;
+	private appManager: SepticApplicationManager;
+
+	constructor(appManager: SepticApplicationManager) {
+		this.appManager = appManager;
+	}
+
+	refresh(): void {
+		this._onDidChangeTreeData.fire();
+	}
+
+	getTreeItem(element: JinjaVariableNode): vscode.TreeItem {
+		return element;
+	}
+
+	async getChildren(element?: JinjaVariableNode): Promise<JinjaVariableNode[]> {
+		if (!element) {
+			return Promise.resolve(this.getJinjaVariables());
+		}
+	}
+
+	private async getJinjaVariables(): Promise<JinjaVariableNode[]> {
+		const scg = await this.appManager.getCurrentScgContext();
+		if (!scg) {
+			return undefined;
+		}
+		const activeEditor = vscode.window.activeTextEditor;
+		if (!activeEditor) {
+			return undefined;
+		}
+		const filePath = activeEditor.document.uri.fsPath;
+		const template = scg.layout.find((t) => t.name === path.basename(filePath));
+		if (!template || template.source === undefined) {
+			return undefined;
+		}
+		const source = await scg.getSourceById(template.source)
+		const columns = await source.getHeaders();
+		if (!columns) {
+			return undefined;
+		}
+		return columns.map(column => new JinjaVariableNode(column, vscode.TreeItemCollapsibleState.None, source));
+	}
+}
+
+export class JinjaVariableNode extends vscode.TreeItem {
+
+	constructor(
+		public readonly label: string,
+		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+		public readonly source: ScgSource,
+		public readonly command?: vscode.Command
+	) {
+		super(label, collapsibleState);
+
+		this.tooltip = label;
+		this.description = `{{ ${label} }}`;
+		this.contextValue = "scg.variable";
+		this.command = {
+			command: "editor.action.insertSnippet",
+			title: "Insert at cursor",
+			arguments: [{ snippet: `{{ ${label} }}` }]
+		}
+
 	}
 }

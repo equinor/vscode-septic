@@ -80,5 +80,18 @@ export class SepticApplicationManager {
 		return applications?.find(app => filePath.startsWith(app.path));
 	}
 
+	public async getCurrentScgContext(): Promise<ScgConfig | undefined> {
+		const application = await this.getCurrentApplication();
+		if (!application) {
+			return undefined;
+		}
+		const activeEditor = vscode.window.activeTextEditor;
+		if (!activeEditor) {
+			return undefined;
+		}
+		const filePath = activeEditor.document.uri.fsPath;
+		return application.scgConfigs.find(config => filePath.startsWith(config.templatepath));
+	}
+
 }
 

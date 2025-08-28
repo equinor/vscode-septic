@@ -102,11 +102,11 @@ export class ScgConfig {
 	}
 
 	get outputfile(): string | undefined {
-		return path.dirname(this.path) + "/" + this.config.outputfile;
+		return path.dirname(this.path) + "\\" + this.config.outputfile;
 	}
 
 	get templatepath(): string {
-		return path.dirname(this.path) + "/" + this.config.templatepath;
+		return path.dirname(this.path) + "\\" + this.config.templatepath;
 	}
 
 	get adjustspacing(): boolean | undefined {

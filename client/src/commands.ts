@@ -7,7 +7,7 @@ import * as vscode from "vscode";
 import * as protocol from "./protocol";
 import { LanguageClient } from "vscode-languageclient/node";
 import { generateCalc } from './lm';
-import { ScgNode, ScgTreeItemType, ScgTreeProvider } from './scgTreeProvider';
+import { ScgNode, ScgTreeItemType, ScgTreeProvider } from './treeProviders';
 
 export function registerCommandDetectCycles(context: vscode.ExtensionContext, client: LanguageClient) {
 	vscode.commands.registerCommand("septic.detectCycles", async () => {
