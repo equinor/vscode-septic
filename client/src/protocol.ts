@@ -4,6 +4,22 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { RequestType, Diagnostic } from "vscode-languageclient";
+// Types for root function info (keep in sync with server)
+export interface SepticFunctionLine {
+    name: string;
+    alg: string;
+    doc: string;
+}
+
+export interface SepticFunction {
+    name: string;
+    lines: SepticFunctionLine[];
+    inputs: string[];
+}
+// Request for root functions in a cnfg file
+export const getRootFunctions = new RequestType<{ uri: string }, SepticFunction[], unknown>(
+    "septic/getRootFunctions"
+);
 
 export interface SepticCalcInfo {
     name: string;

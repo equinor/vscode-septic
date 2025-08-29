@@ -3,7 +3,8 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { removeSpaces } from "../util";
+import { removeJinjaLoopsAndIfs, removeSpaces } from "../util";
+import { AlgExpr, parseAlg } from './algParser';
 import { SepticTokenType } from "./septicTokens";
 
 export class SepticBase {
@@ -128,6 +129,22 @@ export class SepticObject extends SepticBase {
 
     resetParent() {
         this.parent = undefined;
+    }
+
+    parseAlg(): { algExpr: AlgExpr, positionsMap: number[] } | undefined {
+        const algAttr = this.getAttribute("Alg");
+        if (!algAttr) {
+            return undefined;
+        }
+        let expr;
+        const algString = algAttr.getValue() || "";
+        const { strippedString, positionsMap } = removeJinjaLoopsAndIfs(algString);
+        try {
+            expr = parseAlg(strippedString);
+        } catch {
+            return undefined;
+        }
+        return { algExpr: expr, positionsMap: positionsMap };
     }
 }
 

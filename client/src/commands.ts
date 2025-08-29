@@ -8,6 +8,7 @@ import * as protocol from "./protocol";
 import * as path from "path";
 import { LanguageClient } from "vscode-languageclient/node";
 import { generateCalc } from './lm';
+import { registerCommandShowRootFunctions } from './showRootFunctions';
 import { ApplicationTreeItem, ApplicationTreeItemType, ApplicationTreeProvider } from './treeProviders';
 import { SepticApplicationManager } from './applicationManager';
 import { createMdfWebviewPanel } from './webviews';
@@ -302,6 +303,7 @@ export function registerCommands(context: vscode.ExtensionContext, client: Langu
 	registerCommandRefreshApplications(applicationManager);
 	registerCommandMakeConfig();
 	registerCommandPlotModel();
+	registerCommandShowRootFunctions(context, client);
 }
 
 

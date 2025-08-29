@@ -5,6 +5,13 @@
 
 import { RequestType, Diagnostic } from "vscode-languageserver";
 import { SepticCalcInfo, SepticObjectDoc } from './septic';
+import { SepticFunction, SepticFunctionLine } from './septic/septicCnfg';
+// Types for root function info
+export type { SepticFunction, SepticFunctionLine };
+// Request for root functions in a cnfg file
+export const getRootFunctions = new RequestType<{ uri: string }, SepticFunction[], unknown>(
+    "septic/getRootFunctions"
+);
 
 export interface SepticVariable {
     name: string;
@@ -33,7 +40,7 @@ export const opcTagList = new RequestType<{ uri: string }, string, unknown>(
     "septic/opcTagList"
 );
 
-export const getContext = new RequestType<{ uri: string }, string, any>(
+export const getContext = new RequestType<{ uri: string }, string, unknown>(
     "septic/getContext"
 );
 

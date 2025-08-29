@@ -238,6 +238,15 @@ connection.onRequest(protocol.validateAlg, async (param) => {
     return validateStandAloneCalc(param.calc, context);
 });
 
+connection.onRequest(protocol.getRootFunctions, async (param) => {
+    const cnfg: SepticCnfg | undefined = await langService.cnfgProvider.get(param.uri);
+    if (!cnfg) {
+        return [];
+    }
+    await cnfg.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
+    return cnfg.getRootFunctions();
+});
+
 connection.onInitialize((params: InitializeParams) => {
     const capabilities = params.capabilities;
     // Does the client support the `workspace/configuration` request?
