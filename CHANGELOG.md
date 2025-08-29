@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.27.0](https://github.com/equinor/vscode-septic/compare/v1.26.1...v1.27.0) (2025-08-28)
+
+
+### ✨ Features
+
+* add custom septic view container ([#818](https://github.com/equinor/vscode-septic/issues/818)) ([5a54cd9](https://github.com/equinor/vscode-septic/commit/5a54cd9fb4d26db592c25e545df6476332d1db97))
+
 ## [1.26.1](https://github.com/equinor/vscode-septic/compare/v1.26.0...v1.26.1) (2025-08-22)
 
 
