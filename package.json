@@ -78,6 +78,11 @@
         "icon": "$(refresh)"
       },
       {
+        "command": "septic.functionTree.refresh",
+        "title": "Septic: Refresh Functions",
+        "icon": "$(refresh)"
+      },
+      {
         "command": "septic.applicationTree.start",
         "title": "Septic: Start Application",
         "icon": "$(play)"
@@ -239,6 +244,10 @@
       {
         "view": "septic-scg-variables",
         "contents": "This view give an overview of the current Septic Scg/Jinja variables for the current configuration file based on the sources used in the Scg config file"
+      },
+      {
+        "view": "septic-functions",
+        "contents": "This view gives an overview of the current Septic Functions in open editor."
       }
     ],
     "views": {
@@ -250,6 +259,10 @@
         {
           "id": "septic-scg-variables",
           "name": "Scg/Jinja variables"
+        },
+        {
+          "id": "septic-functions",
+          "name": "Functions"
         }
       ]
     },
@@ -272,6 +285,11 @@
         {
           "command": "septic.applicationTree.refresh",
           "when": "view == septic-applications",
+          "group": "navigation"
+        },
+        {
+          "command": "septic.functionTree.refresh",
+          "when": "view == septic-functions",
           "group": "navigation"
         }
       ],

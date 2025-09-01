@@ -9,8 +9,8 @@ import { SepticFunction, SepticFunctionLine } from './septic/septicFunction';
 // Types for root function info
 export type { SepticFunction, SepticFunctionLine };
 // Request for root functions in a cnfg file
-export const getRootFunctions = new RequestType<{ uri: string }, SepticFunction[], unknown>(
-    "septic/getRootFunctions"
+export const getFunctions = new RequestType<{ uri: string }, SepticFunction[], unknown>(
+    "septic/getFunctions"
 );
 
 export interface SepticVariable {

@@ -238,7 +238,7 @@ connection.onRequest(protocol.validateAlg, async (param) => {
     return validateStandAloneCalc(param.calc, context);
 });
 
-connection.onRequest(protocol.getRootFunctions, async (param) => {
+connection.onRequest(protocol.getFunctions, async (param) => {
     const cnfg: SepticCnfg | undefined = await langService.cnfgProvider.get(param.uri);
     if (!cnfg) {
         return [];

@@ -8,7 +8,7 @@ import * as protocol from "./protocol";
 import * as path from "path";
 import { LanguageClient } from "vscode-languageclient/node";
 import { generateCalc } from './lm';
-import { ApplicationTreeItem, ApplicationTreeItemType, ApplicationTreeProvider } from './treeProviders';
+import { ApplicationTreeItem, ApplicationTreeItemType, ApplicationTreeProvider, SepticFunctionTreeProvider } from './treeProviders';
 import { SepticApplicationManager } from './applicationManager';
 import { createMdfWebviewPanel } from './webviews';
 
@@ -226,6 +226,12 @@ export function registerCommandRefreshApplications(applicationManager: SepticApp
 	});
 }
 
+export function registerCommandRefreshFunctions(functionTree: SepticFunctionTreeProvider) {
+	vscode.commands.registerCommand('septic.functionTree.refresh', async () => {
+		functionTree.refresh();
+	});
+}
+
 export function registerCommandStartApplication(applicationManager: SepticApplicationManager) {
 	vscode.commands.registerCommand('septic.applicationTree.start', async (e: ApplicationTreeItem) => {
 		const application = await applicationManager.getApplicationByName(e.label);
@@ -324,7 +330,7 @@ export function registerCommandGetFunctions(context: vscode.ExtensionContext, cl
 	});
 }
 
-export function registerCommands(context: vscode.ExtensionContext, client: LanguageClient, applicationTreeProvider: ApplicationTreeProvider, applicationManager: SepticApplicationManager) {
+export function registerCommands(context: vscode.ExtensionContext, client: LanguageClient, applicationTreeProvider: ApplicationTreeProvider, applicationManager: SepticApplicationManager, functionTree: SepticFunctionTreeProvider) {
 	registerCommandDetectCycles(context, client);
 	registerCommandCompareCnfg(context, client);
 	registerCommandOpcTagList(context, client);
@@ -335,6 +341,7 @@ export function registerCommands(context: vscode.ExtensionContext, client: Langu
 	registerCommandAddSource(applicationTreeProvider);
 	registerCommandStartApplication(applicationManager);
 	registerCommandRefreshApplications(applicationManager);
+	registerCommandRefreshFunctions(functionTree);
 	registerCommandMakeConfig();
 	registerCommandPlotModel();
 	registerCommandGetFunctions(context, client);

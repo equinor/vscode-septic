@@ -15,7 +15,7 @@ import { registerCommands } from './commands';
 import { registerRequestHandlers } from "./requests";
 import { registerChatTools } from './tools';
 import { registerSepticChatParticipant } from './chatParticipant';
-import { ApplicationTreeProvider, JinjaVariablesTreeProvider } from './treeProviders';
+import { ApplicationTreeProvider, JinjaVariablesTreeProvider, SepticFunctionTreeProvider } from './treeProviders';
 import { SepticApplicationManager } from './applicationManager';
 
 let client: LanguageClient;
@@ -56,14 +56,17 @@ export function activate(context: vscode.ExtensionContext) {
     const appManager = new SepticApplicationManager(context);
     const applicationsTreeProvider = new ApplicationTreeProvider(appManager);
     const jinjaVariablesTreeProvider = new JinjaVariablesTreeProvider(appManager);
+    const septicFunctionTreeProvider = new SepticFunctionTreeProvider(client);
     vscode.window.registerTreeDataProvider('septic-applications', applicationsTreeProvider);
     vscode.window.registerTreeDataProvider('septic-scg-variables', jinjaVariablesTreeProvider);
+    vscode.window.registerTreeDataProvider('septic-functions', septicFunctionTreeProvider);
     vscode.window.onDidChangeActiveTextEditor((e) => {
         if (!e) {
             return;
         }
         applicationsTreeProvider.refresh();
         jinjaVariablesTreeProvider.refresh();
+        septicFunctionTreeProvider.refresh();
     })
     vscode.workspace.onDidSaveTextDocument((e) => {
         if (path.extname(e.fileName) === '.yaml' || path.extname(e.fileName) === '.yml') {
@@ -71,7 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
     })
     registerChatTools(context, client)
-    registerCommands(context, client, applicationsTreeProvider, appManager);
+    registerCommands(context, client, applicationsTreeProvider, appManager, septicFunctionTreeProvider);
     registerRequestHandlers(client);
     registerSepticChatParticipant(context, client)
     client.start();
