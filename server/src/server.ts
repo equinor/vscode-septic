@@ -244,7 +244,7 @@ connection.onRequest(protocol.getRootFunctions, async (param) => {
         return [];
     }
     await cnfg.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
-    return cnfg.getRootFunctions();
+    return cnfg.getFunctions();
 });
 
 connection.onInitialize((params: InitializeParams) => {

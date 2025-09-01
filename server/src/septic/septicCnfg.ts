@@ -26,6 +26,7 @@ import {
 import { removeSpaces, transformPositionsToOriginal } from "../util";
 import { updateParentObjects } from "./hierarchy";
 import { Alg, Cycle, findAlgCycles } from "./cycle";
+import { getFunctionsFromCalcPvrs, SepticFunction } from './septicFunction';
 
 export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];
@@ -231,148 +232,12 @@ export class SepticCnfg implements SepticReferenceProvider {
         return findAlgCycles(algs);
     }
 
-    public getRootFunctions(): SepticFunction[] {
-        const calcModels = this.objects.filter((obj) => obj.isType("CalcModl"));
-        const functions: SepticFunction[] = [];
-        for (const calcModel of calcModels) {
-            const functionsInModel = this.getFunctionInCalcModel(calcModel);
-            functions.push(...functionsInModel);
-        }
+    public getFunctions(): SepticFunction[] {
+        const calcPvrs = this.objects.filter((obj) => obj.isType("CalcPvr"));
+        const functions: SepticFunction[] = getFunctionsFromCalcPvrs(calcPvrs);
         return functions;
     }
-
-    public getFunctionInCalcModel(calcModel: SepticObject): SepticFunction[] {
-        const nodes = calcModel.children.filter((child) => child.identifier?.id).map((child) => {
-            return {
-                obj: child,
-                name: child.identifier!.id,
-                parents: [],
-                children: [],
-                inputs: [],
-                visited: false,
-            };
-        });
-        nodes.reverse()
-        for (const node of nodes) {
-            this.visitNode(node, nodes, []);
-        }
-        const rootNodes = nodes.filter((node) => node.parents.length === 0);
-        const functions: SepticFunction[] = rootNodes.map((node) => this.createFunctionFromNode(node));
-        return functions;
-    }
-
-    private createFunctionFromNode(node: SepticFunctionNode): SepticFunction {
-        const allNodes = [node, ...getDescendants(node)];
-        const visited = new Set<SepticFunctionNode>();
-        const sorted: SepticFunctionNode[] = [];
-
-        function visit(n: SepticFunctionNode) {
-            if (visited.has(n)) return;
-            visited.add(n);
-            for (const child of n.children) {
-                visit(child);
-            }
-            sorted.push(n);
-        }
-        for (const n of allNodes) {
-            visit(n);
-        }
-
-        const lines = sorted.map((child) => {
-            return {
-                name: child.name,
-                alg: child.obj.getAttribute("Alg")?.getValue() || "",
-                doc: child.obj.getAttribute("Text1")?.getValue() || "",
-            };
-        });
-        const inputs = Array.from(new Set(allNodes.map((n) => n.inputs).flat()));
-        return {
-            name: node.name,
-            lines: lines,
-            inputs: inputs,
-        };
-    }
-
-    private visitNode(node: SepticFunctionNode, allNodes: SepticFunctionNode[], ancestors: string[]) {
-        if (node.visited) {
-            return;
-        }
-        node.visited = true;
-        const parsedAlg = node.obj.parseAlg();
-        if (!parsedAlg) {
-            return;
-        }
-        const visitor = new AlgVisitor();
-        visitor.visit(parsedAlg.algExpr);
-        visitor.variables.forEach((xvr) => {
-            const name = xvr.value.split(".")[0];
-            const refNode = allNodes.find((n) => n.name === name);
-            if (refNode) {
-                refNode.parents.push(node);
-                if (ancestors.includes(refNode.name)) {
-                    node.inputs.push(refNode.name);
-                } else {
-                    node.children.push(refNode);
-                }
-                this.visitNode(refNode, allNodes, [...ancestors, node.name]);
-
-            } else {
-                node.inputs.push(name);
-            }
-        });
-    }
 }
-
-function getDescendants(node: SepticFunctionNode, visited = new Set<SepticFunctionNode>()): SepticFunctionNode[] {
-    const descendants: SepticFunctionNode[] = [];
-    for (const child of node.children) {
-        if (!visited.has(child)) {
-            visited.add(child);
-            descendants.push(child, ...getDescendants(child, visited));
-        }
-    }
-    return descendants;
-};
-
-export function printFunctionInfo(func: SepticFunction) {
-    console.log(`function ${func.name}(${func.inputs.join(", ")})`);
-    func.lines.forEach((line, idx) => {
-        if (idx === func.lines.length - 1) {
-            // Last line: print as return statement
-            const textLine = line.doc
-                ? `   return ${line.alg} #${line.doc}`
-                : `   return ${line.alg}`;
-            console.log(textLine);
-        } else {
-            const textLine = line.doc
-                ? `   ${line.name} = ${line.alg} #${line.doc}`
-                : `   ${line.name} = ${line.alg}`;
-            console.log(textLine);
-        }
-    });
-}
-
-interface SepticFunctionNode {
-    obj: SepticObject;
-    name: string;
-    parents: SepticFunctionNode[];
-    children: SepticFunctionNode[];
-    inputs: string[];
-    visited: boolean;
-}
-
-export interface SepticFunction {
-    name: string;
-    lines: SepticFunctionLine[];
-    inputs: string[];
-}
-
-export interface SepticFunctionLine {
-    name: string;
-    alg: string;
-    doc: string;
-}
-
 
 export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
     const xvrRefs: SepticReference[] = [];

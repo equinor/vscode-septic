@@ -17,7 +17,7 @@ export interface SepticFunction {
     inputs: string[];
 }
 // Request for root functions in a cnfg file
-export const getRootFunctions = new RequestType<{ uri: string }, SepticFunction[], unknown>(
+export const getFunctions = new RequestType<{ uri: string }, SepticFunction[], unknown>(
     "septic/getRootFunctions"
 );
 

@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import { parseSepticSync, SepticMetaInfoProvider } from '../septic';
 import { MockDocument } from './util';
-import { printFunctionInfo } from '../septic';
 
 SepticMetaInfoProvider.setVersion("v3.0");
 
@@ -22,7 +21,7 @@ describe("SepticFunction", () => {
 		const doc = new MockDocument(text);
 		const cnfg = parseSepticSync(doc.getText());
 		await cnfg.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
-		const functions = cnfg.getRootFunctions();
+		const functions = cnfg.getFunctions();
 		expect(functions.length).to.equal(1);
 		expect(functions[0].lines.length).to.equal(3);
 		expect(functions[0].inputs.length).to.equal(0);
@@ -43,7 +42,7 @@ describe("SepticFunction", () => {
 		const doc = new MockDocument(text);
 		const cnfg = parseSepticSync(doc.getText());
 		await cnfg.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
-		const functions = cnfg.getRootFunctions();
+		const functions = cnfg.getFunctions();
 		expect(functions.length).to.equal(1);
 		expect(functions[0].lines.length).to.equal(3);
 		expect(functions[0].inputs.length).to.equal(1);
@@ -67,8 +66,7 @@ describe("SepticFunction", () => {
 		const doc = new MockDocument(text);
 		const cnfg = parseSepticSync(doc.getText());
 		await cnfg.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
-		const functions = cnfg.getRootFunctions();
-		printFunctionInfo(functions[0]);
+		const functions = cnfg.getFunctions();
 		expect(functions.length).to.equal(2);
 
 	});

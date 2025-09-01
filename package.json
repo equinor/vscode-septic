@@ -49,8 +49,8 @@
         "title": "Septic: Generate Calc"
       },
       {
-        "command": "septic.showRootFunctions",
-        "title": "Septic: Show Root Functions"
+        "command": "septic.getFunctions",
+        "title": "Septic: Get functions in file"
       },
       {
         "command": "septic.scgtree.addTemplate",

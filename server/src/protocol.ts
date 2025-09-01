@@ -5,7 +5,7 @@
 
 import { RequestType, Diagnostic } from "vscode-languageserver";
 import { SepticCalcInfo, SepticObjectDoc } from './septic';
-import { SepticFunction, SepticFunctionLine } from './septic/septicCnfg';
+import { SepticFunction, SepticFunctionLine } from './septic/septicFunction';
 // Types for root function info
 export type { SepticFunction, SepticFunctionLine };
 // Request for root functions in a cnfg file
