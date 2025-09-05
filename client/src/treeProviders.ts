@@ -44,7 +44,7 @@ export class ApplicationTreeProvider implements vscode.TreeDataProvider<Applicat
 					command: 'vscode.open',
 					title: 'Open Template',
 					arguments: [vscode.Uri.file(element.config.templatepath + "/" + layout.name || '')]
-				}));
+				}, layout.source));
 			}
 			return Promise.resolve(items);
 		} else if (element.type === ApplicationTreeItemType.Sources) {
@@ -118,25 +118,31 @@ export class ApplicationTreeItem extends vscode.TreeItem {
 		public readonly type: ApplicationTreeItemType,
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
 		public readonly config: ScgConfig,
-		public readonly command?: vscode.Command
+		public readonly command?: vscode.Command,
+		public readonly source?: string
 	) {
 		super(label, collapsibleState);
 
 		this.tooltip = `${this.label}`;
-		this.description = this.type;
 		this.contextValue = this.type;
 		if (type === ApplicationTreeItemType.Config) {
 			this.iconPath = new vscode.ThemeIcon("settings-view-bar-icon");
+			this.description = this.type;
 		} else if (type === ApplicationTreeItemType.Application) {
 			this.iconPath = new vscode.ThemeIcon("application");
+			this.description = this.type;
 		} else if (type === ApplicationTreeItemType.Layout) {
 			this.iconPath = new vscode.ThemeIcon("folder");
+			this.description = "";
 		} else if (type === ApplicationTreeItemType.Template) {
 			this.iconPath = new vscode.ThemeIcon("file");
+			this.description = source ? source : "";
 		} else if (type === ApplicationTreeItemType.Sources) {
 			this.iconPath = new vscode.ThemeIcon("folder");
+			this.description = "";
 		} else if (type === ApplicationTreeItemType.Source) {
 			this.iconPath = new vscode.ThemeIcon("outline-view-icon");
+			this.description = this.type;
 		}
 	}
 }
