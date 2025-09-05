@@ -83,7 +83,7 @@ export class ScgConfig {
 				});
 			}
 		} else {
-			this.config.layout.push({
+			this.config.layout.splice(0, 0, {
 				name,
 				source: source,
 			});
