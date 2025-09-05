@@ -190,6 +190,35 @@ export function registerCommandRenameTemplate(applicationTreeProvider: Applicati
 	});
 }
 
+
+export function registerCommandAddSource(applicationTreeProvider: ApplicationTreeProvider) {
+	vscode.commands.registerCommand('septic.scgtree.addSource', async (node: ApplicationTreeItem) => {
+		if (!node) {
+			return;
+		}
+		const newName = await vscode.window.showInputBox({ prompt: "Enter new source name" });
+		if (!newName) {
+			return;
+		}
+		const fileName = await vscode.window.showInputBox({ prompt: "Enter source file name (with path relative to scg folder)" });
+		if (!fileName) {
+			return;
+		}
+		if (!fileName.endsWith(".csv")) {
+			vscode.window.showErrorMessage("Source file must be a CSV file");
+			return;
+		}
+		const fileUri = vscode.Uri.file(path.join(path.dirname(node.config.path), fileName));
+		const dirUri = vscode.Uri.file(path.dirname(fileUri.fsPath));
+		await vscode.workspace.fs.createDirectory(dirUri);
+		const dummyContent = new TextEncoder().encode("Dummy;Content\n");
+		await vscode.workspace.fs.writeFile(fileUri, dummyContent);
+		node.config.addSource(newName, fileName);
+		await node.config.save()
+		applicationTreeProvider.refresh();
+	});
+}
+
 export function registerCommandRefreshApplications(applicationManager: SepticApplicationManager) {
 	vscode.commands.registerCommand('septic.applicationTree.refresh', async () => {
 		applicationManager.refreshApplications();
@@ -259,6 +288,7 @@ export function registerCommands(context: vscode.ExtensionContext, client: Langu
 	registerCommandAddTemplate(applicationTreeProvider);
 	registerCommandRemoveTemplate(applicationTreeProvider);
 	registerCommandRenameTemplate(applicationTreeProvider);
+	registerCommandAddSource(applicationTreeProvider);
 	registerCommandStartApplication(applicationManager);
 	registerCommandRefreshApplications(applicationManager);
 	registerCommandMakeConfig();

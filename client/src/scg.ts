@@ -104,6 +104,13 @@ export class ScgConfig {
 		}
 	}
 
+	public addSource(name: string, fileName: string): void {
+		this.config.sources.push({
+			filename: fileName,
+			id: name
+		});
+	}
+
 	public async updateConfig() {
 		this.config = await readScgConfig(this.path);
 	}

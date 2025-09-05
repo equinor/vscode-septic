@@ -49,6 +49,11 @@
         "icon": "$(new-file)"
       },
       {
+        "command": "septic.scgtree.addSource",
+        "title": "Septic: Add source",
+        "icon": "$(new-file)"
+      },
+      {
         "command": "septic.scgtree.removeTemplate",
         "title": "Septic: Remove template",
         "icon": "$(trash)"
@@ -261,6 +266,11 @@
         {
           "command": "septic.scgtree.renameTemplate",
           "when": "view == septic-applications && (viewItem == Template)",
+          "group": "inline"
+        },
+        {
+          "command": "septic.scgtree.addSource",
+          "when": "view == septic-applications && (viewItem == Sources)",
           "group": "inline"
         },
         {
