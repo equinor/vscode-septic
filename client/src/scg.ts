@@ -97,6 +97,13 @@ export class ScgConfig {
 		}
 	}
 
+	public renameTemplate(oldName: string, newName: string): void {
+		const index = this.config.layout.findIndex(item => item.name === oldName);
+		if (index !== -1) {
+			this.config.layout[index].name = newName;
+		}
+	}
+
 	public async updateConfig() {
 		this.config = await readScgConfig(this.path);
 	}

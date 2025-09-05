@@ -54,6 +54,11 @@
         "icon": "$(trash)"
       },
       {
+        "command": "septic.scgtree.renameTemplate",
+        "title": "Septic: Rename template in config and file",
+        "icon": "$(edit)"
+      },
+      {
         "command": "septic.applicationTree.refresh",
         "title": "Septic: Refresh Applications",
         "icon": "$(refresh)"
@@ -250,6 +255,11 @@
         },
         {
           "command": "septic.scgtree.removeTemplate",
+          "when": "view == septic-applications && (viewItem == Template)",
+          "group": "inline"
+        },
+        {
+          "command": "septic.scgtree.renameTemplate",
           "when": "view == septic-applications && (viewItem == Template)",
           "group": "inline"
         },

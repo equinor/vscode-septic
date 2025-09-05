@@ -174,6 +174,22 @@ export function registerCommandRemoveTemplate(applicationTreeProvider: Applicati
 	});
 }
 
+export function registerCommandRenameTemplate(applicationTreeProvider: ApplicationTreeProvider) {
+	vscode.commands.registerCommand('septic.scgtree.renameTemplate', async (node: ApplicationTreeItem) => {
+		if (!node) {
+			return;
+		}
+		const newName = await vscode.window.showInputBox({ prompt: "Enter new template name", value: node.label });
+		if (!newName) {
+			return;
+		}
+		await vscode.workspace.fs.rename(vscode.Uri.file(node.config.templatepath + "/" + node.label), vscode.Uri.file(node.config.templatepath + "/" + newName), { overwrite: false });
+		node.config.renameTemplate(node.label, newName);
+		await node.config.save()
+		applicationTreeProvider.refresh();
+	});
+}
+
 export function registerCommandRefreshApplications(applicationManager: SepticApplicationManager) {
 	vscode.commands.registerCommand('septic.applicationTree.refresh', async () => {
 		applicationManager.refreshApplications();
@@ -242,6 +258,7 @@ export function registerCommands(context: vscode.ExtensionContext, client: Langu
 	registerCommandGenerateCalc(context, client);
 	registerCommandAddTemplate(applicationTreeProvider);
 	registerCommandRemoveTemplate(applicationTreeProvider);
+	registerCommandRenameTemplate(applicationTreeProvider);
 	registerCommandStartApplication(applicationManager);
 	registerCommandRefreshApplications(applicationManager);
 	registerCommandMakeConfig();
