@@ -310,7 +310,7 @@ export function registerCommandGetFunctions(context: vscode.ExtensionContext, cl
 		}
 		// Format output similar to printFunctionInfo
 		const formatted = functions.map(func => {
-			let out = `function ${func.name}(${func.inputs.join(", ")})\n`;
+			let out = `function ${func.name}(${func.inputs.map(input => `${input.name}: ${input.type}`).join(", ")})\n`;
 			func.lines.forEach((line, idx) => {
 				if (idx === func.lines.length - 1) {
 					out += line.doc

@@ -16,11 +16,21 @@ export interface SepticFunction {
 	inputs: string[];
 }
 
+export interface SepticFunctionInput {
+	name: string;
+	type: string;
+	offset: number;
+	uri: string;
+}
+
 export interface SepticFunctionLine {
 	name: string;
 	alg: string;
 	doc: string;
+	offset: number;
+	uri: string;
 }
+
 
 export function getFunctionsFromCalcPvrs(calcPvrs: SepticObject[]): SepticFunction[] {
 	const nodes = calcPvrs.filter((child) => child.identifier?.id).map((child) => {
@@ -109,6 +119,8 @@ function createFunctionFromNode(name: string, node: SepticFunctionNode, maxDepth
 			name: child.name,
 			alg: child.obj.getAttribute("Alg")?.getValue() || "",
 			doc: child.obj.getAttribute("Text1")?.getValue() || "",
+			offset: child.obj.start,
+			uri: child.obj.uri
 		};
 	});
 	sorted.forEach((child) => {

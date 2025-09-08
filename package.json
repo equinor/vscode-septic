@@ -234,6 +234,13 @@
           "title": "Septic",
           "icon": "./images/septic_black_and_white.svg"
         }
+      ],
+      "panel": [
+        {
+          "id": "septic-functions-panel",
+          "title": "Septic: Functions",
+          "icon": "./images/septic_black_and_white.svg"
+        }
       ]
     },
     "viewsWelcome": [
@@ -259,7 +266,9 @@
         {
           "id": "septic-scg-variables",
           "name": "Scg/Jinja variables"
-        },
+        }
+      ],
+      "septic-functions-panel": [
         {
           "id": "septic-functions",
           "name": "Functions"
