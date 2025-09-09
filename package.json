@@ -32,6 +32,11 @@
         "title": "Septic: Detect Cycles in Calcs"
       },
       {
+        "command": "septic.plotModel",
+        "title": "Septic: Plot Model File",
+        "icon": "$(graph)"
+      },
+      {
         "command": "septic.opcTagList",
         "title": "Septic: List all OPC-Tags"
       },
@@ -235,6 +240,20 @@
       ]
     },
     "menus": {
+      "editor/title": [
+        {
+          "command": "septic.plotModel",
+          "when": "resourceExtname == .mdf",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "septic.plotModel",
+          "when": "resourceExtname == .mdf",
+          "group": "1_septic"
+        }
+      ],
       "view/title": [
         {
           "command": "septic.applicationTree.refresh",

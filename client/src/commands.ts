@@ -10,6 +10,7 @@ import { LanguageClient } from "vscode-languageclient/node";
 import { generateCalc } from './lm';
 import { ApplicationTreeItem, ApplicationTreeItemType, ApplicationTreeProvider } from './treeProviders';
 import { SepticApplicationManager } from './applicationManager';
+import { createMdfWebviewPanel } from './webviews';
 
 export function registerCommandDetectCycles(context: vscode.ExtensionContext, client: LanguageClient) {
 	vscode.commands.registerCommand("septic.detectCycles", async () => {
@@ -235,6 +236,14 @@ export function registerCommandGenerateCalc(context: vscode.ExtensionContext, cl
 	});
 }
 
+export function registerCommandPlotModel() {
+	vscode.commands.registerCommand('septic.plotModel', async (e: vscode.Uri) => {
+		const doc = await vscode.workspace.openTextDocument(e);
+		const mdfContent = doc.getText();
+		createMdfWebviewPanel(mdfContent, path.basename(e.path));
+	})
+}
+
 export function registerCommands(context: vscode.ExtensionContext, client: LanguageClient, applicationTreeProvider: ApplicationTreeProvider, applicationManager: SepticApplicationManager) {
 	registerCommandDetectCycles(context, client);
 	registerCommandCompareCnfg(context, client);
@@ -245,6 +254,7 @@ export function registerCommands(context: vscode.ExtensionContext, client: Langu
 	registerCommandStartApplication(applicationManager);
 	registerCommandRefreshApplications(applicationManager);
 	registerCommandMakeConfig();
+	registerCommandPlotModel();
 }
 
 
