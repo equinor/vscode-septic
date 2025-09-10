@@ -113,7 +113,6 @@ function createFunctionFromNode(name: string, node: SepticFunctionNode, maxDepth
 		sorted.push(n);
 	}
 	visit(node, 0);
-
 	const lines = sorted.map((child) => {
 		return {
 			name: child.name,
@@ -131,22 +130,4 @@ function createFunctionFromNode(name: string, node: SepticFunctionNode, maxDepth
 		lines: lines,
 		inputs: Array.from(inputs),
 	};
-}
-
-export function printFunctionInfo(func: SepticFunction) {
-	console.log(`function ${func.name}(${func.inputs.join(", ")})`);
-	func.lines.forEach((line, idx) => {
-		if (idx === func.lines.length - 1) {
-			// Last line: print as return statement
-			const textLine = line.doc
-				? `   return ${line.alg} #${line.doc}`
-				: `   return ${line.alg}`;
-			console.log(textLine);
-		} else {
-			const textLine = line.doc
-				? `   ${line.name} = ${line.alg} #${line.doc}`
-				: `   ${line.name} = ${line.alg}`;
-			console.log(textLine);
-		}
-	});
 }
