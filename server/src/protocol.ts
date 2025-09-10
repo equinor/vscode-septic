@@ -3,8 +3,34 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { RequestType, Diagnostic } from "vscode-languageserver";
+import { RequestType, Diagnostic, Position } from "vscode-languageserver";
 import { SepticCalcInfo, SepticObjectDoc } from './septic';
+
+
+export interface SepticFunctionExport {
+    name: string;
+    lines: SepticFunctionLineExport[];
+    inputs: SepticFunctionInputExport[];
+}
+
+export interface SepticFunctionInputExport {
+    name: string;
+    type: string;
+    pos?: Position;
+    uri: string;
+}
+
+export interface SepticFunctionLineExport {
+    name: string;
+    alg: string;
+    doc: string;
+    pos?: Position;
+    uri: string;
+}
+
+export const getFunctions = new RequestType<{ uri: string }, SepticFunctionExport[], unknown>(
+    "septic/getFunctions"
+);
 
 export interface SepticVariable {
     name: string;
@@ -33,7 +59,7 @@ export const opcTagList = new RequestType<{ uri: string }, string, unknown>(
     "septic/opcTagList"
 );
 
-export const getContext = new RequestType<{ uri: string }, string, any>(
+export const getContext = new RequestType<{ uri: string }, string, unknown>(
     "septic/getContext"
 );
 

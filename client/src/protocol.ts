@@ -3,7 +3,32 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { RequestType, Diagnostic } from "vscode-languageclient";
+import { RequestType, Diagnostic, Position } from "vscode-languageclient";
+
+export interface SepticFunctionExport {
+    name: string;
+    lines: SepticFunctionLineExport[];
+    inputs: SepticFunctionInputExport[];
+}
+
+export interface SepticFunctionInputExport {
+    name: string;
+    type: string;
+    pos?: Position;
+    uri: string;
+}
+
+export interface SepticFunctionLineExport {
+    name: string;
+    alg: string;
+    doc: string;
+    pos?: Position;
+    uri: string;
+}
+// Request for root functions in a cnfg file
+export const getFunctions = new RequestType<{ uri: string }, SepticFunctionExport[], unknown>(
+    "septic/getFunctions"
+);
 
 export interface SepticCalcInfo {
     name: string;

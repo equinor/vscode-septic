@@ -49,6 +49,10 @@
         "title": "Septic: Generate Calc"
       },
       {
+        "command": "septic.getFunctions",
+        "title": "Septic: Get functions in file"
+      },
+      {
         "command": "septic.scgtree.addTemplate",
         "title": "Septic: Insert template below",
         "icon": "$(new-file)"
@@ -71,6 +75,11 @@
       {
         "command": "septic.applicationTree.refresh",
         "title": "Septic: Refresh Applications",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "septic.functionTree.refresh",
+        "title": "Septic: Refresh Functions",
         "icon": "$(refresh)"
       },
       {
@@ -225,6 +234,13 @@
           "title": "Septic",
           "icon": "./images/septic_black_and_white.svg"
         }
+      ],
+      "panel": [
+        {
+          "id": "septic-functions-panel",
+          "title": "Septic: Functions",
+          "icon": "./images/septic_black_and_white.svg"
+        }
       ]
     },
     "viewsWelcome": [
@@ -235,6 +251,10 @@
       {
         "view": "septic-scg-variables",
         "contents": "This view give an overview of the current Septic Scg/Jinja variables for the current configuration file based on the sources used in the Scg config file"
+      },
+      {
+        "view": "septic-functions",
+        "contents": "This view gives an overview of the current Septic Functions in open editor."
       }
     ],
     "views": {
@@ -246,6 +266,12 @@
         {
           "id": "septic-scg-variables",
           "name": "Scg/Jinja variables"
+        }
+      ],
+      "septic-functions-panel": [
+        {
+          "id": "septic-functions",
+          "name": "Functions"
         }
       ]
     },
@@ -268,6 +294,11 @@
         {
           "command": "septic.applicationTree.refresh",
           "when": "view == septic-applications",
+          "group": "navigation"
+        },
+        {
+          "command": "septic.functionTree.refresh",
+          "when": "view == septic-functions",
           "group": "navigation"
         }
       ],

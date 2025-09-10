@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import { ScgConfig, ScgSource } from './scg';
 import { SepticApplication, SepticApplicationManager } from './applicationManager';
 import * as path from 'path';
+import { LanguageClient } from 'vscode-languageclient/node';
+import { SepticFunctionExport } from './protocol';
 
 export class ApplicationTreeProvider implements vscode.TreeDataProvider<ApplicationTreeItem> {
 
@@ -214,5 +216,101 @@ export class JinjaVariableNode extends vscode.TreeItem {
 			arguments: [{ snippet: `{{ ${label} }}` }]
 		}
 
+	}
+}
+
+export class SepticFunctionTreeProvider implements vscode.TreeDataProvider<SepticFunctionTreeItem> {
+
+	private _onDidChangeTreeData: vscode.EventEmitter<SepticFunctionTreeItem | undefined | void> = new vscode.EventEmitter<SepticFunctionTreeItem | undefined | void>();
+	readonly onDidChangeTreeData: vscode.Event<SepticFunctionTreeItem | undefined | void> = this._onDidChangeTreeData.event;
+	private client: LanguageClient;
+	private functionsCache: SepticFunctionExport[] | undefined = undefined;
+
+	constructor(client: LanguageClient) {
+		this.client = client;
+	}
+
+	refresh(): void {
+		this._onDidChangeTreeData.fire();
+	}
+
+	getTreeItem(element: SepticFunctionTreeItem): vscode.TreeItem {
+		return element;
+	}
+
+	async getChildren(element?: SepticFunctionTreeItem): Promise<SepticFunctionTreeItem[]> {
+		if (!element) {
+			return Promise.resolve(this.getSepticFunctions());
+		}
+		if (element.type === SepticFunctionTreeItemType.Definition) {
+			const inputs = new SepticFunctionTreeItem("Inputs", vscode.TreeItemCollapsibleState.Collapsed, element.func, SepticFunctionTreeItemType.Inputs);
+			const code = new SepticFunctionTreeItem("Code", vscode.TreeItemCollapsibleState.Expanded, element.func, SepticFunctionTreeItemType.Code);
+			return Promise.resolve([inputs, code]);
+		} else if (element.type === SepticFunctionTreeItemType.Code) {
+			const lines = element.func.lines.map((line, index) => {
+				let label = "";
+				if (index === element.func.lines.length - 1) {
+					label += `return ${line.alg}`;
+				} else {
+					label += `${line.name} = ${line.alg}`;
+				}
+				const uri = vscode.Uri.parse(line.uri).with({ fragment: 'L' + (line.pos.line + 1) });
+				const command: vscode.Command = {
+					command: 'vscode.open',
+					title: 'Go to function',
+					arguments: [uri]
+				};
+				return new SepticFunctionTreeItem(label, vscode.TreeItemCollapsibleState.None, element.func, SepticFunctionTreeItemType.Line, command);
+			});
+			return Promise.resolve(lines)
+		} else if (element.type === SepticFunctionTreeItemType.Inputs) {
+			const inputs = element.func.inputs.map((input) => {
+				const uri = vscode.Uri.parse(input.uri).with({ fragment: 'L' + (input.pos.line + 1) });
+				const command: vscode.Command = {
+					command: 'vscode.open',
+					title: 'Go to function',
+					arguments: [uri]
+				};
+				return new SepticFunctionTreeItem(`${input.name}: ${input.type}`, vscode.TreeItemCollapsibleState.None, element.func, SepticFunctionTreeItemType.Input, command);
+			});
+			return Promise.resolve(inputs);
+		}
+
+	}
+
+	private async getSepticFunctions(): Promise<SepticFunctionTreeItem[]> {
+		const activeEditor = vscode.window.activeTextEditor;
+		if (!activeEditor) {
+			return undefined;
+		}
+		const functions: SepticFunctionExport[] = await this.client.sendRequest('septic/getFunctions', { uri: activeEditor.document.uri.toString() });
+		if (!functions || functions.length === 0) {
+			return this.functionsCache ? this.functionsCache.map(func => new SepticFunctionTreeItem(func.name, vscode.TreeItemCollapsibleState.Collapsed, func, SepticFunctionTreeItemType.Definition)) : undefined;
+		}
+		this.functionsCache = functions;
+		return functions.map(func => new SepticFunctionTreeItem(func.name, vscode.TreeItemCollapsibleState.Collapsed, func, SepticFunctionTreeItemType.Definition));
+	}
+}
+
+enum SepticFunctionTreeItemType {
+	Definition = "definition",
+	Inputs = "inputs",
+	Input = "input",
+	Code = "code",
+	Line = "line"
+}
+
+export class SepticFunctionTreeItem extends vscode.TreeItem {
+
+	constructor(
+		public readonly label: string,
+		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+		public readonly func: SepticFunctionExport,
+		public readonly type: SepticFunctionTreeItemType,
+		public readonly command?: vscode.Command
+	) {
+
+		super(label, collapsibleState);
+		this.contextValue = "septic.function";
 	}
 }

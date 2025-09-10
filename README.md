@@ -101,6 +101,25 @@ Septic Co-Pilot features powered by Large Language Models (LLM):
 
 Septic documentation is used as input to the Large Language Models (LLM) powering the Co-Pilot and is selected based on the selected version in the workspace.
 
+The extension provides a dedicated view for working with Septic projects. The view offer functionality for quick navigation between applications, SCG-config files and templates. Editing functionality for SCG-config is integrated in the view. Some of the functionality are dependent on that the project uses the best practices repo/application structure.
+
+![](./images/septic_view.PNG)
+
+ A separate view for tagged functions is offered in the terminal view.
+
+ ![](./images/septic_functions_view.PNG)
+
+ A tagged function is created by adding a `#functionName` in a `CalcPvr.Text2`. All calculations and inputs that the CalcPvr is dependent on is extracted. The recursive depth of the tree is can be set by using `#functionName(depth)`
+
+
+```cpp
+  CalcPvr:       {{Wellname}}State
+         Text1=  "Current state of the state machine"
+         Text2=  "#stateMachine(2)"
+           Alg=  "setgood(if({{Wellname}}IntermediateState > 0, {{Wellname}}IntermediateState, {{Wellname}}State))"
+```
+
+Model files (".mdf" or ".pdf") can be plotted by right clicking the model file in the file explorer and selecting `Septic: Plot Model File`
 
 ## Feedback and contributions
 

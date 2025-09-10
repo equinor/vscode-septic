@@ -238,6 +238,46 @@ connection.onRequest(protocol.validateAlg, async (param) => {
     return validateStandAloneCalc(param.calc, context);
 });
 
+connection.onRequest(protocol.getFunctions.method, async (param) => {
+    const cnfg: SepticCnfg | undefined = await langService.cnfgProvider.get(param.uri);
+    if (!cnfg) {
+        return [];
+    }
+    let context: SepticReferenceProvider | undefined = await contextManager.getContext(param.uri);
+    if (context) {
+        await context.load();
+    } else {
+        context = cnfg;
+    }
+    const functions = cnfg.getFunctions();
+
+    return await Promise.all(functions.map(async (func) => {
+        const inputs = await Promise.all(func.inputs.map(async (input) => {
+            const xvr = context.getObjectsByIdentifier(input).filter((obj) => obj.isXvr)[0];
+            if (xvr) {
+                const doc = await documentProvider.getDocument(xvr.uri);
+                return {
+                    name: input,
+                    type: xvr.type,
+                    pos: doc?.positionAt(xvr.start),
+                    uri: xvr.uri
+                };
+            }
+        }))
+        const lines = await Promise.all(func.lines.map(async (line) => {
+            const doc = await documentProvider.getDocument(param.uri);
+            return { name: line.name, alg: line.alg, doc: line.doc, pos: doc?.positionAt(line.offset), uri: line.uri };
+        }));
+        return {
+            name: func.name,
+            lines: lines,
+            inputs: inputs.filter((i) => !!i)
+        };
+    }));
+
+
+});
+
 connection.onInitialize((params: InitializeParams) => {
     const capabilities = params.capabilities;
     // Does the client support the `workspace/configuration` request?

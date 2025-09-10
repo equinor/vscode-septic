@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { AlgVisitor, parseAlg } from "./algParser";
+import { AlgVisitor } from "./algParser";
 import { SepticTokenType } from "./septicTokens";
 import {
     SepticMetaInfoProvider,
@@ -23,9 +23,10 @@ import {
     createSepticReference,
     ReferenceType,
 } from "./reference";
-import { removeJinjaLoopsAndIfs, removeSpaces, transformPositionsToOriginal } from "../util";
+import { removeSpaces, transformPositionsToOriginal } from "../util";
 import { updateParentObjects } from "./hierarchy";
 import { Alg, Cycle, findAlgCycles } from "./cycle";
+import { getFunctionsFromCalcPvrs, SepticFunction } from './septicFunction';
 
 export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];
@@ -230,6 +231,12 @@ export class SepticCnfg implements SepticReferenceProvider {
         }
         return findAlgCycles(algs);
     }
+
+    public getFunctions(): SepticFunction[] {
+        const calcPvrs = this.objects.filter((obj) => obj.isType("CalcPvr"));
+        const functions: SepticFunction[] = getFunctionsFromCalcPvrs(calcPvrs);
+        return functions;
+    }
 }
 
 export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
@@ -269,35 +276,27 @@ export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
 
 function calcPvrReferences(obj: SepticObject): SepticReference[] {
     const refs: SepticReference[] = [];
-    const alg = obj.getAttribute("Alg");
-    if (!alg) {
-        return [];
-    }
-    let expr;
-    const algString = alg.getValue() || "";
-    const { strippedString, positionsMap } = removeJinjaLoopsAndIfs(algString);
-    try {
-        expr = parseAlg(strippedString);
-    } catch {
+    const parsedAlg = obj.parseAlg();
+    if (!parsedAlg) {
         return [];
     }
     const visitor = new AlgVisitor();
-    visitor.visit(expr);
+    visitor.visit(parsedAlg.algExpr);
 
     visitor.variables.forEach((xvr) => {
         const identifier = xvr.value.split(".")[0];
         let start = xvr.start;
         const diff = xvr.end - xvr.start;
-        if (positionsMap.length) {
-            const originalPositions = transformPositionsToOriginal([start], positionsMap);
+        if (parsedAlg.positionsMap.length) {
+            const originalPositions = transformPositionsToOriginal([start], parsedAlg.positionsMap);
             start = originalPositions[0];
         }
         const ref: SepticReference = createSepticReference(
             identifier,
             {
                 uri: "",
-                start: alg!.getAttrValue()!.start + start + 1,
-                end: alg!.getAttrValue()!.start + start + diff + 1,
+                start: obj.getAttribute("Alg")!.getAttrValue()!.start + start + 1,
+                end: obj.getAttribute("Alg")!.getAttrValue()!.start + start + diff + 1,
             },
             undefined,
             ReferenceType.calc
