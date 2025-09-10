@@ -243,14 +243,14 @@
       "editor/title": [
         {
           "command": "septic.plotModel",
-          "when": "resourceExtname == .mdf",
+          "when": "resourceExtname == .mdf || resourceExtname == .pdf",
           "group": "navigation"
         }
       ],
       "explorer/context": [
         {
           "command": "septic.plotModel",
-          "when": "resourceExtname == .mdf",
+          "when": "resourceExtname == .mdf || resourceExtname == .pdf",
           "group": "1_septic"
         }
       ],
