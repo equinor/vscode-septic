@@ -101,7 +101,7 @@ function createFunctionFromNode(name: string, node: SepticFunctionNode, maxDepth
 		if (visited.has(n)) return;
 
 		visited.add(n);
-		if (maxDepth && depth == maxDepth) {
+		if (maxDepth !== undefined && depth == maxDepth) {
 			n.children.forEach((child) => {
 				inputs.add(child.name);
 			});

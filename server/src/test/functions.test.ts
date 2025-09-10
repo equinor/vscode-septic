@@ -72,5 +72,52 @@ describe("SepticFunction", () => {
 		expect(functions.length).to.equal(2);
 
 	});
+	it("Expect only a single function with one line and two inputs when depth is set to 0", async () => {
+		const text = `
+				CalcModl:  Test
+
+				CalcPvr:  A
+				Alg= "1+2"
+
+				CalcPvr:  B
+				Alg=  "A + 1"
+
+				CalcPvr: C
+				Text2= "#test(0)"
+				Alg= "A * B"
+
+			`;
+		const doc = new MockDocument(text);
+		const cnfg = parseSepticSync(doc.getText());
+		const functions = cnfg.getFunctions();
+		expect(functions.length).to.equal(1);
+		expect(functions[0].lines.length).to.equal(1);
+		expect(functions[0].inputs.length).to.equal(2);
+	});
+	it("Expect only a single function with one line and two inputs when depth is set to 0", async () => {
+		const text = `
+				CalcModl:  Test
+
+				CalcPvr:  A
+				Alg= "1+2"
+
+				CalcPvr:  B
+				Alg=  "A + 1"
+
+				CalcPvr: C
+				Alg= "A * B"
+
+				CalcPvr: D
+				Text2= "#test(1)"
+				Alg= "C + 1"
+
+			`;
+		const doc = new MockDocument(text);
+		const cnfg = parseSepticSync(doc.getText());
+		const functions = cnfg.getFunctions();
+		expect(functions.length).to.equal(1);
+		expect(functions[0].lines.length).to.equal(2);
+		expect(functions[0].inputs.length).to.equal(2);
+	});
 
 });
