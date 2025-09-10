@@ -1014,6 +1014,7 @@
   - '       Density=  700'
   - Compressibility=  500
   - ProductionIndex=  8
+  - '      StepSize=  0'
   description: Nonlinear model in a SmpcAppl
   prefix: wellmodel
 - body:
@@ -1023,6 +1024,7 @@
   - '       Density=  700'
   - Compressibility=  500
   - ProductionIndex=  8
+  - '      StepSize=  0'
   description: Nonlinear process, where the models are taken from the subr with same
     ID
   prefix: wellproc

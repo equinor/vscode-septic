@@ -9887,6 +9887,19 @@
     postfix: []
     snippet: ''
     tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Step size [%]
+    enums: []
+    list: false
+    name: StepSize
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
   description: Nonlinear model in a SmpcAppl
   name: WellModel
   parents:
@@ -9953,6 +9966,19 @@
     enums: []
     list: false
     name: ProductionIndex
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Step size [%]
+    enums: []
+    list: false
+    name: StepSize
     noCnfg: false
     nosnippet: false
     postfix: []
