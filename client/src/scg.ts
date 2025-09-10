@@ -83,7 +83,7 @@ export class ScgConfig {
 				});
 			}
 		} else {
-			this.config.layout.push({
+			this.config.layout.splice(0, 0, {
 				name,
 				source: source,
 			});
@@ -95,6 +95,20 @@ export class ScgConfig {
 		if (index !== -1) {
 			this.config.layout.splice(index, 1);
 		}
+	}
+
+	public renameTemplate(oldName: string, newName: string): void {
+		const index = this.config.layout.findIndex(item => item.name === oldName);
+		if (index !== -1) {
+			this.config.layout[index].name = newName;
+		}
+	}
+
+	public addSource(name: string, fileName: string): void {
+		this.config.sources.push({
+			filename: fileName,
+			id: name
+		});
 	}
 
 	public async updateConfig() {
