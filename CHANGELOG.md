@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.28.0](https://github.com/equinor/vscode-septic/compare/v1.27.0...v1.28.0) (2025-09-10)
+
+
+### 🧹 Chores
+
+* **deps:** bump actions/setup-node from 4 to 5 ([#823](https://github.com/equinor/vscode-septic/issues/823)) ([b047bb3](https://github.com/equinor/vscode-septic/commit/b047bb33b25eff08c1291eaecc294ece01db2bf4))
+* **deps:** bump actions/setup-python from 5 to 6 ([#824](https://github.com/equinor/vscode-septic/issues/824)) ([8783a57](https://github.com/equinor/vscode-septic/commit/8783a5760c9ba371884022c247780ac97339d1ee))
+* **deps:** bump typescript from 5.8.3 to 5.9.2 ([#811](https://github.com/equinor/vscode-septic/issues/811)) ([26675d0](https://github.com/equinor/vscode-septic/commit/26675d0cc8531865137df2409df582a72dcced5e))
+
+
+### 📚 Documentation
+
+* update Septic documentation for latest ([#820](https://github.com/equinor/vscode-septic/issues/820)) ([14f4992](https://github.com/equinor/vscode-septic/commit/14f4992787462908a19ec75532df65585f1ddb12))
+
+
+### ✨ Features
+
+* add command for plotting of model files ([#826](https://github.com/equinor/vscode-septic/issues/826)) ([d46b2bb](https://github.com/equinor/vscode-septic/commit/d46b2bb27aa4749bff0335fb2780c5dc665dc396))
+* add view of tagged functions ([#825](https://github.com/equinor/vscode-septic/issues/825)) ([97ef9fc](https://github.com/equinor/vscode-septic/commit/97ef9fc906e886f463cd79bdac6433338d897d96))
+* update editing of scg files in application tree view ([#822](https://github.com/equinor/vscode-septic/issues/822)) ([e18ee22](https://github.com/equinor/vscode-septic/commit/e18ee22ffb8fd61ea81164ed172fde6ae6354f73))
+
 ## [1.27.0](https://github.com/equinor/vscode-septic/compare/v1.26.1...v1.27.0) (2025-08-28)
 
 
