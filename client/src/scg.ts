@@ -174,7 +174,8 @@ export function validateScgConfig(data: ScgConfigSchema): boolean {
 	// Validate counters
 	if (data.counters) {
 		for (const counter of data.counters) {
-			if (typeof counter.name !== 'string' || typeof counter.value !== 'number') return false;
+			if (typeof counter.name !== 'string') return false;
+			if (counter.value && typeof counter.value !== 'number') return false;
 		}
 	}
 
