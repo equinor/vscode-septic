@@ -1,6 +1,12 @@
 import * as yaml from 'js-yaml';
 import * as path from 'path';
 import * as vscode from 'vscode';
+import Ajv from 'ajv';
+
+import * as scgSchema from '../../schemas/scg_config.schema.json';
+
+const ajv = new Ajv();
+const validate_scg = ajv.compile<ScgConfigSchema>(scgSchema);
 
 export interface ScgConfigSchema {
 	outputfile?: string;
@@ -153,47 +159,15 @@ export async function readScgConfig(filePath: string): Promise<ScgConfigSchema |
 		const uri = vscode.Uri.file(filePath);
 		const document = await vscode.workspace.openTextDocument(uri);
 		const fileContents = document.getText();
-		const data = yaml.load(fileContents) as ScgConfigSchema;
-		if (!validateScgConfig(data)) {
-			return undefined;
+		const data = yaml.load(fileContents);
+
+		if (validate_scg(data)) {
+			return data;
 		}
-		return data;
+		return undefined;
 	} catch {
 		return undefined;
 	}
-}
-
-export function validateScgConfig(data: ScgConfigSchema): boolean {
-	if (!data.templatepath || typeof data.templatepath !== 'string') return false;
-	if (data.adjustspacing && typeof data.adjustspacing !== 'boolean') return false;
-	if (data.verifycontent && typeof data.verifycontent !== 'boolean') return false;
-
-	// Validate optional fields
-	if (data.outputfile && typeof data.outputfile !== 'string') return false;
-
-	// Validate counters
-	if (data.counters) {
-		for (const counter of data.counters) {
-			if (typeof counter.name !== 'string') return false;
-			if (counter.value && typeof counter.value !== 'number') return false;
-		}
-	}
-
-	// Validate sources
-	for (const source of data.sources) {
-		if (typeof source.filename !== 'string' || typeof source.id !== 'string') return false;
-		if (source.sheet && typeof source.sheet !== 'string') return false;
-		if (source.delimiter && typeof source.delimiter !== 'string') return false;
-	}
-
-	// Validate layout
-	for (const layout of data.layout) {
-		if (typeof layout.name !== 'string') return false;
-		if (layout.source && typeof layout.source !== 'string') return false;
-		if (layout.include && typeof layout.include !== 'object') return false;
-	}
-
-	return true;
 }
 
 export async function isScgConfig(filePath: string): Promise<boolean> {
@@ -201,39 +175,10 @@ export async function isScgConfig(filePath: string): Promise<boolean> {
 		const uri = vscode.Uri.file(filePath);
 		const document = await vscode.workspace.openTextDocument(uri);
 		const fileContents = document.getText();
-		const data = yaml.load(fileContents) as ScgConfigSchema;
-		return validateScgConfig(data);
+		const data = yaml.load(fileContents);
+		return validate_scg(data);
 	} catch {
 		return false;
-	}
-}
-
-export async function findScgConfigFiles(): Promise<vscode.Uri[]> {
-	try {
-		const activeEditor = vscode.window.activeTextEditor;
-		if (!activeEditor) {
-			return [];
-		}
-		let currentFolder = vscode.Uri.file(activeEditor.document.uri.fsPath).with({ path: vscode.Uri.file(activeEditor.document.uri.fsPath).path.replace(/\/[^/]+$/, '') });
-		const workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-
-		while (currentFolder.fsPath.startsWith(workspaceFolder || '') && currentFolder.fsPath !== workspaceFolder) {
-			const files = await vscode.workspace.findFiles(new vscode.RelativePattern(currentFolder, '*.yaml'));
-			const scgConfigFiles: vscode.Uri[] = [];
-			for (const file of files) {
-				if (await isScgConfig(file.fsPath)) {
-					scgConfigFiles.push(file);
-				}
-			}
-			if (scgConfigFiles.length > 0) {
-				return scgConfigFiles;
-			}
-			currentFolder = vscode.Uri.file(currentFolder.fsPath).with({ path: vscode.Uri.file(currentFolder.fsPath).path.replace(/\/[^/]+$/, '') });
-		}
-		return [];
-	} catch (error) {
-		console.error('Error finding SCG config files:', error);
-		return [];
 	}
 }
 
