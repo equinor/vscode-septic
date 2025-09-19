@@ -249,31 +249,13 @@ function updateDatatypeParams(params: SepticCalcParameterInfo[] | undefined) {
             description: param.description,
             name: param.name,
             direction: param.direction,
-            datatype: param.datatype.map((type) => {
-                return datatypeToObjectName(type);
-            }),
+            datatype: param.datatype,
         };
     });
 }
 
-const objectNameMap = new Map<string, string>([
-    ["mvr", "Mvr"],
-    ["cvr", "Cvr"],
-    ["dvr", "Dvr"],
-    ["evr", "Evr"],
-    ["tvr", "Tvr"],
-    ["smpcappl", "SmpcAppl"],
-]);
-
 export const VALUE = "Value";
 
-function datatypeToObjectName(type: string) {
-    const objectName = objectNameMap.get(type);
-    if (!objectName) {
-        return VALUE;
-    }
-    return objectName;
-}
 
 function toSymbolKind(name: string) {
     const nameLower = name.toLowerCase();
@@ -356,19 +338,19 @@ class SepticObjectDocumentation implements ISepticObjectDocumentation {
                 continue;
             } else {
                 this.attributes.push({
-                        description: attr.description,
-                        dataType: attr.dataType,
-                        enums: attr.enums,
-                        list: attr.list,
-                        name: attr.name,
-                        tags: attr.tags,
-                        calc: attr.calc,
-                        basename: attr.name,
-                        noCnfg: false,
-                        default: attr.default,
-                        snippet: attr.snippet,
-                        noSnippet: attr.noSnippet,
-                    });
+                    description: attr.description,
+                    dataType: attr.dataType,
+                    enums: attr.enums,
+                    list: attr.list,
+                    name: attr.name,
+                    tags: attr.tags,
+                    calc: attr.calc,
+                    basename: attr.name,
+                    noCnfg: false,
+                    default: attr.default,
+                    snippet: attr.snippet,
+                    noSnippet: attr.noSnippet,
+                });
             }
             ;
         }

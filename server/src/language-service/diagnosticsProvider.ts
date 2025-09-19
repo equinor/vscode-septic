@@ -30,7 +30,6 @@ import {
     SepticObjectInfo,
     fromCalcIndexToParamIndex,
     SepticCalcParameterInfo,
-    VALUE,
     getCalcParamIndexInfo,
     getIndexOfParam,
     getValueOfAlgExpr,
@@ -567,7 +566,7 @@ function validateParamType(
     refProvider: SepticReferenceProvider,
     algPositionTransformer: AlgPositionTransformer
 ): Diagnostic[] {
-    if (types[0] === VALUE) {
+    if (types[0] === "value") {
         return validateValueParamType(expr, refProvider, algPositionTransformer);
     }
     return validateObjectParamType(expr, types, refProvider, algPositionTransformer);
@@ -594,7 +593,7 @@ function validateObjectParamType(
         exprLiteral.value.split(".")[0]
     );
     for (const obj of objects) {
-        if (obj.isType(...types)) {
+        if (types.includes(obj.type.toLowerCase())) {
             return [];
         }
     }
