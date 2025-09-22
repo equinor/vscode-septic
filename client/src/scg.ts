@@ -164,6 +164,9 @@ export async function readScgConfig(filePath: string): Promise<ScgConfigSchema |
 		if (validate_scg(data)) {
 			return data;
 		}
+		let errorMessage = `Error validating ${filePath} against the SCG schema:\n`;
+		errorMessage += validate_scg.errors.map(error => `SCG config validation error at ${error.instancePath}: ${error.message}`).join('\n');
+		vscode.window.showErrorMessage(errorMessage);
 		return undefined;
 	} catch {
 		return undefined;
