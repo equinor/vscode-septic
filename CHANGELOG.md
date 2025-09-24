@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.28.1](https://github.com/equinor/vscode-septic/compare/v1.28.0...v1.28.1) (2025-09-24)
+
+
+### 📚 Documentation
+
+* update Septic documentation for v3.5.0 ([#838](https://github.com/equinor/vscode-septic/issues/838)) ([df3b13e](https://github.com/equinor/vscode-septic/commit/df3b13ee1498a3956951d7036c36ba4408f6e407))
+
+
+### 🐛 Bug Fixes
+
+* error in loading param datatypes documentation ([#835](https://github.com/equinor/vscode-septic/issues/835)) ([1c768e6](https://github.com/equinor/vscode-septic/commit/1c768e66b1bd93746e99687d09d5b7ee66b50d6a))
+* validation of counter in scg configs ([#837](https://github.com/equinor/vscode-septic/issues/837)) ([06a166c](https://github.com/equinor/vscode-septic/commit/06a166ccb5a1b59fa61dff76d9199c15390ee35a))
+
 ## [1.28.0](https://github.com/equinor/vscode-septic/compare/v1.27.0...v1.28.0) (2025-09-10)
 
 
