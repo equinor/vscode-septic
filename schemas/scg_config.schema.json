@@ -1,0 +1,263 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "Septic Config Generator Configuration",
+	"type": "object",
+	"properties": {
+		"outputfile": {
+			"description": "The file that will be generated. Writes to stdout if not specified.",
+			"type": [
+				"string",
+				"null"
+			]
+		},
+		"encoding": {
+			"description": "The encoding to use for template files and the outputfile. Use any label specified in https://encoding.spec.whatwg.org/#concept-encoding-get",
+			"type": "string",
+			"default": "Windows-1252"
+		},
+		"templatepath": {
+			"description": "The directory that contains all template files",
+			"type": "string"
+		},
+		"adjustspacing": {
+			"description": "Whether to ensure exactly one newline between rendered template files",
+			"type": "boolean",
+			"default": true
+		},
+		"verifycontent": {
+			"description": "Whether to warn about differences from an already existing rendered file",
+			"type": "boolean",
+			"default": true
+		},
+		"counters": {
+			"description": "List of global auto-incrementing counters",
+			"type": [
+				"array",
+				"null"
+			],
+			"items": {
+				"$ref": "#/definitions/Counter"
+			}
+		},
+		"sources": {
+			"description": "List of source file configurations",
+			"type": [
+				"array",
+				"null"
+			],
+			"items": {
+				"$ref": "#/definitions/Source"
+			}
+		},
+		"layout": {
+			"description": "List of templates in the order they should be rendered",
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/Template"
+			}
+		},
+		"drawio": {
+			"description": "List of .drawio files to process",
+			"type": [
+				"array",
+				"null"
+			],
+			"items": {
+				"$ref": "#/definitions/Drawio"
+			}
+		}
+	},
+	"additionalProperties": true,
+	"required": [
+		"templatepath",
+		"layout"
+	],
+	"definitions": {
+		"Counter": {
+			"type": "object",
+			"properties": {
+				"name": {
+					"description": "Counter name",
+					"type": "string"
+				},
+				"value": {
+					"description": "Initial value for the counter, defaults to 0",
+					"type": [
+						"integer",
+						"null"
+					],
+					"default": null
+				}
+			},
+			"additionalProperties": false,
+			"required": [
+				"name"
+			]
+		},
+		"Source": {
+			"type": "object",
+			"properties": {
+				"filename": {
+					"description": "The filename(s) of the source data",
+					"allOf": [
+						{
+							"$ref": "#/definitions/Filename"
+						}
+					]
+				},
+				"id": {
+					"description": "The unique identifier for this source",
+					"type": "string"
+				},
+				"sheet": {
+					"description": "Optional sheet name for .xlsx files",
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"delimiter": {
+					"description": "Optional delimiter for .csv files",
+					"type": [
+						"string",
+						"null"
+					],
+					"minLength": 1,
+					"maxLength": 1
+				}
+			},
+			"additionalProperties": false,
+			"required": [
+				"filename",
+				"id"
+			]
+		},
+		"Filename": {
+			"anyOf": [
+				{
+					"description": "Single filename as a string",
+					"type": "string"
+				},
+				{
+					"description": "Multiple filenames as a list of strings",
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			]
+		},
+		"Template": {
+			"type": "object",
+			"properties": {
+				"name": {
+					"description": "The name of the template file",
+					"type": "string"
+				},
+				"source": {
+					"description": "Optional source id to iterate over for this template",
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"include": {
+					"description": "Optional list of fields from source to include in iteration",
+					"type": [
+						"array",
+						"null"
+					],
+					"items": {
+						"$ref": "#/definitions/Include"
+					}
+				},
+				"exclude": {
+					"description": "Optional list of fields from source to exclude in iteration",
+					"type": [
+						"array",
+						"null"
+					],
+					"items": {
+						"$ref": "#/definitions/Include"
+					}
+				}
+			},
+			"additionalProperties": false,
+			"required": [
+				"name"
+			]
+		},
+		"Include": {
+			"anyOf": [
+				{
+					"description": "Include a single element by name",
+					"type": "string"
+				},
+				{
+					"description": "Include a conditional element with a condition and optional items",
+					"allOf": [
+						{
+							"$ref": "#/definitions/IncludeConditional"
+						}
+					]
+				}
+			]
+		},
+		"IncludeConditional": {
+			"type": "object",
+			"properties": {
+				"if": {
+					"description": "The condition to evaluate. Uses MiniJinja syntax.",
+					"type": "string"
+				},
+				"then": {
+					"description": "List of items to include if the condition is true",
+					"type": [
+						"array",
+						"null"
+					],
+					"items": {
+						"type": "string"
+					}
+				},
+				"continue": {
+					"description": "Whether to continue evaluating further conditions after this one",
+					"type": [
+						"boolean",
+						"null"
+					]
+				}
+			},
+			"additionalProperties": false,
+			"required": [
+				"if"
+			]
+		},
+		"Drawio": {
+			"type": "object",
+			"properties": {
+				"input": {
+					"description": "The draw.io file to process",
+					"type": "string"
+				},
+				"pngoutput": {
+					"description": "Optional output PNG file path. If not provided, the output will have the same name as input but with .png extension",
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"csvoutput": {
+					"description": "Optional output CSV file path for components. If not provided, the output will have the same name as input but with _components.csv extension",
+					"type": [
+						"string",
+						"null"
+					]
+				}
+			},
+			"required": [
+				"input"
+			]
+		}
+	}
+}

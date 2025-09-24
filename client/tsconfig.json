@@ -10,7 +10,8 @@
         "sourceMap": true,
         "jsx": "react",
         "jsxFactory": "vscpp",
-        "jsxFragmentFactory": "vscppf"
+        "jsxFragmentFactory": "vscppf",
+        "resolveJsonModule": true
     },
     "include": [
         "src",
