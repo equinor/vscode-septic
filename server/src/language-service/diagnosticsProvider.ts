@@ -566,7 +566,7 @@ function validateParamType(
     refProvider: SepticReferenceProvider,
     algPositionTransformer: AlgPositionTransformer
 ): Diagnostic[] {
-    if (types[0] === "value") {
+    if (types[0].startsWith("value")) {
         return validateValueParamType(expr, refProvider, algPositionTransformer);
     }
     return validateObjectParamType(expr, types, refProvider, algPositionTransformer);
