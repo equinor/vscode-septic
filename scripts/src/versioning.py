@@ -63,7 +63,7 @@ def get_versions_from_tag(tag: str):
 
 def get_versions(path: Path):
     return [
-        x[0].split("\\")[-1]
+        Path(x[0]).name
         for x in os.walk(path.resolve())
-        if re.match(r"(?:v(\d+)_(\d+))|latest", x[0].split("\\")[-1])
+        if re.match(r"(?:v(\d+)_(\d+))|latest", Path(x[0]).name)
     ]
