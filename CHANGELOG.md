@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.28.2](https://github.com/equinor/vscode-septic/compare/v1.28.1...v1.28.2) (2025-09-30)
+
+
+### 👷 CI/CD
+
+* fix update of version option in documentation script ([#839](https://github.com/equinor/vscode-septic/issues/839)) ([5cf0041](https://github.com/equinor/vscode-septic/commit/5cf00413aaa04899bdf4f9fca0766184d05c47da))
+
+
+### 🐛 Bug Fixes
+
+* bug with value datatype ([#841](https://github.com/equinor/vscode-septic/issues/841)) ([173878e](https://github.com/equinor/vscode-septic/commit/173878e07a791b524434aeaaa611632bd428cac0))
+
 ## [1.28.1](https://github.com/equinor/vscode-septic/compare/v1.28.0...v1.28.1) (2025-09-24)
 
 
