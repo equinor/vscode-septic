@@ -247,20 +247,15 @@ export function getObjectCompletion(
             ).map((obj) => xvrToCompletionItem(obj, range))
         );
     }
+    const enums = getEnumCompletions(obj, currentAttr.attr);
+    const completions = [...enums, ...references];
     if (isEndAttribute(offset, currentAttr.attr)) {
+        completions.push(...getObjectAttributeCompletion(obj, offset, cnfg.doc));
         if (currentAttr.last) {
-            return [
-                ...getObjectAttributeCompletion(obj, offset, cnfg.doc),
-                ...references,
-                ...snippets,
-            ];
+            completions.push(...snippets);
         }
-        return [
-            ...getObjectAttributeCompletion(obj, offset, cnfg.doc),
-            ...references,
-        ];
     }
-    return references;
+    return completions;
 }
 
 function getCurrentAttr(
@@ -308,6 +303,7 @@ function getObjectAttributeCompletion(
                 value: formatObjectAttribute(attr),
                 kind: "markdown",
             },
+            sortText: `2${attr.name}`,
             textEdit: TextEdit.replace(rangeNewLine.range, text),
             insertTextMode: InsertTextMode.asIs,
             insertTextFormat: InsertTextFormat.Snippet,
@@ -345,6 +341,28 @@ function isReferenceAttribute(obj: SepticObject, attr: Attribute): boolean {
         return false;
     }
     return objectInfo.refs.attributes.includes(attr.key);
+}
+
+function getEnumCompletions(obj: SepticObject, attr: Attribute): CompletionItem[] {
+    const objectInfo = SepticMetaInfoProvider.getInstance().getObjectDocumentation(obj.type);
+    if (!objectInfo) {
+        return [];
+    }
+    let attrDoc = objectInfo.attributes.find((a) => a.name === attr.key);
+    if (!attrDoc) {
+        return [];
+    }
+    if (attrDoc.dataType !== "enum") {
+        return [];
+    }
+    return attrDoc.enums.map((value) => {
+        return {
+            label: value,
+            kind: CompletionItemKind.EnumMember,
+            detail: `Enum member of ${attrDoc.name}`,
+            sortText: `1${value}`,
+        };
+    });
 }
 
 function isEndAttribute(offset: number, attr: Attribute): boolean {

@@ -242,6 +242,20 @@ describe("Test completion of attribute with references to xvrs", () => {
     });
 });
 
+describe("Test completion of attribute enum datatype", () => {
+    it("Expect Xvrs for attribute that references Xvrs", () => {
+        const content = loadFile("completionAttrRefs.cnfg");
+        const cnfg = parseSepticForTest(content);
+        const position = Position.create(1, 11);
+        const compItems = getObjectCompletion(position, cnfg, cnfg);
+        const variableCompItems = compItems.filter(
+            (item) => item.kind === CompletionItemKind.EnumMember
+        );
+        const enums = SepticMetaInfoProvider.getInstance().getObjectDocumentation("Evr")?.attributes.find(attr => attr.name === "UserInput")?.enums;
+        expect(variableCompItems.length).to.equal(enums?.length);
+    });
+});
+
 describe("Test calc completion", () => {
     it("Completion suggest Xvrs", () => {
         const text = `Mvr: TestMvr\nEvr:   TestEvr\nCalcPvr: TestCalc\nAlg= "  "\n`;
