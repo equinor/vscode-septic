@@ -1,4 +1,5 @@
 import { bold, code, h4, horizontalRule } from "../util/markdown";
+import { SepticObject } from './septicElements';
 import {
     ISepticObjectDocumentation,
     SepticAttributeDocumentation,
@@ -115,4 +116,26 @@ export function formatDataType(attrDoc: SepticAttributeDocumentation) {
 
 function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+
+export function formatObjectInstance(obj: SepticObject) {
+    let doc = `${obj.type}:  ${obj.identifier!.name}`;
+    const newline = "\n\n";
+    doc += newline + horizontalRule();
+    const text1 = obj.getAttribute("Text1")?.getValue();
+    if (text1) {
+        doc += newline + "Text1: " + text1;
+    }
+    const text2 = obj.getAttribute("Text2")?.getValue();
+    if (text2) {
+        doc += newline + "Text2: " + text2;
+    }
+    if (obj.isType("Evr")) {
+        const meas = obj.getAttribute("Meas")?.getValue();
+        if (meas) {
+            doc += newline + "Meas: " + meas;
+        }
+    }
+    return doc;
 }

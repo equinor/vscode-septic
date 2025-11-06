@@ -25,10 +25,12 @@ import {
     SepticMetaInfoProvider,
     SepticObject,
     SepticContext,
+    SepticCalcInfo,
     formatCalcMarkdown,
     formatDefaultValue,
     formatObjectAttribute,
     parseAlg,
+    formatObjectInstance,
 } from "../septic";
 import { indentsAttributesDelimiter } from "./formatProvider";
 import { isAlphaNumeric } from "../util";
@@ -78,14 +80,14 @@ export function getCompletion(
     const alg = cnfg.findAlgValueFromLocation(pos);
     if (alg) {
         if (triggerCharacter === ".") {
-            return getCalcPublicPropertiesCompletion(offset, cnfg, contextProvider);
+            return getPublicAttributesCompletion(offset, cnfg, contextProvider);
         }
         return getCalcCompletion(offset, cnfg, contextProvider);
     }
     return getObjectCompletion(pos, cnfg, contextProvider, settings);
 }
 
-export function getCalcPublicPropertiesCompletion(
+export function getPublicAttributesCompletion(
     offset: number,
     cnfg: SepticCnfg,
     contextProvider: SepticContext
@@ -118,26 +120,10 @@ export function getCalcPublicPropertiesCompletion(
             if (!objDoc) {
                 continue;
             }
-            return publicPropertiesToCompletionItems(
-                objDoc.publicAttributes,
-                obj.type
-            );
+            return objDoc.publicAttributes.map((prop) => CompletionItemFactory.fromPublicProperty(prop, obj.type));
         }
     }
     return [];
-}
-
-function publicPropertiesToCompletionItems(
-    properties: string[],
-    objType: string
-): CompletionItem[] {
-    return properties.map((prop) => {
-        return {
-            label: prop,
-            kind: CompletionItemKind.Property,
-            detail: `Public property for ${objType}`,
-        };
-    });
 }
 
 export function getCalcCompletion(
@@ -168,29 +154,12 @@ export function getCalcCompletion(
     }
 
     getRelevantXvrsCalc(contextProvider.getAllXvrObjects()).forEach((xvr) => {
-        compItems.push(xvrToCompletionItem(xvr, range));
+        compItems.push(CompletionItemFactory.fromXvr(xvr, range));
     });
 
     const calcs = metaInfoProvider.getCalcs();
     for (const calc of calcs) {
-        compItems.push({
-            label: calc.name,
-            kind: CompletionItemKind.Function,
-            detail: "SepticCalc",
-            data: calc,
-            documentation: {
-                value: formatCalcMarkdown(calc),
-                kind: "markdown",
-            },
-            filterText:
-                calc.name +
-                " " +
-                calc.detailedDescription.replace(
-                    threeLettersOrLessWordsRegex,
-                    ""
-                ),
-            commitCharacters: ["("],
-        });
+        compItems.push(CompletionItemFactory.fromCalc(calc));
     }
     return compItems;
 }
@@ -245,22 +214,7 @@ function getObjectAttributeCompletion(
         if (obj.getAttribute(attr.name)) {
             continue;
         }
-        const text = rangeNewLine.addNewLine
-            ? "\n" + getTextAttrTextEdit(attr)
-            : getTextAttrTextEdit(attr);
-        compItems.push({
-            label: attr.name,
-            kind: CompletionItemKind.Property,
-            detail: "SepticObjectAttribute",
-            documentation: {
-                value: formatObjectAttribute(attr),
-                kind: "markdown",
-            },
-            sortText: `2${attr.name}`,
-            textEdit: TextEdit.replace(rangeNewLine.range, text),
-            insertTextMode: InsertTextMode.asIs,
-            insertTextFormat: InsertTextFormat.Snippet,
-        });
+        compItems.push(CompletionItemFactory.fromAttribute(attr, rangeNewLine));
     }
     return compItems;
 }
@@ -269,7 +223,7 @@ function getIdentifierCompletion(obj: SepticObject, refProvider: SepticContext, 
     return getRelevantXvrsIdentifier(
         obj,
         refProvider.getAllXvrObjects()
-    ).map((obj) => xvrToCompletionItem(obj, range))
+    ).map((obj) => CompletionItemFactory.fromXvr(obj, range))
 }
 
 function getAttributeValueCompletion(obj: SepticObject, attr: Attribute, refProvider: SepticContext, range: Range): CompletionItem[] {
@@ -285,7 +239,7 @@ function getReferenceCompletions(obj: SepticObject, attr: Attribute, refProvider
     return getRelevantXvrsAttributes(
         attr,
         refProvider.getAllXvrObjects()
-    ).map((obj) => xvrToCompletionItem(obj, range))
+    ).map((obj) => CompletionItemFactory.fromXvr(obj, range))
 }
 
 function getEnumCompletions(obj: SepticObject, attr: Attribute): CompletionItem[] {
@@ -300,14 +254,7 @@ function getEnumCompletions(obj: SepticObject, attr: Attribute): CompletionItem[
     if (attrDoc.dataType !== "enum") {
         return [];
     }
-    return attrDoc.enums.map((value) => {
-        return {
-            label: value,
-            kind: CompletionItemKind.EnumMember,
-            detail: `Enum member of ${attrDoc.name}`,
-            sortText: `1${value}`,
-        };
-    });
+    return attrDoc.enums.map((value) => CompletionItemFactory.fromEnum(value, attrDoc));
 }
 
 function isIdentifierCompletion(offset: number, obj: SepticObject) {
@@ -398,28 +345,6 @@ function getExistingCompletion(
     return {
         str: existing.split("").reverse().join(""),
         endIndex: index,
-    };
-}
-
-const priorityMapping: { [key: string]: number } = {
-    "Mvr": 1,
-    "Cvr": 2,
-    "Dvr": 3,
-    "Evr": 4,
-    "Tvr": 5,
-};
-
-function xvrToCompletionItem(obj: SepticObject, range: Range): CompletionItem {
-    let priority = priorityMapping[obj.type] ?? 6;
-    return {
-        label: obj.identifier!.name,
-        labelDetails: { detail: ` ${obj.type}` },
-        kind: CompletionItemKind.Variable,
-        detail: obj.type,
-        data: obj.identifier!.name,
-        filterText: obj.identifier!.id + obj.identifier!.name,
-        sortText: priority + obj.identifier!.id,
-        textEdit: TextEdit.replace(range, obj.identifier!.name),
     };
 }
 
@@ -538,4 +463,98 @@ function findCurrentAttr(
         index += 1;
     }
     return { attr: obj.attributes[obj.attributes.length - 1], last: true };
+}
+
+const XVR_TYPE_PRIORITY: Record<string, number> = {
+    'Mvr': 1,
+    'Cvr': 2,
+    'Dvr': 3,
+    'Evr': 4,
+    'Tvr': 5,
+};
+const DEFAULT_PRIORITY = 6;
+
+const CALC_PRIORITY = 1;
+const ENUM_PRIORITY = 1;
+const REFERENCE_PRIORITY = 2;
+const PUBLIC_PROPERTY_PRIORITY = 6;
+
+class CompletionItemFactory {
+
+    static fromXvr(obj: SepticObject, range: Range): CompletionItem {
+        const priority = XVR_TYPE_PRIORITY[obj.type] ?? DEFAULT_PRIORITY;
+        return {
+            label: obj.identifier!.name,
+            kind: CompletionItemKind.Variable,
+            detail: obj.type,
+            documentation: {
+                value: formatObjectInstance(obj),
+                kind: "markdown",
+            },
+            filterText: obj.identifier!.id + obj.identifier!.name,
+            sortText: `${REFERENCE_PRIORITY}${priority}${obj.identifier!.id}`,
+            textEdit: TextEdit.replace(range, obj.identifier!.name),
+            labelDetails: { detail: ` ${obj.type}` },
+        };
+    }
+    static fromCalc(calc: SepticCalcInfo): CompletionItem {
+        return {
+            label: calc.name,
+            kind: CompletionItemKind.Function,
+            detail: "SepticCalc",
+            documentation: {
+                value: formatCalcMarkdown(calc),
+                kind: "markdown",
+            },
+            sortText: `${CALC_PRIORITY}${calc.name}`,
+            filterText:
+                calc.name +
+                " " +
+                calc.detailedDescription.replace(threeLettersOrLessWordsRegex, ""),
+            commitCharacters: ["("],
+        };
+    }
+    static fromPublicProperty(property: string, objType: string): CompletionItem {
+        return {
+            label: property,
+            kind: CompletionItemKind.Property,
+            detail: `${objType}.${property}`,
+            sortText: `${PUBLIC_PROPERTY_PRIORITY}${property}`,
+            labelDetails: { detail: ` ${objType}.${property}` }
+        };
+    }
+    static fromAttribute(
+        attr: SepticAttributeDocumentation,
+        rangeNewLine: { range: Range; addNewLine: boolean }
+    ): CompletionItem {
+        const text = rangeNewLine.addNewLine
+            ? "\n" + getTextAttrTextEdit(attr)
+            : getTextAttrTextEdit(attr);
+
+        return {
+            label: attr.name,
+            kind: CompletionItemKind.Property,
+            detail: "Object Attribute",
+            documentation: {
+                value: formatObjectAttribute(attr, true),
+                kind: "markdown",
+            },
+            sortText: `${REFERENCE_PRIORITY}${attr.name}`,
+            textEdit: TextEdit.replace(rangeNewLine.range, text),
+            insertTextMode: InsertTextMode.asIs,
+            insertTextFormat: InsertTextFormat.Snippet,
+        };
+    }
+    static fromEnum(value: string, attrDoc: SepticAttributeDocumentation): CompletionItem {
+        return {
+            label: value,
+            kind: CompletionItemKind.EnumMember,
+            detail: `Enum Value ${attrDoc.name}`,
+            documentation: {
+                value: `${attrDoc.description}`,
+                kind: "markdown",
+            },
+            sortText: `${ENUM_PRIORITY}${value}`,
+        };
+    }
 }

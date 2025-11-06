@@ -2,7 +2,7 @@ import { describe } from "mocha";
 import { SepticMetaInfoProvider } from "../septic";
 import {
     getCalcCompletion,
-    getCalcPublicPropertiesCompletion,
+    getPublicAttributesCompletion,
     getCompletion,
     getObjectCompletion,
 } from "../language-service/completionProvider";
@@ -311,7 +311,7 @@ describe("Test property completion in alg", () => {
         const content = loadFile("completion/publicProperties.cnfg");
         const cnfg = parseSepticForTest(content);
         const offset = cnfg.offsetAt(Position.create(6, 26));
-        const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
+        const compItems = getPublicAttributesCompletion(offset, cnfg, cnfg);
         expect(
             compItems.filter(
                 (item) => item.kind === CompletionItemKind.Property
@@ -325,21 +325,21 @@ describe("Test property completion in alg", () => {
         const content = loadFile("completion/publicProperties.cnfg");
         const cnfg = parseSepticForTest(content);
         const offset = cnfg.offsetAt(Position.create(11, 27));
-        const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
+        const compItems = getPublicAttributesCompletion(offset, cnfg, cnfg);
         expect(compItems.length).to.equal(0);
     });
     it("Expect no completion item for number", () => {
         const content = loadFile("completion/publicProperties.cnfg");
         const cnfg = parseSepticForTest(content);
         const offset = cnfg.offsetAt(Position.create(16, 20));
-        const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
+        const compItems = getPublicAttributesCompletion(offset, cnfg, cnfg);
         expect(compItems.length).to.equal(0);
     });
     it("Expect no completion item for already completed variable", () => {
         const content = loadFile("completion/publicProperties.cnfg");
         const cnfg = parseSepticForTest(content);
         const offset = cnfg.offsetAt(Position.create(21, 26));
-        const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
+        const compItems = getPublicAttributesCompletion(offset, cnfg, cnfg);
         expect(compItems.length).to.equal(0);
     });
 });
