@@ -200,17 +200,17 @@ describe("Test completion of object attributes", () => {
 
 describe("Test completion of attribute with references to xvrs", () => {
     it("Expect Xvrs for attribute that references Xvrs", () => {
-        const content = loadFile("completionAttrRefs.cnfg");
+        const content = loadFile("completion/completionAttrRefs.cnfg");
         const cnfg = parseSepticForTest(content);
         const position = Position.create(13, 28);
         const compItems = getObjectCompletion(position, cnfg, cnfg);
         const variableCompItems = compItems.filter(
             (item) => item.kind === CompletionItemKind.Variable
         );
-        expect(variableCompItems.length).to.equal(2);
+        expect(variableCompItems.length).to.equal(3);
     });
     it("Expect Mvrs for attribute that references Mvrs", () => {
-        const content = loadFile("completionAttrRefs.cnfg");
+        const content = loadFile("completion/completionAttrRefs.cnfg");
         const cnfg = parseSepticForTest(content);
         const position = Position.create(17, 19);
         const compItems = getObjectCompletion(position, cnfg, cnfg);
@@ -221,17 +221,17 @@ describe("Test completion of attribute with references to xvrs", () => {
         expect(variableCompItems[0].label).to.equal("MvrTest");
     });
     it("Expect completion of xvr in-between existing attr values", () => {
-        const content = loadFile("completionAttrRefs.cnfg");
+        const content = loadFile("completion/completionAttrRefs.cnfg");
         const cnfg = parseSepticForTest(content);
         const position = Position.create(27, 20);
         const compItems = getObjectCompletion(position, cnfg, cnfg);
         const variableCompItems = compItems.filter(
             (item) => item.kind === CompletionItemKind.Variable
         );
-        expect(variableCompItems.length).to.equal(2);
+        expect(variableCompItems.length).to.equal(3);
     });
     it("Expect no completion of xvr non-reference attribute", () => {
-        const content = loadFile("completionAttrRefs.cnfg");
+        const content = loadFile("completion/completionAttrRefs.cnfg");
         const cnfg = parseSepticForTest(content);
         const position = Position.create(20, 20);
         const compItems = getObjectCompletion(position, cnfg, cnfg);
@@ -244,9 +244,9 @@ describe("Test completion of attribute with references to xvrs", () => {
 
 describe("Test completion of attribute enum datatype", () => {
     it("Expect Xvrs for attribute that references Xvrs", () => {
-        const content = loadFile("completionAttrRefs.cnfg");
+        const content = loadFile("completion/completionAttrRefs.cnfg");
         const cnfg = parseSepticForTest(content);
-        const position = Position.create(1, 11);
+        const position = Position.create(30, 17);
         const compItems = getObjectCompletion(position, cnfg, cnfg);
         const variableCompItems = compItems.filter(
             (item) => item.kind === CompletionItemKind.EnumMember

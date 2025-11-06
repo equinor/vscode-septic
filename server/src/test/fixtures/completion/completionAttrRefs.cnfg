@@ -26,3 +26,8 @@
        PlotMax=  100
        PlotMin=  0
           Xvrs=  1  MvrTest
+
+  Evr:           EvrName
+     UserInput=
+
+  

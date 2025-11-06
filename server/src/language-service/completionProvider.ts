@@ -35,6 +35,7 @@ import { isAlphaNumeric } from "../util";
 import { CompletionSettings, SettingsManager } from '../settings';
 
 const threeLettersOrLessWordsRegex = /\b[\w]{1,3}\b/;
+
 export class CompletionProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
     private readonly settingsManager: SettingsManager;
@@ -202,77 +203,29 @@ export function getObjectCompletion(
 ): CompletionItem[] {
     cnfg.updateObjectParents();
     contextProvider.updateObjectParents();
-    const snippets: CompletionItem[] = getRelevantSnippets(position, contextProvider, cnfg.uri, settings.onlySuggestValidSnippets);
+    const objectSnippets: CompletionItem[] = getRelevantObjectSnippets(position, contextProvider, cnfg.doc, settings.onlySuggestValidSnippets);
     const references: CompletionItem[] = [];
     const obj = cnfg.findObjectFromLocation(position);
     if (!obj) {
-        return snippets;
+        return objectSnippets;
     }
-    const ref = cnfg.findReferenceFromLocation(position);
     const offset = cnfg.offsetAt(position);
+    const range = findCompletionRange(offset, cnfg, cnfg.doc)
     if (isIdentifierCompletion(offset, obj)) {
-        const range: Range = ref
-            ? {
-                start: cnfg.positionAt(ref.location.start),
-                end: cnfg.positionAt(ref.location.end),
-            }
-            : {
-                start: position,
-                end: position,
-            };
-        return getRelevantXvrsIdentifier(
-            obj,
-            contextProvider.getAllXvrObjects()
-        ).map((obj) => xvrToCompletionItem(obj, range));
+        return getIdentifierCompletion(obj, contextProvider, range);
     }
-    const currentAttr = getCurrentAttr(offset, obj);
+    const currentAttr = findCurrentAttr(offset, obj);
     if (!currentAttr.attr) {
-        return [...snippets, ...getObjectAttributeCompletion(obj, offset, cnfg.doc)];
+        return [...objectSnippets, ...getObjectAttributeCompletion(obj, offset, cnfg.doc)];
     }
-    if (isReferenceAttribute(obj, currentAttr.attr)) {
-        const range: Range = ref
-            ? {
-                start: cnfg.positionAt(ref.location.start),
-                end: cnfg.positionAt(ref.location.end),
-            }
-            : {
-                start: cnfg.positionAt(offset),
-                end: cnfg.positionAt(offset),
-            };
-
-        references.push(
-            ...getRelevantXvrsAttributes(
-                currentAttr.attr,
-                contextProvider.getAllXvrObjects()
-            ).map((obj) => xvrToCompletionItem(obj, range))
-        );
-    }
-    const enums = getEnumCompletions(obj, currentAttr.attr);
-    const completions = [...enums, ...references];
+    const completions = getAttributeValueCompletion(obj, currentAttr.attr, contextProvider, range);
     if (isEndAttribute(offset, currentAttr.attr)) {
         completions.push(...getObjectAttributeCompletion(obj, offset, cnfg.doc));
         if (currentAttr.last) {
-            completions.push(...snippets);
+            completions.push(...objectSnippets);
         }
     }
     return completions;
-}
-
-function getCurrentAttr(
-    offset: number,
-    obj: SepticObject
-): { attr: Attribute | undefined; last: boolean } {
-    if (!obj.attributes.length) {
-        return { attr: undefined, last: false };
-    }
-    let index = 1;
-    while (index < obj.attributes.length) {
-        if (obj.attributes[index].start >= offset) {
-            return { attr: obj.attributes[index - 1], last: false };
-        }
-        index += 1;
-    }
-    return { attr: obj.attributes[obj.attributes.length - 1], last: true };
 }
 
 function getObjectAttributeCompletion(
@@ -287,7 +240,7 @@ function getObjectAttributeCompletion(
         return [];
     }
     const compItems: CompletionItem[] = [];
-    const rangeNewLine = getRangeAttrTextEdit(offset, doc);
+    const rangeNewLine = findRangeAttrTextEdit(offset, doc);
     for (const attr of objDoc.attributes) {
         if (obj.getAttribute(attr.name)) {
             continue;
@@ -310,6 +263,51 @@ function getObjectAttributeCompletion(
         });
     }
     return compItems;
+}
+
+function getIdentifierCompletion(obj: SepticObject, refProvider: SepticContext, range: Range): CompletionItem[] {
+    return getRelevantXvrsIdentifier(
+        obj,
+        refProvider.getAllXvrObjects()
+    ).map((obj) => xvrToCompletionItem(obj, range))
+}
+
+function getAttributeValueCompletion(obj: SepticObject, attr: Attribute, refProvider: SepticContext, range: Range): CompletionItem[] {
+    const references = getReferenceCompletions(obj, attr, refProvider, range);
+    const enums = getEnumCompletions(obj, attr);
+    return [...references, ...enums];
+}
+
+function getReferenceCompletions(obj: SepticObject, attr: Attribute, refProvider: SepticContext, range: Range): CompletionItem[] {
+    if (!isReferenceAttribute(obj, attr)) {
+        return [];
+    }
+    return getRelevantXvrsAttributes(
+        attr,
+        refProvider.getAllXvrObjects()
+    ).map((obj) => xvrToCompletionItem(obj, range))
+}
+
+function getEnumCompletions(obj: SepticObject, attr: Attribute): CompletionItem[] {
+    const objectInfo = SepticMetaInfoProvider.getInstance().getObjectDocumentation(obj.type);
+    if (!objectInfo) {
+        return [];
+    }
+    let attrDoc = objectInfo.attributes.find((a) => a.name === attr.key);
+    if (!attrDoc) {
+        return [];
+    }
+    if (attrDoc.dataType !== "enum") {
+        return [];
+    }
+    return attrDoc.enums.map((value) => {
+        return {
+            label: value,
+            kind: CompletionItemKind.EnumMember,
+            detail: `Enum member of ${attrDoc.name}`,
+            sortText: `1${value}`,
+        };
+    });
 }
 
 function isIdentifierCompletion(offset: number, obj: SepticObject) {
@@ -343,28 +341,6 @@ function isReferenceAttribute(obj: SepticObject, attr: Attribute): boolean {
     return objectInfo.refs.attributes.includes(attr.key);
 }
 
-function getEnumCompletions(obj: SepticObject, attr: Attribute): CompletionItem[] {
-    const objectInfo = SepticMetaInfoProvider.getInstance().getObjectDocumentation(obj.type);
-    if (!objectInfo) {
-        return [];
-    }
-    let attrDoc = objectInfo.attributes.find((a) => a.name === attr.key);
-    if (!attrDoc) {
-        return [];
-    }
-    if (attrDoc.dataType !== "enum") {
-        return [];
-    }
-    return attrDoc.enums.map((value) => {
-        return {
-            label: value,
-            kind: CompletionItemKind.EnumMember,
-            detail: `Enum member of ${attrDoc.name}`,
-            sortText: `1${value}`,
-        };
-    });
-}
-
 function isEndAttribute(offset: number, attr: Attribute): boolean {
     return offset >= attr.end;
 }
@@ -382,7 +358,7 @@ function getTextAttrTextEdit(attr: SepticAttributeDocumentation) {
     return attrFormatted;
 }
 
-function getRangeAttrTextEdit(
+function findRangeAttrTextEdit(
     offset: number,
     doc: ITextDocument
 ): { range: Range; addNewLine: boolean } {
@@ -493,12 +469,12 @@ function getRelevantXvrsAttributes(
     }
 }
 
-function getRelevantSnippets(position: Position, contextProvider: SepticContext, uri: string, onlySuggestValidSnippets: boolean): CompletionItem[] {
+function getRelevantObjectSnippets(pos: Position, contextProvider: SepticContext, doc: ITextDocument, onlySuggestValidSnippets: boolean): CompletionItem[] {
     const snippets = SepticMetaInfoProvider.getInstance().getSnippets().slice();
     if (!onlySuggestValidSnippets) {
         return snippets;
     }
-    const obj = contextProvider.findObjectFromLocation(position, uri);
+    const obj = contextProvider.findObjectFromLocation(pos, doc.uri);
     if (!obj) {
         return snippets.filter((snippet) => snippet.label.startsWith("system"));
     }
@@ -531,4 +507,35 @@ function getObjectsSnippets(objectHierarchy: SepticObjectHierarchy, obj: SepticO
     }
 
     return relevantObjects.map((val) => val.toLowerCase());
+}
+
+function findCompletionRange(offset: number, cnfg: SepticCnfg, doc: ITextDocument) {
+    const ref = cnfg.findReferenceFromLocation(offset);
+    const range: Range = ref
+        ? {
+            start: doc.positionAt(ref.location.start),
+            end: doc.positionAt(ref.location.end),
+        }
+        : {
+            start: doc.positionAt(offset),
+            end: doc.positionAt(offset),
+        };
+    return range;
+}
+
+function findCurrentAttr(
+    offset: number,
+    obj: SepticObject
+): { attr: Attribute | undefined; last: boolean } {
+    if (!obj.attributes.length) {
+        return { attr: undefined, last: false };
+    }
+    let index = 1;
+    while (index < obj.attributes.length) {
+        if (obj.attributes[index].start >= offset) {
+            return { attr: obj.attributes[index - 1], last: false };
+        }
+        index += 1;
+    }
+    return { attr: obj.attributes[obj.attributes.length - 1], last: true };
 }
