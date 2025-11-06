@@ -14,7 +14,7 @@ import {
     Range,
     CompletionParams,
 } from "vscode-languageserver";
-import { ISepticConfigProvider } from "./septicConfigProvider";
+import { ISepticConfigProvider } from "../configProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
     AlgVisitor,

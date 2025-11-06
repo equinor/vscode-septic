@@ -8,7 +8,7 @@ import {
     DocumentSymbol,
     SymbolKind,
 } from "vscode-languageserver";
-import { ISepticConfigProvider } from "./septicConfigProvider";
+import { ISepticConfigProvider } from "../configProvider";
 import { ITextDocument } from "./types/textDocument";
 import { SepticCnfg, SepticObject, SepticMetaInfoProvider } from "../septic";
 

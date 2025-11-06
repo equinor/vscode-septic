@@ -9,11 +9,11 @@ import {
     CancellationTokenSource,
     URI,
 } from "vscode-languageserver";
-import { SepticCnfg, parseSepticAsync } from "../septic";
-import { ResourceMap } from "../util/resourceMap";
-import { ITextDocument } from ".";
-import { Lazy, lazy } from "../util/lazy";
-import { DocumentProvider } from "../documentProvider";
+import { SepticCnfg, parseSepticAsync } from "./septic";
+import { ResourceMap } from "./util/resourceMap";
+import { ITextDocument } from "./language-service";
+import { Lazy, lazy } from "./util/lazy";
+import { DocumentProvider } from "./documentProvider";
 import * as path from "path";
 
 export interface ISepticConfigProvider {

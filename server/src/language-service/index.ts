@@ -7,7 +7,7 @@
 import * as lsp from "vscode-languageserver";
 import { FoldingRangeProvider } from "./foldingRangeProvider";
 import { ITextDocument } from "./types/textDocument";
-import { SepticConfigProvider } from "./septicConfigProvider";
+import { SepticConfigProvider } from "../configProvider";
 import { DiagnosticProvider } from "./diagnosticsProvider";
 import { DocumentSymbolProvider } from "./documentSymbolProvider";
 import { SettingsManager } from "../settings";

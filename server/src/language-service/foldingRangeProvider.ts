@@ -7,7 +7,7 @@
 import * as lsp from "vscode-languageserver";
 import { ITextDocument } from "./types/textDocument";
 import { SepticCnfg, SepticMetaInfoProvider } from "../septic";
-import { SepticConfigProvider } from "./septicConfigProvider";
+import { SepticConfigProvider } from "../configProvider";
 
 export class FoldingRangeProvider {
     private readonly cnfgProvider: SepticConfigProvider;

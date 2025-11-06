@@ -6,7 +6,7 @@
 
 import { Diagnostic, DiagnosticSeverity, Range } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { ISepticConfigProvider } from "./septicConfigProvider";
+import { ISepticConfigProvider } from "../configProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
     AlgVisitor,

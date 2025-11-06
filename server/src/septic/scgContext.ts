@@ -11,7 +11,7 @@ import {
 } from "./reference";
 import { SepticContext } from './context';
 import { SepticObject } from "./elements";
-import { SepticConfigProvider } from "../language-service/septicConfigProvider";
+import { SepticConfigProvider } from "../configProvider";
 import { SepticCnfg } from "./cnfg";
 import { SepticObjectHierarchy } from "../metaInfoProvider";
 import { updateParentObjects } from "./hierarchy";

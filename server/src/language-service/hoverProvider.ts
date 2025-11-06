@@ -9,7 +9,7 @@ import {
     MarkupContent,
     MarkupKind,
 } from "vscode-languageserver";
-import { SepticConfigProvider } from "./septicConfigProvider";
+import { SepticConfigProvider } from "../configProvider";
 import { ITextDocument } from "./types/textDocument";
 import {
     AlgVisitor,

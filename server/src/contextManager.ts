@@ -9,7 +9,7 @@ import * as YAML from "js-yaml";
 import * as path from "path";
 import * as protocol from "./protocol";
 import { ScgConfig, ScgContext } from "./septic";
-import { SepticConfigProvider } from "./language-service/septicConfigProvider";
+import { SepticConfigProvider } from "./configProvider";
 
 export class ContextManager {
     private docProvider: DocumentProvider;
