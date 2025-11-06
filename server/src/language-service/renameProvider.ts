@@ -13,7 +13,7 @@ import {
 import { SepticConfigProvider } from "./septicConfigProvider";
 import { ITextDocument } from "./types/textDocument";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
-import { SepticCnfg, SepticReferenceProvider } from "../septic";
+import { SepticCnfg, SepticContext } from "../septic";
 import { DocumentProvider } from "../documentProvider";
 
 export type GetDocument = (uri: string) => Promise<ITextDocument | undefined>;
@@ -35,7 +35,7 @@ export class RenameProvider {
     async provideRename(
         params: RenameParams,
         doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<WorkspaceEdit | undefined> {
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
@@ -46,7 +46,7 @@ export class RenameProvider {
             cnfg,
             offset,
             params.newName,
-            refProvider,
+            contextProvider,
             this.docProvider.getDocument.bind(this.docProvider)
         );
     }
@@ -75,14 +75,14 @@ export async function getRenameEdits(
     cnfg: SepticCnfg,
     offset: number,
     newName: string,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     getDocumentFunction: GetDocument
 ): Promise<WorkspaceEdit | undefined> {
     const ref = cnfg.getXvrRefFromOffset(offset);
     if (!ref) {
         return undefined;
     }
-    const refs = refProvider.getXvrRefs(ref.identifier);
+    const refs = contextProvider.getXvrRefs(ref.identifier);
     if (!refs) {
         return undefined;
     }

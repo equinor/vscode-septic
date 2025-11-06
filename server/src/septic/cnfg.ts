@@ -17,18 +17,18 @@ import {
 } from "./elements";
 import {
     SepticReference,
-    SepticReferenceProvider,
     RefValidationFunction,
     defaultRefValidationFunction,
     createSepticReference,
     ReferenceType,
 } from "./reference";
+import { SepticContext } from './context';
 import { removeSpaces, transformPositionsToOriginal } from "../util";
 import { updateParentObjects } from "./hierarchy";
 import { Alg, Cycle, findAlgCycles } from "./cycle";
 import { getFunctionsFromCalcPvrs, SepticFunction } from './function';
 
-export class SepticCnfg implements SepticReferenceProvider {
+export class SepticCnfg implements SepticContext {
     public objects: SepticObject[];
     public comments: SepticComment[];
     private xvrRefs = new Map<string, SepticReference[]>();

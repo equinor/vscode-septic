@@ -24,7 +24,7 @@ import {
     SepticCnfg,
     SepticMetaInfoProvider,
     SepticObject,
-    SepticReferenceProvider,
+    SepticContext,
     formatCalcMarkdown,
     formatDefaultValue,
     formatObjectAttribute,
@@ -49,20 +49,20 @@ export class CompletionProvider {
     public async provideCompletion(
         params: CompletionParams,
         doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<CompletionItem[]> {
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
         const settings = await this.settingsManager.getSettings();
-        await refProvider.load();
+        await contextProvider.load();
         return getCompletion(
             params.position,
             params.context?.triggerCharacter,
             cnfg,
             doc,
-            refProvider,
+            contextProvider,
             settings?.completion || { onlySuggestValidSnippets: false }
         );
     }
@@ -73,24 +73,24 @@ export function getCompletion(
     triggerCharacter: string | undefined,
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     settings: CompletionSettings = { onlySuggestValidSnippets: false }
 ): CompletionItem[] {
     const offset = doc.offsetAt(pos);
     const alg = cnfg.offsetInAlg(offset);
     if (alg) {
         if (triggerCharacter === ".") {
-            return getCalcPublicPropertiesCompletion(offset, cnfg, refProvider);
+            return getCalcPublicPropertiesCompletion(offset, cnfg, contextProvider);
         }
-        return getCalcCompletion(offset, cnfg, doc, refProvider);
+        return getCalcCompletion(offset, cnfg, doc, contextProvider);
     }
-    return getObjectCompletion(offset, cnfg, refProvider, doc, settings);
+    return getObjectCompletion(offset, cnfg, contextProvider, doc, settings);
 }
 
 export function getCalcPublicPropertiesCompletion(
     offset: number,
     cnfg: SepticCnfg,
-    refProvider: SepticReferenceProvider
+    contextProvider: SepticContext
 ): CompletionItem[] {
     const algValue = cnfg.offsetInAlg(offset);
     if (!algValue) {
@@ -110,7 +110,7 @@ export function getCalcPublicPropertiesCompletion(
             continue;
         }
         const variableCore = variable.value.slice(0, variable.value.length - 1);
-        const objects = refProvider.getObjectsByIdentifier(variableCore);
+        const objects = contextProvider.getObjectsByIdentifier(variableCore);
         for (const obj of objects) {
             if (!obj.isXvr) {
                 continue;
@@ -146,7 +146,7 @@ export function getCalcCompletion(
     offset: number,
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    contextProvider: SepticContext
 ): CompletionItem[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const compItems: CompletionItem[] = [];
@@ -170,7 +170,7 @@ export function getCalcCompletion(
         };
     }
 
-    getRelevantXvrsCalc(refProvider.getAllXvrObjects()).forEach((xvr) => {
+    getRelevantXvrsCalc(contextProvider.getAllXvrObjects()).forEach((xvr) => {
         compItems.push(xvrToCompletionItem(xvr, range));
     });
 
@@ -201,13 +201,13 @@ export function getCalcCompletion(
 export function getObjectCompletion(
     offset: number,
     cnfg: SepticCnfg,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     doc: ITextDocument,
     settings: CompletionSettings = { onlySuggestValidSnippets: false }
 ): CompletionItem[] {
     cnfg.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
-    refProvider.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
-    const snippets: CompletionItem[] = getRelevantSnippets(offset, refProvider, doc, settings.onlySuggestValidSnippets);
+    contextProvider.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
+    const snippets: CompletionItem[] = getRelevantSnippets(offset, contextProvider, doc, settings.onlySuggestValidSnippets);
     const references: CompletionItem[] = [];
     const obj = cnfg.getObjectFromOffset(offset);
     if (!obj) {
@@ -226,7 +226,7 @@ export function getObjectCompletion(
             };
         return getRelevantXvrsIdentifier(
             obj,
-            refProvider.getAllXvrObjects()
+            contextProvider.getAllXvrObjects()
         ).map((obj) => xvrToCompletionItem(obj, range));
     }
     const currentAttr = getCurrentAttr(offset, obj);
@@ -247,7 +247,7 @@ export function getObjectCompletion(
         references.push(
             ...getRelevantXvrsAttributes(
                 currentAttr.attr,
-                refProvider.getAllXvrObjects()
+                contextProvider.getAllXvrObjects()
             ).map((obj) => xvrToCompletionItem(obj, range))
         );
     }
@@ -419,7 +419,7 @@ const priorityMapping: { [key: string]: number } = {
     "Tvr": 5,
 };
 
-function xvrToCompletionItem(obj: SepticObject, range: Range): CompletionItem {    
+function xvrToCompletionItem(obj: SepticObject, range: Range): CompletionItem {
     let priority = priorityMapping[obj.type] ?? 6;
     return {
         label: obj.identifier!.name,
@@ -479,12 +479,12 @@ function getRelevantXvrsAttributes(
     }
 }
 
-function getRelevantSnippets(offset: number, refProvider: SepticReferenceProvider, doc: ITextDocument, onlySuggestValidSnippets: boolean): CompletionItem[] {
+function getRelevantSnippets(offset: number, contextProvider: SepticContext, doc: ITextDocument, onlySuggestValidSnippets: boolean): CompletionItem[] {
     const snippets = SepticMetaInfoProvider.getInstance().getSnippets().slice();
     if (!onlySuggestValidSnippets) {
         return snippets;
     }
-    const obj = refProvider.getObjectFromOffset(offset, doc.uri);
+    const obj = contextProvider.getObjectFromOffset(offset, doc.uri);
     if (!obj) {
         return snippets.filter((snippet) => snippet.label.startsWith("system"));
     }

@@ -13,7 +13,7 @@ import {
     SepticCnfg,
     SepticMetaInfoProvider,
     parseAlg,
-    SepticReferenceProvider,
+    SepticContext,
     SepticComment,
     Attribute,
     SepticObject,
@@ -141,7 +141,7 @@ export class DiagnosticProvider {
     /* istanbul ignore next */
     public async provideDiagnostics(
         uri: string,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<Diagnostic[]> {
         const cnfg = await this.cnfgProvider.get(uri);
         if (cnfg === undefined) {
@@ -158,25 +158,25 @@ export class DiagnosticProvider {
         if (!settings.enabled) {
             return [];
         }
-        await refProvider.load();
-        return getDiagnostics(cnfg, doc, refProvider);
+        await contextProvider.load();
+        return getDiagnostics(cnfg, doc, contextProvider);
     }
 }
 
-export function validateStandAloneCalc(alg: string, refProvider: SepticReferenceProvider): Diagnostic[] {
+export function validateStandAloneCalc(alg: string, contextProvider: SepticContext): Diagnostic[] {
     const doc = TextDocument.create("", "", 0, `"${alg}"`);
     const algAttrValue = new AttributeValue(`"${alg}"`, SepticTokenType.string);
-    return validateAlg(algAttrValue, doc, refProvider);
+    return validateAlg(algAttrValue, doc, contextProvider);
 }
 
 export function getDiagnostics(
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    contextProvider: SepticContext
 ) {
     const diagnostics: Diagnostic[] = [];
-    diagnostics.push(...validateObjects(cnfg, doc, refProvider));
-    diagnostics.push(...validateAlgs(cnfg, doc, refProvider));
+    diagnostics.push(...validateObjects(cnfg, doc, contextProvider));
+    diagnostics.push(...validateAlgs(cnfg, doc, contextProvider));
     diagnostics.push(...validateComments(cnfg, doc));
     const disabledLines = getDisabledLines(cnfg.comments, doc);
     const filteredDiags = diagnostics.filter((diag) => {
@@ -232,7 +232,7 @@ function checkSepticComment(comment: SepticComment): boolean {
 export function validateAlgs(
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    contextProvider: SepticContext
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     const algAttrs = cnfg.getAlgAttrs();
@@ -242,14 +242,14 @@ export function validateAlgs(
         if (!algAttrValue) {
             continue;
         }
-        diagnostics.push(...validateAlg(algAttrValue, doc, refProvider));
+        diagnostics.push(...validateAlg(algAttrValue, doc, contextProvider));
     }
     return diagnostics;
 }
 
 type AlgPositionTransformer = (start: number, end: number) => Range;
 
-export function validateAlg(alg: AttributeValue, doc: ITextDocument, refProvider: SepticReferenceProvider): Diagnostic[] {
+export function validateAlg(alg: AttributeValue, doc: ITextDocument, contextProvider: SepticContext): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
 
     if (!checkAlgLength(alg.getValue())) {
@@ -296,7 +296,7 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, refProvider
     visitor.visit(expr);
     visitor.calcs.forEach((calc) => {
         diagnostics.push(
-            ...validateCalc(calc, refProvider, algPositionTransformer)
+            ...validateCalc(calc, contextProvider, algPositionTransformer)
         );
     });
     visitor.variables.forEach((variable) => {
@@ -304,7 +304,7 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, refProvider
             ...validateAlgVariable(
                 variable,
                 doc,
-                refProvider,
+                contextProvider,
                 offsetStartAlg
             )
         );
@@ -315,7 +315,7 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, refProvider
 export function validateAlgVariable(
     variable: AlgLiteral,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     offsetStartAlg: number
 ): Diagnostic[] {
     if (isPureJinja(variable.value)) {
@@ -323,7 +323,7 @@ export function validateAlgVariable(
     }
     const variableParts = variable.value.split(".");
     if (
-        !refProvider.validateRef(variableParts[0], defaultRefValidationFunction)
+        !contextProvider.validateRef(variableParts[0], defaultRefValidationFunction)
     ) {
         return [
             createDiagnostic(
@@ -354,7 +354,7 @@ export function validateAlgVariable(
         ];
     }
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
-    let referencedObjects = refProvider.getObjectsByIdentifier(
+    let referencedObjects = contextProvider.getObjectsByIdentifier(
         variableParts[0]
     );
     referencedObjects = referencedObjects.filter((obj) => obj.isXvr);
@@ -389,7 +389,7 @@ export function validateAlgVariable(
 
 export function validateCalc(
     calc: AlgCalc,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     algPositionTransformer: AlgPositionTransformer
 ): Diagnostic[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
@@ -408,7 +408,7 @@ export function validateCalc(
         ...validateCalcParams(
             calc,
             calcMetaInfo,
-            refProvider,
+            contextProvider,
             algPositionTransformer
         )
     );
@@ -418,7 +418,7 @@ export function validateCalc(
 function validateCalcParams(
     calc: AlgCalc,
     calcInfo: SepticCalcInfo,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     algPositionTransformer: AlgPositionTransformer
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
@@ -429,7 +429,7 @@ function validateCalcParams(
         if (!paramInfo) {
             continue;
         }
-        diagnostics.push(...validateSingleParam(paramExpr, paramInfo, refProvider, algPositionTransformer));
+        diagnostics.push(...validateSingleParam(paramExpr, paramInfo, contextProvider, algPositionTransformer));
     }
     diagnostics.push(...validateCalcParamsLength(calc, calcInfo, algPositionTransformer));
     return diagnostics;
@@ -438,7 +438,7 @@ function validateCalcParams(
 function validateSingleParam(
     paramExpr: AlgExpr,
     paramInfo: SepticCalcParameterInfo,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     algPositionTransformer: AlgPositionTransformer
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
@@ -452,7 +452,7 @@ function validateSingleParam(
             )
         );
     }
-    diagnostics.push(...validateParamType(paramExpr, paramInfo.datatype, refProvider, algPositionTransformer));
+    diagnostics.push(...validateParamType(paramExpr, paramInfo.datatype, contextProvider, algPositionTransformer));
     return diagnostics;
 }
 
@@ -563,19 +563,19 @@ function checkAlgLength(alg: string) {
 function validateParamType(
     expr: AlgExpr,
     types: string[],
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     algPositionTransformer: AlgPositionTransformer
 ): Diagnostic[] {
     if (types[0].startsWith("value")) {
-        return validateValueParamType(expr, refProvider, algPositionTransformer);
+        return validateValueParamType(expr, contextProvider, algPositionTransformer);
     }
-    return validateObjectParamType(expr, types, refProvider, algPositionTransformer);
+    return validateObjectParamType(expr, types, contextProvider, algPositionTransformer);
 }
 
 function validateObjectParamType(
     expr: AlgExpr,
     types: string[],
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     algPositionTransformer: AlgPositionTransformer
 ): Diagnostic[] {
     if (!isAlgExprObjectReference(expr)) {
@@ -589,7 +589,7 @@ function validateObjectParamType(
         ];
     }
     const exprLiteral = expr as AlgLiteral;
-    const objects = refProvider.getObjectsByIdentifier(
+    const objects = contextProvider.getObjectsByIdentifier(
         exprLiteral.value.split(".")[0]
     );
     for (const obj of objects) {
@@ -609,7 +609,7 @@ function validateObjectParamType(
 
 function validateValueParamType(
     expr: AlgExpr,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     algPositionTransformer: AlgPositionTransformer
 ): Diagnostic[] {
     if (!isAlgExprObjectReference(expr)) {
@@ -619,7 +619,7 @@ function validateValueParamType(
     if (isPureJinja(exprLiteral.value)) {
         return [];
     }
-    if (refProvider.validateRef(exprLiteral.value.split(".")[0], defaultRefValidationFunction)) {
+    if (contextProvider.validateRef(exprLiteral.value.split(".")[0], defaultRefValidationFunction)) {
         return [];
     }
     return [createDiagnostic(
@@ -636,7 +636,7 @@ function isAlgExprObjectReference(expr: AlgExpr) {
 export function validateObjects(
     cnfg: SepticCnfg,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    contextProvider: SepticContext
 ): Diagnostic[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const diagnostics: Diagnostic[] = [];
@@ -658,7 +658,7 @@ export function validateObjects(
             continue;
         }
         diagnostics.push(
-            ...validateObject(obj, doc, refProvider, objectDoc, objectInfo)
+            ...validateObject(obj, doc, contextProvider, objectDoc, objectInfo)
         );
     }
     return diagnostics;
@@ -667,7 +667,7 @@ export function validateObjects(
 export function validateObject(
     obj: SepticObject,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     objectDoc: ISepticObjectDocumentation,
     objectInfo: SepticObjectInfo | undefined
 ): Diagnostic[] {
@@ -675,7 +675,7 @@ export function validateObject(
     diagnostics.push(...validateObjectParent(obj, doc));
     diagnostics.push(...validateIdentifier(obj, doc));
     diagnostics.push(
-        ...validateObjectReferences(obj, doc, refProvider, objectInfo)
+        ...validateObjectReferences(obj, doc, contextProvider, objectInfo)
     );
     const baseAttributes: Map<string, Attribute[]> = new Map();
     for (const attr of obj.attributes) {
@@ -744,31 +744,31 @@ export function validateIdentifier(
 export function validateObjectReferences(
     obj: SepticObject,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     objectMetaInfo: SepticObjectInfo | undefined
 ): Diagnostic[] {
     if (!objectMetaInfo) {
         return [];
     }
     const diagnostics: Diagnostic[] = [];
-    diagnostics.push(...validateDuplicateIdentifiers(obj, refProvider, doc));
+    diagnostics.push(...validateDuplicateIdentifiers(obj, contextProvider, doc));
     if (obj.isType("Evr")) {
-        diagnostics.push(...validateEvrReferences(obj, refProvider, doc));
+        diagnostics.push(...validateEvrReferences(obj, contextProvider, doc));
     }
     if (shouldValidateIdentifier(objectMetaInfo, obj)) {
         if (obj.isType("CalcPvr")) {
             diagnostics.push(
-                ...validateCalcPvrIdentifierReferences(obj, refProvider, doc)
+                ...validateCalcPvrIdentifierReferences(obj, contextProvider, doc)
             );
         } else if (obj.isType("UAAppl")) {
             diagnostics.push(
-                ...validateUAApplReferences(obj, refProvider, doc)
+                ...validateUAApplReferences(obj, contextProvider, doc)
             );
         } else {
             diagnostics.push(
                 ...validateIdentifierReferences(
                     obj,
-                    refProvider,
+                    contextProvider,
                     objectMetaInfo,
                     doc
                 )
@@ -789,7 +789,7 @@ export function validateObjectReferences(
             if (refName.length < 1) {
                 continue;
             }
-            const validRef = refProvider.validateRef(
+            const validRef = contextProvider.validateRef(
                 refName,
                 defaultRefValidationFunction
             );
@@ -821,11 +821,11 @@ function shouldValidateIdentifier(
 
 function validateIdentifierReferences(
     obj: SepticObject,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     objectMetaInfo: SepticObjectInfo,
     doc: ITextDocument
 ): Diagnostic[] {
-    const validRef = refProvider.validateRef(
+    const validRef = contextProvider.validateRef(
         obj.identifier!.name,
         defaultRefValidationFunction
     );
@@ -886,7 +886,7 @@ const hasDuplicateReferenceUaXvr: RefValidationFunction = (
 
 function validateDuplicateIdentifiers(
     obj: SepticObject,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     doc: ITextDocument
 ): Diagnostic[] {
     if (!obj.identifier) {
@@ -902,7 +902,7 @@ function validateDuplicateIdentifiers(
     } else {
         return [];
     }
-    const validRef = refProvider.validateRef(
+    const validRef = contextProvider.validateRef(
         obj.identifier!.name,
         validationFunction
     );
@@ -925,11 +925,11 @@ function validateDuplicateIdentifiers(
 
 function validateCalcPvrIdentifierReferences(
     obj: SepticObject,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     doc: ITextDocument
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    if (refProvider.validateRef(obj.identifier!.name, hasDuplicateCalcPvrRef)) {
+    if (contextProvider.validateRef(obj.identifier!.name, hasDuplicateCalcPvrRef)) {
         diagnostics.push(
             createDiagnostic(
                 DiagnosticSeverity.Warning,
@@ -942,14 +942,14 @@ function validateCalcPvrIdentifierReferences(
             )
         );
     }
-    const referenceToEvr = refProvider.validateRef(
+    const referenceToEvr = contextProvider.validateRef(
         obj.identifier!.name,
         hasReferenceToEvr
     );
     if (referenceToEvr) {
         return diagnostics;
     }
-    const referenceToXvr = refProvider.validateRef(
+    const referenceToXvr = contextProvider.validateRef(
         obj.identifier!.name,
         defaultRefValidationFunction
     );
@@ -978,10 +978,10 @@ function validateCalcPvrIdentifierReferences(
 
 function validateUAApplReferences(
     obj: SepticObject,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     doc: ITextDocument
 ): Diagnostic[] {
-    for (const object of refProvider.getObjectsByIdentifier(
+    for (const object of contextProvider.getObjectsByIdentifier(
         obj.identifier!.name
     )) {
         if (object.isType("SmpcAppl", "MPCAppl")) {
@@ -1025,7 +1025,7 @@ const hasDuplicateCalcPvrRef: RefValidationFunction = (refs: SepticReference[]) 
 
 export function validateEvrReferences(
     obj: SepticObject,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     doc: ITextDocument
 ) {
     const userInputAttrValue = obj.getAttribute("UserInput")?.getAttrValue();
@@ -1036,7 +1036,7 @@ export function validateEvrReferences(
     if (!name) {
         return [];
     }
-    const refs = refProvider.getXvrRefs(name);
+    const refs = contextProvider.getXvrRefs(name);
     const calcPvrRef = refs?.find((ref) => {
         return ref.type === ReferenceType.calc || ref.obj?.type === "CalcPvr";
     });

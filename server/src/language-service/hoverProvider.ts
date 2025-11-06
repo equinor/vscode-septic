@@ -16,7 +16,7 @@ import {
     SepticCnfg,
     SepticMetaInfoProvider,
     SepticObject,
-    SepticReferenceProvider,
+    SepticContext,
     formatCalcMarkdown,
     formatObjectAttribute,
     formatObjectDocumentationMarkdown,
@@ -35,15 +35,15 @@ export class HoverProvider {
     async provideHover(
         params: HoverParams,
         doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<Hover | undefined> {
         const cnfg = await this.cnfgProvider.get(doc.uri);
         if (!cnfg) {
             return undefined;
         }
-        await refProvider.load();
+        await contextProvider.load();
         const offset = doc.offsetAt(params.position);
-        return getHover(cnfg, offset, doc, refProvider);
+        return getHover(cnfg, offset, doc, contextProvider);
     }
 }
 
@@ -51,13 +51,13 @@ export function getHover(
     cnfg: SepticCnfg,
     offset: number,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    contextProvider: SepticContext
 ): Hover | undefined {
     const objectHover = getObjectHover(cnfg, offset, doc);
     if (objectHover) {
         return objectHover;
     }
-    const refHover = getReferenceHover(cnfg, offset, doc, refProvider);
+    const refHover = getReferenceHover(cnfg, offset, doc, contextProvider);
     if (refHover) {
         return refHover;
     }
@@ -68,13 +68,13 @@ export function getReferenceHover(
     cnfg: SepticCnfg,
     offset: number,
     doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    contextProvider: SepticContext
 ): Hover | undefined {
     const ref = cnfg.getXvrRefFromOffset(offset);
     if (!ref) {
         return undefined;
     }
-    const allRefs = refProvider.getXvrRefs(ref.identifier);
+    const allRefs = contextProvider.getXvrRefs(ref.identifier);
     if (!allRefs) {
         return undefined;
     }

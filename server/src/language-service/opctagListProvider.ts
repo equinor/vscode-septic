@@ -3,14 +3,14 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { SepticReferenceProvider } from "../septic";
+import { SepticContext } from "../septic";
 
 export function generateOpcReport(
-    refProvider: SepticReferenceProvider
+    contextProvider: SepticContext
 ): string {
     const header: string = "ObjectId;ObjectType;ObjectAttribute;OPCTag";
     const entries: string[] = [];
-    const opcObjects = refProvider.getObjectsByType(
+    const opcObjects = contextProvider.getObjectsByType(
         "SopcTvr",
         "SopcEvr",
         "SopcCvr",

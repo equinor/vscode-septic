@@ -18,7 +18,7 @@ import {
     ReferenceProvider,
 } from "./referenceProvider";
 import { DocumentProvider } from "../documentProvider";
-import { SepticCnfg, SepticReferenceProvider } from "../septic";
+import { SepticCnfg, SepticContext } from "../septic";
 import { RenameProvider } from "./renameProvider";
 import { HoverProvider } from "./hoverProvider";
 import { FormattingProvider } from "./formatProvider";
@@ -38,7 +38,7 @@ export interface ILanguageService {
 
     provideDiagnostics(
         uri: string,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<lsp.Diagnostic[]>;
 
     provideDocumentSymbols(
@@ -48,31 +48,31 @@ export interface ILanguageService {
     provideCompletion(
         pos: lsp.CompletionParams,
         doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<lsp.CompletionItem[]>;
 
     provideDefinition(
         params: lsp.DefinitionParams,
         doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<LocationLinkOffset[]>;
 
     provideReferences(
         params: lsp.ReferenceParams,
         doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<LocationOffset[]>;
 
     provideDeclaration(
         params: lsp.DeclarationParams,
         doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<LocationLinkOffset[]>;
 
     provideRename(
         params: lsp.RenameParams,
         doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<lsp.WorkspaceEdit | undefined>;
 
     providePrepareRename(
@@ -83,7 +83,7 @@ export interface ILanguageService {
     provideHover(
         params: lsp.HoverParams,
         doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<lsp.Hover | undefined>;
 
     provideFormatting(doc: ITextDocument): Promise<lsp.TextEdit[]>;
@@ -97,7 +97,7 @@ export interface ILanguageService {
 
     provideCycleReport(
         name: string,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<string>;
 
     provideCnfgComparison(
@@ -106,7 +106,7 @@ export interface ILanguageService {
         settingsFile: string
     ): Promise<string>;
 
-    provideOpcTagList(refProvider: SepticReferenceProvider): string;
+    provideOpcTagList(contextProvider: SepticContext): string;
 }
 
 export function createLanguageService(

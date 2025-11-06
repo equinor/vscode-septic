@@ -30,7 +30,7 @@ import { ContextManager } from "./contextManager";
 import { offsetToPositionRange } from "./util/converter";
 import {
     ScgContext,
-    SepticReferenceProvider,
+    SepticContext,
     SepticMetaInfoProvider,
     SepticCnfg,
 } from "./septic";
@@ -139,7 +139,7 @@ async function updateDiagnosticsAllStandaloneCnfgs() {
 }
 
 connection.onRequest(protocol.opcTagList, async (param) => {
-    let context: SepticReferenceProvider | undefined =
+    let context: SepticContext | undefined =
         await contextManager.getContextByName(param.uri);
     if (!context) {
         context = await langService.cnfgProvider.get(param.uri);
@@ -152,7 +152,7 @@ connection.onRequest(protocol.opcTagList, async (param) => {
 });
 
 connection.onRequest(protocol.cylceReport, async (param) => {
-    let context: SepticReferenceProvider | undefined =
+    let context: SepticContext | undefined =
         await contextManager.getContextByName(param.uri);
     if (!context) {
         context = await langService.cnfgProvider.get(param.uri);
@@ -211,7 +211,7 @@ connection.onRequest(protocol.documentation, async () => {
 });
 
 connection.onRequest(protocol.variables, async (param) => {
-    let context: SepticReferenceProvider | undefined =
+    let context: SepticContext | undefined =
         await contextManager.getContext(param.uri);
     if (!context) {
         context = await langService.cnfgProvider.get(param.uri);
@@ -227,7 +227,7 @@ connection.onRequest(protocol.variables, async (param) => {
 )
 
 connection.onRequest(protocol.validateAlg, async (param) => {
-    let context: SepticReferenceProvider | undefined =
+    let context: SepticContext | undefined =
         await contextManager.getContext(param.uri);
     if (!context) {
         context = await langService.cnfgProvider.get(param.uri);
@@ -243,7 +243,7 @@ connection.onRequest(protocol.getFunctions.method, async (param) => {
     if (!cnfg) {
         return [];
     }
-    let context: SepticReferenceProvider | undefined = await contextManager.getContext(param.uri);
+    let context: SepticContext | undefined = await contextManager.getContext(param.uri);
     if (context) {
         await context.load();
     } else {
@@ -410,7 +410,7 @@ connection.onCompletion(
         if (!document) {
             return [];
         }
-        let context: SepticReferenceProvider | undefined =
+        let context: SepticContext | undefined =
             await contextManager.getContext(params.textDocument.uri);
         if (!context) {
             context = await langService.cnfgProvider.get(
@@ -430,7 +430,7 @@ connection.onDefinition(async (params) => {
     if (!document) {
         return [];
     }
-    let context: SepticReferenceProvider | undefined =
+    let context: SepticContext | undefined =
         await contextManager.getContext(params.textDocument.uri);
     if (!context) {
         context = await langService.cnfgProvider.get(params.textDocument.uri);
@@ -468,7 +468,7 @@ connection.onDeclaration(async (params) => {
     if (!document) {
         return [];
     }
-    let context: SepticReferenceProvider | undefined =
+    let context: SepticContext | undefined =
         await contextManager.getContext(params.textDocument.uri);
     if (!context) {
         context = await langService.cnfgProvider.get(params.textDocument.uri);
@@ -505,7 +505,7 @@ connection.onReferences(async (params) => {
     if (!document) {
         return [];
     }
-    let context: SepticReferenceProvider | undefined =
+    let context: SepticContext | undefined =
         await contextManager.getContext(params.textDocument.uri);
     if (!context) {
         context = await langService.cnfgProvider.get(params.textDocument.uri);
@@ -540,7 +540,7 @@ connection.onRenameRequest(async (params) => {
         return undefined;
     }
 
-    let context: SepticReferenceProvider | undefined =
+    let context: SepticContext | undefined =
         await contextManager.getContext(params.textDocument.uri);
     if (!context) {
         context = await langService.cnfgProvider.get(params.textDocument.uri);
@@ -566,7 +566,7 @@ connection.onHover(async (params) => {
         return undefined;
     }
 
-    let context: SepticReferenceProvider | undefined =
+    let context: SepticContext | undefined =
         await contextManager.getContext(params.textDocument.uri);
     if (!context) {
         context = await langService.cnfgProvider.get(params.textDocument.uri);

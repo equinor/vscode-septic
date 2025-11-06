@@ -7,9 +7,9 @@ import * as path from "path";
 import {
     RefValidationFunction,
     SepticReference,
-    SepticReferenceProvider,
     defaultRefValidationFunction,
 } from "./reference";
+import { SepticContext } from './context';
 import { SepticObject } from "./elements";
 import { SepticConfigProvider } from "../language-service/septicConfigProvider";
 import { SepticCnfg } from "./cnfg";
@@ -44,7 +44,7 @@ export interface ScgTemplate {
     include?: string[];
 }
 
-export class ScgContext implements SepticReferenceProvider {
+export class ScgContext implements SepticContext {
     public name: string;
     public filePath: string;
 
