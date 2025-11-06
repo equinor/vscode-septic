@@ -1,5 +1,5 @@
-import { AlgVisitor } from './algParser';
-import { SepticObject } from './septicElements';
+import { AlgVisitor } from './alg';
+import { SepticObject } from './elements';
 
 interface SepticFunctionNode {
 	obj: SepticObject;

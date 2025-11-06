@@ -3,18 +3,18 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { AlgVisitor } from "./algParser";
-import { SepticTokenType } from "./septicTokens";
+import { AlgVisitor } from "./alg";
+import { SepticTokenType } from "./tokens";
 import {
     SepticMetaInfoProvider,
     SepticObjectHierarchy,
-} from "./septicMetaInfo";
+} from "../metaInfoProvider";
 import {
     Attribute,
     AttributeValue,
     SepticComment,
     SepticObject,
-} from "./septicElements";
+} from "./elements";
 import {
     SepticReference,
     SepticReferenceProvider,
@@ -26,7 +26,7 @@ import {
 import { removeSpaces, transformPositionsToOriginal } from "../util";
 import { updateParentObjects } from "./hierarchy";
 import { Alg, Cycle, findAlgCycles } from "./cycle";
-import { getFunctionsFromCalcPvrs, SepticFunction } from './septicFunction';
+import { getFunctionsFromCalcPvrs, SepticFunction } from './function';
 
 export class SepticCnfg implements SepticReferenceProvider {
     public objects: SepticObject[];

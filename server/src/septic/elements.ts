@@ -4,8 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { removeJinjaLoopsAndIfs, removeSpaces } from "../util";
-import { AlgExpr, parseAlg } from './algParser';
-import { SepticTokenType } from "./septicTokens";
+import { AlgExpr, parseAlg } from './alg';
+import { SepticTokenType } from "./tokens";
 
 export class SepticBase {
     start: number;

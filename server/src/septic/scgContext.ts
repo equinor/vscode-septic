@@ -10,11 +10,11 @@ import {
     SepticReferenceProvider,
     defaultRefValidationFunction,
 } from "./reference";
-import { SepticObject } from "./septicElements";
+import { SepticObject } from "./elements";
 import { SepticConfigProvider } from "../language-service/septicConfigProvider";
-import { SepticCnfg } from "./septicCnfg";
+import { SepticCnfg } from "./cnfg";
 import { removeSpaces } from "../util";
-import { SepticObjectHierarchy } from "./septicMetaInfo";
+import { SepticObjectHierarchy } from "../metaInfoProvider";
 import { updateParentObjects } from "./hierarchy";
 import { Alg, Cycle, findAlgCycles } from "./cycle";
 

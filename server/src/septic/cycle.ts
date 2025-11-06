@@ -8,7 +8,7 @@ import {
     AlgUnary,
     IAlgVisitor,
     parseAlg,
-} from "./algParser";
+} from "./alg";
 
 export class CycleDetectorVisitor implements IAlgVisitor {
     variables: AlgLiteral[] = [];

@@ -4,8 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Cycle } from "./cycle";
-import { SepticObject } from "./septicElements";
-import { SepticObjectHierarchy } from "./septicMetaInfo";
+import { SepticObject } from "./elements";
+import { SepticObjectHierarchy } from "../metaInfoProvider";
 
 export interface SepticReference {
     identifier: string;
