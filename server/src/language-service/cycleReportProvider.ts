@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { DocumentProvider } from "../documentProvider";
-import { SepticContext } from "../septic";
+import { findAlgCycles, SepticContext } from "../septic";
 
 const spacesToLink = 40;
 
@@ -20,7 +20,9 @@ export class CycleReportProvider {
         contextProvider: SepticContext
     ): Promise<string> {
         const reports: string[] = [`Cycle Report:  ${name}`];
-        const cycles = contextProvider.findAlgCycles();
+        await contextProvider.load();
+
+        const cycles = findAlgCycles(contextProvider.getObjectsByType("CalcPvr"));
         cycles.sort((a, b) => b.nodes.length - a.nodes.length);
         for (const cycle of cycles) {
             reports.push(

@@ -215,22 +215,7 @@ export class SepticCnfg implements SepticContext {
         }
     }
 
-    public findAlgCycles(): Cycle[] {
-        const calcPvrs = this.objects.filter((obj) => obj.isType("CalcPvr"));
-        const algs: Alg[] = [];
-        for (const calcPvr of calcPvrs) {
-            const alg = calcPvr.getAttribute("Alg");
-            const content = alg?.getAttrValue()?.getValue();
-            if (!content || !calcPvr.identifier?.name) {
-                continue;
-            }
-            algs.push({
-                calcPvrName: removeSpaces(calcPvr.identifier.name),
-                content: content,
-            });
-        }
-        return findAlgCycles(algs);
-    }
+
 
     public getFunctions(): SepticFunction[] {
         const calcPvrs = this.objects.filter((obj) => obj.isType("CalcPvr"));

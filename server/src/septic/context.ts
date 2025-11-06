@@ -23,6 +23,5 @@ export interface SepticContext {
 		validationFunction: RefValidationFunction
 	): boolean;
 	updateObjectParents(hierarchy: SepticObjectHierarchy): Promise<void>;
-	findAlgCycles(): Cycle[];
 }
 

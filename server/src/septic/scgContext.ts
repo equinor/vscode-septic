@@ -13,10 +13,8 @@ import { SepticContext } from './context';
 import { SepticObject } from "./elements";
 import { SepticConfigProvider } from "../language-service/septicConfigProvider";
 import { SepticCnfg } from "./cnfg";
-import { removeSpaces } from "../util";
 import { SepticObjectHierarchy } from "../metaInfoProvider";
 import { updateParentObjects } from "./hierarchy";
-import { Alg, Cycle, findAlgCycles } from "./cycle";
 
 export interface ScgConfig {
     outputfile?: string;
@@ -228,31 +226,5 @@ export class ScgContext implements SepticContext {
             objects.push(...cnfg.objects);
         }
         updateParentObjects(objects, hierarchy);
-    }
-
-    public findAlgCycles(): Cycle[] {
-        const calcPvrs: SepticObject[] = [];
-        for (const file of this.files) {
-            const cnfg = this.cnfgCache.get(file);
-            if (!cnfg) {
-                continue;
-            }
-            calcPvrs.push(
-                ...cnfg.objects.filter((obj) => obj.type === "CalcPvr")
-            );
-        }
-        const algs: Alg[] = [];
-        for (const calcPvr of calcPvrs) {
-            const alg = calcPvr.getAttribute("Alg");
-            const content = alg?.getAttrValue()?.getValue();
-            if (!content || !calcPvr.identifier?.name) {
-                continue;
-            }
-            algs.push({
-                calcPvrName: removeSpaces(calcPvr.identifier?.name),
-                content: content,
-            });
-        }
-        return findAlgCycles(algs);
     }
 }
