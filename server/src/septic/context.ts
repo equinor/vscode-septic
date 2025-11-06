@@ -3,7 +3,6 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Cycle } from "./cycle";
 import { SepticObject } from "./elements";
 import { SepticObjectHierarchy } from "../metaInfoProvider"; import { SepticReference, RefValidationFunction } from './reference';
 
