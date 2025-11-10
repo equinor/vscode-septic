@@ -224,7 +224,7 @@ export function validateAlgs(
     contextProvider: SepticContext
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    const algAttrs = cnfg.getAlgAttrs();
+    const algAttrs = cnfg.objects.filter((obj) => obj.type === "CalcPvr" && obj.getAttribute("Alg")).map((obj) => obj.getAttribute("Alg")!);
 
     for (let i = 0; i < algAttrs.length; i++) {
         const algAttrValue = algAttrs[i].getAttrValue();

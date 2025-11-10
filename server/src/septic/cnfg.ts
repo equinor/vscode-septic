@@ -111,19 +111,6 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         });
     }
 
-    public getAlgAttrs(): Attribute[] {
-        const objects: Attribute[] = [];
-        this.objects.forEach((obj) => {
-            if (obj.isType("CalcPvr")) {
-                const algAttr = obj.getAttribute("Alg");
-                if (algAttr) {
-                    objects.push(algAttr);
-                }
-            }
-        });
-        return objects;
-    }
-
     public getXvrRefs(name: string): SepticReference[] | undefined {
         this.extractReferences();
         return this.xvrRefs.get(removeSpaces(name));
