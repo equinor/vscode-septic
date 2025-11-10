@@ -48,7 +48,7 @@ export function getSignatureHelp(
     position: Position
 ): SignatureHelp {
     const offset = cnfg.offsetAt(position);
-    const alg = cnfg.getAlgFromOffset(offset);
+    const alg = cnfg.findAlgFromLocation(offset);
     if (!alg) {
         return { signatures: [] };
     }

@@ -190,12 +190,12 @@ export class ScgContext implements SepticContext {
         return objects;
     }
 
-    public getObjectFromOffset(offset: number, uri: string = ""): SepticObject | undefined {
+    public findObjectFromLocation(offset: number, uri: string = ""): SepticObject | undefined {
         const cnfg = this.cnfgCache.get(uri);
         if (!cnfg) {
             return undefined;
         }
-        const obj = cnfg.getObjectFromOffset(offset);
+        const obj = cnfg.findObjectFromLocation(offset);
         if (obj) {
             return obj;
         }

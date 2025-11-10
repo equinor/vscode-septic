@@ -35,7 +35,7 @@ export class SepticCnfg implements SepticContext, ITextDocument {
     public comments: SepticComment[] = [];
     public readonly doc: ITextDocument;
     private references = new Map<string, SepticReference[]>();
-    private xvrRefsExtracted = false;
+    private referencesExtracted = false;
     public uri: string = "";
 
     constructor(doc: ITextDocument) {
@@ -161,8 +161,9 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         });
     }
 
-    public offsetInAlg(offset: number): undefined | AttributeValue {
-        const obj = this.getObjectFromOffset(offset);
+    public locationInAlg(location: Position | number): undefined | AttributeValue {
+        const offset = typeof location === "number" ? location : this.offsetAt(location);
+        const obj = this.findObjectFromLocation(offset);
         if (!obj) {
             return undefined;
         }
@@ -178,8 +179,9 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         return undefined;
     }
 
-    public getAlgFromOffset(offset: number): Attribute | undefined {
-        const obj = this.getObjectFromOffset(offset);
+    public findAlgFromLocation(location: Position | number): Attribute | undefined {
+        const offset = typeof location === "number" ? location : this.offsetAt(location);
+        const obj = this.findObjectFromLocation(offset);
         if (!obj) {
             return undefined;
         }
@@ -196,10 +198,11 @@ export class SepticCnfg implements SepticContext, ITextDocument {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public getObjectFromOffset(offset: number, uri: string = ""): SepticObject | undefined {
+    public findObjectFromLocation(location: Position | number, uri: string = ""): SepticObject | undefined {
         if (!this.objects.length) {
             return undefined;
         }
+        const offset = typeof location === "number" ? location : this.offsetAt(location)
         if (offset < this.objects[0].start) {
             return undefined;
         }
@@ -219,8 +222,9 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         });
     }
 
-    public getReferenceFromOffset(offset: number): SepticReference | undefined {
+    public findReferenceFromLocation(location: Position | number): SepticReference | undefined {
         this.extractReferences();
+        const offset = typeof location === "number" ? location : this.offsetAt(location)
         for (const xvrRef of this.references.values()) {
             const validRef = xvrRef.find((ref) => {
                 return (
@@ -242,10 +246,10 @@ export class SepticCnfg implements SepticContext, ITextDocument {
     }
 
     private extractReferences(): void {
-        if (this.xvrRefsExtracted) {
+        if (this.referencesExtracted) {
             return;
         }
-        this.xvrRefsExtracted = true;
+        this.referencesExtracted = true;
         this.objects.forEach((obj) => {
             extractReferencesFromObj(obj).forEach((xvr) => {
                 xvr.location.uri = this.uri;

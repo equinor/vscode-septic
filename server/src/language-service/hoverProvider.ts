@@ -66,7 +66,7 @@ export function getReferenceHover(
     position: Position,
     contextProvider: SepticContext
 ): Hover | undefined {
-    const ref = cnfg.getReferenceFromOffset(cnfg.offsetAt(position));
+    const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
         return undefined;
     }
@@ -77,10 +77,6 @@ export function getReferenceHover(
     const xvr = allRefs.filter((value) => {
         return value.obj?.isXvr;
     });
-    const sopcXvr = allRefs.filter((value) => {
-        return value.obj?.isOpcXvr;
-    });
-
     if (xvr.length) {
         const text = getMarkdownXvr(xvr[0].obj!);
         return {
@@ -91,7 +87,9 @@ export function getReferenceHover(
             },
         };
     }
-
+    const sopcXvr = allRefs.filter((value) => {
+        return value.obj?.isOpcXvr;
+    });
     if (sopcXvr.length) {
         const text = getMarkdownXvr(sopcXvr[0].obj!);
         return {
@@ -109,7 +107,7 @@ export function getObjectHover(
     position: Position
 ): Hover | undefined {
     const offset = cnfg.offsetAt(position);
-    const obj = cnfg.getObjectFromOffset(offset);
+    const obj = cnfg.findObjectFromLocation(offset);
     if (!obj) {
         return undefined;
     }
@@ -161,7 +159,7 @@ export function getCalcHover(
     position: Position
 ): Hover | undefined {
     const offset = cnfg.offsetAt(position);
-    const obj = cnfg.getObjectFromOffset(offset);
+    const obj = cnfg.findObjectFromLocation(offset);
     if (!obj) {
         return undefined;
     }

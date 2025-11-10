@@ -5,6 +5,7 @@
 
 import { SepticObject } from "./elements";
 import { SepticObjectHierarchy } from "../metaInfoProvider"; import { SepticReference, RefValidationFunction } from './reference';
+import { Position } from 'vscode-languageserver';
 
 export interface SepticContext {
 	load(): Promise<void>;
@@ -16,7 +17,7 @@ export interface SepticContext {
 		identifier: string,
 		type: string
 	): SepticObject | undefined;
-	getObjectFromOffset(offset: number, uri: string): SepticObject | undefined;
+	findObjectFromLocation(location: Position | number, uri: string): SepticObject | undefined;
 	validateReferences(
 		name: string,
 		validationFunction: RefValidationFunction

@@ -11,7 +11,6 @@ import {
     ReferenceParams,
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "../types/textDocument";
 import {
     SepticCnfg,
     SepticReference,
@@ -57,7 +56,6 @@ export class ReferenceProvider {
         params: DeclarationParams,
         contextProvider: SepticContext
     ): Promise<LocationLinkOffset[]> {
-        const offset = params.position;
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
@@ -72,7 +70,7 @@ export function getDefinition(
     cnfg: SepticCnfg,
     contextProvider: SepticContext
 ): LocationLinkOffset[] {
-    const ref = cnfg.getReferenceFromOffset(cnfg.offsetAt(position));
+    const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
         return [];
     }
@@ -99,7 +97,7 @@ export function getReferences(
     cnfg: SepticCnfg,
     contextProvider: SepticContext
 ): LocationOffset[] {
-    const ref = cnfg.getReferenceFromOffset(cnfg.offsetAt(position));
+    const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
         return [];
     }
@@ -123,7 +121,7 @@ export function getDeclaration(
     cnfg: SepticCnfg,
     contextProvider: SepticContext
 ): LocationLinkOffset[] {
-    const ref = cnfg.getReferenceFromOffset(cnfg.offsetAt(position));
+    const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
         return [];
     }

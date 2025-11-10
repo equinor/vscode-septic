@@ -77,7 +77,7 @@ export function getCompletion(
     settings: CompletionSettings = { onlySuggestValidSnippets: false }
 ): CompletionItem[] {
     const offset = doc.offsetAt(pos);
-    const alg = cnfg.offsetInAlg(offset);
+    const alg = cnfg.locationInAlg(offset);
     if (alg) {
         if (triggerCharacter === ".") {
             return getCalcPublicPropertiesCompletion(offset, cnfg, contextProvider);
@@ -92,7 +92,7 @@ export function getCalcPublicPropertiesCompletion(
     cnfg: SepticCnfg,
     contextProvider: SepticContext
 ): CompletionItem[] {
-    const algValue = cnfg.offsetInAlg(offset);
+    const algValue = cnfg.locationInAlg(offset);
     if (!algValue) {
         return [];
     }
@@ -150,7 +150,7 @@ export function getCalcCompletion(
 ): CompletionItem[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const compItems: CompletionItem[] = [];
-    const ref = cnfg.getReferenceFromOffset(offset);
+    const ref = cnfg.findReferenceFromLocation(offset);
     let range: Range;
     if (ref) {
         range = {
@@ -209,11 +209,11 @@ export function getObjectCompletion(
     contextProvider.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
     const snippets: CompletionItem[] = getRelevantSnippets(offset, contextProvider, doc, settings.onlySuggestValidSnippets);
     const references: CompletionItem[] = [];
-    const obj = cnfg.getObjectFromOffset(offset);
+    const obj = cnfg.findObjectFromLocation(offset);
     if (!obj) {
         return snippets;
     }
-    const ref = cnfg.getReferenceFromOffset(offset);
+    const ref = cnfg.findReferenceFromLocation(offset);
     if (isIdentifierCompletion(offset, obj)) {
         const range: Range = ref
             ? {
@@ -484,7 +484,7 @@ function getRelevantSnippets(offset: number, contextProvider: SepticContext, doc
     if (!onlySuggestValidSnippets) {
         return snippets;
     }
-    const obj = contextProvider.getObjectFromOffset(offset, doc.uri);
+    const obj = contextProvider.findObjectFromLocation(offset, doc.uri);
     if (!obj) {
         return snippets.filter((snippet) => snippet.label.startsWith("system"));
     }

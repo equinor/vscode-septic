@@ -96,14 +96,14 @@ export function getCodeActionInsertEvr(
     if (!diag) {
         return [];
     }
-    const currentObject = cnfg.getObjectFromOffset(
-        cnfg.offsetAt(params.range.start)
+    const currentObject = cnfg.findObjectFromLocation(
+        params.range.start
     );
     if (!currentObject?.isType("CalcPvr")) {
         return [];
     }
-    const referencedVariable = cnfg.getReferenceFromOffset(
-        cnfg.offsetAt(params.range.start)
+    const referencedVariable = cnfg.findReferenceFromLocation(
+        params.range.start
     );
     if (!referencedVariable) {
         return [];
