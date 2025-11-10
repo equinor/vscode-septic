@@ -39,11 +39,10 @@ describe("Test codeaction for inserting evr", () => {
         await cnfg.updateObjectParents(
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
-        const doc = TextDocument.create("", "", 0, content);
-        const codeActions = getCodeActionInsertEvr(params, cnfg, doc, "bottom");
+        const codeActions = getCodeActionInsertEvr(params, cnfg, "bottom");
         expect(codeActions.length).to.equal(1);
         const action = codeActions[0];
-        expect(doc.positionAt(action.offset).line).to.greaterThan(24);
+        expect(cnfg.positionAt(action.offset).line).to.greaterThan(24);
         expect(action.name === "NewTest");
     });
     it("Expect to insert evr for missing reference in calcpvr identifier at top", () => {
@@ -70,11 +69,10 @@ describe("Test codeaction for inserting evr", () => {
         cnfg.updateObjectParents(
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
-        const doc = TextDocument.create("", "", 0, content);
-        const codeActions = getCodeActionInsertEvr(params, cnfg, doc, "top");
+        const codeActions = getCodeActionInsertEvr(params, cnfg, "top");
         expect(codeActions.length).to.equal(1);
         const action = codeActions[0];
-        expect(doc.positionAt(action.offset).line).to.lessThan(9);
+        expect(cnfg.positionAt(action.offset).line).to.lessThan(9);
         expect(action.name === "NewTest");
     });
     it("Expect to insert evr for missing reference in alg", () => {
@@ -101,11 +99,10 @@ describe("Test codeaction for inserting evr", () => {
         cnfg.updateObjectParents(
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
-        const doc = TextDocument.create("", "", 0, content);
-        const codeActions = getCodeActionInsertEvr(params, cnfg, doc, "bottom");
+        const codeActions = getCodeActionInsertEvr(params, cnfg, "bottom");
         expect(codeActions.length).to.equal(1);
         const action = codeActions[0];
-        expect(doc.positionAt(action.offset).line).to.greaterThan(24);
+        expect(cnfg.positionAt(action.offset).line).to.greaterThan(24);
         expect(action.name === "SomethingTest");
     });
     it("Expect no insert evr existing reference", () => {
@@ -126,7 +123,7 @@ describe("Test codeaction for inserting evr", () => {
             SepticMetaInfoProvider.getInstance().getObjectHierarchy()
         );
         const doc = TextDocument.create("", "", 0, content);
-        const codeActions = getCodeActionInsertEvr(params, cnfg, doc, "bottom");
+        const codeActions = getCodeActionInsertEvr(params, cnfg, "bottom");
         expect(codeActions.length).to.equal(0);
     });
 });
@@ -154,7 +151,7 @@ describe("Test codeaction for ignoring warning", () => {
         const content = loadFile("codeActionIgnore.cnfg");
         const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("", "", 0, content);
-        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg, doc);
+        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg);
         expect(codeActions.length).to.equal(2);
         expect(codeActions[0].title === `W501: Disable with {# noqa: .... #}`);
         expect(codeActions[1].title === `W501: Disable with // noqa: ....`);
@@ -181,7 +178,7 @@ describe("Test codeaction for ignoring warning", () => {
         const content = loadFile("codeActionIgnore.cnfg");
         const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("", "", 0, content);
-        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg, doc);
+        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg);
         expect(codeActions.length).to.equal(1);
         expect(codeActions[0].title === `E202: Update disable diagnostics`);
         const textEdits = codeActions[0].edit?.documentChanges?.at(
@@ -215,7 +212,7 @@ describe("Test codeaction for ignoring warning", () => {
         const content = loadFile("codeActionIgnore.cnfg");
         const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("", "", 0, content);
-        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg, doc);
+        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg);
         expect(codeActions.length).to.equal(1);
         expect(codeActions[0].title === `E202: Update disable diagnostics`);
         const textEdits = codeActions[0].edit?.documentChanges?.at(
@@ -253,7 +250,7 @@ describe("Test codeaction for ignoring warning", () => {
         const content = loadFile("codeActionIgnore.cnfg");
         const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("", "", 0, content);
-        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg, doc);
+        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg);
         expect(codeActions.length).to.equal(2);
         expect(codeActions[0].title === `E202: Update disable diagnostics`);
         expect(codeActions[1].title === `W501: Update disable diagnostics`);
@@ -287,7 +284,7 @@ describe("Test codeaction for ignoring warning", () => {
         const content = loadFile("codeActionIgnore.cnfg");
         const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("", "", 0, content);
-        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg, doc);
+        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg);
         expect(codeActions.length).to.equal(2);
         expect(codeActions[0].title === `E202: Update disable diagnostics`);
         expect(codeActions[1].title === `W501: Update disable diagnostics`);
@@ -314,7 +311,7 @@ describe("Test codeaction for ignoring warning", () => {
         const content = loadFile("codeActionIgnore.cnfg");
         const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("", "", 0, content);
-        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg, doc);
+        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg);
         expect(codeActions.length).to.equal(0);
     });
     it("Expect no ignore comment code action when existing non ignore jinja comment on line", async () => {
@@ -339,7 +336,7 @@ describe("Test codeaction for ignoring warning", () => {
         const content = loadFile("codeActionIgnore.cnfg");
         const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("", "", 0, content);
-        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg, doc);
+        const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg);
         expect(codeActions.length).to.equal(0);
     });
 });
