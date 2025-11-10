@@ -386,12 +386,8 @@ connection.onDidChangeConfiguration(() => {
 });
 
 connection.onFoldingRanges(async (params): Promise<FoldingRange[]> => {
-    const document = documents.get(params.textDocument.uri);
-    if (!document) {
-        return [];
-    }
     await settingsManager.getSettings();
-    return langService.provideFoldingRanges(document);
+    return langService.provideFoldingRanges(params);
 });
 
 connection.onDocumentSymbol(

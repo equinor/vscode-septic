@@ -33,7 +33,7 @@ export * from "./types/textDocument";
 export interface ILanguageService {
     cnfgProvider: SepticConfigProvider;
     provideFoldingRanges(
-        doc: ITextDocument,
+        params: lsp.FoldingRangeParams
     ): Promise<lsp.FoldingRange[]>;
 
     provideDiagnostics(

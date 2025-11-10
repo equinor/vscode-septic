@@ -15,19 +15,15 @@ describe("Test folding of document", () => {
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
 		`;
-
-        const doc = new MockDocument(text);
-
-        const cnfg = parseSepticForTest(doc.getText());
-        const foldingRanges = getFoldingRanges(doc, cnfg);
-
+        const cnfg = parseSepticForTest(text);
+        const foldingRanges = getFoldingRanges(cnfg);
         expect(foldingRanges.length).to.equal(3);
-        expect(foldingRanges[0].startLine).to.equal(2);
-        expect(foldingRanges[0].endLine).to.equal(11);
-        expect(foldingRanges[1].startLine).to.equal(6);
-        expect(foldingRanges[1].endLine).to.equal(11);
-        expect(foldingRanges[2].startLine).to.equal(9);
-        expect(foldingRanges[2].endLine).to.equal(11);
+        expect(foldingRanges[0].startLine).to.equal(1);
+        expect(foldingRanges[0].endLine).to.equal(9);
+        expect(foldingRanges[1].startLine).to.equal(5);
+        expect(foldingRanges[1].endLine).to.equal(9);
+        expect(foldingRanges[2].startLine).to.equal(8);
+        expect(foldingRanges[2].endLine).to.equal(9);
     });
 
     it("Test folding of same levels", () => {
@@ -45,21 +41,16 @@ describe("Test folding of document", () => {
         DmmyAppl: Test
         Text1= "Test"
 		`;
-
-        const doc = new MockDocument(text);
-
-        const cnfg = parseSepticForTest(doc.getText());
-
-        const foldingRanges = getFoldingRanges(doc, cnfg);
-
+        const cnfg = parseSepticForTest(text);
+        const foldingRanges = getFoldingRanges(cnfg);
         expect(foldingRanges.length).to.equal(4);
-        expect(foldingRanges[0].startLine).to.equal(2);
-        expect(foldingRanges[0].endLine).to.equal(5);
-        expect(foldingRanges[1].startLine).to.equal(6);
-        expect(foldingRanges[1].endLine).to.equal(11);
-        expect(foldingRanges[2].startLine).to.equal(9);
-        expect(foldingRanges[2].endLine).to.equal(11);
-        expect(foldingRanges[3].startLine).to.equal(12);
-        expect(foldingRanges[3].endLine).to.equal(14);
+        expect(foldingRanges[0].startLine).to.equal(1);
+        expect(foldingRanges[0].endLine).to.equal(4);
+        expect(foldingRanges[1].startLine).to.equal(5);
+        expect(foldingRanges[1].endLine).to.equal(10);
+        expect(foldingRanges[2].startLine).to.equal(8);
+        expect(foldingRanges[2].endLine).to.equal(10);
+        expect(foldingRanges[3].startLine).to.equal(11);
+        expect(foldingRanges[3].endLine).to.equal(12);
     });
 });
