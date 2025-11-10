@@ -1,5 +1,5 @@
 import { getDocumentSymbols } from "../language-service/documentSymbolProvider";
-import { MockDocument, parseSepticForTest } from "./util";
+import { parseSepticForTest } from "./util";
 import { expect } from "chai";
 
 describe("Test folding of document", () => {
@@ -15,12 +15,8 @@ describe("Test folding of document", () => {
 			CalcPvr:  TestCalcPvr 
 				Text1= "Test"
 		`;
-
-        const doc = new MockDocument(text);
-
-        const cnfg = parseSepticForTest(doc.getText());
-        const documentSymbols = getDocumentSymbols(doc, cnfg);
-
+        const cnfg = parseSepticForTest(text);
+        const documentSymbols = getDocumentSymbols(cnfg);
         expect(documentSymbols.length).to.equal(1);
         expect(documentSymbols[0].children?.length).to.equal(1);
     });
@@ -39,12 +35,8 @@ describe("Test folding of document", () => {
       
 		`;
 
-        const doc = new MockDocument(text);
-
-        const cnfg = parseSepticForTest(doc.getText());
-
-        const documentSymbols = getDocumentSymbols(doc, cnfg);
-
+        const cnfg = parseSepticForTest(text);
+        const documentSymbols = getDocumentSymbols(cnfg);
         expect(documentSymbols.length).to.equal(2);
         expect(documentSymbols[0].children?.length).to.equal(0);
         expect(documentSymbols[1].children?.length).to.equal(1);

@@ -392,11 +392,7 @@ connection.onFoldingRanges(async (params): Promise<FoldingRange[]> => {
 
 connection.onDocumentSymbol(
     async (params): Promise<DocumentSymbol[]> => {
-        const document = documents.get(params.textDocument.uri);
-        if (!document) {
-            return [];
-        }
-        return langService.provideDocumentSymbols(document);
+        return langService.provideDocumentSymbols(params);
     }
 );
 

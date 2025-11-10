@@ -40,7 +40,7 @@ export interface ILanguageService {
     ): Promise<lsp.Diagnostic[]>;
 
     provideDocumentSymbols(
-        doc: ITextDocument,
+        params: lsp.DocumentSymbolParams,
     ): Promise<lsp.DocumentSymbol[]>;
 
     provideCompletion(
