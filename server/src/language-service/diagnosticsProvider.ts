@@ -41,7 +41,6 @@ import {
 } from "../septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
-import { DocumentProvider } from '../documentProvider';
 
 export const disableDiagnosticRegex =
     /\/\/\s+noqa\b(?::([ \w,]*))?|\{#\s+noqa\b(?::([ \w,]*))?\s*#\}/i;
@@ -124,17 +123,14 @@ function createDiagnostic(
 
 export class DiagnosticProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
-    private readonly docProvider: DocumentProvider;
     private readonly settingsManager: SettingsManager;
 
     /* istanbul ignore next */
     constructor(
         cnfgProvider: ISepticConfigProvider,
-        docProvider: DocumentProvider,
         settingsManager: SettingsManager
     ) {
         this.cnfgProvider = cnfgProvider;
-        this.docProvider = docProvider;
         this.settingsManager = settingsManager;
     }
 
@@ -147,10 +143,6 @@ export class DiagnosticProvider {
         if (cnfg === undefined) {
             return [];
         }
-        const doc = await this.docProvider.getDocument(uri);
-        if (doc === undefined) {
-            return [];
-        }
         const settingsWorkspace = await this.settingsManager.getSettings();
         const settings =
             settingsWorkspace?.diagnostics ?? defaultDiagnosticsSettings;
@@ -159,7 +151,7 @@ export class DiagnosticProvider {
             return [];
         }
         await contextProvider.load();
-        return getDiagnostics(cnfg, doc, contextProvider);
+        return getDiagnostics(cnfg, contextProvider);
     }
 }
 
@@ -171,14 +163,13 @@ export function validateStandAloneCalc(alg: string, contextProvider: SepticConte
 
 export function getDiagnostics(
     cnfg: SepticCnfg,
-    doc: ITextDocument,
     contextProvider: SepticContext
 ) {
     const diagnostics: Diagnostic[] = [];
-    diagnostics.push(...validateObjects(cnfg, doc, contextProvider));
-    diagnostics.push(...validateAlgs(cnfg, doc, contextProvider));
-    diagnostics.push(...validateComments(cnfg, doc));
-    const disabledLines = getDisabledLines(cnfg.comments, doc);
+    diagnostics.push(...validateObjects(cnfg, contextProvider));
+    diagnostics.push(...validateAlgs(cnfg, contextProvider));
+    diagnostics.push(...validateComments(cnfg));
+    const disabledLines = getDisabledLines(cnfg.comments, cnfg.doc);
     const filteredDiags = diagnostics.filter((diag) => {
         const disabledLine = disabledLines.get(diag.range.start.line);
         if (!disabledLine) {
@@ -199,7 +190,6 @@ export function getDiagnostics(
 
 export function validateComments(
     cnfg: SepticCnfg,
-    doc: ITextDocument
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     for (const comment of cnfg.comments) {
@@ -208,8 +198,8 @@ export function validateComments(
                 createDiagnostic(
                     DiagnosticSeverity.Error,
                     {
-                        start: doc.positionAt(comment.start),
-                        end: doc.positionAt(comment.end),
+                        start: cnfg.positionAt(comment.start),
+                        end: cnfg.positionAt(comment.end),
                     },
                     `Invalid comment. Correct format is //{whitespace}... or /*{whitespace}...{whitespace}*/`,
                     DiagnosticCode.invalidComment
@@ -231,7 +221,6 @@ function checkSepticComment(comment: SepticComment): boolean {
 
 export function validateAlgs(
     cnfg: SepticCnfg,
-    doc: ITextDocument,
     contextProvider: SepticContext
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
@@ -242,7 +231,7 @@ export function validateAlgs(
         if (!algAttrValue) {
             continue;
         }
-        diagnostics.push(...validateAlg(algAttrValue, doc, contextProvider));
+        diagnostics.push(...validateAlg(algAttrValue, cnfg.doc, contextProvider));
     }
     return diagnostics;
 }
@@ -635,7 +624,6 @@ function isAlgExprObjectReference(expr: AlgExpr) {
 
 export function validateObjects(
     cnfg: SepticCnfg,
-    doc: ITextDocument,
     contextProvider: SepticContext
 ): Diagnostic[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
@@ -648,8 +636,8 @@ export function validateObjects(
                 createDiagnostic(
                     DiagnosticSeverity.Error,
                     {
-                        start: doc.positionAt(obj.start),
-                        end: doc.positionAt(obj.start + obj.type.length),
+                        start: cnfg.positionAt(obj.start),
+                        end: cnfg.positionAt(obj.start + obj.type.length),
                     },
                     "Unknown object type",
                     DiagnosticCode.unknownObjectType
@@ -658,7 +646,7 @@ export function validateObjects(
             continue;
         }
         diagnostics.push(
-            ...validateObject(obj, doc, contextProvider, objectDoc, objectInfo)
+            ...validateObject(obj, cnfg.doc, contextProvider, objectDoc, objectInfo)
         );
     }
     return diagnostics;

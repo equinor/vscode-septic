@@ -1,6 +1,6 @@
 import { getFoldingRanges } from "../language-service/foldingRangeProvider";
 import { expect } from "chai";
-import { MockDocument, parseSepticForTest } from "./util";
+import { parseSepticForTest } from "./util";
 
 describe("Test folding of document", () => {
     it("Test folding of increasing levels", () => {

@@ -113,7 +113,6 @@ export function createLanguageService(
     const foldingRangeProvider = new FoldingRangeProvider(cnfgProvider);
     const diagnosticProvider = new DiagnosticProvider(
         cnfgProvider,
-        documentProvider,
         settingsManager
     );
 
