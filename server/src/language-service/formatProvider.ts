@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Position, TextEdit } from "vscode-languageserver";
+import { Position, TextEdit, DocumentFormattingParams } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
 import { ITextDocument } from "../types/textDocument";
 import {
@@ -19,12 +19,12 @@ import {
 } from "../septic";
 
 const indentsObjectDeclaration = 2;
-export const indentsAttributesDelimiter = 14;
 const startObjectName = 17;
 const spacesBetweenValues = 2;
 const spacesBetweenIntValues = 6;
 const indentsAttributeValuesStart = 17;
 const maxNumberAttrValuesPerLine = 5;
+export const indentsAttributesDelimiter = 14;
 
 export const jinjaForRegex = /^\{%-?\s+for\b.+%}$/;
 export const jinjaIfRegex = /^\{%-?\s+if\b.+%}$/;
@@ -44,12 +44,12 @@ export class FormattingProvider {
     }
 
     /* istanbul ignore next */
-    public async provideFormatting(doc: ITextDocument): Promise<TextEdit[]> {
-        const cnfg = await this.cnfgProvider.get(doc.uri);
+    public async provideFormatting(params: DocumentFormattingParams): Promise<TextEdit[]> {
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
-        const formatter = new SepticCnfgFormatter(cnfg, doc);
+        const formatter = new SepticCnfgFormatter(cnfg);
         return formatter.format();
     }
 }
@@ -81,7 +81,7 @@ export class SepticCnfgFormatter {
         counter: 0,
     };
 
-    constructor(cnfg: SepticCnfg, doc: ITextDocument) {
+    constructor(cnfg: SepticCnfg) {
         cnfg.objects.forEach((obj) => {
             this.elements.push(...obj.getElements());
         });
@@ -91,7 +91,7 @@ export class SepticCnfgFormatter {
         this.elements = this.elements.sort((e1, e2) => {
             return e1.start - e2.start;
         });
-        this.doc = doc;
+        this.doc = cnfg.doc;
     }
 
     public format(): TextEdit[] {

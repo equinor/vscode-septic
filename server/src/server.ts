@@ -570,11 +570,7 @@ connection.onDocumentFormatting(async (params) => {
     if (!settings?.formatting.enabled) {
         return [];
     }
-    const doc = documents.get(params.textDocument.uri);
-    if (!doc) {
-        return [];
-    }
-    return langService.provideFormatting(doc);
+    return langService.provideFormatting(params);
 });
 
 connection.onSignatureHelp(async (params) => {

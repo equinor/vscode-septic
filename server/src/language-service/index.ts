@@ -83,7 +83,7 @@ export interface ILanguageService {
         contextProvider: SepticContext
     ): Promise<lsp.Hover | undefined>;
 
-    provideFormatting(doc: ITextDocument): Promise<lsp.TextEdit[]>;
+    provideFormatting(params: lsp.DocumentFormattingParams): Promise<lsp.TextEdit[]>;
 
     provideSignatureHelp(
         param: lsp.SignatureHelpParams
