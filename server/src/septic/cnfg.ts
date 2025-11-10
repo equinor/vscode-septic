@@ -36,7 +36,6 @@ export class SepticCnfg implements SepticContext, ITextDocument {
     public readonly doc: ITextDocument;
     private references = new Map<string, SepticReference[]>();
     private referencesExtracted = false;
-    public uri: string = "";
 
     constructor(doc: ITextDocument) {
         this.doc = doc;
@@ -59,6 +58,9 @@ export class SepticCnfg implements SepticContext, ITextDocument {
                 comment.end
             );
         });
+        this.objects.forEach((obj) => {
+            obj.setUri(this.uri);
+        });
     }
 
     public async parseAsync(token: CancellationToken): Promise<void> {
@@ -77,6 +79,9 @@ export class SepticCnfg implements SepticContext, ITextDocument {
                 comment.start,
                 comment.end
             );
+        });
+        this.objects.forEach((obj) => {
+            obj.setUri(this.uri);
         });
     }
 
@@ -104,11 +109,8 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         return Promise.resolve();
     }
 
-    public setUri(uri: string) {
-        this.uri = uri;
-        this.objects.forEach((obj) => {
-            obj.setUri(uri);
-        });
+    public get uri(): string {
+        return this.doc.uri;
     }
 
     public getReferences(name: string): SepticReference[] | undefined {

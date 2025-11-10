@@ -31,7 +31,6 @@ async function getValueCnfg(
 ): Promise<SepticCnfg> {
     const cnfg = new SepticCnfg(document);
     await cnfg.parseAsync(token);
-    cnfg.setUri(document.uri);
     return cnfg;
 }
 
