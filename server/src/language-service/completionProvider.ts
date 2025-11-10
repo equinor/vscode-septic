@@ -15,7 +15,7 @@ import {
     CompletionParams,
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "./types/textDocument";
+import { ITextDocument } from "../types/textDocument";
 import {
     AlgVisitor,
     Attribute,

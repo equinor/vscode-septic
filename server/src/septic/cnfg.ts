@@ -26,11 +26,11 @@ import { SepticContext } from './context';
 import { removeSpaces, sleep, transformPositionsToOriginal } from "../util";
 import { updateParentObjects } from "./hierarchy";
 import { getFunctionsFromCalcPvrs, SepticFunction } from './function';
-import { ITextDocument } from '../language-service';
-import { CancellationToken, Position } from 'vscode-languageserver';
+import { ITextDocument } from '../types/textDocument';
+import { CancellationToken, Position, Range } from 'vscode-languageserver';
 import { SepticParser, SepticScanner } from './parser';
 
-export class SepticCnfg implements SepticContext {
+export class SepticCnfg implements SepticContext, ITextDocument {
     public objects: SepticObject[] = [];
     public comments: SepticComment[] = [];
     public readonly doc: ITextDocument;
@@ -86,6 +86,18 @@ export class SepticCnfg implements SepticContext {
 
     public offsetAt(position: Position): number {
         return this.doc.offsetAt(position);
+    }
+
+    public getText(range?: Range): string {
+        return this.doc.getText(range);
+    }
+
+    public get lineCount(): number {
+        return this.doc.lineCount;
+    }
+
+    public get version(): number {
+        return this.doc.version;
     }
 
     public async load(): Promise<void> {

@@ -6,7 +6,7 @@ import {
     GetDocument,
     getRenameEdits,
 } from "../language-service/renameProvider";
-import { ITextDocument } from "../language-service";
+import { ITextDocument } from "../types/textDocument";
 
 const getDocumentFunction = (doc: ITextDocument): GetDocument => {
     return (): Promise<ITextDocument | undefined> => {

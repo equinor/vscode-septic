@@ -6,7 +6,7 @@
 
 import * as lsp from "vscode-languageserver";
 import { FoldingRangeProvider } from "./foldingRangeProvider";
-import { ITextDocument } from "./types/textDocument";
+import { ITextDocument } from "../types/textDocument";
 import { SepticConfigProvider } from "../configProvider";
 import { DiagnosticProvider } from "./diagnosticsProvider";
 import { DocumentSymbolProvider } from "./documentSymbolProvider";
@@ -27,8 +27,6 @@ import { CodeActionProvider } from "./codeActionProvider";
 import { CycleReportProvider } from "./cycleReportProvider";
 import { generateOpcReport } from "./opctagListProvider";
 import { CnfgComparisionProvider } from "./cnfgComparisonProvider";
-
-export * from "./types/textDocument";
 
 export interface ILanguageService {
     cnfgProvider: SepticConfigProvider;

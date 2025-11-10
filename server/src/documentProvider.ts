@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Emitter } from "vscode-jsonrpc";
-import { ITextDocument } from "./language-service";
+import { ITextDocument } from "./types/textDocument";
 import { ResourceMap } from "./util";
 import {
     Connection,

@@ -7,7 +7,7 @@
 import { Diagnostic, DiagnosticSeverity, Range } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { ISepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "./types/textDocument";
+import { ITextDocument } from "../types/textDocument";
 import {
     AlgVisitor,
     SepticCnfg,

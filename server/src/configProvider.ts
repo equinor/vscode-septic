@@ -11,7 +11,7 @@ import {
 } from "vscode-languageserver";
 import { SepticCnfg } from "./septic";
 import { ResourceMap } from "./util/resourceMap";
-import { ITextDocument } from "./language-service";
+import { ITextDocument } from "./types/textDocument";
 import { Lazy, lazy } from "./util/lazy";
 import { DocumentProvider } from "./documentProvider";
 import * as path from "path";

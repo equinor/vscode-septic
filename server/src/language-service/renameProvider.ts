@@ -11,7 +11,7 @@ import {
     WorkspaceEdit,
 } from "vscode-languageserver";
 import { SepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "./types/textDocument";
+import { ITextDocument } from "../types/textDocument";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
 import { SepticCnfg, SepticContext } from "../septic";
 import { DocumentProvider } from "../documentProvider";

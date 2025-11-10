@@ -11,7 +11,6 @@ import {
     Position
 } from "vscode-languageserver";
 import { SepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "./types/textDocument";
 import {
     AlgVisitor,
     SepticCnfg,

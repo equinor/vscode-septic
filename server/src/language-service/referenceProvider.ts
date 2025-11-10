@@ -10,7 +10,7 @@ import {
     ReferenceParams,
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "./types/textDocument";
+import { ITextDocument } from "../types/textDocument";
 import {
     SepticCnfg,
     SepticReference,
