@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { parseSepticSync, SepticMetaInfoProvider } from '../septic';
-import { MockDocument } from './util';
+import { SepticMetaInfoProvider } from '../septic';
+import { MockDocument, parseSepticForTest } from './util';
 
 SepticMetaInfoProvider.setVersion("v3.0");
 
@@ -21,7 +21,7 @@ describe("SepticFunction", () => {
 
 			`;
 		const doc = new MockDocument(text);
-		const cnfg = parseSepticSync(doc.getText());
+		const cnfg = parseSepticForTest(doc.getText());
 		const functions = cnfg.getFunctions();
 		expect(functions.length).to.equal(1);
 		expect(functions[0].lines.length).to.equal(3);
@@ -42,7 +42,7 @@ describe("SepticFunction", () => {
 				Alg= "A * B + D"
 			`;
 		const doc = new MockDocument(text);
-		const cnfg = parseSepticSync(doc.getText());
+		const cnfg = parseSepticForTest(doc.getText());
 		const functions = cnfg.getFunctions();
 		expect(functions.length).to.equal(1);
 		expect(functions[0].lines.length).to.equal(3);
@@ -67,7 +67,7 @@ describe("SepticFunction", () => {
 				Alg= "B + 1"
 			`;
 		const doc = new MockDocument(text);
-		const cnfg = parseSepticSync(doc.getText());
+		const cnfg = parseSepticForTest(doc.getText());
 		const functions = cnfg.getFunctions();
 		expect(functions.length).to.equal(2);
 
@@ -88,7 +88,7 @@ describe("SepticFunction", () => {
 
 			`;
 		const doc = new MockDocument(text);
-		const cnfg = parseSepticSync(doc.getText());
+		const cnfg = parseSepticForTest(doc.getText());
 		const functions = cnfg.getFunctions();
 		expect(functions.length).to.equal(1);
 		expect(functions[0].lines.length).to.equal(1);
@@ -113,7 +113,7 @@ describe("SepticFunction", () => {
 
 			`;
 		const doc = new MockDocument(text);
-		const cnfg = parseSepticSync(doc.getText());
+		const cnfg = parseSepticForTest(doc.getText());
 		const functions = cnfg.getFunctions();
 		expect(functions.length).to.equal(1);
 		expect(functions[0].lines.length).to.equal(2);

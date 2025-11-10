@@ -1,7 +1,6 @@
 import { getFoldingRanges } from "../language-service/foldingRangeProvider";
-import { parseSepticSync } from "../septic";
 import { expect } from "chai";
-import { MockDocument } from "./util";
+import { MockDocument, parseSepticForTest } from "./util";
 
 describe("Test folding of document", () => {
     it("Test folding of increasing levels", () => {
@@ -19,7 +18,7 @@ describe("Test folding of document", () => {
 
         const doc = new MockDocument(text);
 
-        const cnfg = parseSepticSync(doc.getText());
+        const cnfg = parseSepticForTest(doc.getText());
         const foldingRanges = getFoldingRanges(doc, cnfg);
 
         expect(foldingRanges.length).to.equal(3);
@@ -49,7 +48,7 @@ describe("Test folding of document", () => {
 
         const doc = new MockDocument(text);
 
-        const cnfg = parseSepticSync(doc.getText());
+        const cnfg = parseSepticForTest(doc.getText());
 
         const foldingRanges = getFoldingRanges(doc, cnfg);
 

@@ -23,21 +23,61 @@ import {
     ReferenceType,
 } from "./reference";
 import { SepticContext } from './context';
-import { removeSpaces, transformPositionsToOriginal } from "../util";
+import { removeSpaces, sleep, transformPositionsToOriginal } from "../util";
 import { updateParentObjects } from "./hierarchy";
-import { Alg, Cycle, findAlgCycles } from "./cycle";
 import { getFunctionsFromCalcPvrs, SepticFunction } from './function';
+import { ITextDocument } from '../language-service';
+import { CancellationToken } from 'vscode-languageserver';
+import { SepticParser, SepticScanner } from './parser';
 
 export class SepticCnfg implements SepticContext {
-    public objects: SepticObject[];
-    public comments: SepticComment[];
+    public objects: SepticObject[] = [];
+    public comments: SepticComment[] = [];
+    public readonly doc: ITextDocument;
     private xvrRefs = new Map<string, SepticReference[]>();
     private xvrRefsExtracted = false;
     public uri: string = "";
 
-    constructor(objects: SepticObject[], comments: SepticComment[] = []) {
-        this.objects = objects;
-        this.comments = comments;
+    constructor(doc: ITextDocument) {
+        this.doc = doc;
+    }
+
+    public parse(cts: CancellationToken): void {
+        const scanner = new SepticScanner(this.doc.getText());
+        const tokens = scanner.scanTokens();
+        if (!tokens.tokens.length) {
+            return;
+        }
+        const parser = new SepticParser(tokens.tokens);
+
+        this.objects = parser.parse(cts);
+        this.comments = tokens.comments.map((comment) => {
+            return new SepticComment(
+                comment.content,
+                comment.type,
+                comment.start,
+                comment.end
+            );
+        });
+    }
+
+    public async parseAsync(token: CancellationToken): Promise<void> {
+        const scanner = new SepticScanner(this.doc.getText());
+        const tokens = scanner.scanTokens();
+        if (!tokens.tokens.length) {
+            return;
+        }
+        await sleep(1);  // Sleep to prevent starvation of other async tasks
+        const parser = new SepticParser(tokens.tokens);
+        this.objects = parser.parse(token);
+        this.comments = tokens.comments.map((comment) => {
+            return new SepticComment(
+                comment.content,
+                comment.type,
+                comment.start,
+                comment.end
+            );
+        });
     }
 
     public async load(): Promise<void> {

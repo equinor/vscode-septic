@@ -5,7 +5,6 @@
 
 import { CancellationToken } from "vscode-languageserver";
 import { Parser, IToken, ParserError } from "../util/parser";
-import { SepticCnfg } from "./cnfg";
 import { SepticToken, SepticTokenType } from "./tokens";
 import {
     Attribute,
@@ -14,53 +13,6 @@ import {
     SepticComment,
     SepticObject,
 } from "./elements";
-import { sleep } from "../util";
-
-export function parseSepticSync(
-    input: string,
-    token: CancellationToken | undefined = undefined
-): SepticCnfg {
-    const scanner = new SepticScanner(input);
-    const tokens = scanner.scanTokens();
-    if (!tokens.tokens.length) {
-        return new SepticCnfg([]);
-    }
-    const parser = new SepticParser(tokens.tokens);
-
-    const cnfg = parser.parse(token);
-    cnfg.comments = tokens.comments.map((comment) => {
-        return new SepticComment(
-            comment.content,
-            comment.type,
-            comment.start,
-            comment.end
-        );
-    });
-    return cnfg;
-}
-
-export async function parseSepticAsync(
-    input: string,
-    token: CancellationToken | undefined = undefined
-): Promise<SepticCnfg> {
-    const scanner = new SepticScanner(input);
-    const tokens = scanner.scanTokens();
-    if (!tokens.tokens.length) {
-        return new SepticCnfg([]);
-    }
-    await sleep(1); // Short sleep to prevent starvation of other processes
-    const parser = new SepticParser(tokens.tokens);
-    const cnfg = parser.parse(token);
-    cnfg.comments = tokens.comments.map((comment) => {
-        return new SepticComment(
-            comment.content,
-            comment.type,
-            comment.start,
-            comment.end
-        );
-    });
-    return cnfg;
-}
 
 const validAttributeTokens = [
     SepticTokenType.numeric,
@@ -69,14 +21,14 @@ const validAttributeTokens = [
     SepticTokenType.path,
 ];
 
-export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
+export class SepticParser extends Parser<SepticTokenType, SepticObject[]> {
     public errors: ParserError<SepticTokenType>[] = [];
 
-    parse(token: CancellationToken | undefined = undefined): SepticCnfg {
+    parse(token: CancellationToken | undefined = undefined): SepticObject[] {
         const septicObjects = [];
         while (!this.isAtEnd()) {
             if (token?.isCancellationRequested) {
-                return new SepticCnfg([]);
+                return [];
             }
             if (this.match(SepticTokenType.object)) {
                 const septicObj = this.septicObject();
@@ -88,7 +40,7 @@ export class SepticParser extends Parser<SepticTokenType, SepticCnfg> {
                 );
             }
         }
-        return new SepticCnfg(septicObjects);
+        return septicObjects;
     }
 
     septicObject(): SepticObject {

@@ -1,6 +1,5 @@
-import { parseSepticSync } from "../septic";
 import { getDocumentSymbols } from "../language-service/documentSymbolProvider";
-import { MockDocument } from "./util";
+import { MockDocument, parseSepticForTest } from "./util";
 import { expect } from "chai";
 
 describe("Test folding of document", () => {
@@ -19,7 +18,7 @@ describe("Test folding of document", () => {
 
         const doc = new MockDocument(text);
 
-        const cnfg = parseSepticSync(doc.getText());
+        const cnfg = parseSepticForTest(doc.getText());
         const documentSymbols = getDocumentSymbols(doc, cnfg);
 
         expect(documentSymbols.length).to.equal(1);
@@ -42,7 +41,7 @@ describe("Test folding of document", () => {
 
         const doc = new MockDocument(text);
 
-        const cnfg = parseSepticSync(doc.getText());
+        const cnfg = parseSepticForTest(doc.getText());
 
         const documentSymbols = getDocumentSymbols(doc, cnfg);
 
