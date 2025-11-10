@@ -24,9 +24,9 @@ describe("Test extraction of refs from config file", () => {
 			SopcProc: Var2
 		`;
         const cnfg = parseSepticForTest(text);
-        expect(cnfg.getXvrRefs("Var1")?.length).to.equal(2);
-        expect(cnfg.getXvrRefs("Var2")?.length).to.equal(1);
-        expect(cnfg.getXvrRefs("Var3")?.length).to.equal(1);
+        expect(cnfg.getReferences("Var1")?.length).to.equal(2);
+        expect(cnfg.getReferences("Var2")?.length).to.equal(1);
+        expect(cnfg.getReferences("Var3")?.length).to.equal(1);
     });
 
     it("Test xvrs + Calcs", () => {
@@ -44,9 +44,9 @@ describe("Test extraction of refs from config file", () => {
 
 		`;
         const cnfg = parseSepticForTest(text);
-        expect(cnfg.getXvrRefs("Var1")?.length).to.equal(3);
-        expect(cnfg.getXvrRefs("Var2")?.length).to.equal(3);
-        expect(cnfg.getXvrRefs("CalcVar")?.length).to.equal(2);
+        expect(cnfg.getReferences("Var1")?.length).to.equal(3);
+        expect(cnfg.getReferences("Var2")?.length).to.equal(3);
+        expect(cnfg.getReferences("CalcVar")?.length).to.equal(2);
     });
 
     it("Objects containg list of refs", () => {
@@ -66,9 +66,9 @@ describe("Test extraction of refs from config file", () => {
 				Cvrs= 1 "Var2"
 		`;
         const cnfg = parseSepticForTest(text);
-        expect(cnfg.getXvrRefs("Var1")?.length).to.equal(3);
-        expect(cnfg.getXvrRefs("Var2")?.length).to.equal(2);
-        expect(cnfg.getXvrRefs("Var3")?.length).to.equal(2);
+        expect(cnfg.getReferences("Var1")?.length).to.equal(3);
+        expect(cnfg.getReferences("Var2")?.length).to.equal(2);
+        expect(cnfg.getReferences("Var3")?.length).to.equal(2);
     });
 
     it("Objects containg ref in identifer", () => {
@@ -84,9 +84,9 @@ describe("Test extraction of refs from config file", () => {
 			XvrPlot: Var2
 		`;
         const cnfg = parseSepticForTest(text);
-        expect(cnfg.getXvrRefs("Var1")?.length).to.equal(2);
-        expect(cnfg.getXvrRefs("Var2")?.length).to.equal(2);
-        expect(cnfg.getXvrRefs("Var3")?.length).to.equal(1);
+        expect(cnfg.getReferences("Var1")?.length).to.equal(2);
+        expect(cnfg.getReferences("Var2")?.length).to.equal(2);
+        expect(cnfg.getReferences("Var3")?.length).to.equal(1);
     });
 });
 

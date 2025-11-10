@@ -150,7 +150,7 @@ export function getCalcCompletion(
 ): CompletionItem[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const compItems: CompletionItem[] = [];
-    const ref = cnfg.getXvrRefFromOffset(offset);
+    const ref = cnfg.getReferenceFromOffset(offset);
     let range: Range;
     if (ref) {
         range = {
@@ -213,7 +213,7 @@ export function getObjectCompletion(
     if (!obj) {
         return snippets;
     }
-    const ref = cnfg.getXvrRefFromOffset(offset);
+    const ref = cnfg.getReferenceFromOffset(offset);
     if (isIdentifierCompletion(offset, obj)) {
         const range: Range = ref
             ? {

@@ -312,7 +312,7 @@ export function validateAlgVariable(
     }
     const variableParts = variable.value.split(".");
     if (
-        !contextProvider.validateRef(variableParts[0], defaultRefValidationFunction)
+        !contextProvider.validateReferences(variableParts[0], defaultRefValidationFunction)
     ) {
         return [
             createDiagnostic(
@@ -608,7 +608,7 @@ function validateValueParamType(
     if (isPureJinja(exprLiteral.value)) {
         return [];
     }
-    if (contextProvider.validateRef(exprLiteral.value.split(".")[0], defaultRefValidationFunction)) {
+    if (contextProvider.validateReferences(exprLiteral.value.split(".")[0], defaultRefValidationFunction)) {
         return [];
     }
     return [createDiagnostic(
@@ -777,7 +777,7 @@ export function validateObjectReferences(
             if (refName.length < 1) {
                 continue;
             }
-            const validRef = contextProvider.validateRef(
+            const validRef = contextProvider.validateReferences(
                 refName,
                 defaultRefValidationFunction
             );
@@ -813,7 +813,7 @@ function validateIdentifierReferences(
     objectMetaInfo: SepticObjectInfo,
     doc: ITextDocument
 ): Diagnostic[] {
-    const validRef = contextProvider.validateRef(
+    const validRef = contextProvider.validateReferences(
         obj.identifier!.name,
         defaultRefValidationFunction
     );
@@ -890,7 +890,7 @@ function validateDuplicateIdentifiers(
     } else {
         return [];
     }
-    const validRef = contextProvider.validateRef(
+    const validRef = contextProvider.validateReferences(
         obj.identifier!.name,
         validationFunction
     );
@@ -917,7 +917,7 @@ function validateCalcPvrIdentifierReferences(
     doc: ITextDocument
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    if (contextProvider.validateRef(obj.identifier!.name, hasDuplicateCalcPvrRef)) {
+    if (contextProvider.validateReferences(obj.identifier!.name, hasDuplicateCalcPvrRef)) {
         diagnostics.push(
             createDiagnostic(
                 DiagnosticSeverity.Warning,
@@ -930,14 +930,14 @@ function validateCalcPvrIdentifierReferences(
             )
         );
     }
-    const referenceToEvr = contextProvider.validateRef(
+    const referenceToEvr = contextProvider.validateReferences(
         obj.identifier!.name,
         hasReferenceToEvr
     );
     if (referenceToEvr) {
         return diagnostics;
     }
-    const referenceToXvr = contextProvider.validateRef(
+    const referenceToXvr = contextProvider.validateReferences(
         obj.identifier!.name,
         defaultRefValidationFunction
     );
@@ -1024,7 +1024,7 @@ export function validateEvrReferences(
     if (!name) {
         return [];
     }
-    const refs = contextProvider.getXvrRefs(name);
+    const refs = contextProvider.getReferences(name);
     const calcPvrRef = refs?.find((ref) => {
         return ref.type === ReferenceType.calc || ref.obj?.type === "CalcPvr";
     });

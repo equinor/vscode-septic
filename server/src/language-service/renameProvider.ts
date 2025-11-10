@@ -58,7 +58,7 @@ export class RenameProvider {
         if (!cnfg) {
             return null;
         }
-        const ref = cnfg.getXvrRefFromOffset(cnfg.offsetAt(params.position));
+        const ref = cnfg.getReferenceFromOffset(cnfg.offsetAt(params.position));
         if (!ref) {
             return null;
         }
@@ -76,11 +76,11 @@ export async function getRenameEdits(
     contextProvider: SepticContext,
     getDocumentFunction: GetDocument
 ): Promise<WorkspaceEdit | undefined> {
-    const ref = cnfg.getXvrRefFromOffset(cnfg.offsetAt(position));
+    const ref = cnfg.getReferenceFromOffset(cnfg.offsetAt(position));
     if (!ref) {
         return undefined;
     }
-    const refs = contextProvider.getXvrRefs(ref.identifier);
+    const refs = contextProvider.getReferences(ref.identifier);
     if (!refs) {
         return undefined;
     }

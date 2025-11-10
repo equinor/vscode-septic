@@ -102,7 +102,7 @@ export function getCodeActionInsertEvr(
     if (!currentObject?.isType("CalcPvr")) {
         return [];
     }
-    const referencedVariable = cnfg.getXvrRefFromOffset(
+    const referencedVariable = cnfg.getReferenceFromOffset(
         cnfg.offsetAt(params.range.start)
     );
     if (!referencedVariable) {

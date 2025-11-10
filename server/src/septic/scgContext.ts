@@ -134,8 +134,8 @@ export class ScgContext implements SepticContext {
         return undefined;
     }
 
-    public getXvrRefs(name: string): SepticReference[] | undefined {
-        const xvrRefs: SepticReference[] = [];
+    public getReferences(name: string): SepticReference[] | undefined {
+        const references: SepticReference[] = [];
         for (const file of this.files) {
             const cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
@@ -144,26 +144,26 @@ export class ScgContext implements SepticContext {
                 );
                 continue;
             }
-            const localRefs = cnfg.getXvrRefs(name);
-            if (localRefs) {
-                xvrRefs.push(...localRefs);
+            const localReferences = cnfg.getReferences(name);
+            if (localReferences) {
+                references.push(...localReferences);
             }
         }
-        if (!xvrRefs.length) {
+        if (!references.length) {
             return undefined;
         }
-        return xvrRefs;
+        return references;
     }
 
-    public validateRef(
+    public validateReferences(
         name: string,
         validationFunction: RefValidationFunction = defaultRefValidationFunction
     ): boolean {
-        const xvrRefs = this.getXvrRefs(name);
-        if (!xvrRefs) {
+        const references = this.getReferences(name);
+        if (!references) {
             return false;
         }
-        return validationFunction(xvrRefs);
+        return validationFunction(references);
     }
 
     public getAllXvrObjects(): SepticObject[] {

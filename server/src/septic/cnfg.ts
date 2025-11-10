@@ -34,7 +34,7 @@ export class SepticCnfg implements SepticContext, ITextDocument {
     public objects: SepticObject[] = [];
     public comments: SepticComment[] = [];
     public readonly doc: ITextDocument;
-    private xvrRefs = new Map<string, SepticReference[]>();
+    private references = new Map<string, SepticReference[]>();
     private xvrRefsExtracted = false;
     public uri: string = "";
 
@@ -111,16 +111,16 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         });
     }
 
-    public getXvrRefs(name: string): SepticReference[] | undefined {
+    public getReferences(name: string): SepticReference[] | undefined {
         this.extractReferences();
-        return this.xvrRefs.get(removeSpaces(name));
+        return this.references.get(removeSpaces(name));
     }
 
-    public validateRef(
+    public validateReferences(
         name: string,
         validationFunction: RefValidationFunction = defaultRefValidationFunction
     ): boolean {
-        const xvrRefs = this.getXvrRefs(name);
+        const xvrRefs = this.getReferences(name);
         if (!xvrRefs) {
             return false;
         }
@@ -219,9 +219,9 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         });
     }
 
-    public getXvrRefFromOffset(offset: number): SepticReference | undefined {
+    public getReferenceFromOffset(offset: number): SepticReference | undefined {
         this.extractReferences();
-        for (const xvrRef of this.xvrRefs.values()) {
+        for (const xvrRef of this.references.values()) {
             const validRef = xvrRef.find((ref) => {
                 return (
                     offset >= ref.location.start && offset <= ref.location.end
@@ -255,10 +255,10 @@ export class SepticCnfg implements SepticContext, ITextDocument {
     }
 
     private addXvrRef(ref: SepticReference) {
-        if (this.xvrRefs.has(ref.identifier)) {
-            this.xvrRefs.get(ref.identifier)?.push(ref);
+        if (this.references.has(ref.identifier)) {
+            this.references.get(ref.identifier)?.push(ref);
         } else {
-            this.xvrRefs.set(ref.identifier, [ref]);
+            this.references.set(ref.identifier, [ref]);
         }
     }
 
@@ -272,7 +272,7 @@ export class SepticCnfg implements SepticContext, ITextDocument {
 }
 
 export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
-    const xvrRefs: SepticReference[] = [];
+    const references: SepticReference[] = [];
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const objectDef = metaInfoProvider.getObject(obj.type);
     if (!objectDef) {
@@ -293,17 +293,17 @@ export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
                 ? ReferenceType.xvr
                 : ReferenceType.identifier
         );
-        xvrRefs.push(ref);
+        references.push(ref);
     }
 
     objectDef.refs.attributes.forEach((attr) => {
-        xvrRefs.push(...attributeReferences(obj, attr));
+        references.push(...attributeReferences(obj, attr));
     });
 
     if (obj.isType("CalcPvr")) {
-        xvrRefs.push(...calcPvrReferences(obj));
+        references.push(...calcPvrReferences(obj));
     }
-    return xvrRefs;
+    return references;
 }
 
 function calcPvrReferences(obj: SepticObject): SepticReference[] {

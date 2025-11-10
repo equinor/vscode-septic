@@ -8,7 +8,7 @@ import { SepticObjectHierarchy } from "../metaInfoProvider"; import { SepticRefe
 
 export interface SepticContext {
 	load(): Promise<void>;
-	getXvrRefs(name: string): SepticReference[] | undefined;
+	getReferences(name: string): SepticReference[] | undefined;
 	getObjectsByType(...types: string[]): SepticObject[];
 	getAllXvrObjects(): SepticObject[];
 	getObjectsByIdentifier(identifier: string): SepticObject[];
@@ -17,7 +17,7 @@ export interface SepticContext {
 		type: string
 	): SepticObject | undefined;
 	getObjectFromOffset(offset: number, uri: string): SepticObject | undefined;
-	validateRef(
+	validateReferences(
 		name: string,
 		validationFunction: RefValidationFunction
 	): boolean;

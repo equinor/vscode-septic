@@ -72,7 +72,7 @@ export function getDefinition(
     cnfg: SepticCnfg,
     contextProvider: SepticContext
 ): LocationLinkOffset[] {
-    const ref = cnfg.getXvrRefFromOffset(cnfg.offsetAt(position));
+    const ref = cnfg.getReferenceFromOffset(cnfg.offsetAt(position));
     if (!ref) {
         return [];
     }
@@ -81,7 +81,7 @@ export function getDefinition(
         return [];
     }
 
-    const xvrRefs = contextProvider.getXvrRefs(ref.identifier);
+    const xvrRefs = contextProvider.getReferences(ref.identifier);
     if (!xvrRefs) {
         return [];
     }
@@ -99,11 +99,11 @@ export function getReferences(
     cnfg: SepticCnfg,
     contextProvider: SepticContext
 ): LocationOffset[] {
-    const ref = cnfg.getXvrRefFromOffset(cnfg.offsetAt(position));
+    const ref = cnfg.getReferenceFromOffset(cnfg.offsetAt(position));
     if (!ref) {
         return [];
     }
-    const xvrRefs = contextProvider.getXvrRefs(ref.identifier);
+    const xvrRefs = contextProvider.getReferences(ref.identifier);
     if (!xvrRefs) {
         return [];
     }
@@ -123,14 +123,14 @@ export function getDeclaration(
     cnfg: SepticCnfg,
     contextProvider: SepticContext
 ): LocationLinkOffset[] {
-    const ref = cnfg.getXvrRefFromOffset(cnfg.offsetAt(position));
+    const ref = cnfg.getReferenceFromOffset(cnfg.offsetAt(position));
     if (!ref) {
         return [];
     }
     if (ref.obj?.isOpcXvr) {
         return [];
     }
-    const xvrRefs = contextProvider.getXvrRefs(ref.identifier);
+    const xvrRefs = contextProvider.getReferences(ref.identifier);
     if (!xvrRefs) {
         return [];
     }

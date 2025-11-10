@@ -66,11 +66,11 @@ export function getReferenceHover(
     position: Position,
     contextProvider: SepticContext
 ): Hover | undefined {
-    const ref = cnfg.getXvrRefFromOffset(cnfg.offsetAt(position));
+    const ref = cnfg.getReferenceFromOffset(cnfg.offsetAt(position));
     if (!ref) {
         return undefined;
     }
-    const allRefs = contextProvider.getXvrRefs(ref.identifier);
+    const allRefs = contextProvider.getReferences(ref.identifier);
     if (!allRefs) {
         return undefined;
     }
