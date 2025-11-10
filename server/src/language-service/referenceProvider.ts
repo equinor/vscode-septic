@@ -7,6 +7,7 @@
 import {
     DeclarationParams,
     DefinitionParams,
+    Position,
     ReferenceParams,
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
@@ -28,55 +29,50 @@ export class ReferenceProvider {
     /* istanbul ignore next */
     public async provideDefinition(
         params: DefinitionParams,
-        doc: ITextDocument,
         contextProvider: SepticContext
     ): Promise<LocationLinkOffset[]> {
-        const offset = doc.offsetAt(params.position);
-        const cnfg = await this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
         await contextProvider.load();
-        return getDefinition(offset, cnfg, contextProvider);
+        return getDefinition(params.position, cnfg, contextProvider);
     }
 
     /* istanbul ignore next */
     public async provideReferences(
         params: ReferenceParams,
-        doc: ITextDocument,
         contextProvider: SepticContext
     ): Promise<LocationOffset[]> {
-        const offset = doc.offsetAt(params.position);
-        const cnfg = await this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
         await contextProvider.load();
-        return getReferences(offset, cnfg, contextProvider);
+        return getReferences(params.position, cnfg, contextProvider);
     }
 
     /* istanbul ignore next */
     public async provideDeclaration(
         params: DeclarationParams,
-        doc: ITextDocument,
         contextProvider: SepticContext
     ): Promise<LocationLinkOffset[]> {
-        const offset = doc.offsetAt(params.position);
-        const cnfg = await this.cnfgProvider.get(doc.uri);
+        const offset = params.position;
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
         await contextProvider.load();
-        return getDeclaration(offset, cnfg, contextProvider);
+        return getDeclaration(params.position, cnfg, contextProvider);
     }
 }
 
 export function getDefinition(
-    offset: number,
+    position: Position,
     cnfg: SepticCnfg,
     contextProvider: SepticContext
 ): LocationLinkOffset[] {
-    const ref = cnfg.getXvrRefFromOffset(offset);
+    const ref = cnfg.getXvrRefFromOffset(cnfg.offsetAt(position));
     if (!ref) {
         return [];
     }
@@ -99,11 +95,11 @@ export function getDefinition(
 }
 
 export function getReferences(
-    offset: number,
+    position: Position,
     cnfg: SepticCnfg,
     contextProvider: SepticContext
 ): LocationOffset[] {
-    const ref = cnfg.getXvrRefFromOffset(offset);
+    const ref = cnfg.getXvrRefFromOffset(cnfg.offsetAt(position));
     if (!ref) {
         return [];
     }
@@ -123,15 +119,14 @@ export function getReferences(
 }
 
 export function getDeclaration(
-    offset: number,
+    position: Position,
     cnfg: SepticCnfg,
     contextProvider: SepticContext
 ): LocationLinkOffset[] {
-    const ref = cnfg.getXvrRefFromOffset(offset);
+    const ref = cnfg.getXvrRefFromOffset(cnfg.offsetAt(position));
     if (!ref) {
         return [];
     }
-
     if (ref.obj?.isOpcXvr) {
         return [];
     }

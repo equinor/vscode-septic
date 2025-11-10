@@ -418,10 +418,6 @@ connection.onCompletion(
 );
 
 connection.onDefinition(async (params) => {
-    const document = documents.get(params.textDocument.uri);
-    if (!document) {
-        return [];
-    }
     let context: SepticContext | undefined =
         await contextManager.getContext(params.textDocument.uri);
     if (!context) {
@@ -434,7 +430,6 @@ connection.onDefinition(async (params) => {
 
     const refsOffset = await langService.provideDefinition(
         params,
-        document,
         context
     );
     const refs: LocationLink[] = [];
@@ -456,10 +451,6 @@ connection.onDefinition(async (params) => {
 });
 
 connection.onDeclaration(async (params) => {
-    const document = documents.get(params.textDocument.uri);
-    if (!document) {
-        return [];
-    }
     let context: SepticContext | undefined =
         await contextManager.getContext(params.textDocument.uri);
     if (!context) {
@@ -471,7 +462,6 @@ connection.onDeclaration(async (params) => {
     }
     const refsOffset = await langService.provideDeclaration(
         params,
-        document,
         context
     );
     const refs: LocationLink[] = [];
@@ -493,10 +483,6 @@ connection.onDeclaration(async (params) => {
 });
 
 connection.onReferences(async (params) => {
-    const document = documents.get(params.textDocument.uri);
-    if (!document) {
-        return [];
-    }
     let context: SepticContext | undefined =
         await contextManager.getContext(params.textDocument.uri);
     if (!context) {
@@ -508,7 +494,6 @@ connection.onReferences(async (params) => {
     }
     const refsOffset = await langService.provideReferences(
         params,
-        document,
         context
     );
 

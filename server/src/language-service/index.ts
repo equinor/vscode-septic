@@ -51,19 +51,16 @@ export interface ILanguageService {
 
     provideDefinition(
         params: lsp.DefinitionParams,
-        doc: ITextDocument,
         contextProvider: SepticContext
     ): Promise<LocationLinkOffset[]>;
 
     provideReferences(
         params: lsp.ReferenceParams,
-        doc: ITextDocument,
         contextProvider: SepticContext
     ): Promise<LocationOffset[]>;
 
     provideDeclaration(
         params: lsp.DeclarationParams,
-        doc: ITextDocument,
         contextProvider: SepticContext
     ): Promise<LocationLinkOffset[]>;
 

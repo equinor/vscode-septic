@@ -5,7 +5,8 @@ import {
     getReferences,
 } from "../language-service/referenceProvider";
 import { Attribute, AttributeValue, extractReferencesFromObj, Identifier, SepticObject, SepticTokenType } from "../septic";
-import { MockDocument, parseSepticForTest } from "./util";
+import { parseSepticForTest } from "./util";
+import { Position } from 'vscode-languageserver';
 
 describe("Test extraction of refs from config file", () => {
     it("Test (sopc)xvrs", () => {
@@ -22,10 +23,7 @@ describe("Test extraction of refs from config file", () => {
 
 			SopcProc: Var2
 		`;
-
-        const doc = new MockDocument(text);
-
-        const cnfg = parseSepticForTest(doc.getText());
+        const cnfg = parseSepticForTest(text);
         expect(cnfg.getXvrRefs("Var1")?.length).to.equal(2);
         expect(cnfg.getXvrRefs("Var2")?.length).to.equal(1);
         expect(cnfg.getXvrRefs("Var3")?.length).to.equal(1);
@@ -45,10 +43,7 @@ describe("Test extraction of refs from config file", () => {
 				Alg= "Var1 + Var2 - abs(Var2)"
 
 		`;
-
-        const doc = new MockDocument(text);
-
-        const cnfg = parseSepticForTest(doc.getText());
+        const cnfg = parseSepticForTest(text);
         expect(cnfg.getXvrRefs("Var1")?.length).to.equal(3);
         expect(cnfg.getXvrRefs("Var2")?.length).to.equal(3);
         expect(cnfg.getXvrRefs("CalcVar")?.length).to.equal(2);
@@ -70,10 +65,7 @@ describe("Test extraction of refs from config file", () => {
 			CvrList:
 				Cvrs= 1 "Var2"
 		`;
-
-        const doc = new MockDocument(text);
-
-        const cnfg = parseSepticForTest(doc.getText());
+        const cnfg = parseSepticForTest(text);
         expect(cnfg.getXvrRefs("Var1")?.length).to.equal(3);
         expect(cnfg.getXvrRefs("Var2")?.length).to.equal(2);
         expect(cnfg.getXvrRefs("Var3")?.length).to.equal(2);
@@ -91,10 +83,7 @@ describe("Test extraction of refs from config file", () => {
 
 			XvrPlot: Var2
 		`;
-
-        const doc = new MockDocument(text);
-
-        const cnfg = parseSepticForTest(doc.getText());
+        const cnfg = parseSepticForTest(text);
         expect(cnfg.getXvrRefs("Var1")?.length).to.equal(2);
         expect(cnfg.getXvrRefs("Var2")?.length).to.equal(2);
         expect(cnfg.getXvrRefs("Var3")?.length).to.equal(1);
@@ -103,157 +92,151 @@ describe("Test extraction of refs from config file", () => {
 
 describe("Test getDefinition", () => {
     const text = `
-			SopcMvr: Var1
+SopcMvr: Var1
 
-			Mvr: Var1
+Mvr: Var1
 			
-			Cvr: Var2
+Cvr: Var2
 
-			Mvr: Var3
+Mvr: Var3
 
-			MvrList:
-				Mvrs= 2 "Var1" "Var3"
+MvrList:
+Mvrs= 2 "Var1" "Var3"
 
-			CvrList:
-				Cvrs= 1 "Var2"
+CvrList:
+Cvrs= 1 "Var2"
 
-            CalcPvr: Var2
-                Alg= "abs(Var1)"
+CalcPvr: Var2
+Alg= "abs(Var1)"
 		`;
-    const doc = new MockDocument(text);
-
-    const cnfg = parseSepticForTest(doc.getText());
-    it("Get Definition SopcXvr", () => {
-        const offset = 15;
-        const result = getDefinition(offset, cnfg, cnfg);
+    const cnfg = parseSepticForTest(text);
+    it("Get Definition SopcMvr", () => {
+        const position = Position.create(1, 11);
+        const result = getDefinition(position, cnfg, cnfg);
         expect(result.length).to.equal(1);
     });
-    it("Get Definition Xvr", () => {
-        const offset = 29;
-        const result = getDefinition(offset, cnfg, cnfg);
+    it("Get Definition Mvr: ", () => {
+        const position = Position.create(5, 7);
+        const result = getDefinition(position, cnfg, cnfg);
         expect(result.length).to.equal(0);
     });
     it("Get Definition Xvr", () => {
-        const offset = 46;
-        const result = getDefinition(offset, cnfg, cnfg);
+        const position = Position.create(7, 7);
+        const result = getDefinition(position, cnfg, cnfg);
         expect(result.length).to.equal(0);
     });
     it("Get Definition CalcPvr", () => {
-        const offset = 158;
-        const result = getDefinition(offset, cnfg, cnfg);
+        const position = Position.create(15, 12);
+        const result = getDefinition(position, cnfg, cnfg);
         expect(result.length).to.equal(1);
     });
     it("Get Definition Xvr", () => {
-        const offset = 190;
-        const result = getDefinition(offset, cnfg, cnfg);
+        const position = Position.create(16, 13);
+        const result = getDefinition(position, cnfg, cnfg);
         expect(result.length).to.equal(1);
     });
     it("Expect no definition when outside refs", () => {
-        const offset = 1;
-        const result = getDefinition(offset, cnfg, cnfg);
+        const position = Position.create(0, 1);
+        const result = getDefinition(position, cnfg, cnfg);
         expect(result.length).to.equal(0);
     });
 });
 
 describe("Test getDeclaration", () => {
     const text = `
-			SopcMvr: Var1
+SopcMvr: Var1
 
-			Mvr: Var1
-			
-			Cvr: Var2
+Mvr: Var1
 
-			Mvr: Var3
+Cvr: Var2
 
-			MvrList:
-				Mvrs= 2 "Var1" "Var3"
+Mvr: Var3
 
-			CvrList:
-				Cvrs= 1 "Var2"
+MvrList:
+Mvrs= 2 "Var1" "Var3"
 
-            CalcPvr: Var2
-                Alg= "abs(Var1)"
+CvrList:
+Cvrs= 1 "Var2"
+
+CalcPvr: Var2
+Alg= "abs(Var1)"
 		`;
-    const doc = new MockDocument(text);
-
-    const cnfg = parseSepticForTest(doc.getText());
-    it("Get Declaration SopcXvr", () => {
-        const offset = 15;
-        const result = getDeclaration(offset, cnfg, cnfg);
+    const cnfg = parseSepticForTest(text);
+    it("Get Declaration SopcMvr", () => {
+        const position = Position.create(1, 11);
+        const result = getDeclaration(position, cnfg, cnfg);
         expect(result.length).to.equal(0);
     });
-    it("Get Declaration Xvr", () => {
-        const offset = 29;
-        const result = getDeclaration(offset, cnfg, cnfg);
+    it("Get Declaration Mvr Var 1", () => {
+        const position = Position.create(3, 7);
+        const result = getDeclaration(position, cnfg, cnfg);
         expect(result.length).to.equal(1);
     });
     it("Get Declaration CalcPvr", () => {
-        const offset = 158;
-        const result = getDeclaration(offset, cnfg, cnfg);
+        const position = Position.create(15, 12);
+        const result = getDeclaration(position, cnfg, cnfg);
         expect(result.length).to.equal(0);
     });
     it("Get Declaration Alg", () => {
-        const offset = 190;
-        const result = getDeclaration(offset, cnfg, cnfg);
+        const position = Position.create(16, 13);
+        const result = getDeclaration(position, cnfg, cnfg);
         expect(result.length).to.equal(1);
     });
     it("Expect no declaration when not in ref", () => {
-        const offset = 1;
-        const result = getDeclaration(offset, cnfg, cnfg);
+        const position = Position.create(0, 1);
+        const result = getDeclaration(position, cnfg, cnfg);
         expect(result.length).to.equal(0);
     });
 });
 
 describe("Test getReferences", () => {
     const text = `
-			SopcMvr: Var1
+SopcMvr: Var1
 
-			Mvr: Var1
-			
-			Cvr: Var2
+Mvr: Var1
 
-			Mvr: Var3
+Cvr: Var2
 
-			MvrList:
-				Mvrs= 2 "Var1" "Var3"
+Mvr: Var3
 
-			CvrList:
-				Cvrs= 1 "Var2"
+MvrList:
+Mvrs= 2 "Var1" "Var3"
 
-            CalcPvr: Var2
-                Alg= "abs(Var1)"
+CvrList:
+Cvrs= 1 "Var2"
+
+CalcPvr: Var2
+Alg= "abs(Var1)"
 		`;
-    const doc = new MockDocument(text);
-
-    const cnfg = parseSepticForTest(doc.getText());
+    const cnfg = parseSepticForTest(text);
     it("Get References SopcXvr", () => {
-        const offset = 15;
-        const result = getReferences(offset, cnfg, cnfg);
+        const position = Position.create(1, 11);
+        const result = getReferences(position, cnfg, cnfg);
         expect(result.length).to.equal(4);
     });
-    it("Get References Xvr", () => {
-        const offset = 29;
-        const result = getReferences(offset, cnfg, cnfg);
+    it("Get References Mvr Var1", () => {
+        const position = Position.create(3, 7);
+        const result = getReferences(position, cnfg, cnfg);
         expect(result.length).to.equal(4);
     });
-    it("Get References Xvr", () => {
-        const offset = 46;
-        const result = getReferences(offset, cnfg, cnfg);
+    it("Get References Cvr Var2", () => {
+        const position = Position.create(5, 7);
+        const result = getReferences(position, cnfg, cnfg);
         expect(result.length).to.equal(3);
     });
     it("Get References CalcPvr", () => {
-        const offset = 158;
-        const result = getReferences(offset, cnfg, cnfg);
+        const position = Position.create(15, 12);
+        const result = getReferences(position, cnfg, cnfg);
         expect(result.length).to.equal(3);
     });
     it("Get References Alg", () => {
-        const offset = 190;
-        const result = getReferences(offset, cnfg, cnfg);
+        const position = Position.create(16, 13);
+        const result = getReferences(position, cnfg, cnfg);
         expect(result.length).to.equal(4);
     });
     it("Expect no references when outside", () => {
-        const offset = 1;
-        const result = getReferences(offset, cnfg, cnfg);
+        const position = Position.create(0, 1);
+        const result = getReferences(position, cnfg, cnfg);
         expect(result.length).to.equal(0);
     });
 });
