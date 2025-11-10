@@ -88,8 +88,7 @@ export interface ILanguageService {
     provideFormatting(doc: ITextDocument): Promise<lsp.TextEdit[]>;
 
     provideSignatureHelp(
-        param: lsp.SignatureHelpParams,
-        doc: ITextDocument
+        param: lsp.SignatureHelpParams
     ): Promise<lsp.SignatureHelp>;
 
     provideCodeAction(param: lsp.CodeActionParams): Promise<lsp.CodeAction[]>;

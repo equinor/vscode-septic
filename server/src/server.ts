@@ -586,11 +586,7 @@ connection.onDocumentFormatting(async (params) => {
 });
 
 connection.onSignatureHelp(async (params) => {
-    const doc = await documentProvider.getDocument(params.textDocument.uri);
-    if (!doc) {
-        return undefined;
-    }
-    return langService.provideSignatureHelp(params, doc);
+    return langService.provideSignatureHelp(params);
 });
 
 connection.onCodeAction(async (params) => {

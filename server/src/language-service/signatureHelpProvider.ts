@@ -8,9 +8,9 @@ import {
     ParameterInformation,
     SignatureHelp,
     SignatureHelpParams,
+    Position
 } from "vscode-languageserver";
 import { SepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "./types/textDocument";
 import {
     AlgExpr,
     AlgCalc,
@@ -34,21 +34,20 @@ export class SignatureHelpProvider {
     /* istanbul ignore next */
     public async provideSignatureHelp(
         param: SignatureHelpParams,
-        doc: ITextDocument
     ): Promise<SignatureHelp> {
-        const cnfg = await this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(param.textDocument.uri);
         if (!cnfg) {
             return { signatures: [] };
         }
-        const offset = doc.offsetAt(param.position);
-        return getSignatureHelp(cnfg, offset);
+        return getSignatureHelp(cnfg, param.position);
     }
 }
 
 export function getSignatureHelp(
     cnfg: SepticCnfg,
-    offset: number
+    position: Position
 ): SignatureHelp {
+    const offset = cnfg.offsetAt(position);
     const alg = cnfg.getAlgFromOffset(offset);
     if (!alg) {
         return { signatures: [] };
