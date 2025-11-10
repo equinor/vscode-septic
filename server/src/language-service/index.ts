@@ -45,7 +45,6 @@ export interface ILanguageService {
 
     provideCompletion(
         pos: lsp.CompletionParams,
-        doc: ITextDocument,
         contextProvider: SepticContext
     ): Promise<lsp.CompletionItem[]>;
 

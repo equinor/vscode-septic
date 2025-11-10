@@ -398,10 +398,6 @@ connection.onDocumentSymbol(
 
 connection.onCompletion(
     async (params: CompletionParams): Promise<CompletionItem[]> => {
-        const document = documents.get(params.textDocument.uri);
-        if (!document) {
-            return [];
-        }
         let context: SepticContext | undefined =
             await contextManager.getContext(params.textDocument.uri);
         if (!context) {
@@ -409,11 +405,10 @@ connection.onCompletion(
                 params.textDocument.uri
             );
         }
-
         if (!context) {
             return [];
         }
-        return langService.provideCompletion(params, document, context);
+        return langService.provideCompletion(params, context);
     }
 );
 

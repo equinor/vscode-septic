@@ -48,7 +48,6 @@ export class CompletionProvider {
     /* istanbul ignore next */
     public async provideCompletion(
         params: CompletionParams,
-        doc: ITextDocument,
         contextProvider: SepticContext
     ): Promise<CompletionItem[]> {
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
@@ -61,7 +60,6 @@ export class CompletionProvider {
             params.position,
             params.context?.triggerCharacter,
             cnfg,
-            doc,
             contextProvider,
             settings?.completion || { onlySuggestValidSnippets: false }
         );
@@ -72,19 +70,18 @@ export function getCompletion(
     pos: Position,
     triggerCharacter: string | undefined,
     cnfg: SepticCnfg,
-    doc: ITextDocument,
     contextProvider: SepticContext,
     settings: CompletionSettings = { onlySuggestValidSnippets: false }
 ): CompletionItem[] {
-    const offset = doc.offsetAt(pos);
-    const alg = cnfg.findAlgValueFromLocation(offset);
+    const offset = cnfg.offsetAt(pos);
+    const alg = cnfg.findAlgValueFromLocation(pos);
     if (alg) {
         if (triggerCharacter === ".") {
             return getCalcPublicPropertiesCompletion(offset, cnfg, contextProvider);
         }
-        return getCalcCompletion(offset, cnfg, doc, contextProvider);
+        return getCalcCompletion(offset, cnfg, contextProvider);
     }
-    return getObjectCompletion(offset, cnfg, contextProvider, doc, settings);
+    return getObjectCompletion(pos, cnfg, contextProvider, settings);
 }
 
 export function getCalcPublicPropertiesCompletion(
@@ -145,7 +142,6 @@ function publicPropertiesToCompletionItems(
 export function getCalcCompletion(
     offset: number,
     cnfg: SepticCnfg,
-    doc: ITextDocument,
     contextProvider: SepticContext
 ): CompletionItem[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
@@ -154,18 +150,18 @@ export function getCalcCompletion(
     let range: Range;
     if (ref) {
         range = {
-            start: doc.positionAt(ref.location.start),
-            end: doc.positionAt(ref.location.end),
+            start: cnfg.positionAt(ref.location.start),
+            end: cnfg.positionAt(ref.location.end),
         };
     } else {
-        const pos = doc.positionAt(offset);
-        const line = doc.getText({
+        const pos = cnfg.positionAt(offset);
+        const line = cnfg.getText({
             start: Position.create(pos.line, 0),
             end: Position.create(pos.line, Infinity),
         });
         const existing = getExistingCompletion(line, pos.character - 1);
         range = {
-            start: doc.positionAt(offset - existing.str.length),
+            start: cnfg.positionAt(offset - existing.str.length),
             end: pos,
         };
     }
@@ -199,30 +195,30 @@ export function getCalcCompletion(
 }
 
 export function getObjectCompletion(
-    offset: number,
+    position: Position,
     cnfg: SepticCnfg,
     contextProvider: SepticContext,
-    doc: ITextDocument,
     settings: CompletionSettings = { onlySuggestValidSnippets: false }
 ): CompletionItem[] {
     cnfg.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
     contextProvider.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
-    const snippets: CompletionItem[] = getRelevantSnippets(offset, contextProvider, doc, settings.onlySuggestValidSnippets);
+    const snippets: CompletionItem[] = getRelevantSnippets(position, contextProvider, cnfg.uri, settings.onlySuggestValidSnippets);
     const references: CompletionItem[] = [];
-    const obj = cnfg.findObjectFromLocation(offset);
+    const obj = cnfg.findObjectFromLocation(position);
     if (!obj) {
         return snippets;
     }
-    const ref = cnfg.findReferenceFromLocation(offset);
+    const ref = cnfg.findReferenceFromLocation(position);
+    const offset = cnfg.offsetAt(position);
     if (isIdentifierCompletion(offset, obj)) {
         const range: Range = ref
             ? {
-                start: doc.positionAt(ref.location.start),
-                end: doc.positionAt(ref.location.end),
+                start: cnfg.positionAt(ref.location.start),
+                end: cnfg.positionAt(ref.location.end),
             }
             : {
-                start: doc.positionAt(offset),
-                end: doc.positionAt(offset),
+                start: position,
+                end: position,
             };
         return getRelevantXvrsIdentifier(
             obj,
@@ -231,17 +227,17 @@ export function getObjectCompletion(
     }
     const currentAttr = getCurrentAttr(offset, obj);
     if (!currentAttr.attr) {
-        return [...snippets, ...getObjectAttributeCompletion(obj, offset, doc)];
+        return [...snippets, ...getObjectAttributeCompletion(obj, offset, cnfg.doc)];
     }
     if (isReferenceAttribute(obj, currentAttr.attr)) {
         const range: Range = ref
             ? {
-                start: doc.positionAt(ref.location.start),
-                end: doc.positionAt(ref.location.end),
+                start: cnfg.positionAt(ref.location.start),
+                end: cnfg.positionAt(ref.location.end),
             }
             : {
-                start: doc.positionAt(offset),
-                end: doc.positionAt(offset),
+                start: cnfg.positionAt(offset),
+                end: cnfg.positionAt(offset),
             };
 
         references.push(
@@ -254,13 +250,13 @@ export function getObjectCompletion(
     if (isEndAttribute(offset, currentAttr.attr)) {
         if (currentAttr.last) {
             return [
-                ...getObjectAttributeCompletion(obj, offset, doc),
+                ...getObjectAttributeCompletion(obj, offset, cnfg.doc),
                 ...references,
                 ...snippets,
             ];
         }
         return [
-            ...getObjectAttributeCompletion(obj, offset, doc),
+            ...getObjectAttributeCompletion(obj, offset, cnfg.doc),
             ...references,
         ];
     }
@@ -479,12 +475,12 @@ function getRelevantXvrsAttributes(
     }
 }
 
-function getRelevantSnippets(offset: number, contextProvider: SepticContext, doc: ITextDocument, onlySuggestValidSnippets: boolean): CompletionItem[] {
+function getRelevantSnippets(position: Position, contextProvider: SepticContext, uri: string, onlySuggestValidSnippets: boolean): CompletionItem[] {
     const snippets = SepticMetaInfoProvider.getInstance().getSnippets().slice();
     if (!onlySuggestValidSnippets) {
         return snippets;
     }
-    const obj = contextProvider.findObjectFromLocation(offset, doc.uri);
+    const obj = contextProvider.findObjectFromLocation(position, uri);
     if (!obj) {
         return snippets.filter((snippet) => snippet.label.startsWith("system"));
     }
