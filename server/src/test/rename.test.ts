@@ -20,10 +20,10 @@ describe("Test renaming", () => {
         const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
-        const offset = doc.offsetAt(Position.create(0, 21));
+        const position = Position.create(0, 21);
         const renameEdits = await getRenameEdits(
             cnfg,
-            offset,
+            position,
             "New",
             cnfg,
             getDocument
@@ -45,10 +45,10 @@ describe("Test renaming", () => {
         const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
-        const offset = doc.offsetAt(Position.create(12, 21));
+        const position = Position.create(12, 21);
         const renameEdits = await getRenameEdits(
             cnfg,
-            offset,
+            position,
             "New",
             cnfg,
             getDocument
@@ -70,10 +70,10 @@ describe("Test renaming", () => {
         const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
-        const offset = doc.offsetAt(Position.create(6, 21));
+        const position = Position.create(6, 21);
         const renameEdits = await getRenameEdits(
             cnfg,
-            offset,
+            position,
             "New",
             cnfg,
             getDocument
@@ -94,10 +94,10 @@ describe("Test renaming", () => {
         const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
-        const offset = doc.offsetAt(Position.create(23, 21));
+        const position = Position.create(23, 21);
         const renameEdits = await getRenameEdits(
             cnfg,
-            offset,
+            position,
             "New",
             cnfg,
             getDocument
@@ -118,10 +118,10 @@ describe("Test renaming", () => {
         const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
-        const offset = doc.offsetAt(Position.create(7, 21));
+        const position = Position.create(7, 21);
         const renameEdits = await getRenameEdits(
             cnfg,
-            offset,
+            position,
             "New",
             cnfg,
             getDocument

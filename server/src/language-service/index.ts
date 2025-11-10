@@ -66,13 +66,11 @@ export interface ILanguageService {
 
     provideRename(
         params: lsp.RenameParams,
-        doc: ITextDocument,
         contextProvider: SepticContext
     ): Promise<lsp.WorkspaceEdit | undefined>;
 
     providePrepareRename(
         params: lsp.PrepareRenameParams,
-        doc: ITextDocument
     ): Promise<lsp.Range | null>;
 
     provideHover(

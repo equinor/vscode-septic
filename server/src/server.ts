@@ -512,11 +512,6 @@ connection.onReferences(async (params) => {
 });
 
 connection.onRenameRequest(async (params) => {
-    const document = documents.get(params.textDocument.uri);
-    if (!document) {
-        return undefined;
-    }
-
     let context: SepticContext | undefined =
         await contextManager.getContext(params.textDocument.uri);
     if (!context) {
@@ -526,15 +521,11 @@ connection.onRenameRequest(async (params) => {
     if (!context) {
         return undefined;
     }
-    return await langService.provideRename(params, document, context);
+    return await langService.provideRename(params, context);
 });
 
 connection.onPrepareRename((params) => {
-    const document = documents.get(params.textDocument.uri);
-    if (!document) {
-        return null;
-    }
-    return langService.providePrepareRename(params, document);
+    return langService.providePrepareRename(params);
 });
 
 connection.onHover(async (params) => {
