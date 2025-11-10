@@ -27,7 +27,7 @@ import { removeSpaces, sleep, transformPositionsToOriginal } from "../util";
 import { updateParentObjects } from "./hierarchy";
 import { getFunctionsFromCalcPvrs, SepticFunction } from './function';
 import { ITextDocument } from '../language-service';
-import { CancellationToken } from 'vscode-languageserver';
+import { CancellationToken, Position } from 'vscode-languageserver';
 import { SepticParser, SepticScanner } from './parser';
 
 export class SepticCnfg implements SepticContext {
@@ -78,6 +78,14 @@ export class SepticCnfg implements SepticContext {
                 comment.end
             );
         });
+    }
+
+    public positionAt(offset: number): Position {
+        return this.doc.positionAt(offset);
+    }
+
+    public offsetAt(position: Position): number {
+        return this.doc.offsetAt(position);
     }
 
     public async load(): Promise<void> {

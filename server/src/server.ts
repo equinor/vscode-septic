@@ -561,11 +561,6 @@ connection.onPrepareRename((params) => {
 });
 
 connection.onHover(async (params) => {
-    const doc = await documentProvider.getDocument(params.textDocument.uri);
-    if (!doc) {
-        return undefined;
-    }
-
     let context: SepticContext | undefined =
         await contextManager.getContext(params.textDocument.uri);
     if (!context) {
@@ -575,7 +570,7 @@ connection.onHover(async (params) => {
     if (!context) {
         return undefined;
     }
-    return langService.provideHover(params, doc, context);
+    return langService.provideHover(params, context);
 });
 
 connection.onDocumentFormatting(async (params) => {

@@ -82,7 +82,6 @@ export interface ILanguageService {
 
     provideHover(
         params: lsp.HoverParams,
-        doc: ITextDocument,
         contextProvider: SepticContext
     ): Promise<lsp.Hover | undefined>;
 
