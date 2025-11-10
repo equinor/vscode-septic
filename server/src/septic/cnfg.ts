@@ -163,38 +163,18 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         });
     }
 
-    public locationInAlg(location: Position | number): undefined | AttributeValue {
+    public findAlgValueFromLocation(location: Position | number): undefined | AttributeValue {
         const offset = typeof location === "number" ? location : this.offsetAt(location);
         const obj = this.findObjectFromLocation(offset);
         if (!obj) {
             return undefined;
         }
-        const alg = obj.getAttribute("Alg");
-        const algValue = alg?.getAttrValue();
+        const algValue = obj.getAttribute("Alg")?.getAttrValue();
         if (!algValue) {
             return undefined;
         }
-
         if (offset >= algValue.start && offset <= algValue.end) {
             return algValue;
-        }
-        return undefined;
-    }
-
-    public findAlgFromLocation(location: Position | number): Attribute | undefined {
-        const offset = typeof location === "number" ? location : this.offsetAt(location);
-        const obj = this.findObjectFromLocation(offset);
-        if (!obj) {
-            return undefined;
-        }
-        const alg = obj.getAttribute("Alg");
-        const algValue = alg?.getAttrValue();
-        if (!algValue) {
-            return undefined;
-        }
-
-        if (offset >= algValue.start && offset <= algValue.end) {
-            return alg;
         }
         return undefined;
     }
@@ -267,8 +247,6 @@ export class SepticCnfg implements SepticContext, ITextDocument {
             this.references.set(ref.identifier, [ref]);
         }
     }
-
-
 
     public getFunctions(): SepticFunction[] {
         const calcPvrs = this.objects.filter((obj) => obj.isType("CalcPvr"));

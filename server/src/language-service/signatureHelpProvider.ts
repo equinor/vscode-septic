@@ -48,19 +48,19 @@ export function getSignatureHelp(
     position: Position
 ): SignatureHelp {
     const offset = cnfg.offsetAt(position);
-    const alg = cnfg.findAlgFromLocation(offset);
-    if (!alg) {
+    const algValue = cnfg.findAlgValueFromLocation(offset);
+    if (!algValue) {
         return { signatures: [] };
     }
     let parsedAlg: AlgExpr;
     try {
-        parsedAlg = parseAlg(alg.getValue()!);
+        parsedAlg = parseAlg(algValue.getValue());
     } catch {
         return { signatures: [] };
     }
     const algVisitor = new AlgVisitor();
     algVisitor.visit(parsedAlg);
-    const offsetAlg = offset - (alg.getAttrValue()!.start + 1);
+    const offsetAlg = offset - (algValue.start + 1);
     let currentCalc: AlgCalc | undefined = undefined;
     for (const calc of algVisitor.calcs) {
         const start = calc.start + calc.identifier.length + 1;

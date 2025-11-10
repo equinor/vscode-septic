@@ -77,7 +77,7 @@ export function getCompletion(
     settings: CompletionSettings = { onlySuggestValidSnippets: false }
 ): CompletionItem[] {
     const offset = doc.offsetAt(pos);
-    const alg = cnfg.locationInAlg(offset);
+    const alg = cnfg.findAlgValueFromLocation(offset);
     if (alg) {
         if (triggerCharacter === ".") {
             return getCalcPublicPropertiesCompletion(offset, cnfg, contextProvider);
@@ -92,7 +92,7 @@ export function getCalcPublicPropertiesCompletion(
     cnfg: SepticCnfg,
     contextProvider: SepticContext
 ): CompletionItem[] {
-    const algValue = cnfg.locationInAlg(offset);
+    const algValue = cnfg.findAlgValueFromLocation(offset);
     if (!algValue) {
         return [];
     }
