@@ -104,8 +104,7 @@ export function findAlgCycles(calcPvrs: SepticObject[]): Cycle[] {
 function extractAlgs(calcPvrs: SepticObject[]): Alg[] {
     const algs: Alg[] = [];
     for (const calcPvr of calcPvrs) {
-        const alg = calcPvr.getAttribute("Alg");
-        const content = alg?.getAttrValue()?.getValue();
+        const content = calcPvr.getAttributeFirstValue("Alg");
         if (!content || !calcPvr.identifier?.name) {
             continue;
         }

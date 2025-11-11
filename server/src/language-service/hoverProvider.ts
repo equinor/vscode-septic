@@ -222,8 +222,8 @@ function getCalcDocumentation(name: string): MarkupContent | undefined {
 }
 
 function getMarkdownXvr(obj: SepticObject): MarkupContent {
-    const text1 = obj.getAttribute("Text1")?.getValue() ?? "";
-    const text2 = obj.getAttribute("Text2")?.getValue() ?? "";
+    const text1 = obj.getAttributeFirstValue("Text1") ?? "";
+    const text2 = obj.getAttributeFirstValue("Text2") ?? "";
     let text = `${obj.type}: ${obj.identifier?.name}`;
     if (text1 !== "") {
         text += `\n\nText1= ${text1}`;

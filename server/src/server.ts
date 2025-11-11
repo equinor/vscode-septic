@@ -220,7 +220,7 @@ connection.onRequest(protocol.variables, async (param) => {
         }
     }
     return context.getObjectsByType("Evr", "Cvr", "Dvr", "Tvr", "Mvr").map((xvr) => {
-        const description: string = xvr.getAttribute("Text1")?.getAttrValue()?.getValue() ?? "None";
+        const description: string = xvr.getAttributeFirstValue("Text1") ?? "None";
         return { name: xvr.identifier?.id, description: description, type: xvr.type };
     });
 }

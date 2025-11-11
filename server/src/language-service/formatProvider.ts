@@ -515,7 +515,7 @@ export class SepticCnfgFormatter {
         if (!cols) {
             return maxNumberAttrValuesPerLine;
         }
-        const numCols = cols.getValue();
+        const numCols = cols.getFirstValue();
         if (!numCols) {
             return maxNumberAttrValuesPerLine;
         }

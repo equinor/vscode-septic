@@ -45,7 +45,7 @@ export function getFunctionsFromCalcPvrs(calcPvrs: SepticObject[]): SepticFuncti
 		};
 	});
 	const functionNodes = nodes.map((node) => {
-		const text2 = node.obj.getAttribute("Text2")?.getValue();
+		const text2 = node.obj.getAttributeFirstValue("Text2");
 		const match = text2?.match(/^#([a-zA-Z_][a-zA-Z0-9_]*)(?:\((\d+)\))?/);
 		if (match) {
 			const functionName = match[1];
@@ -116,8 +116,8 @@ function createFunctionFromNode(name: string, node: SepticFunctionNode, maxDepth
 	const lines = sorted.map((child) => {
 		return {
 			name: child.name,
-			alg: child.obj.getAttribute("Alg")?.getValue() || "",
-			doc: child.obj.getAttribute("Text1")?.getValue() || "",
+			alg: child.obj.getAttributeFirstValue("Alg") || "",
+			doc: child.obj.getAttributeFirstValue("Text1") || "",
 			offset: child.obj.start,
 			uri: child.obj.uri
 		};

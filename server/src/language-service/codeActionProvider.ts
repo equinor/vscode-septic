@@ -207,17 +207,17 @@ export function getCodeActionGenerateCalc(params: CodeActionParams, cnfg: Septic
     for (const obj of objects) {
         const algAttr = obj.getAttribute("Alg");
         const textAttr = obj.getAttribute("Text1");
-        if (algAttr?.getValue() === undefined || textAttr?.getValue() === undefined) {
+        if (algAttr?.getFirstValue() === undefined || textAttr?.getFirstValue() === undefined) {
             continue;
         }
-        if (textAttr.getValue() === "") {
+        if (textAttr.getFirstValue() === "") {
             continue;
         }
-        const start = cnfg.positionAt(algAttr.getAttrValue()!.start + 1);
-        const end = cnfg.positionAt(algAttr.getAttrValue()!.end - 1);
+        const start = cnfg.positionAt(algAttr.getFirstAttributeValueObject()!.start + 1);
+        const end = cnfg.positionAt(algAttr.getFirstAttributeValueObject()!.end - 1);
         const codeAction = CodeAction.create(`Generate Calc: ${obj.identifier?.name}`);
         codeAction.kind = CodeActionKind.QuickFix;
-        codeAction.command = Command.create(`Generate calc`, "septic.generateCalc", textAttr.getValue(), start, end);
+        codeAction.command = Command.create(`Generate calc`, "septic.generateCalc", textAttr.getFirstValue(), start, end);
         codeActions.push(codeAction);
 
     }

@@ -224,10 +224,10 @@ export function validateAlgs(
     contextProvider: SepticContext
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    const algAttrs = cnfg.objects.filter((obj) => obj.type === "CalcPvr" && obj.getAttribute("Alg")).map((obj) => obj.getAttribute("Alg")!);
+    const algAttrs = cnfg.objects.filter((obj) => obj.type === "CalcPvr" && obj.hasAttribute("Alg")).map((obj) => obj.getAttribute("Alg")!);
 
     for (let i = 0; i < algAttrs.length; i++) {
-        const algAttrValue = algAttrs[i].getAttrValue();
+        const algAttrValue = algAttrs[i].getFirstAttributeValueObject();
         if (!algAttrValue) {
             continue;
         }
@@ -764,7 +764,7 @@ export function validateObjectReferences(
         }
     }
     for (const attr of objectMetaInfo.refs.attributes) {
-        let attrValues = obj.getAttribute(attr)?.getAttrValues();
+        let attrValues = obj.getAttributeValueObjects(attr);
         if (!attrValues) {
             continue;
         }
@@ -1016,7 +1016,7 @@ export function validateEvrReferences(
     contextProvider: SepticContext,
     doc: ITextDocument
 ) {
-    const userInputAttrValue = obj.getAttribute("UserInput")?.getAttrValue();
+    const userInputAttrValue = obj.getAttributeFirstValueObject("UserInput");
     if (userInputAttrValue && userInputAttrValue.getValue() !== "OFF") {
         return [];
     }
@@ -1071,7 +1071,7 @@ export function validateAttribute(
     } else {
         duplicates.set(attrDoc.basename, [attr]);
     }
-    const attrValues = attr.getAttrValues();
+    const attrValues = attr.getAttributeValueObjects();
     diagnostics.push(
         ...validateAttributeNumValues(
             attrValues,

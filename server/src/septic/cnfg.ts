@@ -169,7 +169,7 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         if (!obj) {
             return undefined;
         }
-        const algValue = obj.getAttribute("Alg")?.getAttrValue();
+        const algValue = obj.getAttributeFirstValueObject("Alg");
         if (!algValue) {
             return undefined;
         }
@@ -311,8 +311,8 @@ function calcPvrReferences(obj: SepticObject): SepticReference[] {
             identifier,
             {
                 uri: "",
-                start: obj.getAttribute("Alg")!.getAttrValue()!.start + start + 1,
-                end: obj.getAttribute("Alg")!.getAttrValue()!.start + start + diff + 1,
+                start: obj.getAttributeFirstValueObject("Alg")!.start + start + 1,
+                end: obj.getAttributeFirstValueObject("Alg")!.start + start + diff + 1,
             },
             undefined,
             ReferenceType.calc

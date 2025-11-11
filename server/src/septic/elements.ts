@@ -100,6 +100,27 @@ export class SepticObject extends SepticBase {
         });
     }
 
+    hasAttribute(name: string): boolean {
+        const attr = this.getAttribute(name);
+        return attr !== undefined;
+    }
+
+    getAttributeFirstValue(name: string): string | undefined {
+        return this.getAttribute(name)?.getFirstValue();
+    }
+
+    getAttributeValues(name: string): string[] {
+        return this.getAttribute(name)?.getValues() ?? [];
+    }
+
+    getAttributeValueObjects(name: string): AttributeValue[] {
+        return this.getAttribute(name)?.getAttributeValueObjects() ?? [];
+    }
+
+    getAttributeFirstValueObject(name: string): AttributeValue | undefined {
+        return this.getAttribute(name)?.getFirstAttributeValueObject();
+    }
+
     getElements(): SepticBase[] {
         const elements: SepticBase[] = [this];
         if (this.identifier) {
@@ -132,12 +153,8 @@ export class SepticObject extends SepticBase {
     }
 
     parseAlg(): { algExpr: AlgExpr, positionsMap: number[] } | undefined {
-        const algAttr = this.getAttribute("Alg");
-        if (!algAttr) {
-            return undefined;
-        }
         let expr;
-        const algString = algAttr.getValue() || "";
+        const algString = this.getAttributeFirstValue("Alg") ?? "";
         const { strippedString, positionsMap } = removeJinjaLoopsAndIfs(algString);
         try {
             expr = parseAlg(strippedString);
@@ -176,15 +193,15 @@ export class Attribute extends SepticBase {
         return elements;
     }
 
-    getAttrValue(): AttributeValue | undefined {
+    getFirstAttributeValueObject(): AttributeValue | undefined {
         return this.values?.[0];
     }
 
-    getAttrValues(): AttributeValue[] {
+    getAttributeValueObjects(): AttributeValue[] {
         return this.values;
     }
 
-    getValue(): string | undefined {
+    getFirstValue(): string | undefined {
         if (!this.values.length) {
             return undefined;
         }

@@ -40,7 +40,7 @@ export function generateOpcReport(
                 attr.key.startsWith("y")
         );
         for (const tagAttr of tagAttributes) {
-            const value = tagAttr.getAttrValue()?.getValue() ?? "";
+            const value = tagAttr.getFirstValue() ?? "";
             if (
                 value.trim() === "" ||
                 value === "DUMMY_TAG" ||
