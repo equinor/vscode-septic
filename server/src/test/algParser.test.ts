@@ -251,38 +251,38 @@ describe("Test parsing of basic expressions", () => {
         const input = "1+2";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
-        expect((<AlgBinary>expr).operator?.type).to.equal(AlgTokenType.plus);
+        expect((expr as AlgBinary).operator?.type).to.equal(AlgTokenType.plus);
     });
 
     it("Parsing of subtraction", () => {
         const input = "12-23";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
-        expect((<AlgBinary>expr).operator?.type).to.equal(AlgTokenType.minus);
+        expect((expr as AlgBinary).operator?.type).to.equal(AlgTokenType.minus);
     });
     it("Parsing of multiplication", () => {
         const input = "9*896";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
-        expect((<AlgBinary>expr).operator?.type).to.equal(AlgTokenType.mul);
+        expect((expr as AlgBinary).operator?.type).to.equal(AlgTokenType.mul);
     });
     it("Parsing of division", () => {
         const input = "21/7";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
-        expect((<AlgBinary>expr).operator?.type).to.equal(AlgTokenType.div);
+        expect((expr as AlgBinary).operator?.type).to.equal(AlgTokenType.div);
     });
     it("Parsing of less", () => {
         const input = "1<2";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
-        expect((<AlgBinary>expr).operator?.type).to.equal(AlgTokenType.less);
+        expect((expr as AlgBinary).operator?.type).to.equal(AlgTokenType.less);
     });
     it("Parsing of less-equal", () => {
         const input = "1<=2";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
-        expect((<AlgBinary>expr).operator?.type).to.equal(
+        expect((expr as AlgBinary).operator?.type).to.equal(
             AlgTokenType.lessEqual
         );
     });
@@ -290,13 +290,13 @@ describe("Test parsing of basic expressions", () => {
         const input = "1>2";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
-        expect((<AlgBinary>expr).operator?.type).to.equal(AlgTokenType.greater);
+        expect((expr as AlgBinary).operator?.type).to.equal(AlgTokenType.greater);
     });
     it("Parsing of greater-equal", () => {
         const input = "1>=2";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
-        expect((<AlgBinary>expr).operator?.type).to.equal(
+        expect((expr as AlgBinary).operator?.type).to.equal(
             AlgTokenType.greaterEqual
         );
     });
@@ -304,7 +304,7 @@ describe("Test parsing of basic expressions", () => {
         const input = "1==2";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
-        expect((<AlgBinary>expr).operator?.type).to.equal(
+        expect((expr as AlgBinary).operator?.type).to.equal(
             AlgTokenType.equalEqual
         );
     });
@@ -312,13 +312,13 @@ describe("Test parsing of basic expressions", () => {
         const input = "(1+2)";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgGrouping);
-        expect((<AlgGrouping>expr).expr).to.instanceOf(AlgBinary);
+        expect((expr as AlgGrouping).expr).to.instanceOf(AlgBinary);
     });
     it("Parsing of unary", () => {
         const input = "-(1+2)";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgUnary);
-        expect((<AlgUnary>expr).right).to.instanceOf(AlgGrouping);
+        expect((expr as AlgUnary).right).to.instanceOf(AlgGrouping);
     });
 });
 
@@ -327,31 +327,31 @@ describe("Test parsing of variables", () => {
         const input = "var1";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgLiteral);
-        expect((<AlgLiteral>expr).value).to.equal("var1");
+        expect((expr as AlgLiteral).value).to.equal("var1");
     });
     it("Parsing of jinja variable", () => {
         const input = "{{ Test }}";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgLiteral);
-        expect((<AlgLiteral>expr).value).to.equal("{{Test}}");
+        expect((expr as AlgLiteral).value).to.equal("{{Test}}");
     });
     it("Parsing of combined variable", () => {
         const input = "var1{{ Test }}";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgLiteral);
-        expect((<AlgLiteral>expr).value).to.equal("var1{{Test}}");
+        expect((expr as AlgLiteral).value).to.equal("var1{{Test}}");
     });
     it("Parsing of combined variable", () => {
         const input = "var1{{ Test1 }}var2{{ Test2 }}";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgLiteral);
-        expect((<AlgLiteral>expr).value).to.equal("var1{{Test1}}var2{{Test2}}");
+        expect((expr as AlgLiteral).value).to.equal("var1{{Test1}}var2{{Test2}}");
     });
     it("Parsing of variable with subvariable", () => {
         const input = "test.first";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgLiteral);
-        expect((<AlgLiteral>expr).value).to.equal("test.first");
+        expect((expr as AlgLiteral).value).to.equal("test.first");
     });
 });
 
@@ -360,36 +360,36 @@ describe("Test parsing of functions", () => {
         const input = "add()";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgCalc);
-        expect((<AlgCalc>expr).params.length).to.equal(1);
-        expect((<AlgCalc>expr).params[0]).to.instanceOf(AlgLiteral);
+        expect((expr as AlgCalc).params.length).to.equal(1);
+        expect((expr as AlgCalc).params[0]).to.instanceOf(AlgLiteral);
     });
 
     it("Parsing of function with multiple arguments", () => {
         const input = "add(1,2)";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgCalc);
-        expect((<AlgCalc>expr).params.length).to.equal(2);
-        expect((<AlgCalc>expr).identifier).to.equal("add");
-        expect((<AlgCalc>expr).params[0]).to.instanceOf(AlgLiteral);
-        expect((<AlgCalc>expr).params[1]).to.instanceOf(AlgLiteral);
+        expect((expr as AlgCalc).params.length).to.equal(2);
+        expect((expr as AlgCalc).identifier).to.equal("add");
+        expect((expr as AlgCalc).params[0]).to.instanceOf(AlgLiteral);
+        expect((expr as AlgCalc).params[1]).to.instanceOf(AlgLiteral);
     });
     it("Parsing of nested functions", () => {
         const input = "and(not(true),false)";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgCalc);
-        expect((<AlgCalc>expr).params.length).to.equal(2);
-        expect((<AlgCalc>expr).identifier).to.equal("and");
-        expect((<AlgCalc>expr).params[0]).to.instanceOf(AlgCalc);
-        expect((<AlgCalc>expr).params[1]).to.instanceOf(AlgLiteral);
+        expect((expr as AlgCalc).params.length).to.equal(2);
+        expect((expr as AlgCalc).identifier).to.equal("and");
+        expect((expr as AlgCalc).params[0]).to.instanceOf(AlgCalc);
+        expect((expr as AlgCalc).params[1]).to.instanceOf(AlgLiteral);
     });
     it("Parsing of trublesome function", () => {
         const input = "intpoltype1({{ Wellname }}Zpc_Y, {{ Cv_curve_well }})";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgCalc);
-        expect((<AlgCalc>expr).params.length).to.equal(2);
-        expect((<AlgCalc>expr).identifier).to.equal("intpoltype1");
-        expect((<AlgCalc>expr).params[0]).to.instanceOf(AlgLiteral);
-        expect((<AlgCalc>expr).params[1]).to.instanceOf(AlgLiteral);
+        expect((expr as AlgCalc).params.length).to.equal(2);
+        expect((expr as AlgCalc).identifier).to.equal("intpoltype1");
+        expect((expr as AlgCalc).params[0]).to.instanceOf(AlgLiteral);
+        expect((expr as AlgCalc).params[1]).to.instanceOf(AlgLiteral);
     });
 });
 

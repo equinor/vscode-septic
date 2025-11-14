@@ -572,8 +572,8 @@
   },
   "dependencies": {
     "@vscode/prompt-tsx": "^0.4.0-alpha.5",
-    "js-yaml": "^4.1.0",
-    "ajv": "^8.12.0"
+    "ajv": "^8.12.0",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
@@ -584,7 +584,7 @@
     "@types/vscode": "^1.95.0",
     "@typescript-eslint/eslint-plugin": "8.14.0",
     "@typescript-eslint/parser": "8.14.0",
-    "chai": "^5.3.1",
+    "chai": "^4.5.0",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.0.0",
     "esbuild": "^0.25.5",
