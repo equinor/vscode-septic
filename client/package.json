@@ -10,13 +10,13 @@
     "url": "https://github.com/equinor/vscode-septic"
   },
   "engines": {
-    "vscode": "^1.95.0"
+    "vscode": "^1.105.0"
   },
   "dependencies": {
     "vscode-languageclient": "^8.1.0"
   },
   "devDependencies": {
-    "@types/vscode": "^1.95.0",
+    "@types/vscode": "^1.105.0",
     "@vscode/test-electron": "^2.2.3",
     "@types/js-yaml": "^4.0.5"
   }
