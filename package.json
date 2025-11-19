@@ -566,7 +566,7 @@
     "package": "npm run check-types && node esbuild.js --production",
     "lint": "eslint -c eslint.config.mjs ./client/src ./server/src",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-    "e2e-test": "npm run compile && npm run compile-tests && node ./client/out/test/runTest",
+    "integration-test": "npm run compile && npm run compile-tests && vscode-test",
     "test": "cross-env NODE_ENV=test mocha --require ts-node/register server/src/test/**/*.test.ts ",
     "test_with_coverage": "npm run compile && nyc mocha --require ts-node/register --require source-map-support/register --recursive server/src/test/**/*.test.ts "
   },
@@ -584,6 +584,8 @@
     "@types/vscode": "^1.105.0",
     "@typescript-eslint/eslint-plugin": "8.14.0",
     "@typescript-eslint/parser": "8.14.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
     "chai": "^4.5.0",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.0.0",

@@ -3,7 +3,6 @@
          Text2=  ""
          Nstep=  1
        PlotMax=  25
-      MasterOn=  ON
        DesMode=  ACTIVE
 
   Evr:           EvrTest
@@ -13,3 +12,12 @@
   Evr:           Deadband{{Test}}
          Text1=  ""
          Text2=  ""
+
+  CalcModl:      CalcTest
+         Text1=  ""
+         Text2=  ""
+
+  CalcPvr:       EvrTest
+         Text1=  ""
+         Text2=  ""
+           Alg=  "Deadband{{Test}} + 1"

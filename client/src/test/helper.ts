@@ -12,14 +12,15 @@ export let editor: vscode.TextEditor;
 export let documentEol: string;
 export let platformEol: string;
 
+export let activated = false;
+
 export async function activate(docUri: vscode.Uri) {
-    // The extensionId is `publisher.name` from package.json
-    const ext = vscode.extensions.getExtension("EinarSIdso.septic-config");
-    await ext.activate();
     try {
+        const ext = vscode.extensions.getExtension("EinarSIdso.septic-config");
+        await ext.activate();
+        await sleep(1000);
         doc = await vscode.workspace.openTextDocument(docUri);
         editor = await vscode.window.showTextDocument(doc);
-        await sleep(1000); // Wait for server activation
     } catch (e) {
         console.error(e);
     }

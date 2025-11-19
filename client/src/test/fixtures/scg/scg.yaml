@@ -4,23 +4,21 @@ templatepath: templates
 
 verifycontent: true
 
-adjustsspacing: true
-
 sources:
-  - filename: example.xlsx
-    id: main
-    sheet: Sheet1
+  - filename: wells.csv
+    id: wells
+    delimiter: ";"
 
 layout:
   - name: 01_System.cnfg
-  - name: 02_SopcProc.cnfg
-  - name: 03_SopcProc_well.cnfg
-    source: main
-  - name: 04_SmpcAppl.cnfg
-  - name: 05_ExprModl_well.cnfg
-    source: main
-  - name: 06_DspGroupTables.cnfg
-    source: main
-  - name: 07_DspGroupTables_well.cnfg
-  - name: 08_DmmyAppl.cnfg
-  - name: 09_Calc.cnfg
+  - name: 11_SopcProc.cnfg
+  - name: 12_SopcProcWell.cnfg
+    source: wells
+  - name: 21_DmmyAppl.cnfg
+  - name: 31_SmpcAppl.cnfg
+  - name: 32_SmpcApplWell.cnfg
+    source: wells
+  - name: 41_ExprModl.cnfg
+  - name: 61_DspGroupTables.cnfg
+  - name: 62_DspGroupWell.cnfg
+    source: wells
