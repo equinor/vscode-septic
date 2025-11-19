@@ -25,11 +25,11 @@ export class ContextManager {
 	}
 
 	public async getContext(uri: string): Promise<SepticContext | undefined> {
-		const context = this.scgContextManager.getContext(uri);
+		const context = await this.scgContextManager.getContext(uri);
 		if (context) {
 			return context;
 		}
-		return this.cnfgProvider.get(uri);
+		return await this.cnfgProvider.get(uri);
 	}
 
 	public async getAllContexts(): Promise<SepticContext[]> {
