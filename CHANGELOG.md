@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.28.3](https://github.com/equinor/vscode-septic/compare/v1.28.2...v1.28.3) (2025-11-19)
+
+
+### 🧹 Chores
+
+* update to node 22 and vscode version ([#850](https://github.com/equinor/vscode-septic/issues/850)) ([8e5547a](https://github.com/equinor/vscode-septic/commit/8e5547a84ccf53e9ad82e6d443544c26a637d57d))
+
 ## [1.28.2](https://github.com/equinor/vscode-septic/compare/v1.28.1...v1.28.2) (2025-09-30)
 
 
