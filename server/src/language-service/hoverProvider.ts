@@ -15,7 +15,6 @@ import {
     AlgVisitor,
     SepticCnfg,
     SepticMetaInfoProvider,
-    SepticObject,
     SepticReferenceProvider,
     formatCalcMarkdown,
     formatObjectAttribute,
@@ -82,14 +81,10 @@ export function getReferenceHover(
     const xvr = allRefs.filter((value) => {
         return value.obj?.isXvr;
     });
-    const sopcXvr = allRefs.filter((value) => {
-        return value.obj?.isOpcXvr;
-    });
-
     if (xvr.length) {
         const text = formatObjectInstance(xvr[0].obj!);
         return {
-            contents: text,
+            contents: { value: text, kind: "markdown" },
             range: {
                 start: doc.positionAt(ref.location.start),
                 end: doc.positionAt(ref.location.end),
