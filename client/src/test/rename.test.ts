@@ -87,7 +87,7 @@ suite("Renaming SCG", async () => {
             getDocUri("scg/templates/21_DmmyAppl.cnfg"),
             uris,
             new vscode.Position(7, 21),
-            2
+            3
         );
     });
     test("Renaming of Evr in Calc", async () => {
@@ -95,7 +95,7 @@ suite("Renaming SCG", async () => {
             getDocUri("scg/templates/21_DmmyAppl.cnfg"),
             uris,
             new vscode.Position(22, 28),
-            3
+            2
         );
     });
 });
