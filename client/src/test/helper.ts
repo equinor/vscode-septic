@@ -14,11 +14,22 @@ export let platformEol: string;
 
 export let activated = false;
 
-export async function activate(docUri: vscode.Uri) {
+export async function activate() {
+    if (activated) {
+        return;
+    }
     try {
         const ext = vscode.extensions.getExtension("EinarSIdso.septic-config");
         await ext.activate();
-        await sleep(1000);
+        await sleep(2000);
+        activated = true;
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export async function openDocument(docUri: vscode.Uri) {
+    try {
         doc = await vscode.workspace.openTextDocument(docUri);
         editor = await vscode.window.showTextDocument(doc);
     } catch (e) {

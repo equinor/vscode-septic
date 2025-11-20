@@ -5,15 +5,16 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as vscode from "vscode";
-import { getDocUri, activate } from "./helper";
+import { getDocUri, openDocument, activate } from "./helper";
 import { expect } from "chai";
 
-suite("Should get completion", () => {
-    const docUri = getDocUri("completion/completion.cnfg");
-    test("Suggest corresponding SopcXvr name", async () => {
-        await testCompletion(docUri, new vscode.Position(6, 19), {
+suite("Test completion", async () => {
+    test("Completion Tvr name should give SopcTvr", async () => {
+        await activate();
+        const docUri = getDocUri("test.cnfg");
+        await testCompletion(docUri, new vscode.Position(83, 24), {
             items: [
-                { label: "TestCvr", kind: vscode.CompletionItemKind.Variable },
+                { label: "TestTvr", kind: vscode.CompletionItemKind.Variable },
             ],
         });
     });
@@ -24,7 +25,7 @@ async function testCompletion(
     position: vscode.Position,
     expectedCompletion: vscode.CompletionList
 ) {
-    await activate(docUri);
+    await openDocument(docUri);
     const actualCompletion: vscode.CompletionList =
         await vscode.commands.executeCommand(
             "vscode.executeCompletionItemProvider",

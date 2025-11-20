@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as vscode from "vscode";
-import { getDocUri, activate } from "./helper";
+import { getDocUri, openDocument, activate } from "./helper";
 import { expect } from "chai";
 
 suite("Test references SCG-context", async () => {
@@ -44,7 +44,8 @@ async function testReference(
     position: vscode.Position,
     expectedNumLocations: number
 ) {
-    await activate(docUri);
+    await activate();
+    await openDocument(docUri);
     const locations: vscode.Location[] = await vscode.commands.executeCommand(
         "vscode.executeReferenceProvider",
         docUri,

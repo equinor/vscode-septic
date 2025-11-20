@@ -5,43 +5,36 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as vscode from "vscode";
-import { getDocUri, activate } from "./helper";
+import { getDocUri, openDocument, activate } from "./helper";
 import { expect } from "chai";
 
 suite("Renaming single file", async () => {
-    test("Renaming of SopcXvr", async () => {
+    test("Renaming of SopcCvr", async () => {
         await testRename(
-            getDocUri("rename/xvr.cnfg"),
-            new vscode.Position(0, 19),
-            1
+            getDocUri("test.cnfg"),
+            new vscode.Position(39, 21),
+            3
         );
     });
-    test("Renaming of SopcXvr", async () => {
+    test("Renaming of Evr in Calc", async () => {
         await testRename(
-            getDocUri("rename/sopcXvr.cnfg"),
-            new vscode.Position(0, 21),
+            getDocUri("test.cnfg"),
+            new vscode.Position(151, 21),
             2
         );
     });
-    test("Renaming of Xvr in Calc", async () => {
+    test("Renaming of Mvr in list", async () => {
         await testRename(
-            getDocUri("rename/calc.cnfg"),
-            new vscode.Position(0, 18),
-            2
+            getDocUri("test.cnfg"),
+            new vscode.Position(278, 24),
+            4
         );
     });
-    test("Renaming of Xvr in list", async () => {
+    test("Renaming of Tvr", async () => {
         await testRename(
-            getDocUri("rename/xvrList.cnfg"),
-            new vscode.Position(0, 18),
-            2
-        );
-    });
-    test("Not renaming of appl with same name", async () => {
-        await testRename(
-            getDocUri("rename/appl.cnfg"),
-            new vscode.Position(3, 20),
-            1
+            getDocUri("test.cnfg"),
+            new vscode.Position(83, 23),
+            3
         );
     });
 });
@@ -105,7 +98,8 @@ async function testRename(
     position: vscode.Position,
     expectedNumEdits: number
 ) {
-    await activate(docUri);
+    await activate();
+    await openDocument(docUri);
     const workspaceEdit: vscode.WorkspaceEdit =
         await vscode.commands.executeCommand(
             "vscode.executeDocumentRenameProvider",
@@ -123,7 +117,8 @@ async function testRenameContext(
     position: vscode.Position,
     expectedNumEdits: number
 ) {
-    await activate(docUri);
+    await activate();
+    await openDocument(docUri);
     const workspaceEdit: vscode.WorkspaceEdit =
         await vscode.commands.executeCommand(
             "vscode.executeDocumentRenameProvider",
