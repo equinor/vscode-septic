@@ -63,7 +63,7 @@ suite("Renaming SCG", async () => {
             getDocUri("scg/templates/12_SopcProcWell.cnfg"),
             uris,
             new vscode.Position(18, 24),
-            5
+            3
         );
     });
     test("Renaming of Xvr in List", async () => {
@@ -87,7 +87,7 @@ suite("Renaming SCG", async () => {
             getDocUri("scg/templates/21_DmmyAppl.cnfg"),
             uris,
             new vscode.Position(7, 21),
-            3
+            2
         );
     });
     test("Renaming of Evr in Calc", async () => {

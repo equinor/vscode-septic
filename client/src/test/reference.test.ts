@@ -34,7 +34,7 @@ suite("Test references SCG-context", async () => {
         await testReference(
             getDocUri("scg/templates/21_DmmyAppl.cnfg"),
             new vscode.Position(22, 22),
-            3
+            2
         );
     });
 });
