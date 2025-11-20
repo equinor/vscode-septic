@@ -125,16 +125,28 @@ export function formatObjectInstance(obj: SepticObject) {
     doc += newline + horizontalRule();
     const text1 = obj.getAttribute("Text1")?.getValue();
     if (text1) {
-        doc += newline + "Text1: " + text1;
+        doc += newline + `Text1: "${text1}"`;
+    } else {
+        doc += newline + `Text1: ""`;
     }
     const text2 = obj.getAttribute("Text2")?.getValue();
     if (text2) {
-        doc += newline + "Text2: " + text2;
+        doc += newline + `Text2: "${text2}"`;
+    } else {
+        doc += newline + `Text2: ""`;
+    }
+    const unit = obj.getAttribute("Unit")?.getValue();
+    if (unit) {
+        doc += newline + `Unit: "${unit}"`;
+    } else {
+        doc += newline + `Unit: ""`;
     }
     if (obj.isType("Evr")) {
         const meas = obj.getAttribute("Meas")?.getValue();
         if (meas) {
             doc += newline + "Meas: " + meas;
+        } else {
+            doc += newline + "Meas: 0";
         }
     }
     return doc;
