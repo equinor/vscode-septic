@@ -2,7 +2,7 @@ import { describe } from "mocha";
 import { SepticMetaInfoProvider, parseSepticSync } from "../septic";
 import {
     getCalcCompletion,
-    getCalcPublicPropertiesCompletion,
+    getPublicAttributesCompletion,
     getCompletion,
     getObjectCompletion,
 } from "../language-service/completionProvider";
@@ -219,7 +219,7 @@ describe("Test completion of object attributes", () => {
 
 describe("Test completion of attribute with references to xvrs", () => {
     it("Expect Xvrs for attribute that references Xvrs", () => {
-        const content = loadFile("completionAttrRefs.cnfg");
+        const content = loadFile("completion/completionAttrRefs.cnfg");
         const doc = TextDocument.create("", "", 0, content);
         const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(13, 28));
@@ -230,7 +230,7 @@ describe("Test completion of attribute with references to xvrs", () => {
         expect(variableCompItems.length).to.equal(2);
     });
     it("Expect Mvrs for attribute that references Mvrs", () => {
-        const content = loadFile("completionAttrRefs.cnfg");
+        const content = loadFile("completion/completionAttrRefs.cnfg");
         const doc = TextDocument.create("", "", 0, content);
         const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(17, 19));
@@ -242,7 +242,7 @@ describe("Test completion of attribute with references to xvrs", () => {
         expect(variableCompItems[0].label).to.equal("MvrTest");
     });
     it("Expect completion of xvr in-between existing attr values", () => {
-        const content = loadFile("completionAttrRefs.cnfg");
+        const content = loadFile("completion/completionAttrRefs.cnfg");
         const doc = TextDocument.create("", "", 0, content);
         const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(27, 20));
@@ -253,7 +253,7 @@ describe("Test completion of attribute with references to xvrs", () => {
         expect(variableCompItems.length).to.equal(2);
     });
     it("Expect no completion of xvr non-reference attribute", () => {
-        const content = loadFile("completionAttrRefs.cnfg");
+        const content = loadFile("completion/completionAttrRefs.cnfg");
         const doc = TextDocument.create("", "", 0, content);
         const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(20, 20));
@@ -262,6 +262,21 @@ describe("Test completion of attribute with references to xvrs", () => {
             (item) => item.kind === CompletionItemKind.Variable
         );
         expect(variableCompItems.length).to.equal(0);
+    });
+});
+
+describe("Test completion of attribute enum datatype", () => {
+    it("Expect Xvrs for attribute that references Xvrs", () => {
+        const content = "Evr: TestEvr\nUserInput=  \n";
+        const doc = TextDocument.create("", "", 0, content);
+        const cnfg = parseSepticSync(doc.getText());
+        const offset = doc.offsetAt(Position.create(1, 11));
+        const compItems = getObjectCompletion(offset, cnfg, cnfg, doc);
+        const variableCompItems = compItems.filter(
+            (item) => item.kind === CompletionItemKind.EnumMember
+        );
+        const enums = SepticMetaInfoProvider.getInstance().getObjectDocumentation("Evr")?.attributes.find(attr => attr.name === "UserInput")?.enums;
+        expect(variableCompItems.length).to.equal(enums?.length);
     });
 });
 
@@ -325,7 +340,7 @@ describe("Test property completion in alg", () => {
         const doc = TextDocument.create("test.cnfg", "septic", 0, content);
         const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(6, 26));
-        const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
+        const compItems = getPublicAttributesCompletion(offset, cnfg, cnfg);
         expect(
             compItems.filter(
                 (item) => item.kind === CompletionItemKind.Property
@@ -340,7 +355,7 @@ describe("Test property completion in alg", () => {
         const doc = TextDocument.create("test.cnfg", "septic", 0, content);
         const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(11, 27));
-        const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
+        const compItems = getPublicAttributesCompletion(offset, cnfg, cnfg);
         expect(compItems.length).to.equal(0);
     });
     it("Expect no completion item for number", () => {
@@ -348,7 +363,7 @@ describe("Test property completion in alg", () => {
         const doc = TextDocument.create("test.cnfg", "septic", 0, content);
         const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(16, 20));
-        const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
+        const compItems = getPublicAttributesCompletion(offset, cnfg, cnfg);
         expect(compItems.length).to.equal(0);
     });
     it("Expect no completion item for already completed variable", () => {
@@ -356,7 +371,7 @@ describe("Test property completion in alg", () => {
         const doc = TextDocument.create("test.cnfg", "septic", 0, content);
         const cnfg = parseSepticSync(doc.getText());
         const offset = doc.offsetAt(Position.create(21, 26));
-        const compItems = getCalcPublicPropertiesCompletion(offset, cnfg, cnfg);
+        const compItems = getPublicAttributesCompletion(offset, cnfg, cnfg);
         expect(compItems.length).to.equal(0);
     });
 });

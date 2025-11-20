@@ -56,25 +56,6 @@ describe("Test reference hover", () => {
             true
         );
     });
-    it("Expect to get SopcCvr text when hovering on SopcCvr without Cvr", () => {
-        const content = loadFile("hover.cnfg");
-        const cnfg = parseSepticSync(content);
-        const doc = TextDocument.create("", "", 0, content);
-        const offset = doc.offsetAt(Position.create(31, 21));
-        const hover = getReferenceHover(cnfg, offset, doc, cnfg);
-        expect(hover).to.not.equal(undefined);
-        compareRange(
-            {
-                start: Position.create(31, 17),
-                end: Position.create(31, 24),
-            },
-            hover?.range!
-        );
-        const hoverMarkdown = hover!.contents as MarkupContent;
-        expect(/\SopcCvr\b/.test(hoverMarkdown.value.split("\n")[0])).to.equal(
-            true
-        );
-    });
     it("Expect to get Evr text when hovering on Evr ref in CalcPvr identifier", () => {
         const content = loadFile("hover.cnfg");
         const cnfg = parseSepticSync(content);

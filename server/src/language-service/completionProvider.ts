@@ -25,16 +25,19 @@ import {
     SepticMetaInfoProvider,
     SepticObject,
     SepticReferenceProvider,
+    SepticCalcInfo,
     formatCalcMarkdown,
     formatDefaultValue,
     formatObjectAttribute,
     parseAlg,
+    formatObjectInstance,
 } from "../septic";
 import { indentsAttributesDelimiter } from "./formatProvider";
 import { isAlphaNumeric } from "../util";
 import { CompletionSettings, SettingsManager } from '../settings';
 
 const threeLettersOrLessWordsRegex = /\b[\w]{1,3}\b/;
+
 export class CompletionProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
     private readonly settingsManager: SettingsManager;
@@ -80,14 +83,14 @@ export function getCompletion(
     const alg = cnfg.offsetInAlg(offset);
     if (alg) {
         if (triggerCharacter === ".") {
-            return getCalcPublicPropertiesCompletion(offset, cnfg, refProvider);
+            return getPublicAttributesCompletion(offset, cnfg, refProvider);
         }
         return getCalcCompletion(offset, cnfg, doc, refProvider);
     }
     return getObjectCompletion(offset, cnfg, refProvider, doc, settings);
 }
 
-export function getCalcPublicPropertiesCompletion(
+export function getPublicAttributesCompletion(
     offset: number,
     cnfg: SepticCnfg,
     refProvider: SepticReferenceProvider
@@ -120,26 +123,10 @@ export function getCalcPublicPropertiesCompletion(
             if (!objDoc) {
                 continue;
             }
-            return publicPropertiesToCompletionItems(
-                objDoc.publicAttributes,
-                obj.type
-            );
+            return objDoc.publicAttributes.map((prop) => CompletionItemFactory.fromPublicProperty(prop, obj.type));
         }
     }
     return [];
-}
-
-function publicPropertiesToCompletionItems(
-    properties: string[],
-    objType: string
-): CompletionItem[] {
-    return properties.map((prop) => {
-        return {
-            label: prop,
-            kind: CompletionItemKind.Property,
-            detail: `Public property for ${objType}`,
-        };
-    });
 }
 
 export function getCalcCompletion(
@@ -171,29 +158,12 @@ export function getCalcCompletion(
     }
 
     getRelevantXvrsCalc(refProvider.getAllXvrObjects()).forEach((xvr) => {
-        compItems.push(xvrToCompletionItem(xvr, range));
+        compItems.push(CompletionItemFactory.fromXvr(xvr, range));
     });
 
     const calcs = metaInfoProvider.getCalcs();
     for (const calc of calcs) {
-        compItems.push({
-            label: calc.name,
-            kind: CompletionItemKind.Function,
-            detail: "SepticCalc",
-            data: calc,
-            documentation: {
-                value: formatCalcMarkdown(calc),
-                kind: "markdown",
-            },
-            filterText:
-                calc.name +
-                " " +
-                calc.detailedDescription.replace(
-                    threeLettersOrLessWordsRegex,
-                    ""
-                ),
-            commitCharacters: ["("],
-        });
+        compItems.push(CompletionItemFactory.fromCalc(calc));
     }
     return compItems;
 }
@@ -207,81 +177,27 @@ export function getObjectCompletion(
 ): CompletionItem[] {
     cnfg.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
     refProvider.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
-    const snippets: CompletionItem[] = getRelevantSnippets(offset, refProvider, doc, settings.onlySuggestValidSnippets);
-    const references: CompletionItem[] = [];
+    const objectSnippets: CompletionItem[] = getRelevantObjectSnippets(offset, refProvider, doc, settings.onlySuggestValidSnippets);
     const obj = cnfg.getObjectFromOffset(offset);
     if (!obj) {
-        return snippets;
+        return objectSnippets;
     }
-    const ref = cnfg.getXvrRefFromOffset(offset);
+    const range = findCompletionRange(offset, cnfg, doc)
     if (isIdentifierCompletion(offset, obj)) {
-        const range: Range = ref
-            ? {
-                start: doc.positionAt(ref.location.start),
-                end: doc.positionAt(ref.location.end),
-            }
-            : {
-                start: doc.positionAt(offset),
-                end: doc.positionAt(offset),
-            };
-        return getRelevantXvrsIdentifier(
-            obj,
-            refProvider.getAllXvrObjects()
-        ).map((obj) => xvrToCompletionItem(obj, range));
+        return getIdentifierCompletion(obj, refProvider, range);
     }
-    const currentAttr = getCurrentAttr(offset, obj);
+    const currentAttr = findCurrentAttr(offset, obj);
     if (!currentAttr.attr) {
-        return [...snippets, ...getObjectAttributeCompletion(obj, offset, doc)];
+        return [...objectSnippets, ...getObjectAttributeCompletion(obj, offset, doc)];
     }
-    if (isReferenceAttribute(obj, currentAttr.attr)) {
-        const range: Range = ref
-            ? {
-                start: doc.positionAt(ref.location.start),
-                end: doc.positionAt(ref.location.end),
-            }
-            : {
-                start: doc.positionAt(offset),
-                end: doc.positionAt(offset),
-            };
-
-        references.push(
-            ...getRelevantXvrsAttributes(
-                currentAttr.attr,
-                refProvider.getAllXvrObjects()
-            ).map((obj) => xvrToCompletionItem(obj, range))
-        );
-    }
+    const completions = getAttributeValueCompletion(obj, currentAttr.attr, refProvider, range);
     if (isEndAttribute(offset, currentAttr.attr)) {
+        completions.push(...getObjectAttributeCompletion(obj, offset, doc));
         if (currentAttr.last) {
-            return [
-                ...getObjectAttributeCompletion(obj, offset, doc),
-                ...references,
-                ...snippets,
-            ];
+            completions.push(...objectSnippets);
         }
-        return [
-            ...getObjectAttributeCompletion(obj, offset, doc),
-            ...references,
-        ];
     }
-    return references;
-}
-
-function getCurrentAttr(
-    offset: number,
-    obj: SepticObject
-): { attr: Attribute | undefined; last: boolean } {
-    if (!obj.attributes.length) {
-        return { attr: undefined, last: false };
-    }
-    let index = 1;
-    while (index < obj.attributes.length) {
-        if (obj.attributes[index].start >= offset) {
-            return { attr: obj.attributes[index - 1], last: false };
-        }
-        index += 1;
-    }
-    return { attr: obj.attributes[obj.attributes.length - 1], last: true };
+    return completions;
 }
 
 function getObjectAttributeCompletion(
@@ -296,28 +212,52 @@ function getObjectAttributeCompletion(
         return [];
     }
     const compItems: CompletionItem[] = [];
-    const rangeNewLine = getRangeAttrTextEdit(offset, doc);
+    const rangeNewLine = findRangeAttrTextEdit(offset, doc);
     for (const attr of objDoc.attributes) {
         if (obj.getAttribute(attr.name)) {
             continue;
         }
-        const text = rangeNewLine.addNewLine
-            ? "\n" + getTextAttrTextEdit(attr)
-            : getTextAttrTextEdit(attr);
-        compItems.push({
-            label: attr.name,
-            kind: CompletionItemKind.Property,
-            detail: "SepticObjectAttribute",
-            documentation: {
-                value: formatObjectAttribute(attr),
-                kind: "markdown",
-            },
-            textEdit: TextEdit.replace(rangeNewLine.range, text),
-            insertTextMode: InsertTextMode.asIs,
-            insertTextFormat: InsertTextFormat.Snippet,
-        });
+        compItems.push(CompletionItemFactory.fromAttribute(attr, rangeNewLine));
     }
     return compItems;
+}
+
+function getIdentifierCompletion(obj: SepticObject, refProvider: SepticReferenceProvider, range: Range): CompletionItem[] {
+    return getRelevantXvrsIdentifier(
+        obj,
+        refProvider.getAllXvrObjects()
+    ).map((obj) => CompletionItemFactory.fromXvr(obj, range))
+}
+
+function getAttributeValueCompletion(obj: SepticObject, attr: Attribute, refProvider: SepticReferenceProvider, range: Range): CompletionItem[] {
+    const references = getReferenceCompletions(obj, attr, refProvider, range);
+    const enums = getEnumCompletions(obj, attr);
+    return [...references, ...enums];
+}
+
+function getReferenceCompletions(obj: SepticObject, attr: Attribute, refProvider: SepticReferenceProvider, range: Range): CompletionItem[] {
+    if (!isReferenceAttribute(obj, attr)) {
+        return [];
+    }
+    return getRelevantXvrsAttributes(
+        attr,
+        refProvider.getAllXvrObjects()
+    ).map((obj) => CompletionItemFactory.fromXvr(obj, range))
+}
+
+function getEnumCompletions(obj: SepticObject, attr: Attribute): CompletionItem[] {
+    const objectInfo = SepticMetaInfoProvider.getInstance().getObjectDocumentation(obj.type);
+    if (!objectInfo) {
+        return [];
+    }
+    let attrDoc = objectInfo.attributes.find((a) => a.name === attr.key);
+    if (!attrDoc) {
+        return [];
+    }
+    if (attrDoc.dataType !== "enum") {
+        return [];
+    }
+    return attrDoc.enums.map((value) => CompletionItemFactory.fromEnum(value, attrDoc));
 }
 
 function isIdentifierCompletion(offset: number, obj: SepticObject) {
@@ -368,7 +308,7 @@ function getTextAttrTextEdit(attr: SepticAttributeDocumentation) {
     return attrFormatted;
 }
 
-function getRangeAttrTextEdit(
+function findRangeAttrTextEdit(
     offset: number,
     doc: ITextDocument
 ): { range: Range; addNewLine: boolean } {
@@ -408,28 +348,6 @@ function getExistingCompletion(
     return {
         str: existing.split("").reverse().join(""),
         endIndex: index,
-    };
-}
-
-const priorityMapping: { [key: string]: number } = {
-    "Mvr": 1,
-    "Cvr": 2,
-    "Dvr": 3,
-    "Evr": 4,
-    "Tvr": 5,
-};
-
-function xvrToCompletionItem(obj: SepticObject, range: Range): CompletionItem {    
-    let priority = priorityMapping[obj.type] ?? 6;
-    return {
-        label: obj.identifier!.name,
-        labelDetails: { detail: ` ${obj.type}` },
-        kind: CompletionItemKind.Variable,
-        detail: obj.type,
-        data: obj.identifier!.name,
-        filterText: obj.identifier!.id + obj.identifier!.name,
-        sortText: priority + obj.identifier!.id,
-        textEdit: TextEdit.replace(range, obj.identifier!.name),
     };
 }
 
@@ -479,7 +397,7 @@ function getRelevantXvrsAttributes(
     }
 }
 
-function getRelevantSnippets(offset: number, refProvider: SepticReferenceProvider, doc: ITextDocument, onlySuggestValidSnippets: boolean): CompletionItem[] {
+function getRelevantObjectSnippets(offset: number, refProvider: SepticReferenceProvider, doc: ITextDocument, onlySuggestValidSnippets: boolean): CompletionItem[] {
     const snippets = SepticMetaInfoProvider.getInstance().getSnippets().slice();
     if (!onlySuggestValidSnippets) {
         return snippets;
@@ -517,4 +435,133 @@ function getObjectsSnippets(objectHierarchy: SepticObjectHierarchy, obj: SepticO
     }
 
     return relevantObjects.map((val) => val.toLowerCase());
+}
+
+function findCompletionRange(offset: number, cnfg: SepticCnfg, doc: ITextDocument) {
+    const ref = cnfg.getXvrRefFromOffset(offset);
+    const range: Range = ref
+        ? {
+            start: doc.positionAt(ref.location.start),
+            end: doc.positionAt(ref.location.end),
+        }
+        : {
+            start: doc.positionAt(offset),
+            end: doc.positionAt(offset),
+        };
+    return range;
+}
+
+function findCurrentAttr(
+    offset: number,
+    obj: SepticObject
+): { attr: Attribute | undefined; last: boolean } {
+    if (!obj.attributes.length) {
+        return { attr: undefined, last: false };
+    }
+    let index = 1;
+    while (index < obj.attributes.length) {
+        if (obj.attributes[index].start >= offset) {
+            return { attr: obj.attributes[index - 1], last: false };
+        }
+        index += 1;
+    }
+    return { attr: obj.attributes[obj.attributes.length - 1], last: true };
+}
+
+const XVR_TYPE_PRIORITY: Record<string, number> = {
+    'Mvr': 1,
+    'Cvr': 2,
+    'Dvr': 3,
+    'Evr': 4,
+    'Tvr': 5,
+};
+
+const ENUM_PRIORITY = 1;
+const REFERENCE_PRIORITY = 2;
+const ATTRIBUTE_PRIORITY = 3;
+const CALC_PRIORITY = 4;
+const PUBLIC_PROPERTY_PRIORITY = 5;
+const DEFAULT_PRIORITY = 6;
+
+class CompletionItemFactory {
+
+    static fromXvr(obj: SepticObject, range: Range): CompletionItem {
+        const priority = XVR_TYPE_PRIORITY[obj.type] ?? DEFAULT_PRIORITY;
+        return {
+            label: obj.identifier!.name,
+            kind: CompletionItemKind.Variable,
+            detail: obj.type,
+            documentation: {
+                value: formatObjectInstance(obj),
+                kind: "markdown",
+            },
+            filterText: obj.identifier!.id + obj.identifier!.name,
+            sortText: `${REFERENCE_PRIORITY}${priority}${obj.identifier!.id}`,
+            textEdit: TextEdit.replace(range, obj.identifier!.name),
+            labelDetails: { detail: ` ${obj.type}` },
+        };
+    }
+    static fromCalc(calc: SepticCalcInfo): CompletionItem {
+        return {
+            label: calc.name,
+            kind: CompletionItemKind.Function,
+            detail: "SepticCalc",
+            documentation: {
+                value: formatCalcMarkdown(calc),
+                kind: "markdown",
+            },
+            sortText: `${CALC_PRIORITY}${calc.name}`,
+            filterText:
+                calc.name +
+                " " +
+                calc.detailedDescription.replace(threeLettersOrLessWordsRegex, ""),
+            commitCharacters: ["("],
+            labelDetails: { detail: ` Calc` },
+        };
+    }
+    static fromPublicProperty(property: string, objType: string): CompletionItem {
+        return {
+            label: property,
+            kind: CompletionItemKind.Property,
+            detail: `${objType}.${property}`,
+            sortText: `${PUBLIC_PROPERTY_PRIORITY}${property}`,
+            labelDetails: { detail: ` ${objType}.${property}` }
+        };
+    }
+    static fromAttribute(
+        attr: SepticAttributeDocumentation,
+        rangeNewLine: { range: Range; addNewLine: boolean }
+    ): CompletionItem {
+        const text = rangeNewLine.addNewLine
+            ? "\n" + getTextAttrTextEdit(attr)
+            : getTextAttrTextEdit(attr);
+
+        return {
+            label: attr.name,
+            kind: CompletionItemKind.Property,
+            detail: "Object Attribute",
+            documentation: {
+                value: formatObjectAttribute(attr, true),
+                kind: "markdown",
+            },
+            sortText: `${ATTRIBUTE_PRIORITY}${attr.name}`,
+            textEdit: TextEdit.replace(rangeNewLine.range, text),
+            insertTextMode: InsertTextMode.asIs,
+            insertTextFormat: InsertTextFormat.Snippet,
+            labelDetails: { detail: ` Attribute` }
+        };
+    }
+    static fromEnum(value: string, attrDoc: SepticAttributeDocumentation): CompletionItem {
+        return {
+            label: value,
+            kind: CompletionItemKind.EnumMember,
+            detail: `Enum Value ${attrDoc.name}`,
+            documentation: {
+                value: `${attrDoc.description}`,
+                kind: "markdown",
+            },
+            sortText: `${ENUM_PRIORITY}${value}`,
+            labelDetails: { detail: ` Enum` }
+        };
+    }
 }
