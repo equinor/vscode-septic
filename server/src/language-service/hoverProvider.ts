@@ -20,6 +20,7 @@ import {
     formatCalcMarkdown,
     formatObjectAttribute,
     formatObjectDocumentationMarkdown,
+    formatObjectInstance,
     parseAlg,
 } from "../septic";
 
@@ -86,18 +87,7 @@ export function getReferenceHover(
     });
 
     if (xvr.length) {
-        const text = getMarkdownXvr(xvr[0].obj!);
-        return {
-            contents: text,
-            range: {
-                start: doc.positionAt(ref.location.start),
-                end: doc.positionAt(ref.location.end),
-            },
-        };
-    }
-
-    if (sopcXvr.length) {
-        const text = getMarkdownXvr(sopcXvr[0].obj!);
+        const text = formatObjectInstance(xvr[0].obj!);
         return {
             contents: text,
             range: {
@@ -225,17 +215,4 @@ function getCalcDocumentation(name: string): MarkupContent | undefined {
         value: formatCalcMarkdown(calcInfo),
         kind: MarkupKind.Markdown,
     };
-}
-
-function getMarkdownXvr(obj: SepticObject): MarkupContent {
-    const text1 = obj.getAttribute("Text1")?.getValue() ?? "";
-    const text2 = obj.getAttribute("Text2")?.getValue() ?? "";
-    let text = `${obj.type}: ${obj.identifier?.name}`;
-    if (text1 !== "") {
-        text += `\n\nText1= ${text1}`;
-    }
-    if (text2 !== "") {
-        text += `\n\nText2= ${text2}`;
-    }
-    return { value: text, kind: "markdown" };
 }

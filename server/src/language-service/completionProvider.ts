@@ -516,6 +516,7 @@ class CompletionItemFactory {
                 " " +
                 calc.detailedDescription.replace(threeLettersOrLessWordsRegex, ""),
             commitCharacters: ["("],
+            labelDetails: { detail: ` Calc` },
         };
     }
     static fromPublicProperty(property: string, objType: string): CompletionItem {
@@ -547,6 +548,7 @@ class CompletionItemFactory {
             textEdit: TextEdit.replace(rangeNewLine.range, text),
             insertTextMode: InsertTextMode.asIs,
             insertTextFormat: InsertTextFormat.Snippet,
+            labelDetails: { detail: ` Attribute` }
         };
     }
     static fromEnum(value: string, attrDoc: SepticAttributeDocumentation): CompletionItem {
@@ -559,6 +561,7 @@ class CompletionItemFactory {
                 kind: "markdown",
             },
             sortText: `${ENUM_PRIORITY}${value}`,
+            labelDetails: { detail: ` Enum` }
         };
     }
 }
