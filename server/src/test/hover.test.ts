@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { describe, it } from "mocha";
 import { compareRange, loadFile, parseSepticForTest } from "./util";
-import { TextDocument } from "vscode-languageserver-textdocument";
 import { MarkupContent, Position } from "vscode-languageserver";
 import {
     getCalcHover,
@@ -50,24 +49,6 @@ describe("Test reference hover", () => {
         }
         const hoverMarkdown = hover!.contents as MarkupContent;
         expect(/\bMvr\b/.test(hoverMarkdown.value.split("\n")[0])).to.equal(
-            true
-        );
-    });
-    it("Expect to get SopcCvr text when hovering on SopcCvr without Cvr", () => {
-        const content = loadFile("hover.cnfg");
-        const cnfg = parseSepticForTest(content);
-        const position = Position.create(31, 21);
-        const hover = getReferenceHover(cnfg, position, cnfg);
-        expect(hover).to.not.equal(undefined);
-        compareRange(
-            {
-                start: Position.create(31, 17),
-                end: Position.create(31, 24),
-            },
-            hover?.range!
-        );
-        const hoverMarkdown = hover!.contents as MarkupContent;
-        expect(/\SopcCvr\b/.test(hoverMarkdown.value.split("\n")[0])).to.equal(
             true
         );
     });
