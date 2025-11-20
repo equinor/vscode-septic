@@ -472,12 +472,13 @@ const XVR_TYPE_PRIORITY: Record<string, number> = {
     'Evr': 4,
     'Tvr': 5,
 };
-const DEFAULT_PRIORITY = 6;
 
-const CALC_PRIORITY = 1;
 const ENUM_PRIORITY = 1;
 const REFERENCE_PRIORITY = 2;
-const PUBLIC_PROPERTY_PRIORITY = 6;
+const ATTRIBUTE_PRIORITY = 3;
+const CALC_PRIORITY = 4;
+const PUBLIC_PROPERTY_PRIORITY = 5;
+const DEFAULT_PRIORITY = 6;
 
 class CompletionItemFactory {
 
@@ -539,7 +540,7 @@ class CompletionItemFactory {
                 value: formatObjectAttribute(attr, true),
                 kind: "markdown",
             },
-            sortText: `${REFERENCE_PRIORITY}${attr.name}`,
+            sortText: `${ATTRIBUTE_PRIORITY}${attr.name}`,
             textEdit: TextEdit.replace(rangeNewLine.range, text),
             insertTextMode: InsertTextMode.asIs,
             insertTextFormat: InsertTextFormat.Snippet,
