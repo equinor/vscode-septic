@@ -16,7 +16,7 @@ export default defineConfig([
     // to the directory this config file is in
     extensionDevelopmentPath: __dirname,
     // Optional: sample workspace to open
-    workspaceFolder: `${__dirname}/client/src/test/fixtures`,
+    workspaceFolder: `${__dirname}/client/out/test/fixtures`,
     // Optional: install additional extensions to the installation prior to testing. By
     //default, any `extensionDependencies` from the package.json are automatically installed.
     // Optional: additional mocha options to use:
