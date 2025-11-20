@@ -4,7 +4,7 @@ import {
     SepticAttributeDocumentation,
     SepticCalcInfo,
     SepticCalcParameterInfo,
-} from "./septicMetaInfo";
+} from "../metaInfoProvider";
 
 export function formatObjectDocumentationMarkdown(
     objDoc: ISepticObjectDocumentation

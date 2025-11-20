@@ -8,9 +8,9 @@ import {
     ParameterInformation,
     SignatureHelp,
     SignatureHelpParams,
+    Position
 } from "vscode-languageserver";
-import { SepticConfigProvider } from "./septicConfigProvider";
-import { ITextDocument } from "./types/textDocument";
+import { SepticConfigProvider } from "../configProvider";
 import {
     AlgExpr,
     AlgCalc,
@@ -34,34 +34,33 @@ export class SignatureHelpProvider {
     /* istanbul ignore next */
     public async provideSignatureHelp(
         param: SignatureHelpParams,
-        doc: ITextDocument
     ): Promise<SignatureHelp> {
-        const cnfg = await this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(param.textDocument.uri);
         if (!cnfg) {
             return { signatures: [] };
         }
-        const offset = doc.offsetAt(param.position);
-        return getSignatureHelp(cnfg, offset);
+        return getSignatureHelp(cnfg, param.position);
     }
 }
 
 export function getSignatureHelp(
     cnfg: SepticCnfg,
-    offset: number
+    position: Position
 ): SignatureHelp {
-    const alg = cnfg.getAlgFromOffset(offset);
-    if (!alg) {
+    const offset = cnfg.offsetAt(position);
+    const algValue = cnfg.findAlgValueFromLocation(offset);
+    if (!algValue) {
         return { signatures: [] };
     }
     let parsedAlg: AlgExpr;
     try {
-        parsedAlg = parseAlg(alg.getValue()!);
+        parsedAlg = parseAlg(algValue.getValue());
     } catch {
         return { signatures: [] };
     }
     const algVisitor = new AlgVisitor();
     algVisitor.visit(parsedAlg);
-    const offsetAlg = offset - (alg.getAttrValue()!.start + 1);
+    const offsetAlg = offset - (algValue.start + 1);
     let currentCalc: AlgCalc | undefined = undefined;
     for (const calc of algVisitor.calcs) {
         const start = calc.start + calc.identifier.length + 1;

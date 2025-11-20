@@ -1,4 +1,3 @@
- 
   SmpcAppl:      CVMVtest
          Text1=  ""
          Text2=  ""
@@ -6,12 +5,8 @@
          Nstep=  1
        PlotMax=  25
          Nhorz=  80
-        Nstart=  0
-      MasterOn=  ON
        DesMode=  ACTIVE
        FailMax=  0
-       PriceOn=  ON
-    PriceScale=  1
        IterOpt=  OFF
    IterNewSens=  OFF
      IterQpMax=  0
@@ -37,7 +32,6 @@
      EachParam=  OFF
    LinErrorLim=  1000
      ColdStart=  OFF
-    SimOptimal=  OFF
      PrintSens=  0
      SensLimSS=  1e-006
     SensLimDyn=  1e-006

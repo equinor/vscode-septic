@@ -13,8 +13,8 @@ import {
     Range,
     WorkspaceEdit,
 } from "vscode-languageserver";
-import { SepticConfigProvider } from "./septicConfigProvider";
-import { ITextDocument } from "./types/textDocument";
+import { SepticConfigProvider } from "../configProvider";
+import { ITextDocument } from "../types/textDocument";
 import {
     SepticCnfg,
     SepticComment,
@@ -47,12 +47,6 @@ export class CodeActionProvider {
         params: CodeActionParams
     ): Promise<CodeAction[]> {
         const codeActions: CodeAction[] = [];
-        const doc = await this.documentProvider.getDocument(
-            params.textDocument.uri
-        );
-        if (!doc) {
-            return [];
-        }
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
@@ -60,11 +54,11 @@ export class CodeActionProvider {
         const settings = await this.settingsManager.getSettings();
         const insertPos = settings?.codeActions.insertEvrPosition ?? "bottom";
         const insertEvrActions = await this.createCodeActionsInsertEvr(
-            getCodeActionInsertEvr(params, cnfg, doc, insertPos)
+            getCodeActionInsertEvr(params, cnfg, insertPos)
         );
         codeActions.push(...insertEvrActions);
-        codeActions.push(...getCodeActionIgnoreDiagnostics(params, cnfg, doc));
-        codeActions.push(...getCodeActionGenerateCalc(params, cnfg, doc));
+        codeActions.push(...getCodeActionIgnoreDiagnostics(params, cnfg));
+        codeActions.push(...getCodeActionGenerateCalc(params, cnfg));
         return codeActions;
     }
 
@@ -94,7 +88,6 @@ export interface CodeActionInsert {
 export function getCodeActionInsertEvr(
     params: CodeActionParams,
     cnfg: SepticCnfg,
-    doc: ITextDocument,
     insertEvrPos: "top" | "bottom"
 ): CodeActionInsert[] {
     const diag = params.context.diagnostics.find(
@@ -103,14 +96,14 @@ export function getCodeActionInsertEvr(
     if (!diag) {
         return [];
     }
-    const currentObject = cnfg.getObjectFromOffset(
-        doc.offsetAt(params.range.start)
+    const currentObject = cnfg.findObjectFromLocation(
+        params.range.start
     );
     if (!currentObject?.isType("CalcPvr")) {
         return [];
     }
-    const referencedVariable = cnfg.getXvrRefFromOffset(
-        doc.offsetAt(params.range.start)
+    const referencedVariable = cnfg.findReferenceFromLocation(
+        params.range.start
     );
     if (!referencedVariable) {
         return [];
@@ -163,19 +156,18 @@ function getInsertOffsetAndUri(
 
 export function getCodeActionIgnoreDiagnostics(
     params: CodeActionParams,
-    cnfg: SepticCnfg,
-    doc: ITextDocument
+    cnfg: SepticCnfg
 ): CodeAction[] {
     const codeActions: CodeAction[] = [];
     if (
-        !isOnlyIgnoreCommentsOnSameLine(cnfg.comments, params.range.start, doc)
+        !isOnlyIgnoreCommentsOnSameLine(cnfg.comments, params.range.start, cnfg)
     ) {
         return codeActions;
     }
     const comment = getIgnoreCommentSameLine(
         params.range.start,
         cnfg.comments,
-        doc
+        cnfg
     );
     const codes = [
         ...new Set(params.context.diagnostics.filter((diag) => diag.code).map((diag) => diag.code)),
@@ -190,7 +182,7 @@ export function getCodeActionIgnoreDiagnostics(
                     code!.toString(),
                     comment,
                     applicableDiagnostics,
-                    doc
+                    cnfg
                 )
             );
         } else {
@@ -199,7 +191,7 @@ export function getCodeActionIgnoreDiagnostics(
                     code!.toString(),
                     params.range.start,
                     applicableDiagnostics,
-                    doc
+                    cnfg
                 )
             );
         }
@@ -207,25 +199,25 @@ export function getCodeActionIgnoreDiagnostics(
     return codeActions;
 }
 
-export function getCodeActionGenerateCalc(params: CodeActionParams, cnfg: SepticCnfg, doc: ITextDocument): CodeAction[] {
+export function getCodeActionGenerateCalc(params: CodeActionParams, cnfg: SepticCnfg): CodeAction[] {
     const codeActions = []
-    const start = doc.offsetAt(params.range.start);
-    const end = doc.offsetAt(params.range.end);
+    const start = cnfg.offsetAt(params.range.start);
+    const end = cnfg.offsetAt(params.range.end);
     const objects = cnfg.getObjectsInRange(start, end).filter(obj => obj.isType("CalcPvr"));
     for (const obj of objects) {
         const algAttr = obj.getAttribute("Alg");
         const textAttr = obj.getAttribute("Text1");
-        if (algAttr?.getValue() === undefined || textAttr?.getValue() === undefined) {
+        if (algAttr?.getFirstValue() === undefined || textAttr?.getFirstValue() === undefined) {
             continue;
         }
-        if (textAttr.getValue() === "") {
+        if (textAttr.getFirstValue() === "") {
             continue;
         }
-        const start = doc.positionAt(algAttr.getAttrValue()!.start + 1);
-        const end = doc.positionAt(algAttr.getAttrValue()!.end - 1);
+        const start = cnfg.positionAt(algAttr.getFirstAttributeValueObject()!.start + 1);
+        const end = cnfg.positionAt(algAttr.getFirstAttributeValueObject()!.end - 1);
         const codeAction = CodeAction.create(`Generate Calc: ${obj.identifier?.name}`);
         codeAction.kind = CodeActionKind.QuickFix;
-        codeAction.command = Command.create(`Generate calc`, "septic.generateCalc", textAttr.getValue(), start, end);
+        codeAction.command = Command.create(`Generate calc`, "septic.generateCalc", textAttr.getFirstValue(), start, end);
         codeActions.push(codeAction);
 
     }

@@ -6,8 +6,8 @@
 
 import * as lsp from "vscode-languageserver";
 import { FoldingRangeProvider } from "./foldingRangeProvider";
-import { ITextDocument } from "./types/textDocument";
-import { SepticConfigProvider } from "./septicConfigProvider";
+import { ITextDocument } from "../types/textDocument";
+import { SepticConfigProvider } from "../configProvider";
 import { DiagnosticProvider } from "./diagnosticsProvider";
 import { DocumentSymbolProvider } from "./documentSymbolProvider";
 import { SettingsManager } from "../settings";
@@ -18,7 +18,7 @@ import {
     ReferenceProvider,
 } from "./referenceProvider";
 import { DocumentProvider } from "../documentProvider";
-import { SepticCnfg, SepticReferenceProvider } from "../septic";
+import { SepticCnfg, SepticContext } from "../septic";
 import { RenameProvider } from "./renameProvider";
 import { HoverProvider } from "./hoverProvider";
 import { FormattingProvider } from "./formatProvider";
@@ -28,76 +28,66 @@ import { CycleReportProvider } from "./cycleReportProvider";
 import { generateOpcReport } from "./opctagListProvider";
 import { CnfgComparisionProvider } from "./cnfgComparisonProvider";
 
-export * from "./types/textDocument";
-
 export interface ILanguageService {
     cnfgProvider: SepticConfigProvider;
     provideFoldingRanges(
-        doc: ITextDocument,
+        params: lsp.FoldingRangeParams
     ): Promise<lsp.FoldingRange[]>;
 
     provideDiagnostics(
         uri: string,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<lsp.Diagnostic[]>;
 
     provideDocumentSymbols(
-        doc: ITextDocument,
+        params: lsp.DocumentSymbolParams,
     ): Promise<lsp.DocumentSymbol[]>;
 
     provideCompletion(
         pos: lsp.CompletionParams,
-        doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<lsp.CompletionItem[]>;
 
     provideDefinition(
         params: lsp.DefinitionParams,
-        doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<LocationLinkOffset[]>;
 
     provideReferences(
         params: lsp.ReferenceParams,
-        doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<LocationOffset[]>;
 
     provideDeclaration(
         params: lsp.DeclarationParams,
-        doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<LocationLinkOffset[]>;
 
     provideRename(
         params: lsp.RenameParams,
-        doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<lsp.WorkspaceEdit | undefined>;
 
     providePrepareRename(
         params: lsp.PrepareRenameParams,
-        doc: ITextDocument
     ): Promise<lsp.Range | null>;
 
     provideHover(
         params: lsp.HoverParams,
-        doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<lsp.Hover | undefined>;
 
-    provideFormatting(doc: ITextDocument): Promise<lsp.TextEdit[]>;
+    provideFormatting(params: lsp.DocumentFormattingParams): Promise<lsp.TextEdit[]>;
 
     provideSignatureHelp(
-        param: lsp.SignatureHelpParams,
-        doc: ITextDocument
+        param: lsp.SignatureHelpParams
     ): Promise<lsp.SignatureHelp>;
 
     provideCodeAction(param: lsp.CodeActionParams): Promise<lsp.CodeAction[]>;
 
     provideCycleReport(
         name: string,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<string>;
 
     provideCnfgComparison(
@@ -106,7 +96,7 @@ export interface ILanguageService {
         settingsFile: string
     ): Promise<string>;
 
-    provideOpcTagList(refProvider: SepticReferenceProvider): string;
+    provideOpcTagList(contextProvider: SepticContext): string;
 }
 
 export function createLanguageService(
@@ -117,7 +107,6 @@ export function createLanguageService(
     const foldingRangeProvider = new FoldingRangeProvider(cnfgProvider);
     const diagnosticProvider = new DiagnosticProvider(
         cnfgProvider,
-        documentProvider,
         settingsManager
     );
 

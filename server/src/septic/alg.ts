@@ -5,7 +5,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { IToken, Parser, ParserError } from "./parser";
+import { IToken, Parser, ParserError } from "../util/parser";
 
 export enum AlgTokenType {
     leftParen,

@@ -1,13 +1,12 @@
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { parseSepticSync } from "../septic";
-import { compareRange, loadFile } from "./util";
+import { compareRange, loadFile, parseSepticForTest } from "./util";
 import { Position, Range, TextDocumentEdit } from "vscode-languageserver";
 import { expect } from "chai";
 import {
     GetDocument,
     getRenameEdits,
 } from "../language-service/renameProvider";
-import { ITextDocument } from "../language-service";
+import { ITextDocument } from "../types/textDocument";
 
 const getDocumentFunction = (doc: ITextDocument): GetDocument => {
     return (): Promise<ITextDocument | undefined> => {
@@ -18,13 +17,13 @@ const getDocumentFunction = (doc: ITextDocument): GetDocument => {
 describe("Test renaming", () => {
     it("Expect to rename 5 refs when renaming Test1", async () => {
         const content = loadFile("rename.cnfg");
-        const cnfg = parseSepticSync(content);
+        const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
-        const offset = doc.offsetAt(Position.create(0, 21));
+        const position = Position.create(0, 21);
         const renameEdits = await getRenameEdits(
             cnfg,
-            offset,
+            position,
             "New",
             cnfg,
             getDocument
@@ -43,13 +42,13 @@ describe("Test renaming", () => {
     });
     it("Expect to rename 5 refs when renaming Test1 from inside alg", async () => {
         const content = loadFile("rename.cnfg");
-        const cnfg = parseSepticSync(content);
+        const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
-        const offset = doc.offsetAt(Position.create(12, 21));
+        const position = Position.create(12, 21);
         const renameEdits = await getRenameEdits(
             cnfg,
-            offset,
+            position,
             "New",
             cnfg,
             getDocument
@@ -68,13 +67,13 @@ describe("Test renaming", () => {
     });
     it("Expect to rename 4 refs when renaming Test2", async () => {
         const content = loadFile("rename.cnfg");
-        const cnfg = parseSepticSync(content);
+        const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
-        const offset = doc.offsetAt(Position.create(6, 21));
+        const position = Position.create(6, 21);
         const renameEdits = await getRenameEdits(
             cnfg,
-            offset,
+            position,
             "New",
             cnfg,
             getDocument
@@ -92,13 +91,13 @@ describe("Test renaming", () => {
     });
     it("Expect to rename 4 refs when renaming Test2 inside Xvr list", async () => {
         const content = loadFile("rename.cnfg");
-        const cnfg = parseSepticSync(content);
+        const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
-        const offset = doc.offsetAt(Position.create(23, 21));
+        const position = Position.create(23, 21);
         const renameEdits = await getRenameEdits(
             cnfg,
-            offset,
+            position,
             "New",
             cnfg,
             getDocument
@@ -116,13 +115,13 @@ describe("Test renaming", () => {
     });
     it("Expect to no renames when trying to rename outside of ref", async () => {
         const content = loadFile("rename.cnfg");
-        const cnfg = parseSepticSync(content);
+        const cnfg = parseSepticForTest(content);
         const doc = TextDocument.create("test.cnfg", "", 0, content);
         const getDocument: GetDocument = getDocumentFunction(doc);
-        const offset = doc.offsetAt(Position.create(7, 21));
+        const position = Position.create(7, 21);
         const renameEdits = await getRenameEdits(
             cnfg,
-            offset,
+            position,
             "New",
             cnfg,
             getDocument
