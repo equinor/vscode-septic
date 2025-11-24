@@ -1,5 +1,5 @@
 import { SepticObject } from "./elements";
-import { SepticObjectHierarchy } from "../metaInfoProvider";
+import { SepticMetaInfoProvider, SepticObjectHierarchy } from "../metaInfoProvider";
 
 interface ObjectNode {
     obj: SepticObject;
@@ -9,8 +9,8 @@ interface ObjectNode {
 
 export function updateParentObjects(
     objects: SepticObject[],
-    objectHierarchy: SepticObjectHierarchy
 ) {
+    const objectHierarchy = SepticMetaInfoProvider.getInstance().getObjectHierarchy();
     objects.forEach((obj) => {
         obj.resetChildren();
         obj.resetParent();

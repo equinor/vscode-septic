@@ -34,12 +34,8 @@ export class CnfgComparisionProvider {
         if (!settings) {
             return "error";
         }
-        prevVersion.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
-        currentVersion.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        prevVersion.updateObjectParents();
+        currentVersion.updateObjectParents();
         const rootObjectDiff: ObjectDiff = compareObjects(
             prevVersion.objects[0],
             currentVersion.objects[0],

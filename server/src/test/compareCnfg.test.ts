@@ -200,14 +200,10 @@ ValidationLimit=  -1
          Color=  BLACK 
 		`;
         const prevCnfg = parseSepticForTest(prevText);
-        prevCnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        prevCnfg.updateObjectParents();
         const prevObject = prevCnfg.objects[0];
         const currentCnfg = parseSepticForTest(currentText);
-        currentCnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        currentCnfg.updateObjectParents();
         const currentObject = currentCnfg.objects[0];
         const diff = compareObjects(prevObject, currentObject, settings);
         const noDiff = isNoDiff(diff);
@@ -271,14 +267,10 @@ ValidationLimit=  -1
          Color=  BLACK 
 		`;
         const prevCnfg = parseSepticForTest(prevText);
-        prevCnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        prevCnfg.updateObjectParents();
         const prevObject = prevCnfg.objects[0];
         const currentCnfg = parseSepticForTest(currentText);
-        currentCnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        currentCnfg.updateObjectParents();
         const currentObject = currentCnfg.objects[0];
         const diff = compareObjects(prevObject, currentObject, settings);
         expect(diff.updatedObjects.length).to.equal(1);
@@ -336,14 +328,10 @@ ValidationLimit=  -1
          Color=  BLACK 
 		`;
         const prevCnfg = parseSepticForTest(prevText);
-        prevCnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        prevCnfg.updateObjectParents();
         const prevObject = prevCnfg.objects[0];
         const currentCnfg = parseSepticForTest(currentText);
-        currentCnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        currentCnfg.updateObjectParents();
         const currentObject = currentCnfg.objects[0];
         const diff = compareObjects(prevObject, currentObject, settings);
         expect(diff.addedObjects.length).to.equal(1);
@@ -401,14 +389,10 @@ ValidationLimit=  -1
          Color=  BLACK 
 		`;
         const prevCnfg = parseSepticForTest(prevText);
-        prevCnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        prevCnfg.updateObjectParents();
         const prevObject = prevCnfg.objects[0];
         const currentCnfg = parseSepticForTest(currentText);
-        currentCnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        currentCnfg.updateObjectParents();
         const currentObject = currentCnfg.objects[0];
         const diff = compareObjects(prevObject, currentObject, settings);
         expect(diff.removedObjects.length).to.equal(1);

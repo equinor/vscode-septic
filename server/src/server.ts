@@ -76,9 +76,7 @@ let hasWorkspaceFolderCapability = false;
 async function publishDiagnosticsScgContext(context: ScgContext): Promise<void> {
     await context.load();
     const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
-    await context.updateObjectParents(
-        SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-    );
+    await context.updateObjectParents();
     const diagnosticsPromises = context.files.map(async (uri) => {
         const codes = getIgnoredCodes(uri, ignorePatterns);
         if (codes !== undefined && codes.length == 0) {
@@ -102,9 +100,7 @@ async function publishDiagnosticsCnfg(cnfg: SepticCnfg): Promise<void> {
         connection.sendDiagnostics({ uri: cnfg.uri, diagnostics: [] });
         return;
     }
-    await cnfg.updateObjectParents(
-        SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-    );
+    await cnfg.updateObjectParents();
     let diagnostics = await langService.provideDiagnostics(cnfg.uri, cnfg);
     if (codes) {
         diagnostics = diagnostics.filter((diag) => diag.code && !codes.includes(diag.code as string));
@@ -527,9 +523,7 @@ connection.onCodeAction(async (params) => {
     if (!context) {
         return undefined;
     }
-    context.updateObjectParents(
-        SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-    );
+    context.updateObjectParents();
     const codeActions = await langService.provideCodeAction(params);
     return codeActions;
 });

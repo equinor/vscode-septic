@@ -36,9 +36,7 @@ describe("Test codeaction for inserting evr", () => {
         };
         const content = loadFile("codeAction.cnfg");
         const cnfg = parseSepticForTest(content);
-        await cnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        await cnfg.updateObjectParents();
         const codeActions = getCodeActionInsertEvr(params, cnfg, "bottom");
         expect(codeActions.length).to.equal(1);
         const action = codeActions[0];
@@ -66,9 +64,7 @@ describe("Test codeaction for inserting evr", () => {
         };
         const content = loadFile("codeAction.cnfg");
         const cnfg = parseSepticForTest(content);
-        cnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        cnfg.updateObjectParents();
         const codeActions = getCodeActionInsertEvr(params, cnfg, "top");
         expect(codeActions.length).to.equal(1);
         const action = codeActions[0];
@@ -96,9 +92,7 @@ describe("Test codeaction for inserting evr", () => {
         };
         const content = loadFile("codeAction.cnfg");
         const cnfg = parseSepticForTest(content);
-        cnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        cnfg.updateObjectParents();
         const codeActions = getCodeActionInsertEvr(params, cnfg, "bottom");
         expect(codeActions.length).to.equal(1);
         const action = codeActions[0];
@@ -119,9 +113,7 @@ describe("Test codeaction for inserting evr", () => {
         };
         const content = loadFile("codeAction.cnfg");
         const cnfg = parseSepticForTest(content);
-        cnfg.updateObjectParents(
-            SepticMetaInfoProvider.getInstance().getObjectHierarchy()
-        );
+        cnfg.updateObjectParents();
         const doc = TextDocument.create("", "", 0, content);
         const codeActions = getCodeActionInsertEvr(params, cnfg, "bottom");
         expect(codeActions.length).to.equal(0);

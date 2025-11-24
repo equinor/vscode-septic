@@ -221,9 +221,8 @@ export class SepticCnfg implements SepticContext, ITextDocument {
     }
 
     public updateObjectParents(
-        hierarchy: SepticObjectHierarchy
     ): Promise<void> {
-        updateParentObjects(this.objects, hierarchy);
+        updateParentObjects(this.objects);
         return Promise.resolve();
     }
 

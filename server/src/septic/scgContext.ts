@@ -13,7 +13,7 @@ import { SepticContext } from './context';
 import { SepticObject } from "./elements";
 import { SepticConfigProvider } from "../configProvider";
 import { SepticCnfg } from "./cnfg";
-import { SepticObjectHierarchy } from "../metaInfoProvider";
+import { SepticMetaInfoProvider } from "../metaInfoProvider";
 import { updateParentObjects } from "./hierarchy";
 
 export interface ScgConfig {
@@ -214,7 +214,6 @@ export class ScgContext implements SepticContext {
     }
 
     public async updateObjectParents(
-        hierarchy: SepticObjectHierarchy
     ): Promise<void> {
         await this.load();
         const objects: SepticObject[] = [];
@@ -225,6 +224,6 @@ export class ScgContext implements SepticContext {
             }
             objects.push(...cnfg.objects);
         }
-        updateParentObjects(objects, hierarchy);
+        updateParentObjects(objects);
     }
 }

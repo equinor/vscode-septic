@@ -200,8 +200,8 @@ export function getObjectCompletion(
     contextProvider: SepticContext,
     settings: CompletionSettings = { onlySuggestValidSnippets: false }
 ): CompletionItem[] {
-    cnfg.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
-    contextProvider.updateObjectParents(SepticMetaInfoProvider.getInstance().getObjectHierarchy());
+    cnfg.updateObjectParents();
+    contextProvider.updateObjectParents();
     const snippets: CompletionItem[] = getRelevantSnippets(position, contextProvider, cnfg.uri, settings.onlySuggestValidSnippets);
     const references: CompletionItem[] = [];
     const obj = cnfg.findObjectFromLocation(position);

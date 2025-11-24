@@ -1368,7 +1368,6 @@ describe("Test validation of object references", () => {
 });
 
 describe("Test validation of object structure", () => {
-    const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     it("Expect no diagnostics for correct structure", () => {
         const text = `
             CalcModl: TestModl
@@ -1377,7 +1376,7 @@ describe("Test validation of object structure", () => {
         "       
 		`;
         const cnfg = parseSepticForTest(text);
-        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        cnfg.updateObjectParents();
         const diag = validateObjectParent(cnfg.objects[1], cnfg.doc);
         expect(diag.length).to.equal(0);
     });
@@ -1390,7 +1389,7 @@ describe("Test validation of object structure", () => {
         "       
 		`;
         const cnfg = parseSepticForTest(text);
-        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        cnfg.updateObjectParents();
         const diag = validateObjectParent(cnfg.objects[0], cnfg.doc);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.missingParentObject);
@@ -1404,7 +1403,7 @@ describe("Test validation of object structure", () => {
         "       
 		`;
         const cnfg = parseSepticForTest(text);
-        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        cnfg.updateObjectParents();
         const diag = validateObjectParent(cnfg.objects[1], cnfg.doc);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.missingParentObject);
@@ -1420,7 +1419,7 @@ describe("Test validation of object structure", () => {
         "       
 		`;
         const cnfg = parseSepticForTest(text);
-        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        cnfg.updateObjectParents();
         const diag = validateObjectParent(cnfg.objects[2], cnfg.doc);
         expect(diag.length).to.equal(1);
         expect(diag[0].code).to.equal(DiagnosticCode.invalidParentObject);
@@ -1436,7 +1435,7 @@ describe("Test validation of object structure", () => {
         "       
 		`;
         const cnfg = parseSepticForTest(text);
-        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        cnfg.updateObjectParents();
         const diag = validateObjectParent(cnfg.objects[2], cnfg.doc);
         expect(diag.length).to.equal(0);
     });
@@ -1453,7 +1452,7 @@ describe("Test validation of object structure", () => {
         "       
 		`;
         const cnfg = parseSepticForTest(text);
-        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        cnfg.updateObjectParents();
         const diag = validateObjectParent(cnfg.objects[3], cnfg.doc);
         expect(diag.length).to.equal(0);
     });
@@ -1464,7 +1463,7 @@ describe("Test validation of object structure", () => {
         "       
 		`;
         const cnfg = parseSepticForTest(text);
-        cnfg.updateObjectParents(metaInfoProvider.getObjectHierarchy());
+        cnfg.updateObjectParents();
         const diag = validateObjectParent(cnfg.objects[0], cnfg.doc);
         expect(diag.length).to.equal(0);
     });

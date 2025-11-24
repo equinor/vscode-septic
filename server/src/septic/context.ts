@@ -10,9 +10,9 @@ import { Position } from 'vscode-languageserver';
 export interface SepticContext {
 	load(): Promise<void>;
 	getReferences(name: string): SepticReference[] | undefined;
-	getObjectsByType(...types: string[]): SepticObject[];
 	getAllXvrObjects(): SepticObject[];
 	getObjectsByIdentifier(identifier: string): SepticObject[];
+	getObjectsByType(...types: string[]): SepticObject[];
 	getObjectByIdentifierAndType(
 		identifier: string,
 		type: string
@@ -22,6 +22,6 @@ export interface SepticContext {
 		name: string,
 		validationFunction: RefValidationFunction
 	): boolean;
-	updateObjectParents(hierarchy: SepticObjectHierarchy): Promise<void>;
+	updateObjectParents(): Promise<void>;
 }
 
