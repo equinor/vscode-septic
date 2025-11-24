@@ -20,4 +20,4 @@
   CalcPvr:       EvrTest
          Text1=  ""
          Text2=  ""
-           Alg=  "Deadband{{Test}} + 1"
+           Alg=  "Deadband{{Test}} + 1 + intpoltype1(1,1,0)"

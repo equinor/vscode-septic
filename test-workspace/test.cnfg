@@ -149,7 +149,7 @@ ValidationLimit=  -1
   CalcPvr:       TestEvr
          Text1=  ""
          Text2=  ""
-           Alg=  "CalcEvr + 1"
+           Alg=  "CalcEvr + 1 + abs(-1)"
 
   MPCAppl:       Test
          Text1=  ""
