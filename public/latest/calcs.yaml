@@ -1182,6 +1182,14 @@
   quality: GOOD
   retr: month, [1-12]
   signature: getMonth()
+- detailedDescription: "Gets pAppl->OPCReadTime, time in sec for last OPC read. Identical\
+    \ to green curve in System info plot\r\n  Impl-detail, gets previus sample, as\
+    \ current value for write and dT in not yet calulated, keep all 3 in sync"
+  name: getOPCreadtime
+  parameters: []
+  quality: GOOD
+  retr: pAppl->OPCReadTime
+  signature: getOPCreadtime()
 - detailedDescription: "Gets pAppl->opcWriteTime, time in sec for last OPC write.\
     \ Identical to blue curve in System info plot\r\n  Impl-detail, gets previus sample,\
     \ as current value in not yet calulated"
@@ -2523,6 +2531,24 @@
   quality: GOOD if input GOOD
   retr: Boolean
   signature: pulseon(condition, samples)
+- detailedDescription: Zeros model effect of old MV and DV changes.
+  name: resetopenloop
+  parameters:
+  - arity: '1'
+    datatype:
+    - cvr
+    description: Cvr
+    direction: in
+    name: cvr
+  - arity: '1'
+    datatype:
+    - value
+    description: Flag for allowing update (1)
+    direction: in
+    name: apply
+  quality: GOOD if valid model and cv and apply is 0 or 1, else BAD
+  retr: 1 if valid Cvr and apply is 1, else 0
+  signature: resetopenloop(cvr, apply)
 - detailedDescription: Computes the rounded value
   name: round
   parameters:
