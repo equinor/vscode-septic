@@ -9,6 +9,13 @@ import { getDocUri, openDocument, activate } from "./helper";
 import { expect } from "chai";
 
 suite("Renaming single file", async () => {
+    setup(async () => {
+        await vscode.commands.executeCommand('workbench.action.closeAllEditors');
+        await activate();
+    });
+    teardown(async () => {
+        await vscode.commands.executeCommand('workbench.action.closeAllEditors');
+    });
     test("Renaming of SopcCvr", async () => {
         await testRename(
             getDocUri("test.cnfg"),
@@ -98,7 +105,6 @@ async function testRename(
     position: vscode.Position,
     expectedNumEdits: number
 ) {
-    await activate();
     await openDocument(docUri);
     const workspaceEdit: vscode.WorkspaceEdit =
         await vscode.commands.executeCommand(
@@ -117,7 +123,6 @@ async function testRenameContext(
     position: vscode.Position,
     expectedNumEdits: number
 ) {
-    await activate();
     await openDocument(docUri);
     const workspaceEdit: vscode.WorkspaceEdit =
         await vscode.commands.executeCommand(

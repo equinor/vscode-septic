@@ -9,6 +9,13 @@ import { getDocUri, openDocument, activate } from "./helper";
 import { expect } from "chai";
 
 suite("Test references SCG-context", async () => {
+    setup(async () => {
+        await vscode.commands.executeCommand('workbench.action.closeAllEditors');
+        await activate();
+    });
+    teardown(async () => {
+        await vscode.commands.executeCommand('workbench.action.closeAllEditors');
+    });
     test("Reference Mvr", async () => {
         await testReference(
             getDocUri("scg/templates/12_SopcProcWell.cnfg"),
@@ -44,7 +51,6 @@ async function testReference(
     position: vscode.Position,
     expectedNumLocations: number
 ) {
-    await activate();
     await openDocument(docUri);
     const locations: vscode.Location[] = await vscode.commands.executeCommand(
         "vscode.executeReferenceProvider",

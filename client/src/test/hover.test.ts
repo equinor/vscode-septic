@@ -9,6 +9,13 @@ import { getDocUri, openDocument, activate } from "./helper";
 import { expect } from "chai";
 
 suite("Test hover standalone", async () => {
+	setup(async () => {
+		await vscode.commands.executeCommand('workbench.action.closeAllEditors');
+		await activate();
+	});
+	teardown(async () => {
+		await vscode.commands.executeCommand('workbench.action.closeAllEditors');
+	});
 	test("Hovering over system object", async () => {
 		const docUri = getDocUri("test.cnfg");
 		await testHover(docUri, new vscode.Position(0, 6), ["#### System", "Attributes:", "Parent object(s):"]);
@@ -28,6 +35,13 @@ suite("Test hover standalone", async () => {
 });
 
 suite("Test hover scg", async () => {
+	setup(async () => {
+		await vscode.commands.executeCommand('workbench.action.closeAllEditors');
+		await activate();
+	});
+	teardown(async () => {
+		await vscode.commands.executeCommand('workbench.action.closeAllEditors');
+	});
 	test("Hovering over dmmy appl object", async () => {
 		const docUri = getDocUri("scg/templates/21_DmmyAppl.cnfg");
 		await testHover(docUri, new vscode.Position(0, 6), ["#### DmmyAppl", "Attributes:", "Parent object(s):"]);
@@ -55,7 +69,6 @@ async function testHover(
 	position: vscode.Position,
 	expectedContent: string[]
 ) {
-	await activate();
 	await openDocument(docUri);
 	const hovers: vscode.Hover[] =
 		await vscode.commands.executeCommand(

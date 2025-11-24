@@ -9,8 +9,11 @@ import { getDocUri, openDocument, activate } from "./helper";
 import { expect } from "chai";
 
 suite("Test completion", async () => {
-    test("Completion Tvr name should give SopcTvr", async () => {
+    setup(async () => {
+        await vscode.commands.executeCommand('workbench.action.closeAllEditors');
         await activate();
+    });
+    test("Completion Tvr name should give SopcTvr", async () => {
         const docUri = getDocUri("test.cnfg");
         await testCompletion(docUri, new vscode.Position(83, 24), {
             items: [

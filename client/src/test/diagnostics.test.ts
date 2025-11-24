@@ -14,6 +14,7 @@ suite("Test diagnostics scg", async () => {
 	let configUri: vscode.Uri;
 
 	setup(async () => {
+		await vscode.commands.executeCommand('workbench.action.closeAllEditors');
 		await activate();
 		configUri = getDocUri("scg/scg.yaml");
 		const doc = await vscode.workspace.openTextDocument(configUri);
