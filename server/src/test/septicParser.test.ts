@@ -3,8 +3,8 @@ import {
     SepticParser,
     SepticScanner,
     SepticTokenType,
-    parseSepticSync,
 } from "../septic";
+import { parseSepticForTest } from "./util";
 
 describe("Test tokenization of objects and identifiers", () => {
     it("Expect object tokens for object declaration", () => {
@@ -915,7 +915,7 @@ describe("Test parsing of valid input", () => {
         ClipOn=  OFF
 			 GrpLock=  0000000000000000000000000
 				`;
-        const cnfg = parseSepticSync(input);
+        const cnfg = parseSepticForTest(input);
         expect(cnfg.objects.length).to.equal(1);
         expect(cnfg.objects[0].attributes.length).to.equal(5);
         const expected = [

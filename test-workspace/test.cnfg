@@ -1,0 +1,293 @@
+  System:        SystemName
+         Text1=  ""
+         Text2=  ""
+
+  SopcProc:      SopcProcName
+         Text1=  ""
+         Text2=  ""
+
+  SopcMvr:       TestMvr
+         Text1=  ""
+         Text2=  ""
+        MvrTag=  ""
+       MeasTag=  ".YXSP"
+         PVTag=  ".YX"
+         IdTag=  ""
+   NotValidTag=  ".YXF"
+     SpCalcTag=  ".XOUT"
+         HiTag=  ".XWRH|NotUsed"
+         LoTag=  ".XWRL|NotUsed"
+         IvTag=  ".YR"
+      MvLowTag=  "DUMMY_TAG"
+     MvHighTag=  "DUMMY_TAG"
+       MvIvTag=  "DUMMY_TAG"
+      MaxUpTag=  ".YWCU"
+    MaxDownTag=  ".YWCD"
+       AutoTag=  ".YBA"
+        WhiTag=  ".YXWH|NotUsed"
+        WloTag=  ".YXWL|NotUsed"
+       CompTag=  ".YADA"
+       CaraTag=  "DUMMY_TAG"
+       TrakTag=  "DUMMY_TAG"
+     ToCompTag=  "DUMMY_TAG"
+    ToLocalTag=  "DUMMY_TAG"
+   MvActiveTag=  ".XAPC"
+   MvSwitchTag=  "DUMMY_TAG"
+ CompStatusTag=  "DUMMY_TAG"
+         Scale=  1
+        Offset=  0
+
+  SopcCvr:       TestCvr
+         Text1=  ""
+         Text2=  ""
+        CvrTag=  ""
+       MeasTag=  ".YX"
+         IdTag=  ""
+         SpTag=  ".YR"
+      CvLowTag=  "DUMMY_TAG"
+     CvHighTag=  "DUMMY_TAG"
+ CvSetpointTag=  "DUMMY_TAG"
+   NotValidTag=  ".YXF"
+   CvSwitchTag=  ".YADA"
+   CvActiveTag=  ".XAPC"
+         LoTag=  ".YWRL"
+         HiTag=  ".YWRH"
+         Scale=  1
+        Offset=  0
+
+  SopcTvr:       TestTvr
+         Text1=  ""
+         Text2=  ""
+        TvrTag=  ""
+       MeasTag=  ".YX"
+   NotValidTag=  ".YXF"
+      Text1Tag=  ""
+         Scale=  1
+        Offset=  0
+
+  SopcEvr:       TestEvr
+         Text1=  ""
+         Text2=  ""
+        EvrTag=  ""
+       MeasTag=  ".YX"
+         IdTag=  ""
+   NotValidTag=  ".YXF"
+
+  DmmyAppl:      Test
+         Text1=  ""
+         Text2=  ""
+         Nstep=  1
+       PlotMax=  25
+       DesMode=  ACTIVE
+     IterEachN=  1
+
+  Tvr:           TestTvr
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+          Unit=  ""
+          Meas=  0
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+MeasValidation=  OFF
+ MeasHighLimit=  1e+10
+  MeasLowLimit=  -1e+10
+         Color=  BLACK
+
+  Evr:           TestEvr
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+          Unit=  ""
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+          Meas=  0
+     UserInput=  OFF
+     UserEnums=  1
+                 ""
+    UserAccess=  WRRR
+      UserMeas=  0
+      MinInput=  0
+      MaxInput=  0
+ValidationLimit=  -1
+         Color=  BLACK
+
+  Evr:           CalcEvr
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+          Unit=  ""
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+          Meas=  0
+     UserInput=  OFF
+     UserEnums=  1
+                 ""
+    UserAccess=  WRRR
+      UserMeas=  0
+      MinInput=  0
+      MaxInput=  0
+ValidationLimit=  -1
+         Color=  BLACK
+
+  CalcModl:      Test
+         Text1=  ""
+         Text2=  ""
+
+  CalcPvr:       TestEvr
+         Text1=  ""
+         Text2=  ""
+           Alg=  "CalcEvr + 1 + abs(-1)"
+
+  MPCAppl:       Test
+         Text1=  ""
+         Text2=  ""
+         Nhorz=  80
+         Npred=  80
+       FeasTol=  1e-10
+       FailMax=  0
+       DesMode=  STOPPED
+
+  Mvr:           TestMvr
+         Text1=  ""
+         Text2=  ""
+          Mode=  STOPPED
+          Auto=  OFF
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+        MaxChg=  -1
+          Unit=  ""
+          Meas=  0
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+        HighOn=  1e+10
+         LowOn=  -1e+10
+  ProcessValue=  0
+          IvOn=  0
+         MaxUp=  10
+         MaxDn=  -10
+     MovePnlty=  1
+         IvRoc=  -1
+        IvPrio=  99
+          Fulf=  1
+   FulfReScale=  0
+  FulfDynScale=  1
+      Blocking=  6    2     4     7    11    16    22
+MeasValidation=  OFF
+ MeasHighLimit=  1e+10
+  MeasLowLimit=  -1e+10
+        LockHL=  OFF
+        LockIV=  OFF
+        LockLL=  OFF
+        PVPred=  OFF
+
+  Cvr:           TestCvr
+         Text1=  ""
+         Text2=  ""
+          Mode=  STOPPED
+          Auto=  OFF
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+        MaxChg=  -1
+          Unit=  ""
+          Meas=  0
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+     SetPntOff=  0
+       HighOff=  100
+        LowOff=  0
+    SetPntPrio=  1
+      HighPrio=  1
+       LowPrio=  1
+   HighBackOff=  0
+    LowBackOff=  0
+          Fulf=  1
+     HighPnlty=  1
+      LowPnlty=  1
+     RelxParam=  3    1    30    90
+   FulfReScale=  0.001
+  FulfUniScale=  1
+  FulfDynScale=  1
+SetPntChangeMode=  FILTER
+      SetpTref=  0
+   SetPntRocUp=  1
+   SetPntRocDn=  1
+     BiasTfilt=  0
+     BiasTpred=  0
+BiasTpredMaxUp=  1e10
+BiasTpredMaxDn=  -1e10
+     ConsTfilt=  -1
+         Integ=  0
+ TransformType=  NOTRANS
+     BadCntLim=  0
+       DesHorz=  0
+         Neval=  5
+        EvalDT=  0
+   KeepTargets=  OFF
+MeasValidation=  OFF
+ MeasHighLimit=  1e+10
+  MeasLowLimit=  -1e+10
+        LockHL=  OFF
+        LockSP=  OFF
+        LockLL=  OFF
+     ColdStart=  OFF
+
+  DisplayGroup:  Test
+       GroupNo=  1
+        Locked=  OFF
+          Rows=  -1
+          Cols=  -1
+         xGrid=  OFF
+         yGrid=  OFF
+         xAxis=  OFF
+         yAxis=  ON
+     Autoscale=  OFF
+     Spanscale=  OFF
+      HistSize=  -1
+      PredSize=  -1
+
+  Table:         TableName
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1
+   NameColSize=  -1
+   TextColSize=  -1
+  ValueColSize=  -1
+ GroupsColSize=  -1
+
+  MvrList:       MvrListName
+          Text=  ""
+          Mvrs=  1  TestMvr
+
+  CvrList:       CvrListName
+          Text=  ""
+          Cvrs=  1  TestCvr
+
+  TvrList:       TvrListName
+          Text=  ""
+          Tvrs=  1  TestTvr
+
+  XvrPlot:       TestMvr
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1

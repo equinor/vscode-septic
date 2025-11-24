@@ -22,7 +22,7 @@ jobs:
         run: xvfb-run --auto-servernum npm run test
 
       - name: 🧪 Run Integrationtests
-        run: xvfb-run --auto-servernum npm run e2e-test
+        run: xvfb-run --auto-servernum npm run integration-test
 
       - name: 🧪 Test Building of Artifact
         run: npx @vscode/vsce package

@@ -12,5 +12,8 @@
 
   MvrList:       MVlist
           Text=  "MV"
-          Mvrs=  1
-                 "D{{Id}}Zpc"
+          Mvrs=  1  D{{Id}}Zpc
+
+  EvrList:       EvrListName
+          Text=  ""
+          Evrs=  1  EvrTest

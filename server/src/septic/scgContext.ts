@@ -7,16 +7,14 @@ import * as path from "path";
 import {
     RefValidationFunction,
     SepticReference,
-    SepticReferenceProvider,
     defaultRefValidationFunction,
 } from "./reference";
-import { SepticObject } from "./septicElements";
-import { SepticConfigProvider } from "../language-service/septicConfigProvider";
-import { SepticCnfg } from "./septicCnfg";
-import { removeSpaces } from "../util";
-import { SepticObjectHierarchy } from "./septicMetaInfo";
+import { SepticContext } from './context';
+import { SepticObject } from "./elements";
+import { SepticConfigProvider } from "../configProvider";
+import { SepticCnfg } from "./cnfg";
+import { SepticMetaInfoProvider } from "../metaInfoProvider";
 import { updateParentObjects } from "./hierarchy";
-import { Alg, Cycle, findAlgCycles } from "./cycle";
 
 export interface ScgConfig {
     outputfile?: string;
@@ -44,7 +42,7 @@ export interface ScgTemplate {
     include?: string[];
 }
 
-export class ScgContext implements SepticReferenceProvider {
+export class ScgContext implements SepticContext {
     public name: string;
     public filePath: string;
 
@@ -136,8 +134,8 @@ export class ScgContext implements SepticReferenceProvider {
         return undefined;
     }
 
-    public getXvrRefs(name: string): SepticReference[] | undefined {
-        const xvrRefs: SepticReference[] = [];
+    public getReferences(name: string): SepticReference[] | undefined {
+        const references: SepticReference[] = [];
         for (const file of this.files) {
             const cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
@@ -146,26 +144,26 @@ export class ScgContext implements SepticReferenceProvider {
                 );
                 continue;
             }
-            const localRefs = cnfg.getXvrRefs(name);
-            if (localRefs) {
-                xvrRefs.push(...localRefs);
+            const localReferences = cnfg.getReferences(name);
+            if (localReferences) {
+                references.push(...localReferences);
             }
         }
-        if (!xvrRefs.length) {
+        if (!references.length) {
             return undefined;
         }
-        return xvrRefs;
+        return references;
     }
 
-    public validateRef(
+    public validateReferences(
         name: string,
         validationFunction: RefValidationFunction = defaultRefValidationFunction
     ): boolean {
-        const xvrRefs = this.getXvrRefs(name);
-        if (!xvrRefs) {
+        const references = this.getReferences(name);
+        if (!references) {
             return false;
         }
-        return validationFunction(xvrRefs);
+        return validationFunction(references);
     }
 
     public getAllXvrObjects(): SepticObject[] {
@@ -192,12 +190,12 @@ export class ScgContext implements SepticReferenceProvider {
         return objects;
     }
 
-    public getObjectFromOffset(offset: number, uri: string = ""): SepticObject | undefined {
+    public findObjectFromLocation(offset: number, uri: string = ""): SepticObject | undefined {
         const cnfg = this.cnfgCache.get(uri);
         if (!cnfg) {
             return undefined;
         }
-        const obj = cnfg.getObjectFromOffset(offset);
+        const obj = cnfg.findObjectFromLocation(offset);
         if (obj) {
             return obj;
         }
@@ -216,7 +214,6 @@ export class ScgContext implements SepticReferenceProvider {
     }
 
     public async updateObjectParents(
-        hierarchy: SepticObjectHierarchy
     ): Promise<void> {
         await this.load();
         const objects: SepticObject[] = [];
@@ -227,32 +224,6 @@ export class ScgContext implements SepticReferenceProvider {
             }
             objects.push(...cnfg.objects);
         }
-        updateParentObjects(objects, hierarchy);
-    }
-
-    public findAlgCycles(): Cycle[] {
-        const calcPvrs: SepticObject[] = [];
-        for (const file of this.files) {
-            const cnfg = this.cnfgCache.get(file);
-            if (!cnfg) {
-                continue;
-            }
-            calcPvrs.push(
-                ...cnfg.objects.filter((obj) => obj.type === "CalcPvr")
-            );
-        }
-        const algs: Alg[] = [];
-        for (const calcPvr of calcPvrs) {
-            const alg = calcPvr.getAttribute("Alg");
-            const content = alg?.getAttrValue()?.getValue();
-            if (!content || !calcPvr.identifier?.name) {
-                continue;
-            }
-            algs.push({
-                calcPvrName: removeSpaces(calcPvr.identifier?.name),
-                content: content,
-            });
-        }
-        return findAlgCycles(algs);
+        updateParentObjects(objects);
     }
 }

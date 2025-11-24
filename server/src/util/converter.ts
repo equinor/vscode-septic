@@ -1,5 +1,5 @@
 import { Range } from "vscode-languageserver-types";
-import { ITextDocument } from "../language-service";
+import { ITextDocument } from "../types/textDocument";
 
 export function offsetToPositionRange(
     offsetRange: { start: number; end: number },

@@ -1,0 +1,24 @@
+outputfile: example.cnfg
+
+templatepath: templates
+
+verifycontent: true
+
+sources:
+  - filename: wells.csv
+    id: wells
+    delimiter: ";"
+
+layout:
+  - name: 01_System.cnfg
+  - name: 11_SopcProc.cnfg
+  - name: 12_SopcProcWell.cnfg
+    source: wells
+  - name: 21_DmmyAppl.cnfg
+  - name: 31_SmpcAppl.cnfg
+  - name: 32_SmpcApplWell.cnfg
+    source: wells
+  - name: 41_ExprModl.cnfg
+  - name: 61_DspGroupTables.cnfg
+  - name: 62_DspGroupWell.cnfg
+    source: wells

@@ -1,3 +1,4 @@
+import { removeSpaces } from '../util';
 import {
     AlgBinary,
     AlgExpr,
@@ -8,7 +9,8 @@ import {
     AlgUnary,
     IAlgVisitor,
     parseAlg,
-} from "./algParser";
+} from "./alg";
+import { SepticObject } from './elements';
 
 export class CycleDetectorVisitor implements IAlgVisitor {
     variables: AlgLiteral[] = [];
@@ -90,7 +92,43 @@ interface Node {
     calcpvr: string;
 }
 
-export function findAlgCycles(algs: Alg[]): Cycle[] {
+export function findAlgCycles(calcPvrs: SepticObject[]): Cycle[] {
+    const algs = extractAlgs(calcPvrs);
+    if (!algs.length) {
+        return [];
+    }
+    const graph = buildGraph(algs);
+    return findCyclesInGraph(graph);
+}
+
+function extractAlgs(calcPvrs: SepticObject[]): Alg[] {
+    const algs: Alg[] = [];
+    for (const calcPvr of calcPvrs) {
+        const content = calcPvr.getAttributeFirstValue("Alg");
+        if (!content || !calcPvr.identifier?.name) {
+            continue;
+        }
+        algs.push({
+            calcPvrName: removeSpaces(calcPvr.identifier.name),
+            content: content,
+        });
+    }
+    return algs;
+}
+
+
+export function findCyclesInGraph(graph: Map<string, Node>): Cycle[] {
+    const visited: Map<string, boolean> = new Map<string, boolean>();
+    const cycles: Cycle[] = [];
+    for (const node of graph.values()) {
+        if (!visited.get(node.name)) {
+            dfs(graph, node, visited, [], cycles);
+        }
+    }
+    return cycles;
+}
+
+export function buildGraph(algs: Alg[]): Map<string, Node> {
     const graph: Map<string, Node> = new Map<string, Node>();
     for (const alg of algs) {
         let expr;
@@ -141,15 +179,7 @@ export function findAlgCycles(algs: Alg[]): Cycle[] {
             algNode.calcpvr = alg.calcPvrName;
         }
     }
-
-    const visited: Map<string, boolean> = new Map<string, boolean>();
-    const cycles: Cycle[] = [];
-    for (const node of graph.values()) {
-        if (!visited.get(node.name)) {
-            dfs(graph, node, visited, [], cycles);
-        }
-    }
-    return cycles;
+    return graph;
 }
 
 function dfs(

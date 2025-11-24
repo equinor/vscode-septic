@@ -6,10 +6,11 @@
 
 import {
     DocumentSymbol,
+    DocumentSymbolParams,
     SymbolKind,
 } from "vscode-languageserver";
-import { ISepticConfigProvider } from "./septicConfigProvider";
-import { ITextDocument } from "./types/textDocument";
+import { ISepticConfigProvider } from "../configProvider";
+import { ITextDocument } from "../types/textDocument";
 import { SepticCnfg, SepticObject, SepticMetaInfoProvider } from "../septic";
 
 interface SepticSymbol {
@@ -28,24 +29,24 @@ export class DocumentSymbolProvider {
 
     /* istanbul ignore next */
     public async provideDocumentSymbols(
-        document: ITextDocument,
+        params: DocumentSymbolParams,
     ): Promise<DocumentSymbol[]> {
-        const cnfg = await this.cnfgProvider.get(document.uri);
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
-        return getDocumentSymbols(document, cnfg);
+        return getDocumentSymbols(cnfg);
     }
 }
 
-export function getDocumentSymbols(doc: ITextDocument, cnfg: SepticCnfg) {
+export function getDocumentSymbols(cnfg: SepticCnfg) {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const symbols = cnfg.objects.map((obj) => {
         const level = metaInfoProvider.getObjectDefault(obj.type).level;
         const symbolKind = metaInfoProvider.getObjectDefault(
             obj.type
         ).symbolKind;
-        return createSepticSymbol(obj, doc, symbolKind, level);
+        return createSepticSymbol(obj, cnfg.doc, symbolKind, level);
     });
 
     const root = {

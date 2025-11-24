@@ -1,5 +1,5 @@
-import { AlgCalc, AlgExpr, AlgLiteral, AlgTokenType } from "./algParser";
-import { SepticCalcInfo } from "./septicMetaInfo";
+import { AlgCalc, AlgExpr, AlgLiteral, AlgTokenType } from "./alg";
+import { SepticCalcInfo } from "../metaInfoProvider";
 
 /* 
     Assumptions:

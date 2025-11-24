@@ -1,8 +1,0 @@
-  CalcModl:      CalcTest
-         Text1=  ""
-         Text2=  ""
-
-  CalcPvr:       EvrTest
-         Text1=  ""
-         Text2=  ""
-           Alg=  "Deadband{{Test}} + 1"

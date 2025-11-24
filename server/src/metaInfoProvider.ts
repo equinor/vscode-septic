@@ -125,7 +125,7 @@ export class SepticMetaInfoProvider {
     private getBasePublicPath(): string {
         // Use a different base path for tests if NODE_ENV is 'test'
         if (process.env.NODE_ENV === "test") {
-            return path.join(__dirname, `../../../public`);
+            return path.join(__dirname, `../../public`);
         }
         return path.join(
             __dirname,
