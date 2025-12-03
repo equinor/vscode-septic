@@ -26,7 +26,7 @@ suite("Test hover standalone", async () => {
 	});
 	test("Hovering over evr in calc", async () => {
 		const docUri = getDocUri("test.cnfg");
-		await testHover(docUri, new vscode.Position(151, 22), ["Evr: CalcEvr"]);
+		await testHover(docUri, new vscode.Position(151, 22), ["Evr:", "CalcEvr", "Meas:"]);
 	});
 	test("Hovering over function in calc", async () => {
 		const docUri = getDocUri("test.cnfg");
@@ -52,7 +52,7 @@ suite("Test hover scg", async () => {
 	});
 	test("Hovering over evr in calc", async () => {
 		const docUri = getDocUri("scg/templates/21_DmmyAppl.cnfg");
-		await testHover(docUri, new vscode.Position(22, 25), ["Evr: Deadband{{Test}}"]);
+		await testHover(docUri, new vscode.Position(22, 25), ["Evr:", "Deadband{{Test}}"]);
 	});
 	test("Hovering over function in calc", async () => {
 		const docUri = getDocUri("scg/templates/21_DmmyAppl.cnfg");
@@ -60,7 +60,7 @@ suite("Test hover scg", async () => {
 	});
 	test("Hovering over mvr reference", async () => {
 		const docUri = getDocUri("scg/templates/62_DspGroupWell.cnfg");
-		await testHover(docUri, new vscode.Position(14, 26), ["Mvr: D{{ Id }}Zpc", "Text1="]);
+		await testHover(docUri, new vscode.Position(14, 26), ["Mvr:", "D{{ Id }}Zpc", "Text1:"]);
 	});
 });
 
