@@ -30,7 +30,7 @@ jobs:
         run: echo "ARTIFACT_NAME=$(echo vscode-septic-${{ env.BUILD_VERSION }}.vsix)" >> $GITHUB_ENV
 
       - name: "Upload artifact"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: "*.vsix"
