@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.29.0](https://github.com/equinor/vscode-septic/compare/v1.28.2...v1.29.0) (2025-12-03)
+
+
+### 🧹 Chores
+
+* **deps:** bump @types/mocha from 10.0.7 to 10.0.10 ([#752](https://github.com/equinor/vscode-septic/issues/752)) ([02032b5](https://github.com/equinor/vscode-septic/commit/02032b555ae06ebbd2659c026aa4f07f468d6758))
+* **deps:** bump actions/download-artifact from 5 to 6 ([#847](https://github.com/equinor/vscode-septic/issues/847)) ([2e5fa05](https://github.com/equinor/vscode-septic/commit/2e5fa05dd56270a0f93d1679d0d3bd1f30f0541a))
+* **deps:** bump actions/setup-node from 5 to 6 ([#845](https://github.com/equinor/vscode-septic/issues/845)) ([e9dca17](https://github.com/equinor/vscode-septic/commit/e9dca17768e3444185071e5057f6d93ef58e8507))
+* **deps:** bump actions/upload-artifact from 4 to 5 ([#846](https://github.com/equinor/vscode-septic/issues/846)) ([6a4a494](https://github.com/equinor/vscode-septic/commit/6a4a494fb67c4157ecc4b67f4a39397bedec1ff8))
+* **deps:** bump the npm_and_yarn group across 1 directory with 1 update ([#853](https://github.com/equinor/vscode-septic/issues/853)) ([3c07491](https://github.com/equinor/vscode-septic/commit/3c07491996b48dd5a5ed585c4e2f49162d6eec87))
+* update to node 22 and vscode version ([#850](https://github.com/equinor/vscode-septic/issues/850)) ([8e5547a](https://github.com/equinor/vscode-septic/commit/8e5547a84ccf53e9ad82e6d443544c26a637d57d))
+
+
+### 📚 Documentation
+
+* update scg schema to latest ([#855](https://github.com/equinor/vscode-septic/issues/855)) ([93cfa9b](https://github.com/equinor/vscode-septic/commit/93cfa9bb14ede3e3376de8b972171ba9aabc3267))
+* update Septic documentation for latest ([#854](https://github.com/equinor/vscode-septic/issues/854)) ([d1f6300](https://github.com/equinor/vscode-septic/commit/d1f63007647068ca840a2964a390f8ea190de3f1))
+
+
+### ✨ Features
+
+* add auto completion of enums ([#848](https://github.com/equinor/vscode-septic/issues/848)) ([ee007db](https://github.com/equinor/vscode-septic/commit/ee007db62ff01cd762debc2275c02d999911e8d7))
+
+
+### 🔨 Refactor
+
+* server structure ([#849](https://github.com/equinor/vscode-septic/issues/849)) ([845128a](https://github.com/equinor/vscode-septic/commit/845128a692fb42d811edd466d3f111e556d60a1b))
+
 ## [1.28.2](https://github.com/equinor/vscode-septic/compare/v1.28.1...v1.28.2) (2025-09-30)
 
 
