@@ -6,7 +6,6 @@
        PlotMax=  250000
        PlotMin=  0
       PlotSpan=  -1
-       PlotGrp=  0000000000000000000000000000000
           Nfix=  1
         MaxChg=  -1
           Unit=  "Sm3/h"
@@ -25,8 +24,6 @@
           Fulf=  1
      HighPnlty=  1
       LowPnlty=  1
-     HighLimit=  1000
-      LowLimit=  1000
      RelxParam=  3    1    30    80
    FulfReScale=  0.001
       SetpTref=  1.4116
@@ -46,7 +43,6 @@ MeasValidation=  OFF
         LockHL=  OFF
         LockSP=  OFF
         LockLL=  OFF
-UseFactorWeight=  0
 
   Mvr:           D{{ Id }}Zpc
          Text1=  "D{{ Id }}: Production choke"
@@ -56,7 +52,6 @@ UseFactorWeight=  0
        PlotMax=  100
        PlotMin=  0
       PlotSpan=  -1
-       PlotGrp=  0000000000000000000000000000000
           Nfix=  1
         MaxChg=  100
           Unit=  "%"
@@ -75,7 +70,6 @@ UseFactorWeight=  0
         IvPrio=  5
           Fulf=  10
    FulfReScale=  1
-         Price=  0
       Blocking=  8    1     2     4     8    16    32    64    96
 MeasValidation=  OFF
  MeasHighLimit=  1e+010
@@ -83,9 +77,3 @@ MeasValidation=  OFF
         LockHL=  OFF
         LockIV=  OFF
         LockLL=  OFF
-UseFactorWeight=  0
-
-  CalcPvr:       D{{Id}}Zpc
-         Text1=  ""
-         Text2=  ""
-           Alg=  "D{{Id}}Zpc.Test"

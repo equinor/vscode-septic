@@ -8,15 +8,15 @@ import {
     HoverParams,
     MarkupContent,
     MarkupKind,
+    Position
 } from "vscode-languageserver";
-import { SepticConfigProvider } from "./septicConfigProvider";
-import { ITextDocument } from "./types/textDocument";
+import { SepticConfigProvider } from "../configProvider";
 import {
     AlgVisitor,
     SepticCnfg,
     SepticMetaInfoProvider,
     SepticObject,
-    SepticReferenceProvider,
+    SepticContext,
     formatCalcMarkdown,
     formatObjectAttribute,
     formatObjectDocumentationMarkdown,
@@ -34,75 +34,69 @@ export class HoverProvider {
     /* istanbul ignore next */
     async provideHover(
         params: HoverParams,
-        doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<Hover | undefined> {
-        const cnfg = await this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return undefined;
         }
-        await refProvider.load();
-        const offset = doc.offsetAt(params.position);
-        return getHover(cnfg, offset, doc, refProvider);
+        await contextProvider.load();
+        return getHover(cnfg, params.position, contextProvider);
     }
 }
 
 export function getHover(
     cnfg: SepticCnfg,
-    offset: number,
-    doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    position: Position,
+    contextProvider: SepticContext
 ): Hover | undefined {
-    const objectHover = getObjectHover(cnfg, offset, doc);
+    const objectHover = getObjectHover(cnfg, position);
     if (objectHover) {
         return objectHover;
     }
-    const refHover = getReferenceHover(cnfg, offset, doc, refProvider);
+    const refHover = getReferenceHover(cnfg, position, contextProvider);
     if (refHover) {
         return refHover;
     }
-    return getCalcHover(cnfg, offset, doc);
+    return getCalcHover(cnfg, position);
 }
 
 export function getReferenceHover(
     cnfg: SepticCnfg,
-    offset: number,
-    doc: ITextDocument,
-    refProvider: SepticReferenceProvider
+    position: Position,
+    contextProvider: SepticContext
 ): Hover | undefined {
-    const ref = cnfg.getXvrRefFromOffset(offset);
+    const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
         return undefined;
     }
-    const allRefs = refProvider.getXvrRefs(ref.identifier);
+    const allRefs = contextProvider.getReferences(ref.identifier);
     if (!allRefs) {
         return undefined;
     }
     const xvr = allRefs.filter((value) => {
         return value.obj?.isXvr;
     });
-    const sopcXvr = allRefs.filter((value) => {
-        return value.obj?.isOpcXvr;
-    });
-
     if (xvr.length) {
         const text = getMarkdownXvr(xvr[0].obj!);
         return {
             contents: text,
             range: {
-                start: doc.positionAt(ref.location.start),
-                end: doc.positionAt(ref.location.end),
+                start: cnfg.positionAt(ref.location.start),
+                end: cnfg.positionAt(ref.location.end),
             },
         };
     }
-
+    const sopcXvr = allRefs.filter((value) => {
+        return value.obj?.isOpcXvr;
+    });
     if (sopcXvr.length) {
         const text = getMarkdownXvr(sopcXvr[0].obj!);
         return {
             contents: text,
             range: {
-                start: doc.positionAt(ref.location.start),
-                end: doc.positionAt(ref.location.end),
+                start: cnfg.positionAt(ref.location.start),
+                end: cnfg.positionAt(ref.location.end),
             },
         };
     }
@@ -110,10 +104,10 @@ export function getReferenceHover(
 
 export function getObjectHover(
     cnfg: SepticCnfg,
-    offset: number,
-    doc: ITextDocument
+    position: Position
 ): Hover | undefined {
-    const obj = cnfg.getObjectFromOffset(offset);
+    const offset = cnfg.offsetAt(position);
+    const obj = cnfg.findObjectFromLocation(offset);
     if (!obj) {
         return undefined;
     }
@@ -130,8 +124,8 @@ export function getObjectHover(
                 kind: MarkupKind.Markdown,
             },
             range: {
-                start: doc.positionAt(obj.start),
-                end: doc.positionAt(obj.start + obj.type.length),
+                start: cnfg.positionAt(obj.start),
+                end: cnfg.positionAt(obj.start + obj.type.length),
             },
         };
     }
@@ -152,8 +146,8 @@ export function getObjectHover(
                     kind: MarkupKind.Markdown,
                 },
                 range: {
-                    start: doc.positionAt(attr.start),
-                    end: doc.positionAt(attr.start + attr.key.length),
+                    start: cnfg.positionAt(attr.start),
+                    end: cnfg.positionAt(attr.start + attr.key.length),
                 },
             };
         }
@@ -162,10 +156,10 @@ export function getObjectHover(
 
 export function getCalcHover(
     cnfg: SepticCnfg,
-    offset: number,
-    doc: ITextDocument
+    position: Position
 ): Hover | undefined {
-    const obj = cnfg.getObjectFromOffset(offset);
+    const offset = cnfg.offsetAt(position);
+    const obj = cnfg.findObjectFromLocation(offset);
     if (!obj) {
         return undefined;
     }
@@ -207,8 +201,8 @@ export function getCalcHover(
         return {
             contents: content,
             range: {
-                start: doc.positionAt(startAlg + currentCalc.start),
-                end: doc.positionAt(startAlg + currentCalc.end),
+                start: cnfg.positionAt(startAlg + currentCalc.start),
+                end: cnfg.positionAt(startAlg + currentCalc.end),
             },
         };
     }
@@ -228,8 +222,8 @@ function getCalcDocumentation(name: string): MarkupContent | undefined {
 }
 
 function getMarkdownXvr(obj: SepticObject): MarkupContent {
-    const text1 = obj.getAttribute("Text1")?.getValue() ?? "";
-    const text2 = obj.getAttribute("Text2")?.getValue() ?? "";
+    const text1 = obj.getAttributeFirstValue("Text1") ?? "";
+    const text2 = obj.getAttributeFirstValue("Text2") ?? "";
     let text = `${obj.type}: ${obj.identifier?.name}`;
     if (text1 !== "") {
         text += `\n\nText1= ${text1}`;

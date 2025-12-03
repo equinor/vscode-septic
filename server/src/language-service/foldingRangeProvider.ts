@@ -4,10 +4,9 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as lsp from "vscode-languageserver";
-import { ITextDocument } from "./types/textDocument";
+import { FoldingRange, FoldingRangeParams } from 'vscode-languageserver';
 import { SepticCnfg, SepticMetaInfoProvider } from "../septic";
-import { SepticConfigProvider } from "./septicConfigProvider";
+import { SepticConfigProvider } from "../configProvider";
 
 export class FoldingRangeProvider {
     private readonly cnfgProvider: SepticConfigProvider;
@@ -19,23 +18,22 @@ export class FoldingRangeProvider {
 
     /* istanbul ignore next */
     public async provideFoldingRanges(
-        doc: ITextDocument,
-    ): Promise<lsp.FoldingRange[]> {
-        const cnfg = await this.cnfgProvider.get(doc.uri);
+        params: FoldingRangeParams,
+    ): Promise<FoldingRange[]> {
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
 
-        return getFoldingRanges(doc, cnfg);
+        return getFoldingRanges(cnfg);
     }
 }
 
 export function getFoldingRanges(
-    doc: ITextDocument,
     cnfg: SepticCnfg,
-): lsp.FoldingRange[] {
+): FoldingRange[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
-    const ranges: lsp.FoldingRange[] = [];
+    const ranges: FoldingRange[] = [];
 
     for (let i = 0; i < cnfg.objects.length; i++) {
         const obj = cnfg.objects[i];
@@ -55,10 +53,10 @@ export function getFoldingRanges(
         }
         const lastObject = end < cnfg.objects.length - 1;
         const endLine = lastObject
-            ? doc.positionAt(cnfg.objects[end + 1].start).line - 1
-            : doc.positionAt(cnfg.objects[end].end).line;
+            ? cnfg.positionAt(cnfg.objects[end + 1].start).line - 1
+            : cnfg.positionAt(cnfg.objects[end].end).line;
         ranges.push({
-            startLine: doc.positionAt(obj.start).line,
+            startLine: cnfg.positionAt(obj.start).line,
             endLine: endLine,
         });
     }

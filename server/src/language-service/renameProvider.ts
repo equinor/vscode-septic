@@ -5,15 +5,16 @@
  *--------------------------------------------------------------------------------------------*/
 
 import {
+    Position,
     PrepareRenameParams,
     Range,
     RenameParams,
     WorkspaceEdit,
 } from "vscode-languageserver";
-import { SepticConfigProvider } from "./septicConfigProvider";
-import { ITextDocument } from "./types/textDocument";
+import { SepticConfigProvider } from "../configProvider";
+import { ITextDocument } from "../types/textDocument";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
-import { SepticCnfg, SepticReferenceProvider } from "../septic";
+import { SepticCnfg, SepticContext } from "../septic";
 import { DocumentProvider } from "../documentProvider";
 
 export type GetDocument = (uri: string) => Promise<ITextDocument | undefined>;
@@ -34,19 +35,17 @@ export class RenameProvider {
     /* istanbul ignore next */
     async provideRename(
         params: RenameParams,
-        doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<WorkspaceEdit | undefined> {
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return undefined;
         }
-        const offset = doc.offsetAt(params.position);
         return getRenameEdits(
             cnfg,
-            offset,
+            params.position,
             params.newName,
-            refProvider,
+            contextProvider,
             this.docProvider.getDocument.bind(this.docProvider)
         );
     }
@@ -54,49 +53,48 @@ export class RenameProvider {
     /* istanbul ignore next */
     async providePrepareRename(
         params: PrepareRenameParams,
-        doc: ITextDocument
     ): Promise<Range | null> {
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return null;
         }
-        const ref = cnfg.getXvrRefFromOffset(doc.offsetAt(params.position));
+        const ref = cnfg.findReferenceFromLocation(params.position);
         if (!ref) {
             return null;
         }
         return Range.create(
-            doc.positionAt(ref.location.start),
-            doc.positionAt(ref.location.end)
+            cnfg.positionAt(ref.location.start),
+            cnfg.positionAt(ref.location.end)
         );
     }
 }
 
 export async function getRenameEdits(
     cnfg: SepticCnfg,
-    offset: number,
+    position: Position,
     newName: string,
-    refProvider: SepticReferenceProvider,
+    contextProvider: SepticContext,
     getDocumentFunction: GetDocument
 ): Promise<WorkspaceEdit | undefined> {
-    const ref = cnfg.getXvrRefFromOffset(offset);
+    const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
         return undefined;
     }
-    const refs = refProvider.getXvrRefs(ref.identifier);
+    const refs = contextProvider.getReferences(ref.identifier);
     if (!refs) {
         return undefined;
     }
     const builder = new WorkspaceEditBuilder();
     for (const ref of refs) {
-        const docRef = await getDocumentFunction(ref.location.uri);
-        if (!docRef) {
+        const doc = await getDocumentFunction(ref.location.uri);
+        if (!doc) {
             continue;
         }
         builder.replace(
             ref.location.uri,
             Range.create(
-                docRef.positionAt(ref.location.start),
-                docRef.positionAt(ref.location.end)
+                doc.positionAt(ref.location.start),
+                doc.positionAt(ref.location.end)
             ),
             newName
         );

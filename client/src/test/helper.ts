@@ -12,14 +12,26 @@ export let editor: vscode.TextEditor;
 export let documentEol: string;
 export let platformEol: string;
 
-export async function activate(docUri: vscode.Uri) {
-    // The extensionId is `publisher.name` from package.json
-    const ext = vscode.extensions.getExtension("EinarSIdso.septic-config");
-    await ext.activate();
+export let activated = false;
+
+export async function activate() {
+    if (activated) {
+        return;
+    }
+    try {
+        const ext = vscode.extensions.getExtension("EinarSIdso.septic-config");
+        await ext.activate();
+        await sleep(2000);
+        activated = true;
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export async function openDocument(docUri: vscode.Uri) {
     try {
         doc = await vscode.workspace.openTextDocument(docUri);
         editor = await vscode.window.showTextDocument(doc);
-        await sleep(1000); // Wait for server activation
     } catch (e) {
         console.error(e);
     }
@@ -30,7 +42,7 @@ async function sleep(ms: number) {
 }
 
 export const getDocPath = (p: string) => {
-    return path.resolve(__dirname, "fixtures", p);
+    return path.resolve(__dirname, "../../../test-workspace", p);
 };
 export const getDocUri = (p: string) => {
     return vscode.Uri.file(getDocPath(p));

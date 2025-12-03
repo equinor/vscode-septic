@@ -3,77 +3,126 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { AlgVisitor } from "./algParser";
-import { SepticTokenType } from "./septicTokens";
+import { AlgVisitor } from "./alg";
+import { SepticTokenType } from "./tokens";
 import {
     SepticMetaInfoProvider,
     SepticObjectHierarchy,
-} from "./septicMetaInfo";
+} from "../metaInfoProvider";
 import {
     Attribute,
     AttributeValue,
     SepticComment,
     SepticObject,
-} from "./septicElements";
+} from "./elements";
 import {
     SepticReference,
-    SepticReferenceProvider,
     RefValidationFunction,
     defaultRefValidationFunction,
     createSepticReference,
     ReferenceType,
 } from "./reference";
-import { removeSpaces, transformPositionsToOriginal } from "../util";
+import { SepticContext } from './context';
+import { removeSpaces, sleep, transformPositionsToOriginal } from "../util";
 import { updateParentObjects } from "./hierarchy";
-import { Alg, Cycle, findAlgCycles } from "./cycle";
-import { getFunctionsFromCalcPvrs, SepticFunction } from './septicFunction';
+import { getFunctionsFromCalcPvrs, SepticFunction } from './function';
+import { ITextDocument } from '../types/textDocument';
+import { CancellationToken, Position, Range } from 'vscode-languageserver';
+import { SepticParser, SepticScanner } from './parser';
 
-export class SepticCnfg implements SepticReferenceProvider {
-    public objects: SepticObject[];
-    public comments: SepticComment[];
-    private xvrRefs = new Map<string, SepticReference[]>();
-    private xvrRefsExtracted = false;
-    public uri: string = "";
+export class SepticCnfg implements SepticContext, ITextDocument {
+    public objects: SepticObject[] = [];
+    public comments: SepticComment[] = [];
+    public readonly doc: ITextDocument;
+    private references = new Map<string, SepticReference[]>();
+    private referencesExtracted = false;
 
-    constructor(objects: SepticObject[], comments: SepticComment[] = []) {
-        this.objects = objects;
-        this.comments = comments;
+    constructor(doc: ITextDocument) {
+        this.doc = doc;
+    }
+
+    public parse(cts: CancellationToken): void {
+        const scanner = new SepticScanner(this.doc.getText());
+        const tokens = scanner.scanTokens();
+        if (!tokens.tokens.length) {
+            return;
+        }
+        const parser = new SepticParser(tokens.tokens);
+
+        this.objects = parser.parse(cts);
+        this.comments = tokens.comments.map((comment) => {
+            return new SepticComment(
+                comment.content,
+                comment.type,
+                comment.start,
+                comment.end
+            );
+        });
+        this.objects.forEach((obj) => {
+            obj.setUri(this.uri);
+        });
+    }
+
+    public async parseAsync(token: CancellationToken): Promise<void> {
+        const scanner = new SepticScanner(this.doc.getText());
+        const tokens = scanner.scanTokens();
+        if (!tokens.tokens.length) {
+            return;
+        }
+        await sleep(1);  // Sleep to prevent starvation of other async tasks
+        const parser = new SepticParser(tokens.tokens);
+        this.objects = parser.parse(token);
+        this.comments = tokens.comments.map((comment) => {
+            return new SepticComment(
+                comment.content,
+                comment.type,
+                comment.start,
+                comment.end
+            );
+        });
+        this.objects.forEach((obj) => {
+            obj.setUri(this.uri);
+        });
+    }
+
+    public positionAt(offset: number): Position {
+        return this.doc.positionAt(offset);
+    }
+
+    public offsetAt(position: Position): number {
+        return this.doc.offsetAt(position);
+    }
+
+    public getText(range?: Range): string {
+        return this.doc.getText(range);
+    }
+
+    public get lineCount(): number {
+        return this.doc.lineCount;
+    }
+
+    public get version(): number {
+        return this.doc.version;
     }
 
     public async load(): Promise<void> {
         return Promise.resolve();
     }
 
-    public setUri(uri: string) {
-        this.uri = uri;
-        this.objects.forEach((obj) => {
-            obj.setUri(uri);
-        });
+    public get uri(): string {
+        return this.doc.uri;
     }
 
-    public getAlgAttrs(): Attribute[] {
-        const objects: Attribute[] = [];
-        this.objects.forEach((obj) => {
-            if (obj.isType("CalcPvr")) {
-                const algAttr = obj.getAttribute("Alg");
-                if (algAttr) {
-                    objects.push(algAttr);
-                }
-            }
-        });
-        return objects;
-    }
-
-    public getXvrRefs(name: string): SepticReference[] | undefined {
+    public getReferences(name: string): SepticReference[] | undefined {
         this.extractReferences();
-        return this.xvrRefs.get(removeSpaces(name));
+        return this.references.get(removeSpaces(name));
     }
 
-    public validateRef(
+    public validateReferences(
         name: string,
         validationFunction: RefValidationFunction = defaultRefValidationFunction
     ): boolean {
-        const xvrRefs = this.getXvrRefs(name);
+        const xvrRefs = this.getReferences(name);
         if (!xvrRefs) {
             return false;
         }
@@ -114,45 +163,28 @@ export class SepticCnfg implements SepticReferenceProvider {
         });
     }
 
-    public offsetInAlg(offset: number): undefined | AttributeValue {
-        const obj = this.getObjectFromOffset(offset);
+    public findAlgValueFromLocation(location: Position | number): undefined | AttributeValue {
+        const offset = typeof location === "number" ? location : this.offsetAt(location);
+        const obj = this.findObjectFromLocation(offset);
         if (!obj) {
             return undefined;
         }
-        const alg = obj.getAttribute("Alg");
-        const algValue = alg?.getAttrValue();
+        const algValue = obj.getAttributeFirstValueObject("Alg");
         if (!algValue) {
             return undefined;
         }
-
         if (offset >= algValue.start && offset <= algValue.end) {
             return algValue;
         }
         return undefined;
     }
 
-    public getAlgFromOffset(offset: number): Attribute | undefined {
-        const obj = this.getObjectFromOffset(offset);
-        if (!obj) {
-            return undefined;
-        }
-        const alg = obj.getAttribute("Alg");
-        const algValue = alg?.getAttrValue();
-        if (!algValue) {
-            return undefined;
-        }
-
-        if (offset >= algValue.start && offset <= algValue.end) {
-            return alg;
-        }
-        return undefined;
-    }
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public getObjectFromOffset(offset: number, uri: string = ""): SepticObject | undefined {
+    public findObjectFromLocation(location: Position | number, uri: string = ""): SepticObject | undefined {
         if (!this.objects.length) {
             return undefined;
         }
+        const offset = typeof location === "number" ? location : this.offsetAt(location)
         if (offset < this.objects[0].start) {
             return undefined;
         }
@@ -172,9 +204,10 @@ export class SepticCnfg implements SepticReferenceProvider {
         });
     }
 
-    public getXvrRefFromOffset(offset: number): SepticReference | undefined {
+    public findReferenceFromLocation(location: Position | number): SepticReference | undefined {
         this.extractReferences();
-        for (const xvrRef of this.xvrRefs.values()) {
+        const offset = typeof location === "number" ? location : this.offsetAt(location)
+        for (const xvrRef of this.references.values()) {
             const validRef = xvrRef.find((ref) => {
                 return (
                     offset >= ref.location.start && offset <= ref.location.end
@@ -188,17 +221,16 @@ export class SepticCnfg implements SepticReferenceProvider {
     }
 
     public updateObjectParents(
-        hierarchy: SepticObjectHierarchy
     ): Promise<void> {
-        updateParentObjects(this.objects, hierarchy);
+        updateParentObjects(this.objects);
         return Promise.resolve();
     }
 
     private extractReferences(): void {
-        if (this.xvrRefsExtracted) {
+        if (this.referencesExtracted) {
             return;
         }
-        this.xvrRefsExtracted = true;
+        this.referencesExtracted = true;
         this.objects.forEach((obj) => {
             extractReferencesFromObj(obj).forEach((xvr) => {
                 xvr.location.uri = this.uri;
@@ -208,28 +240,11 @@ export class SepticCnfg implements SepticReferenceProvider {
     }
 
     private addXvrRef(ref: SepticReference) {
-        if (this.xvrRefs.has(ref.identifier)) {
-            this.xvrRefs.get(ref.identifier)?.push(ref);
+        if (this.references.has(ref.identifier)) {
+            this.references.get(ref.identifier)?.push(ref);
         } else {
-            this.xvrRefs.set(ref.identifier, [ref]);
+            this.references.set(ref.identifier, [ref]);
         }
-    }
-
-    public findAlgCycles(): Cycle[] {
-        const calcPvrs = this.objects.filter((obj) => obj.isType("CalcPvr"));
-        const algs: Alg[] = [];
-        for (const calcPvr of calcPvrs) {
-            const alg = calcPvr.getAttribute("Alg");
-            const content = alg?.getAttrValue()?.getValue();
-            if (!content || !calcPvr.identifier?.name) {
-                continue;
-            }
-            algs.push({
-                calcPvrName: removeSpaces(calcPvr.identifier.name),
-                content: content,
-            });
-        }
-        return findAlgCycles(algs);
     }
 
     public getFunctions(): SepticFunction[] {
@@ -240,7 +255,7 @@ export class SepticCnfg implements SepticReferenceProvider {
 }
 
 export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
-    const xvrRefs: SepticReference[] = [];
+    const references: SepticReference[] = [];
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const objectDef = metaInfoProvider.getObject(obj.type);
     if (!objectDef) {
@@ -261,17 +276,17 @@ export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
                 ? ReferenceType.xvr
                 : ReferenceType.identifier
         );
-        xvrRefs.push(ref);
+        references.push(ref);
     }
 
     objectDef.refs.attributes.forEach((attr) => {
-        xvrRefs.push(...attributeReferences(obj, attr));
+        references.push(...attributeReferences(obj, attr));
     });
 
     if (obj.isType("CalcPvr")) {
-        xvrRefs.push(...calcPvrReferences(obj));
+        references.push(...calcPvrReferences(obj));
     }
-    return xvrRefs;
+    return references;
 }
 
 function calcPvrReferences(obj: SepticObject): SepticReference[] {
@@ -295,8 +310,8 @@ function calcPvrReferences(obj: SepticObject): SepticReference[] {
             identifier,
             {
                 uri: "",
-                start: obj.getAttribute("Alg")!.getAttrValue()!.start + start + 1,
-                end: obj.getAttribute("Alg")!.getAttrValue()!.start + start + diff + 1,
+                start: obj.getAttributeFirstValueObject("Alg")!.start + start + 1,
+                end: obj.getAttributeFirstValueObject("Alg")!.start + start + diff + 1,
             },
             undefined,
             ReferenceType.calc

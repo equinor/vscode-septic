@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Emitter } from "vscode-jsonrpc";
-import { ITextDocument } from "./language-service";
+import { ITextDocument } from "./types/textDocument";
 import { ResourceMap } from "./util";
 import {
     Connection,
@@ -29,7 +29,6 @@ class Document implements ITextDocument {
 
     readonly uri: string;
     readonly version: number = 0;
-    readonly lineCount: number = 0;
 
     constructor(uri: string, init: { inMemoryDoc: ITextDocument });
     constructor(uri: string, init: { onDiskDoc: ITextDocument });
@@ -95,6 +94,18 @@ class Document implements ITextDocument {
 
     setOnDiskDoc(doc: TextDocument | undefined) {
         this.onDiskDoc = doc;
+    }
+
+    get lineCount(): number {
+        if (this.inMemoryDoc) {
+            return this.inMemoryDoc.lineCount;
+        }
+
+        if (this.onDiskDoc) {
+            return this.onDiskDoc.lineCount;
+        }
+
+        throw new Error("Document has been closed");
     }
 }
 

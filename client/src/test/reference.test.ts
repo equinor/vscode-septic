@@ -5,35 +5,42 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as vscode from "vscode";
-import { getDocUri, activate } from "./helper";
+import { getDocUri, openDocument, activate } from "./helper";
 import { expect } from "chai";
 
 suite("Test references SCG-context", async () => {
+    setup(async () => {
+        await vscode.commands.executeCommand('workbench.action.closeAllEditors');
+        await activate();
+    });
+    teardown(async () => {
+        await vscode.commands.executeCommand('workbench.action.closeAllEditors');
+    });
     test("Reference Mvr", async () => {
         await testReference(
-            getDocUri("scg/templates/03_SopcProc_well.cnfg"),
+            getDocUri("scg/templates/12_SopcProcWell.cnfg"),
             new vscode.Position(18, 24),
-            5
+            3
         );
     });
     test("Reference Cvr", async () => {
         await testReference(
-            getDocUri("scg/templates/03_SopcProc_well.cnfg"),
+            getDocUri("scg/templates/12_SopcProcWell.cnfg"),
             new vscode.Position(0, 24),
             3
         );
     });
     test("Reference Evr", async () => {
         await testReference(
-            getDocUri("scg/templates/08_DmmyAppl.cnfg"),
-            new vscode.Position(8, 21),
-            2
+            getDocUri("scg/templates/21_DmmyAppl.cnfg"),
+            new vscode.Position(7, 21),
+            3
         );
     });
-    test("Reference Evr", async () => {
+    test("Reference Evr in calc", async () => {
         await testReference(
-            getDocUri("scg/templates/09_Calc.cnfg"),
-            new vscode.Position(7, 28),
+            getDocUri("scg/templates/21_DmmyAppl.cnfg"),
+            new vscode.Position(22, 22),
             2
         );
     });
@@ -44,7 +51,7 @@ async function testReference(
     position: vscode.Position,
     expectedNumLocations: number
 ) {
-    await activate(docUri);
+    await openDocument(docUri);
     const locations: vscode.Location[] = await vscode.commands.executeCommand(
         "vscode.executeReferenceProvider",
         docUri,

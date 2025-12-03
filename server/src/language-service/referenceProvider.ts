@@ -7,14 +7,14 @@
 import {
     DeclarationParams,
     DefinitionParams,
+    Position,
     ReferenceParams,
 } from "vscode-languageserver";
-import { ISepticConfigProvider } from "./septicConfigProvider";
-import { ITextDocument } from "./types/textDocument";
+import { ISepticConfigProvider } from "../configProvider";
 import {
     SepticCnfg,
     SepticReference,
-    SepticReferenceProvider,
+    SepticContext,
 } from "../septic";
 
 export class ReferenceProvider {
@@ -28,55 +28,49 @@ export class ReferenceProvider {
     /* istanbul ignore next */
     public async provideDefinition(
         params: DefinitionParams,
-        doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<LocationLinkOffset[]> {
-        const offset = doc.offsetAt(params.position);
-        const cnfg = await this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
-        await refProvider.load();
-        return getDefinition(offset, cnfg, refProvider);
+        await contextProvider.load();
+        return getDefinition(params.position, cnfg, contextProvider);
     }
 
     /* istanbul ignore next */
     public async provideReferences(
         params: ReferenceParams,
-        doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<LocationOffset[]> {
-        const offset = doc.offsetAt(params.position);
-        const cnfg = await this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
-        await refProvider.load();
-        return getReferences(offset, cnfg, refProvider);
+        await contextProvider.load();
+        return getReferences(params.position, cnfg, contextProvider);
     }
 
     /* istanbul ignore next */
     public async provideDeclaration(
         params: DeclarationParams,
-        doc: ITextDocument,
-        refProvider: SepticReferenceProvider
+        contextProvider: SepticContext
     ): Promise<LocationLinkOffset[]> {
-        const offset = doc.offsetAt(params.position);
-        const cnfg = await this.cnfgProvider.get(doc.uri);
+        const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
         }
-        await refProvider.load();
-        return getDeclaration(offset, cnfg, refProvider);
+        await contextProvider.load();
+        return getDeclaration(params.position, cnfg, contextProvider);
     }
 }
 
 export function getDefinition(
-    offset: number,
+    position: Position,
     cnfg: SepticCnfg,
-    refProvider: SepticReferenceProvider
+    contextProvider: SepticContext
 ): LocationLinkOffset[] {
-    const ref = cnfg.getXvrRefFromOffset(offset);
+    const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
         return [];
     }
@@ -85,7 +79,7 @@ export function getDefinition(
         return [];
     }
 
-    const xvrRefs = refProvider.getXvrRefs(ref.identifier);
+    const xvrRefs = contextProvider.getReferences(ref.identifier);
     if (!xvrRefs) {
         return [];
     }
@@ -99,15 +93,15 @@ export function getDefinition(
 }
 
 export function getReferences(
-    offset: number,
+    position: Position,
     cnfg: SepticCnfg,
-    refProvider: SepticReferenceProvider
+    contextProvider: SepticContext
 ): LocationOffset[] {
-    const ref = cnfg.getXvrRefFromOffset(offset);
+    const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
         return [];
     }
-    const xvrRefs = refProvider.getXvrRefs(ref.identifier);
+    const xvrRefs = contextProvider.getReferences(ref.identifier);
     if (!xvrRefs) {
         return [];
     }
@@ -123,19 +117,18 @@ export function getReferences(
 }
 
 export function getDeclaration(
-    offset: number,
+    position: Position,
     cnfg: SepticCnfg,
-    refProvider: SepticReferenceProvider
+    contextProvider: SepticContext
 ): LocationLinkOffset[] {
-    const ref = cnfg.getXvrRefFromOffset(offset);
+    const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
         return [];
     }
-
     if (ref.obj?.isOpcXvr) {
         return [];
     }
-    const xvrRefs = refProvider.getXvrRefs(ref.identifier);
+    const xvrRefs = contextProvider.getReferences(ref.identifier);
     if (!xvrRefs) {
         return [];
     }

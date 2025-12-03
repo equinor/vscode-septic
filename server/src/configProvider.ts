@@ -9,11 +9,11 @@ import {
     CancellationTokenSource,
     URI,
 } from "vscode-languageserver";
-import { SepticCnfg, parseSepticAsync } from "../septic";
-import { ResourceMap } from "../util/resourceMap";
-import { ITextDocument } from ".";
-import { Lazy, lazy } from "../util/lazy";
-import { DocumentProvider } from "../documentProvider";
+import { SepticCnfg } from "./septic";
+import { ResourceMap } from "./util/resourceMap";
+import { ITextDocument } from "./types/textDocument";
+import { Lazy, lazy } from "./util/lazy";
+import { DocumentProvider } from "./documentProvider";
 import * as path from "path";
 
 export interface ISepticConfigProvider {
@@ -29,9 +29,8 @@ async function getValueCnfg(
     document: ITextDocument,
     token: CancellationToken
 ): Promise<SepticCnfg> {
-    const text = document.getText();
-    const cnfg = await parseSepticAsync(text, token);
-    cnfg.setUri(document.uri);
+    const cnfg = new SepticCnfg(document);
+    await cnfg.parseAsync(token);
     return cnfg;
 }
 

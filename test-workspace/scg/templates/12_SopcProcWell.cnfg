@@ -24,7 +24,6 @@
    NotValidTag=  "DUMMY_TAG"
          PVTag=  "18HCV{{ TagId }}00.XSP"
          IdTag=  "D{{ Id }}"
-   NotValidTag=  "18HCV{{ TagId }}00.XF"
      SpCalcTag=  "18HCV{{ TagId }}00."
          HiTag=  "18HCV{{ TagId }}00."
          LoTag=  "18HCV{{ TagId }}00.XRL"
