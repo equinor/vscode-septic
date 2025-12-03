@@ -10,7 +10,6 @@ import {
     Attribute,
     AttributeValue,
     Identifier,
-    SepticComment,
     SepticObject,
 } from "./elements";
 
@@ -113,7 +112,11 @@ export class SepticParser extends Parser<SepticTokenType, SepticObject[]> {
 
     identifier(): Identifier {
         const token = super.previous();
-        const identifier = new Identifier(token.content, token.start, token.end);
+        const identifier = new Identifier(
+            token.content,
+            token.start,
+            token.end
+        );
         return identifier;
     }
 
@@ -178,18 +181,17 @@ export class SepticScanner {
             case "\n":
             case "\t":
                 break;
-            case "{":
-                {
-                    const next = this.advance();
-                    if (next === "{") {
-                        this.jinja("}");
-                    } else if (next === "#" || next === "%") {
-                        this.jinja(next);
-                    } else {
-                        this.error(`Unexpected token: ${next}`);
-                    }
-                    break;
+            case "{": {
+                const next = this.advance();
+                if (next === "{") {
+                    this.jinja("}");
+                } else if (next === "#" || next === "%") {
+                    this.jinja(next);
+                } else {
+                    this.error(`Unexpected token: ${next}`);
                 }
+                break;
+            }
             case `"`:
                 this.string();
                 break;
@@ -409,9 +411,8 @@ export class SepticScanner {
 
     private jinja(type: string): void {
         while (
-            !this.isAtEnd() && !(
-                this.peek() === type &&
-                this.peekNext() === "}")
+            !this.isAtEnd() &&
+            !(this.peek() === type && this.peekNext() === "}")
         ) {
             this.advance();
         }

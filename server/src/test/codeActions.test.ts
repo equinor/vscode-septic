@@ -1,5 +1,4 @@
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { SepticMetaInfoProvider } from "../septic";
 import { loadFile, parseSepticForTest } from "./util";
 import {
     Position,
@@ -114,7 +113,6 @@ describe("Test codeaction for inserting evr", () => {
         const content = loadFile("codeAction.cnfg");
         const cnfg = parseSepticForTest(content);
         cnfg.updateObjectParents();
-        const doc = TextDocument.create("", "", 0, content);
         const codeActions = getCodeActionInsertEvr(params, cnfg, "bottom");
         expect(codeActions.length).to.equal(0);
     });
@@ -142,7 +140,7 @@ describe("Test codeaction for ignoring warning", () => {
         };
         const content = loadFile("codeActionIgnore.cnfg");
         const cnfg = parseSepticForTest(content);
-        const doc = TextDocument.create("", "", 0, content);
+
         const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg);
         expect(codeActions.length).to.equal(2);
         expect(codeActions[0].title === `W501: Disable with {# noqa: .... #}`);
@@ -241,7 +239,6 @@ describe("Test codeaction for ignoring warning", () => {
         };
         const content = loadFile("codeActionIgnore.cnfg");
         const cnfg = parseSepticForTest(content);
-        const doc = TextDocument.create("", "", 0, content);
         const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg);
         expect(codeActions.length).to.equal(2);
         expect(codeActions[0].title === `E202: Update disable diagnostics`);
@@ -275,7 +272,6 @@ describe("Test codeaction for ignoring warning", () => {
         };
         const content = loadFile("codeActionIgnore.cnfg");
         const cnfg = parseSepticForTest(content);
-        const doc = TextDocument.create("", "", 0, content);
         const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg);
         expect(codeActions.length).to.equal(2);
         expect(codeActions[0].title === `E202: Update disable diagnostics`);
@@ -302,7 +298,6 @@ describe("Test codeaction for ignoring warning", () => {
         };
         const content = loadFile("codeActionIgnore.cnfg");
         const cnfg = parseSepticForTest(content);
-        const doc = TextDocument.create("", "", 0, content);
         const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg);
         expect(codeActions.length).to.equal(0);
     });
@@ -327,7 +322,6 @@ describe("Test codeaction for ignoring warning", () => {
         };
         const content = loadFile("codeActionIgnore.cnfg");
         const cnfg = parseSepticForTest(content);
-        const doc = TextDocument.create("", "", 0, content);
         const codeActions = getCodeActionIgnoreDiagnostics(params, cnfg);
         expect(codeActions.length).to.equal(0);
     });

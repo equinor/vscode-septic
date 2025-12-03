@@ -6,7 +6,6 @@
 
 import * as lsp from "vscode-languageserver";
 import { FoldingRangeProvider } from "./foldingRangeProvider";
-import { ITextDocument } from "../types/textDocument";
 import { SepticConfigProvider } from "../configProvider";
 import { DiagnosticProvider } from "./diagnosticsProvider";
 import { DocumentSymbolProvider } from "./documentSymbolProvider";
@@ -40,7 +39,7 @@ export interface ILanguageService {
     ): Promise<lsp.Diagnostic[]>;
 
     provideDocumentSymbols(
-        params: lsp.DocumentSymbolParams,
+        params: lsp.DocumentSymbolParams
     ): Promise<lsp.DocumentSymbol[]>;
 
     provideCompletion(
@@ -69,7 +68,7 @@ export interface ILanguageService {
     ): Promise<lsp.WorkspaceEdit | undefined>;
 
     providePrepareRename(
-        params: lsp.PrepareRenameParams,
+        params: lsp.PrepareRenameParams
     ): Promise<lsp.Range | null>;
 
     provideHover(
@@ -77,7 +76,9 @@ export interface ILanguageService {
         contextProvider: SepticContext
     ): Promise<lsp.Hover | undefined>;
 
-    provideFormatting(params: lsp.DocumentFormattingParams): Promise<lsp.TextEdit[]>;
+    provideFormatting(
+        params: lsp.DocumentFormattingParams
+    ): Promise<lsp.TextEdit[]>;
 
     provideSignatureHelp(
         param: lsp.SignatureHelpParams
@@ -112,7 +113,10 @@ export function createLanguageService(
 
     const documentSymbolProvider = new DocumentSymbolProvider(cnfgProvider);
 
-    const completionProvider = new CompletionProvider(cnfgProvider, settingsManager);
+    const completionProvider = new CompletionProvider(
+        cnfgProvider,
+        settingsManager
+    );
 
     const referenceProvider = new ReferenceProvider(cnfgProvider);
 
@@ -172,6 +176,6 @@ export function createLanguageService(
         provideOpcTagList: generateOpcReport,
         provideCnfgComparison: cnfgComparisionProvider.compareCnfgs.bind(
             cnfgComparisionProvider
-        )
+        ),
     });
 }
