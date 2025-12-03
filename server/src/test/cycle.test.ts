@@ -1,5 +1,11 @@
 import { expect } from "chai";
-import { Alg, buildGraph, CycleDetectorVisitor, findAlgCycles, findCyclesInGraph, parseAlg } from "../septic";
+import {
+    Alg,
+    buildGraph,
+    CycleDetectorVisitor,
+    findCyclesInGraph,
+    parseAlg,
+} from "../septic";
 
 describe("Test cycle detector visitor", () => {
     it("Expect all variables when no setgood", () => {

@@ -9,11 +9,10 @@ import {
     SepticReference,
     defaultRefValidationFunction,
 } from "./reference";
-import { SepticContext } from './context';
+import { SepticContext } from "./context";
 import { SepticObject } from "./elements";
 import { SepticConfigProvider } from "../configProvider";
 import { SepticCnfg } from "./cnfg";
-import { SepticMetaInfoProvider } from "../metaInfoProvider";
 import { updateParentObjects } from "./hierarchy";
 
 export interface ScgConfig {
@@ -26,7 +25,6 @@ export interface ScgConfig {
     adjustsspacing: boolean;
 
     sources: ScgSource[];
-
     layout: ScgTemplate[];
 }
 
@@ -190,7 +188,10 @@ export class ScgContext implements SepticContext {
         return objects;
     }
 
-    public findObjectFromLocation(offset: number, uri: string = ""): SepticObject | undefined {
+    public findObjectFromLocation(
+        offset: number,
+        uri: string = ""
+    ): SepticObject | undefined {
         const cnfg = this.cnfgCache.get(uri);
         if (!cnfg) {
             return undefined;
@@ -210,11 +211,10 @@ export class ScgContext implements SepticContext {
                 return cnfg.objects[cnfg.objects.length - 1];
             }
         }
-        return undefined
+        return undefined;
     }
 
-    public async updateObjectParents(
-    ): Promise<void> {
+    public async updateObjectParents(): Promise<void> {
         await this.load();
         const objects: SepticObject[] = [];
         for (const file of this.files) {

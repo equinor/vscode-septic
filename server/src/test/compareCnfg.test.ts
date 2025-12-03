@@ -6,7 +6,6 @@ import {
     ComparisonSettings,
     isNoDiff,
 } from "../language-service/cnfgComparisonProvider";
-import { SepticMetaInfoProvider } from "../septic";
 import { parseSepticForTest } from "./util";
 
 const settings: ComparisonSettings = {

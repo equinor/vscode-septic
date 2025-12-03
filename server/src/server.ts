@@ -35,8 +35,8 @@ import {
     SepticCnfg,
 } from "./septic";
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
-import { validateStandAloneCalc } from './language-service/diagnosticsProvider';
-import { ContextManager } from './contextManager';
+import { validateStandAloneCalc } from "./language-service/diagnosticsProvider";
+import { ContextManager } from "./contextManager";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -73,7 +73,9 @@ const contextManager = new ContextManager(
 let hasConfigurationCapability = true;
 let hasWorkspaceFolderCapability = false;
 
-async function publishDiagnosticsScgContext(context: ScgContext): Promise<void> {
+async function publishDiagnosticsScgContext(
+    context: ScgContext
+): Promise<void> {
     await context.load();
     const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
     await context.updateObjectParents();
@@ -85,7 +87,9 @@ async function publishDiagnosticsScgContext(context: ScgContext): Promise<void> 
         }
         let diagnostics = await langService.provideDiagnostics(uri, context);
         if (codes) {
-            diagnostics = diagnostics.filter((diag) => diag.code && !codes.includes(diag.code as string));
+            diagnostics = diagnostics.filter(
+                (diag) => diag.code && !codes.includes(diag.code as string)
+            );
         }
         connection.sendDiagnostics({ uri: uri, diagnostics: diagnostics });
     });
@@ -103,13 +107,17 @@ async function publishDiagnosticsCnfg(cnfg: SepticCnfg): Promise<void> {
     await cnfg.updateObjectParents();
     let diagnostics = await langService.provideDiagnostics(cnfg.uri, cnfg);
     if (codes) {
-        diagnostics = diagnostics.filter((diag) => diag.code && !codes.includes(diag.code as string));
+        diagnostics = diagnostics.filter(
+            (diag) => diag.code && !codes.includes(diag.code as string)
+        );
     }
     connection.sendDiagnostics({ uri: cnfg.uri, diagnostics: diagnostics });
 }
 
 async function publishDiagnostics(uri: string) {
-    const context: SepticContext | undefined = await contextManager.getContext(uri);
+    const context: SepticContext | undefined = await contextManager.getContext(
+        uri
+    );
     if (!context) {
         return;
     }
@@ -138,10 +146,10 @@ async function updateDiagnosticsAllStandaloneCnfgs() {
     }
 }
 
-
 connection.onRequest(protocol.opcTagList, async (param) => {
-    let context: SepticContext | undefined =
-        await contextManager.getContext(param.uri);
+    const context: SepticContext | undefined = await contextManager.getContext(
+        param.uri
+    );
     if (!context) {
         return "";
     }
@@ -150,7 +158,7 @@ connection.onRequest(protocol.opcTagList, async (param) => {
 });
 
 connection.onRequest(protocol.cylceReport, async (param) => {
-    let context: SepticContext | undefined =
+    const context: SepticContext | undefined =
         await scgContextManager.getContext(param.uri);
     if (!context) {
         return "";
@@ -206,24 +214,32 @@ connection.onRequest(protocol.documentation, async () => {
 });
 
 connection.onRequest(protocol.variables, async (param) => {
-    let context: SepticContext | undefined =
-        await scgContextManager.getContext(param.uri);
+    let context: SepticContext | undefined = await scgContextManager.getContext(
+        param.uri
+    );
     if (!context) {
         context = await langService.cnfgProvider.get(param.uri);
         if (!context) {
             return undefined;
         }
     }
-    return context.getObjectsByType("Evr", "Cvr", "Dvr", "Tvr", "Mvr").map((xvr) => {
-        const description: string = xvr.getAttributeFirstValue("Text1") ?? "None";
-        return { name: xvr.identifier?.id, description: description, type: xvr.type };
-    });
-}
-)
+    return context
+        .getObjectsByType("Evr", "Cvr", "Dvr", "Tvr", "Mvr")
+        .map((xvr) => {
+            const description: string =
+                xvr.getAttributeFirstValue("Text1") ?? "None";
+            return {
+                name: xvr.identifier?.id,
+                description: description,
+                type: xvr.type,
+            };
+        });
+});
 
 connection.onRequest(protocol.validateAlg, async (param) => {
-    let context: SepticContext | undefined =
-        await scgContextManager.getContext(param.uri);
+    let context: SepticContext | undefined = await scgContextManager.getContext(
+        param.uri
+    );
     if (!context) {
         context = await langService.cnfgProvider.get(param.uri);
         if (!context) {
@@ -234,11 +250,15 @@ connection.onRequest(protocol.validateAlg, async (param) => {
 });
 
 connection.onRequest(protocol.getFunctions.method, async (param) => {
-    const cnfg: SepticCnfg | undefined = await langService.cnfgProvider.get(param.uri);
+    const cnfg: SepticCnfg | undefined = await langService.cnfgProvider.get(
+        param.uri
+    );
     if (!cnfg) {
         return [];
     }
-    let context: SepticContext | undefined = await scgContextManager.getContext(param.uri);
+    let context: SepticContext | undefined = await scgContextManager.getContext(
+        param.uri
+    );
     if (context) {
         await context.load();
     } else {
@@ -246,31 +266,43 @@ connection.onRequest(protocol.getFunctions.method, async (param) => {
     }
     const functions = cnfg.getFunctions();
 
-    return await Promise.all(functions.map(async (func) => {
-        const inputs = await Promise.all(func.inputs.map(async (input) => {
-            const xvr = context.getObjectsByIdentifier(input).filter((obj) => obj.isXvr)[0];
-            if (xvr) {
-                const doc = await documentProvider.getDocument(xvr.uri);
-                return {
-                    name: input,
-                    type: xvr.type,
-                    pos: doc?.positionAt(xvr.start),
-                    uri: xvr.uri
-                };
-            }
-        }))
-        const lines = await Promise.all(func.lines.map(async (line) => {
-            const doc = await documentProvider.getDocument(param.uri);
-            return { name: line.name, alg: line.alg, doc: line.doc, pos: doc?.positionAt(line.offset), uri: line.uri };
-        }));
-        return {
-            name: func.name,
-            lines: lines,
-            inputs: inputs.filter((i) => !!i)
-        };
-    }));
-
-
+    return await Promise.all(
+        functions.map(async (func) => {
+            const inputs = await Promise.all(
+                func.inputs.map(async (input) => {
+                    const xvr = context
+                        .getObjectsByIdentifier(input)
+                        .filter((obj) => obj.isXvr)[0];
+                    if (xvr) {
+                        const doc = await documentProvider.getDocument(xvr.uri);
+                        return {
+                            name: input,
+                            type: xvr.type,
+                            pos: doc?.positionAt(xvr.start),
+                            uri: xvr.uri,
+                        };
+                    }
+                })
+            );
+            const lines = await Promise.all(
+                func.lines.map(async (line) => {
+                    const doc = await documentProvider.getDocument(param.uri);
+                    return {
+                        name: line.name,
+                        alg: line.alg,
+                        doc: line.doc,
+                        pos: doc?.positionAt(line.offset),
+                        uri: line.uri,
+                    };
+                })
+            );
+            return {
+                name: func.name,
+                lines: lines,
+                inputs: inputs.filter((i) => !!i),
+            };
+        })
+    );
 });
 
 connection.onInitialize((params: InitializeParams) => {
@@ -385,15 +417,13 @@ connection.onFoldingRanges(async (params): Promise<FoldingRange[]> => {
     return langService.provideFoldingRanges(params);
 });
 
-connection.onDocumentSymbol(
-    async (params): Promise<DocumentSymbol[]> => {
-        return langService.provideDocumentSymbols(params);
-    }
-);
+connection.onDocumentSymbol(async (params): Promise<DocumentSymbol[]> => {
+    return langService.provideDocumentSymbols(params);
+});
 
 connection.onCompletion(
     async (params: CompletionParams): Promise<CompletionItem[]> => {
-        let context: SepticContext | undefined =
+        const context: SepticContext | undefined =
             await contextManager.getContext(params.textDocument.uri);
         if (!context) {
             return [];
@@ -403,15 +433,13 @@ connection.onCompletion(
 );
 
 connection.onDefinition(async (params) => {
-    let context: SepticContext | undefined =
-        await contextManager.getContext(params.textDocument.uri);
+    const context: SepticContext | undefined = await contextManager.getContext(
+        params.textDocument.uri
+    );
     if (!context) {
         return [];
     }
-    const refsOffset = await langService.provideDefinition(
-        params,
-        context
-    );
+    const refsOffset = await langService.provideDefinition(params, context);
     const refs: LocationLink[] = [];
     for (const ref of refsOffset) {
         const doc = await documentProvider.getDocument(ref.targetUri);
@@ -431,15 +459,13 @@ connection.onDefinition(async (params) => {
 });
 
 connection.onDeclaration(async (params) => {
-    let context: SepticContext | undefined =
-        await contextManager.getContext(params.textDocument.uri);
+    const context: SepticContext | undefined = await contextManager.getContext(
+        params.textDocument.uri
+    );
     if (!context) {
         return [];
     }
-    const refsOffset = await langService.provideDeclaration(
-        params,
-        context
-    );
+    const refsOffset = await langService.provideDeclaration(params, context);
     const refs: LocationLink[] = [];
     for (const ref of refsOffset) {
         const doc = await documentProvider.getDocument(ref.targetUri);
@@ -459,15 +485,13 @@ connection.onDeclaration(async (params) => {
 });
 
 connection.onReferences(async (params) => {
-    let context: SepticContext | undefined =
-        await contextManager.getContext(params.textDocument.uri);
+    const context: SepticContext | undefined = await contextManager.getContext(
+        params.textDocument.uri
+    );
     if (!context) {
         return [];
     }
-    const refsOffset = await langService.provideReferences(
-        params,
-        context
-    );
+    const refsOffset = await langService.provideReferences(params, context);
     const refs: Location[] = [];
     for (const ref of refsOffset) {
         const doc = await documentProvider.getDocument(ref.uri);
@@ -483,8 +507,9 @@ connection.onReferences(async (params) => {
 });
 
 connection.onRenameRequest(async (params) => {
-    let context: SepticContext | undefined =
-        await contextManager.getContext(params.textDocument.uri);
+    const context: SepticContext | undefined = await contextManager.getContext(
+        params.textDocument.uri
+    );
     if (!context) {
         return undefined;
     }
@@ -496,8 +521,9 @@ connection.onPrepareRename((params) => {
 });
 
 connection.onHover(async (params) => {
-    let context: SepticContext | undefined =
-        await contextManager.getContext(params.textDocument.uri);
+    const context: SepticContext | undefined = await contextManager.getContext(
+        params.textDocument.uri
+    );
     if (!context) {
         return undefined;
     }
