@@ -15,11 +15,11 @@ import {
     AlgVisitor,
     SepticCnfg,
     SepticMetaInfoProvider,
-    SepticObject,
     SepticContext,
     formatCalcMarkdown,
     formatObjectAttribute,
     formatObjectDocumentationMarkdown,
+    formatObjectInstance,
     parseAlg,
 } from "../septic";
 
@@ -78,22 +78,9 @@ export function getReferenceHover(
         return value.obj?.isXvr;
     });
     if (xvr.length) {
-        const text = getMarkdownXvr(xvr[0].obj!);
+        const text = formatObjectInstance(xvr[0].obj!);
         return {
-            contents: text,
-            range: {
-                start: cnfg.positionAt(ref.location.start),
-                end: cnfg.positionAt(ref.location.end),
-            },
-        };
-    }
-    const sopcXvr = allRefs.filter((value) => {
-        return value.obj?.isOpcXvr;
-    });
-    if (sopcXvr.length) {
-        const text = getMarkdownXvr(sopcXvr[0].obj!);
-        return {
-            contents: text,
+            contents: { value: text, kind: "markdown" },
             range: {
                 start: cnfg.positionAt(ref.location.start),
                 end: cnfg.positionAt(ref.location.end),
@@ -219,17 +206,4 @@ function getCalcDocumentation(name: string): MarkupContent | undefined {
         value: formatCalcMarkdown(calcInfo),
         kind: MarkupKind.Markdown,
     };
-}
-
-function getMarkdownXvr(obj: SepticObject): MarkupContent {
-    const text1 = obj.getAttributeFirstValue("Text1") ?? "";
-    const text2 = obj.getAttributeFirstValue("Text2") ?? "";
-    let text = `${obj.type}: ${obj.identifier?.name}`;
-    if (text1 !== "") {
-        text += `\n\nText1= ${text1}`;
-    }
-    if (text2 !== "") {
-        text += `\n\nText2= ${text2}`;
-    }
-    return { value: text, kind: "markdown" };
 }

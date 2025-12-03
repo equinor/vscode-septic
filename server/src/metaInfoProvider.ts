@@ -224,6 +224,8 @@ export class SepticMetaInfoProvider {
                     .join("\n"),
                 insertTextMode: InsertTextMode.asIs,
                 detail: obj.description,
+                sortText: `${obj.prefix}`,
+                labelDetails: { detail: ` Object` }
             };
             return compItem;
         });
