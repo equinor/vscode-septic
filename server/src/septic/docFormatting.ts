@@ -1,5 +1,5 @@
 import { bold, code, h4, horizontalRule } from "../util/markdown";
-import { SepticObject } from './septicElements';
+import { SepticObject } from './elements';
 import {
     ISepticObjectDocumentation,
     SepticAttributeDocumentation,
@@ -123,26 +123,26 @@ export function formatObjectInstance(obj: SepticObject) {
     let doc = `${obj.type}:  ${obj.identifier!.name}`;
     const newline = "\n\n";
     doc += newline + horizontalRule();
-    const text1 = obj.getAttribute("Text1")?.getValue();
+    const text1 = obj.getAttributeFirstValue("Text1");
     if (text1) {
         doc += newline + `Text1: "${text1}"`;
     } else {
         doc += newline + `Text1: ""`;
     }
-    const text2 = obj.getAttribute("Text2")?.getValue();
+    const text2 = obj.getAttributeFirstValue("Text2");
     if (text2) {
         doc += newline + `Text2: "${text2}"`;
     } else {
         doc += newline + `Text2: ""`;
     }
-    const unit = obj.getAttribute("Unit")?.getValue();
+    const unit = obj.getAttributeFirstValue("Unit");
     if (unit) {
         doc += newline + `Unit: "${unit}"`;
     } else {
         doc += newline + `Unit: ""`;
     }
     if (obj.isType("Evr")) {
-        const meas = obj.getAttribute("Meas")?.getValue();
+        const meas = obj.getAttributeFirstValue("Meas");
         if (meas) {
             doc += newline + "Meas: " + meas;
         } else {
