@@ -5,16 +5,8 @@
 
 import { AlgVisitor } from "./alg";
 import { SepticTokenType } from "./tokens";
-import {
-    SepticMetaInfoProvider,
-    SepticObjectHierarchy,
-} from "../metaInfoProvider";
-import {
-    Attribute,
-    AttributeValue,
-    SepticComment,
-    SepticObject,
-} from "./elements";
+import { SepticMetaInfoProvider } from "../metaInfoProvider";
+import { AttributeValue, SepticComment, SepticObject } from "./elements";
 import {
     SepticReference,
     RefValidationFunction,
@@ -22,13 +14,13 @@ import {
     createSepticReference,
     ReferenceType,
 } from "./reference";
-import { SepticContext } from './context';
+import { SepticContext } from "./context";
 import { removeSpaces, sleep, transformPositionsToOriginal } from "../util";
 import { updateParentObjects } from "./hierarchy";
-import { getFunctionsFromCalcPvrs, SepticFunction } from './function';
-import { ITextDocument } from '../types/textDocument';
-import { CancellationToken, Position, Range } from 'vscode-languageserver';
-import { SepticParser, SepticScanner } from './parser';
+import { getFunctionsFromCalcPvrs, SepticFunction } from "./function";
+import { ITextDocument } from "../types/textDocument";
+import { CancellationToken, Position, Range } from "vscode-languageserver";
+import { SepticParser, SepticScanner } from "./parser";
 
 export class SepticCnfg implements SepticContext, ITextDocument {
     public objects: SepticObject[] = [];
@@ -69,7 +61,7 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         if (!tokens.tokens.length) {
             return;
         }
-        await sleep(1);  // Sleep to prevent starvation of other async tasks
+        await sleep(1); // Sleep to prevent starvation of other async tasks
         const parser = new SepticParser(tokens.tokens);
         this.objects = parser.parse(token);
         this.comments = tokens.comments.map((comment) => {
@@ -163,8 +155,11 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         });
     }
 
-    public findAlgValueFromLocation(location: Position | number): undefined | AttributeValue {
-        const offset = typeof location === "number" ? location : this.offsetAt(location);
+    public findAlgValueFromLocation(
+        location: Position | number
+    ): undefined | AttributeValue {
+        const offset =
+            typeof location === "number" ? location : this.offsetAt(location);
         const obj = this.findObjectFromLocation(offset);
         if (!obj) {
             return undefined;
@@ -179,12 +174,16 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         return undefined;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public findObjectFromLocation(location: Position | number, uri: string = ""): SepticObject | undefined {
+    public findObjectFromLocation(
+        location: Position | number,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        uri: string = ""
+    ): SepticObject | undefined {
         if (!this.objects.length) {
             return undefined;
         }
-        const offset = typeof location === "number" ? location : this.offsetAt(location)
+        const offset =
+            typeof location === "number" ? location : this.offsetAt(location);
         if (offset < this.objects[0].start) {
             return undefined;
         }
@@ -204,9 +203,12 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         });
     }
 
-    public findReferenceFromLocation(location: Position | number): SepticReference | undefined {
+    public findReferenceFromLocation(
+        location: Position | number
+    ): SepticReference | undefined {
         this.extractReferences();
-        const offset = typeof location === "number" ? location : this.offsetAt(location)
+        const offset =
+            typeof location === "number" ? location : this.offsetAt(location);
         for (const xvrRef of this.references.values()) {
             const validRef = xvrRef.find((ref) => {
                 return (
@@ -220,8 +222,7 @@ export class SepticCnfg implements SepticContext, ITextDocument {
         return undefined;
     }
 
-    public updateObjectParents(
-    ): Promise<void> {
+    public updateObjectParents(): Promise<void> {
         updateParentObjects(this.objects);
         return Promise.resolve();
     }
@@ -272,9 +273,7 @@ export function extractReferencesFromObj(obj: SepticObject): SepticReference[] {
                 end: obj.identifier.end,
             },
             isObjRef ? obj : undefined,
-            isObjRef
-                ? ReferenceType.xvr
-                : ReferenceType.identifier
+            isObjRef ? ReferenceType.xvr : ReferenceType.identifier
         );
         references.push(ref);
     }
@@ -303,15 +302,23 @@ function calcPvrReferences(obj: SepticObject): SepticReference[] {
         let start = xvr.start;
         const diff = xvr.end - xvr.start;
         if (parsedAlg.positionsMap.length) {
-            const originalPositions = transformPositionsToOriginal([start], parsedAlg.positionsMap);
+            const originalPositions = transformPositionsToOriginal(
+                [start],
+                parsedAlg.positionsMap
+            );
             start = originalPositions[0];
         }
         const ref: SepticReference = createSepticReference(
             identifier,
             {
                 uri: "",
-                start: obj.getAttributeFirstValueObject("Alg")!.start + start + 1,
-                end: obj.getAttributeFirstValueObject("Alg")!.start + start + diff + 1,
+                start:
+                    obj.getAttributeFirstValueObject("Alg")!.start + start + 1,
+                end:
+                    obj.getAttributeFirstValueObject("Alg")!.start +
+                    start +
+                    diff +
+                    1,
             },
             undefined,
             ReferenceType.calc
@@ -321,7 +328,10 @@ function calcPvrReferences(obj: SepticObject): SepticReference[] {
     return refs;
 }
 
-function attributeReferences(obj: SepticObject, attrName: string): SepticReference[] {
+function attributeReferences(
+    obj: SepticObject,
+    attrName: string
+): SepticReference[] {
     const attr = obj.getAttribute(attrName);
     if (!attr) {
         return [];

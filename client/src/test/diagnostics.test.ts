@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as vscode from "vscode";
-import { getDocUri, openDocument, activate, setTestContent } from "./helper";
+import { getDocUri, activate } from "./helper";
 import { expect } from "chai";
 
 
