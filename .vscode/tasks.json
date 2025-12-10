@@ -37,6 +37,15 @@
             ],
             "label": "npm: lint",
             "detail": "eslint -c eslint.config.mjs ./client/src ./server/src"
+        },
+        {
+            "type": "npm",
+            "script": "compile-tests",
+            "path": "packages/extension",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "npm: compile-tests - packages/extension",
+            "detail": "tsc -p ./client && tsc -p ./server && npm run copy-files"
         }
     ]
 }

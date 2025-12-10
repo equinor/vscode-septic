@@ -283,21 +283,23 @@ describe("Test parsing of basic expressions", () => {
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
         expect((expr as AlgBinary).operator?.type).to.equal(
-            AlgTokenType.lessEqual
+            AlgTokenType.lessEqual,
         );
     });
     it("Parsing of greater", () => {
         const input = "1>2";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
-        expect((expr as AlgBinary).operator?.type).to.equal(AlgTokenType.greater);
+        expect((expr as AlgBinary).operator?.type).to.equal(
+            AlgTokenType.greater,
+        );
     });
     it("Parsing of greater-equal", () => {
         const input = "1>=2";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
         expect((expr as AlgBinary).operator?.type).to.equal(
-            AlgTokenType.greaterEqual
+            AlgTokenType.greaterEqual,
         );
     });
     it("Parsing of equalequal", () => {
@@ -305,7 +307,7 @@ describe("Test parsing of basic expressions", () => {
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgBinary);
         expect((expr as AlgBinary).operator?.type).to.equal(
-            AlgTokenType.equalEqual
+            AlgTokenType.equalEqual,
         );
     });
     it("Parsing of grouping", () => {
@@ -345,7 +347,9 @@ describe("Test parsing of variables", () => {
         const input = "var1{{ Test1 }}var2{{ Test2 }}";
         const expr = parseAlg(input);
         expect(expr).to.instanceOf(AlgLiteral);
-        expect((expr as AlgLiteral).value).to.equal("var1{{Test1}}var2{{Test2}}");
+        expect((expr as AlgLiteral).value).to.equal(
+            "var1{{Test1}}var2{{Test2}}",
+        );
     });
     it("Parsing of variable with subvariable", () => {
         const input = "test.first";
