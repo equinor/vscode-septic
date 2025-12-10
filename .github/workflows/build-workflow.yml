@@ -7,8 +7,11 @@ on:
 
 jobs:
   build:
-    name: "🛠️ Build"
+    name: "🛠️ Build Extension"
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/extension
     steps:
       - uses: actions/checkout@v5
 
