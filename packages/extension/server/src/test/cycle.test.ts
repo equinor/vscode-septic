@@ -5,7 +5,7 @@ import {
     CycleDetectorVisitor,
     findCyclesInGraph,
     parseAlg,
-} from "../septic";
+} from "septic";
 
 describe("Test cycle detector visitor", () => {
     it("Expect all variables when no setgood", () => {

@@ -3,11 +3,9 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { SepticContext } from "../septic";
+import { SepticContext } from "septic";
 
-export function generateOpcReport(
-    contextProvider: SepticContext
-): string {
+export function generateOpcReport(contextProvider: SepticContext): string {
     const header: string = "ObjectId;ObjectType;ObjectAttribute;OPCTag";
     const entries: string[] = [];
     const opcObjects = contextProvider.getObjectsByType(
@@ -29,7 +27,7 @@ export function generateOpcReport(
         "UADvr",
         "UAMvr",
         "UAAppl",
-        "UAProc"
+        "UAProc",
     );
     for (const obj of opcObjects) {
         const objectName = obj.identifier?.id ?? "unknown";
@@ -37,7 +35,7 @@ export function generateOpcReport(
             (attr) =>
                 attr.key.endsWith("Tag") ||
                 attr.key.startsWith("x") ||
-                attr.key.startsWith("y")
+                attr.key.startsWith("y"),
         );
         for (const tagAttr of tagAttributes) {
             const value = tagAttr.getFirstValue() ?? "";

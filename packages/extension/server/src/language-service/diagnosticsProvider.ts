@@ -7,7 +7,6 @@
 import { Diagnostic, DiagnosticSeverity, Range } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { ISepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "../types/textDocument";
 import {
     AlgVisitor,
     SepticCnfg,
@@ -38,7 +37,7 @@ import {
     SepticReference,
     ReferenceType,
     AlgParsingErrorType,
-} from "../septic";
+} from "septic";
 import { SettingsManager } from "../settings";
 import { isPureJinja } from "../util";
 
@@ -110,7 +109,7 @@ function createDiagnostic(
     severity: DiagnosticSeverity,
     range: Range,
     message: string,
-    code: DiagnosticCode
+    code: DiagnosticCode,
 ): Diagnostic {
     return {
         severity: severity,
@@ -128,7 +127,7 @@ export class DiagnosticProvider {
     /* istanbul ignore next */
     constructor(
         cnfgProvider: ISepticConfigProvider,
-        settingsManager: SettingsManager
+        settingsManager: SettingsManager,
     ) {
         this.cnfgProvider = cnfgProvider;
         this.settingsManager = settingsManager;
@@ -137,7 +136,7 @@ export class DiagnosticProvider {
     /* istanbul ignore next */
     public async provideDiagnostics(
         uri: string,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<Diagnostic[]> {
         const cnfg = await this.cnfgProvider.get(uri);
         if (cnfg === undefined) {
@@ -155,7 +154,10 @@ export class DiagnosticProvider {
     }
 }
 
-export function validateStandAloneCalc(alg: string, contextProvider: SepticContext): Diagnostic[] {
+export function validateStandAloneCalc(
+    alg: string,
+    contextProvider: SepticContext,
+): Diagnostic[] {
     const doc = TextDocument.create("", "", 0, `"${alg}"`);
     const algAttrValue = new AttributeValue(`"${alg}"`, SepticTokenType.string);
     return validateAlg(algAttrValue, doc, contextProvider);
@@ -163,7 +165,7 @@ export function validateStandAloneCalc(alg: string, contextProvider: SepticConte
 
 export function getDiagnostics(
     cnfg: SepticCnfg,
-    contextProvider: SepticContext
+    contextProvider: SepticContext,
 ) {
     const diagnostics: Diagnostic[] = [];
     diagnostics.push(...validateObjects(cnfg, contextProvider));
@@ -188,9 +190,7 @@ export function getDiagnostics(
     return filteredDiags;
 }
 
-export function validateComments(
-    cnfg: SepticCnfg,
-): Diagnostic[] {
+export function validateComments(cnfg: SepticCnfg): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     for (const comment of cnfg.comments) {
         if (!checkSepticComment(comment)) {
@@ -202,8 +202,8 @@ export function validateComments(
                         end: cnfg.positionAt(comment.end),
                     },
                     `Invalid comment. Correct format is //{whitespace}... or /*{whitespace}...{whitespace}*/`,
-                    DiagnosticCode.invalidComment
-                )
+                    DiagnosticCode.invalidComment,
+                ),
             );
         }
     }
@@ -221,24 +221,32 @@ function checkSepticComment(comment: SepticComment): boolean {
 
 export function validateAlgs(
     cnfg: SepticCnfg,
-    contextProvider: SepticContext
+    contextProvider: SepticContext,
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    const algAttrs = cnfg.objects.filter((obj) => obj.type === "CalcPvr" && obj.hasAttribute("Alg")).map((obj) => obj.getAttribute("Alg")!);
+    const algAttrs = cnfg.objects
+        .filter((obj) => obj.type === "CalcPvr" && obj.hasAttribute("Alg"))
+        .map((obj) => obj.getAttribute("Alg")!);
 
     for (let i = 0; i < algAttrs.length; i++) {
         const algAttrValue = algAttrs[i].getFirstAttributeValueObject();
         if (!algAttrValue) {
             continue;
         }
-        diagnostics.push(...validateAlg(algAttrValue, cnfg.doc, contextProvider));
+        diagnostics.push(
+            ...validateAlg(algAttrValue, cnfg.doc, contextProvider),
+        );
     }
     return diagnostics;
 }
 
 type AlgPositionTransformer = (start: number, end: number) => Range;
 
-export function validateAlg(alg: AttributeValue, doc: ITextDocument, contextProvider: SepticContext): Diagnostic[] {
+export function validateAlg(
+    alg: AttributeValue,
+    doc: TextDocument,
+    contextProvider: SepticContext,
+): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
 
     if (!checkAlgLength(alg.getValue())) {
@@ -250,12 +258,15 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, contextProv
                     end: doc.positionAt(alg.end),
                 },
                 `Alg exceed the maximum length of ${maxAlgLength} chars`,
-                DiagnosticCode.algMaxLength
-            )
+                DiagnosticCode.algMaxLength,
+            ),
         );
     }
     const offsetStartAlg = alg.start + 1;
-    const algPositionTransformer: AlgPositionTransformer = (start: number, end: number): Range => {
+    const algPositionTransformer: AlgPositionTransformer = (
+        start: number,
+        end: number,
+    ): Range => {
         return {
             start: doc.positionAt(start + offsetStartAlg),
             end: doc.positionAt(end + offsetStartAlg),
@@ -266,17 +277,17 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, contextProv
         expr = parseAlg(alg.getValue());
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-        let code = DiagnosticCode.invalidAlg
-        let severity: DiagnosticSeverity = DiagnosticSeverity.Error
+        let code = DiagnosticCode.invalidAlg;
+        let severity: DiagnosticSeverity = DiagnosticSeverity.Error;
         if (error.type === AlgParsingErrorType.unsupportedJinja) {
-            code = DiagnosticCode.jinjaExpressionInAlg
-            severity = DiagnosticSeverity.Warning
+            code = DiagnosticCode.jinjaExpressionInAlg;
+            severity = DiagnosticSeverity.Warning;
         }
         const diagnostic = createDiagnostic(
             severity,
             algPositionTransformer(error.token.start, error.token.end),
             error.message,
-            code
+            code,
         );
         diagnostics.push(diagnostic);
         return diagnostics;
@@ -285,7 +296,7 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, contextProv
     visitor.visit(expr);
     visitor.calcs.forEach((calc) => {
         diagnostics.push(
-            ...validateCalc(calc, contextProvider, algPositionTransformer)
+            ...validateCalc(calc, contextProvider, algPositionTransformer),
         );
     });
     visitor.variables.forEach((variable) => {
@@ -294,8 +305,8 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, contextProv
                 variable,
                 doc,
                 contextProvider,
-                offsetStartAlg
-            )
+                offsetStartAlg,
+            ),
         );
     });
     return diagnostics;
@@ -303,16 +314,19 @@ export function validateAlg(alg: AttributeValue, doc: ITextDocument, contextProv
 
 export function validateAlgVariable(
     variable: AlgLiteral,
-    doc: ITextDocument,
+    doc: TextDocument,
     contextProvider: SepticContext,
-    offsetStartAlg: number
+    offsetStartAlg: number,
 ): Diagnostic[] {
     if (isPureJinja(variable.value)) {
         return [];
     }
     const variableParts = variable.value.split(".");
     if (
-        !contextProvider.validateReferences(variableParts[0], defaultRefValidationFunction)
+        !contextProvider.validateReferences(
+            variableParts[0],
+            defaultRefValidationFunction,
+        )
     ) {
         return [
             createDiagnostic(
@@ -322,7 +336,7 @@ export function validateAlgVariable(
                     end: doc.positionAt(offsetStartAlg + variable.end),
                 },
                 `Reference to undefined variable: ${variable.value}`,
-                DiagnosticCode.missingReference
+                DiagnosticCode.missingReference,
             ),
         ];
     }
@@ -338,20 +352,20 @@ export function validateAlgVariable(
                     end: doc.positionAt(offsetStartAlg + variable.end),
                 },
                 `Missing public property for variable`,
-                DiagnosticCode.missingPublicProperty
+                DiagnosticCode.missingPublicProperty,
             ),
         ];
     }
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     let referencedObjects = contextProvider.getObjectsByIdentifier(
-        variableParts[0]
+        variableParts[0],
     );
     referencedObjects = referencedObjects.filter((obj) => obj.isXvr);
     if (!referencedObjects.length) {
         return [];
     }
     const publicAttributes = metaInfoProvider.getObjectDocumentation(
-        referencedObjects[0].type
+        referencedObjects[0].type,
     )?.publicAttributes;
 
     if (!publicAttributes?.includes(variableParts[1])) {
@@ -361,14 +375,14 @@ export function validateAlgVariable(
                 {
                     start: doc.positionAt(
                         offsetStartAlg +
-                        variable.start +
-                        variableParts[0].length +
-                        1
+                            variable.start +
+                            variableParts[0].length +
+                            1,
                     ),
                     end: doc.positionAt(offsetStartAlg + variable.end),
                 },
                 `Unknown public property ${variableParts[1]} for ${referencedObjects[0].type}'`,
-                DiagnosticCode.unknownPublicProperty
+                DiagnosticCode.unknownPublicProperty,
             ),
         ];
     }
@@ -379,7 +393,7 @@ export function validateAlgVariable(
 export function validateCalc(
     calc: AlgCalc,
     contextProvider: SepticContext,
-    algPositionTransformer: AlgPositionTransformer
+    algPositionTransformer: AlgPositionTransformer,
 ): Diagnostic[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const diagnostics: Diagnostic[] = [];
@@ -389,7 +403,7 @@ export function validateCalc(
             DiagnosticSeverity.Warning,
             algPositionTransformer(calc.start, calc.end),
             `Unknown function: ${calc.identifier}`,
-            DiagnosticCode.unknownCalc
+            DiagnosticCode.unknownCalc,
         );
         return [diagnostic];
     }
@@ -398,8 +412,8 @@ export function validateCalc(
             calc,
             calcMetaInfo,
             contextProvider,
-            algPositionTransformer
-        )
+            algPositionTransformer,
+        ),
     );
     return diagnostics;
 }
@@ -408,7 +422,7 @@ function validateCalcParams(
     calc: AlgCalc,
     calcInfo: SepticCalcInfo,
     contextProvider: SepticContext,
-    algPositionTransformer: AlgPositionTransformer
+    algPositionTransformer: AlgPositionTransformer,
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     for (let index = 0; index < calc.getNumParams(); index++) {
@@ -418,9 +432,18 @@ function validateCalcParams(
         if (!paramInfo) {
             continue;
         }
-        diagnostics.push(...validateSingleParam(paramExpr, paramInfo, contextProvider, algPositionTransformer));
+        diagnostics.push(
+            ...validateSingleParam(
+                paramExpr,
+                paramInfo,
+                contextProvider,
+                algPositionTransformer,
+            ),
+        );
     }
-    diagnostics.push(...validateCalcParamsLength(calc, calcInfo, algPositionTransformer));
+    diagnostics.push(
+        ...validateCalcParamsLength(calc, calcInfo, algPositionTransformer),
+    );
     return diagnostics;
 }
 
@@ -428,7 +451,7 @@ function validateSingleParam(
     paramExpr: AlgExpr,
     paramInfo: SepticCalcParameterInfo,
     contextProvider: SepticContext,
-    algPositionTransformer: AlgPositionTransformer
+    algPositionTransformer: AlgPositionTransformer,
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     if (isEmptyNonOptionalParam(paramExpr, paramInfo)) {
@@ -437,35 +460,53 @@ function validateSingleParam(
                 DiagnosticSeverity.Warning,
                 algPositionTransformer(paramExpr.start, paramExpr.end),
                 `Missing value for non-optional parameter`,
-                DiagnosticCode.missingValueNonOptionalArg
-            )
+                DiagnosticCode.missingValueNonOptionalArg,
+            ),
         );
     }
-    diagnostics.push(...validateParamType(paramExpr, paramInfo.datatype, contextProvider, algPositionTransformer));
+    diagnostics.push(
+        ...validateParamType(
+            paramExpr,
+            paramInfo.datatype,
+            contextProvider,
+            algPositionTransformer,
+        ),
+    );
     return diagnostics;
 }
 
 function validateCalcParamsLength(
     calc: AlgCalc,
     calcInfo: SepticCalcInfo,
-    algPositionTransformer: AlgPositionTransformer
+    algPositionTransformer: AlgPositionTransformer,
 ): Diagnostic[] {
     const paramInfo = getCalcParamIndexInfo(calcInfo);
     const numFixedParamsPre = paramInfo.fixedLengthParams.pre.length
-        ? paramInfo.fixedLengthParams.pre[paramInfo.fixedLengthParams.pre.length - 1]
+        ? paramInfo.fixedLengthParams.pre[
+              paramInfo.fixedLengthParams.pre.length - 1
+          ]
         : 0;
-    const numFixedParamsPost = paramInfo.fixedLengthParams.post.length ? paramInfo.fixedLengthParams.post[paramInfo.fixedLengthParams.post.length - 1] - numFixedParamsPre : 0;
+    const numFixedParamsPost = paramInfo.fixedLengthParams.post.length
+        ? paramInfo.fixedLengthParams.post[
+              paramInfo.fixedLengthParams.post.length - 1
+          ] - numFixedParamsPre
+        : 0;
     const numVariableParams = paramInfo.variableLengthParams.num;
     const numParams = calc.getNumParams();
     if (!numVariableParams) {
-        if (numParams < numFixedParamsPre - paramInfo.fixedLengthParams.numOptional) {
+        if (
+            numParams <
+            numFixedParamsPre - paramInfo.fixedLengthParams.numOptional
+        ) {
             return [
                 createDiagnostic(
                     DiagnosticSeverity.Warning,
                     algPositionTransformer(calc.start, calc.end),
-                    `Missing parameter(s). Expected min ${numFixedParamsPre - paramInfo.fixedLengthParams.numOptional
+                    `Missing parameter(s). Expected min ${
+                        numFixedParamsPre -
+                        paramInfo.fixedLengthParams.numOptional
                     } params but got ${numParams}`,
-                    DiagnosticCode.invalidNumberOfParams
+                    DiagnosticCode.invalidNumberOfParams,
                 ),
             ];
         }
@@ -475,7 +516,7 @@ function validateCalcParamsLength(
                     DiagnosticSeverity.Warning,
                     algPositionTransformer(calc.start, calc.end),
                     `Too many parameters. Expected max ${numFixedParamsPre} params but got ${numParams}`,
-                    DiagnosticCode.invalidNumberOfParams
+                    DiagnosticCode.invalidNumberOfParams,
                 ),
             ];
         }
@@ -484,7 +525,7 @@ function validateCalcParamsLength(
     if (paramInfo.variableLengthParams.exactLength) {
         const indexDesignatorParam = getIndexOfParam(
             paramInfo.variableLengthParams.exactLength,
-            calcInfo
+            calcInfo,
         );
         if (!indexDesignatorParam) {
             return [];
@@ -493,20 +534,22 @@ function validateCalcParamsLength(
             return [];
         }
         const designatorValue = getValueOfAlgExpr(
-            calc.params[indexDesignatorParam]
+            calc.params[indexDesignatorParam],
         );
         if (designatorValue === undefined) {
             return [];
         }
         const expectedNumParams =
-            numVariableParams * designatorValue + numFixedParamsPre + numFixedParamsPost;
+            numVariableParams * designatorValue +
+            numFixedParamsPre +
+            numFixedParamsPost;
         if (numParams !== expectedNumParams) {
             return [
                 createDiagnostic(
                     DiagnosticSeverity.Warning,
                     algPositionTransformer(calc.start, calc.end),
                     `Invalid number of parameters. Expected ${expectedNumParams} params but got ${numParams}`,
-                    DiagnosticCode.invalidNumberOfParams
+                    DiagnosticCode.invalidNumberOfParams,
                 ),
             ];
         }
@@ -514,17 +557,25 @@ function validateCalcParamsLength(
     }
 
     if (
-        (numParams - numFixedParamsPre - numFixedParamsPost) % numVariableParams !== 0 ||
-        numParams === 0 || numParams < numFixedParamsPre + numFixedParamsPost + numVariableParams
+        (numParams - numFixedParamsPre - numFixedParamsPost) %
+            numVariableParams !==
+            0 ||
+        numParams === 0 ||
+        numParams < numFixedParamsPre + numFixedParamsPost + numVariableParams
     ) {
-        const minNumParams = numFixedParamsPre + numFixedParamsPost + numVariableParams;
-        const oddOrEven = (numVariableParams + numFixedParamsPre + numFixedParamsPost) % 2 === 0 ? "even" : "odd";
+        const minNumParams =
+            numFixedParamsPre + numFixedParamsPost + numVariableParams;
+        const oddOrEven =
+            (numVariableParams + numFixedParamsPre + numFixedParamsPost) % 2 ===
+            0
+                ? "even"
+                : "odd";
         return [
             createDiagnostic(
                 DiagnosticSeverity.Warning,
                 algPositionTransformer(calc.start, calc.end),
                 `Invalid number of parameters. Expected min ${minNumParams} parameters and an ${oddOrEven} number of parameters but got ${numParams}`,
-                DiagnosticCode.invalidNumberOfParams
+                DiagnosticCode.invalidNumberOfParams,
             ),
         ];
     }
@@ -533,7 +584,7 @@ function validateCalcParamsLength(
 
 function isEmptyNonOptionalParam(
     expr: AlgExpr,
-    paramInfo: SepticCalcParameterInfo
+    paramInfo: SepticCalcParameterInfo,
 ) {
     return (
         expr instanceof AlgLiteral &&
@@ -553,19 +604,28 @@ function validateParamType(
     expr: AlgExpr,
     types: string[],
     contextProvider: SepticContext,
-    algPositionTransformer: AlgPositionTransformer
+    algPositionTransformer: AlgPositionTransformer,
 ): Diagnostic[] {
     if (types[0].startsWith("value")) {
-        return validateValueParamType(expr, contextProvider, algPositionTransformer);
+        return validateValueParamType(
+            expr,
+            contextProvider,
+            algPositionTransformer,
+        );
     }
-    return validateObjectParamType(expr, types, contextProvider, algPositionTransformer);
+    return validateObjectParamType(
+        expr,
+        types,
+        contextProvider,
+        algPositionTransformer,
+    );
 }
 
 function validateObjectParamType(
     expr: AlgExpr,
     types: string[],
     contextProvider: SepticContext,
-    algPositionTransformer: AlgPositionTransformer
+    algPositionTransformer: AlgPositionTransformer,
 ): Diagnostic[] {
     if (!isAlgExprObjectReference(expr)) {
         return [
@@ -573,13 +633,13 @@ function validateObjectParamType(
                 DiagnosticSeverity.Warning,
                 algPositionTransformer(expr.start, expr.end),
                 `Wrong data type for parameter. Expected data type for parameter: ${types.join(",")}}`,
-                DiagnosticCode.invalidDataTypeArg
-            )
+                DiagnosticCode.invalidDataTypeArg,
+            ),
         ];
     }
     const exprLiteral = expr as AlgLiteral;
     const objects = contextProvider.getObjectsByIdentifier(
-        exprLiteral.value.split(".")[0]
+        exprLiteral.value.split(".")[0],
     );
     for (const obj of objects) {
         if (types.includes(obj.type.toLowerCase())) {
@@ -591,15 +651,15 @@ function validateObjectParamType(
             DiagnosticSeverity.Warning,
             algPositionTransformer(expr.start, expr.end),
             `Wrong data type for parameter: ${exprLiteral.value}. Expected data type for parameter: ${types.join(",")}}`,
-            DiagnosticCode.invalidDataTypeArg
-        )
+            DiagnosticCode.invalidDataTypeArg,
+        ),
     ];
 }
 
 function validateValueParamType(
     expr: AlgExpr,
     contextProvider: SepticContext,
-    algPositionTransformer: AlgPositionTransformer
+    algPositionTransformer: AlgPositionTransformer,
 ): Diagnostic[] {
     if (!isAlgExprObjectReference(expr)) {
         return [];
@@ -608,14 +668,22 @@ function validateValueParamType(
     if (isPureJinja(exprLiteral.value)) {
         return [];
     }
-    if (contextProvider.validateReferences(exprLiteral.value.split(".")[0], defaultRefValidationFunction)) {
+    if (
+        contextProvider.validateReferences(
+            exprLiteral.value.split(".")[0],
+            defaultRefValidationFunction,
+        )
+    ) {
         return [];
     }
-    return [createDiagnostic(
-        DiagnosticSeverity.Warning,
-        algPositionTransformer(expr.start, expr.end),
-        `Reference to undefined variable: ${exprLiteral.value}`,
-        DiagnosticCode.missingReference)];
+    return [
+        createDiagnostic(
+            DiagnosticSeverity.Warning,
+            algPositionTransformer(expr.start, expr.end),
+            `Reference to undefined variable: ${exprLiteral.value}`,
+            DiagnosticCode.missingReference,
+        ),
+    ];
 }
 
 function isAlgExprObjectReference(expr: AlgExpr) {
@@ -624,7 +692,7 @@ function isAlgExprObjectReference(expr: AlgExpr) {
 
 export function validateObjects(
     cnfg: SepticCnfg,
-    contextProvider: SepticContext
+    contextProvider: SepticContext,
 ): Diagnostic[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const diagnostics: Diagnostic[] = [];
@@ -640,13 +708,19 @@ export function validateObjects(
                         end: cnfg.positionAt(obj.start + obj.type.length),
                     },
                     "Unknown object type",
-                    DiagnosticCode.unknownObjectType
-                )
+                    DiagnosticCode.unknownObjectType,
+                ),
             );
             continue;
         }
         diagnostics.push(
-            ...validateObject(obj, cnfg.doc, contextProvider, objectDoc, objectInfo)
+            ...validateObject(
+                obj,
+                cnfg.doc,
+                contextProvider,
+                objectDoc,
+                objectInfo,
+            ),
         );
     }
     return diagnostics;
@@ -654,26 +728,32 @@ export function validateObjects(
 
 export function validateObject(
     obj: SepticObject,
-    doc: ITextDocument,
+    doc: TextDocument,
     contextProvider: SepticContext,
     objectDoc: ISepticObjectDocumentation,
-    objectInfo: SepticObjectInfo | undefined
+    objectInfo: SepticObjectInfo | undefined,
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     diagnostics.push(...validateObjectParent(obj, doc));
     diagnostics.push(...validateIdentifier(obj, doc));
     diagnostics.push(
-        ...validateObjectReferences(obj, doc, contextProvider, objectInfo)
+        ...validateObjectReferences(obj, doc, contextProvider, objectInfo),
     );
     const baseAttributes: Map<string, Attribute[]> = new Map();
     for (const attr of obj.attributes) {
-        diagnostics.push(...validateAttribute(attr, doc, objectDoc, baseAttributes));
+        diagnostics.push(
+            ...validateAttribute(attr, doc, objectDoc, baseAttributes),
+        );
     }
     checkForDuplicateAttributes(baseAttributes, diagnostics, doc);
     return diagnostics;
 }
 
-function checkForDuplicateAttributes(baseAttributes: Map<string, Attribute[]>, diagnostics: Diagnostic[], doc: ITextDocument) {
+function checkForDuplicateAttributes(
+    baseAttributes: Map<string, Attribute[]>,
+    diagnostics: Diagnostic[],
+    doc: TextDocument,
+) {
     for (const [key, attrs] of baseAttributes) {
         if (attrs.length > 1) {
             for (const attr of attrs) {
@@ -685,8 +765,8 @@ function checkForDuplicateAttributes(baseAttributes: Map<string, Attribute[]>, d
                             end: doc.positionAt(attr.start + attr.key.length),
                         },
                         `Duplicated attribute ${key}`,
-                        DiagnosticCode.duplicatedAttribute
-                    )
+                        DiagnosticCode.duplicatedAttribute,
+                    ),
                 );
             }
         }
@@ -695,7 +775,7 @@ function checkForDuplicateAttributes(baseAttributes: Map<string, Attribute[]>, d
 
 export function validateIdentifier(
     obj: SepticObject,
-    doc: ITextDocument
+    doc: TextDocument,
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     if (!obj.identifier) {
@@ -706,7 +786,7 @@ export function validateIdentifier(
                 end: doc.positionAt(obj.start + obj.type.length),
             },
             `Missing identifier for object of type ${obj.type}`,
-            DiagnosticCode.missingIdentifier
+            DiagnosticCode.missingIdentifier,
         );
         diagnostics.push(diagnostic);
         return diagnostics;
@@ -724,33 +804,39 @@ export function validateIdentifier(
                 end: doc.positionAt(obj.identifier.end),
             },
             `Invalid identifier. Identifier needs to contain minimum one letter. Allowed chars: [a-z, A-Z, 0-9, _, -]. Jinja-expressions are allowed for SCG`,
-            DiagnosticCode.invalidIdentifier
+            DiagnosticCode.invalidIdentifier,
         ),
     ];
 }
 
 export function validateObjectReferences(
     obj: SepticObject,
-    doc: ITextDocument,
+    doc: TextDocument,
     contextProvider: SepticContext,
-    objectMetaInfo: SepticObjectInfo | undefined
+    objectMetaInfo: SepticObjectInfo | undefined,
 ): Diagnostic[] {
     if (!objectMetaInfo) {
         return [];
     }
     const diagnostics: Diagnostic[] = [];
-    diagnostics.push(...validateDuplicateIdentifiers(obj, contextProvider, doc));
+    diagnostics.push(
+        ...validateDuplicateIdentifiers(obj, contextProvider, doc),
+    );
     if (obj.isType("Evr")) {
         diagnostics.push(...validateEvrReferences(obj, contextProvider, doc));
     }
     if (shouldValidateIdentifier(objectMetaInfo, obj)) {
         if (obj.isType("CalcPvr")) {
             diagnostics.push(
-                ...validateCalcPvrIdentifierReferences(obj, contextProvider, doc)
+                ...validateCalcPvrIdentifierReferences(
+                    obj,
+                    contextProvider,
+                    doc,
+                ),
             );
         } else if (obj.isType("UAAppl")) {
             diagnostics.push(
-                ...validateUAApplReferences(obj, contextProvider, doc)
+                ...validateUAApplReferences(obj, contextProvider, doc),
             );
         } else {
             diagnostics.push(
@@ -758,8 +844,8 @@ export function validateObjectReferences(
                     obj,
                     contextProvider,
                     objectMetaInfo,
-                    doc
-                )
+                    doc,
+                ),
             );
         }
     }
@@ -779,7 +865,7 @@ export function validateObjectReferences(
             }
             const validRef = contextProvider.validateReferences(
                 refName,
-                defaultRefValidationFunction
+                defaultRefValidationFunction,
             );
             if (validRef) {
                 continue;
@@ -792,8 +878,8 @@ export function validateObjectReferences(
                         end: doc.positionAt(attrValue.end),
                     },
                     `Reference to undefined Xvr ${attrValue.getValue()}`,
-                    DiagnosticCode.missingReference
-                )
+                    DiagnosticCode.missingReference,
+                ),
             );
         }
     }
@@ -802,7 +888,7 @@ export function validateObjectReferences(
 
 function shouldValidateIdentifier(
     objectMetaInfo: SepticObjectInfo,
-    obj: SepticObject
+    obj: SepticObject,
 ) {
     return objectMetaInfo.refs.identifier && obj.identifier && !obj.isXvr;
 }
@@ -811,11 +897,11 @@ function validateIdentifierReferences(
     obj: SepticObject,
     contextProvider: SepticContext,
     objectMetaInfo: SepticObjectInfo,
-    doc: ITextDocument
+    doc: TextDocument,
 ): Diagnostic[] {
     const validRef = contextProvider.validateReferences(
         obj.identifier!.name,
-        defaultRefValidationFunction
+        defaultRefValidationFunction,
     );
     if (validRef) {
         return [];
@@ -831,13 +917,13 @@ function validateIdentifierReferences(
                 end: doc.positionAt(obj.identifier!.end),
             },
             `Reference to undefined Xvr ${obj.identifier!.name}`,
-            DiagnosticCode.missingReference
+            DiagnosticCode.missingReference,
         ),
     ];
 }
 
 const hasDuplicateReferenceXvr: RefValidationFunction = (
-    refs: SepticReference[]
+    refs: SepticReference[],
 ) => {
     let xvrsCount = 0;
     for (const ref of refs) {
@@ -849,7 +935,7 @@ const hasDuplicateReferenceXvr: RefValidationFunction = (
 };
 
 const hasDuplicateReferenceSopcXvr: RefValidationFunction = (
-    refs: SepticReference[]
+    refs: SepticReference[],
 ) => {
     let sopcXvrsCount = 0;
     for (const ref of refs) {
@@ -861,7 +947,7 @@ const hasDuplicateReferenceSopcXvr: RefValidationFunction = (
 };
 
 const hasDuplicateReferenceUaXvr: RefValidationFunction = (
-    refs: SepticReference[]
+    refs: SepticReference[],
 ) => {
     let uaXvrsCount = 0;
     for (const ref of refs) {
@@ -875,7 +961,7 @@ const hasDuplicateReferenceUaXvr: RefValidationFunction = (
 function validateDuplicateIdentifiers(
     obj: SepticObject,
     contextProvider: SepticContext,
-    doc: ITextDocument
+    doc: TextDocument,
 ): Diagnostic[] {
     if (!obj.identifier) {
         return [];
@@ -892,7 +978,7 @@ function validateDuplicateIdentifiers(
     }
     const validRef = contextProvider.validateReferences(
         obj.identifier!.name,
-        validationFunction
+        validationFunction,
     );
     if (validRef) {
         return [];
@@ -906,7 +992,7 @@ function validateDuplicateIdentifiers(
                 end: doc.positionAt(obj.identifier!.end),
             },
             `Duplicate Xvr with name: ${obj.identifier!.name}`,
-            DiagnosticCode.duplicate
+            DiagnosticCode.duplicate,
         ),
     ];
 }
@@ -914,10 +1000,15 @@ function validateDuplicateIdentifiers(
 function validateCalcPvrIdentifierReferences(
     obj: SepticObject,
     contextProvider: SepticContext,
-    doc: ITextDocument
+    doc: TextDocument,
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    if (contextProvider.validateReferences(obj.identifier!.name, hasDuplicateCalcPvrRef)) {
+    if (
+        contextProvider.validateReferences(
+            obj.identifier!.name,
+            hasDuplicateCalcPvrRef,
+        )
+    ) {
         diagnostics.push(
             createDiagnostic(
                 DiagnosticSeverity.Warning,
@@ -926,20 +1017,20 @@ function validateCalcPvrIdentifierReferences(
                     end: doc.positionAt(obj.identifier!.end),
                 },
                 `Duplicate CalcPvr with name: ${obj.identifier!.name}`,
-                DiagnosticCode.duplicate
-            )
+                DiagnosticCode.duplicate,
+            ),
         );
     }
     const referenceToEvr = contextProvider.validateReferences(
         obj.identifier!.name,
-        hasReferenceToEvr
+        hasReferenceToEvr,
     );
     if (referenceToEvr) {
         return diagnostics;
     }
     const referenceToXvr = contextProvider.validateReferences(
         obj.identifier!.name,
-        defaultRefValidationFunction
+        defaultRefValidationFunction,
     );
     const severity = referenceToXvr
         ? DiagnosticSeverity.Warning
@@ -958,7 +1049,7 @@ function validateCalcPvrIdentifierReferences(
                 end: doc.positionAt(obj.identifier!.end),
             },
             message,
-            code
+            code,
         ),
     );
     return diagnostics;
@@ -967,10 +1058,10 @@ function validateCalcPvrIdentifierReferences(
 function validateUAApplReferences(
     obj: SepticObject,
     contextProvider: SepticContext,
-    doc: ITextDocument
+    doc: TextDocument,
 ): Diagnostic[] {
     for (const object of contextProvider.getObjectsByIdentifier(
-        obj.identifier!.name
+        obj.identifier!.name,
     )) {
         if (object.isType("SmpcAppl", "MPCAppl")) {
             return [];
@@ -984,7 +1075,7 @@ function validateUAApplReferences(
                 end: doc.positionAt(obj.identifier!.end),
             },
             "Missing reference to SmpcAppl or MPCAppl",
-            DiagnosticCode.missingReference
+            DiagnosticCode.missingReference,
         ),
     ];
 }
@@ -998,7 +1089,9 @@ const hasReferenceToEvr: RefValidationFunction = (refs: SepticReference[]) => {
     return false;
 };
 
-const hasDuplicateCalcPvrRef: RefValidationFunction = (refs: SepticReference[]) => {
+const hasDuplicateCalcPvrRef: RefValidationFunction = (
+    refs: SepticReference[],
+) => {
     let seen = false;
     for (const ref of refs) {
         if (ref.obj?.isType("CalcPvr")) {
@@ -1014,7 +1107,7 @@ const hasDuplicateCalcPvrRef: RefValidationFunction = (refs: SepticReference[]) 
 export function validateEvrReferences(
     obj: SepticObject,
     contextProvider: SepticContext,
-    doc: ITextDocument
+    doc: TextDocument,
 ) {
     const userInputAttrValue = obj.getAttributeFirstValueObject("UserInput");
     if (userInputAttrValue && userInputAttrValue.getValue() !== "OFF") {
@@ -1037,7 +1130,7 @@ export function validateEvrReferences(
                     end: doc.positionAt(obj.identifier!.end),
                 },
                 "Unused Evr. Evr not used in calcs or enabled user input",
-                DiagnosticCode.unusedEvr
+                DiagnosticCode.unusedEvr,
             ),
         ];
     }
@@ -1046,9 +1139,9 @@ export function validateEvrReferences(
 
 export function validateAttribute(
     attr: Attribute,
-    doc: ITextDocument,
+    doc: TextDocument,
     objectDoc: ISepticObjectDocumentation,
-    duplicates: Map<string, Attribute[]>
+    duplicates: Map<string, Attribute[]>,
 ): Diagnostic[] {
     const attrDoc = objectDoc.getAttribute(attr.key);
     const diagnostics: Diagnostic[] = [];
@@ -1061,7 +1154,7 @@ export function validateAttribute(
                     end: doc.positionAt(attr.start + attr.key.length),
                 },
                 `Unknown attribute for Object of type ${objectDoc.name}`,
-                DiagnosticCode.unknownAttribute
+                DiagnosticCode.unknownAttribute,
             ),
         ];
     }
@@ -1078,12 +1171,12 @@ export function validateAttribute(
             attrDoc,
             attr.start,
             attr.start + attr.key.length,
-            doc
-        )
+            doc,
+        ),
     );
     const startIndex = attrValues.length > 1 ? 1 : 0;
     diagnostics.push(
-        ...validateAttributeValue(attrValues.slice(startIndex), attrDoc, doc)
+        ...validateAttributeValue(attrValues.slice(startIndex), attrDoc, doc),
     );
     return diagnostics;
 }
@@ -1091,7 +1184,7 @@ export function validateAttribute(
 function validateAttributeValue(
     attrValues: AttributeValue[],
     attrDoc: SepticAttributeDocumentation,
-    doc: ITextDocument
+    doc: TextDocument,
 ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     for (const attrValue of attrValues) {
@@ -1106,8 +1199,8 @@ function validateAttributeValue(
                         end: doc.positionAt(attrValue.end),
                     },
                     errorMessage,
-                    DiagnosticCode.invalidDataTypeAttribute
-                )
+                    DiagnosticCode.invalidDataTypeAttribute,
+                ),
             );
         }
         if (attrValue.type === SepticTokenType.string) {
@@ -1118,15 +1211,15 @@ function validateAttributeValue(
                         DiagnosticSeverity.Error,
                         {
                             start: doc.positionAt(
-                                attrValue.start + 1 + indexInvalid
+                                attrValue.start + 1 + indexInvalid,
                             ),
                             end: doc.positionAt(
-                                attrValue.start + 1 + indexInvalid + 1
+                                attrValue.start + 1 + indexInvalid + 1,
                             ),
                         },
                         `Invalid char in string: "'" `,
-                        DiagnosticCode.invalidCharInString
-                    )
+                        DiagnosticCode.invalidCharInString,
+                    ),
                 );
             }
         }
@@ -1139,7 +1232,7 @@ function validateAttributeNumValues(
     attrDoc: SepticAttributeDocumentation,
     startAttr: number,
     endAttr: number,
-    doc: ITextDocument
+    doc: TextDocument,
 ): Diagnostic[] {
     const range = {
         start: doc.positionAt(startAttr),
@@ -1152,7 +1245,7 @@ function validateAttributeNumValues(
                     DiagnosticSeverity.Error,
                     range,
                     `Missing value for attribute`,
-                    DiagnosticCode.missingAttributeValue
+                    DiagnosticCode.missingAttributeValue,
                 ),
             ];
         case 1:
@@ -1164,51 +1257,51 @@ function validateAttributeNumValues(
                     DiagnosticSeverity.Error,
                     range,
                     `Attribute expects list of values`,
-                    DiagnosticCode.missingListAttribute
+                    DiagnosticCode.missingListAttribute,
                 ),
             ];
-        default:
-            {
-                if (!attrDoc.list) {
-                    return [
-                        createDiagnostic(
-                            DiagnosticSeverity.Error,
-                            range,
-                            `Attribute does not expect list of values`,
-                            DiagnosticCode.unexpectedList
-                        ),
-                    ];
-                }
-                if (!isInt(attrValues[0].value)) {
-                    return [
-                        createDiagnostic(
-                            DiagnosticSeverity.Error,
-                            range,
-                            `First value needs to be positive int when multiple values are provided for attribute`,
-                            DiagnosticCode.missingListLengthValue
-                        ),
-                    ];
-                }
-                const numValues = parseInt(attrValues[0].value);
-                if (attrValues.length - 1 !== numValues) {
-                    return [
-                        createDiagnostic(
-                            DiagnosticSeverity.Error,
-                            range,
-                            `Incorrect number of values given. Expected: ${numValues} Actual: ${attrValues.length - 1
-                            }.`,
-                            DiagnosticCode.mismatchLengthList
-                        ),
-                    ];
-                }
-                return [];
+        default: {
+            if (!attrDoc.list) {
+                return [
+                    createDiagnostic(
+                        DiagnosticSeverity.Error,
+                        range,
+                        `Attribute does not expect list of values`,
+                        DiagnosticCode.unexpectedList,
+                    ),
+                ];
             }
+            if (!isInt(attrValues[0].value)) {
+                return [
+                    createDiagnostic(
+                        DiagnosticSeverity.Error,
+                        range,
+                        `First value needs to be positive int when multiple values are provided for attribute`,
+                        DiagnosticCode.missingListLengthValue,
+                    ),
+                ];
+            }
+            const numValues = parseInt(attrValues[0].value);
+            if (attrValues.length - 1 !== numValues) {
+                return [
+                    createDiagnostic(
+                        DiagnosticSeverity.Error,
+                        range,
+                        `Incorrect number of values given. Expected: ${numValues} Actual: ${
+                            attrValues.length - 1
+                        }.`,
+                        DiagnosticCode.mismatchLengthList,
+                    ),
+                ];
+            }
+            return [];
+        }
     }
 }
 
 export function validateObjectParent(
     obj: SepticObject,
-    doc: ITextDocument
+    doc: TextDocument,
 ): Diagnostic[] {
     const objectHierarchy =
         SepticMetaInfoProvider.getInstance().getObjectHierarchy();
@@ -1222,7 +1315,7 @@ export function validateObjectParent(
                     end: doc.positionAt(obj.start + obj.type.length),
                 },
                 `No parent object for object. Expected parent object of type: ${expectedParents}`,
-                DiagnosticCode.missingParentObject
+                DiagnosticCode.missingParentObject,
             ),
         ];
     }
@@ -1236,7 +1329,7 @@ export function validateObjectParent(
                     end: doc.positionAt(obj.start + obj.type.length),
                 },
                 `Invalid parent object of type ${parent}. Expected parent object of type: ${expectedParents}`,
-                DiagnosticCode.invalidParentObject
+                DiagnosticCode.invalidParentObject,
             ),
         ];
     }
@@ -1245,7 +1338,7 @@ export function validateObjectParent(
 
 export function checkAttributeDataType(
     attrValue: AttributeValue,
-    attrDoc: SepticAttributeDocumentation
+    attrDoc: SepticAttributeDocumentation,
 ): boolean {
     if (jinjaRegex.test(attrValue.value)) {
         return true;
@@ -1266,15 +1359,14 @@ export function checkAttributeDataType(
                 attrValue.type === SepticTokenType.string ||
                 attrValue.type === SepticTokenType.identifier
             );
-        default:
-            {
-                const bitMaskMatch = attrDoc.dataType.match(/^bit([0-9]+)$/);
-                if (!bitMaskMatch) {
-                    return true;
-                }
-                const number = parseInt(bitMaskMatch[1]);
-                return RegExp(`^[01]{1,${number}}$`).test(attrValue.value);
+        default: {
+            const bitMaskMatch = attrDoc.dataType.match(/^bit([0-9]+)$/);
+            if (!bitMaskMatch) {
+                return true;
             }
+            const number = parseInt(bitMaskMatch[1]);
+            return RegExp(`^[01]{1,${number}}$`).test(attrValue.value);
+        }
     }
 }
 
@@ -1303,7 +1395,7 @@ function containsInvalidChars(str: string): boolean {
 
 function getDisabledLines(
     comments: SepticComment[],
-    doc: ITextDocument
+    doc: TextDocument,
 ): Map<number, { all: boolean; diagnosticCodes: string[] }> {
     const disabledLinesMap = new Map<
         number,

@@ -1,5 +1,4 @@
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { loadFile, parseSepticForTest } from "./util";
 import {
     Position,
     CodeActionParams,
@@ -12,6 +11,7 @@ import {
 } from "../language-service/codeActionProvider";
 import { DiagnosticCode } from "../language-service/diagnosticsProvider";
 import { expect } from "chai";
+import { loadFile, parseSepticForTest } from "./util";
 
 describe("Test codeaction for inserting evr", () => {
     it("Expect to insert evr for missing reference in calcpvr identifier at bottom", async () => {
@@ -28,7 +28,7 @@ describe("Test codeaction for inserting evr", () => {
                         range,
                         "Test",
                         undefined,
-                        DiagnosticCode.missingReference
+                        DiagnosticCode.missingReference,
                     ),
                 ],
             },
@@ -56,7 +56,7 @@ describe("Test codeaction for inserting evr", () => {
                         range,
                         "Test",
                         undefined,
-                        DiagnosticCode.missingReference
+                        DiagnosticCode.missingReference,
                     ),
                 ],
             },
@@ -84,7 +84,7 @@ describe("Test codeaction for inserting evr", () => {
                         range,
                         "Test",
                         undefined,
-                        DiagnosticCode.missingReference
+                        DiagnosticCode.missingReference,
                     ),
                 ],
             },
@@ -133,7 +133,7 @@ describe("Test codeaction for ignoring warning", () => {
                         range,
                         "Test",
                         undefined,
-                        DiagnosticCode.missingReference
+                        DiagnosticCode.missingReference,
                     ),
                 ],
             },
@@ -160,7 +160,7 @@ describe("Test codeaction for ignoring warning", () => {
                         range,
                         "Test",
                         undefined,
-                        DiagnosticCode.unknownCalc
+                        DiagnosticCode.unknownCalc,
                     ),
                 ],
             },
@@ -172,12 +172,12 @@ describe("Test codeaction for ignoring warning", () => {
         expect(codeActions.length).to.equal(1);
         expect(codeActions[0].title === `E202: Update disable diagnostics`);
         const textEdits = codeActions[0].edit?.documentChanges?.at(
-            0
+            0,
         ) as TextDocumentEdit;
         const updatedeContent = TextDocument.applyEdits(doc, textEdits.edits);
         const updatedCnfg = parseSepticForTest(updatedeContent);
         expect(updatedCnfg.comments[0].content).to.equal(
-            "{# noqa: W501, E202 #}"
+            "{# noqa: W501, E202 #}",
         );
     });
     it("Expect code actions to suggest updating ignore comment", async () => {
@@ -194,7 +194,7 @@ describe("Test codeaction for ignoring warning", () => {
                         range,
                         "Test",
                         undefined,
-                        DiagnosticCode.unknownCalc
+                        DiagnosticCode.unknownCalc,
                     ),
                 ],
             },
@@ -206,7 +206,7 @@ describe("Test codeaction for ignoring warning", () => {
         expect(codeActions.length).to.equal(1);
         expect(codeActions[0].title === `E202: Update disable diagnostics`);
         const textEdits = codeActions[0].edit?.documentChanges?.at(
-            0
+            0,
         ) as TextDocumentEdit;
         const updatedeContent = TextDocument.applyEdits(doc, textEdits.edits);
         const updatedCnfg = parseSepticForTest(updatedeContent);
@@ -226,13 +226,13 @@ describe("Test codeaction for ignoring warning", () => {
                         range,
                         "Test",
                         undefined,
-                        DiagnosticCode.unknownCalc
+                        DiagnosticCode.unknownCalc,
                     ),
                     Diagnostic.create(
                         range,
                         "Test",
                         undefined,
-                        DiagnosticCode.missingReference
+                        DiagnosticCode.missingReference,
                     ),
                 ],
             },
@@ -259,13 +259,13 @@ describe("Test codeaction for ignoring warning", () => {
                         range,
                         "Test",
                         undefined,
-                        DiagnosticCode.unknownCalc
+                        DiagnosticCode.unknownCalc,
                     ),
                     Diagnostic.create(
                         range,
                         "Test",
                         undefined,
-                        DiagnosticCode.missingReference
+                        DiagnosticCode.missingReference,
                     ),
                 ],
             },
@@ -291,7 +291,7 @@ describe("Test codeaction for ignoring warning", () => {
                         range,
                         "Test",
                         undefined,
-                        DiagnosticCode.unknownCalc
+                        DiagnosticCode.unknownCalc,
                     ),
                 ],
             },
@@ -315,7 +315,7 @@ describe("Test codeaction for ignoring warning", () => {
                         range,
                         "Test",
                         undefined,
-                        DiagnosticCode.unknownCalc
+                        DiagnosticCode.unknownCalc,
                     ),
                 ],
             },

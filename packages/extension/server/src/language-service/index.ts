@@ -17,7 +17,7 @@ import {
     ReferenceProvider,
 } from "./referenceProvider";
 import { DocumentProvider } from "../documentProvider";
-import { SepticCnfg, SepticContext } from "../septic";
+import { SepticCnfg, SepticContext } from "septic";
 import { RenameProvider } from "./renameProvider";
 import { HoverProvider } from "./hoverProvider";
 import { FormattingProvider } from "./formatProvider";
@@ -30,71 +30,71 @@ import { CnfgComparisionProvider } from "./cnfgComparisonProvider";
 export interface ILanguageService {
     cnfgProvider: SepticConfigProvider;
     provideFoldingRanges(
-        params: lsp.FoldingRangeParams
+        params: lsp.FoldingRangeParams,
     ): Promise<lsp.FoldingRange[]>;
 
     provideDiagnostics(
         uri: string,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<lsp.Diagnostic[]>;
 
     provideDocumentSymbols(
-        params: lsp.DocumentSymbolParams
+        params: lsp.DocumentSymbolParams,
     ): Promise<lsp.DocumentSymbol[]>;
 
     provideCompletion(
         pos: lsp.CompletionParams,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<lsp.CompletionItem[]>;
 
     provideDefinition(
         params: lsp.DefinitionParams,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<LocationLinkOffset[]>;
 
     provideReferences(
         params: lsp.ReferenceParams,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<LocationOffset[]>;
 
     provideDeclaration(
         params: lsp.DeclarationParams,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<LocationLinkOffset[]>;
 
     provideRename(
         params: lsp.RenameParams,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<lsp.WorkspaceEdit | undefined>;
 
     providePrepareRename(
-        params: lsp.PrepareRenameParams
+        params: lsp.PrepareRenameParams,
     ): Promise<lsp.Range | null>;
 
     provideHover(
         params: lsp.HoverParams,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<lsp.Hover | undefined>;
 
     provideFormatting(
-        params: lsp.DocumentFormattingParams
+        params: lsp.DocumentFormattingParams,
     ): Promise<lsp.TextEdit[]>;
 
     provideSignatureHelp(
-        param: lsp.SignatureHelpParams
+        param: lsp.SignatureHelpParams,
     ): Promise<lsp.SignatureHelp>;
 
     provideCodeAction(param: lsp.CodeActionParams): Promise<lsp.CodeAction[]>;
 
     provideCycleReport(
         name: string,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<string>;
 
     provideCnfgComparison(
         prevVersion: SepticCnfg,
         currentVersion: SepticCnfg,
-        settingsFile: string
+        settingsFile: string,
     ): Promise<string>;
 
     provideOpcTagList(contextProvider: SepticContext): string;
@@ -102,20 +102,20 @@ export interface ILanguageService {
 
 export function createLanguageService(
     settingsManager: SettingsManager,
-    documentProvider: DocumentProvider
+    documentProvider: DocumentProvider,
 ) {
     const cnfgProvider = new SepticConfigProvider(documentProvider);
     const foldingRangeProvider = new FoldingRangeProvider(cnfgProvider);
     const diagnosticProvider = new DiagnosticProvider(
         cnfgProvider,
-        settingsManager
+        settingsManager,
     );
 
     const documentSymbolProvider = new DocumentSymbolProvider(cnfgProvider);
 
     const completionProvider = new CompletionProvider(
         cnfgProvider,
-        settingsManager
+        settingsManager,
     );
 
     const referenceProvider = new ReferenceProvider(cnfgProvider);
@@ -131,26 +131,26 @@ export function createLanguageService(
     const codeActionProvider = new CodeActionProvider(
         cnfgProvider,
         settingsManager,
-        documentProvider
+        documentProvider,
     );
 
     const cycleReportProvider = new CycleReportProvider(documentProvider);
 
     const cnfgComparisionProvider = new CnfgComparisionProvider(
-        documentProvider
+        documentProvider,
     );
 
     return Object.freeze<ILanguageService>({
         cnfgProvider,
         provideFoldingRanges:
             foldingRangeProvider.provideFoldingRanges.bind(
-                foldingRangeProvider
+                foldingRangeProvider,
             ),
         provideDiagnostics:
             diagnosticProvider.provideDiagnostics.bind(diagnosticProvider),
         provideDocumentSymbols:
             documentSymbolProvider.provideDocumentSymbols.bind(
-                documentSymbolProvider
+                documentSymbolProvider,
             ),
         provideCompletion:
             completionProvider.provideCompletion.bind(completionProvider),
@@ -167,7 +167,7 @@ export function createLanguageService(
         provideFormatting:
             formattingProvider.provideFormatting.bind(formattingProvider),
         provideSignatureHelp: signatureHelpProvider.provideSignatureHelp.bind(
-            signatureHelpProvider
+            signatureHelpProvider,
         ),
         provideCodeAction:
             codeActionProvider.provideCodeAction.bind(codeActionProvider),
@@ -175,7 +175,7 @@ export function createLanguageService(
             cycleReportProvider.generateCycleReport.bind(cycleReportProvider),
         provideOpcTagList: generateOpcReport,
         provideCnfgComparison: cnfgComparisionProvider.compareCnfgs.bind(
-            cnfgComparisionProvider
+            cnfgComparisionProvider,
         ),
     });
 }

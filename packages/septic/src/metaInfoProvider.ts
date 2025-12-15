@@ -24,6 +24,7 @@ const defaultObject: SepticObjectInfo = {
 export class SepticMetaInfoProvider {
     private static metaInfoProvider: SepticMetaInfoProvider;
     private static version: string = "latest";
+    private snippetsInfo: SepticObjectSnippet[];
     private calcsMap: Map<string, SepticCalcInfo>;
     private objectsMap: Map<string, SepticObjectInfo>;
     private objectsDocMap: Map<string, ISepticObjectDocumentation>;
@@ -38,6 +39,7 @@ export class SepticMetaInfoProvider {
         this.objectHierarchy = this.loadObjectHierarchy(
             Array.from(this.objectsDocMap.values()),
         );
+        this.snippetsInfo = this.loadSnippetsInfo(version);
     }
 
     public static getInstance(): SepticMetaInfoProvider {
@@ -57,6 +59,10 @@ export class SepticMetaInfoProvider {
 
     public static setVersion(version: string): void {
         SepticMetaInfoProvider.version = version;
+    }
+
+    public static getVersion(): string {
+        return this.version;
     }
 
     public getCalcs(): SepticCalcInfo[] {
@@ -87,6 +93,10 @@ export class SepticMetaInfoProvider {
             return obj;
         }
         return defaultObject;
+    }
+
+    public getSnippets(): SepticObjectSnippet[] {
+        return this.snippetsInfo;
     }
 
     public hasObject(objectType: string): boolean {
@@ -207,6 +217,20 @@ export class SepticMetaInfoProvider {
             objectsDocMap.set(obj.name, new SepticObjectDocumentation(obj));
         }
         return objectsDocMap;
+    }
+
+    private loadSnippetsInfo(version: string): SepticObjectSnippet[] {
+        const basePath = this.getBasePublicPath();
+        const filePath = path.join(
+            basePath,
+            `${version.replace(/\./g, "_")}`,
+            "snippets.yaml",
+        );
+        const file = fs.readFileSync(filePath, "utf-8");
+        const objectSnippets: SepticObjectSnippet[] = YAML.load(
+            file,
+        ) as SepticObjectSnippet[];
+        return objectSnippets;
     }
 
     private loadObjectHierarchy(

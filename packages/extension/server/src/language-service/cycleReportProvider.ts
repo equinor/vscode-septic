@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { DocumentProvider } from "../documentProvider";
-import { findAlgCycles, SepticContext } from "../septic";
+import { findAlgCycles, SepticContext } from "septic";
 
 const spacesToLink = 40;
 
@@ -17,25 +17,27 @@ export class CycleReportProvider {
 
     public async generateCycleReport(
         name: string,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<string> {
         const reports: string[] = [`Cycle Report:  ${name}`];
         await contextProvider.load();
 
-        const cycles = findAlgCycles(contextProvider.getObjectsByType("CalcPvr"));
+        const cycles = findAlgCycles(
+            contextProvider.getObjectsByType("CalcPvr"),
+        );
         cycles.sort((a, b) => b.nodes.length - a.nodes.length);
         for (const cycle of cycles) {
             reports.push(
                 "\n" +
-                [...cycle.nodes, cycle.nodes[0]]
-                    .map((node) => node.name)
-                    .join("->")
+                    [...cycle.nodes, cycle.nodes[0]]
+                        .map((node) => node.name)
+                        .join("->"),
             );
             for (const node of cycle.nodes) {
                 let nodeStr = `CalcPvr: ${node.calcpvr}`;
                 const nodeObj = contextProvider.getObjectByIdentifierAndType(
                     node.calcpvr,
-                    "CalcPvr"
+                    "CalcPvr",
                 );
                 if (!nodeObj) {
                     reports.push(nodeStr);

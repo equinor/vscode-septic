@@ -2,10 +2,12 @@
   "name": "septic",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha --require ts-node/register src/test/**/*.test.ts",
-    "build": "tsc"
+    "build": "tsc --noEmit",
+    "dev": "tsc -w"
   },
   "author": "",
   "license": "MIT",
@@ -15,5 +17,12 @@
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
   }
 }

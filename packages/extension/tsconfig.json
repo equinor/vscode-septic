@@ -1,13 +1,17 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "nodenext",
         "target": "es2024",
         "lib": ["es2024"],
-        "outDir": "out",
-        "rootDir": "src",
-        "sourceMap": true
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "composite": true
     },
-    "include": ["src"],
+    "files": [],
     "exclude": ["node_modules", ".vscode-test"],
-    "references": [{ "path": "./client" }, { "path": "./server" }]
+    "references": [
+        { "path": "./client" },
+        { "path": "./server" },
+        { "path": "../septic" }
+    ]
 }

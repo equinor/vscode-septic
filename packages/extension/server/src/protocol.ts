@@ -4,8 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { RequestType, Diagnostic, Position } from "vscode-languageserver";
-import { SepticCalcInfo, SepticObjectDoc } from './septic';
-
+import { SepticCalcInfo, SepticObjectDoc } from "septic";
 
 export interface SepticFunctionExport {
     name: string;
@@ -28,9 +27,11 @@ export interface SepticFunctionLineExport {
     uri: string;
 }
 
-export const getFunctions = new RequestType<{ uri: string }, SepticFunctionExport[], unknown>(
-    "septic/getFunctions"
-);
+export const getFunctions = new RequestType<
+    { uri: string },
+    SepticFunctionExport[],
+    unknown
+>("septic/getFunctions");
 
 export interface SepticVariable {
     name: string;
@@ -38,29 +39,28 @@ export interface SepticVariable {
     type: string;
 }
 
-
 export const fsReadFile = new RequestType<{ uri: string }, number[], unknown>(
-    "septic/fs_readfile"
+    "septic/fs_readfile",
 );
 
 export const findYamlFiles = new RequestType<object, string[], unknown>(
-    "septic/findYamlFiles"
+    "septic/findYamlFiles",
 );
 
 export const globFiles = new RequestType<{ uri: string }, string[], unknown>(
-    "septic/globFiles"
+    "septic/globFiles",
 );
 
 export const cylceReport = new RequestType<{ uri: string }, string, unknown>(
-    "septic/cycleReport"
+    "septic/cycleReport",
 );
 
 export const opcTagList = new RequestType<{ uri: string }, string, unknown>(
-    "septic/opcTagList"
+    "septic/opcTagList",
 );
 
 export const getContext = new RequestType<{ uri: string }, string, unknown>(
-    "septic/getContext"
+    "septic/getContext",
 );
 
 export const compareCnfg = new RequestType<
@@ -69,10 +69,24 @@ export const compareCnfg = new RequestType<
     unknown
 >("septic/compareCnfg");
 
-export const contexts = new RequestType<object, string[], unknown>("septic/contexts");
+export const contexts = new RequestType<object, string[], unknown>(
+    "septic/contexts",
+);
 
-export const documentation = new RequestType<object, { objects: SepticObjectDoc[], calcs: SepticCalcInfo[] }, unknown>("septic/documentation");
+export const documentation = new RequestType<
+    object,
+    { objects: SepticObjectDoc[]; calcs: SepticCalcInfo[] },
+    unknown
+>("septic/documentation");
 
-export const variables = new RequestType<{ uri: string }, SepticVariable[] | undefined, unknown>("septic/variables");
+export const variables = new RequestType<
+    { uri: string },
+    SepticVariable[] | undefined,
+    unknown
+>("septic/variables");
 
-export const validateAlg = new RequestType<{ calc: string, uri: string }, Diagnostic[], unknown>("septic/validateCalc");
+export const validateAlg = new RequestType<
+    { calc: string; uri: string },
+    Diagnostic[],
+    unknown
+>("septic/validateCalc");

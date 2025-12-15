@@ -11,11 +11,7 @@ import {
     ReferenceParams,
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
-import {
-    SepticCnfg,
-    SepticReference,
-    SepticContext,
-} from "../septic";
+import { SepticCnfg, SepticReference, SepticContext } from "septic";
 
 export class ReferenceProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
@@ -28,7 +24,7 @@ export class ReferenceProvider {
     /* istanbul ignore next */
     public async provideDefinition(
         params: DefinitionParams,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<LocationLinkOffset[]> {
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
@@ -41,7 +37,7 @@ export class ReferenceProvider {
     /* istanbul ignore next */
     public async provideReferences(
         params: ReferenceParams,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<LocationOffset[]> {
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
@@ -54,7 +50,7 @@ export class ReferenceProvider {
     /* istanbul ignore next */
     public async provideDeclaration(
         params: DeclarationParams,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<LocationLinkOffset[]> {
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
@@ -68,7 +64,7 @@ export class ReferenceProvider {
 export function getDefinition(
     position: Position,
     cnfg: SepticCnfg,
-    contextProvider: SepticContext
+    contextProvider: SepticContext,
 ): LocationLinkOffset[] {
     const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
@@ -95,7 +91,7 @@ export function getDefinition(
 export function getReferences(
     position: Position,
     cnfg: SepticCnfg,
-    contextProvider: SepticContext
+    contextProvider: SepticContext,
 ): LocationOffset[] {
     const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
@@ -119,7 +115,7 @@ export function getReferences(
 export function getDeclaration(
     position: Position,
     cnfg: SepticCnfg,
-    contextProvider: SepticContext
+    contextProvider: SepticContext,
 ): LocationLinkOffset[] {
     const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {

@@ -8,7 +8,7 @@ import { DocumentProvider } from "./documentProvider";
 import * as YAML from "js-yaml";
 import * as path from "path";
 import * as protocol from "./protocol";
-import { ScgConfig, ScgContext } from "./septic";
+import { ScgConfig, ScgContext } from "septic";
 import { SepticConfigProvider } from "./configProvider";
 
 export class ScgContextManager {
@@ -31,7 +31,7 @@ export class ScgContextManager {
     constructor(
         docProvider: DocumentProvider,
         cnfgProvider: SepticConfigProvider,
-        connection: Connection
+        connection: Connection,
     ) {
         this.docProvider = docProvider;
         this.cnfgProvider = cnfgProvider;
@@ -85,7 +85,7 @@ export class ScgContextManager {
             await this.updateScgContext(uri);
         } catch {
             console.log(
-                `Error updating context ${context.name}. Removing context from manager!`
+                `Error updating context ${context.name}. Removing context from manager!`,
             );
             this.contexts.delete(context.name);
         }
@@ -96,7 +96,7 @@ export class ScgContextManager {
         const context = this.contexts.get(uri);
         if (context) {
             console.log(
-                `Deleted file. Removing context ${context.name} from manager`
+                `Deleted file. Removing context ${context.name} from manager`,
             );
             this.contexts.delete(uri);
             this._onDidDeleteContext.fire(uri);
@@ -120,14 +120,14 @@ export class ScgContextManager {
             protocol.globFiles,
             {
                 uri: path.parse(uri).dir + "/" + scgConfig.templatepath,
-            }
+            },
         );
         const scgContext = new ScgContext(
             uri,
             uri,
             scgConfig,
             filesInTemplatePath,
-            this.cnfgProvider
+            this.cnfgProvider,
         );
         this.contexts.set(scgContext.name, scgContext);
 

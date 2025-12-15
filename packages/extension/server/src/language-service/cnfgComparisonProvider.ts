@@ -12,7 +12,7 @@ import {
     SepticCnfg,
     SepticMetaInfoProvider,
     SepticObject,
-} from "../septic";
+} from "septic";
 import * as YAML from "js-yaml";
 import * as fs from "fs";
 import * as path from "path";
@@ -27,7 +27,7 @@ export class CnfgComparisionProvider {
     public async compareCnfgs(
         prevVersion: SepticCnfg,
         currentVersion: SepticCnfg,
-        settingsFile: string
+        settingsFile: string,
     ): Promise<string> {
         const settings: ComparisonSettings | undefined =
             loadComparisonSettings(settingsFile);
@@ -39,21 +39,21 @@ export class CnfgComparisionProvider {
         const rootObjectDiff: ObjectDiff = compareObjects(
             prevVersion.objects[0],
             currentVersion.objects[0],
-            settings
+            settings,
         );
         if (isNoDiff(rootObjectDiff)) {
             return "";
         }
         const report = await this.generateDiffReportFlat(
             rootObjectDiff,
-            settings
+            settings,
         );
         return report;
     }
 
     public async generateDiffReportFlat(
         rootDiff: ObjectDiff,
-        settings: ComparisonSettings
+        settings: ComparisonSettings,
     ): Promise<string> {
         const report: string[] = [];
         const padding = "    ";
@@ -62,12 +62,12 @@ export class CnfgComparisionProvider {
             (item) =>
                 item.attributeDiff.length &&
                 !settings.ignoredObjectTypes.includes(
-                    item.currentObject.type
+                    item.currentObject.type,
                 ) &&
                 !ignoreVariable(
                     item.currentObject.identifier?.id,
-                    settings.ignoredVariables
-                )
+                    settings.ignoredVariables,
+                ),
         );
         if (updatedObjects.length) {
             report.push("## Updated objects\n");
@@ -75,21 +75,21 @@ export class CnfgComparisionProvider {
         for (const updatedObj of updatedObjects) {
             let linkPrev = await this.getLink(
                 updatedObj.prevObject,
-                updatedObj.prevObject.uri
+                updatedObj.prevObject.uri,
             );
             linkPrev = linkPrev ? "  " + linkPrev : "";
             let linkCurrent = await this.getLink(
                 updatedObj.currentObject,
-                updatedObj.currentObject.uri
+                updatedObj.currentObject.uri,
             );
             linkCurrent = linkCurrent ? linkCurrent : "";
             report.push(
-                `${updatedObj.prevObject.type}: ${updatedObj.prevObject.identifier?.id} ${linkPrev} -> ${linkCurrent}`
+                `${updatedObj.prevObject.type}: ${updatedObj.prevObject.identifier?.id} ${linkPrev} -> ${linkCurrent}`,
             );
             for (const attrDiff of updatedObj.attributeDiff) {
                 report.push(
                     padding +
-                    `${attrDiff.name}: ${attrDiff.prevValue} -> ${attrDiff.currentValue}`
+                        `${attrDiff.name}: ${attrDiff.prevValue} -> ${attrDiff.currentValue}`,
                 );
             }
         }
@@ -97,7 +97,7 @@ export class CnfgComparisionProvider {
         addedObjects = addedObjects.filter(
             (item) =>
                 !settings.ignoredObjectTypes.includes(item.type) &&
-                !ignoreVariable(item.identifier?.id, settings.ignoredVariables)
+                !ignoreVariable(item.identifier?.id, settings.ignoredVariables),
         );
         if (addedObjects.length) {
             report.push("\n## Added objects\n");
@@ -111,7 +111,7 @@ export class CnfgComparisionProvider {
         removedObjects = removedObjects.filter(
             (item) =>
                 !settings.ignoredObjectTypes.includes(item.type) &&
-                !ignoreVariable(item.identifier?.id, settings.ignoredVariables)
+                !ignoreVariable(item.identifier?.id, settings.ignoredVariables),
         );
         if (removedObjects.length) {
             report.push("\n## Removed objects\n");
@@ -120,7 +120,7 @@ export class CnfgComparisionProvider {
             let link = await this.getLink(removedObj, removedObj.uri);
             link = link ? "  " + link : "";
             report.push(
-                `${removedObj.type}: ${removedObj.identifier?.id}` + link
+                `${removedObj.type}: ${removedObj.identifier?.id}` + link,
             );
         }
         return report.join("\n");
@@ -138,24 +138,24 @@ export class CnfgComparisionProvider {
 export function compareObjects(
     prevObj: SepticObject,
     currentObj: SepticObject,
-    settings: ComparisonSettings
+    settings: ComparisonSettings,
 ): ObjectDiff {
     const removedObjects: SepticObject[] = [];
     const updatedObjects: ObjectDiff[] = [];
     const ignoredAttributes = settings.ignoredAttributes.find(
-        (item) => item.objectName === prevObj.type
+        (item) => item.objectName === prevObj.type,
     )?.attributes;
     const attributeDiff: AttributeDiff[] = compareAttributes(
         prevObj,
         currentObj,
-        ignoredAttributes
+        ignoredAttributes,
     );
     const currentMatchedChildren: SepticObject[] = [];
     for (const prevChild of prevObj.children) {
         const currentChild = currentObj.children.find(
             (item) =>
                 item.identifier?.id === prevChild.identifier?.id &&
-                item.type === prevChild.type
+                item.type === prevChild.type,
         );
         if (!currentChild) {
             removedObjects.push(prevChild);
@@ -168,7 +168,7 @@ export function compareObjects(
         }
     }
     const addedObjects: SepticObject[] = currentObj.children.filter(
-        (item) => !currentMatchedChildren.find((it) => it === item)
+        (item) => !currentMatchedChildren.find((it) => it === item),
     );
     return {
         prevObject: prevObj,
@@ -185,12 +185,13 @@ const defaultIgnoredAttributes: string[] = ["Text1", "Text2"];
 export function compareAttributes(
     prevObj: SepticObject,
     currentObj: SepticObject,
-    ignoredAttributes: string[] | undefined
+    ignoredAttributes: string[] | undefined,
 ): AttributeDiff[] {
     const attrDiff: AttributeDiff[] = [];
-    const objectDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation(
-        prevObj.type
-    );
+    const objectDoc =
+        SepticMetaInfoProvider.getInstance().getObjectDocumentation(
+            prevObj.type,
+        );
     if (!objectDoc) {
         return [];
     }
@@ -329,23 +330,23 @@ export interface ComparisonSettings {
 
 function getDefaultSettingsPath(): string {
     if (process.env.NODE_ENV === "test") {
-        return path.join(__dirname, `../../../public/defaultComparisonSetting.yaml`);
+        return path.join(
+            __dirname,
+            `../../../public/defaultComparisonSetting.yaml`,
+        );
     }
-    return path.join(
-        __dirname,
-        `../public/defaultComparisonSetting.yaml`
-    );
+    return path.join(__dirname, `../public/defaultComparisonSetting.yaml`);
 }
 
 function loadComparisonSettings(
-    filePath: string
+    filePath: string,
 ): ComparisonSettings | undefined {
     if (filePath === "Default") {
         filePath = getDefaultSettingsPath();
     }
     const fileStream = fs.readFileSync(filePath, "utf-8");
     const comparisonSettingsInput: ComparisonSettingsInput = YAML.load(
-        fileStream
+        fileStream,
     ) as ComparisonSettings;
     const comparisonSettings: ComparisonSettings = {
         ignoredVariables: comparisonSettingsInput.ignoredVariables ?? [],
@@ -357,7 +358,7 @@ function loadComparisonSettings(
 
 function ignoreVariable(
     id: string | undefined,
-    ignoredVariables: string[]
+    ignoredVariables: string[],
 ): boolean {
     if (!id) {
         return false;

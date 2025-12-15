@@ -7,8 +7,8 @@
 
         // Environment Settings
         // See also https://aka.ms/tsconfig/module
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "target": "es2024",
         "lib": ["es2024"],
         "types": ["mocha", "node"],
@@ -43,8 +43,9 @@
         "moduleDetection": "force",
         "skipLibCheck": true,
         "outDir": "./dist",
-        "rootDir": "./src"
+        "rootDir": "./src",
+        "composite": true
     },
-    "include": ["src"],
-    "exclude": ["node_modules", "dist", "tests"]
+    "include": ["./src"],
+    "exclude": ["node_modules", "./dist"]
 }

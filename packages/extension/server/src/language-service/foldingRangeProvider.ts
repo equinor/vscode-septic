@@ -4,8 +4,8 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { FoldingRange, FoldingRangeParams } from 'vscode-languageserver';
-import { SepticCnfg, SepticMetaInfoProvider } from "../septic";
+import { FoldingRange, FoldingRangeParams } from "vscode-languageserver";
+import { SepticCnfg, SepticMetaInfoProvider } from "septic";
 import { SepticConfigProvider } from "../configProvider";
 
 export class FoldingRangeProvider {
@@ -29,9 +29,7 @@ export class FoldingRangeProvider {
     }
 }
 
-export function getFoldingRanges(
-    cnfg: SepticCnfg,
-): FoldingRange[] {
+export function getFoldingRanges(cnfg: SepticCnfg): FoldingRange[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const ranges: FoldingRange[] = [];
 
@@ -43,7 +41,7 @@ export function getFoldingRanges(
         let j = i + 1;
         while (j < cnfg.objects.length) {
             const objectLevel = metaInfoProvider.getObjectDefault(
-                cnfg.objects[j].type
+                cnfg.objects[j].type,
             ).level;
             if (objectLevel <= level) {
                 break;

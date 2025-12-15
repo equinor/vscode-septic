@@ -15,7 +15,7 @@ import {
     CompletionParams,
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "../types/textDocument";
+import { TextDocument } from "vscode-languageserver-textdocument";
 import {
     AlgVisitor,
     Attribute,
@@ -31,10 +31,11 @@ import {
     formatObjectAttribute,
     parseAlg,
     formatObjectInstance,
-} from "../septic";
+} from "septic";
 import { indentsAttributesDelimiter } from "./formatProvider";
 import { isAlphaNumeric } from "../util";
 import { CompletionSettings, SettingsManager } from "../settings";
+import { SepticSnippetProvider } from "../snippets";
 
 const threeLettersOrLessWordsRegex = /\b[\w]{1,3}\b/;
 
@@ -45,7 +46,7 @@ export class CompletionProvider {
     /* istanbul ignore next */
     constructor(
         cnfgProvider: ISepticConfigProvider,
-        settingsManager: SettingsManager
+        settingsManager: SettingsManager,
     ) {
         this.cnfgProvider = cnfgProvider;
         this.settingsManager = settingsManager;
@@ -54,7 +55,7 @@ export class CompletionProvider {
     /* istanbul ignore next */
     public async provideCompletion(
         params: CompletionParams,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<CompletionItem[]> {
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
@@ -67,7 +68,7 @@ export class CompletionProvider {
             params.context?.triggerCharacter,
             cnfg,
             contextProvider,
-            settings?.completion || { onlySuggestValidSnippets: false }
+            settings?.completion || { onlySuggestValidSnippets: false },
         );
     }
 }
@@ -77,7 +78,7 @@ export function getCompletion(
     triggerCharacter: string | undefined,
     cnfg: SepticCnfg,
     contextProvider: SepticContext,
-    settings: CompletionSettings = { onlySuggestValidSnippets: false }
+    settings: CompletionSettings = { onlySuggestValidSnippets: false },
 ): CompletionItem[] {
     const offset = cnfg.offsetAt(pos);
     const alg = cnfg.findAlgValueFromLocation(pos);
@@ -93,7 +94,7 @@ export function getCompletion(
 export function getPublicAttributesCompletion(
     offset: number,
     cnfg: SepticCnfg,
-    contextProvider: SepticContext
+    contextProvider: SepticContext,
 ): CompletionItem[] {
     const algValue = cnfg.findAlgValueFromLocation(offset);
     if (!algValue) {
@@ -124,7 +125,7 @@ export function getPublicAttributesCompletion(
                 continue;
             }
             return objDoc.publicAttributes.map((prop) =>
-                CompletionItemFactory.fromPublicProperty(prop, obj.type)
+                CompletionItemFactory.fromPublicProperty(prop, obj.type),
             );
         }
     }
@@ -134,7 +135,7 @@ export function getPublicAttributesCompletion(
 export function getCalcCompletion(
     offset: number,
     cnfg: SepticCnfg,
-    contextProvider: SepticContext
+    contextProvider: SepticContext,
 ): CompletionItem[] {
     const metaInfoProvider = SepticMetaInfoProvider.getInstance();
     const compItems: CompletionItem[] = [];
@@ -173,7 +174,7 @@ export function getObjectCompletion(
     position: Position,
     cnfg: SepticCnfg,
     contextProvider: SepticContext,
-    settings: CompletionSettings = { onlySuggestValidSnippets: false }
+    settings: CompletionSettings = { onlySuggestValidSnippets: false },
 ): CompletionItem[] {
     cnfg.updateObjectParents();
     contextProvider.updateObjectParents();
@@ -181,7 +182,7 @@ export function getObjectCompletion(
         position,
         contextProvider,
         cnfg.doc,
-        settings.onlySuggestValidSnippets
+        settings.onlySuggestValidSnippets,
     );
     const obj = cnfg.findObjectFromLocation(position);
     if (!obj) {
@@ -203,11 +204,11 @@ export function getObjectCompletion(
         obj,
         currentAttr.attr,
         contextProvider,
-        range
+        range,
     );
     if (isEndAttribute(offset, currentAttr.attr)) {
         completions.push(
-            ...getObjectAttributeCompletion(obj, offset, cnfg.doc)
+            ...getObjectAttributeCompletion(obj, offset, cnfg.doc),
         );
         if (currentAttr.last) {
             completions.push(...objectSnippets);
@@ -219,10 +220,10 @@ export function getObjectCompletion(
 function getObjectAttributeCompletion(
     obj: SepticObject,
     offset: number,
-    doc: ITextDocument
+    doc: TextDocument,
 ) {
     const objDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation(
-        obj.type
+        obj.type,
     );
     if (!objDoc) {
         return [];
@@ -241,10 +242,10 @@ function getObjectAttributeCompletion(
 function getIdentifierCompletion(
     obj: SepticObject,
     refProvider: SepticContext,
-    range: Range
+    range: Range,
 ): CompletionItem[] {
     return getRelevantXvrsIdentifier(obj, refProvider.getAllXvrObjects()).map(
-        (obj) => CompletionItemFactory.fromXvr(obj, range)
+        (obj) => CompletionItemFactory.fromXvr(obj, range),
     );
 }
 
@@ -252,7 +253,7 @@ function getAttributeValueCompletion(
     obj: SepticObject,
     attr: Attribute,
     refProvider: SepticContext,
-    range: Range
+    range: Range,
 ): CompletionItem[] {
     const references = getReferenceCompletions(obj, attr, refProvider, range);
     const enums = getEnumCompletions(obj, attr);
@@ -263,19 +264,19 @@ function getReferenceCompletions(
     obj: SepticObject,
     attr: Attribute,
     refProvider: SepticContext,
-    range: Range
+    range: Range,
 ): CompletionItem[] {
     if (!isReferenceAttribute(obj, attr)) {
         return [];
     }
     return getRelevantXvrsAttributes(attr, refProvider.getAllXvrObjects()).map(
-        (obj) => CompletionItemFactory.fromXvr(obj, range)
+        (obj) => CompletionItemFactory.fromXvr(obj, range),
     );
 }
 
 function getEnumCompletions(
     obj: SepticObject,
-    attr: Attribute
+    attr: Attribute,
 ): CompletionItem[] {
     const objectInfo =
         SepticMetaInfoProvider.getInstance().getObjectDocumentation(obj.type);
@@ -290,7 +291,7 @@ function getEnumCompletions(
         return [];
     }
     return attrDoc.enums.map((value) =>
-        CompletionItemFactory.fromEnum(value, attrDoc)
+        CompletionItemFactory.fromEnum(value, attrDoc),
     );
 }
 
@@ -344,7 +345,7 @@ function getTextAttrTextEdit(attr: SepticAttributeDocumentation) {
 
 function findRangeAttrTextEdit(
     offset: number,
-    doc: ITextDocument
+    doc: TextDocument,
 ): { range: Range; addNewLine: boolean } {
     const pos = doc.positionAt(offset);
     const line = doc.getText({
@@ -369,7 +370,7 @@ function findRangeAttrTextEdit(
 
 function getExistingCompletion(
     line: string,
-    startIndex: number
+    startIndex: number,
 ): { str: string; endIndex: number } {
     let existing = "";
     let index = startIndex;
@@ -393,15 +394,15 @@ function getRelevantXvrsCalc(objects: SepticObject[]) {
 
 function getRelevantXvrsIdentifier(
     obj: SepticObject,
-    objects: SepticObject[]
+    objects: SepticObject[],
 ): SepticObject[] {
     if (obj.isXvr) {
         return objects.filter((xvr) =>
-            xvr.isType("Sopc" + obj.type, "UA" + obj.type)
+            xvr.isType("Sopc" + obj.type, "UA" + obj.type),
         );
     } else if (obj.isOpcXvr) {
         return objects.filter((xvr) =>
-            xvr.isType(obj.type.slice(obj.type.length - 3))
+            xvr.isType(obj.type.slice(obj.type.length - 3)),
         );
     } else if (obj.isType("CalcPvr")) {
         return objects.filter((xvr) => xvr.isType("Evr"));
@@ -412,7 +413,7 @@ function getRelevantXvrsIdentifier(
 
 function getRelevantXvrsAttributes(
     attr: Attribute,
-    objects: SepticObject[]
+    objects: SepticObject[],
 ): SepticObject[] {
     switch (attr.key) {
         case "Cvrs":
@@ -436,10 +437,10 @@ function getRelevantXvrsAttributes(
 function getRelevantObjectSnippets(
     pos: Position,
     contextProvider: SepticContext,
-    doc: ITextDocument,
-    onlySuggestValidSnippets: boolean
+    doc: TextDocument,
+    onlySuggestValidSnippets: boolean,
 ): CompletionItem[] {
-    const snippets = SepticMetaInfoProvider.getInstance().getSnippets().slice();
+    const snippets = SepticSnippetProvider.getInstance().getSnippets().slice();
     if (!onlySuggestValidSnippets) {
         return snippets;
     }
@@ -451,13 +452,13 @@ function getRelevantObjectSnippets(
         SepticMetaInfoProvider.getInstance().getObjectHierarchy();
     const relevantObjects = getObjectsSnippets(objectHierarchy, obj);
     return snippets.filter((snippet) =>
-        relevantObjects.includes(snippet.label)
+        relevantObjects.includes(snippet.label),
     );
 }
 
 function getObjectsSnippets(
     objectHierarchy: SepticObjectHierarchy,
-    obj: SepticObject
+    obj: SepticObject,
 ): string[] {
     let node = objectHierarchy.nodes.get(obj.type);
     let currentObject: SepticObject | undefined = obj;
@@ -487,7 +488,7 @@ function getObjectsSnippets(
 function findCompletionRange(
     offset: number,
     cnfg: SepticCnfg,
-    doc: ITextDocument
+    doc: TextDocument,
 ) {
     const ref = cnfg.findReferenceFromLocation(offset);
     const range: Range = ref
@@ -504,7 +505,7 @@ function findCompletionRange(
 
 function findCurrentAttr(
     offset: number,
-    obj: SepticObject
+    obj: SepticObject,
 ): { attr: Attribute | undefined; last: boolean } {
     if (!obj.attributes.length) {
         return { attr: undefined, last: false };
@@ -566,7 +567,7 @@ class CompletionItemFactory {
                 " " +
                 calc.detailedDescription.replace(
                     threeLettersOrLessWordsRegex,
-                    ""
+                    "",
                 ),
             commitCharacters: ["("],
             labelDetails: { detail: ` Calc` },
@@ -574,7 +575,7 @@ class CompletionItemFactory {
     }
     static fromPublicProperty(
         property: string,
-        objType: string
+        objType: string,
     ): CompletionItem {
         return {
             label: property,
@@ -586,7 +587,7 @@ class CompletionItemFactory {
     }
     static fromAttribute(
         attr: SepticAttributeDocumentation,
-        rangeNewLine: { range: Range; addNewLine: boolean }
+        rangeNewLine: { range: Range; addNewLine: boolean },
     ): CompletionItem {
         const text = rangeNewLine.addNewLine
             ? "\n" + getTextAttrTextEdit(attr)
@@ -609,7 +610,7 @@ class CompletionItemFactory {
     }
     static fromEnum(
         value: string,
-        attrDoc: SepticAttributeDocumentation
+        attrDoc: SepticAttributeDocumentation,
     ): CompletionItem {
         return {
             label: value,

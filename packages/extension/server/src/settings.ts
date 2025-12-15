@@ -4,8 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Connection } from "vscode-languageserver";
-import { DiagnosticsSettings } from "./language-service/diagnosticsProvider";
-import { SepticMetaInfoProvider } from "./septic";
+import { DiagnosticsSettings } from "./language-service/diagnosticsProvider.js";
+import { SepticMetaInfoProvider } from "septic";
 
 const updatedFoldingLevel = 1;
 const defaultFoldingLevelCalcModl = 2;
@@ -99,7 +99,7 @@ export class SettingsManager {
             : defaultFoldingLevelCalcModl;
         if (this.settings) {
             SepticMetaInfoProvider.setVersion(
-                this.settings.documentation.version
+                this.settings.documentation.version,
             );
         }
         const metaInfoProvider = SepticMetaInfoProvider.getInstance();

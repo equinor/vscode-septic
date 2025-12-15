@@ -10,8 +10,8 @@ import {
     SymbolKind,
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "../types/textDocument";
-import { SepticCnfg, SepticObject, SepticMetaInfoProvider } from "../septic";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import { SepticCnfg, SepticObject, SepticMetaInfoProvider } from "septic";
 
 interface SepticSymbol {
     symbol: DocumentSymbol;
@@ -44,7 +44,7 @@ export function getDocumentSymbols(cnfg: SepticCnfg) {
     const symbols = cnfg.objects.map((obj) => {
         const level = metaInfoProvider.getObjectDefault(obj.type).level;
         const symbolKind = metaInfoProvider.getObjectDefault(
-            obj.type
+            obj.type,
         ).symbolKind;
         return createSepticSymbol(obj, cnfg.doc, symbolKind, level);
     });
@@ -72,7 +72,7 @@ export function getDocumentSymbols(cnfg: SepticCnfg) {
 
 function updateParent(
     parent: SepticSymbol,
-    symbol: SepticSymbol
+    symbol: SepticSymbol,
 ): SepticSymbol {
     while (parent && symbol.level <= parent.level) {
         parent = parent.parent!;
@@ -99,9 +99,9 @@ function updateRange(parent: DocumentSymbol) {
 
 function createSepticSymbol(
     obj: SepticObject,
-    doc: ITextDocument,
-    symbolKind: SymbolKind,
-    level: number
+    doc: TextDocument,
+    symbol: string,
+    level: number,
 ): SepticSymbol {
     const name = obj.type + ": " + obj.identifier?.name;
     const range = {
@@ -112,14 +112,32 @@ function createSepticSymbol(
         symbol: DocumentSymbol.create(
             name,
             undefined,
-            symbolKind,
+            toSymbolKind(symbol),
             range,
             range,
-            []
+            [],
         ),
         level: level,
         parent: undefined,
     };
+}
+
+function toSymbolKind(name: string) {
+    const nameLower = name.toLowerCase();
+    switch (nameLower) {
+        case "function":
+            return SymbolKind.Function;
+        case "namespace":
+            return SymbolKind.Namespace;
+        case "variable":
+            return SymbolKind.Variable;
+        case "array":
+            return SymbolKind.Array;
+        case "interface":
+            return SymbolKind.Interface;
+        default:
+            return SymbolKind.Object;
+    }
 }
 
 function dummySymbol(): DocumentSymbol {
@@ -133,6 +151,6 @@ function dummySymbol(): DocumentSymbol {
         SymbolKind.Array,
         range,
         range,
-        []
+        [],
     );
 }

@@ -8,7 +8,7 @@ import {
     ParameterInformation,
     SignatureHelp,
     SignatureHelpParams,
-    Position
+    Position,
 } from "vscode-languageserver";
 import { SepticConfigProvider } from "../configProvider";
 import {
@@ -21,7 +21,7 @@ import {
     parseAlg,
     SepticCnfg,
     fromCalcIndexToParamIndex,
-} from "../septic";
+} from "septic";
 
 export class SignatureHelpProvider {
     private cnfgProvider: SepticConfigProvider;
@@ -45,7 +45,7 @@ export class SignatureHelpProvider {
 
 export function getSignatureHelp(
     cnfg: SepticCnfg,
-    position: Position
+    position: Position,
 ): SignatureHelp {
     const offset = cnfg.offsetAt(position);
     const algValue = cnfg.findAlgValueFromLocation(offset);
@@ -80,7 +80,7 @@ export function getSignatureHelp(
     const activeParameterIndex = fromCalcIndexToParamIndex(
         currentCalc,
         calcMetaInfo,
-        currentIndexCalc
+        currentIndexCalc,
     );
     return {
         signatures: [
@@ -96,7 +96,7 @@ export function getSignatureHelp(
 }
 
 function paramMetaInfoToParameterInformation(
-    paramInfo: SepticCalcParameterInfo
+    paramInfo: SepticCalcParameterInfo,
 ): ParameterInformation {
     return {
         label: paramInfo.name,

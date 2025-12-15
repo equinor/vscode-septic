@@ -9,9 +9,9 @@ import {
     CancellationTokenSource,
     URI,
 } from "vscode-languageserver";
-import { SepticCnfg } from "./septic";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import { SepticCnfg } from "septic";
 import { ResourceMap } from "./util/resourceMap";
-import { ITextDocument } from "./types/textDocument";
 import { Lazy, lazy } from "./util/lazy";
 import { DocumentProvider } from "./documentProvider";
 import * as path from "path";
@@ -21,13 +21,13 @@ export interface ISepticConfigProvider {
 }
 
 type GetValueFn = (
-    document: ITextDocument,
-    token: CancellationToken
+    document: TextDocument,
+    token: CancellationToken,
 ) => Promise<SepticCnfg>;
 
 async function getValueCnfg(
-    document: ITextDocument,
-    token: CancellationToken
+    document: TextDocument,
+    token: CancellationToken,
 ): Promise<SepticCnfg> {
     const cnfg = new SepticCnfg(document);
     await cnfg.parseAsync(token);
@@ -41,7 +41,7 @@ export class SepticConfigProvider implements ISepticConfigProvider {
     }>();
 
     private readonly loadingDocuments = new ResourceMap<
-        Promise<ITextDocument | undefined>
+        Promise<TextDocument | undefined>
     >();
 
     readonly getValue;
@@ -50,7 +50,7 @@ export class SepticConfigProvider implements ISepticConfigProvider {
 
     constructor(
         docProvider: DocumentProvider,
-        getValue: GetValueFn = getValueCnfg
+        getValue: GetValueFn = getValueCnfg,
     ) {
         this.getValue = getValue;
         this.docProvider = docProvider;
@@ -93,7 +93,7 @@ export class SepticConfigProvider implements ISepticConfigProvider {
         this.set(doc);
     }
 
-    private set(doc: ITextDocument) {
+    private set(doc: TextDocument) {
         const cts = new CancellationTokenSource();
         this.cache.set(doc.uri, {
             value: lazy<Promise<SepticCnfg>>(async () => {
@@ -104,7 +104,7 @@ export class SepticConfigProvider implements ISepticConfigProvider {
         });
     }
 
-    private loadDocument(uri: string): Promise<ITextDocument | undefined> {
+    private loadDocument(uri: string): Promise<TextDocument | undefined> {
         const exsisting = this.loadingDocuments.get(uri);
         if (exsisting) {
             return exsisting;

@@ -6,10 +6,9 @@ import {
     GetDocument,
     getRenameEdits,
 } from "../language-service/renameProvider";
-import { ITextDocument } from "../types/textDocument";
 
-const getDocumentFunction = (doc: ITextDocument): GetDocument => {
-    return (): Promise<ITextDocument | undefined> => {
+const getDocumentFunction = (doc: TextDocument): GetDocument => {
+    return (): Promise<TextDocument | undefined> => {
         return Promise.resolve(doc);
     };
 };
@@ -26,7 +25,7 @@ describe("Test renaming", () => {
             position,
             "New",
             cnfg,
-            getDocument
+            getDocument,
         );
         const edits = renameEdits!.documentChanges![0] as TextDocumentEdit;
         const expectedRanges: Range[] = [
@@ -51,7 +50,7 @@ describe("Test renaming", () => {
             position,
             "New",
             cnfg,
-            getDocument
+            getDocument,
         );
         const edits = renameEdits!.documentChanges![0] as TextDocumentEdit;
         const expectedRanges: Range[] = [
@@ -76,7 +75,7 @@ describe("Test renaming", () => {
             position,
             "New",
             cnfg,
-            getDocument
+            getDocument,
         );
         const edits = renameEdits!.documentChanges![0] as TextDocumentEdit;
         const expectedRanges: Range[] = [
@@ -100,7 +99,7 @@ describe("Test renaming", () => {
             position,
             "New",
             cnfg,
-            getDocument
+            getDocument,
         );
         const edits = renameEdits!.documentChanges![0] as TextDocumentEdit;
         const expectedRanges: Range[] = [
@@ -124,7 +123,7 @@ describe("Test renaming", () => {
             position,
             "New",
             cnfg,
-            getDocument
+            getDocument,
         );
         expect(renameEdits?.documentChanges).to.equal(undefined);
     });

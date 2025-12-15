@@ -12,12 +12,12 @@ import {
     WorkspaceEdit,
 } from "vscode-languageserver";
 import { SepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "../types/textDocument";
+import { TextDocument } from "vscode-languageserver-textdocument";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
-import { SepticCnfg, SepticContext } from "../septic";
+import { SepticCnfg, SepticContext } from "septic";
 import { DocumentProvider } from "../documentProvider";
 
-export type GetDocument = (uri: string) => Promise<ITextDocument | undefined>;
+export type GetDocument = (uri: string) => Promise<TextDocument | undefined>;
 
 export class RenameProvider {
     private cnfgProvider: SepticConfigProvider;
@@ -26,7 +26,7 @@ export class RenameProvider {
     /* istanbul ignore next */
     constructor(
         cnfgProvider: SepticConfigProvider,
-        docProvider: DocumentProvider
+        docProvider: DocumentProvider,
     ) {
         this.cnfgProvider = cnfgProvider;
         this.docProvider = docProvider;
@@ -35,7 +35,7 @@ export class RenameProvider {
     /* istanbul ignore next */
     async provideRename(
         params: RenameParams,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<WorkspaceEdit | undefined> {
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
@@ -46,7 +46,7 @@ export class RenameProvider {
             params.position,
             params.newName,
             contextProvider,
-            this.docProvider.getDocument.bind(this.docProvider)
+            this.docProvider.getDocument.bind(this.docProvider),
         );
     }
 
@@ -64,7 +64,7 @@ export class RenameProvider {
         }
         return Range.create(
             cnfg.positionAt(ref.location.start),
-            cnfg.positionAt(ref.location.end)
+            cnfg.positionAt(ref.location.end),
         );
     }
 }
@@ -74,7 +74,7 @@ export async function getRenameEdits(
     position: Position,
     newName: string,
     contextProvider: SepticContext,
-    getDocumentFunction: GetDocument
+    getDocumentFunction: GetDocument,
 ): Promise<WorkspaceEdit | undefined> {
     const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
@@ -94,9 +94,9 @@ export async function getRenameEdits(
             ref.location.uri,
             Range.create(
                 doc.positionAt(ref.location.start),
-                doc.positionAt(ref.location.end)
+                doc.positionAt(ref.location.end),
             ),
-            newName
+            newName,
         );
     }
 

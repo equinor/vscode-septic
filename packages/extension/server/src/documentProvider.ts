@@ -5,7 +5,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Emitter } from "vscode-jsonrpc";
-import { ITextDocument } from "./types/textDocument";
 import { ResourceMap } from "./util";
 import {
     Connection,
@@ -21,23 +20,23 @@ import {
 } from "vscode-languageserver-textdocument";
 import * as path from "path";
 import { TextDecoder } from "util";
-import { SettingsManager } from "./settings";
+import { SettingsManager } from "./settings.js";
 
-class Document implements ITextDocument {
-    private inMemoryDoc?: ITextDocument;
-    private onDiskDoc?: ITextDocument;
+class Document implements TextDocument {
+    private inMemoryDoc?: TextDocument;
+    private onDiskDoc?: TextDocument;
 
     readonly uri: string;
     readonly version: number = 0;
 
-    constructor(uri: string, init: { inMemoryDoc: ITextDocument });
-    constructor(uri: string, init: { onDiskDoc: ITextDocument });
+    constructor(uri: string, init: { inMemoryDoc: TextDocument });
+    constructor(uri: string, init: { onDiskDoc: TextDocument });
     constructor(
         uri: string,
         init: {
-            inMemoryDoc: ITextDocument;
-            onDiskDoc: ITextDocument;
-        }
+            inMemoryDoc: TextDocument;
+            onDiskDoc: TextDocument;
+        },
     ) {
         this.uri = uri;
         this.inMemoryDoc = init?.inMemoryDoc;
@@ -107,6 +106,16 @@ class Document implements ITextDocument {
 
         throw new Error("Document has been closed");
     }
+
+    get languageId(): string {
+        if (this.inMemoryDoc) {
+            return this.inMemoryDoc.languageId;
+        }
+        if (this.onDiskDoc) {
+            return this.onDiskDoc.languageId;
+        }
+        throw new Error("Document has been closed");
+    }
 }
 
 export class DocumentProvider {
@@ -137,7 +146,7 @@ export class DocumentProvider {
     constructor(
         connection: Connection,
         documents: TextDocuments<TextDocument>,
-        settingsManager: SettingsManager
+        settingsManager: SettingsManager,
     ) {
         this.connection = connection;
         this.documents = documents;
@@ -180,7 +189,7 @@ export class DocumentProvider {
             } else {
                 this.cache.set(
                     e.document.uri,
-                    new Document(e.document.uri, { inMemoryDoc: e.document })
+                    new Document(e.document.uri, { inMemoryDoc: e.document }),
                 );
             }
             this._onDidChangeDoc.fire(e.document.uri);
@@ -228,7 +237,7 @@ export class DocumentProvider {
         return this.cache.keys();
     }
 
-    public async getDocument(uri: string): Promise<ITextDocument | undefined> {
+    public async getDocument(uri: string): Promise<TextDocument | undefined> {
         const doc = this.cache.get(uri);
         if (doc) {
             return doc;
@@ -253,14 +262,14 @@ export class DocumentProvider {
     }
 
     private async openDocumentFromFs(
-        uri: string
+        uri: string,
     ): Promise<Document | undefined> {
         try {
             const encodedContent = await this.connection.sendRequest(
                 protocol.fsReadFile,
                 {
                     uri: uri,
-                }
+                },
             );
             const bytes = new Uint8Array(encodedContent);
             const settings = await this.settingsManager.getSettings();

@@ -8,7 +8,7 @@ import {
     HoverParams,
     MarkupContent,
     MarkupKind,
-    Position
+    Position,
 } from "vscode-languageserver";
 import { SepticConfigProvider } from "../configProvider";
 import {
@@ -21,7 +21,7 @@ import {
     formatObjectDocumentationMarkdown,
     formatObjectInstance,
     parseAlg,
-} from "../septic";
+} from "septic";
 
 export class HoverProvider {
     private cnfgProvider: SepticConfigProvider;
@@ -34,7 +34,7 @@ export class HoverProvider {
     /* istanbul ignore next */
     async provideHover(
         params: HoverParams,
-        contextProvider: SepticContext
+        contextProvider: SepticContext,
     ): Promise<Hover | undefined> {
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
@@ -48,7 +48,7 @@ export class HoverProvider {
 export function getHover(
     cnfg: SepticCnfg,
     position: Position,
-    contextProvider: SepticContext
+    contextProvider: SepticContext,
 ): Hover | undefined {
     const objectHover = getObjectHover(cnfg, position);
     if (objectHover) {
@@ -64,7 +64,7 @@ export function getHover(
 export function getReferenceHover(
     cnfg: SepticCnfg,
     position: Position,
-    contextProvider: SepticContext
+    contextProvider: SepticContext,
 ): Hover | undefined {
     const ref = cnfg.findReferenceFromLocation(position);
     if (!ref) {
@@ -91,7 +91,7 @@ export function getReferenceHover(
 
 export function getObjectHover(
     cnfg: SepticCnfg,
-    position: Position
+    position: Position,
 ): Hover | undefined {
     const offset = cnfg.offsetAt(position);
     const obj = cnfg.findObjectFromLocation(offset);
@@ -99,7 +99,7 @@ export function getObjectHover(
         return undefined;
     }
     const objDoc = SepticMetaInfoProvider.getInstance().getObjectDocumentation(
-        obj.type
+        obj.type,
     );
     if (!objDoc) {
         return undefined;
@@ -122,7 +122,7 @@ export function getObjectHover(
             offset <= attr.start + attr.key.length + 1
         ) {
             const attrDoc = objDoc.attributes.find(
-                (attrDoc) => attrDoc.name === attr.key
+                (attrDoc) => attrDoc.name === attr.key,
             );
             if (!attrDoc) {
                 return undefined;
@@ -143,7 +143,7 @@ export function getObjectHover(
 
 export function getCalcHover(
     cnfg: SepticCnfg,
-    position: Position
+    position: Position,
 ): Hover | undefined {
     const offset = cnfg.offsetAt(position);
     const obj = cnfg.findObjectFromLocation(offset);
@@ -162,8 +162,8 @@ export function getCalcHover(
         alg = parseAlg(
             algAttr.values[0].value.substring(
                 1,
-                algAttr.values[0].value.length - 1
-            )
+                algAttr.values[0].value.length - 1,
+            ),
         );
     } catch {
         return undefined;

@@ -3,9 +3,13 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Position, TextEdit, DocumentFormattingParams } from "vscode-languageserver";
+import {
+    Position,
+    TextEdit,
+    DocumentFormattingParams,
+} from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "../types/textDocument";
+import { TextDocument } from "vscode-languageserver-textdocument";
 import {
     Attribute,
     AttributeValue,
@@ -16,7 +20,7 @@ import {
     SepticObject,
     SepticTokenType,
     ValueTypes,
-} from "../septic";
+} from "septic";
 
 const indentsObjectDeclaration = 2;
 const startObjectName = 17;
@@ -44,7 +48,9 @@ export class FormattingProvider {
     }
 
     /* istanbul ignore next */
-    public async provideFormatting(params: DocumentFormattingParams): Promise<TextEdit[]> {
+    public async provideFormatting(
+        params: DocumentFormattingParams,
+    ): Promise<TextEdit[]> {
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
         if (!cnfg) {
             return [];
@@ -57,7 +63,7 @@ export class FormattingProvider {
 type FormatterCheck = (element: SepticBase | undefined) => boolean;
 
 export class SepticCnfgFormatter {
-    private doc: ITextDocument;
+    private doc: TextDocument;
 
     private lines: string[] = [];
     private currentLine = "";
@@ -142,14 +148,15 @@ export class SepticCnfgFormatter {
         if (!this.isPreviousLineEmptyOrComment()) {
             this.addEmptyLine();
         }
-        const indentsDeclaration = indentsObjectDeclaration - existingWhitespaces;
+        const indentsDeclaration =
+            indentsObjectDeclaration - existingWhitespaces;
         const objectTypeFormatted =
             " ".repeat(indentsDeclaration) + object?.type + ":";
         this.currentLine += objectTypeFormatted;
 
         const indentsName = Math.max(
             startObjectName - objectTypeFormatted.length - existingWhitespaces,
-            2
+            2,
         );
 
         if (
@@ -173,7 +180,7 @@ export class SepticCnfgFormatter {
         }
         const indentsStart = Math.max(
             indentsAttributesDelimiter - attr.key.length - existingWhitespaces,
-            0
+            0,
         );
         const attrDefFormatted = " ".repeat(indentsStart) + attr.key + "=";
         this.currentLine += attrDefFormatted;
@@ -209,7 +216,7 @@ export class SepticCnfgFormatter {
             this.currentLine +=
                 " ".repeat(
                     indentsAttributeValuesStart -
-                    (indentsAttributesDelimiter + 1)
+                        (indentsAttributesDelimiter + 1),
                 ) + attrValue.value;
             this.attrValueState.first = false;
             if (this.attrValueState.type === ValueTypes.stringList) {
@@ -236,7 +243,7 @@ export class SepticCnfgFormatter {
         ) {
             spaces = Math.max(
                 1,
-                spacesBetweenIntValues - attrValue.value.length
+                spacesBetweenIntValues - attrValue.value.length,
             );
             if (this.attrValueState.second) {
                 this.attrValueState.second = false;
@@ -378,7 +385,7 @@ export class SepticCnfgFormatter {
                 start: this.doc.positionAt(this.start),
                 end: endPos,
             },
-            this.lines.join("\n")
+            this.lines.join("\n"),
         );
         this.lines = [];
         this.edits.push(edit);

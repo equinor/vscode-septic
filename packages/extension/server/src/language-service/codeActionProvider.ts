@@ -14,13 +14,13 @@ import {
     WorkspaceEdit,
 } from "vscode-languageserver";
 import { SepticConfigProvider } from "../configProvider";
-import { ITextDocument } from "../types/textDocument";
+import { TextDocument } from "vscode-languageserver-textdocument";
 import {
     SepticCnfg,
     SepticComment,
     SepticObject,
     SepticTokenType,
-} from "../septic";
+} from "septic";
 import { DiagnosticCode, disableDiagnosticRegex } from "./diagnosticsProvider";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
 import { SettingsManager } from "../settings";
@@ -35,7 +35,7 @@ export class CodeActionProvider {
     constructor(
         cnfgProvider: SepticConfigProvider,
         settingsManager: SettingsManager,
-        documentProvider: DocumentProvider
+        documentProvider: DocumentProvider,
     ) {
         this.cnfgProvider = cnfgProvider;
         this.settingsManager = settingsManager;
@@ -44,7 +44,7 @@ export class CodeActionProvider {
 
     /* istanbul ignore next */
     public async provideCodeAction(
-        params: CodeActionParams
+        params: CodeActionParams,
     ): Promise<CodeAction[]> {
         const codeActions: CodeAction[] = [];
         const cnfg = await this.cnfgProvider.get(params.textDocument.uri);
@@ -54,7 +54,7 @@ export class CodeActionProvider {
         const settings = await this.settingsManager.getSettings();
         const insertPos = settings?.codeActions.insertEvrPosition ?? "bottom";
         const insertEvrActions = await this.createCodeActionsInsertEvr(
-            getCodeActionInsertEvr(params, cnfg, insertPos)
+            getCodeActionInsertEvr(params, cnfg, insertPos),
         );
         codeActions.push(...insertEvrActions);
         codeActions.push(...getCodeActionIgnoreDiagnostics(params, cnfg));
@@ -64,7 +64,7 @@ export class CodeActionProvider {
 
     /* istanbul ignore next */
     private async createCodeActionsInsertEvr(
-        codeActionsInsert: CodeActionInsert[]
+        codeActionsInsert: CodeActionInsert[],
     ) {
         const codeActions = [];
         for (const cai of codeActionsInsert) {
@@ -88,22 +88,20 @@ export interface CodeActionInsert {
 export function getCodeActionInsertEvr(
     params: CodeActionParams,
     cnfg: SepticCnfg,
-    insertEvrPos: "top" | "bottom"
+    insertEvrPos: "top" | "bottom",
 ): CodeActionInsert[] {
     const diag = params.context.diagnostics.find(
-        (diag) => diag.code === DiagnosticCode.missingReference
+        (diag) => diag.code === DiagnosticCode.missingReference,
     );
     if (!diag) {
         return [];
     }
-    const currentObject = cnfg.findObjectFromLocation(
-        params.range.start
-    );
+    const currentObject = cnfg.findObjectFromLocation(params.range.start);
     if (!currentObject?.isType("CalcPvr")) {
         return [];
     }
     const referencedVariable = cnfg.findReferenceFromLocation(
-        params.range.start
+        params.range.start,
     );
     if (!referencedVariable) {
         return [];
@@ -136,7 +134,7 @@ function getDmmyApplAncestor(obj: SepticObject): undefined | SepticObject {
 
 function getInsertOffsetAndUri(
     dmmyAppl: SepticObject,
-    insertPos: "top" | "bottom"
+    insertPos: "top" | "bottom",
 ): undefined | { offset: number; uri: string } {
     if (insertPos === "top") {
         return { offset: dmmyAppl.end, uri: dmmyAppl.uri };
@@ -156,7 +154,7 @@ function getInsertOffsetAndUri(
 
 export function getCodeActionIgnoreDiagnostics(
     params: CodeActionParams,
-    cnfg: SepticCnfg
+    cnfg: SepticCnfg,
 ): CodeAction[] {
     const codeActions: CodeAction[] = [];
     if (
@@ -167,14 +165,18 @@ export function getCodeActionIgnoreDiagnostics(
     const comment = getIgnoreCommentSameLine(
         params.range.start,
         cnfg.comments,
-        cnfg
+        cnfg,
     );
     const codes = [
-        ...new Set(params.context.diagnostics.filter((diag) => diag.code).map((diag) => diag.code)),
+        ...new Set(
+            params.context.diagnostics
+                .filter((diag) => diag.code)
+                .map((diag) => diag.code),
+        ),
     ];
     for (const code of codes) {
         const applicableDiagnostics = params.context.diagnostics.filter(
-            (diag) => diag.code === code
+            (diag) => diag.code === code,
         );
         if (comment) {
             codeActions.push(
@@ -182,8 +184,8 @@ export function getCodeActionIgnoreDiagnostics(
                     code!.toString(),
                     comment,
                     applicableDiagnostics,
-                    cnfg
-                )
+                    cnfg,
+                ),
             );
         } else {
             codeActions.push(
@@ -191,50 +193,68 @@ export function getCodeActionIgnoreDiagnostics(
                     code!.toString(),
                     params.range.start,
                     applicableDiagnostics,
-                    cnfg
-                )
+                    cnfg,
+                ),
             );
         }
     }
     return codeActions;
 }
 
-export function getCodeActionGenerateCalc(params: CodeActionParams, cnfg: SepticCnfg): CodeAction[] {
-    const codeActions = []
+export function getCodeActionGenerateCalc(
+    params: CodeActionParams,
+    cnfg: SepticCnfg,
+): CodeAction[] {
+    const codeActions = [];
     const start = cnfg.offsetAt(params.range.start);
     const end = cnfg.offsetAt(params.range.end);
-    const objects = cnfg.getObjectsInRange(start, end).filter(obj => obj.isType("CalcPvr"));
+    const objects = cnfg
+        .getObjectsInRange(start, end)
+        .filter((obj) => obj.isType("CalcPvr"));
     for (const obj of objects) {
         const algAttr = obj.getAttribute("Alg");
         const textAttr = obj.getAttribute("Text1");
-        if (algAttr?.getFirstValue() === undefined || textAttr?.getFirstValue() === undefined) {
+        if (
+            algAttr?.getFirstValue() === undefined ||
+            textAttr?.getFirstValue() === undefined
+        ) {
             continue;
         }
         if (textAttr.getFirstValue() === "") {
             continue;
         }
-        const start = cnfg.positionAt(algAttr.getFirstAttributeValueObject()!.start + 1);
-        const end = cnfg.positionAt(algAttr.getFirstAttributeValueObject()!.end - 1);
-        const codeAction = CodeAction.create(`Generate Calc: ${obj.identifier?.name}`);
+        const start = cnfg.positionAt(
+            algAttr.getFirstAttributeValueObject()!.start + 1,
+        );
+        const end = cnfg.positionAt(
+            algAttr.getFirstAttributeValueObject()!.end - 1,
+        );
+        const codeAction = CodeAction.create(
+            `Generate Calc: ${obj.identifier?.name}`,
+        );
         codeAction.kind = CodeActionKind.QuickFix;
-        codeAction.command = Command.create(`Generate calc`, "septic.generateCalc", textAttr.getFirstValue(), start, end);
+        codeAction.command = Command.create(
+            `Generate calc`,
+            "septic.generateCalc",
+            textAttr.getFirstValue(),
+            start,
+            end,
+        );
         codeActions.push(codeAction);
-
     }
     return codeActions;
 }
 
-
 function isOnlyIgnoreCommentsOnSameLine(
     comments: SepticComment[],
     pos: Position,
-    doc: ITextDocument
+    doc: TextDocument,
 ) {
     return (
         comments.filter(
             (comment) =>
                 doc.positionAt(comment.start).line === pos.line &&
-                !disableDiagnosticRegex.test(comment.content)
+                !disableDiagnosticRegex.test(comment.content),
         ).length === 0
     );
 }
@@ -242,12 +262,12 @@ function isOnlyIgnoreCommentsOnSameLine(
 function getIgnoreCommentSameLine(
     pos: Position,
     comments: SepticComment[],
-    doc: ITextDocument
+    doc: TextDocument,
 ): undefined | SepticComment {
     return comments.find(
         (comment) =>
             doc.positionAt(comment.start).line === pos.line &&
-            disableDiagnosticRegex.test(comment.content)
+            disableDiagnosticRegex.test(comment.content),
     );
 }
 
@@ -255,17 +275,17 @@ function createCodeActionInsertIgnoreComment(
     code: string,
     pos: Position,
     diagnostics: Diagnostic[],
-    doc: ITextDocument
+    doc: TextDocument,
 ): CodeAction[] {
     const codeActionJinja = CodeAction.create(
-        `${code}: Disable with {# noqa: .... #}`
+        `${code}: Disable with {# noqa: .... #}`,
     );
     codeActionJinja.diagnostics = diagnostics;
     codeActionJinja.kind = CodeActionKind.QuickFix;
     codeActionJinja.edit = createCodeActionInsertIgnoreCommentEdit(
         `  {# noqa: ${code} #}`,
         pos,
-        doc
+        doc,
     );
     const codeAction = CodeAction.create(`${code}: Disable with // noqa: ....`);
     codeAction.diagnostics = diagnostics;
@@ -273,7 +293,7 @@ function createCodeActionInsertIgnoreComment(
     codeAction.edit = createCodeActionInsertIgnoreCommentEdit(
         `  // noqa: ${code}`,
         pos,
-        doc
+        doc,
     );
     return [codeActionJinja, codeAction];
 }
@@ -281,7 +301,7 @@ function createCodeActionInsertIgnoreComment(
 function createCodeActionInsertIgnoreCommentEdit(
     text: string,
     pos: Position,
-    doc: ITextDocument
+    doc: TextDocument,
 ) {
     const editBuilder = new WorkspaceEditBuilder();
     editBuilder.insert(doc.uri, Position.create(pos.line, 9999), text);
@@ -292,7 +312,7 @@ function createCodeActionUpdateIgnoreComment(
     code: string,
     comment: SepticComment,
     diagnostics: Diagnostic[],
-    doc: ITextDocument
+    doc: TextDocument,
 ): CodeAction {
     const codeAction = CodeAction.create(`${code}: Update disable diagnostics`);
     codeAction.diagnostics = diagnostics;
@@ -304,7 +324,7 @@ function createCodeActionUpdateIgnoreComment(
 function createUpdateIgnoreCommentEdit(
     code: string,
     comment: SepticComment,
-    doc: ITextDocument
+    doc: TextDocument,
 ): WorkspaceEdit {
     const match = comment.content.match(disableDiagnosticRegex);
     const existingCodes = (match![1] ?? match![2])
@@ -321,16 +341,16 @@ function createUpdateIgnoreCommentEdit(
         doc.uri,
         Range.create(
             doc.positionAt(comment.start),
-            doc.positionAt(comment.end)
+            doc.positionAt(comment.end),
         ),
-        text
+        text,
     );
     return editBuilder.getEdit();
 }
 
 function createCodeActionInsertEvr(
     action: CodeActionInsert,
-    doc: ITextDocument
+    doc: TextDocument,
 ): CodeAction {
     const codeAction = CodeAction.create("Insert Evr");
     codeAction.diagnostics = [action.diag];
@@ -343,7 +363,7 @@ function createCodeActionInsertEvr(
 function createInsertEvrEdit(
     name: string,
     offset: number,
-    doc: ITextDocument
+    doc: TextDocument,
 ): WorkspaceEdit {
     const editBuilder = new WorkspaceEditBuilder();
     const text = getTextEvr(name);

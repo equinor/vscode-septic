@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "nodenext",
         "target": "es2024",
         "lib": ["es2024"],
         "outDir": "out",
@@ -10,8 +10,9 @@
         "jsxFactory": "vscpp",
         "jsxFragmentFactory": "vscppf",
         "resolveJsonModule": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "composite": true
     },
-    "include": ["src", "test"],
-    "exclude": ["node_modules", ".vscode-test"]
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "out", ".vscode-test"]
 }
