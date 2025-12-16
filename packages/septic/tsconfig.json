@@ -12,10 +12,6 @@
         "target": "es2024",
         "lib": ["es2024"],
         "types": ["mocha", "node"],
-        // For nodejs:
-        // "lib": ["esnext"],
-        // "types": ["node"],
-        // and npm install -D @types/node
 
         // Other Outputs
         "sourceMap": true,
@@ -46,6 +42,6 @@
         "rootDir": "./src",
         "composite": true
     },
-    "include": ["./src"],
-    "exclude": ["node_modules", "./dist"]
+    "include": ["src"],
+    "exclude": ["node_modules", "src/test", "dist"]
 }

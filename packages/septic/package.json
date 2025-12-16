@@ -6,8 +6,9 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha",
-    "build": "tsc --noEmit",
-    "dev": "tsc -w"
+    "build": "tsc -b",
+    "dev": "tsc -w",
+    "lint": "eslint -c eslint.config.mjs ./src"
   },
   "author": "",
   "license": "MIT",

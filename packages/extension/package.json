@@ -559,7 +559,7 @@
     "compile-tests": "tsc -b ./client && tsc -b ./server",
     "watch": "npm-run-all -p watch:*",
     "watch:esbuild": "node esbuild.js --watch",
-    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "watch:tsc": "tsc --watch --project tsconfig.json",
     "package": "npm run check-types && node esbuild.js --production",
     "lint": "eslint -c eslint.config.mjs ./client/src ./server/src",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
