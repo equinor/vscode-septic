@@ -3,5 +3,6 @@
     "ts-node/register"
   ],
   "spec": "server/src/test/**/*.test.ts",
+  "loader": "ts-node/esm",
   "package": "./server/package.json"
 }

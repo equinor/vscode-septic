@@ -13,3 +13,4 @@ export * from "./cycle";
 export * from "./context";
 export * from "./diagnostics";
 export { compareCnfgs } from "./compare";
+export { SepticCnfgFormatter } from "./formatter";

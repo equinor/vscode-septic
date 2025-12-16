@@ -32,12 +32,12 @@ import {
     parseAlg,
     formatObjectInstance,
 } from "septic";
-import { indentsAttributesDelimiter } from "./formatProvider";
 import { isAlphaNumeric } from "../util";
 import { CompletionSettings, SettingsManager } from "../settings";
 import { SepticSnippetProvider } from "../snippets";
 
 const threeLettersOrLessWordsRegex = /\b[\w]{1,3}\b/;
+const indentsAttributesDelimiter = 14;
 
 export class CompletionProvider {
     private readonly cnfgProvider: ISepticConfigProvider;
