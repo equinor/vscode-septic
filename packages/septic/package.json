@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "cross-env NODE_ENV=test mocha --require ts-node/register src/test/**/*.test.ts",
+    "test": "cross-env NODE_ENV=test mocha",
     "build": "tsc --noEmit",
     "dev": "tsc -w"
   },
