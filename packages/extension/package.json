@@ -563,7 +563,7 @@
     "package": "npm run check-types && node esbuild.js --production",
     "lint": "eslint -c eslint.config.mjs ./client/src ./server/src",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-    "integration-test": "npm run compile && vscode-test",
+    "integration-test": "npm run compile && npm run compile-tests && vscode-test",
     "test": "cross-env NODE_ENV=test mocha",
     "test_with_coverage": "npm run compile && nyc mocha --import ts-node/esm --require source-map-support/register --recursive server/src/test/**/*.test.ts "
   },
