@@ -11,14 +11,13 @@
                 "panel": "dedicated",
                 "reveal": "never"
             },
-            "problemMatcher": [
-                "$tsc"
-            ]
+            "problemMatcher": ["$tsc"]
         },
         {
             "type": "npm",
             "script": "watch",
             "problemMatcher": "$tsc-watch",
+            "path": "packages/extension",
             "isBackground": true,
             "presentation": {
                 "reveal": "never",
@@ -32,9 +31,7 @@
         {
             "type": "npm",
             "script": "lint",
-            "problemMatcher": [
-                "$eslint-stylish"
-            ],
+            "problemMatcher": ["$eslint-stylish"],
             "label": "npm: lint",
             "detail": "eslint -c eslint.config.mjs ./client/src ./server/src"
         },

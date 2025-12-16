@@ -9,7 +9,7 @@ import {
     getCodeActionInsertEvr,
     getCodeActionIgnoreDiagnostics,
 } from "../language-service/codeActionProvider";
-import { DiagnosticCode } from "../language-service/diagnosticsProvider";
+import { DiagnosticCode } from "septic";
 import { expect } from "chai";
 import { loadFile, parseSepticForTest } from "./util";
 

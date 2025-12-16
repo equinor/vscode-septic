@@ -20,8 +20,8 @@ import {
     SepticComment,
     SepticObject,
     SepticTokenType,
+    DiagnosticCode,
 } from "septic";
-import { DiagnosticCode, disableDiagnosticRegex } from "./diagnosticsProvider";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
 import { SettingsManager } from "../settings";
 import { DocumentProvider } from "../documentProvider";
@@ -244,6 +244,9 @@ export function getCodeActionGenerateCalc(
     }
     return codeActions;
 }
+
+const disableDiagnosticRegex =
+    /\/\/\s+noqa\b(?::([ \w,]*))?|\{#\s+noqa\b(?::([ \w,]*))?\s*#\}/i;
 
 function isOnlyIgnoreCommentsOnSameLine(
     comments: SepticComment[],

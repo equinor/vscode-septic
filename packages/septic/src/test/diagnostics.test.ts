@@ -12,13 +12,13 @@ import {
     validateAttribute,
     validateComments,
     validateObject,
-} from "../language-service/diagnosticsProvider";
+} from "../diagnostics";
 import {
     AttributeValue,
     SepticAttributeDocumentation,
     SepticMetaInfoProvider,
     SepticTokenType,
-} from "septic";
+} from "..";
 import { parseSepticForTest } from "./util";
 
 SepticMetaInfoProvider.setVersion("v3.0");
@@ -33,7 +33,7 @@ describe("Test diagnostics for invalid algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidAlg);
     });
     it("Expect diagnostics for unexpected token in alg", () => {
         const text = `
@@ -44,7 +44,7 @@ describe("Test diagnostics for invalid algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidAlg);
     });
     it("Expect diagnostics when alg contains multiple expressions", () => {
         const text = `
@@ -56,7 +56,7 @@ describe("Test diagnostics for invalid algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidAlg);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidAlg);
     });
     it("Expect diagnostics when alg exceeds maximum length", () => {
         const text = `
@@ -68,7 +68,7 @@ describe("Test diagnostics for invalid algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(2);
-        expect(diag[0].code).to.equal(DiagnosticCode.algMaxLength);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.algMaxLength);
     });
     it("Expect no diagnostics when alg exceeds maximum length but contains jinja", () => {
         const text = `
@@ -80,7 +80,7 @@ describe("Test diagnostics for invalid algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.not.equal(DiagnosticCode.algMaxLength);
+        expect(diag[0]!.code).to.not.equal(DiagnosticCode.algMaxLength);
     });
 });
 
@@ -95,7 +95,7 @@ describe("Test diagnostics for references in algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingReference);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingReference);
     });
     it("Expect no diagnostics for defined reference in alg", () => {
         const text = `
@@ -131,7 +131,7 @@ describe("Test diagnostics for references in algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingReference);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingReference);
     });
     it("Expect diagnostics for reference to unknown calc in alg", () => {
         const text = `
@@ -143,7 +143,7 @@ describe("Test diagnostics for references in algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.unknownCalc);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.unknownCalc);
     });
     it("Expect no diagnostics for reference to known calc in alg", () => {
         const text = `
@@ -179,7 +179,7 @@ describe("Test diagnostics for references in algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingPublicProperty);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingPublicProperty);
     });
     it("Expect diagnostics for unknown property", () => {
         const text = `
@@ -192,7 +192,7 @@ describe("Test diagnostics for references in algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.unknownPublicProperty);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.unknownPublicProperty);
     });
 });
 
@@ -224,7 +224,7 @@ describe("Test datatype diagnostics in algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeArg);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidDataTypeArg);
     });
     it("Expect diagnostics when giving expression to param that expect object", () => {
         const text = `
@@ -239,7 +239,7 @@ describe("Test datatype diagnostics in algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeArg);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidDataTypeArg);
     });
     it("Expect diagnostics when giving value to param that expect object", () => {
         const text = `
@@ -254,7 +254,7 @@ describe("Test datatype diagnostics in algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeArg);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidDataTypeArg);
     });
     it("Expect no diagnostics when using public property on valid xvr on param that expects value", () => {
         const text = `
@@ -297,7 +297,7 @@ describe("Test datatype diagnostics in algs", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingReference);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingReference);
     });
 });
 
@@ -348,7 +348,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(
+        expect(diag[0]!.code).to.equal(
             DiagnosticCode.missingValueNonOptionalArg,
         );
     });
@@ -381,7 +381,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
     it("Expect that we get diagnostic when too few params are used in calc", () => {
         const text = `
@@ -393,7 +393,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
     it("Expect that validation catches multiple issues in one alg", () => {
         const text = `
@@ -405,10 +405,10 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(2);
-        expect(diag[0].code).to.equal(
+        expect(diag[0]!.code).to.equal(
             DiagnosticCode.missingValueNonOptionalArg,
         );
-        expect(diag[1].code).to.equal(DiagnosticCode.invalidNumberOfParams);
+        expect(diag[1]!.code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
     it("Expect that validation ignore alg attributes without value", () => {
         const text = `
@@ -431,7 +431,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
     it("Expect diagnostics for variable length with wrong number", () => {
         const text = `
@@ -443,7 +443,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
     it("Expect no diagnostics for exact variable length with correct number", () => {
         const text = `
@@ -466,7 +466,7 @@ describe("Test parameter diagnostics in alg", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateAlgs(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidNumberOfParams);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidNumberOfParams);
     });
     it("Expect no diagnostics for variable length with correct number", () => {
         const text = `
@@ -509,9 +509,9 @@ describe("Test identifier diagnostics", () => {
         Evr:  
 		`;
         const cnfg = parseSepticForTest(text);
-        const diag = validateIdentifier(cnfg.objects[0], cnfg.doc);
+        const diag = validateIdentifier(cnfg.objects[0]!, cnfg.doc);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingIdentifier);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingIdentifier);
     });
     it("Expect diagnostics for identifier without letter", () => {
         const text = `
@@ -519,9 +519,9 @@ describe("Test identifier diagnostics", () => {
 		`;
 
         const cnfg = parseSepticForTest(text);
-        const diag = validateIdentifier(cnfg.objects[0], cnfg.doc);
+        const diag = validateIdentifier(cnfg.objects[0]!, cnfg.doc);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidIdentifier);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidIdentifier);
     });
     it("Expect diagnostics for identifier with invalid char", () => {
         const text = `
@@ -529,9 +529,9 @@ describe("Test identifier diagnostics", () => {
 		`;
 
         const cnfg = parseSepticForTest(text);
-        const diag = validateIdentifier(cnfg.objects[0], cnfg.doc);
+        const diag = validateIdentifier(cnfg.objects[0]!, cnfg.doc);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidIdentifier);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidIdentifier);
     });
     it("Expect no diagnostics for identifier with only jinja", () => {
         const text = `
@@ -539,7 +539,7 @@ describe("Test identifier diagnostics", () => {
 		`;
 
         const cnfg = parseSepticForTest(text);
-        const diag = validateIdentifier(cnfg.objects[0], cnfg.doc);
+        const diag = validateIdentifier(cnfg.objects[0]!, cnfg.doc);
         expect(diag.length).to.equal(0);
     });
     it("Expect no diagnostics for valid identifier", () => {
@@ -548,7 +548,7 @@ describe("Test identifier diagnostics", () => {
 		`;
 
         const cnfg = parseSepticForTest(text);
-        const diag = validateIdentifier(cnfg.objects[0], cnfg.doc);
+        const diag = validateIdentifier(cnfg.objects[0]!, cnfg.doc);
         expect(diag.length).to.equal(0);
     });
 });
@@ -620,7 +620,7 @@ describe("Test disabling of diagnostics", () => {
         const cnfg = parseSepticForTest(text);
         const diag = getDiagnostics(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidIdentifier);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidIdentifier);
     });
     it("Expect diagnostics for disabled line using wrong code", () => {
         const text = `
@@ -631,7 +631,7 @@ describe("Test disabling of diagnostics", () => {
         const cnfg = parseSepticForTest(text);
         const diag = getDiagnostics(cnfg, cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingReference);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingReference);
     });
     it("Expect no diagnostics for disabled line with multiple codes", () => {
         const text = `
@@ -665,13 +665,13 @@ describe("Test validation of attributes", () => {
         `;
         const cnfg = parseSepticForTest(text);
         const diag = validateAttribute(
-            cnfg.objects[0].attributes[0],
+            cnfg.objects[0]!.attributes[0]!,
             cnfg.doc,
             mvrDoc!,
             new Map(),
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingAttributeValue);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingAttributeValue);
     });
     it("Expect diagnostics for attribute with wrong data type", () => {
         const text = `
@@ -680,13 +680,13 @@ describe("Test validation of attributes", () => {
         `;
         const cnfg = parseSepticForTest(text);
         const diag = validateAttribute(
-            cnfg.objects[0].attributes[0],
+            cnfg.objects[0]!.attributes[0]!,
             cnfg.doc,
             mvrDoc!,
             new Map(),
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
     });
     it("Expect diagnostics for attribute with wrong data type", () => {
         const text = `
@@ -695,13 +695,13 @@ describe("Test validation of attributes", () => {
         `;
         const cnfg = parseSepticForTest(text);
         const diag = validateAttribute(
-            cnfg.objects[0].attributes[0],
+            cnfg.objects[0]!.attributes[0]!,
             cnfg.doc,
             mvrDoc!,
             new Map(),
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
     });
     it("Expect diagnostics for attribute with wrong data type", () => {
         const text = `
@@ -710,13 +710,13 @@ describe("Test validation of attributes", () => {
         `;
         const cnfg = parseSepticForTest(text);
         const diag = validateAttribute(
-            cnfg.objects[0].attributes[0],
+            cnfg.objects[0]!.attributes[0]!,
             cnfg.doc,
             mvrDoc!,
             new Map(),
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
     });
     it("Expect diagnostics for attribute with wrong enum value", () => {
         const text = `
@@ -725,13 +725,13 @@ describe("Test validation of attributes", () => {
         `;
         const cnfg = parseSepticForTest(text);
         const diag = validateAttribute(
-            cnfg.objects[0].attributes[0],
+            cnfg.objects[0]!.attributes[0]!,
             cnfg.doc,
             mvrDoc!,
             new Map(),
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidDataTypeAttribute);
     });
     it("Expect diagnostics when giving list to non-list attribute", () => {
         const text = `
@@ -740,13 +740,13 @@ describe("Test validation of attributes", () => {
         `;
         const cnfg = parseSepticForTest(text);
         const diag = validateAttribute(
-            cnfg.objects[0].attributes[0],
+            cnfg.objects[0]!.attributes[0]!,
             cnfg.doc,
             mvrDoc!,
             new Map(),
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.unexpectedList);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.unexpectedList);
     });
     it("Expect diagnostics when not giving list to list attribute", () => {
         const text = `
@@ -755,13 +755,13 @@ describe("Test validation of attributes", () => {
         `;
         const cnfg = parseSepticForTest(text);
         const diag = validateAttribute(
-            cnfg.objects[0].attributes[0],
+            cnfg.objects[0]!.attributes[0]!,
             cnfg.doc,
             mvrDoc!,
             new Map(),
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingListAttribute);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingListAttribute);
     });
     it("Expect diagnostics for attribute with mismatch on list length", () => {
         const text = `
@@ -770,13 +770,13 @@ describe("Test validation of attributes", () => {
         `;
         const cnfg = parseSepticForTest(text);
         const diag = validateAttribute(
-            cnfg.objects[0].attributes[0],
+            cnfg.objects[0]!.attributes[0]!,
             cnfg.doc,
             mvrDoc!,
             new Map(),
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.mismatchLengthList);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.mismatchLengthList);
     });
 
     it("Expect diagnostics for attribute with wrong datatype for list indicator", () => {
@@ -786,13 +786,13 @@ describe("Test validation of attributes", () => {
         `;
         const cnfg = parseSepticForTest(text);
         const diag = validateAttribute(
-            cnfg.objects[0].attributes[0],
+            cnfg.objects[0]!.attributes[0]!,
             cnfg.doc,
             mvrDoc!,
             new Map(),
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingListLengthValue);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingListLengthValue);
     });
     it("Expect no diagnostics for attribute with correct list", () => {
         const text = `
@@ -801,7 +801,7 @@ describe("Test validation of attributes", () => {
         `;
         const cnfg = parseSepticForTest(text);
         const diag = validateAttribute(
-            cnfg.objects[0].attributes[0],
+            cnfg.objects[0]!.attributes[0]!,
             cnfg.doc,
             mvrDoc!,
             new Map(),
@@ -815,13 +815,13 @@ describe("Test validation of attributes", () => {
         `;
         const cnfg = parseSepticForTest(text);
         const diag = validateAttribute(
-            cnfg.objects[0].attributes[0],
+            cnfg.objects[0]!.attributes[0]!,
             cnfg.doc,
             mvrDoc!,
             new Map(),
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.unknownAttribute);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.unknownAttribute);
     });
 
     it("Expect diagnostics for invalid char in string", () => {
@@ -831,13 +831,13 @@ describe("Test validation of attributes", () => {
         `;
         const cnfg = parseSepticForTest(text);
         const diag = validateAttribute(
-            cnfg.objects[0].attributes[0],
+            cnfg.objects[0]!.attributes[0]!,
             cnfg.doc,
             mvrDoc!,
             new Map(),
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidCharInString);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidCharInString);
     });
 });
 
@@ -854,7 +854,7 @@ describe("Test check for duplicated attributes", () => {
             SepticMetaInfoProvider.getInstance().getObject("Mvr");
         const cnfg = parseSepticForTest(text);
         const diag = validateObject(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectDoc!,
@@ -877,7 +877,7 @@ describe("Test check for duplicated attributes", () => {
             SepticMetaInfoProvider.getInstance().getObject("Mvr");
         const cnfg = parseSepticForTest(text);
         const diag = validateObject(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectDoc!,
@@ -900,7 +900,7 @@ describe("Test check for duplicated attributes", () => {
             SepticMetaInfoProvider.getInstance().getObject("Mvr");
         const cnfg = parseSepticForTest(text);
         const diag = validateObject(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectDoc!,
@@ -1078,13 +1078,13 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("SopcMvr");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingReference);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingReference);
     });
     it("Expect no  diagnostics for correct reference in identifier", () => {
         const text = `
@@ -1095,7 +1095,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("SopcMvr");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
@@ -1112,13 +1112,13 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("MvrList");
         const diag = validateObjectReferences(
-            cnfg.objects[1],
+            cnfg.objects[1]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingReference);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingReference);
     });
     it("Expect no diagnostics for corret reference in attr list", () => {
         const text = `
@@ -1130,7 +1130,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("MvrList");
         const diag = validateObjectReferences(
-            cnfg.objects[1],
+            cnfg.objects[1]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
@@ -1145,13 +1145,13 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("Evr");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
         );
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.unusedEvr);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.unusedEvr);
     });
     it("Expect no diagnostics for evr with user input enabled", () => {
         const text = `
@@ -1161,7 +1161,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("Evr");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
@@ -1178,7 +1178,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("Evr");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
@@ -1196,7 +1196,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("Evr");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
@@ -1212,7 +1212,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("MvrList");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
@@ -1231,7 +1231,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("MvrList");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
@@ -1250,7 +1250,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("MvrList");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
@@ -1269,7 +1269,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("MvrList");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
@@ -1288,7 +1288,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("MvrList");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
@@ -1307,7 +1307,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("MvrList");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
@@ -1326,7 +1326,7 @@ describe("Test validation of object references", () => {
         const cnfg = parseSepticForTest(text);
         const objectInfo = metaInfoProvider.getObject("CalcPvr");
         const diag = validateObjectReferences(
-            cnfg.objects[0],
+            cnfg.objects[0]!,
             cnfg.doc,
             cnfg,
             objectInfo!,
@@ -1348,7 +1348,7 @@ describe("Test validation of object structure", () => {
 		`;
         const cnfg = parseSepticForTest(text);
         cnfg.updateObjectParents();
-        const diag = validateObjectParent(cnfg.objects[1], cnfg.doc);
+        const diag = validateObjectParent(cnfg.objects[1]!, cnfg.doc);
         expect(diag.length).to.equal(0);
     });
 
@@ -1361,9 +1361,9 @@ describe("Test validation of object structure", () => {
 		`;
         const cnfg = parseSepticForTest(text);
         cnfg.updateObjectParents();
-        const diag = validateObjectParent(cnfg.objects[0], cnfg.doc);
+        const diag = validateObjectParent(cnfg.objects[0]!, cnfg.doc);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingParentObject);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingParentObject);
     });
 
     it("Expect diagnostics for incorrect structure", () => {
@@ -1375,9 +1375,9 @@ describe("Test validation of object structure", () => {
 		`;
         const cnfg = parseSepticForTest(text);
         cnfg.updateObjectParents();
-        const diag = validateObjectParent(cnfg.objects[1], cnfg.doc);
+        const diag = validateObjectParent(cnfg.objects[1]!, cnfg.doc);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.missingParentObject);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.missingParentObject);
     });
 
     it("Expect diagnostics for unexpected object on same level structure", () => {
@@ -1391,9 +1391,9 @@ describe("Test validation of object structure", () => {
 		`;
         const cnfg = parseSepticForTest(text);
         cnfg.updateObjectParents();
-        const diag = validateObjectParent(cnfg.objects[2], cnfg.doc);
+        const diag = validateObjectParent(cnfg.objects[2]!, cnfg.doc);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidParentObject);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidParentObject);
     });
 
     it("Expect no diagnostics for object on same level structure", () => {
@@ -1407,7 +1407,7 @@ describe("Test validation of object structure", () => {
 		`;
         const cnfg = parseSepticForTest(text);
         cnfg.updateObjectParents();
-        const diag = validateObjectParent(cnfg.objects[2], cnfg.doc);
+        const diag = validateObjectParent(cnfg.objects[2]!, cnfg.doc);
         expect(diag.length).to.equal(0);
     });
 
@@ -1424,7 +1424,7 @@ describe("Test validation of object structure", () => {
 		`;
         const cnfg = parseSepticForTest(text);
         cnfg.updateObjectParents();
-        const diag = validateObjectParent(cnfg.objects[3], cnfg.doc);
+        const diag = validateObjectParent(cnfg.objects[3]!, cnfg.doc);
         expect(diag.length).to.equal(0);
     });
 
@@ -1435,7 +1435,7 @@ describe("Test validation of object structure", () => {
 		`;
         const cnfg = parseSepticForTest(text);
         cnfg.updateObjectParents();
-        const diag = validateObjectParent(cnfg.objects[0], cnfg.doc);
+        const diag = validateObjectParent(cnfg.objects[0]!, cnfg.doc);
         expect(diag.length).to.equal(0);
     });
 });
@@ -1448,7 +1448,7 @@ describe("Test validation of comments", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateComments(cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidComment);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidComment);
     });
     it("Expect no diagnostics for valid line comment", () => {
         const text = `
@@ -1473,7 +1473,7 @@ describe("Test validation of comments", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateComments(cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidComment);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidComment);
     });
     it("Expect diagnostics for invalid block comment", () => {
         const text = `
@@ -1482,7 +1482,7 @@ describe("Test validation of comments", () => {
         const cnfg = parseSepticForTest(text);
         const diag = validateComments(cnfg);
         expect(diag.length).to.equal(1);
-        expect(diag[0].code).to.equal(DiagnosticCode.invalidComment);
+        expect(diag[0]!.code).to.equal(DiagnosticCode.invalidComment);
     });
     it("Expect no diagnostics for valid block comment", () => {
         const text = `
