@@ -25,7 +25,6 @@ import { SignatureHelpProvider } from "./signatureHelpProvider";
 import { CodeActionProvider } from "./codeActionProvider";
 import { CycleReportProvider } from "./cycleReportProvider";
 import { generateOpcReport } from "./opctagListProvider";
-import { CnfgComparisionProvider } from "./cnfgComparisonProvider";
 
 export interface ILanguageService {
     cnfgProvider: SepticConfigProvider;
@@ -91,12 +90,6 @@ export interface ILanguageService {
         contextProvider: SepticContext,
     ): Promise<string>;
 
-    provideCnfgComparison(
-        prevVersion: SepticCnfg,
-        currentVersion: SepticCnfg,
-        settingsFile: string,
-    ): Promise<string>;
-
     provideOpcTagList(contextProvider: SepticContext): string;
 }
 
@@ -136,10 +129,6 @@ export function createLanguageService(
 
     const cycleReportProvider = new CycleReportProvider(documentProvider);
 
-    const cnfgComparisionProvider = new CnfgComparisionProvider(
-        documentProvider,
-    );
-
     return Object.freeze<ILanguageService>({
         cnfgProvider,
         provideFoldingRanges:
@@ -174,8 +163,5 @@ export function createLanguageService(
         provideCycleReport:
             cycleReportProvider.generateCycleReport.bind(cycleReportProvider),
         provideOpcTagList: generateOpcReport,
-        provideCnfgComparison: cnfgComparisionProvider.compareCnfgs.bind(
-            cnfgComparisionProvider,
-        ),
     });
 }

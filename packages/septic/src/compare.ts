@@ -2,137 +2,108 @@
  *  Copyright (c) Equinor ASA
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
-import { DocumentProvider } from "../documentProvider";
-import {
-    AlgComparison,
-    Attribute,
-    parseAlg,
-    SepticBase,
-    SepticCnfg,
-    SepticMetaInfoProvider,
-    SepticObject,
-} from "septic";
+import { Attribute, SepticBase, SepticObject } from "./elements";
+import { AlgComparison, parseAlg } from "./alg";
+import { SepticCnfg } from "./cnfg";
+import { SepticMetaInfoProvider } from "./metaInfoProvider";
 import * as YAML from "js-yaml";
 import * as fs from "fs";
 import * as path from "path";
+import { getBasePublicPath } from "./path";
 
-export class CnfgComparisionProvider {
-    readonly docProvider: DocumentProvider;
-
-    constructor(docProvider: DocumentProvider) {
-        this.docProvider = docProvider;
+export function compareCnfgs(
+    prevVersion: SepticCnfg,
+    currentVersion: SepticCnfg,
+    settingsFile: string,
+): string {
+    const settings: ComparisonSettings | undefined =
+        loadComparisonSettings(settingsFile);
+    if (!settings) {
+        return "";
     }
+    const report = generateDiffReportFlat(
+        settings,
+        prevVersion,
+        currentVersion,
+    );
+    return report;
+}
 
-    public async compareCnfgs(
-        prevVersion: SepticCnfg,
-        currentVersion: SepticCnfg,
-        settingsFile: string,
-    ): Promise<string> {
-        const settings: ComparisonSettings | undefined =
-            loadComparisonSettings(settingsFile);
-        if (!settings) {
-            return "error";
-        }
-        prevVersion.updateObjectParents();
-        currentVersion.updateObjectParents();
-        const rootObjectDiff: ObjectDiff = compareObjects(
-            prevVersion.objects[0],
-            currentVersion.objects[0],
-            settings,
-        );
-        if (isNoDiff(rootObjectDiff)) {
-            return "";
-        }
-        const report = await this.generateDiffReportFlat(
-            rootObjectDiff,
-            settings,
-        );
-        return report;
+function generateDiffReportFlat(
+    settings: ComparisonSettings,
+    prevVersion: SepticCnfg,
+    currentVersion: SepticCnfg,
+): string {
+    prevVersion.updateObjectParents();
+    currentVersion.updateObjectParents();
+    const rootObjectDiff: ObjectDiff = compareObjects(
+        prevVersion.objects[0]!,
+        currentVersion.objects[0]!,
+        settings,
+    );
+    const report: string[] = [];
+    const padding = "    ";
+    const objectDiff: ObjectDiff[] = flattenObjectDiff(rootObjectDiff);
+    const updatedObjects: ObjectDiff[] = objectDiff.filter(
+        (item) =>
+            item.attributeDiff.length &&
+            !settings.ignoredObjectTypes.includes(item.currentObject.type) &&
+            !ignoreVariable(
+                item.currentObject.identifier?.id,
+                settings.ignoredVariables,
+            ),
+    );
+    if (updatedObjects.length) {
+        report.push("## Updated objects\n");
     }
-
-    public async generateDiffReportFlat(
-        rootDiff: ObjectDiff,
-        settings: ComparisonSettings,
-    ): Promise<string> {
-        const report: string[] = [];
-        const padding = "    ";
-        const objectDiff: ObjectDiff[] = flattenObjectDiff(rootDiff);
-        const updatedObjects: ObjectDiff[] = objectDiff.filter(
-            (item) =>
-                item.attributeDiff.length &&
-                !settings.ignoredObjectTypes.includes(
-                    item.currentObject.type,
-                ) &&
-                !ignoreVariable(
-                    item.currentObject.identifier?.id,
-                    settings.ignoredVariables,
-                ),
+    for (const updatedObj of updatedObjects) {
+        let linkPrev = createLink(updatedObj.prevObject, prevVersion);
+        linkPrev = linkPrev ? "  " + linkPrev : "";
+        let linkCurrent = createLink(updatedObj.currentObject, currentVersion);
+        linkCurrent = linkCurrent ? linkCurrent : "";
+        report.push(
+            `${updatedObj.prevObject.type}: ${updatedObj.prevObject.identifier?.id} ${linkPrev} -> ${linkCurrent}`,
         );
-        if (updatedObjects.length) {
-            report.push("## Updated objects\n");
-        }
-        for (const updatedObj of updatedObjects) {
-            let linkPrev = await this.getLink(
-                updatedObj.prevObject,
-                updatedObj.prevObject.uri,
-            );
-            linkPrev = linkPrev ? "  " + linkPrev : "";
-            let linkCurrent = await this.getLink(
-                updatedObj.currentObject,
-                updatedObj.currentObject.uri,
-            );
-            linkCurrent = linkCurrent ? linkCurrent : "";
+        for (const attrDiff of updatedObj.attributeDiff) {
             report.push(
-                `${updatedObj.prevObject.type}: ${updatedObj.prevObject.identifier?.id} ${linkPrev} -> ${linkCurrent}`,
-            );
-            for (const attrDiff of updatedObj.attributeDiff) {
-                report.push(
-                    padding +
-                        `${attrDiff.name}: ${attrDiff.prevValue} -> ${attrDiff.currentValue}`,
-                );
-            }
-        }
-        let addedObjects: SepticObject[] = getAddedObjects(objectDiff);
-        addedObjects = addedObjects.filter(
-            (item) =>
-                !settings.ignoredObjectTypes.includes(item.type) &&
-                !ignoreVariable(item.identifier?.id, settings.ignoredVariables),
-        );
-        if (addedObjects.length) {
-            report.push("\n## Added objects\n");
-        }
-        for (const addedObj of addedObjects) {
-            let link = await this.getLink(addedObj, addedObj.uri);
-            link = link ? "  " + link : "";
-            report.push(`${addedObj.type}: ${addedObj.identifier?.id}` + link);
-        }
-        let removedObjects: SepticObject[] = getRemovedObjects(objectDiff);
-        removedObjects = removedObjects.filter(
-            (item) =>
-                !settings.ignoredObjectTypes.includes(item.type) &&
-                !ignoreVariable(item.identifier?.id, settings.ignoredVariables),
-        );
-        if (removedObjects.length) {
-            report.push("\n## Removed objects\n");
-        }
-        for (const removedObj of removedObjects) {
-            let link = await this.getLink(removedObj, removedObj.uri);
-            link = link ? "  " + link : "";
-            report.push(
-                `${removedObj.type}: ${removedObj.identifier?.id}` + link,
+                padding +
+                    `${attrDiff.name}: ${attrDiff.prevValue} -> ${attrDiff.currentValue}`,
             );
         }
-        return report.join("\n");
     }
+    let addedObjects: SepticObject[] = getAddedObjects(objectDiff);
+    addedObjects = addedObjects.filter(
+        (item) =>
+            !settings.ignoredObjectTypes.includes(item.type) &&
+            !ignoreVariable(item.identifier?.id, settings.ignoredVariables),
+    );
+    if (addedObjects.length) {
+        report.push("\n## Added objects\n");
+    }
+    for (const addedObj of addedObjects) {
+        let link = createLink(addedObj, currentVersion);
+        link = link ? "  " + link : "";
+        report.push(`${addedObj.type}: ${addedObj.identifier?.id}` + link);
+    }
+    let removedObjects: SepticObject[] = getRemovedObjects(objectDiff);
+    removedObjects = removedObjects.filter(
+        (item) =>
+            !settings.ignoredObjectTypes.includes(item.type) &&
+            !ignoreVariable(item.identifier?.id, settings.ignoredVariables),
+    );
+    if (removedObjects.length) {
+        report.push("\n## Removed objects\n");
+    }
+    for (const removedObj of removedObjects) {
+        let link = createLink(removedObj, prevVersion);
+        link = link ? "  " + link : "";
+        report.push(`${removedObj.type}: ${removedObj.identifier?.id}` + link);
+    }
+    return report.join("\n");
+}
 
-    public async getLink(element: SepticBase, uri: string): Promise<string> {
-        const doc = await this.docProvider.getDocument(uri);
-        if (!doc) {
-            return "";
-        }
-        return `${uri}#${doc.positionAt(element.start).line + 1}`;
-    }
+function createLink(element: SepticBase, cnfg: SepticCnfg): string {
+    return `${cnfg.uri}#${cnfg.positionAt(element.start).line + 1}`;
 }
 
 export function compareObjects(
@@ -208,7 +179,7 @@ export function compareAttributes(
         const currentValue = currentAttr?.getValues() ?? attr.default;
         let isDiff = false;
         if (prevObj.type === "CalcPvr" && attr.name === "Alg") {
-            isDiff = !compareAlg(prevValue[0], currentValue[0]);
+            isDiff = !compareAlg(prevValue[0]!, currentValue[0]!);
         } else {
             isDiff = prevValue.toString() !== currentValue.toString();
         }
@@ -329,13 +300,8 @@ export interface ComparisonSettings {
 }
 
 function getDefaultSettingsPath(): string {
-    if (process.env.NODE_ENV === "test") {
-        return path.join(
-            __dirname,
-            `../../../public/defaultComparisonSetting.yaml`,
-        );
-    }
-    return path.join(__dirname, `../public/defaultComparisonSetting.yaml`);
+    const basePath = getBasePublicPath();
+    return path.join(basePath, `defaultComparisonSetting.yaml`);
 }
 
 function loadComparisonSettings(

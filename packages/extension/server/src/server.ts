@@ -36,6 +36,7 @@ import {
     SepticContext,
     SepticMetaInfoProvider,
     SepticCnfg,
+    compareCnfgs,
 } from "septic";
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
 import { validateStandAloneCalc } from "./language-service/diagnosticsProvider";
@@ -178,11 +179,7 @@ connection.onRequest(protocol.compareCnfg, async (param) => {
     if (!prevCnfg || !currentCnfg) {
         return "";
     }
-    return langService.provideCnfgComparison(
-        prevCnfg,
-        currentCnfg,
-        param.settingsFile,
-    );
+    return compareCnfgs(prevCnfg, currentCnfg, param.settingsFile);
 });
 
 connection.onRequest(protocol.contexts, async () => {

@@ -12,3 +12,4 @@ export * from "./calc";
 export * from "./cycle";
 export * from "./context";
 export * from "./diagnostics";
+export { compareCnfgs } from "./compare";
