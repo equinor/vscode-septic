@@ -2,14 +2,17 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import * as fs from "fs";
-import * as path from "path";
 import { SepticCnfg } from "../cnfg";
 import {
     getDiagnostics,
     SepticDiagnostic,
     SepticDiagnosticLevel,
 } from "../diagnostics";
+import {
+    validateFileExists,
+    createDocumentFromFile,
+    runCli,
+} from "./utils";
 
 interface LintOptions {
     file: string;
@@ -52,26 +55,6 @@ function parseArguments(): LintOptions {
     }
 
     return options;
-}
-
-function validateFileExists(filePath: string): void {
-    if (!fs.existsSync(filePath)) {
-        console.error(`File not found: ${filePath}`);
-        process.exit(1);
-    }
-}
-
-/**
- * Create a TextDocument from a file path
- */
-function createDocumentFromFile(filePath: string): TextDocument {
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    return TextDocument.create(
-        path.resolve(filePath),
-        "septic",
-        0,
-        fileContent,
-    );
 }
 
 async function lintSepticConfig(
@@ -142,7 +125,4 @@ async function main(): Promise<void> {
     process.exit(exitCode);
 }
 
-main().catch((error) => {
-    console.error("Unexpected error:", error);
-    process.exit(1);
-});
+runCli(main);

@@ -1,0 +1,83 @@
+  System:        Test
+         Text1=  ""
+         Text2=  ""
+         Nsecs=  1
+       PlotMax=  10
+         Nhist=  1440
+         Npred=  80
+         Nmodl=  80
+     ChngLogOn=  ON
+          Grps=  1
+                 ""
+       GrpLock=  0
+      MaxLogon=  ROOT
+       RootPwd=  ""
+       MngrPwd=  ""
+       OperPwd=  ""
+       UserPwd=  ""
+          Terr=  0
+       DebugNR=  1000
+       DebugOn=  00000000
+      FontSize=  -1
+  InitialGroup=  -1
+ShowText1WithName=  OFF
+       MinXPos=  0
+       MinYPos=  0
+       MaxXPos=  0
+       MaxYPos=  0
+    InitScreen=  -1
+      InitXPos=  -1
+      InitYPos=  -1
+     InitWidth=  -1
+    InitHeight=  -1
+MinimizeByHide=  OFF
+HideCloseButton=  OFF
+OPCSampleTimeOffset=  0
+  StepInterval=  0
+       AutoRun=  0
+ShowUpdateCounter=  ON
+
+  SopcProc:      SopcProcName
+         Text1=  ""
+         Text2=  ""
+          Site=  OPCSIMUL
+      ServName=  "Statoil.OPC.Server"
+      ServNode=  "SERVNODE"
+   RealTimeFac=  1.0
+       ProcTag=  "DUMMY_TAG"
+AllowActiveTag=  "AllowActiveTag"
+     StatusTag=  "NotUsed"
+    DesModeTag=  "DUMMY_TAG"
+       PulsTag=  "PulsTag"
+LoopcheckWriteTag=  "DUMMY_TAG"
+LoopcheckReadTag=  "DUMMY_TAG"
+ ServFactorTag=  "DUMMY_TAG"
+    CPUTimeTag=  "DUMMY_TAG"
+         IdTag=  ""
+   ScheduleTag=  "DUMMY_TAG"
+        RunSec=  -1
+   RequestRate=  -1
+ BadCountLimit=  0
+SampleAgeLimit=  -1
+BlockWritingIfBad=  OFF
+   WriteGroups=  1
+WriteGroupPause=  1000
+SkipWriteBlocking=  OFF
+  UseDCOMAUTHN=  ON
+
+  DmmyAppl:      DmmyApplName
+         Text1=  ""
+         Text2=  ""
+         Nstep=  1
+       PlotMax=  25
+       DesMode=  ACTIVE
+     IterEachN=  1
+
+  CalcModl:      CalcModlName
+         Text1=  ""
+         Text2=  ""
+
+  CalcPvr:       CalcPvrName
+         Text1=  ""
+         Text2=  ""
+           Alg=  "0"
