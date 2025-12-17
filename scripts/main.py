@@ -25,7 +25,7 @@ from src.versioning import (
     version_to_folder_name,
 )
 
-output_path = Path("./public")
+output_path = Path("packages/septic/public")
 object_file_name = "objectsDoc.yaml"
 calc_file_name = "calcs.yaml"
 first_valid_version = (2, 88)
@@ -96,13 +96,12 @@ def update_latest_documentation():
 
 
 def update_version_options():
-    package_path = Path("package.json")
+    package_path = Path("packages/extension/package.json")
     with open(package_path.resolve(), "r") as f:
         package = json.load(f)
     package["contributes"]["configuration"]["properties"][
         "septic.documentation.version"
     ]["enum"] = list(map(folder_name_to_option, get_versions(output_path)))
-    package_path = Path("package.json")
     with open(package_path.resolve(), "w") as f:
         json.dump(package, f, indent=2)
 

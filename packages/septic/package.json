@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha",
-    "build": "tsc -b",
+    "build": "tsc -b && copyfiles public/**/* dist",
     "dev": "tsc -w",
     "lint": "eslint -c eslint.config.mjs ./src"
   },
