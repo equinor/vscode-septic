@@ -12,6 +12,25 @@ import {
 } from "./alg";
 import { SepticObject } from "./elements";
 
+export function findAlgCycles(calcPvrs: SepticObject[]): Cycle[] {
+    const algs = extractAlgs(calcPvrs);
+    if (!algs.length) {
+        return [];
+    }
+    const graph = buildGraph(algs);
+    return findCyclesInGraph(graph);
+}
+
+interface Cycle {
+    nodes: Node[];
+}
+
+interface Node {
+    name: string;
+    neighbors: Set<string>;
+    calcpvr: string;
+}
+
 export class CycleDetectorVisitor implements IAlgVisitor {
     variables: AlgLiteral[] = [];
     nodes: Node[] = [];
@@ -80,25 +99,6 @@ export class CycleDetectorVisitor implements IAlgVisitor {
 export interface Alg {
     calcPvrName: string;
     content: string;
-}
-
-export interface Cycle {
-    nodes: Node[];
-}
-
-interface Node {
-    name: string;
-    neighbors: Set<string>;
-    calcpvr: string;
-}
-
-export function findAlgCycles(calcPvrs: SepticObject[]): Cycle[] {
-    const algs = extractAlgs(calcPvrs);
-    if (!algs.length) {
-        return [];
-    }
-    const graph = buildGraph(algs);
-    return findCyclesInGraph(graph);
 }
 
 function extractAlgs(calcPvrs: SepticObject[]): Alg[] {

@@ -2,7 +2,7 @@
  *  Copyright (c) Equinor ASA
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { Attribute, SepticBase, SepticObject } from "./elements";
+import { SepticAttribute, SepticBase, SepticObject } from "./elements";
 import { AlgComparison, parseAlg } from "./alg";
 import { SepticCnfg } from "./cnfg";
 import { SepticMetaInfoProvider } from "./metaInfoProvider";
@@ -266,9 +266,9 @@ export interface ObjectDiff {
 
 export interface AttributeDiff {
     name: string;
-    prevAttr: Attribute | undefined;
+    prevAttr: SepticAttribute | undefined;
     prevValue: string[];
-    currentAttr: Attribute | undefined;
+    currentAttr: SepticAttribute | undefined;
     currentValue: string[];
 }
 

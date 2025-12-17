@@ -4,9 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { AlgVisitor } from "./alg";
-import { SepticTokenType } from "./tokens";
 import { SepticMetaInfoProvider } from "./metaInfoProvider";
-import { AttributeValue, SepticComment, SepticObject } from "./elements";
+import {
+    SepticAttributeValue,
+    SepticComment,
+    SepticObject,
+    SepticTokenType,
+} from "./elements";
 import {
     SepticReference,
     RefValidationFunction,
@@ -24,7 +28,7 @@ import {
     TextDocument,
 } from "vscode-languageserver-textdocument";
 import { SepticParser, SepticScanner } from "./parser";
-import { CancellationToken } from "./util/cts";
+import { CancellationToken } from "./util";
 
 export class SepticCnfg implements SepticContext, TextDocument {
     public objects: SepticObject[] = [];
@@ -165,7 +169,7 @@ export class SepticCnfg implements SepticContext, TextDocument {
 
     public findAlgValueFromLocation(
         location: Position | number,
-    ): undefined | AttributeValue {
+    ): undefined | SepticAttributeValue {
         const offset =
             typeof location === "number" ? location : this.offsetAt(location);
         const obj = this.findObjectFromLocation(offset);

@@ -4,17 +4,9 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Diagnostic, DiagnosticSeverity, Range } from "vscode-languageserver";
-import { TextDocument } from "vscode-languageserver-textdocument";
+import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
-import {
-    SepticContext,
-    AttributeValue,
-    SepticTokenType,
-    getDiagnostics,
-    DiagnosticLevel,
-    validateAlg,
-} from "septic";
+import { SepticContext, getDiagnostics, SepticDiagnosticLevel } from "septic";
 import { SettingsManager } from "../settings";
 
 export interface DiagnosticsSettings {
@@ -68,24 +60,17 @@ export class DiagnosticProvider {
     }
 }
 
-function mapDiagnosticSeverity(level: DiagnosticLevel): DiagnosticSeverity {
+function mapDiagnosticSeverity(
+    level: SepticDiagnosticLevel,
+): DiagnosticSeverity {
     switch (level) {
-        case DiagnosticLevel.error:
+        case SepticDiagnosticLevel.error:
             return DiagnosticSeverity.Error;
-        case DiagnosticLevel.warning:
+        case SepticDiagnosticLevel.warning:
             return DiagnosticSeverity.Warning;
-        case DiagnosticLevel.information:
+        case SepticDiagnosticLevel.information:
             return DiagnosticSeverity.Information;
-        case DiagnosticLevel.hint:
+        case SepticDiagnosticLevel.hint:
             return DiagnosticSeverity.Hint;
     }
-}
-
-export function validateStandAloneCalc(
-    alg: string,
-    context: SepticContext,
-): Diagnostic[] {
-    const doc = TextDocument.create("", "", 0, `"${alg}"`);
-    const algAttrValue = new AttributeValue(`"${alg}"`, SepticTokenType.string);
-    return validateAlg(algAttrValue, doc, context);
 }

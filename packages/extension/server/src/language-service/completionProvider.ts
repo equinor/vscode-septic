@@ -18,7 +18,7 @@ import { ISepticConfigProvider } from "../configProvider";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
     AlgVisitor,
-    Attribute,
+    SepticAttribute,
     SepticObjectHierarchy,
     SepticAttributeDocumentation,
     SepticCnfg,
@@ -26,13 +26,15 @@ import {
     SepticObject,
     SepticContext,
     SepticCalcInfo,
+    parseAlg,
+} from "septic";
+import {
+    isAlphaNumeric,
     formatCalcMarkdown,
     formatDefaultValue,
     formatObjectAttribute,
-    parseAlg,
     formatObjectInstance,
-} from "septic";
-import { isAlphaNumeric } from "../util";
+} from "../util";
 import { CompletionSettings, SettingsManager } from "../settings";
 import { SepticSnippetProvider } from "../snippets";
 
@@ -251,7 +253,7 @@ function getIdentifierCompletion(
 
 function getAttributeValueCompletion(
     obj: SepticObject,
-    attr: Attribute,
+    attr: SepticAttribute,
     refProvider: SepticContext,
     range: Range,
 ): CompletionItem[] {
@@ -262,7 +264,7 @@ function getAttributeValueCompletion(
 
 function getReferenceCompletions(
     obj: SepticObject,
-    attr: Attribute,
+    attr: SepticAttribute,
     refProvider: SepticContext,
     range: Range,
 ): CompletionItem[] {
@@ -276,7 +278,7 @@ function getReferenceCompletions(
 
 function getEnumCompletions(
     obj: SepticObject,
-    attr: Attribute,
+    attr: SepticAttribute,
 ): CompletionItem[] {
     const objectInfo =
         SepticMetaInfoProvider.getInstance().getObjectDocumentation(obj.type);
@@ -318,7 +320,10 @@ function isIdentifierCompletion(offset: number, obj: SepticObject) {
     return false;
 }
 
-function isReferenceAttribute(obj: SepticObject, attr: Attribute): boolean {
+function isReferenceAttribute(
+    obj: SepticObject,
+    attr: SepticAttribute,
+): boolean {
     const objectInfo = SepticMetaInfoProvider.getInstance().getObject(obj.type);
     if (!objectInfo) {
         return false;
@@ -326,7 +331,7 @@ function isReferenceAttribute(obj: SepticObject, attr: Attribute): boolean {
     return objectInfo.refs.attributes.includes(attr.key);
 }
 
-function isEndAttribute(offset: number, attr: Attribute): boolean {
+function isEndAttribute(offset: number, attr: SepticAttribute): boolean {
     return offset >= attr.end;
 }
 
@@ -412,7 +417,7 @@ function getRelevantXvrsIdentifier(
 }
 
 function getRelevantXvrsAttributes(
-    attr: Attribute,
+    attr: SepticAttribute,
     objects: SepticObject[],
 ): SepticObject[] {
     switch (attr.key) {
@@ -506,7 +511,7 @@ function findCompletionRange(
 function findCurrentAttr(
     offset: number,
     obj: SepticObject,
-): { attr: Attribute | undefined; last: boolean } {
+): { attr: SepticAttribute | undefined; last: boolean } {
     if (!obj.attributes.length) {
         return { attr: undefined, last: false };
     }

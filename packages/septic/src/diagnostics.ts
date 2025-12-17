@@ -6,9 +6,10 @@
 import { TextDocument, Range } from "vscode-languageserver-textdocument";
 import {
     SepticComment,
-    Attribute,
+    SepticAttribute,
     SepticObject,
-    AttributeValue,
+    SepticAttributeValue,
+    SepticTokenType,
 } from "./elements";
 
 import {
@@ -46,8 +47,6 @@ import {
 
 import { SepticCnfg } from "./cnfg";
 import { SepticContext } from "./context";
-import { SepticTokenType } from "./tokens";
-import { formatDataType } from "./docFormatting";
 
 export function isPureJinja(str: string) {
     return /^\{\{.*\}\}$/.test(str);
@@ -70,7 +69,7 @@ const maxAlgLength = 250;
     5**: References
     6**: Comments
 */
-export enum DiagnosticCode {
+export enum SepticDiagnosticCode {
     invalidIdentifier = "W101",
     missingIdentifier = "E102",
     unknownObjectType = "E103",
@@ -102,7 +101,7 @@ export enum DiagnosticCode {
     invalidComment = "W601",
 }
 
-export enum DiagnosticLevel {
+export enum SepticDiagnosticLevel {
     error = "error",
     warning = "warning",
     information = "information",
@@ -118,17 +117,17 @@ export const defaultDiagnosticsSettings: DiagnosticsSettings = {
 };
 
 export interface SepticDiagnostic {
-    level: DiagnosticLevel;
-    code: DiagnosticCode;
+    level: SepticDiagnosticLevel;
+    code: SepticDiagnosticCode;
     message: string;
     range: Range;
 }
 
 function createDiagnostic(
-    level: DiagnosticLevel,
+    level: SepticDiagnosticLevel,
     range: Range,
     message: string,
-    code: DiagnosticCode,
+    code: SepticDiagnosticCode,
 ): SepticDiagnostic {
     return {
         level: level,
@@ -143,7 +142,10 @@ export function validateStandAloneCalc(
     contextProvider: SepticContext,
 ): SepticDiagnostic[] {
     const doc = TextDocument.create("", "", 0, `"${alg}"`);
-    const algAttrValue = new AttributeValue(`"${alg}"`, SepticTokenType.string);
+    const algAttrValue = new SepticAttributeValue(
+        `"${alg}"`,
+        SepticTokenType.string,
+    );
     return validateAlg(algAttrValue, doc, contextProvider);
 }
 
@@ -180,13 +182,13 @@ export function validateComments(cnfg: SepticCnfg): SepticDiagnostic[] {
         if (!checkSepticComment(comment)) {
             diagnostics.push(
                 createDiagnostic(
-                    DiagnosticLevel.error,
+                    SepticDiagnosticLevel.error,
                     {
                         start: cnfg.positionAt(comment.start),
                         end: cnfg.positionAt(comment.end),
                     },
                     `Invalid comment. Correct format is //{whitespace}... or /*{whitespace}...{whitespace}*/`,
-                    DiagnosticCode.invalidComment,
+                    SepticDiagnosticCode.invalidComment,
                 ),
             );
         }
@@ -227,7 +229,7 @@ export function validateAlgs(
 type AlgPositionTransformer = (start: number, end: number) => Range;
 
 export function validateAlg(
-    alg: AttributeValue,
+    alg: SepticAttributeValue,
     doc: TextDocument,
     contextProvider: SepticContext,
 ): SepticDiagnostic[] {
@@ -236,13 +238,13 @@ export function validateAlg(
     if (!checkAlgLength(alg.getValue())) {
         diagnostics.push(
             createDiagnostic(
-                DiagnosticLevel.error,
+                SepticDiagnosticLevel.error,
                 {
                     start: doc.positionAt(alg.start),
                     end: doc.positionAt(alg.end),
                 },
                 `Alg exceed the maximum length of ${maxAlgLength} chars`,
-                DiagnosticCode.algMaxLength,
+                SepticDiagnosticCode.algMaxLength,
             ),
         );
     }
@@ -261,11 +263,11 @@ export function validateAlg(
         expr = parseAlg(alg.getValue());
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-        let code = DiagnosticCode.invalidAlg;
-        let level: DiagnosticLevel = DiagnosticLevel.error;
+        let code = SepticDiagnosticCode.invalidAlg;
+        let level: SepticDiagnosticLevel = SepticDiagnosticLevel.error;
         if (error.type === AlgParsingErrorType.unsupportedJinja) {
-            code = DiagnosticCode.jinjaExpressionInAlg;
-            level = DiagnosticLevel.warning;
+            code = SepticDiagnosticCode.jinjaExpressionInAlg;
+            level = SepticDiagnosticLevel.warning;
         }
         const diagnostic = createDiagnostic(
             level,
@@ -314,13 +316,13 @@ export function validateAlgVariable(
     ) {
         return [
             createDiagnostic(
-                DiagnosticLevel.warning,
+                SepticDiagnosticLevel.warning,
                 {
                     start: doc.positionAt(offsetStartAlg + variable.start),
                     end: doc.positionAt(offsetStartAlg + variable.end),
                 },
                 `Reference to undefined variable: ${variable.value}`,
-                DiagnosticCode.missingReference,
+                SepticDiagnosticCode.missingReference,
             ),
         ];
     }
@@ -330,13 +332,13 @@ export function validateAlgVariable(
     if (variableParts[1] === "") {
         return [
             createDiagnostic(
-                DiagnosticLevel.error,
+                SepticDiagnosticLevel.error,
                 {
                     start: doc.positionAt(offsetStartAlg + variable.end - 1),
                     end: doc.positionAt(offsetStartAlg + variable.end),
                 },
                 `Missing public property for variable`,
-                DiagnosticCode.missingPublicProperty,
+                SepticDiagnosticCode.missingPublicProperty,
             ),
         ];
     }
@@ -355,7 +357,7 @@ export function validateAlgVariable(
     if (!publicAttributes?.includes(variableParts[1]!)) {
         return [
             createDiagnostic(
-                DiagnosticLevel.error,
+                SepticDiagnosticLevel.error,
                 {
                     start: doc.positionAt(
                         offsetStartAlg +
@@ -366,7 +368,7 @@ export function validateAlgVariable(
                     end: doc.positionAt(offsetStartAlg + variable.end),
                 },
                 `Unknown public property ${variableParts[1]} for ${referencedObjects[0]!.type}'`,
-                DiagnosticCode.unknownPublicProperty,
+                SepticDiagnosticCode.unknownPublicProperty,
             ),
         ];
     }
@@ -384,10 +386,10 @@ export function validateCalc(
     const calcMetaInfo = metaInfoProvider.getCalc(calc.identifier);
     if (!calcMetaInfo) {
         const diagnostic = createDiagnostic(
-            DiagnosticLevel.warning,
+            SepticDiagnosticLevel.warning,
             algPositionTransformer(calc.start, calc.end),
             `Unknown function: ${calc.identifier}`,
-            DiagnosticCode.unknownCalc,
+            SepticDiagnosticCode.unknownCalc,
         );
         return [diagnostic];
     }
@@ -441,10 +443,10 @@ function validateSingleParam(
     if (isEmptyNonOptionalParam(paramExpr, paramInfo)) {
         diagnostics.push(
             createDiagnostic(
-                DiagnosticLevel.warning,
+                SepticDiagnosticLevel.warning,
                 algPositionTransformer(paramExpr.start, paramExpr.end),
                 `Missing value for non-optional parameter`,
-                DiagnosticCode.missingValueNonOptionalArg,
+                SepticDiagnosticCode.missingValueNonOptionalArg,
             ),
         );
     }
@@ -484,23 +486,23 @@ function validateCalcParamsLength(
         ) {
             return [
                 createDiagnostic(
-                    DiagnosticLevel.warning,
+                    SepticDiagnosticLevel.warning,
                     algPositionTransformer(calc.start, calc.end),
                     `Missing parameter(s). Expected min ${
                         numFixedParamsPre -
                         paramInfo.fixedLengthParams.numOptional
                     } params but got ${numParams}`,
-                    DiagnosticCode.invalidNumberOfParams,
+                    SepticDiagnosticCode.invalidNumberOfParams,
                 ),
             ];
         }
         if (numParams > numFixedParamsPre) {
             return [
                 createDiagnostic(
-                    DiagnosticLevel.warning,
+                    SepticDiagnosticLevel.warning,
                     algPositionTransformer(calc.start, calc.end),
                     `Too many parameters. Expected max ${numFixedParamsPre} params but got ${numParams}`,
-                    DiagnosticCode.invalidNumberOfParams,
+                    SepticDiagnosticCode.invalidNumberOfParams,
                 ),
             ];
         }
@@ -530,10 +532,10 @@ function validateCalcParamsLength(
         if (numParams !== expectedNumParams) {
             return [
                 createDiagnostic(
-                    DiagnosticLevel.warning,
+                    SepticDiagnosticLevel.warning,
                     algPositionTransformer(calc.start, calc.end),
                     `Invalid number of parameters. Expected ${expectedNumParams} params but got ${numParams}`,
-                    DiagnosticCode.invalidNumberOfParams,
+                    SepticDiagnosticCode.invalidNumberOfParams,
                 ),
             ];
         }
@@ -556,10 +558,10 @@ function validateCalcParamsLength(
                 : "odd";
         return [
             createDiagnostic(
-                DiagnosticLevel.warning,
+                SepticDiagnosticLevel.warning,
                 algPositionTransformer(calc.start, calc.end),
                 `Invalid number of parameters. Expected min ${minNumParams} parameters and an ${oddOrEven} number of parameters but got ${numParams}`,
-                DiagnosticCode.invalidNumberOfParams,
+                SepticDiagnosticCode.invalidNumberOfParams,
             ),
         ];
     }
@@ -614,10 +616,10 @@ function validateObjectParamType(
     if (!isAlgExprObjectReference(expr)) {
         return [
             createDiagnostic(
-                DiagnosticLevel.warning,
+                SepticDiagnosticLevel.warning,
                 algPositionTransformer(expr.start, expr.end),
                 `Wrong data type for parameter. Expected data type for parameter: ${types.join(",")}}`,
-                DiagnosticCode.invalidDataTypeArg,
+                SepticDiagnosticCode.invalidDataTypeArg,
             ),
         ];
     }
@@ -632,10 +634,10 @@ function validateObjectParamType(
     }
     return [
         createDiagnostic(
-            DiagnosticLevel.warning,
+            SepticDiagnosticLevel.warning,
             algPositionTransformer(expr.start, expr.end),
             `Wrong data type for parameter: ${exprLiteral.value}. Expected data type for parameter: ${types.join(",")}}`,
-            DiagnosticCode.invalidDataTypeArg,
+            SepticDiagnosticCode.invalidDataTypeArg,
         ),
     ];
 }
@@ -662,10 +664,10 @@ function validateValueParamType(
     }
     return [
         createDiagnostic(
-            DiagnosticLevel.warning,
+            SepticDiagnosticLevel.warning,
             algPositionTransformer(expr.start, expr.end),
             `Reference to undefined variable: ${exprLiteral.value}`,
-            DiagnosticCode.missingReference,
+            SepticDiagnosticCode.missingReference,
         ),
     ];
 }
@@ -686,13 +688,13 @@ export function validateObjects(
         if (!objectDoc) {
             diagnostics.push(
                 createDiagnostic(
-                    DiagnosticLevel.error,
+                    SepticDiagnosticLevel.error,
                     {
                         start: cnfg.positionAt(obj.start),
                         end: cnfg.positionAt(obj.start + obj.type.length),
                     },
                     "Unknown object type",
-                    DiagnosticCode.unknownObjectType,
+                    SepticDiagnosticCode.unknownObjectType,
                 ),
             );
             continue;
@@ -723,7 +725,7 @@ export function validateObject(
     diagnostics.push(
         ...validateObjectReferences(obj, doc, contextProvider, objectInfo),
     );
-    const baseAttributes: Map<string, Attribute[]> = new Map();
+    const baseAttributes: Map<string, SepticAttribute[]> = new Map();
     for (const attr of obj.attributes) {
         diagnostics.push(
             ...validateAttribute(attr, doc, objectDoc, baseAttributes),
@@ -734,7 +736,7 @@ export function validateObject(
 }
 
 function checkForDuplicateAttributes(
-    baseAttributes: Map<string, Attribute[]>,
+    baseAttributes: Map<string, SepticAttribute[]>,
     diagnostics: SepticDiagnostic[],
     doc: TextDocument,
 ) {
@@ -743,13 +745,13 @@ function checkForDuplicateAttributes(
             for (const attr of attrs) {
                 diagnostics.push(
                     createDiagnostic(
-                        DiagnosticLevel.warning,
+                        SepticDiagnosticLevel.warning,
                         {
                             start: doc.positionAt(attr.start),
                             end: doc.positionAt(attr.start + attr.key.length),
                         },
                         `Duplicated attribute ${key}`,
-                        DiagnosticCode.duplicatedAttribute,
+                        SepticDiagnosticCode.duplicatedAttribute,
                     ),
                 );
             }
@@ -764,13 +766,13 @@ export function validateIdentifier(
     const diagnostics: SepticDiagnostic[] = [];
     if (!obj.identifier) {
         const diagnostic: SepticDiagnostic = createDiagnostic(
-            DiagnosticLevel.error,
+            SepticDiagnosticLevel.error,
             {
                 start: doc.positionAt(obj.start),
                 end: doc.positionAt(obj.start + obj.type.length),
             },
             `Missing identifier for object of type ${obj.type}`,
-            DiagnosticCode.missingIdentifier,
+            SepticDiagnosticCode.missingIdentifier,
         );
         diagnostics.push(diagnostic);
         return diagnostics;
@@ -782,13 +784,13 @@ export function validateIdentifier(
 
     return [
         createDiagnostic(
-            DiagnosticLevel.error,
+            SepticDiagnosticLevel.error,
             {
                 start: doc.positionAt(obj.identifier.start),
                 end: doc.positionAt(obj.identifier.end),
             },
             `Invalid identifier. Identifier needs to contain minimum one letter. Allowed chars: [a-z, A-Z, 0-9, _, -]. Jinja-expressions are allowed for SCG`,
-            DiagnosticCode.invalidIdentifier,
+            SepticDiagnosticCode.invalidIdentifier,
         ),
     ];
 }
@@ -856,13 +858,13 @@ export function validateObjectReferences(
             }
             diagnostics.push(
                 createDiagnostic(
-                    DiagnosticLevel.warning,
+                    SepticDiagnosticLevel.warning,
                     {
                         start: doc.positionAt(attrValue.start),
                         end: doc.positionAt(attrValue.end),
                     },
                     `Reference to undefined Xvr ${attrValue.getValue()}`,
-                    DiagnosticCode.missingReference,
+                    SepticDiagnosticCode.missingReference,
                 ),
             );
         }
@@ -891,8 +893,8 @@ function validateIdentifierReferences(
         return [];
     }
     const severity = objectMetaInfo.refs.identifierOptional
-        ? DiagnosticLevel.hint
-        : DiagnosticLevel.warning;
+        ? SepticDiagnosticLevel.hint
+        : SepticDiagnosticLevel.warning;
     return [
         createDiagnostic(
             severity,
@@ -901,7 +903,7 @@ function validateIdentifierReferences(
                 end: doc.positionAt(obj.identifier!.end),
             },
             `Reference to undefined Xvr ${obj.identifier!.name}`,
-            DiagnosticCode.missingReference,
+            SepticDiagnosticCode.missingReference,
         ),
     ];
 }
@@ -967,7 +969,7 @@ function validateDuplicateIdentifiers(
     if (validRef) {
         return [];
     }
-    const severity = DiagnosticLevel.warning;
+    const severity = SepticDiagnosticLevel.warning;
     return [
         createDiagnostic(
             severity,
@@ -976,7 +978,7 @@ function validateDuplicateIdentifiers(
                 end: doc.positionAt(obj.identifier!.end),
             },
             `Duplicate Xvr with name: ${obj.identifier!.name}`,
-            DiagnosticCode.duplicate,
+            SepticDiagnosticCode.duplicate,
         ),
     ];
 }
@@ -995,13 +997,13 @@ function validateCalcPvrIdentifierReferences(
     ) {
         diagnostics.push(
             createDiagnostic(
-                DiagnosticLevel.warning,
+                SepticDiagnosticLevel.warning,
                 {
                     start: doc.positionAt(obj.identifier!.start),
                     end: doc.positionAt(obj.identifier!.end),
                 },
                 `Duplicate CalcPvr with name: ${obj.identifier!.name}`,
-                DiagnosticCode.duplicate,
+                SepticDiagnosticCode.duplicate,
             ),
         );
     }
@@ -1017,14 +1019,14 @@ function validateCalcPvrIdentifierReferences(
         defaultRefValidationFunction,
     );
     const severity = referenceToXvr
-        ? DiagnosticLevel.warning
-        : DiagnosticLevel.hint;
+        ? SepticDiagnosticLevel.warning
+        : SepticDiagnosticLevel.hint;
     const message = referenceToXvr
         ? `CalcPvr references non Evr ${obj.identifier!.name}`
         : `No reference to Evr`;
     const code = referenceToXvr
-        ? DiagnosticCode.invalidReference
-        : DiagnosticCode.missingReference;
+        ? SepticDiagnosticCode.invalidReference
+        : SepticDiagnosticCode.missingReference;
     diagnostics.push(
         createDiagnostic(
             severity,
@@ -1053,13 +1055,13 @@ function validateUAApplReferences(
     }
     return [
         createDiagnostic(
-            DiagnosticLevel.warning,
+            SepticDiagnosticLevel.warning,
             {
                 start: doc.positionAt(obj.identifier!.start),
                 end: doc.positionAt(obj.identifier!.end),
             },
             "Missing reference to SmpcAppl or MPCAppl",
-            DiagnosticCode.missingReference,
+            SepticDiagnosticCode.missingReference,
         ),
     ];
 }
@@ -1108,13 +1110,13 @@ export function validateEvrReferences(
     if (!calcPvrRef) {
         return [
             createDiagnostic(
-                DiagnosticLevel.warning,
+                SepticDiagnosticLevel.warning,
                 {
                     start: doc.positionAt(obj.identifier!.start),
                     end: doc.positionAt(obj.identifier!.end),
                 },
                 "Unused Evr. Evr not used in calcs or enabled user input",
-                DiagnosticCode.unusedEvr,
+                SepticDiagnosticCode.unusedEvr,
             ),
         ];
     }
@@ -1122,23 +1124,23 @@ export function validateEvrReferences(
 }
 
 export function validateAttribute(
-    attr: Attribute,
+    attr: SepticAttribute,
     doc: TextDocument,
     objectDoc: ISepticObjectDocumentation,
-    duplicates: Map<string, Attribute[]>,
+    duplicates: Map<string, SepticAttribute[]>,
 ): SepticDiagnostic[] {
     const attrDoc = objectDoc.getAttribute(attr.key);
     const diagnostics: SepticDiagnostic[] = [];
     if (!attrDoc) {
         return [
             createDiagnostic(
-                DiagnosticLevel.error,
+                SepticDiagnosticLevel.error,
                 {
                     start: doc.positionAt(attr.start),
                     end: doc.positionAt(attr.start + attr.key.length),
                 },
                 `Unknown attribute for Object of type ${objectDoc.name}`,
-                DiagnosticCode.unknownAttribute,
+                SepticDiagnosticCode.unknownAttribute,
             ),
         ];
     }
@@ -1166,7 +1168,7 @@ export function validateAttribute(
 }
 
 function validateAttributeValue(
-    attrValues: AttributeValue[],
+    attrValues: SepticAttributeValue[],
     attrDoc: SepticAttributeDocumentation,
     doc: TextDocument,
 ): SepticDiagnostic[] {
@@ -1177,13 +1179,13 @@ function validateAttributeValue(
             const errorMessage = `Wrong data type for attribute. Expected DataType: ${datatypeFormatted}`;
             diagnostics.push(
                 createDiagnostic(
-                    DiagnosticLevel.error,
+                    SepticDiagnosticLevel.error,
                     {
                         start: doc.positionAt(attrValue.start),
                         end: doc.positionAt(attrValue.end),
                     },
                     errorMessage,
-                    DiagnosticCode.invalidDataTypeAttribute,
+                    SepticDiagnosticCode.invalidDataTypeAttribute,
                 ),
             );
         }
@@ -1192,7 +1194,7 @@ function validateAttributeValue(
             if (indexInvalid !== -1) {
                 diagnostics.push(
                     createDiagnostic(
-                        DiagnosticLevel.error,
+                        SepticDiagnosticLevel.error,
                         {
                             start: doc.positionAt(
                                 attrValue.start + 1 + indexInvalid,
@@ -1202,7 +1204,7 @@ function validateAttributeValue(
                             ),
                         },
                         `Invalid char in string: "'" `,
-                        DiagnosticCode.invalidCharInString,
+                        SepticDiagnosticCode.invalidCharInString,
                     ),
                 );
             }
@@ -1212,7 +1214,7 @@ function validateAttributeValue(
 }
 
 function validateAttributeNumValues(
-    attrValues: AttributeValue[],
+    attrValues: SepticAttributeValue[],
     attrDoc: SepticAttributeDocumentation,
     startAttr: number,
     endAttr: number,
@@ -1226,10 +1228,10 @@ function validateAttributeNumValues(
         case 0:
             return [
                 createDiagnostic(
-                    DiagnosticLevel.error,
+                    SepticDiagnosticLevel.error,
                     range,
                     `Missing value for attribute`,
-                    DiagnosticCode.missingAttributeValue,
+                    SepticDiagnosticCode.missingAttributeValue,
                 ),
             ];
         case 1:
@@ -1238,30 +1240,30 @@ function validateAttributeNumValues(
             }
             return [
                 createDiagnostic(
-                    DiagnosticLevel.error,
+                    SepticDiagnosticLevel.error,
                     range,
                     `Attribute expects list of values`,
-                    DiagnosticCode.missingListAttribute,
+                    SepticDiagnosticCode.missingListAttribute,
                 ),
             ];
         default: {
             if (!attrDoc.list) {
                 return [
                     createDiagnostic(
-                        DiagnosticLevel.error,
+                        SepticDiagnosticLevel.error,
                         range,
                         `Attribute does not expect list of values`,
-                        DiagnosticCode.unexpectedList,
+                        SepticDiagnosticCode.unexpectedList,
                     ),
                 ];
             }
             if (!isInt(attrValues[0]!.value)) {
                 return [
                     createDiagnostic(
-                        DiagnosticLevel.error,
+                        SepticDiagnosticLevel.error,
                         range,
                         `First value needs to be positive int when multiple values are provided for attribute`,
-                        DiagnosticCode.missingListLengthValue,
+                        SepticDiagnosticCode.missingListLengthValue,
                     ),
                 ];
             }
@@ -1269,12 +1271,12 @@ function validateAttributeNumValues(
             if (attrValues.length - 1 !== numValues) {
                 return [
                     createDiagnostic(
-                        DiagnosticLevel.error,
+                        SepticDiagnosticLevel.error,
                         range,
                         `Incorrect number of values given. Expected: ${numValues} Actual: ${
                             attrValues.length - 1
                         }.`,
-                        DiagnosticCode.mismatchLengthList,
+                        SepticDiagnosticCode.mismatchLengthList,
                     ),
                 ];
             }
@@ -1293,13 +1295,13 @@ export function validateObjectParent(
     if (expectedParents.length && !obj.parent) {
         return [
             createDiagnostic(
-                DiagnosticLevel.error,
+                SepticDiagnosticLevel.error,
                 {
                     start: doc.positionAt(obj.start),
                     end: doc.positionAt(obj.start + obj.type.length),
                 },
                 `No parent object for object. Expected parent object of type: ${expectedParents}`,
-                DiagnosticCode.missingParentObject,
+                SepticDiagnosticCode.missingParentObject,
             ),
         ];
     }
@@ -1307,13 +1309,13 @@ export function validateObjectParent(
     if (expectedParents.length && !expectedParents.includes(parent)) {
         return [
             createDiagnostic(
-                DiagnosticLevel.error,
+                SepticDiagnosticLevel.error,
                 {
                     start: doc.positionAt(obj.start),
                     end: doc.positionAt(obj.start + obj.type.length),
                 },
                 `Invalid parent object of type ${parent}. Expected parent object of type: ${expectedParents}`,
-                DiagnosticCode.invalidParentObject,
+                SepticDiagnosticCode.invalidParentObject,
             ),
         ];
     }
@@ -1321,7 +1323,7 @@ export function validateObjectParent(
 }
 
 export function checkAttributeDataType(
-    attrValue: AttributeValue,
+    attrValue: SepticAttributeValue,
     attrDoc: SepticAttributeDocumentation,
 ): boolean {
     if (jinjaRegex.test(attrValue.value)) {
@@ -1414,4 +1416,19 @@ function getDiagnosticCodes(codes: string): string[] {
         }
     });
     return diagnosticCodes;
+}
+
+function formatDataType(attrDoc: SepticAttributeDocumentation) {
+    let output = capitalizeFirstLetter(attrDoc.dataType);
+    if (attrDoc.dataType === "enum") {
+        output += "[" + attrDoc.enums.join(", ") + "]";
+    }
+    if (attrDoc.list) {
+        output += "[ ]";
+    }
+    return output;
+}
+
+function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }

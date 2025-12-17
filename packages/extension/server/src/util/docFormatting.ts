@@ -1,11 +1,11 @@
-import { bold, code, h4, horizontalRule } from "./util/markdown";
-import { SepticObject } from "./elements";
+import { bold, code, h4, horizontalRule } from "./markdown";
 import {
+    SepticObject,
     ISepticObjectDocumentation,
     SepticAttributeDocumentation,
     SepticCalcInfo,
     SepticCalcParameterInfo,
-} from "./metaInfoProvider";
+} from "septic";
 
 export function formatObjectDocumentationMarkdown(
     objDoc: ISepticObjectDocumentation,
@@ -60,6 +60,21 @@ export function formatObjectAttribute(
     return doc;
 }
 
+function formatDataType(attrDoc: SepticAttributeDocumentation) {
+    let output = capitalizeFirstLetter(attrDoc.dataType);
+    if (attrDoc.dataType === "enum") {
+        output += "[" + attrDoc.enums.join(", ") + "]";
+    }
+    if (attrDoc.list) {
+        output += "[ ]";
+    }
+    return output;
+}
+
+function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
 export function formatCalcMarkdown(calc: SepticCalcInfo) {
     const markdown = [
         "```js\n" + `function ${calc.signature}` + "\n```",
@@ -101,21 +116,6 @@ export function formatDefaultValue(attrDefault: string[]) {
         return attrDefault[0];
     }
     return `${attrDefault.length}  ${attrDefault.join("  ")}`;
-}
-
-export function formatDataType(attrDoc: SepticAttributeDocumentation) {
-    let output = capitalizeFirstLetter(attrDoc.dataType);
-    if (attrDoc.dataType === "enum") {
-        output += "[" + attrDoc.enums.join(", ") + "]";
-    }
-    if (attrDoc.list) {
-        output += "[ ]";
-    }
-    return output;
-}
-
-function capitalizeFirstLetter(str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
 export function formatObjectInstance(obj: SepticObject) {

@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { SepticMetaInfoProvider } from "..";
+import { SepticMetaInfoProvider } from "../metaInfoProvider";
 import { parseSepticForTest } from "./util";
 
 SepticMetaInfoProvider.setVersion("v3.0");

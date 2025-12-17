@@ -17,11 +17,11 @@ import {
     AlgVisitor,
     SepticCalcParameterInfo,
     SepticMetaInfoProvider,
-    formatCalcParameter,
     parseAlg,
     SepticCnfg,
     fromCalcIndexToParamIndex,
 } from "septic";
+import { formatCalcParameter } from "../util";
 
 export class SignatureHelpProvider {
     private cnfgProvider: SepticConfigProvider;

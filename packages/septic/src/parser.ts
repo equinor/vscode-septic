@@ -3,14 +3,14 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { CancellationToken } from "./util/cts";
-import { Parser, IToken, ParserError } from "./util/parser";
-import { SepticToken, SepticTokenType } from "./tokens";
+import { Parser, IToken, ParserError, CancellationToken } from "./util";
 import {
-    Attribute,
-    AttributeValue,
-    Identifier,
+    SepticAttribute,
+    SepticAttributeValue,
+    SepticIdentifier,
     SepticObject,
+    SepticToken,
+    SepticTokenType,
 } from "./elements";
 
 const validAttributeTokens = [
@@ -83,9 +83,9 @@ export class SepticParser extends Parser<SepticTokenType, SepticObject[]> {
         return septicObject;
     }
 
-    attribute(): Attribute {
+    attribute(): SepticAttribute {
         const token: SepticToken = this.previous();
-        const attr = new Attribute(token.content, token.start, token.end);
+        const attr = new SepticAttribute(token.content, token.start, token.end);
         while (!this.isAtEnd()) {
             if (this.match(...validAttributeTokens)) {
                 const value = this.attributeValue();
@@ -110,9 +110,9 @@ export class SepticParser extends Parser<SepticTokenType, SepticObject[]> {
         return attr;
     }
 
-    identifier(): Identifier {
+    identifier(): SepticIdentifier {
         const token = super.previous();
-        const identifier = new Identifier(
+        const identifier = new SepticIdentifier(
             token.content,
             token.start,
             token.end,
@@ -120,9 +120,9 @@ export class SepticParser extends Parser<SepticTokenType, SepticObject[]> {
         return identifier;
     }
 
-    attributeValue(): AttributeValue {
+    attributeValue(): SepticAttributeValue {
         const token = this.previous();
-        return new AttributeValue(
+        return new SepticAttributeValue(
             token.content,
             token.type,
             token.start,

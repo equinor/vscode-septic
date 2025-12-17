@@ -257,8 +257,6 @@ function updateDatatypeParams(params: SepticCalcParameterInfo[] | undefined) {
     });
 }
 
-export const VALUE = "Value";
-
 class SepticObjectDocumentation implements ISepticObjectDocumentation {
     name: string;
     attributes: SepticAttributeDocumentation[] = [];

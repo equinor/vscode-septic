@@ -5,7 +5,7 @@
 
 import { SepticCnfg } from "../../cnfg";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { CancellationToken } from "../../util/cts";
+import { CancellationToken } from "../../util";
 
 export function parseSepticForTest(
     text: string,

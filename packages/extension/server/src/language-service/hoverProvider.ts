@@ -16,12 +16,14 @@ import {
     SepticCnfg,
     SepticMetaInfoProvider,
     SepticContext,
+    parseAlg,
+} from "septic";
+import {
     formatCalcMarkdown,
     formatObjectAttribute,
     formatObjectDocumentationMarkdown,
     formatObjectInstance,
-    parseAlg,
-} from "septic";
+} from "../util";
 
 export class HoverProvider {
     private cnfgProvider: SepticConfigProvider;

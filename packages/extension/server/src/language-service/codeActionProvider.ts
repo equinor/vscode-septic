@@ -20,7 +20,7 @@ import {
     SepticComment,
     SepticObject,
     SepticTokenType,
-    DiagnosticCode,
+    SepticDiagnosticCode,
 } from "septic";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
 import { SettingsManager } from "../settings";
@@ -91,7 +91,7 @@ export function getCodeActionInsertEvr(
     insertEvrPos: "top" | "bottom",
 ): CodeActionInsert[] {
     const diag = params.context.diagnostics.find(
-        (diag) => diag.code === DiagnosticCode.missingReference,
+        (diag) => diag.code === SepticDiagnosticCode.missingReference,
     );
     if (!diag) {
         return [];

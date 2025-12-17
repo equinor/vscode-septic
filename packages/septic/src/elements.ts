@@ -5,7 +5,26 @@
 
 import { removeJinjaLoopsAndIfs, removeSpaces } from "./util";
 import { AlgExpr, parseAlg } from "./alg";
-import { SepticTokenType } from "./tokens";
+
+import { IToken } from "./util/parser";
+
+export enum SepticTokenType {
+    object,
+    attribute,
+    blockComment,
+    lineComment,
+    jinjaComment,
+    jinjaExpression,
+    numeric,
+    string,
+    skip,
+    unknown,
+    identifier,
+    path,
+    eof = "eof",
+}
+
+export type SepticToken = IToken<SepticTokenType>;
 
 export class SepticBase {
     start: number;
@@ -52,8 +71,8 @@ export class SepticComment extends SepticBase {
 
 export class SepticObject extends SepticBase {
     type: string;
-    identifier: Identifier | undefined;
-    attributes: Attribute[];
+    identifier: SepticIdentifier | undefined;
+    attributes: SepticAttribute[];
     parent: SepticObject | undefined;
     children: SepticObject[] = [];
     isXvr: boolean;
@@ -63,7 +82,7 @@ export class SepticObject extends SepticBase {
 
     constructor(
         type: string,
-        variable: Identifier | undefined,
+        variable: SepticIdentifier | undefined,
         start: number = -1,
         end: number = -1,
     ) {
@@ -78,7 +97,7 @@ export class SepticObject extends SepticBase {
         this.isOpcXvr = this.isSopcXvr || this.isUaXvr;
     }
 
-    addAttribute(attr: Attribute) {
+    addAttribute(attr: SepticAttribute) {
         this.attributes.push(attr);
     }
 
@@ -94,7 +113,7 @@ export class SepticObject extends SepticBase {
         }
     }
 
-    getAttribute(name: string): Attribute | undefined {
+    getAttribute(name: string): SepticAttribute | undefined {
         return this.attributes.find((attr) => {
             return attr.key === name;
         });
@@ -113,11 +132,13 @@ export class SepticObject extends SepticBase {
         return this.getAttribute(name)?.getValues() ?? [];
     }
 
-    getAttributeValueObjects(name: string): AttributeValue[] {
+    getAttributeValueObjects(name: string): SepticAttributeValue[] {
         return this.getAttribute(name)?.getAttributeValueObjects() ?? [];
     }
 
-    getAttributeFirstValueObject(name: string): AttributeValue | undefined {
+    getAttributeFirstValueObject(
+        name: string,
+    ): SepticAttributeValue | undefined {
         return this.getAttribute(name)?.getFirstAttributeValueObject();
     }
 
@@ -166,8 +187,8 @@ export class SepticObject extends SepticBase {
     }
 }
 
-export class Attribute extends SepticBase {
-    values: AttributeValue[];
+export class SepticAttribute extends SepticBase {
+    values: SepticAttributeValue[];
     key: string;
 
     constructor(key: string, start: number = -1, end: number = -1) {
@@ -176,7 +197,7 @@ export class Attribute extends SepticBase {
         this.key = key;
     }
 
-    addValue(value: AttributeValue) {
+    addValue(value: SepticAttributeValue) {
         this.values.push(value);
     }
 
@@ -194,11 +215,11 @@ export class Attribute extends SepticBase {
         return elements;
     }
 
-    getFirstAttributeValueObject(): AttributeValue | undefined {
+    getFirstAttributeValueObject(): SepticAttributeValue | undefined {
         return this.values?.[0];
     }
 
-    getAttributeValueObjects(): AttributeValue[] {
+    getAttributeValueObjects(): SepticAttributeValue[] {
         return this.values;
     }
 
@@ -213,7 +234,7 @@ export class Attribute extends SepticBase {
         return this.values.map((val) => val.getValue());
     }
 
-    getType(): ValueTypes | undefined {
+    getType(): SepticValueTypes | undefined {
         if (!this.values.length) {
             return undefined;
         }
@@ -225,11 +246,15 @@ export class Attribute extends SepticBase {
 
         switch (type) {
             case SepticTokenType.numeric:
-                return list ? ValueTypes.numericList : ValueTypes.numeric;
+                return list
+                    ? SepticValueTypes.numericList
+                    : SepticValueTypes.numeric;
             case SepticTokenType.string:
-                return list ? ValueTypes.stringList : ValueTypes.string;
+                return list
+                    ? SepticValueTypes.stringList
+                    : SepticValueTypes.string;
             default:
-                return ValueTypes.default;
+                return SepticValueTypes.default;
         }
     }
 
@@ -238,7 +263,7 @@ export class Attribute extends SepticBase {
     }
 }
 
-export class Identifier extends SepticBase {
+export class SepticIdentifier extends SepticBase {
     name: string;
     id: string;
 
@@ -253,7 +278,7 @@ export class Identifier extends SepticBase {
     }
 }
 
-export class AttributeValue extends SepticBase {
+export class SepticAttributeValue extends SepticBase {
     value: string;
     type: SepticTokenType;
 
@@ -280,7 +305,7 @@ export class AttributeValue extends SepticBase {
     }
 }
 
-export enum ValueTypes {
+export enum SepticValueTypes {
     string = 1,
     numeric = 3,
     stringList = 4,

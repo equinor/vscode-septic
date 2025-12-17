@@ -37,9 +37,9 @@ import {
     SepticMetaInfoProvider,
     SepticCnfg,
     compareCnfgs,
+    validateStandAloneCalc,
 } from "septic";
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
-import { validateStandAloneCalc } from "./language-service/diagnosticsProvider";
 import { ContextManager } from "./contextManager";
 
 // Create a connection for the server, using Node's IPC as a transport.

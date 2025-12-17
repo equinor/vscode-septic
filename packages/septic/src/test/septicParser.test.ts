@@ -1,5 +1,6 @@
 import { expect } from "chai";
-import { SepticParser, SepticScanner, SepticTokenType } from "..";
+import { SepticParser, SepticScanner } from "../parser";
+import { SepticTokenType } from "../elements";
 import { parseSepticForTest } from "./util";
 
 describe("Test tokenization of objects and identifiers", () => {

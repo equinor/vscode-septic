@@ -4,8 +4,9 @@ import {
     buildGraph,
     CycleDetectorVisitor,
     findCyclesInGraph,
-    parseAlg,
-} from "..";
+} from "../cycle";
+
+import { parseAlg } from "../alg";
 
 describe("Test cycle detector visitor", () => {
     it("Expect all variables when no setgood", () => {

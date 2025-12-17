@@ -9,17 +9,17 @@ import {
     TextEdit,
 } from "vscode-languageserver-textdocument";
 import {
-    Attribute,
-    AttributeValue,
-    Identifier,
+    SepticAttribute,
+    SepticAttributeValue,
+    SepticIdentifier,
     SepticBase,
     SepticComment,
     SepticObject,
-    ValueTypes,
+    SepticValueTypes,
+    SepticTokenType,
 } from "./elements";
 
 import { SepticCnfg } from "./cnfg";
-import { SepticTokenType } from "./tokens";
 
 const indentsObjectDeclaration = 2;
 const startObjectName = 17;
@@ -27,7 +27,7 @@ const spacesBetweenValues = 2;
 const spacesBetweenIntValues = 6;
 const indentsAttributeValuesStart = 17;
 const maxNumberAttrValuesPerLine = 5;
-export const indentsAttributesDelimiter = 14;
+const indentsAttributesDelimiter = 14;
 
 export const jinjaForRegex = /^\{%-?\s+for\b.+%}$/;
 export const jinjaIfRegex = /^\{%-?\s+if\b.+%}$/;
@@ -56,10 +56,10 @@ export class SepticCnfgFormatter {
 
     private object: SepticObject | undefined;
 
-    private attr: Attribute | undefined;
+    private attr: SepticAttribute | undefined;
 
     private attrValueState: AttrValueFormattingState = {
-        type: ValueTypes.default,
+        type: SepticValueTypes.default,
         first: false,
         second: true,
         counter: 0,
@@ -84,9 +84,9 @@ export class SepticCnfgFormatter {
             const element = this.previous();
             if (element instanceof SepticObject) {
                 this.formatObject(element);
-            } else if (element instanceof Attribute) {
+            } else if (element instanceof SepticAttribute) {
                 this.formatAttribute(element);
-            } else if (element instanceof AttributeValue) {
+            } else if (element instanceof SepticAttributeValue) {
                 this.formatAttrValue(element);
             } else if (element instanceof SepticComment) {
                 this.formatComment(element);
@@ -139,16 +139,16 @@ export class SepticCnfgFormatter {
 
         if (
             !this.synchronize((elem) => {
-                return elem instanceof Identifier;
+                return elem instanceof SepticIdentifier;
             })
         ) {
             return;
         }
-        const identifier = this.previous() as Identifier;
+        const identifier = this.previous() as SepticIdentifier;
         this.currentLine += " ".repeat(indentsName) + identifier.name;
     }
 
-    private formatAttribute(attr: Attribute) {
+    private formatAttribute(attr: SepticAttribute) {
         this.setCurrentAttribute(attr);
         this.addLine();
         const editedFlag = this.getEditedFlag();
@@ -165,7 +165,7 @@ export class SepticCnfgFormatter {
         this.setAttrValueFormattingState(attr);
     }
 
-    private formatAttrValue(attrValue: AttributeValue) {
+    private formatAttrValue(attrValue: SepticAttributeValue) {
         const editedFlag = this.getEditedFlag();
         let resetDoToEdit = false;
         if (editedFlag) {
@@ -181,7 +181,7 @@ export class SepticCnfgFormatter {
                 this.attrValueState.second = false;
             } else {
                 if (
-                    this.attrValueState.type === ValueTypes.stringList &&
+                    this.attrValueState.type === SepticValueTypes.stringList &&
                     this.attrValueState.second
                 ) {
                     this.addEmptyLine();
@@ -197,7 +197,7 @@ export class SepticCnfgFormatter {
                         (indentsAttributesDelimiter + 1),
                 ) + attrValue.value;
             this.attrValueState.first = false;
-            if (this.attrValueState.type === ValueTypes.stringList) {
+            if (this.attrValueState.type === SepticValueTypes.stringList) {
                 this.addLine();
             }
             return;
@@ -216,7 +216,7 @@ export class SepticCnfgFormatter {
             spaces = 1;
         }
         if (
-            this.attrValueState.type === ValueTypes.numericList &&
+            this.attrValueState.type === SepticValueTypes.numericList &&
             spaces === spacesBetweenValues
         ) {
             spaces = Math.max(
@@ -228,7 +228,7 @@ export class SepticCnfgFormatter {
                 spaces = Math.max(1, spaces - 1);
             }
         }
-        if (this.attrValueState.type === ValueTypes.stringList) {
+        if (this.attrValueState.type === SepticValueTypes.stringList) {
             this.attrValueState.second = false;
         }
         this.currentLine += " ".repeat(spaces) + attrValue.value;
@@ -354,7 +354,7 @@ export class SepticCnfgFormatter {
                 endPos = this.doc.positionAt(previousElement.end);
             }
         }
-        if (previousElement instanceof Attribute) {
+        if (previousElement instanceof SepticAttribute) {
             this.currentLine += "  ";
         }
         this.addLine();
@@ -453,7 +453,7 @@ export class SepticCnfgFormatter {
     }
 
     private incrementAttrValueCounter(): void {
-        if (this.attrValueState.type === ValueTypes.stringList) {
+        if (this.attrValueState.type === SepticValueTypes.stringList) {
             this.attrValueState.counter += 1;
         }
     }
@@ -462,11 +462,11 @@ export class SepticCnfgFormatter {
         this.attrValueState.counter = 0;
     }
 
-    private setAttrValueFormattingState(attr: Attribute) {
+    private setAttrValueFormattingState(attr: SepticAttribute) {
         const type = attr.getType();
         if (!type) {
             this.attrValueState = {
-                type: ValueTypes.default,
+                type: SepticValueTypes.default,
                 first: true,
                 second: true,
                 counter: 0,
@@ -485,7 +485,7 @@ export class SepticCnfgFormatter {
         this.object = object;
     }
 
-    private setCurrentAttribute(attr: Attribute) {
+    private setCurrentAttribute(attr: SepticAttribute) {
         this.attr = attr;
     }
 
@@ -532,7 +532,7 @@ function createReplaceEdit(
 }
 
 interface AttrValueFormattingState {
-    type: ValueTypes;
+    type: SepticValueTypes;
     first: boolean;
     second: boolean;
     counter: number;

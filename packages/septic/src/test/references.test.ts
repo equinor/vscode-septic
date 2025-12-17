@@ -1,12 +1,12 @@
 import { expect } from "chai";
 import {
-    Attribute,
-    AttributeValue,
-    extractReferencesFromObj,
-    Identifier,
+    SepticAttribute,
+    SepticAttributeValue,
+    SepticIdentifier,
     SepticObject,
     SepticTokenType,
-} from "..";
+} from "../elements";
+import { extractReferencesFromObj } from "../cnfg";
 import { parseSepticForTest } from "./util";
 
 describe("Test extraction of refs from config file", () => {
@@ -96,12 +96,14 @@ describe("Test getReferences", () => {
         const alg = `"1 + max({% for Wellname in wells | unpack('Wellname') %}{{ Wellname }}Pdh - 5{% if not loop.last %},{% endif %}{% endfor %}) + {{ Wellname }}Twh"`;
         const calcPvr = new SepticObject(
             "CalcPvr",
-            new Identifier("Test"),
+            new SepticIdentifier("Test"),
             0,
             0,
         );
-        const algAttribute = new Attribute("Alg");
-        algAttribute.addValue(new AttributeValue(alg, SepticTokenType.string));
+        const algAttribute = new SepticAttribute("Alg");
+        algAttribute.addValue(
+            new SepticAttributeValue(alg, SepticTokenType.string),
+        );
         calcPvr.addAttribute(algAttribute);
         const refs = extractReferencesFromObj(calcPvr);
         expect(refs.length).to.equal(3);
@@ -112,12 +114,14 @@ describe("Test getReferences", () => {
         const alg = `"1 + max(Test {% if Test %} + Something {% endif %}, 1)"`;
         const calcPvr = new SepticObject(
             "CalcPvr",
-            new Identifier("Test"),
+            new SepticIdentifier("Test"),
             0,
             0,
         );
-        const algAttribute = new Attribute("Alg");
-        algAttribute.addValue(new AttributeValue(alg, SepticTokenType.string));
+        const algAttribute = new SepticAttribute("Alg");
+        algAttribute.addValue(
+            new SepticAttributeValue(alg, SepticTokenType.string),
+        );
         calcPvr.addAttribute(algAttribute);
         const refs = extractReferencesFromObj(calcPvr);
         expect(refs.length).to.equal(2);
@@ -128,12 +132,14 @@ describe("Test getReferences", () => {
         const alg = `"1 + max(Test {% with Test = 2 %} + {{Test}}Something, 1)"`;
         const calcPvr = new SepticObject(
             "CalcPvr",
-            new Identifier("Test"),
+            new SepticIdentifier("Test"),
             0,
             0,
         );
-        const algAttribute = new Attribute("Alg");
-        algAttribute.addValue(new AttributeValue(alg, SepticTokenType.string));
+        const algAttribute = new SepticAttribute("Alg");
+        algAttribute.addValue(
+            new SepticAttributeValue(alg, SepticTokenType.string),
+        );
         calcPvr.addAttribute(algAttribute);
         const refs = extractReferencesFromObj(calcPvr);
         expect(refs.length).to.equal(1);
@@ -142,12 +148,14 @@ describe("Test getReferences", () => {
         const alg = `"maxselection(6,{% for Wellname in (wells | unpack('Wellname'))[:5] %} {{ Wellname }}Priority,{% endfor %} -1,{% for Wellname in (wells | unpack('Wellname'))[:5] %} {{ Wellname }}Priority < {{ CurrentWell }}Priority,{% endfor %} 1)"`;
         const calcPvr = new SepticObject(
             "CalcPvr",
-            new Identifier("Test"),
+            new SepticIdentifier("Test"),
             0,
             0,
         );
-        const algAttribute = new Attribute("Alg");
-        algAttribute.addValue(new AttributeValue(alg, SepticTokenType.string));
+        const algAttribute = new SepticAttribute("Alg");
+        algAttribute.addValue(
+            new SepticAttributeValue(alg, SepticTokenType.string),
+        );
         calcPvr.addAttribute(algAttribute);
         const refs = extractReferencesFromObj(calcPvr);
         expect(refs.length).to.equal(4);
@@ -168,12 +176,14 @@ describe("Test getReferences", () => {
         const alg = `"1{% for test in wells %}+Something{{ Test }}Y{% endfor %}+Perf"`;
         const calcPvr = new SepticObject(
             "CalcPvr",
-            new Identifier("Test"),
+            new SepticIdentifier("Test"),
             0,
             0,
         );
-        const algAttribute = new Attribute("Alg");
-        algAttribute.addValue(new AttributeValue(alg, SepticTokenType.string));
+        const algAttribute = new SepticAttribute("Alg");
+        algAttribute.addValue(
+            new SepticAttributeValue(alg, SepticTokenType.string),
+        );
         calcPvr.addAttribute(algAttribute);
         const refs = extractReferencesFromObj(calcPvr);
         expect(refs.length).to.equal(3);
