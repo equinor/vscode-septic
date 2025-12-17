@@ -57,6 +57,18 @@ export class SepticMetaInfoProvider {
         return SepticMetaInfoProvider.metaInfoProvider;
     }
 
+    public static getAvailableVersions(): string[] {
+        const basePath = getBasePublicPath();
+        const versions = fs
+            .readdirSync(basePath, { withFileTypes: true })
+            .filter(
+                (entry) =>
+                    entry.isDirectory() && entry.name.match(/^v?\d+(_\d+)*$/),
+            )
+            .map((entry) => entry.name.replace(/_/g, "."));
+        return versions;
+    }
+
     public static setVersion(version: string): void {
         SepticMetaInfoProvider.version = version;
     }
@@ -121,26 +133,8 @@ export class SepticMetaInfoProvider {
         return this.objectHierarchy;
     }
 
-    private getBasePublicPath(): string {
-        // Use a different base path for tests if NODE_ENV is 'test'
-        if (process.env.NODE_ENV === "test") {
-            return path.join(__dirname, `../public`);
-        }
-
-        // Check for assets in the bundled location (e.g. dist/assets)
-        // This works when the extension is bundled and assets are copied next to the bundle
-        const bundledPath = path.join(__dirname, "public");
-        if (fs.existsSync(bundledPath)) {
-            return bundledPath;
-        }
-
-        // Fallback to development/library structure (e.g. packages/septic/assets)
-        // This works when running via ts-node or from the compiled lib folder
-        return path.join(__dirname, "../public");
-    }
-
     private loadCalcsInfo(version: string): Map<string, SepticCalcInfo> {
-        const basePath = this.getBasePublicPath();
+        const basePath = getBasePublicPath();
         const filePath = path.join(
             basePath,
             `${version.replace(/\./g, "_")}`,
@@ -170,7 +164,7 @@ export class SepticMetaInfoProvider {
     }
 
     private loadObjectsInfo(): Map<string, SepticObjectInfo> {
-        const basePath = this.getBasePublicPath();
+        const basePath = getBasePublicPath();
         const filePath = path.join(basePath, "objects.yaml");
         const file = fs.readFileSync(filePath, "utf-8");
         const objectsInfo: SepticObjectsInfoInput[] = YAML.load(
@@ -202,7 +196,7 @@ export class SepticMetaInfoProvider {
     private loadObjectsDocumentation(
         version: string,
     ): Map<string, ISepticObjectDocumentation> {
-        const basePath = this.getBasePublicPath();
+        const basePath = getBasePublicPath();
         const filePath = path.join(
             basePath,
             `${version.replace(/\./g, "_")}`,
@@ -220,7 +214,7 @@ export class SepticMetaInfoProvider {
     }
 
     private loadSnippetsInfo(version: string): SepticObjectSnippet[] {
-        const basePath = this.getBasePublicPath();
+        const basePath = getBasePublicPath();
         const filePath = path.join(
             basePath,
             `${version.replace(/\./g, "_")}`,
@@ -240,6 +234,24 @@ export class SepticMetaInfoProvider {
         updateObjectHierarchyLevels(objectTree);
         return objectTree;
     }
+}
+
+function getBasePublicPath(): string {
+    // Use a different base path for tests if NODE_ENV is 'test'
+    if (process.env.NODE_ENV === "test") {
+        return path.join(__dirname, `../public`);
+    }
+
+    // Check for assets in the bundled location (e.g. dist/assets)
+    // This works when the extension is bundled and assets are copied next to the bundle
+    const bundledPath = path.join(__dirname, "public");
+    if (fs.existsSync(bundledPath)) {
+        return bundledPath;
+    }
+
+    // Fallback to development/library structure (e.g. packages/septic/assets)
+    // This works when running via ts-node or from the compiled lib folder
+    return path.join(__dirname, "../public");
 }
 
 function updateDatatypeParams(params: SepticCalcParameterInfo[] | undefined) {

@@ -8,18 +8,19 @@ import {
     SepticDiagnostic,
     SepticDiagnosticLevel,
 } from "../diagnostics";
-import {
-    validateFileExists,
-    createDocumentFromFile,
-    runCli,
-} from "./utils";
+import { SepticMetaInfoProvider } from "../metaInfoProvider";
+import { validateFileExists, createDocumentFromFile, runCli } from "./utils";
 
 interface LintOptions {
     file: string;
     ignore?: string[];
+    version?: string;
 }
 
 function parseArguments(): LintOptions {
+    const availableVersions = SepticMetaInfoProvider.getAvailableVersions();
+    const versionList = availableVersions.join(", ");
+
     const argv = yargs(hideBin(process.argv))
         .command("$0 <file>", "Lint a Septic config file", (yargs) => {
             return yargs.positional("file", {
@@ -33,10 +34,20 @@ function parseArguments(): LintOptions {
             description: "Diagnostic codes to ignore (e.g., W101 E202)",
             string: true,
         })
+        .option("septicversion", {
+            alias: "s",
+            type: "string",
+            description: `Septic version to use for linting (available: ${versionList})`,
+            default: "latest",
+        })
         .example("$0 config.cnfg", "Lint a config file")
         .example(
             "$0 config.cnfg --ignore W101 W203",
             "Lint and ignore specific diagnostic codes",
+        )
+        .example(
+            "$0 config.cnfg --septicversion v3.5",
+            "Lint using Septic version 3.5",
         )
         .help()
         .parseSync();
@@ -48,6 +59,7 @@ function parseArguments(): LintOptions {
 
     const options: LintOptions = {
         file: argv.file as string,
+        version: argv.septicversion as string,
     };
 
     if (argv.ignore) {
@@ -105,6 +117,11 @@ function printDiagnostics(diagnostics: SepticDiagnostic[], uri: string): void {
 async function main(): Promise<void> {
     const options = parseArguments();
     validateFileExists(options.file);
+
+    // Set the version to use for linting
+    if (options.version) {
+        SepticMetaInfoProvider.setVersion(options.version);
+    }
 
     const document = createDocumentFromFile(options.file);
     const allDiagnostics = await lintSepticConfig(document);
