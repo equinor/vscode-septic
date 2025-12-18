@@ -42,7 +42,7 @@
             "group": "build",
             "problemMatcher": [],
             "label": "npm: compile-tests - packages/extension",
-            "detail": "tsc -p ./client && tsc -p ./server && npm run copy-files"
+            "detail": "tsc -p ./client && tsc -p ./server && pnpm copy-files"
         }
     ]
 }

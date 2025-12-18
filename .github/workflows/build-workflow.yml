@@ -14,24 +14,20 @@ jobs:
         working-directory: packages/extension
     steps:
       - uses: actions/checkout@v5
-
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
       - name: "Setup Node.js"
         uses: actions/setup-node@v6
         with:
           node-version: 20
-
       - name: "Install dependencies"
-        run: npm ci
-
+        run: pnpm install
       - name: "Create Artifact"
         run: npx @vscode/vsce package
-
       - name: "Resolve build version"
         run: echo "BUILD_VERSION=$GITHUB_SHA" >> $GITHUB_ENV
-
       - name: "Set artifact name"
         run: echo "ARTIFACT_NAME=$(echo vscode-septic-${{ env.BUILD_VERSION }}.vsix)" >> $GITHUB_ENV
-
       - name: "Upload artifact"
         uses: actions/upload-artifact@v5
         with:

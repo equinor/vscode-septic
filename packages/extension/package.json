@@ -553,25 +553,24 @@
     "instrument": true
   },
   "scripts": {
-    "vscode:prepublish": "npm run package",
+    "vscode:prepublish": "pnpm package",
     "check-types": "tsc --noEmit",
-    "compile": "npm run check-types && node esbuild.js && copyfiles -u 3 ../septic/public/**/* dist/public",
-    "compile-tests": "tsc -b ./client && tsc -b ./server",
-    "watch": "npm-run-all -p watch:*",
+    "build": "pnpm check-types && node esbuild.js && copyfiles -u 3 ../septic/public/**/* dist/public",
+    "build:test": "tsc -b ./client && tsc -b ./server",
+    "watch": "pnpm run \"/^watch:.*/\"",
     "watch:esbuild": "node esbuild.js --watch",
     "watch:tsc": "tsc --watch --project tsconfig.json",
-    "package": "npm run check-types && node esbuild.js --production && copyfiles -u 3 ../septic/public/**/* dist/public",
+    "package": "pnpm check-types && node esbuild.js --production && copyfiles -u 3 ../septic/public/**/* dist/public",
     "lint": "eslint -c eslint.config.mjs ./client/src ./server/src",
-    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-    "integration-test": "npm run compile && npm run compile-tests && vscode-test",
+    "integration-test": "pnpm build && pnpm build:test && vscode-test",
     "test": "cross-env NODE_ENV=test mocha",
-    "test_with_coverage": "npm run compile && nyc mocha --import ts-node/esm --require source-map-support/register --recursive server/src/test/**/*.test.ts "
+    "test_with_coverage": "pnpm build && nyc mocha --import ts-node/esm --require source-map-support/register --recursive server/src/test/**/*.test.ts "
   },
   "dependencies": {
     "@vscode/prompt-tsx": "^0.4.0-alpha.5",
     "ajv": "^8.12.0",
     "js-yaml": "^4.1.1",
-    "septic": "^1.0.0"
+    "septic": "workspace:*"
   },
   "devDependencies": {
     "@types/vscode": "^1.105.0",

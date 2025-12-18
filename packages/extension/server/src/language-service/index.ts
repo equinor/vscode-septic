@@ -17,7 +17,7 @@ import {
     ReferenceProvider,
 } from "./referenceProvider";
 import { DocumentProvider } from "../documentProvider";
-import { SepticCnfg, SepticContext } from "septic";
+import { SepticContext } from "septic";
 import { RenameProvider } from "./renameProvider";
 import { HoverProvider } from "./hoverProvider";
 import { FormattingProvider } from "./formatProvider";

@@ -1,6 +1,7 @@
 {
   "name": "vscode-septic",
   "private": true,
+  "packageManager": "pnpm@10.0.0",
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@types/chai": "^5.2.3",
@@ -23,8 +24,10 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "npm@10.9.4",
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "dev": "pnpm --filter septic watch"
+  }
 }
