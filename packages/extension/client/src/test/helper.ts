@@ -21,7 +21,7 @@ export async function activate() {
     try {
         const ext = vscode.extensions.getExtension("EinarSIdso.septic-config");
         await ext.activate();
-        await sleep(2000);
+        await sleep(10000);
         activated = true;
     } catch (e) {
         console.error(e);
@@ -51,7 +51,7 @@ export const getDocUri = (p: string) => {
 export async function setTestContent(content: string): Promise<boolean> {
     const all = new vscode.Range(
         doc.positionAt(0),
-        doc.positionAt(doc.getText().length)
+        doc.positionAt(doc.getText().length),
     );
     return editor.edit((eb) => eb.replace(all, content));
 }
