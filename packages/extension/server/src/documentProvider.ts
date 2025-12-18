@@ -4,7 +4,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Emitter } from "vscode-jsonrpc";
+import { Emitter } from "vscode-languageserver";
 import { ResourceMap } from "./util";
 import {
     Connection,

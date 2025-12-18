@@ -3,23 +3,32 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as lsp from "vscode-languageserver-types";
+import {
+    CreateFile,
+    DeleteFile,
+    Position,
+    Range,
+    RenameFile,
+    TextDocumentEdit,
+    TextEdit,
+    WorkspaceEdit,
+} from "vscode-languageserver";
 
 export class WorkspaceEditBuilder {
-    private readonly changes: { [uri: string]: lsp.TextEdit[] } = {};
+    private readonly changes: { [uri: string]: TextEdit[] } = {};
     private readonly documentChanges: Array<
-        lsp.CreateFile | lsp.RenameFile | lsp.DeleteFile
+        CreateFile | RenameFile | DeleteFile
     > = [];
 
-    replace(resource: string, range: lsp.Range, newText: string): void {
-        this.addEdit(resource, lsp.TextEdit.replace(range, newText));
+    replace(resource: string, range: Range, newText: string): void {
+        this.addEdit(resource, TextEdit.replace(range, newText));
     }
 
-    insert(resource: string, position: lsp.Position, newText: string): void {
-        this.addEdit(resource, lsp.TextEdit.insert(position, newText));
+    insert(resource: string, position: Position, newText: string): void {
+        this.addEdit(resource, TextEdit.insert(position, newText));
     }
 
-    private addEdit(resource: string, edit: lsp.TextEdit): void {
+    private addEdit(resource: string, edit: TextEdit): void {
         const resourceKey = resource.toString();
         let edits = this.changes![resourceKey];
         if (!edits) {
@@ -30,14 +39,11 @@ export class WorkspaceEditBuilder {
         edits.push(edit);
     }
 
-    getEdit(): lsp.WorkspaceEdit {
+    getEdit(): WorkspaceEdit {
         const textualChanges = Object.entries(this.changes).map(
-            ([uri, edits]): lsp.TextDocumentEdit => {
-                return lsp.TextDocumentEdit.create(
-                    { uri, version: null },
-                    edits
-                );
-            }
+            ([uri, edits]): TextDocumentEdit => {
+                return TextDocumentEdit.create({ uri, version: null }, edits);
+            },
         );
 
         return {
