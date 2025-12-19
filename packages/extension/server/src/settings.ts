@@ -67,16 +67,29 @@ export class SettingsManager {
     }
 
     private async updateSettings(): Promise<void> {
-        const settings = await this.connection.workspace.getConfiguration();
+        const workspaceFolders =
+            await this.connection.workspace.getWorkspaceFolders();
+        const scopeUri =
+            workspaceFolders && workspaceFolders.length > 0
+                ? workspaceFolders[0].uri
+                : undefined;
+        const settings = await this.connection.workspace.getConfiguration({
+            scopeUri: scopeUri,
+            section: "septic",
+        });
+        const scodesettings = await this.connection.workspace.getConfiguration({
+            scopeUri: scopeUri,
+            section: "[septic]",
+        });
         this.settings = {
-            diagnostics: settings["septic"].diagnostics,
-            folding: settings["septic"].folding,
-            formatting: settings["septic"].formatting,
-            encoding: settings["[septic]"]["files.encoding"],
-            ignored: settings["septic"].ignored,
-            codeActions: settings["septic"].codeActions,
-            documentation: settings["septic"].documentation,
-            completion: settings["septic"].completion,
+            diagnostics: settings.diagnostics,
+            folding: settings.folding,
+            formatting: settings.formatting,
+            encoding: scodesettings["files.encoding"],
+            ignored: settings.ignored,
+            codeActions: settings.codeActions,
+            documentation: settings.documentation,
+            completion: settings.completion,
         };
         this.updateMetaInfo();
     }
