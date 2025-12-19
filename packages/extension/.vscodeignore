@@ -2,6 +2,7 @@
 .vscode
 .github
 .editorconfig
+.git
 **/.env
 **/.venv
 **/*.ts
@@ -10,12 +11,12 @@
 **/tsconfig.base.json
 **/tsconfig.tsbuildinfo
 **/out/
-node_modules
-client/node_modules/
-server/node_modules/
-client/src/
-server/src/
+**/node_modules
+client/
+server/
 scripts/
 esbuild.js
 eslint.config.mjs
-SECURITY.md
+test-workspace/
+.vscode-test.mjs
+.mocharc.json

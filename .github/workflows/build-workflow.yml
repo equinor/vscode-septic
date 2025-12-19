@@ -23,7 +23,7 @@ jobs:
       - name: "Install dependencies"
         run: pnpm install
       - name: "Create Artifact"
-        run: npx @vscode/vsce package
+        run: npx @vscode/vsce package --no-dependencies
       - name: "Resolve build version"
         run: echo "BUILD_VERSION=$GITHUB_SHA" >> $GITHUB_ENV
       - name: "Set artifact name"
