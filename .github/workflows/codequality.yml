@@ -27,5 +27,12 @@ jobs:
         run: xvfb-run --auto-servernum pnpm -r test
       - name: 🧪 Run Integrationtests
         run: xvfb-run --auto-servernum  pnpm -r integration-test
+      - name: 📋 Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-logs
+          path: |
+            **/.vscode-test/**/logs/**
       - name: 🧪 Test Building of Extension
         run: cd  packages/extension && npx @vscode/vsce package

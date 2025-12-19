@@ -15,7 +15,7 @@ export default defineConfig([
     mocha: {
       timeout: 100000
     },
-    launchArgs: ['--disable-extensions']
+    launchArgs: ['--disable-extensions', '--verbose', '--log=trace'],
   },
   // you can specify additional test configurations if necessary
 ]);
