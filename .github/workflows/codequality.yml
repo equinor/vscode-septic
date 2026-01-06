@@ -44,4 +44,4 @@ jobs:
           path: |
             packages/extension/dist/**/*
       - name: 🧪 Test Building of Extension
-        run: cd  packages/extension && npx @vscode/vsce package
+        run: cd packages/extension && npx @vscode/vsce package --no-dependencies
