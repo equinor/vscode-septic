@@ -23,10 +23,3 @@ export function createDocumentFromFile(filePath: string): TextDocument {
         fileContent,
     );
 }
-
-export async function runCli(mainFn: () => Promise<void>): Promise<void> {
-    mainFn().catch((error) => {
-        console.error("Unexpected error:", error);
-        process.exit(1);
-    });
-}

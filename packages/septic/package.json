@@ -4,10 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "bin": {
-    "septic-lint": "./dist/cli/lint.js",
-    "septic-format": "./dist/cli/format.js"
-  },
+  "bin": "./dist/cli/index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha",
     "build": "tsc -b && copyfiles public/**/* dist",

@@ -1,70 +1,20 @@
-#!/usr/bin/env node
-import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
-import {
-    TextDocument,
-    TextEdit,
-} from "vscode-languageserver-textdocument";
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Equinor ASA
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+import yargs, { CommandModule } from "yargs";
+import { TextDocument, TextEdit } from "vscode-languageserver-textdocument";
 import * as fs from "fs";
 import * as path from "path";
 import { SepticCnfg } from "../cnfg";
 import { SepticCnfgFormatter } from "../formatter";
-import {
-    validateFileExists,
-    createDocumentFromFile,
-    runCli,
-} from "./utils";
+import { validateFileExists, createDocumentFromFile } from "./utils";
 
 interface FormatOptions {
     file: string;
     check?: boolean | undefined;
     output?: string | undefined;
-}
-
-function parseArguments(): FormatOptions {
-    const argv = yargs(hideBin(process.argv))
-        .command("$0 <file>", "Format a Septic config file", (yargs) => {
-            return yargs.positional("file", {
-                type: "string",
-                description: "Path to Septic config file to format",
-            });
-        })
-        .option("check", {
-            alias: "c",
-            type: "boolean",
-            description: "Check if the file is formatted without modifying it",
-            default: false,
-        })
-        .option("output", {
-            alias: "o",
-            type: "string",
-            description:
-                "Output path for formatted file (default: overwrites input file)",
-        })
-        .example("$0 config.cnfg", "Format a config file")
-        .example(
-            "$0 config.cnfg --check",
-            "Check if a config file is formatted",
-        )
-        .example(
-            "$0 config.cnfg --output formatted.cnfg",
-            "Format and save to a different file",
-        )
-        .help()
-        .parseSync();
-
-    if (!argv.file) {
-        console.error("No file specified for formatting.");
-        process.exit(1);
-    }
-
-    const options: FormatOptions = {
-        file: argv.file as string,
-        check: argv.check,
-        output: argv.output,
-    };
-
-    return options;
 }
 
 function formatSepticConfig(document: TextDocument): TextEdit[] {
@@ -124,8 +74,7 @@ function checkFormatting(
     return originalContent === formattedContent;
 }
 
-async function main(): Promise<void> {
-    const options = parseArguments();
+async function handler(options: FormatOptions): Promise<void> {
     validateFileExists(options.file);
 
     const document = createDocumentFromFile(options.file);
@@ -161,4 +110,43 @@ async function main(): Promise<void> {
     }
 }
 
-runCli(main);
+export const formatCommand: CommandModule<object, FormatOptions> = {
+    command: "format <file>",
+    describe: "Format a Septic config file",
+    builder: (yargs) => {
+        return yargs
+            .positional("file", {
+                type: "string",
+                description: "Path to Septic config file to format",
+                demandOption: true,
+            })
+            .option("check", {
+                alias: "c",
+                type: "boolean",
+                description:
+                    "Check if the file is formatted without modifying it",
+                default: false,
+            })
+            .option("output", {
+                alias: "o",
+                type: "string",
+                description:
+                    "Output path for formatted file (default: overwrites input file)",
+            })
+            .example("$0 format config.cnfg", "Format a config file")
+            .example(
+                "$0 format config.cnfg --check",
+                "Check if a config file is formatted",
+            )
+            .example(
+                "$0 format config.cnfg --output formatted.cnfg",
+                "Format and save to a different file",
+            ) as unknown as yargs.Argv<FormatOptions>;
+    },
+    handler: (argv) => {
+        handler(argv).catch((error) => {
+            console.error("Unexpected error:", error);
+            process.exit(1);
+        });
+    },
+};

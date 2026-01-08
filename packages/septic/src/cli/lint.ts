@@ -1,6 +1,9 @@
-#!/usr/bin/env node
-import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Equinor ASA
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+import yargs, { CommandModule } from "yargs";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { SepticCnfg } from "../cnfg";
 import {
@@ -9,64 +12,12 @@ import {
     SepticDiagnosticLevel,
 } from "../diagnostics";
 import { SepticMetaInfoProvider } from "../metaInfoProvider";
-import { validateFileExists, createDocumentFromFile, runCli } from "./utils";
+import { validateFileExists, createDocumentFromFile } from "./utils";
 
 interface LintOptions {
     file: string;
     ignore?: string[];
-    version?: string;
-}
-
-function parseArguments(): LintOptions {
-    const availableVersions = SepticMetaInfoProvider.getAvailableVersions();
-    const versionList = availableVersions.join(", ");
-
-    const argv = yargs(hideBin(process.argv))
-        .command("$0 <file>", "Lint a Septic config file", (yargs) => {
-            return yargs.positional("file", {
-                type: "string",
-                description: "Path to Septic config file to lint",
-            });
-        })
-        .option("ignore", {
-            alias: "i",
-            type: "array",
-            description: "Diagnostic codes to ignore (e.g., W101 E202)",
-            string: true,
-        })
-        .option("septicversion", {
-            alias: "s",
-            type: "string",
-            description: `Septic version to use for linting (available: ${versionList})`,
-            default: "latest",
-        })
-        .example("$0 config.cnfg", "Lint a config file")
-        .example(
-            "$0 config.cnfg --ignore W101 W203",
-            "Lint and ignore specific diagnostic codes",
-        )
-        .example(
-            "$0 config.cnfg --septicversion v3.5",
-            "Lint using Septic version 3.5",
-        )
-        .help()
-        .parseSync();
-
-    if (!argv.file) {
-        console.error("No file specified for linting.");
-        process.exit(1);
-    }
-
-    const options: LintOptions = {
-        file: argv.file as string,
-        version: argv.septicversion as string,
-    };
-
-    if (argv.ignore) {
-        options.ignore = argv.ignore as string[];
-    }
-
-    return options;
+    septicversion?: string;
 }
 
 async function lintSepticConfig(
@@ -114,13 +65,12 @@ function printDiagnostics(diagnostics: SepticDiagnostic[], uri: string): void {
     }
 }
 
-async function main(): Promise<void> {
-    const options = parseArguments();
+async function handler(options: LintOptions): Promise<void> {
     validateFileExists(options.file);
 
     // Set the version to use for linting
-    if (options.version) {
-        SepticMetaInfoProvider.setVersion(options.version);
+    if (options.septicversion) {
+        SepticMetaInfoProvider.setVersion(options.septicversion);
     }
 
     const document = createDocumentFromFile(options.file);
@@ -142,4 +92,45 @@ async function main(): Promise<void> {
     process.exit(exitCode);
 }
 
-runCli(main);
+export const lintCommand: CommandModule<object, LintOptions> = {
+    command: "lint <file>",
+    describe: "Lint a Septic config file",
+    builder: (yargs) => {
+        const availableVersions = SepticMetaInfoProvider.getAvailableVersions();
+        const versionList = availableVersions.join(", ");
+
+        return yargs
+            .positional("file", {
+                type: "string",
+                description: "Path to Septic config file to lint",
+                demandOption: true,
+            })
+            .option("ignore", {
+                alias: "i",
+                type: "array",
+                description: "Diagnostic codes to ignore (e.g., W101 E202)",
+                string: true,
+            })
+            .option("septicversion", {
+                alias: "s",
+                type: "string",
+                description: `Septic version to use for linting (available: ${versionList})`,
+                default: "latest",
+            })
+            .example("$0 lint config.cnfg", "Lint a config file")
+            .example(
+                "$0 lint config.cnfg --ignore W101 W203",
+                "Lint and ignore specific diagnostic codes",
+            )
+            .example(
+                "$0 lint config.cnfg --septicversion v3.5",
+                "Lint using Septic version 3.5",
+            ) as unknown as yargs.Argv<LintOptions>;
+    },
+    handler: (argv) => {
+        handler(argv).catch((error) => {
+            console.error("Unexpected error:", error);
+            process.exit(1);
+        });
+    },
+};
