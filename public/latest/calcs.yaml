@@ -207,11 +207,30 @@
   quality: quality(x)
   retr: Smallest integer larger than input
   signature: ceil(x)
-- detailedDescription: Returns bit in a binary signal of either 32 or 64 bit.
+- detailedDescription: Returns the value of bit i in a binary signal of either 32
+    or 64 bit.
   name: checkbinint
-  parameters: []
-  quality: GOOD if all inputs are good
-  retr: bit in a binary signal of either 32 or 64 bit
+  parameters:
+  - arity: '1'
+    datatype:
+    - int
+    description: Decimal number to be converted to binary number
+    direction: in
+    name: n
+  - arity: '1'
+    datatype:
+    - int
+    description: Index of bit to be returned/checked
+    direction: in
+    name: i
+  - arity: '1'
+    datatype:
+    - bool
+    description: 'Type of signal: 0 for 32 bit, 1 for 64 bit'
+    direction: in
+    name: k
+  quality: GOOD if all inputs are GOOD
+  retr: Bit value (0 or 1) at position i in the binary representation of n
   signature: checkbinint(n, i, k)
 - detailedDescription: Clamps the value x to the range [lo, hi].If lo>hi, returns
     x with quality bad.
