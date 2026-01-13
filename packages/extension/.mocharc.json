@@ -4,5 +4,6 @@
   ],
   "spec": "server/src/test/**/*.test.ts",
   "loader": "ts-node/esm",
-  "package": "./server/package.json"
+  "package": "./server/package.json",
+  "timeout": 5000
 }

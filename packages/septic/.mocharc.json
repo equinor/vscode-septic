@@ -3,5 +3,6 @@
     "ts-node/register"
   ],
   "loader": "ts-node/esm",
-  "spec": "src/test/**/*.test.ts"
+  "spec": "src/**/test/**/*.test.ts",
+  "timeout": 5000
 }
