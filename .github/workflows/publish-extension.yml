@@ -1,7 +1,8 @@
 name: "🚀 Publish Extension"
 on:
   workflow_call:
-
+permissions:
+  contents: read
 jobs:
   publish:
     name: "🚀 Publish"
