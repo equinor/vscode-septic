@@ -29,7 +29,7 @@
                 "--extensionDevelopmentPath=${workspaceFolder}/packages/extension"
             ],
             "outFiles": ["${workspaceRoot}/packages/extension/dist/**"],
-            "preLaunchTask": "npm: watch"
+            "preLaunchTask": "pnpm: watch"
         },
         {
             "type": "node",

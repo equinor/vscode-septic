@@ -4,10 +4,13 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "type": "npm",
-            "script": "watch",
+            "type": "shell",
+            "command": "pnpm",
+            "args": ["run", "watch"],
+            "options": {
+                "cwd": "${workspaceFolder}/packages/extension"
+            },
             "problemMatcher": "$tsc-watch",
-            "path": "packages/extension",
             "isBackground": true,
             "presentation": {
                 "reveal": "never",
@@ -16,12 +19,16 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "label": "pnpm: watch"
         },
         {
-            "type": "npm",
-            "script": "build:test",
-            "path": "packages/extension",
+            "type": "shell",
+            "command": "pnpm",
+            "args": ["run", "build:test"],
+            "options": {
+                "cwd": "${workspaceFolder}/packages/extension"
+            },
             "group": "build",
             "problemMatcher": [],
             "label": "build-extension-integration-tests"
