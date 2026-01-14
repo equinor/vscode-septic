@@ -14,7 +14,7 @@ import {
 import { SepticConfigProvider } from "../configProvider";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
-import { SepticCnfg, SepticContext } from "septic";
+import { SepticCnfg, SepticContext } from "@equinor/septic-config-lib";
 import { DocumentProvider } from "../documentProvider";
 
 export type GetDocument = (uri: string) => Promise<TextDocument | undefined>;

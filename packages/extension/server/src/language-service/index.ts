@@ -17,7 +17,7 @@ import {
     ReferenceProvider,
 } from "./referenceProvider";
 import { DocumentProvider } from "../documentProvider";
-import { SepticContext } from "septic";
+import { SepticContext } from "@equinor/septic-config-lib";
 import { RenameProvider } from "./renameProvider";
 import { HoverProvider } from "./hoverProvider";
 import { FormattingProvider } from "./formatProvider";

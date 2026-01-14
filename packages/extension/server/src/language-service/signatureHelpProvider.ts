@@ -20,7 +20,7 @@ import {
     parseAlg,
     SepticCnfg,
     fromCalcIndexToParamIndex,
-} from "septic";
+} from "@equinor/septic-config-lib";
 import { formatCalcParameter } from "../util";
 
 export class SignatureHelpProvider {

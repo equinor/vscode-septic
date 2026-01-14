@@ -27,7 +27,7 @@ import {
     SepticContext,
     SepticCalcInfo,
     parseAlg,
-} from "septic";
+} from "@equinor/septic-config-lib";
 import {
     isAlphaNumeric,
     formatCalcMarkdown,

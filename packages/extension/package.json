@@ -11,10 +11,6 @@
     "url": "https://github.com/equinor/vscode-septic"
   },
   "publisher": "EinarSIdso",
-  "categories": [
-    "AI",
-    "Chat"
-  ],
   "keywords": [
     "multi-root ready"
   ],
@@ -570,7 +566,7 @@
     "@vscode/prompt-tsx": "^0.4.0-alpha.5",
     "ajv": "^8.12.0",
     "js-yaml": "^4.1.1",
-    "septic": "workspace:*"
+    "@equinor/septic-config-lib": "workspace:*"
   },
   "devDependencies": {
     "@types/vscode": "^1.105.0",

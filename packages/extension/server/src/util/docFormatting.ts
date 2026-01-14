@@ -5,7 +5,7 @@ import {
     SepticAttributeDocumentation,
     SepticCalcInfo,
     SepticCalcParameterInfo,
-} from "septic";
+} from "@equinor/septic-config-lib";
 
 export function formatObjectDocumentationMarkdown(
     objDoc: ISepticObjectDocumentation,

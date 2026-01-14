@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { ScgContext, SepticContext } from "septic";
+import { ScgContext, SepticContext } from "@equinor/septic-config-lib";
 import { SepticConfigProvider } from "./configProvider";
 import { ScgContextManager } from "./scgContextManager";
 import { DocumentProvider } from "./documentProvider";

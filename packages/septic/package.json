@@ -1,10 +1,16 @@
 {
-  "name": "septic",
+  "name": "@equinor/septic-config-lib",
   "version": "1.0.0",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/equinor/vscode-septic"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "bin": "./dist/cli/index.js",
+  "bin": {
+    "septic-config": "./dist/cli/index.js"
+  },
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha",
     "build": "tsc -b && copyfiles public/**/* dist",

@@ -62,6 +62,9 @@ importers:
 
   packages/extension:
     dependencies:
+      '@equinor/septic-config-lib':
+        specifier: workspace:*
+        version: link:../septic
       '@vscode/prompt-tsx':
         specifier: ^0.4.0-alpha.5
         version: 0.4.0-alpha.5
@@ -71,9 +74,6 @@ importers:
       js-yaml:
         specifier: ^4.1.1
         version: 4.1.1
-      septic:
-        specifier: workspace:*
-        version: link:../septic
     devDependencies:
       '@types/vscode':
         specifier: ^1.105.0

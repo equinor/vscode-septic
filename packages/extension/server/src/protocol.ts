@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { RequestType, Diagnostic, Position } from "vscode-languageserver";
-import { SepticCalcInfo, SepticObjectDoc } from "septic";
+import { SepticCalcInfo, SepticObjectDoc } from "@equinor/septic-config-lib";
 
 export interface SepticFunctionExport {
     name: string;

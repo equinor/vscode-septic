@@ -11,7 +11,11 @@ import {
     ReferenceParams,
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
-import { SepticCnfg, SepticReference, SepticContext } from "septic";
+import {
+    SepticCnfg,
+    SepticReference,
+    SepticContext,
+} from "@equinor/septic-config-lib";
 
 export class ReferenceProvider {
     private readonly cnfgProvider: ISepticConfigProvider;

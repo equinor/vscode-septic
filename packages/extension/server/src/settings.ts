@@ -5,7 +5,7 @@
 
 import { Connection } from "vscode-languageserver";
 import { DiagnosticsSettings } from "./language-service/diagnosticsProvider.js";
-import { SepticMetaInfoProvider } from "septic";
+import { SepticMetaInfoProvider } from "@equinor/septic-config-lib";
 
 const updatedFoldingLevel = 1;
 const defaultFoldingLevelCalcModl = 2;

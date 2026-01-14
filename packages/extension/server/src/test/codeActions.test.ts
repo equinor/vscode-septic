@@ -9,7 +9,7 @@ import {
     getCodeActionInsertEvr,
     getCodeActionIgnoreDiagnostics,
 } from "../language-service/codeActionProvider";
-import { SepticDiagnosticCode } from "septic";
+import { SepticDiagnosticCode } from "@equinor/septic-config-lib";
 import { expect } from "chai";
 import { loadFile, parseSepticForTest } from "./util";
 

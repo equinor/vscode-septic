@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { FoldingRange, FoldingRangeParams } from "vscode-languageserver";
-import { SepticCnfg, SepticMetaInfoProvider } from "septic";
+import { SepticCnfg, SepticMetaInfoProvider } from "@equinor/septic-config-lib";
 import { SepticConfigProvider } from "../configProvider";
 
 export class FoldingRangeProvider {

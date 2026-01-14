@@ -1,4 +1,4 @@
-import { SepticMetaInfoProvider } from "septic";
+import { SepticMetaInfoProvider } from "@equinor/septic-config-lib";
 import {
     CompletionItem,
     CompletionItemKind,

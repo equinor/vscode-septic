@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { SepticCnfg } from "septic";
+import { SepticCnfg } from "@equinor/septic-config-lib";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { CancellationToken } from "vscode-languageserver";
 

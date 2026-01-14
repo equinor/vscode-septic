@@ -6,7 +6,11 @@
 
 import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
-import { SepticContext, getDiagnostics, SepticDiagnosticLevel } from "septic";
+import {
+    SepticContext,
+    getDiagnostics,
+    SepticDiagnosticLevel,
+} from "@equinor/septic-config-lib";
 import { SettingsManager } from "../settings";
 
 export interface DiagnosticsSettings {

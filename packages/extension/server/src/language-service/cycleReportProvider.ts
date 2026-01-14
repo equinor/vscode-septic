@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { DocumentProvider } from "../documentProvider";
-import { findAlgCycles, SepticContext } from "septic";
+import { findAlgCycles, SepticContext } from "@equinor/septic-config-lib";
 
 const spacesToLink = 40;
 

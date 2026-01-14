@@ -11,7 +11,11 @@ import {
 } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { SepticCnfg, SepticObject, SepticMetaInfoProvider } from "septic";
+import {
+    SepticCnfg,
+    SepticObject,
+    SepticMetaInfoProvider,
+} from "@equinor/septic-config-lib";
 
 interface SepticSymbol {
     symbol: DocumentSymbol;

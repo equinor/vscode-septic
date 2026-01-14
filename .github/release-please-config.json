@@ -9,7 +9,7 @@
 			"release-type": "node"
         },
         "packages/septic": {
-            "package-name": "septic",
+            "package-name": "@equinor/septic-config-lib",
 			"release-type": "node"
         }
     },

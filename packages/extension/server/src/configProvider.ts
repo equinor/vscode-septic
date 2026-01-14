@@ -10,7 +10,7 @@ import {
     URI,
 } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { SepticCnfg } from "septic";
+import { SepticCnfg } from "@equinor/septic-config-lib";
 import { ResourceMap } from "./util/resourceMap";
 import { Lazy, lazy } from "./util/lazy";
 import { DocumentProvider } from "./documentProvider";

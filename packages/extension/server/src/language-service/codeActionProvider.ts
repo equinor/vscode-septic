@@ -21,7 +21,7 @@ import {
     SepticObject,
     SepticTokenType,
     SepticDiagnosticCode,
-} from "septic";
+} from "@equinor/septic-config-lib";
 import { WorkspaceEditBuilder } from "../util/editBuilder";
 import { SettingsManager } from "../settings";
 import { DocumentProvider } from "../documentProvider";

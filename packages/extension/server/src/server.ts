@@ -38,7 +38,7 @@ import {
     SepticCnfg,
     compareCnfgs,
     validateStandAloneCalc,
-} from "septic";
+} from "@equinor/septic-config-lib";
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
 import { ContextManager } from "./contextManager";
 

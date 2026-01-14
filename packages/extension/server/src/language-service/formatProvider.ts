@@ -5,7 +5,7 @@
 
 import { TextEdit, DocumentFormattingParams } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
-import { SepticCnfgFormatter } from "septic";
+import { SepticCnfgFormatter } from "@equinor/septic-config-lib";
 
 export class FormattingProvider {
     private readonly cnfgProvider: ISepticConfigProvider;

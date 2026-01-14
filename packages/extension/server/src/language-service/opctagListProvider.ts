@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { SepticContext } from "septic";
+import { SepticContext } from "@equinor/septic-config-lib";
 
 export function generateOpcReport(contextProvider: SepticContext): string {
     const header: string = "ObjectId;ObjectType;ObjectAttribute;OPCTag";

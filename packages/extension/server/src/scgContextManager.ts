@@ -8,7 +8,7 @@ import { DocumentProvider } from "./documentProvider";
 import * as YAML from "js-yaml";
 import * as path from "path";
 import * as protocol from "./protocol";
-import { ScgConfig, ScgContext } from "septic";
+import { ScgConfig, ScgContext } from "@equinor/septic-config-lib";
 import { SepticConfigProvider } from "./configProvider";
 
 export class ScgContextManager {
