@@ -9,7 +9,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "septic-config": "./dist/cli/index.js"
+    "sca": "./dist/cli/index.js"
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha",

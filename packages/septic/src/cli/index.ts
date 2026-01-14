@@ -10,6 +10,7 @@ import { formatCommand } from "./format";
 import { lintCommand } from "./lint";
 
 yargs(hideBin(process.argv))
+    .scriptName("sca")
     .command(formatCommand)
     .command(lintCommand)
     .demandCommand(1, "You need to specify a command")
