@@ -19,18 +19,15 @@ jobs:
           config-file: .github/release-please-config.json
           manifest-file: .release-please-manifest.json
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-
-  build:
-    name: "🛠️ Build"
-    if: ${{ needs.release_please.outputs.release_created }}
+      extension_release_created: ${{ steps.release.outputs['septic-config--release_created'] }}
+      core_package_release_created: ${{ steps.release.outputs['septic--release_created'] }}
+  publish_extension:
+    name: "Publish Extension"
+    if: ${{ needs.release_please.outputs.extension_release_created }}
     needs: [release_please]
-    uses: ./.github/workflows/build-workflow.yml
-
-  deploy:
-    name: "🚀 Publish"
-    needs: [build]
-    uses: ./.github/workflows/deploy-workflow.yml
-    with:
-      artifact: ${{ needs.build.outputs.artifact-name }}
-    secrets: inherit
+    uses: ./.github/workflows/publish-extension.yml
+  publish_core_package:
+    name: "Publish Core Package"
+    if: ${{ needs.release_please.outputs.core_package_release_created }}
+    needs: [release_please]
+    uses: ./.github/workflows/publish-core-package.yml
