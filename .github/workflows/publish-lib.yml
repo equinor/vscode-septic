@@ -9,8 +9,6 @@ jobs:
     defaults:
       run:
         working-directory: packages/septic
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v5
       - name: Install pnpm
@@ -19,10 +17,10 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 22
-          registry-url: https://npm.pkg.github.com
+          registry-url: https://registry.npmjs.org
       - name: "Install dependencies"
         run: pnpm install
       - name: Publish
         run: pnpm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
