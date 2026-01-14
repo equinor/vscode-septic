@@ -1,0 +1,7 @@
+node_modules/
+public/
+src/
+eslint.config.mjs
+tsconfig.json
+tsconfig.tsbuildinfo
+.mocharc.json
