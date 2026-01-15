@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   release_please:
     name: 🔖 Release Please
@@ -10,36 +14,20 @@ jobs:
     steps:
       - name: Create Release
         id: release
-        uses: google-github-actions/release-please-action@v3
+        uses: googleapis/release-please-action@v4
         with:
-          release-type: node
-          package-name: septic-config
-          bump-minor-pre-major: true
-          changelog-types: >
-            [{"type":"build", "section":"📦 Build system","hidden":false},
-            {"type":"chore", "section":"🧹 Chores","hidden":false},
-            {"type":"ci", "section":"👷 CI/CD","hidden":false},
-            {"type":"docs","section":"📚 Documentation","hidden":false},
-            {"type":"feat","section":"✨ Features","hidden":false},
-            {"type":"fix","section":"🐛 Bug Fixes","hidden":false},
-            {"type":"perf", "section":"🏎️ Optimalization","hidden":false},
-            {"type":"refactor", "section":"🔨 Refactor","hidden":false},
-            {"type":"revert", "section":"⏪️ Revert","hidden":false},
-            {"type":"style","section":"💎 Style","hidden":false},
-            {"type":"test", "section":"🧪 Tests","hidden":false}]
+          config-file: .github/release-please-config.json
+          manifest-file: .github/.release-please-manifest.json
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-
-  build:
-    name: "🛠️ Build"
-    if: ${{ needs.release_please.outputs.release_created }}
+      extension_release_created: ${{ steps.release.outputs['septic-config--release_created'] }}
+      lib_release_created: ${{ steps.release.outputs['@equinor/septic-config-lib--release_created'] }}
+  publish_extension:
+    name: "Publish Extension"
+    if: ${{ needs.release_please.outputs.extension_release_created }}
     needs: [release_please]
-    uses: ./.github/workflows/build-workflow.yml
-
-  deploy:
-    name: "🚀 Publish"
-    needs: [build]
-    uses: ./.github/workflows/deploy-workflow.yml
-    with:
-      artifact: ${{ needs.build.outputs.artifact-name }}
-    secrets: inherit
+    uses: ./.github/workflows/publish-extension.yml
+  publish_lib:
+    name: "Publish Lib"
+    if: ${{ needs.release_please.outputs.lib_release_created }}
+    needs: [release_please]
+    uses: ./.github/workflows/publish-lib.yml

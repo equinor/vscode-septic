@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "module": "nodenext",
+        "target": "es2024",
+        "lib": ["es2024"],
+        "outDir": "out",
+        "rootDir": "src",
+        "sourceMap": true,
+        "jsx": "react",
+        "jsxFactory": "vscpp",
+        "jsxFragmentFactory": "vscppf",
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "composite": true
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "out", ".vscode-test"]
+}

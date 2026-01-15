@@ -17,9 +17,7 @@
             "name": "Attach to server",
             "port": 6009,
             "request": "attach",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
+            "skipFiles": ["<node_internals>/**"],
             "type": "node"
         },
         {
@@ -28,34 +26,18 @@
             "request": "launch",
             "runtimeExecutable": "${execPath}",
             "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}"
+                "--extensionDevelopmentPath=${workspaceFolder}/packages/extension"
             ],
-            "outFiles": [
-                "${workspaceRoot}/dist/**"
-            ],
-            "preLaunchTask": "npm: watch"
-        },
-        {
-            "name": "Language Server E2E Test",
-            "type": "extensionHost",
-            "request": "launch",
-            "args": [
-                "--disable-extensions",
-                "--extensionDevelopmentPath=${workspaceFolder}",
-                "--extensionTestsPath=${workspaceFolder}/client/out/test/index",
-                "${workspaceRoot}/client/src/test/fixtures"
-            ],
-            "outFiles": [
-                "${workspaceFolder}/client/out/test/**/*.js"
-            ],
-            "preLaunchTask": "npm: compile-tests"
+            "outFiles": ["${workspaceRoot}/packages/extension/dist/**"],
+            "preLaunchTask": "pnpm: watch"
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "Unittest",
+            "name": "Unittest Extension",
             "env": {
-                "NODE_ENV": "test"
+                "NODE_ENV": "test",
+                "TS_NODE_PROJECT": "${workspaceFolder}/packages/extension/server/tsconfig.json"
             },
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
             "args": [
@@ -64,8 +46,30 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}/server/**/*.test.ts"
+                "${workspaceFolder}/packages/extension/server/src/test/**/*.test.ts"
             ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Unittest Septic Package",
+            "env": {
+                "NODE_ENV": "test",
+                "TS_NODE_PROJECT": "${workspaceFolder}/packages/septic/tsconfig.json"
+            },
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "-r",
+                "ts-node/register",
+                "--timeout",
+                "999999",
+                "--colors",
+                "${workspaceFolder}/packages/septic/src/test/**/*.test.ts"
+            ],
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         }

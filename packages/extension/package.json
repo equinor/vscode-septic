@@ -1,0 +1,579 @@
+{
+  "name": "septic-config",
+  "displayName": "Septic",
+  "icon": "images/septic_128.png",
+  "description": "Provides snippets, syntax highlighting and multi-level folding in Septic config files.",
+  "author": "Equinor ASA",
+  "license": "MIT",
+  "version": "1.29.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/equinor/vscode-septic"
+  },
+  "publisher": "EinarSIdso",
+  "keywords": [
+    "multi-root ready"
+  ],
+  "engines": {
+    "vscode": "^1.105.0"
+  },
+  "activationEvents": [
+    "onLanguage:septic"
+  ],
+  "main": "./dist/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "septic.detectCycles",
+        "title": "Septic: Detect Cycles in Calcs"
+      },
+      {
+        "command": "septic.plotModel",
+        "title": "Septic: Plot Model File",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "septic.opcTagList",
+        "title": "Septic: List all OPC-Tags"
+      },
+      {
+        "command": "septic.compareCnfg",
+        "title": "Septic: Compare config versions"
+      },
+      {
+        "command": "septic.generateCalc",
+        "title": "Septic: Generate Calc"
+      },
+      {
+        "command": "septic.getFunctions",
+        "title": "Septic: Get functions in file"
+      },
+      {
+        "command": "septic.scgtree.addTemplate",
+        "title": "Septic: Insert template below",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "septic.scgtree.addSource",
+        "title": "Septic: Add source",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "septic.scgtree.removeTemplate",
+        "title": "Septic: Remove template",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "septic.scgtree.renameTemplate",
+        "title": "Septic: Rename template in config and file",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "septic.applicationTree.refresh",
+        "title": "Septic: Refresh Applications",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "septic.functionTree.refresh",
+        "title": "Septic: Refresh Functions",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "septic.applicationTree.start",
+        "title": "Septic: Start Application",
+        "icon": "$(play)"
+      },
+      {
+        "command": "septic.applicationTree.make",
+        "title": "Septic: Make scg config",
+        "icon": "$(output)"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Septic",
+      "properties": {
+        "septic.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the language server."
+        },
+        "septic.documentation.version": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "latest",
+            "v2.88",
+            "v2.89",
+            "v2.90",
+            "v3.0",
+            "v3.1",
+            "v3.2",
+            "v3.3",
+            "v3.4",
+            "v3.5"
+          ],
+          "default": "latest",
+          "description": "Select which version of Septic to use for documentation and diagnostics."
+        },
+        "septic.diagnostics.enabled": {
+          "scope": "window",
+          "type": "boolean",
+          "default": "true",
+          "description": "Controls the publishing of diagnostics reports"
+        },
+        "septic.folding.calcModl": {
+          "scope": "window",
+          "type": "boolean",
+          "default": "false",
+          "description": "Sets the foldinglevel of CalcModl to level 1 when enabled."
+        },
+        "septic.formatting.enabled": {
+          "scope": "window",
+          "type": "boolean",
+          "default": "false",
+          "description": "Turns on formatting for cnfg files (Manually Shift+Alt+F or on save if enabled)."
+        },
+        "septic.ignored.paths": {
+          "scope": "window",
+          "type": "object",
+          "default": {},
+          "description": "Path(s) to files/folders that should be ignored when publishing diagnostics."
+        },
+        "septic.codeActions.insertEvrPosition": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "top",
+            "bottom"
+          ],
+          "default": "bottom",
+          "description": "Position of inserted Evr. Bottom = Above CalcModl, Top = Below DmmyAppl"
+        },
+        "septic.completion.onlySuggestValidSnippets": {
+          "scope": "window",
+          "type": "boolean",
+          "default": "false",
+          "description": "Only suggest valid snippets based on the current object hierarchy."
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "septic",
+        "aliases": [
+          "Septic"
+        ],
+        "extensions": [
+          ".cnfg"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./images/septic_light.svg",
+          "dark": "./images/septic_dark.svg"
+        }
+      },
+      {
+        "id": "jinja",
+        "aliases": [
+          "Jinja Raw",
+          "jinja-raw"
+        ],
+        "extensions": [],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "septic",
+        "scopeName": "source.septic",
+        "path": "./syntaxes/septic.tmLanguage.json"
+      },
+      {
+        "language": "jinja",
+        "scopeName": "source.jinja",
+        "path": "./syntaxes/jinja.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "septic",
+        "path": "snippets/snippets.json"
+      }
+    ],
+    "configurationDefaults": {
+      "[septic]": {
+        "files.encoding": "windows1252",
+        "editor.wordWrap": "on",
+        "editor.insertSpaces": true
+      },
+      "hediet.vscode-drawio.customLibraries": [
+        {
+          "entryId": "Septic",
+          "libName": "Septic",
+          "url": "https://raw.githubusercontent.com/equinor/septic-config-generator/refs/heads/main/docs/septic_scratchpad.xml"
+        }
+      ],
+      "yaml.schemas": {
+        "https://raw.githubusercontent.com/equinor/septic-config-generator/refs/heads/main/docs/config.schema.json": "/*/scg/*.yaml"
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "septic",
+          "title": "Septic",
+          "icon": "./images/septic_black_and_white.svg"
+        }
+      ],
+      "panel": [
+        {
+          "id": "septic-functions-panel",
+          "title": "Septic: Functions",
+          "icon": "./images/septic_black_and_white.svg"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "septic-applications",
+        "contents": "This view give an overview of the current Septic Applications in the workspace. An application is defined as a folder containing a `scg` folder with a `config.yaml` file. Click the refresh button to update the list."
+      },
+      {
+        "view": "septic-scg-variables",
+        "contents": "This view give an overview of the current Septic Scg/Jinja variables for the current configuration file based on the sources used in the Scg config file"
+      },
+      {
+        "view": "septic-functions",
+        "contents": "This view gives an overview of the current Septic Functions in open editor."
+      }
+    ],
+    "views": {
+      "septic": [
+        {
+          "id": "septic-applications",
+          "name": "Applications"
+        },
+        {
+          "id": "septic-scg-variables",
+          "name": "Scg/Jinja variables"
+        }
+      ],
+      "septic-functions-panel": [
+        {
+          "id": "septic-functions",
+          "name": "Functions"
+        }
+      ]
+    },
+    "menus": {
+      "editor/title": [
+        {
+          "command": "septic.plotModel",
+          "when": "resourceExtname == .mdf || resourceExtname == .pdf",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "septic.plotModel",
+          "when": "resourceExtname == .mdf || resourceExtname == .pdf",
+          "group": "1_septic"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "septic.applicationTree.refresh",
+          "when": "view == septic-applications",
+          "group": "navigation"
+        },
+        {
+          "command": "septic.functionTree.refresh",
+          "when": "view == septic-functions",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "septic.scgtree.addTemplate",
+          "when": "view == septic-applications && (viewItem == Template || viewItem == Layout)",
+          "group": "inline"
+        },
+        {
+          "command": "septic.scgtree.removeTemplate",
+          "when": "view == septic-applications && (viewItem == Template)",
+          "group": "inline"
+        },
+        {
+          "command": "septic.scgtree.renameTemplate",
+          "when": "view == septic-applications && (viewItem == Template)",
+          "group": "inline"
+        },
+        {
+          "command": "septic.scgtree.addSource",
+          "when": "view == septic-applications && (viewItem == Sources)",
+          "group": "inline"
+        },
+        {
+          "command": "septic.applicationTree.start",
+          "when": "view == septic-applications && (viewItem == Application)",
+          "group": "inline"
+        },
+        {
+          "command": "septic.applicationTree.make",
+          "when": "view == septic-applications && (viewItem == Config)",
+          "group": "inline"
+        }
+      ]
+    },
+    "chatParticipants": [
+      {
+        "id": "septic.chat",
+        "name": "septic",
+        "fullName": "Septic",
+        "description": "Chatbot for Septic related topics using tools",
+        "isSticky": true,
+        "commands": [
+          {
+            "name": "calculation",
+            "description": "Generate and update calculations in Septic configs",
+            "isSticky": true
+          },
+          {
+            "name": "scg",
+            "description": "Documentation, updates and answers realted to Septic Config Generator tool and contexts",
+            "isSticky": true
+          }
+        ]
+      }
+    ],
+    "languageModelTools": [
+      {
+        "name": "septic-tools_validate_calculation",
+        "tags": [
+          "septic",
+          "calculation"
+        ],
+        "toolReferenceName": "validateCalculation",
+        "displayName": "Validate Calculation",
+        "modelDescription": "Validates a given calculation and outputs the diagnostic messages that describes the errors and warnings in the calculation.",
+        "canBeReferencedInPrompt": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "calculation": {
+              "type": "string",
+              "description": "The calculation to validate."
+            },
+            "newVariables": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "A variable to be added to the context."
+              },
+              "description": "New variables in calculation to be added to the context."
+            }
+          }
+        }
+      },
+      {
+        "name": "septic-tools_get_functions",
+        "tags": [
+          "septic",
+          "calculation"
+        ],
+        "toolReferenceName": "getFunctions",
+        "displayName": "Get functions",
+        "modelDescription": "Returns a list of all available functions for use in calculations with description.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "septic-tools_get_variables",
+        "tags": [
+          "septic",
+          "calculation"
+        ],
+        "toolReferenceName": "getVariables",
+        "displayName": "Get variables in context",
+        "modelDescription": "Returns a list of all available variables in the current context with description.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "septic-tools_get_scg_source",
+        "tags": [
+          "septic",
+          "scg"
+        ],
+        "toolReferenceName": "getScgSource",
+        "displayName": "Read content of scg source in csv format",
+        "modelDescription": "Returns the content of an septic config generator (scg) source in csv format.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "The full file path of the scg source"
+            }
+          }
+        }
+      },
+      {
+        "name": "septic-tools_update_scg_source",
+        "tags": [
+          "septic",
+          "scg"
+        ],
+        "toolReferenceName": "updateScgSource",
+        "displayName": "Update the content of an scg source in csv format on disk",
+        "modelDescription": "Updates the given cell in the scg source on csv format with the new value.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "The full file path of the scg context"
+            },
+            "updates": {
+              "type": "array",
+              "description": "A set of updates to be applied to the scg source.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "index": {
+                    "type": "string",
+                    "description": "Index of the row to be updated"
+                  },
+                  "column": {
+                    "type": "string",
+                    "description": "Name of the column to be updated"
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "The new value for the cell"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "septic-tools_modify_scg_source",
+        "tags": [
+          "septic",
+          "scg"
+        ],
+        "toolReferenceName": "modifyScgSource",
+        "displayName": "Modify an scg source in csv format",
+        "modelDescription": "Modify an scg source in csv format on disk by adding or deleting a row or column",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "The full file path of the scg source"
+            },
+            "direction": {
+              "type": "string",
+              "enum": [
+                "row",
+                "column"
+              ],
+              "description": "Select if you want to modify a row or column"
+            },
+            "action": {
+              "type": "string",
+              "enum": [
+                "add",
+                "delete"
+              ],
+              "description": "Select action to perform"
+            },
+            "id": {
+              "type": "string",
+              "description": "Index of the row or the column header to be added or deleted"
+            },
+            "values": {
+              "type": "array",
+              "description": "Values to be added to the row or column excluded the index or header.",
+              "optional": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "coverage/",
+      "**/*.test.ts",
+      "**/test/util/*",
+      "client/*",
+      "server/src/contextManager.ts",
+      "server/src/server.ts",
+      "server/src/documentProvider.ts",
+      "server/src/settings.ts",
+      "server/src/protocol.ts",
+      ".vscode-test/*",
+      "**/index.ts"
+    ],
+    "reporter": [
+      "html"
+    ],
+    "require": [
+      "ts-node/register",
+      "source-map-support/register"
+    ],
+    "all": true,
+    "cache": false,
+    "sourceMap": true,
+    "instrument": true
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm package",
+    "check-types": "tsc --noEmit",
+    "build": "pnpm check-types && node esbuild.js && copyfiles -u 3 ../septic/public/* ../septic/public/**/*  dist/public",
+    "build:test": "tsc -b ./client && tsc -b ./server",
+    "watch": "pnpm run \"/^watch:.*/\"",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --watch --project tsconfig.json",
+    "package": "pnpm check-types && node esbuild.js --production && copyfiles -u 3 ../septic/public/* ../septic/public/**/*  dist/public",
+    "lint": "eslint -c eslint.config.mjs ./client/src ./server/src",
+    "integration-test": "pnpm build && pnpm build:test && vscode-test",
+    "test": "cross-env NODE_ENV=test mocha",
+    "test_with_coverage": "pnpm build && nyc mocha --import ts-node/esm --require source-map-support/register --recursive server/src/test/**/*.test.ts "
+  },
+  "dependencies": {
+    "@vscode/prompt-tsx": "^0.4.0-alpha.5",
+    "ajv": "^8.12.0",
+    "js-yaml": "^4.1.1",
+    "@equinor/septic-config-lib": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.105.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "esbuild": "^0.25.5",
+    "npm-run-all": "^4.1.5",
+    "tsx": "^4.21.0"
+  }
+}

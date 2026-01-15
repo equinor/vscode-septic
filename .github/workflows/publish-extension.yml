@@ -1,0 +1,28 @@
+name: "🚀 Publish Extension"
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  publish:
+    name: "🚀 Publish"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/extension
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: "Setup Node.js"
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: "Install dependencies"
+        run: pnpm install
+      - name: "Create Package"
+        run: npx @vscode/vsce package --no-dependencies
+      - name: Publish
+        run: npx @vscode/vsce publish --pat $VSCE_PAT
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}

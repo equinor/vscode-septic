@@ -4,20 +4,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "type": "npm",
-            "script": "compile",
-            "group": "build",
-            "presentation": {
-                "panel": "dedicated",
-                "reveal": "never"
+            "type": "shell",
+            "command": "pnpm",
+            "args": ["run", "watch"],
+            "options": {
+                "cwd": "${workspaceFolder}/packages/extension"
             },
-            "problemMatcher": [
-                "$tsc"
-            ]
-        },
-        {
-            "type": "npm",
-            "script": "watch",
             "problemMatcher": "$tsc-watch",
             "isBackground": true,
             "presentation": {
@@ -27,16 +19,19 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "label": "pnpm: watch"
         },
         {
-            "type": "npm",
-            "script": "lint",
-            "problemMatcher": [
-                "$eslint-stylish"
-            ],
-            "label": "npm: lint",
-            "detail": "eslint -c eslint.config.mjs ./client/src ./server/src"
+            "type": "shell",
+            "command": "pnpm",
+            "args": ["run", "build:test"],
+            "options": {
+                "cwd": "${workspaceFolder}/packages/extension"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "label": "build-extension-integration-tests"
         }
     ]
 }

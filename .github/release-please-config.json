@@ -1,0 +1,74 @@
+{
+    "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+    "bump-minor-pre-major": true,
+    "pull-request-title-pattern": "chore: release${component} ${version}",
+    "separate-pull-requests": true,
+    "bootstrap-sha": "3971317818401e057d906d295f5a165049651884",
+    "packages": {
+        "packages/extension": {
+            "package-name": "septic-config",
+			"release-type": "node"
+        },
+        "packages/septic": {
+            "package-name": "@equinor/septic-config-lib",
+			"release-type": "node"
+        }
+    },
+    "changelog-sections": [
+        {
+            "type": "build",
+            "section": "📦 Build system",
+            "hidden": false
+        },
+        {
+            "type": "chore",
+            "section": "🧹 Chores",
+            "hidden": false
+        },
+        {
+            "type": "ci",
+            "section": "👷 CI/CD",
+            "hidden": false
+        },
+        {
+            "type": "docs",
+            "section": "📚 Documentation",
+            "hidden": false
+        },
+        {
+            "type": "feat",
+            "section": "✨ Features",
+            "hidden": false
+        },
+        {
+            "type": "fix",
+            "section": "🐛 Bug Fixes",
+            "hidden": false
+        },
+        {
+            "type": "perf",
+            "section": "🏎️ Optimization",
+            "hidden": false
+        },
+        {
+            "type": "refactor",
+            "section": "🔨 Refactor",
+            "hidden": false
+        },
+        {
+            "type": "revert",
+            "section": "⏪️ Revert",
+            "hidden": false
+        },
+        {
+            "type": "style",
+            "section": "💎 Style",
+            "hidden": false
+        },
+        {
+            "type": "test",
+            "section": "🧪 Tests",
+            "hidden": false
+        }
+    ]
+}

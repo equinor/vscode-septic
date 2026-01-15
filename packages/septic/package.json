@@ -1,0 +1,39 @@
+{
+  "name": "@equinor/septic-config-lib",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/equinor/vscode-septic"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "sca": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "test": "cross-env NODE_ENV=test mocha",
+    "build": "tsc -b && copyfiles public/**/* dist",
+    "watch": "tsc -w",
+    "lint": "eslint -c eslint.config.mjs ./src",
+    "prepare": "pnpm run build"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "js-yaml": "^4.1.1",
+    "vscode-languageserver-textdocument": "^1.0.12",
+    "yargs": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/yargs": "^17.0.35"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  }
+}

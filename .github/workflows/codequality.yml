@@ -2,27 +2,30 @@ name: "💎 Code Quality"
 on:
   workflow_dispatch:
   workflow_call:
+permissions:
+  contents: read
 
 jobs:
   code_quality:
-    name: "🛠️ Build & 🧪 Test"
+    name: "🧪 Lint & Test Packages"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 22
-
       - name: 📦 Install dependencies
-        run: npm ci
-
+        run: pnpm install
+      - name: 🛠️ Build Packages
+        run: pnpm -r build
+      - name: 🧹 Lint Packages
+        run: pnpm -r lint
       - name: 🧪 Run Unittests
-        run: xvfb-run --auto-servernum npm run test
-
+        run: xvfb-run --auto-servernum pnpm -r test
       - name: 🧪 Run Integrationtests
-        run: xvfb-run --auto-servernum npm run integration-test
-
-      - name: 🧪 Test Building of Artifact
-        run: npx @vscode/vsce package
+        run: xvfb-run --auto-servernum  pnpm -r integration-test
+      - name: 🧪 Test Building of Extension
+        run: cd packages/extension && npx @vscode/vsce package --no-dependencies
