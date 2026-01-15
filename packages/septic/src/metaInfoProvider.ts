@@ -6,6 +6,12 @@
 import * as YAML from "js-yaml";
 import * as fs from "fs";
 import * as path from "path";
+import {
+    hasEmbeddedData,
+    getEmbeddedVersions,
+    getEmbeddedObjects,
+    getEmbeddedVersionData,
+} from "./embeddedData";
 
 export const defaultObjectLevel = 2;
 export const defaultObjectSymbolKind = "object";
@@ -58,6 +64,12 @@ export class SepticMetaInfoProvider {
     }
 
     public static getAvailableVersions(): string[] {
+        // Use embedded data if available (bundled mode)
+        if (hasEmbeddedData()) {
+            return getEmbeddedVersions();
+        }
+        
+        // Fall back to file system (Node.js mode)
         const basePath = getBasePublicPath();
         const versions = fs
             .readdirSync(basePath, { withFileTypes: true })
@@ -134,16 +146,24 @@ export class SepticMetaInfoProvider {
     }
 
     private loadCalcsInfo(version: string): Map<string, SepticCalcInfo> {
-        const basePath = getBasePublicPath();
-        const filePath = path.join(
-            basePath,
-            `${version.replace(/\./g, "_")}`,
-            "calcs.yaml",
-        );
-        const file = fs.readFileSync(filePath, "utf-8");
-        const calcInfo: SepticCalcInfoInput[] = YAML.load(
-            file,
-        ) as SepticCalcInfoInput[];
+        let calcInfo: SepticCalcInfoInput[];
+        
+        // Use embedded data if available (bundled mode)
+        if (hasEmbeddedData()) {
+            const versionData = getEmbeddedVersionData(version);
+            calcInfo = (versionData?.calcs ?? []) as SepticCalcInfoInput[];
+        } else {
+            // Fall back to file system (Node.js mode)
+            const basePath = getBasePublicPath();
+            const filePath = path.join(
+                basePath,
+                `${version.replace(/\./g, "_")}`,
+                "calcs.yaml",
+            );
+            const file = fs.readFileSync(filePath, "utf-8");
+            calcInfo = YAML.load(file) as SepticCalcInfoInput[];
+        }
+        
         const calcs: SepticCalcInfo[] = calcInfo.map((calc) => {
             return {
                 name: calc.name,
@@ -164,12 +184,19 @@ export class SepticMetaInfoProvider {
     }
 
     private loadObjectsInfo(): Map<string, SepticObjectInfo> {
-        const basePath = getBasePublicPath();
-        const filePath = path.join(basePath, "objects.yaml");
-        const file = fs.readFileSync(filePath, "utf-8");
-        const objectsInfo: SepticObjectsInfoInput[] = YAML.load(
-            file,
-        ) as SepticObjectsInfoInput[];
+        let objectsInfo: SepticObjectsInfoInput[];
+        
+        // Use embedded data if available (bundled mode)
+        if (hasEmbeddedData()) {
+            objectsInfo = getEmbeddedObjects() as SepticObjectsInfoInput[];
+        } else {
+            // Fall back to file system (Node.js mode)
+            const basePath = getBasePublicPath();
+            const filePath = path.join(basePath, "objects.yaml");
+            const file = fs.readFileSync(filePath, "utf-8");
+            objectsInfo = YAML.load(file) as SepticObjectsInfoInput[];
+        }
+        
         const objects: SepticObjectInfo[] = objectsInfo.map((obj) => {
             return {
                 name: obj.name,
@@ -196,16 +223,24 @@ export class SepticMetaInfoProvider {
     private loadObjectsDocumentation(
         version: string,
     ): Map<string, ISepticObjectDocumentation> {
-        const basePath = getBasePublicPath();
-        const filePath = path.join(
-            basePath,
-            `${version.replace(/\./g, "_")}`,
-            "objectsDoc.yaml",
-        );
-        const file = fs.readFileSync(filePath, "utf-8");
-        const objectsDoc: SepticObjectDocumentationInput[] = YAML.load(
-            file,
-        ) as SepticObjectDocumentationInput[];
+        let objectsDoc: SepticObjectDocumentationInput[];
+        
+        // Use embedded data if available (bundled mode)
+        if (hasEmbeddedData()) {
+            const versionData = getEmbeddedVersionData(version);
+            objectsDoc = (versionData?.objectsDoc ?? []) as SepticObjectDocumentationInput[];
+        } else {
+            // Fall back to file system (Node.js mode)
+            const basePath = getBasePublicPath();
+            const filePath = path.join(
+                basePath,
+                `${version.replace(/\./g, "_")}`,
+                "objectsDoc.yaml",
+            );
+            const file = fs.readFileSync(filePath, "utf-8");
+            objectsDoc = YAML.load(file) as SepticObjectDocumentationInput[];
+        }
+        
         const objectsDocMap = new Map<string, ISepticObjectDocumentation>();
         for (const obj of objectsDoc) {
             objectsDocMap.set(obj.name, new SepticObjectDocumentation(obj));
@@ -214,6 +249,13 @@ export class SepticMetaInfoProvider {
     }
 
     private loadSnippetsInfo(version: string): SepticObjectSnippet[] {
+        // Use embedded data if available (bundled mode)
+        if (hasEmbeddedData()) {
+            const versionData = getEmbeddedVersionData(version);
+            return (versionData?.snippets ?? []) as SepticObjectSnippet[];
+        }
+        
+        // Fall back to file system (Node.js mode)
         const basePath = getBasePublicPath();
         const filePath = path.join(
             basePath,

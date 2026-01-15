@@ -14,6 +14,7 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha",
     "build": "tsc -b && copyfiles public/**/* dist",
+    "build:cli-bundle": "node esbuild-cli.mjs",
     "watch": "tsc -w",
     "lint": "eslint -c eslint.config.mjs ./src",
     "prepare": "pnpm run build"
@@ -27,7 +28,8 @@
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
-    "@types/yargs": "^17.0.35"
+    "@types/yargs": "^17.0.35",
+    "esbuild": "^0.25.5"
   },
   "exports": {
     "./package.json": "./package.json",

@@ -141,6 +141,9 @@ importers:
       '@types/yargs':
         specifier: ^17.0.35
         version: 17.0.35
+      esbuild:
+        specifier: ^0.25.5
+        version: 0.25.12
 
 packages:
 
