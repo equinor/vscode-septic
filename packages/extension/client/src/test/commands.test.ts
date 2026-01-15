@@ -7,11 +7,12 @@
 import * as vscode from "vscode";
 import { getDocUri, openDocument, activate } from "./helper";
 import { expect } from "chai";
+import { sleep } from "./helper";
 
 suite("Test OPC-taglist command", async () => {
     setup(async () => {
         await vscode.commands.executeCommand(
-            "workbench.action.closeAllEditors"
+            "workbench.action.closeAllEditors",
         );
         await activate();
         const files = await vscode.workspace.findFiles("**/opc_tags*");
@@ -22,7 +23,7 @@ suite("Test OPC-taglist command", async () => {
 
     teardown(async () => {
         await vscode.commands.executeCommand(
-            "workbench.action.closeAllEditors"
+            "workbench.action.closeAllEditors",
         );
         const files = await vscode.workspace.findFiles("**/opc_tags*");
         for (const file of files) {
@@ -33,19 +34,20 @@ suite("Test OPC-taglist command", async () => {
     test("Get OPC taglist from SCG context", async () => {
         const commandPromise =
             vscode.commands.executeCommand("septic.opcTagList");
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await sleep(100);
         await vscode.commands.executeCommand(
-            "workbench.action.acceptSelectedQuickOpenItem"
+            "workbench.action.acceptSelectedQuickOpenItem",
         );
 
         await commandPromise;
+        await sleep(100);
         const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
         const expectedFileName = "opc_tags_scg.csv";
         const filePath = vscode.Uri.file(`${wsPath}/${expectedFileName}`);
 
         const fileExists = await vscode.workspace.fs.stat(filePath).then(
             () => true,
-            () => false
+            () => false,
         );
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         expect(fileExists).to.be.true;
@@ -60,22 +62,23 @@ suite("Test OPC-taglist command", async () => {
         await openDocument(getDocUri("test.cnfg"));
         const commandPromise =
             vscode.commands.executeCommand("septic.opcTagList");
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await sleep(100);
         await vscode.commands.executeCommand(
-            "workbench.action.quickOpenSelectNext"
+            "workbench.action.quickOpenSelectNext",
         ); // Move to second option
         await vscode.commands.executeCommand(
-            "workbench.action.acceptSelectedQuickOpenItem"
+            "workbench.action.acceptSelectedQuickOpenItem",
         );
 
         await commandPromise;
+        await sleep(100);
         const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
         const expectedFileName = "opc_tags_test.csv";
         const filePath = vscode.Uri.file(`${wsPath}/${expectedFileName}`);
 
         const fileExists = await vscode.workspace.fs.stat(filePath).then(
             () => true,
-            () => false
+            () => false,
         );
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         expect(fileExists).to.be.true;
