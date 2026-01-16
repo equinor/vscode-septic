@@ -11,6 +11,9 @@ jobs:
   release_please:
     name: 🔖 Release Please
     runs-on: ubuntu-latest
+    outputs:
+      extension_release_created: ${{ steps.release.outputs['packages/extension--release_created'] }}
+      lib_release_created: ${{ steps.release.outputs['packages/septic--release_created'] }}
     steps:
       - name: Create Release
         id: release
@@ -18,16 +21,18 @@ jobs:
         with:
           config-file: .github/release-please-config.json
           manifest-file: .github/.release-please-manifest.json
-    outputs:
-      extension_release_created: ${{ steps.release.outputs['septic-config--release_created'] }}
-      lib_release_created: ${{ steps.release.outputs['@equinor/septic-config-lib--release_created'] }}
+      - name: Print release outputs for debugging
+        continue-on-error: true
+        run: |
+          echo "Release outputs:"
+          echo '${{ toJSON(steps.release.outputs) }}' | jq '.' || echo '${{ toJSON(steps.release.outputs) }}'
   publish_extension:
     name: "Publish Extension"
-    if: ${{ needs.release_please.outputs.extension_release_created }}
+    if: ${{ needs.release_please.outputs.extension_release_created == 'true' }}
     needs: [release_please]
     uses: ./.github/workflows/publish-extension.yml
   publish_lib:
     name: "Publish Lib"
-    if: ${{ needs.release_please.outputs.lib_release_created }}
+    if: ${{ needs.release_please.outputs.lib_release_created == 'true' }}
     needs: [release_please]
     uses: ./.github/workflows/publish-lib.yml
