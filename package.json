@@ -28,6 +28,6 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "pnpm --filter septic watch"
+    "dev": "pnpm --filter septic-config-lib watch"
   }
 }
