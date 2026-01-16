@@ -8,6 +8,7 @@ import {
     AlgLiteral,
     parseAlg,
     AlgUnary,
+    AlgVisitor,
 } from "../alg";
 
 describe("Test scanning of operators", () => {
@@ -460,5 +461,32 @@ describe("Test parsing of invalid algs", () => {
             parseAlg(input);
         };
         expect(parse).to.not.throw();
+    });
+});
+
+describe("Test algVisitor", () => {
+    it("Test extraction of variables in alg", () => {
+        const input =
+            "setmaxdn({{ Wellname }}ZpcNew, -abs({{ Wellname }}ZpcYWCD.Tests)/SPM)";
+        const expr = parseAlg(input);
+        const visitor = new AlgVisitor();
+        visitor.visit(expr);
+        expect(visitor.variables.length).to.equal(3);
+        const variableNames = visitor.variables.map((v) => v.value);
+        expect(variableNames).to.include("{{Wellname}}ZpcNew");
+        expect(variableNames).to.include("{{Wellname}}ZpcYWCD.Tests");
+        expect(variableNames).to.include("SPM");
+    });
+    it("Test extraction of variables in alg", () => {
+        const input =
+            "setmaxdn({{ Wellname }}ZpcNew, -abs({{ Wellname }}ZpcYWCD.Tests)/SPM) + min(10, -10)";
+        const expr = parseAlg(input);
+        const visitor = new AlgVisitor();
+        visitor.visit(expr);
+        expect(visitor.calcs.length).to.equal(3);
+        const variableNames = visitor.calcs.map((v) => v.identifier);
+        expect(variableNames).to.include("setmaxdn");
+        expect(variableNames).to.include("abs");
+        expect(variableNames).to.include("min");
     });
 });
