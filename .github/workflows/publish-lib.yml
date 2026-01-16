@@ -3,6 +3,7 @@ on:
   workflow_call:
 permissions:
   contents: read
+  id-token: write
 jobs:
   publish:
     name: "🚀 Publish"
