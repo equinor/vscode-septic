@@ -278,7 +278,7 @@ export function validateAlg(
         diagnostics.push(diagnostic);
         return diagnostics;
     }
-    const visitor = new AlgVisitor(true);
+    const visitor = new AlgVisitor();
     visitor.visit(expr);
     visitor.calcs.forEach((calc) => {
         diagnostics.push(
@@ -289,9 +289,8 @@ export function validateAlg(
         diagnostics.push(
             ...validateAlgVariable(
                 variable,
-                doc,
                 contextProvider,
-                offsetStartAlg,
+                algPositionTransformer,
             ),
         );
     });
@@ -300,9 +299,8 @@ export function validateAlg(
 
 export function validateAlgVariable(
     variable: AlgLiteral,
-    doc: TextDocument,
     contextProvider: SepticContext,
-    offsetStartAlg: number,
+    algPositionTransformer: AlgPositionTransformer,
 ): SepticDiagnostic[] {
     if (isPureJinja(variable.value)) {
         return [];
@@ -317,10 +315,7 @@ export function validateAlgVariable(
         return [
             createDiagnostic(
                 SepticDiagnosticLevel.warning,
-                {
-                    start: doc.positionAt(offsetStartAlg + variable.start),
-                    end: doc.positionAt(offsetStartAlg + variable.end),
-                },
+                algPositionTransformer(variable.start, variable.end),
                 `Reference to undefined variable: ${variable.value}`,
                 SepticDiagnosticCode.missingReference,
             ),
@@ -333,10 +328,7 @@ export function validateAlgVariable(
         return [
             createDiagnostic(
                 SepticDiagnosticLevel.error,
-                {
-                    start: doc.positionAt(offsetStartAlg + variable.end - 1),
-                    end: doc.positionAt(offsetStartAlg + variable.end),
-                },
+                algPositionTransformer(variable.end - 1, variable.end),
                 `Missing public property for variable`,
                 SepticDiagnosticCode.missingPublicProperty,
             ),
@@ -358,21 +350,15 @@ export function validateAlgVariable(
         return [
             createDiagnostic(
                 SepticDiagnosticLevel.error,
-                {
-                    start: doc.positionAt(
-                        offsetStartAlg +
-                            variable.start +
-                            variableParts[0]!.length +
-                            1,
-                    ),
-                    end: doc.positionAt(offsetStartAlg + variable.end),
-                },
+                algPositionTransformer(
+                    variable.end - variableParts[1]!.length,
+                    variable.end,
+                ),
                 `Unknown public property ${variableParts[1]} for ${referencedObjects[0]!.type}'`,
                 SepticDiagnosticCode.unknownPublicProperty,
             ),
         ];
     }
-
     return [];
 }
 
@@ -593,11 +579,7 @@ function validateParamType(
     algPositionTransformer: AlgPositionTransformer,
 ): SepticDiagnostic[] {
     if (types[0]!.startsWith("value")) {
-        return validateValueParamType(
-            expr,
-            contextProvider,
-            algPositionTransformer,
-        );
+        return [];
     }
     return validateObjectParamType(
         expr,
@@ -638,36 +620,6 @@ function validateObjectParamType(
             algPositionTransformer(expr.start, expr.end),
             `Wrong data type for parameter: ${exprLiteral.value}. Expected data type for parameter: ${types.join(",")}}`,
             SepticDiagnosticCode.invalidDataTypeArg,
-        ),
-    ];
-}
-
-function validateValueParamType(
-    expr: AlgExpr,
-    contextProvider: SepticContext,
-    algPositionTransformer: AlgPositionTransformer,
-): SepticDiagnostic[] {
-    if (!isAlgExprObjectReference(expr)) {
-        return [];
-    }
-    const exprLiteral = expr as AlgLiteral;
-    if (isPureJinja(exprLiteral.value)) {
-        return [];
-    }
-    if (
-        contextProvider.validateReferences(
-            exprLiteral.value.split(".")[0]!,
-            defaultRefValidationFunction,
-        )
-    ) {
-        return [];
-    }
-    return [
-        createDiagnostic(
-            SepticDiagnosticLevel.warning,
-            algPositionTransformer(expr.start, expr.end),
-            `Reference to undefined variable: ${exprLiteral.value}`,
-            SepticDiagnosticCode.missingReference,
         ),
     ];
 }

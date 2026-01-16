@@ -197,6 +197,21 @@ describe("Test diagnostics for references in algs", () => {
             SepticDiagnosticCode.unknownPublicProperty,
         );
     });
+    it("Expect diagnostics for unknown property when variable is first param in calc", () => {
+        const text = `
+            Mvr: TestMvr
+			CalcPvr:  TestCalcPvr 
+				Text1= "Test"
+				Alg= "-abs(TestMvr.Tests)"
+		`;
+
+        const cnfg = parseSepticForTest(text);
+        const diag = validateAlgs(cnfg, cnfg);
+        expect(diag.length).to.equal(1);
+        expect(diag[0]!.code).to.equal(
+            SepticDiagnosticCode.unknownPublicProperty,
+        );
+    });
 });
 
 describe("Test datatype diagnostics in algs", () => {
