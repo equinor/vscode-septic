@@ -4,8 +4,6 @@ from typing import List
 
 import yaml
 
-public_path = Path("./public")
-
 indents_attribute_value = 17
 spaces_between_int_values = 6
 spaces_first_int_value = 5
@@ -98,7 +96,7 @@ def format_int_list(values: List[str]):
     return [line]
 
 
-def generate_snippets(version: str):
+def generate_snippets(version: str, output_path: Path):
     version_path = Path("./public") / version
     with open(version_path / "objectsDoc.yaml") as file:
         objects = yaml.load(file, Loader=yaml.BaseLoader)
@@ -107,7 +105,3 @@ def generate_snippets(version: str):
         snippets.append(create_snippet(obj))
     with open(version_path / "snippets.yaml", "w") as file:
         yaml.dump([asdict(snippet) for snippet in snippets], file)
-
-
-if __name__ == "__main__":
-    generate_snippets("latest")
