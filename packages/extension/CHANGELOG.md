@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.29.1](https://github.com/equinor/vscode-septic/compare/septic-config-v1.29.0...septic-config-v1.29.1) (2026-01-15)
+
+
+### 🔨 Refactor
+
+* create dedicated package for septic parsing ([#869](https://github.com/equinor/vscode-septic/issues/869)) ([2a4ff5b](https://github.com/equinor/vscode-septic/commit/2a4ff5bd4d0f3a77f5232fcf3751aa3f5eb8e0bb))
+
 ## [1.29.0](https://github.com/equinor/vscode-septic/compare/v1.28.2...v1.29.0) (2025-12-03)
 
 
