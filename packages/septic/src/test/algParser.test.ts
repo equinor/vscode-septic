@@ -484,9 +484,9 @@ describe("Test algVisitor", () => {
         const visitor = new AlgVisitor();
         visitor.visit(expr);
         expect(visitor.calcs.length).to.equal(3);
-        const variableNames = visitor.calcs.map((v) => v.identifier);
-        expect(variableNames).to.include("setmaxdn");
-        expect(variableNames).to.include("abs");
-        expect(variableNames).to.include("min");
+        const calcNames = visitor.calcs.map((v) => v.identifier);
+        expect(calcNames).to.include("setmaxdn");
+        expect(calcNames).to.include("abs");
+        expect(calcNames).to.include("min");
     });
 });

@@ -289,7 +289,6 @@ export function validateAlg(
         diagnostics.push(
             ...validateAlgVariable(
                 variable,
-                doc,
                 contextProvider,
                 algPositionTransformer,
             ),
@@ -300,7 +299,6 @@ export function validateAlg(
 
 export function validateAlgVariable(
     variable: AlgLiteral,
-    doc: TextDocument,
     contextProvider: SepticContext,
     algPositionTransformer: AlgPositionTransformer,
 ): SepticDiagnostic[] {

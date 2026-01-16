@@ -407,11 +407,8 @@ export interface IAlgVisitor {
 export class AlgVisitor implements IAlgVisitor {
     calcs: AlgCalc[] = [];
     variables: AlgLiteral[] = [];
-    private ignoreIdentifierCalcParams;
 
-    constructor(ignoreIdentifierCalcParams: boolean = false) {
-        this.ignoreIdentifierCalcParams = ignoreIdentifierCalcParams;
-    }
+    constructor() {}
 
     visit(expr: AlgExpr) {
         expr.accept(this);
@@ -435,13 +432,6 @@ export class AlgVisitor implements IAlgVisitor {
     visitCalc(expr: AlgCalc): any {
         this.calcs.push(expr);
         for (const param of expr.params) {
-            if (
-                this.ignoreIdentifierCalcParams &&
-                param instanceof AlgLiteral &&
-                param.type === AlgTokenType.identifier
-            ) {
-                continue;
-            }
             param.accept(this);
         }
     }
