@@ -22,6 +22,12 @@ export default tseslint.config(
       parserOptions: {
         tsconfigRootDir: __dirname,
       },
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+      },
     },
   }
 
