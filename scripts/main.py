@@ -145,8 +145,10 @@ if __name__ == "__main__":
         ref = sys.argv[1].split("/")[-1]
         if ref == "main":
             update_latest_documentation()
-            generate_snippets("latest")
+            generate_snippets("latest", output_path)
         else:
             update_versioned_documentation_tag(ref)
             update_version_options()
-            generate_snippets(version_to_folder_name(get_versions_from_tag(ref)))
+            generate_snippets(
+                version_to_folder_name(get_versions_from_tag(ref)), output_path
+            )
