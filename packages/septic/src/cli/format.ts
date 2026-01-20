@@ -7,6 +7,7 @@ import yargs, { CommandModule } from "yargs";
 import { TextDocument, TextEdit } from "vscode-languageserver-textdocument";
 import * as fs from "fs";
 import * as path from "path";
+import { glob } from "glob";
 import { SepticCnfg } from "../cnfg";
 import { SepticCnfgFormatter } from "../formatter";
 import { createDocumentFromFile } from "../configProvider";
@@ -74,67 +75,131 @@ function checkFormatting(
     return originalContent === formattedContent;
 }
 
-async function handler(options: FormatOptions): Promise<void> {
-    const document = await createDocumentFromFile(options.file);
+async function formatSingleFile(
+    filePath: string,
+    check: boolean,
+    outputPath?: string,
+): Promise<{ needsFormatting: boolean; filePath: string }> {
+    const document = await createDocumentFromFile(filePath);
     const originalContent = document.getText();
 
     const edits = formatSepticConfig(document);
     const formattedContent = applyTextEdits(originalContent, edits);
 
-    if (options.check) {
-        const isFormatted = checkFormatting(originalContent, formattedContent);
+    const isFormatted = checkFormatting(originalContent, formattedContent);
+
+    if (check) {
         if (isFormatted) {
-            console.log(`✓ ${options.file} is formatted correctly`);
-            process.exit(0);
+            console.log(`✓ ${filePath} is formatted correctly`);
         } else {
-            console.log(`✗ ${options.file} needs formatting`);
-            process.exit(1);
+            console.log(`✗ ${filePath} needs formatting`);
         }
+        return { needsFormatting: !isFormatted, filePath };
     }
 
-    const outputPath = options.output || options.file;
-
-    const outputDir = path.dirname(outputPath);
+    const actualOutputPath = outputPath || filePath;
+    const outputDir = path.dirname(actualOutputPath);
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    fs.writeFileSync(outputPath, formattedContent, "utf-8");
+    fs.writeFileSync(actualOutputPath, formattedContent, "utf-8");
 
-    if (options.output) {
-        console.log(`✓ Formatted file saved to: ${outputPath}`);
+    if (outputPath) {
+        console.log(`✓ Formatted file saved to: ${actualOutputPath}`);
     } else {
-        console.log(`✓ Formatted: ${options.file}`);
+        console.log(`✓ Formatted: ${filePath}`);
+    }
+
+    return { needsFormatting: false, filePath };
+}
+
+async function handler(options: FormatOptions): Promise<void> {
+    // Ensure the pattern includes .cnfg extension
+    let pattern = options.file;
+    if (!pattern.endsWith(".cnfg")) {
+        pattern = pattern + ".cnfg";
+    }
+
+    // Find all files matching the pattern
+    const files = await glob(pattern, {
+        absolute: true,
+        nodir: true,
+        windowsPathsNoEscape: true,
+    });
+
+    if (files.length === 0) {
+        // Try treating it as a literal file path
+        if (fs.existsSync(pattern)) {
+            files.push(path.resolve(pattern));
+        } else {
+            console.error(`No files found matching pattern: ${pattern}`);
+            process.exit(1);
+        }
+    }
+
+    // If output is specified and multiple files matched, this is an error
+    if (options.output && files.length > 1) {
+        console.error(
+            `Error: Cannot specify --output when multiple files match the pattern`,
+        );
+        process.exit(1);
+    }
+
+    const results = await Promise.all(
+        files.map((file) =>
+            formatSingleFile(file, options.check || false, options.output),
+        ),
+    );
+
+    if (options.check) {
+        const filesNeedingFormatting = results.filter((r) => r.needsFormatting);
+        if (filesNeedingFormatting.length > 0) {
+            console.log(
+                `\n${filesNeedingFormatting.length} file(s) need formatting`,
+            );
+            process.exit(1);
+        } else {
+            console.log(
+                `\nAll ${files.length} file(s) are formatted correctly`,
+            );
+            process.exit(0);
+        }
     }
 }
 
 export const formatCommand: CommandModule<object, FormatOptions> = {
     command: "format <file>",
-    describe: "Format a Septic config file",
+    describe: "Format Septic config file(s) matching a pattern",
     builder: (yargs) => {
         return yargs
             .positional("file", {
                 type: "string",
-                description: "Path to Septic config file to format",
+                description:
+                    "Path or glob pattern to Septic config file(s) to format",
                 demandOption: true,
             })
             .option("check", {
                 alias: "c",
                 type: "boolean",
                 description:
-                    "Check if the file is formatted without modifying it",
+                    "Check if file(s) are formatted without modifying them",
                 default: false,
             })
             .option("output", {
                 alias: "o",
                 type: "string",
                 description:
-                    "Output path for formatted file (default: overwrites input file)",
+                    "Output path for formatted file (only works with single file)",
             })
-            .example("$0 format config.cnfg", "Format a config file")
+            .example("$0 format config.cnfg", "Format a single config file")
             .example(
-                "$0 format config.cnfg --check",
-                "Check if a config file is formatted",
+                "$0 format '**/*.cnfg'",
+                "Format all .cnfg files recursively",
+            )
+            .example(
+                "$0 format '**/*.cnfg' --check",
+                "Check if all .cnfg files are formatted",
             )
             .example(
                 "$0 format config.cnfg --output formatted.cnfg",
