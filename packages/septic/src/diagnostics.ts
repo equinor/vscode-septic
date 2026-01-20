@@ -940,6 +940,9 @@ function validateCalcPvrIdentifierReferences(
     contextProvider: SepticContext,
     doc: TextDocument,
 ): SepticDiagnostic[] {
+    if (obj.identifier?.name.startsWith("_")) {
+        return [];
+    }
     const diagnostics: SepticDiagnostic[] = [];
     if (
         contextProvider.validateReferences(
