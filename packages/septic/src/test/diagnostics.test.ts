@@ -1427,6 +1427,25 @@ describe("Test validation of object references", () => {
         );
         expect(diagFilterd.length).to.equal(1);
     });
+    it("Expect no diagnostics for duplicate calcpvr starting with _", () => {
+        const text = `
+            CalcPvr:  _Test 
+            
+            CalcPvr:  _Test
+		`;
+        const cnfg = parseSepticForTest(text);
+        const objectInfo = metaInfoProvider.getObject("CalcPvr");
+        const diag = validateObjectReferences(
+            cnfg.objects[0]!,
+            cnfg.doc,
+            cnfg,
+            objectInfo!,
+        );
+        const diagFilterd = diag.filter(
+            (d) => d.code === SepticDiagnosticCode.duplicate,
+        );
+        expect(diagFilterd.length).to.equal(0);
+    });
 });
 
 describe("Test validation of object structure", () => {
