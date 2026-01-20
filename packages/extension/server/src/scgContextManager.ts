@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Connection, Emitter, Event } from "vscode-languageserver";
+import { Emitter, Event } from "vscode-languageserver";
 import { DocumentProvider } from "./documentProvider";
 import * as path from "path";
 import { scgConfigFromYAML, ScgContext } from "@equinor/septic-config-lib";
@@ -13,8 +13,6 @@ export class ScgContextManager {
     private docProvider: DocumentProvider;
 
     private contexts: Map<string, ScgContext> = new Map<string, ScgContext>();
-
-    private connection: Connection;
 
     private cnfgProvider: SepticConfigProvider;
 
@@ -29,11 +27,9 @@ export class ScgContextManager {
     constructor(
         docProvider: DocumentProvider,
         cnfgProvider: SepticConfigProvider,
-        connection: Connection,
     ) {
         this.docProvider = docProvider;
         this.cnfgProvider = cnfgProvider;
-        this.connection = connection;
         this.docProvider.onDidChangeDoc(async (uri) => {
             this.onDidChangeDoc(uri);
         });

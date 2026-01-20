@@ -65,7 +65,6 @@ const langService: ILanguageService = createLanguageService(
 const scgContextManager = new ScgContextManager(
     documentProvider,
     langService.cnfgProvider,
-    connection,
 );
 
 const contextManager = new ContextManager(

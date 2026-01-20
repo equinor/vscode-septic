@@ -85,14 +85,30 @@ export class ScgContext implements SepticContext {
 
     private getFiles(scgConfig: ScgConfigSchema): string[] {
         return scgConfig.layout.map((layout) => {
-            return (
-                path.dirname(this.filePath) +
-                "/" +
-                scgConfig.templatepath +
-                "/" +
-                layout.name
-            );
+            if (this.filePath.startsWith("file:")) {
+                return this.resolveUrlPath(scgConfig.templatepath, layout.name);
+            }
+            return this.resolveFilePath(scgConfig.templatepath, layout.name);
         });
+    }
+
+    private resolveUrlPath(templatePath: string, layoutName: string): string {
+        const baseUrl = new URL(this.filePath);
+        const dirUrl = new URL(".", baseUrl);
+        const relativePath = path.posix.join(templatePath, layoutName);
+        const resolvedUrl = new URL(relativePath, dirUrl);
+        return resolvedUrl.href;
+    }
+
+    private resolveFilePath(templatePath: string, layoutName: string): string {
+        const absoluteBasePath = path.isAbsolute(this.filePath)
+            ? this.filePath
+            : path.resolve(this.filePath);
+        return path.join(
+            path.dirname(absoluteBasePath),
+            templatePath,
+            layoutName,
+        );
     }
 
     public async load(): Promise<void> {

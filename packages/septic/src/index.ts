@@ -30,3 +30,7 @@ export {
 } from "./diagnostics";
 export { compareCnfgs } from "./compare";
 export { SepticCnfgFormatter } from "./formatter";
+export {
+    SepticConfigProviderFs,
+    createDocumentFromFile,
+} from "./configProvider";

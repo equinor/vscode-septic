@@ -63,7 +63,9 @@ export class SepticCnfg implements SepticContext, TextDocument {
         });
     }
 
-    public async parseAsync(token: CancellationToken): Promise<void> {
+    public async parseAsync(
+        token: CancellationToken | undefined,
+    ): Promise<void> {
         const scanner = new SepticScanner(this.doc.getText());
         const tokens = scanner.scanTokens();
         if (!tokens.tokens.length) {
