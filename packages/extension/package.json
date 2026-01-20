@@ -563,10 +563,9 @@
     "test_with_coverage": "pnpm build && nyc mocha --import ts-node/esm --require source-map-support/register --recursive server/src/test/**/*.test.ts "
   },
   "dependencies": {
+    "@equinor/septic-config-lib": "workspace:*",
     "@vscode/prompt-tsx": "^0.4.0-alpha.5",
-    "ajv": "^8.12.0",
-    "js-yaml": "^4.1.1",
-    "@equinor/septic-config-lib": "workspace:*"
+    "js-yaml": "^4.1.1"
   },
   "devDependencies": {
     "@types/vscode": "^1.105.0",

@@ -121,6 +121,7 @@ export interface SepticDiagnostic {
     code: SepticDiagnosticCode;
     message: string;
     range: Range;
+    uri?: string | undefined;
 }
 
 function createDiagnostic(
@@ -128,12 +129,14 @@ function createDiagnostic(
     range: Range,
     message: string,
     code: SepticDiagnosticCode,
+    uri?: string,
 ): SepticDiagnostic {
     return {
         level: level,
         range: range,
         message: message,
         code: code,
+        uri: uri,
     };
 }
 
@@ -152,7 +155,7 @@ export function validateStandAloneCalc(
 export function getDiagnostics(
     cnfg: SepticCnfg,
     contextProvider: SepticContext,
-) {
+): SepticDiagnostic[] {
     const diagnostics: SepticDiagnostic[] = [];
     diagnostics.push(...validateObjects(cnfg, contextProvider));
     diagnostics.push(...validateAlgs(cnfg, contextProvider));
@@ -173,7 +176,10 @@ export function getDiagnostics(
         }
         return true;
     });
-    return filteredDiags;
+    return filteredDiags.map((diag) => {
+        diag.uri = cnfg.uri;
+        return diag;
+    });
 }
 
 export function validateComments(cnfg: SepticCnfg): SepticDiagnostic[] {

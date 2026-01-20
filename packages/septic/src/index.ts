@@ -17,8 +17,8 @@ export {
     SepticTokenType,
 } from "./elements";
 export type { SepticReference } from "./reference";
-export { ScgContext } from "./scgContext";
-export type { ScgConfig } from "./scgContext";
+export { ScgContext, validate_scg, scgConfigFromYAML } from "./scg";
+export type { ScgConfigSchema } from "./scg";
 export { fromCalcIndexToParamIndex } from "./calc";
 export { findAlgCycles } from "./cycle";
 export type { SepticContext } from "./context";
@@ -30,3 +30,7 @@ export {
 } from "./diagnostics";
 export { compareCnfgs } from "./compare";
 export { SepticCnfgFormatter } from "./formatter";
+export {
+    SepticConfigProviderFs,
+    createDocumentFromFile,
+} from "./configProvider";

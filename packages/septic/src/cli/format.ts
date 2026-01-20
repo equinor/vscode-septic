@@ -9,7 +9,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { SepticCnfg } from "../cnfg";
 import { SepticCnfgFormatter } from "../formatter";
-import { validateFileExists, createDocumentFromFile } from "./utils";
+import { createDocumentFromFile } from "../configProvider";
 
 interface FormatOptions {
     file: string;
@@ -75,9 +75,7 @@ function checkFormatting(
 }
 
 async function handler(options: FormatOptions): Promise<void> {
-    validateFileExists(options.file);
-
-    const document = createDocumentFromFile(options.file);
+    const document = await createDocumentFromFile(options.file);
     const originalContent = document.getText();
 
     const edits = formatSepticConfig(document);

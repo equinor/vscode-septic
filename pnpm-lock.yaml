@@ -68,9 +68,6 @@ importers:
       '@vscode/prompt-tsx':
         specifier: ^0.4.0-alpha.5
         version: 0.4.0-alpha.5
-      ajv:
-        specifier: ^8.12.0
-        version: 8.17.1
       js-yaml:
         specifier: ^4.1.1
         version: 4.1.1
@@ -125,6 +122,9 @@ importers:
 
   packages/septic:
     dependencies:
+      ajv:
+        specifier: ^8.17.1
+        version: 8.17.1
       js-yaml:
         specifier: ^4.1.1
         version: 4.1.1
