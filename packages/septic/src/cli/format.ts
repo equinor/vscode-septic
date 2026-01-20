@@ -13,7 +13,7 @@ import { SepticCnfgFormatter } from "../formatter";
 import { createDocumentFromFile } from "../configProvider";
 
 interface FormatOptions {
-    file: string;
+    file: string[];
     check?: boolean | undefined;
     output?: string | undefined;
 }
@@ -115,27 +115,35 @@ async function formatSingleFile(
 }
 
 async function handler(options: FormatOptions): Promise<void> {
-    // Ensure the pattern includes .cnfg extension
-    let pattern = options.file;
-    if (!pattern.endsWith(".cnfg")) {
-        pattern = pattern + ".cnfg";
-    }
+    const files: string[] = [];
 
-    // Find all files matching the pattern
-    const files = await glob(pattern, {
-        absolute: true,
-        nodir: true,
-        windowsPathsNoEscape: true,
-    });
+    // Process each input pattern/file
+    for (const input of options.file) {
+        // Ensure the pattern includes .cnfg extension
+        let pattern = input;
+        if (!pattern.endsWith(".cnfg")) {
+            pattern = pattern + ".cnfg";
+        }
 
-    if (files.length === 0) {
-        // Try treating it as a literal file path
+        // Check if it's a direct file path first (handles bash-expanded paths)
         if (fs.existsSync(pattern)) {
             files.push(path.resolve(pattern));
         } else {
-            console.error(`No files found matching pattern: ${pattern}`);
-            process.exit(1);
+            // Try as a glob pattern
+            const matches = await glob(pattern, {
+                absolute: true,
+                nodir: true,
+                windowsPathsNoEscape: true,
+            });
+            files.push(...matches);
         }
+    }
+
+    if (files.length === 0) {
+        console.error(
+            `No files found matching pattern(s): ${options.file.join(", ")}`,
+        );
+        process.exit(1);
     }
 
     // If output is specified and multiple files matched, this is an error
@@ -169,14 +177,15 @@ async function handler(options: FormatOptions): Promise<void> {
 }
 
 export const formatCommand: CommandModule<object, FormatOptions> = {
-    command: "format <file>",
+    command: "format <file..>",
     describe: "Format Septic config file(s) matching a pattern",
     builder: (yargs) => {
         return yargs
             .positional("file", {
                 type: "string",
+                array: true,
                 description:
-                    "Path or glob pattern to Septic config file(s) to format",
+                    "Path(s) or glob pattern(s) to Septic config file(s) to format",
                 demandOption: true,
             })
             .option("check", {
