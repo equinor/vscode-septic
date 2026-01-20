@@ -123,7 +123,7 @@ importers:
   packages/septic:
     dependencies:
       ajv:
-        specifier: ^8.12.0
+        specifier: ^8.17.1
         version: 8.17.1
       js-yaml:
         specifier: ^4.1.1
