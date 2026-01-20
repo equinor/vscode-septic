@@ -14,30 +14,48 @@ import { SepticObject } from "./elements";
 import { ISepticConfigProvider } from "./configProvider";
 import { SepticCnfg } from "./cnfg";
 import { updateParentObjects } from "./hierarchy";
+import { readFileSync } from "fs";
+import * as yaml from "js-yaml";
 
-export interface ScgConfig {
+import Ajv from "ajv";
+import { getBasePublicPath } from "./path";
+
+const ajv = new Ajv();
+const scgSchemaPath = getBasePublicPath() + "/scg_config.schema.json";
+const scgSchema = JSON.parse(readFileSync(scgSchemaPath, "utf-8"));
+export const validate_scg = ajv.compile<ScgConfigSchema>(scgSchema);
+
+export interface ScgConfigSchema {
     outputfile?: string;
-
     templatepath: string;
-
-    verifycontent: boolean;
-
-    adjustsspacing: boolean;
-
-    sources: ScgSource[];
-    layout: ScgTemplate[];
+    adjustspacing?: boolean;
+    verifycontent?: boolean;
+    counters?: {
+        name: string;
+        value: number;
+    }[];
+    sources: {
+        filename: string;
+        id: string;
+        sheet?: string;
+        delimiter?: string;
+    }[];
+    layout: {
+        name: string;
+        source?: string;
+        include?: object;
+    }[];
 }
 
-export interface ScgSource {
-    filename: string;
-    id: string;
-    sheet: string;
-}
-
-export interface ScgTemplate {
-    name: string;
-    source?: string;
-    include?: string[];
+export function scgConfigFromYAML(yamlContent: string): ScgConfigSchema {
+    const config = yaml.load(yamlContent);
+    const valid = validate_scg(config);
+    if (!valid) {
+        throw new Error(
+            `Invalid SCG config: ${ajv.errorsText(validate_scg.errors)}`,
+        );
+    }
+    return config;
 }
 
 export class ScgContext implements SepticContext {
@@ -51,45 +69,30 @@ export class ScgContext implements SepticContext {
     constructor(
         name: string,
         filePath: string,
-        config: ScgConfig,
-        filesInTemplateDir: string[],
+        config: ScgConfigSchema,
         cnfgProvider: ISepticConfigProvider,
     ) {
         this.name = name;
         this.filePath = filePath;
         this.cnfgProvider = cnfgProvider;
 
-        this.files = this.getFiles(config, filesInTemplateDir);
+        this.files = this.getFiles(config);
     }
 
     public fileInContext(file: string): boolean {
         return this.files.includes(file);
     }
 
-    private getFiles(
-        scgConfig: ScgConfig,
-        filesInTemplateDir: string[],
-    ): string[] {
-        const files = [];
-        for (const template of scgConfig.layout) {
-            if (path.extname(template.name) !== ".cnfg") {
-                continue;
-            }
-            let found = false;
-            for (const file of filesInTemplateDir) {
-                if (template.name === path.basename(file)) {
-                    files.push(file);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                console.log(
-                    `Could not find template: ${template.name} in template dir for context ${this.name}`,
-                );
-            }
-        }
-        return files;
+    private getFiles(scgConfig: ScgConfigSchema): string[] {
+        return scgConfig.layout.map((layout) => {
+            return (
+                path.dirname(this.filePath) +
+                "/" +
+                scgConfig.templatepath +
+                "/" +
+                layout.name
+            );
+        });
     }
 
     public async load(): Promise<void> {
@@ -137,9 +140,6 @@ export class ScgContext implements SepticContext {
         for (const file of this.files) {
             const cnfg = this.cnfgCache.get(file);
             if (!cnfg) {
-                console.log(
-                    `Could not get config for ${file} in context ${this.name}`,
-                );
                 continue;
             }
             const localReferences = cnfg.getReferences(name);

@@ -286,6 +286,7 @@ export class DocumentProvider {
             this.cache.set(uri, doc);
             return doc;
         } catch {
+            console.log(`Failed to open document from file system: ${uri}`);
             return undefined;
         }
     }

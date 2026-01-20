@@ -40,7 +40,8 @@
         "skipLibCheck": true,
         "outDir": "./dist",
         "rootDir": "./src",
-        "composite": true
+        "composite": true,
+        "resolveJsonModule": true
     },
     "include": ["src"],
     "exclude": ["node_modules", "src/test", "dist"]

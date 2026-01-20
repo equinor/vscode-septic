@@ -5,10 +5,8 @@
 
 import { Connection, Emitter, Event } from "vscode-languageserver";
 import { DocumentProvider } from "./documentProvider";
-import * as YAML from "js-yaml";
 import * as path from "path";
-import * as protocol from "./protocol";
-import { ScgConfig, ScgContext } from "@equinor/septic-config-lib";
+import { scgConfigFromYAML, ScgContext } from "@equinor/septic-config-lib";
 import { SepticConfigProvider } from "./configProvider";
 
 export class ScgContextManager {
@@ -83,10 +81,11 @@ export class ScgContextManager {
 
         try {
             await this.updateScgContext(uri);
-        } catch {
+        } catch (error) {
             console.log(
                 `Error updating context ${context.name}. Removing context from manager!`,
             );
+            console.log(error);
             this.contexts.delete(context.name);
         }
         return;
@@ -115,18 +114,12 @@ export class ScgContextManager {
         if (!doc) {
             return;
         }
-        const scgConfig = YAML.load(doc.getText()) as ScgConfig;
-        const filesInTemplatePath = await this.connection.sendRequest(
-            protocol.globFiles,
-            {
-                uri: path.parse(uri).dir + "/" + scgConfig.templatepath,
-            },
-        );
+        const scgConfig = scgConfigFromYAML(doc.getText());
+
         const scgContext = new ScgContext(
             uri,
             uri,
             scgConfig,
-            filesInTemplatePath,
             this.cnfgProvider,
         );
         this.contexts.set(scgContext.name, scgContext);
