@@ -18,11 +18,11 @@ jobs:
       - name: "Setup Node.js"
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org
+      - name: "Update to latest npm to use OIDC"
+        run: npm install -g npm@latest
       - name: "Install dependencies"
         run: pnpm install
       - name: Publish
         run: pnpm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
