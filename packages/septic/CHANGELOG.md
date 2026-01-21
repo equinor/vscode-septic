@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.1.0...septic-config-lib-v1.1.1) (2026-01-21)
+
+
+### 🐛 Bug Fixes
+
+* bug with format command in bash shell ([#891](https://github.com/equinor/vscode-septic/issues/891)) ([854492f](https://github.com/equinor/vscode-septic/commit/854492fb9bc0104fd763a6082c3a89ede3304441))
+
 ## [1.1.0](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.0.0...septic-config-lib-v1.1.0) (2026-01-20)
 
 
