@@ -97,7 +97,7 @@ def format_int_list(values: List[str]):
 
 
 def generate_snippets(version: str, output_path: Path):
-    version_path = Path("./public") / version
+    version_path = output_path / version
     with open(version_path / "objectsDoc.yaml") as file:
         objects = yaml.load(file, Loader=yaml.BaseLoader)
     snippets = []
