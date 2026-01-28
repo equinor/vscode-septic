@@ -469,6 +469,29 @@
     \ position and size if the group is\r\n  gridded"
   prefix: multixvrplot
 - body:
+  - '  MultiphaseModel:  ${1:MultiphaseModelName}'
+  - '    densityOil=  650'
+  - '  densityWater=  1000'
+  - '         MWgas=  30.58'
+  - '        TVD_bh=  4509'
+  - '        TVD_dh=  4000'
+  - '         MD_bh=  5127'
+  - '         MD_dh=  4000'
+  - '            ID=  0.157'
+  - '           Twh=  124'
+  - '           Tdh=  161'
+  - '            Cf=  1.0'
+  - '            Cc=  7.65e-5'
+  - '            WC=  0.1'
+  - '           GOR=  100'
+  - '            CV=  0,0,6,2,12,4,18,7,24,11,29,17,35,23,41,28,47,34,53,42,59,50,65,59,71,68,76,82,82,98,88,114,94,126,100,130'
+  - ProductionIndex=  8
+  - '     IterEachN=  1'
+  - '      Pwh_init=  79.88'
+  - '      Pbh_init=  134'
+  description: Nonlinear model in an /SmpcAppl or NMPCAppl
+  prefix: multiphasemodel
+- body:
   - '  Mvr:           ${1:MvrName}'
   - '         Text1=  ""'
   - '         Text2=  ""'
@@ -1025,6 +1048,8 @@
   - Compressibility=  500
   - ProductionIndex=  8
   - '      StepSize=  0'
+  - '        QNoise=  0'
+  - '      PdhNoise=  0'
   description: Nonlinear process, where the models are taken from the subr with same
     ID
   prefix: wellproc
@@ -1082,3 +1107,30 @@
   - '       ColSize=  1'
   description: XvrPlot cnfg wih optional position and size if the group is gridded
   prefix: xvrplot
+- body:
+  - '  multiphaseProc:  ${1:multiphaseProcName}'
+  - '    densityOil=  650'
+  - '  densityWater=  1000'
+  - '         MWgas=  30.58'
+  - '        TVD_bh=  4509'
+  - '        TVD_dh=  4000'
+  - '         MD_bh=  5127'
+  - '         MD_dh=  4000'
+  - '            ID=  0.157'
+  - '           Twh=  124'
+  - '           Tdh=  161'
+  - '            Cf=  1.0'
+  - '            Cc=  7.65e-5'
+  - '            WC=  0.1'
+  - '           GOR=  100'
+  - '            CV=  0,0,6,2,12,4,18,7,24,11,29,17,35,23,41,28,47,34,53,42,59,50,65,59,71,68,76,82,82,98,88,114,94,126,100,130'
+  - ProductionIndex=  8
+  - '     IterEachN=  1'
+  - '      Pwh_init=  79.88'
+  - '      Pbh_init=  134'
+  - '        QNoise=  0'
+  - '      PdhNoise=  0'
+  - '      StepSize=  0'
+  description: Nonlinear process, where the models are taken from the subr with same
+    ID
+  prefix: multiphaseproc
