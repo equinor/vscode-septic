@@ -20,8 +20,6 @@ jobs:
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
-      - name: "Update to latest npm to use OIDC"
-        run: npm install -g npm@latest
       - name: "Install dependencies"
         run: pnpm install
       - name: Publish
