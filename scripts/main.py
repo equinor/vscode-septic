@@ -116,6 +116,7 @@ def updateObjects(ref: str, output_path: Path):
         yaml.dump(
             [asdict(obj) for obj in objects],
             file,
+            sort_keys=False,
         )
 
 
@@ -125,7 +126,7 @@ def updateCalcs(ref: str, output_path: Path):
     calcs.sort(key=lambda x: x.name)
     calcs = filter(test_calc, calcs)
     with open(output_path, "w") as file:
-        yaml.dump([asdict(calc) for calc in calcs], file)
+        yaml.dump([asdict(calc) for calc in calcs], file, sort_keys=False)
 
 
 def update_meta_info(commit: str, version: Union[tuple, str], output_path: Path):
@@ -133,7 +134,7 @@ def update_meta_info(commit: str, version: Union[tuple, str], output_path: Path)
         version = ".".join([str(x) for x in version])
     meta = {"commit": commit[0:7], "version": version}
     with open(output_path, "w") as file:
-        yaml.dump(meta, file)
+        yaml.dump(meta, file, sort_keys=False)
 
 
 if __name__ == "__main__":

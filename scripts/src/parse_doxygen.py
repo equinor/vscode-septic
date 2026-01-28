@@ -8,25 +8,25 @@ doxygen_regex = r"\/\*![\s\S]*?\*\/"
 @dataclass
 class Attribute:
     name: str
+    description: str
     dataType: str
     list: bool
     enums: List[str]
-    tags: List[str]
+    default: str
     postfix: List[str]
+    snippet: str
     calc: bool
     noCnfg: bool
-    default: str
-    description: str
-    snippet: str
     nosnippet: bool
+    tags: List[str]
 
 
 @dataclass
 class SepticObject:
     name: str
     description: str
-    attributes: List[Attribute]
     parents: List[str]
+    attributes: List[Attribute]
 
 
 @dataclass
