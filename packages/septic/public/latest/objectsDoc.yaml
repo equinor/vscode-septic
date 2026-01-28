@@ -4084,6 +4084,259 @@
   - DisplayGroup
 - attributes:
   - calc: false
+    dataType: float
+    default:
+    - '650'
+    description: Oil density [kg/m3]
+    enums: []
+    list: false
+    name: densityOil
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1000'
+    description: Water density [kg/m3]
+    enums: []
+    list: false
+    name: densityWater
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '30.58'
+    description: Mol weight gas [g/mol]
+    enums: []
+    list: false
+    name: MWgas
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '4509'
+    description: Well vertical depth relative to wellhead [m]
+    enums: []
+    list: false
+    name: TVD_bh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '4000'
+    description: Gauge vertical depth relative to wellhead [m]
+    enums: []
+    list: false
+    name: TVD_dh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '5127'
+    description: Well length relative to wellhead [m]
+    enums: []
+    list: false
+    name: MD_bh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '4000'
+    description: Gauge length relative to wellhead [m]
+    enums: []
+    list: false
+    name: MD_dh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0.157'
+    description: Well tubing inner diameter [m]
+    enums: []
+    list: false
+    name: ID
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '124'
+    description: Wellhead temperature [C]
+    enums: []
+    list: false
+    name: Twh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '161'
+    description: Gauge/bottomhole temperature [C]
+    enums: []
+    list: false
+    name: Tdh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1.0'
+    description: Friction coefficient [bar*s2/m/kg2]
+    enums: []
+    list: false
+    name: Cf
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '7.65e-5'
+    description: CV correction factor [-]
+    enums: []
+    list: false
+    name: Cc
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0.1'
+    description: Water cut (0-1) [-]
+    enums: []
+    list: false
+    name: WC
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '100'
+    description: Gas oil ratio [Sm3/Sm3]
+    enums: []
+    list: false
+    name: GOR
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: doublepair
+    default:
+    - 0,0,6,2,12,4,18,7,24,11,29,17,35,23,41,28,47,34,53,42,59,50,65,59,71,68,76,82,82,98,88,114,94,126,100,130
+    description: Choke characteristics
+    enums: []
+    list: false
+    name: CV
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '8'
+    description: Production index [m3/h/bar]
+    enums: []
+    list: false
+    name: ProductionIndex
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: integer
+    default:
+    - '1'
+    description: Iterations each Nsecs samples
+    enums: []
+    list: false
+    name: IterEachN
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '79.88'
+    description: Initial guess wellhead pressure [bara]
+    enums: []
+    list: false
+    name: Pwh_init
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '134'
+    description: Initial guess bottom hole pressure [bara]
+    enums: []
+    list: false
+    name: Pbh_init
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  description: Nonlinear model in an /SmpcAppl or NMPCAppl
+  name: MultiphaseModel
+  parents:
+  - SmpcAppl
+  - NMPCAppl
+- attributes:
+  - calc: false
     dataType: string
     default:
     - '""'
@@ -9984,6 +10237,32 @@
     postfix: []
     snippet: ''
     tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Output flow rate noise amplitude [Sm3/h]
+    enums: []
+    list: false
+    name: QNoise
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Downhole pressure noise amplitude [bar]
+    enums: []
+    list: false
+    name: PdhNoise
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
   description: Nonlinear process, where the models are taken from the subr with same
     ID
   name: WellProc
@@ -10418,3 +10697,295 @@
   name: XvrPlot
   parents:
   - DisplayGroup
+- attributes:
+  - calc: false
+    dataType: float
+    default:
+    - '650'
+    description: Oil density [kg/m3]
+    enums: []
+    list: false
+    name: densityOil
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1000'
+    description: Water density [kg/m3]
+    enums: []
+    list: false
+    name: densityWater
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '30.58'
+    description: Mol weight gas [g/mol]
+    enums: []
+    list: false
+    name: MWgas
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '4509'
+    description: Well vertical depth relative to wellhead [m]
+    enums: []
+    list: false
+    name: TVD_bh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '4000'
+    description: Gauge vertical depth relative to wellhead [m]
+    enums: []
+    list: false
+    name: TVD_dh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '5127'
+    description: Well length relative to wellhead [m]
+    enums: []
+    list: false
+    name: MD_bh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '4000'
+    description: Gauge length relative to wellhead [m]
+    enums: []
+    list: false
+    name: MD_dh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0.157'
+    description: Well tubing inner diameter [m]
+    enums: []
+    list: false
+    name: ID
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '124'
+    description: Wellhead temperature [C]
+    enums: []
+    list: false
+    name: Twh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '161'
+    description: Gauge/bottomhole temperature [C]
+    enums: []
+    list: false
+    name: Tdh
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '1.0'
+    description: Friction coefficient [bar*s2/m/kg2]
+    enums: []
+    list: false
+    name: Cf
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '7.65e-5'
+    description: CV correction factor [-]
+    enums: []
+    list: false
+    name: Cc
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0.1'
+    description: Water cut (0-1) [-]
+    enums: []
+    list: false
+    name: WC
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '100'
+    description: Gas oil ratio [Sm3/Sm3]
+    enums: []
+    list: false
+    name: GOR
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: doublepair
+    default:
+    - 0,0,6,2,12,4,18,7,24,11,29,17,35,23,41,28,47,34,53,42,59,50,65,59,71,68,76,82,82,98,88,114,94,126,100,130
+    description: Choke characteristics
+    enums: []
+    list: false
+    name: CV
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '8'
+    description: Production index [m3/h/bar]
+    enums: []
+    list: false
+    name: ProductionIndex
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: integer
+    default:
+    - '1'
+    description: Iterations each Nsecs samples
+    enums: []
+    list: false
+    name: IterEachN
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '79.88'
+    description: Initial guess wellhead pressure [bara]
+    enums: []
+    list: false
+    name: Pwh_init
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '134'
+    description: Initial guess bottom hole pressure [bara]
+    enums: []
+    list: false
+    name: Pbh_init
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Output flow rate noise amplitude [Sm3/h]
+    enums: []
+    list: false
+    name: QNoise
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Downhole pressure noise amplitude [bar]
+    enums: []
+    list: false
+    name: PdhNoise
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  - calc: false
+    dataType: float
+    default:
+    - '0'
+    description: Step size [%]
+    enums: []
+    list: false
+    name: StepSize
+    noCnfg: false
+    nosnippet: false
+    postfix: []
+    snippet: ''
+    tags: []
+  description: Nonlinear process, where the models are taken from the subr with same
+    ID
+  name: multiphaseProc
+  parents:
+  - System
