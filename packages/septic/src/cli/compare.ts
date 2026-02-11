@@ -15,6 +15,7 @@ interface CompareOptions {
     current: string;
     settings?: string;
     output?: string;
+    showFormat?: boolean;
 }
 
 async function loadSepticConfig(filePath: string): Promise<SepticCnfg> {
@@ -25,7 +26,49 @@ async function loadSepticConfig(filePath: string): Promise<SepticCnfg> {
     return cnfg;
 }
 
+function showYamlFormat(): void {
+    const yamlFormat = `# Comparison Settings YAML Format
+# This file defines which variables, object types, and attributes to ignore during comparison
+
+# List of variable name patterns to ignore (supports regex)
+ignoredVariables:
+  - "pattern1"
+  - "pattern2"
+
+# List of object types to ignore completely
+ignoredObjectTypes:
+  - ImageStatusLabel
+  - Spacer
+
+# List of attributes to ignore for specific object types
+ignoredAttributes:
+  - objectName: Evr
+    attributes:
+      - Meas
+  - objectName: Mvr
+    attributes:
+      - Meas
+      - MeasBad
+      - Mode
+`;
+    console.log(yamlFormat);
+}
+
 async function handler(options: CompareOptions): Promise<void> {
+    // Show YAML format if requested
+    if (options.showFormat) {
+        showYamlFormat();
+        return;
+    }
+
+    // Validate that file paths are provided
+    if (!options.previous || !options.current) {
+        console.error(
+            "Error: Both previous and current file paths are required when not using --show-format",
+        );
+        process.exit(1);
+    }
+
     // Validate that both files exist
     if (!fs.existsSync(options.previous)) {
         console.error(
@@ -98,19 +141,19 @@ async function handler(options: CompareOptions): Promise<void> {
 }
 
 export const compareCommand: CommandModule<object, CompareOptions> = {
-    command: "compare <previous> <current>",
+    command: "compare [previous] [current]",
     describe: "Compare two Septic config files and generate a diff report",
     builder: (yargs) => {
         return yargs
             .positional("previous", {
                 type: "string",
                 description: "Path to the previous version of the config file",
-                demandOption: true,
+                demandOption: false,
             })
             .positional("current", {
                 type: "string",
                 description: "Path to the current version of the config file",
-                demandOption: true,
+                demandOption: false,
             })
             .option("settings", {
                 alias: "s",
@@ -123,6 +166,12 @@ export const compareCommand: CommandModule<object, CompareOptions> = {
                 type: "string",
                 description:
                     "Output file path for the comparison report (if not specified, prints to terminal)",
+            })
+            .option("show-format", {
+                type: "boolean",
+                description:
+                    "Display the YAML format/schema for comparison settings file",
+                default: false,
             })
             .example(
                 "$0 compare old.cnfg new.cnfg",
@@ -139,6 +188,10 @@ export const compareCommand: CommandModule<object, CompareOptions> = {
             .example(
                 "$0 compare old.cnfg new.cnfg -o diff.md -s settings.yaml",
                 "Compare with custom settings and save to markdown file",
+            )
+            .example(
+                "$0 compare --show-format",
+                "Display the YAML format for comparison settings",
             ) as unknown as yargs.Argv<CompareOptions>;
     },
     handler: (argv) => {
