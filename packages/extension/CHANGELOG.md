@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.30.0](https://github.com/equinor/vscode-septic/compare/septic-config-v1.29.1...septic-config-v1.30.0) (2026-02-11)
+
+
+### 🧹 Chores
+
+* change default encoding of cnfg files to utf8 ([#902](https://github.com/equinor/vscode-septic/issues/902)) ([44439ea](https://github.com/equinor/vscode-septic/commit/44439eac90874cecca5fd28bb24391ee4917364b))
+
+
+### ✨ Features
+
+* add support for linting scg in CLI ([#887](https://github.com/equinor/vscode-septic/issues/887)) ([1ff84de](https://github.com/equinor/vscode-septic/commit/1ff84deb3f35697463a3dd2ef553afefbd6e3a31))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @equinor/septic-config-lib bumped to 1.1.2
+
 ## [1.29.1](https://github.com/equinor/vscode-septic/compare/septic-config-v1.29.0...septic-config-v1.29.1) (2026-01-15)
 
 
