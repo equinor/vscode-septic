@@ -60,11 +60,16 @@ async function handler(options: CompareOptions): Promise<void> {
     // Use default settings if not specified
     const settingsFile = options.settings || "Default";
 
+    // Determine format: if output is specified and ends with .md, use markdown; otherwise use terminal
+    const format: "markdown" | "terminal" = options.output
+        ? "markdown"
+        : "terminal";
+
     // Perform comparison
     console.log(`Comparing configurations...`);
     let report: string;
     try {
-        report = compareCnfgs(prevCnfg, currentCnfg, settingsFile);
+        report = compareCnfgs(prevCnfg, currentCnfg, settingsFile, format);
     } catch (error) {
         console.error(`Error during comparison: ${error}`);
         process.exit(1);
@@ -88,10 +93,7 @@ async function handler(options: CompareOptions): Promise<void> {
         console.log(`✓ Comparison report saved to: ${outputPath}`);
     } else {
         // Output to terminal
-        console.log("\n" + "=".repeat(80));
-        console.log("COMPARISON REPORT");
-        console.log("=".repeat(80) + "\n");
-        console.log(report);
+        console.log("\n" + report);
     }
 }
 
@@ -136,7 +138,7 @@ export const compareCommand: CommandModule<object, CompareOptions> = {
             )
             .example(
                 "$0 compare old.cnfg new.cnfg -o diff.md -s settings.yaml",
-                "Compare with custom settings and save to file",
+                "Compare with custom settings and save to markdown file",
             ) as unknown as yargs.Argv<CompareOptions>;
     },
     handler: (argv) => {
