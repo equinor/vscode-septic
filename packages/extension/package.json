@@ -209,7 +209,7 @@
     ],
     "configurationDefaults": {
       "[septic]": {
-        "files.encoding": "windows1252",
+        "files.encoding": "utf8",
         "editor.wordWrap": "on",
         "editor.insertSpaces": true
       },
