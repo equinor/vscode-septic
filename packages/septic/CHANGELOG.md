@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.2](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.1.1...septic-config-lib-v1.1.2) (2026-02-11)
+
+
+### 📚 Documentation
+
+* update Septic documentation for latest ([#870](https://github.com/equinor/vscode-septic/issues/870)) ([e508ed4](https://github.com/equinor/vscode-septic/commit/e508ed47bcbad690d1c311b4cfdb3e7a052f83f9))
+* update Septic documentation for latest ([#897](https://github.com/equinor/vscode-septic/issues/897)) ([2170be7](https://github.com/equinor/vscode-septic/commit/2170be7e791872601ab07e0fea4dc69fc01f0ca7))
+
 ## [1.1.1](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.1.0...septic-config-lib-v1.1.1) (2026-01-21)
 
 
