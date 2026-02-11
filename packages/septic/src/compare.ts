@@ -15,6 +15,7 @@ export function compareCnfgs(
     prevVersion: SepticCnfg,
     currentVersion: SepticCnfg,
     settingsFile: string,
+    format: "markdown" | "terminal" = "markdown",
 ): string {
     const settings: ComparisonSettings | undefined =
         loadComparisonSettings(settingsFile);
@@ -25,6 +26,7 @@ export function compareCnfgs(
         settings,
         prevVersion,
         currentVersion,
+        format,
     );
     return report;
 }
@@ -33,6 +35,7 @@ function generateDiffReportFlat(
     settings: ComparisonSettings,
     prevVersion: SepticCnfg,
     currentVersion: SepticCnfg,
+    format: "markdown" | "terminal",
 ): string {
     prevVersion.updateObjectParents();
     currentVersion.updateObjectParents();
@@ -41,8 +44,6 @@ function generateDiffReportFlat(
         currentVersion.objects[0]!,
         settings,
     );
-    const report: string[] = [];
-    const padding = "    ";
     const objectDiff: ObjectDiff[] = flattenObjectDiff(rootObjectDiff);
     const updatedObjects: ObjectDiff[] = objectDiff.filter(
         (item) =>
@@ -53,57 +54,249 @@ function generateDiffReportFlat(
                 settings.ignoredVariables,
             ),
     );
-    if (updatedObjects.length) {
-        report.push("## Updated objects\n");
-    }
-    for (const updatedObj of updatedObjects) {
-        let linkPrev = createLink(updatedObj.prevObject, prevVersion);
-        linkPrev = linkPrev ? "  " + linkPrev : "";
-        let linkCurrent = createLink(updatedObj.currentObject, currentVersion);
-        linkCurrent = linkCurrent ? linkCurrent : "";
-        report.push(
-            `${updatedObj.prevObject.type}: ${updatedObj.prevObject.identifier?.id} ${linkPrev} -> ${linkCurrent}`,
-        );
-        for (const attrDiff of updatedObj.attributeDiff) {
-            report.push(
-                padding +
-                    `${attrDiff.name}: ${attrDiff.prevValue} -> ${attrDiff.currentValue}`,
-            );
-        }
-    }
     let addedObjects: SepticObject[] = getAddedObjects(objectDiff);
     addedObjects = addedObjects.filter(
         (item) =>
             !settings.ignoredObjectTypes.includes(item.type) &&
             !ignoreVariable(item.identifier?.id, settings.ignoredVariables),
     );
-    if (addedObjects.length) {
-        report.push("\n## Added objects\n");
-    }
-    for (const addedObj of addedObjects) {
-        let link = createLink(addedObj, currentVersion);
-        link = link ? "  " + link : "";
-        report.push(`${addedObj.type}: ${addedObj.identifier?.id}` + link);
-    }
     let removedObjects: SepticObject[] = getRemovedObjects(objectDiff);
     removedObjects = removedObjects.filter(
         (item) =>
             !settings.ignoredObjectTypes.includes(item.type) &&
             !ignoreVariable(item.identifier?.id, settings.ignoredVariables),
     );
-    if (removedObjects.length) {
-        report.push("\n## Removed objects\n");
+
+    if (format === "markdown") {
+        return generateMarkdownReport(
+            updatedObjects,
+            addedObjects,
+            removedObjects,
+            prevVersion,
+            currentVersion,
+        );
+    } else {
+        return generateTerminalReport(
+            updatedObjects,
+            addedObjects,
+            removedObjects,
+            prevVersion,
+            currentVersion,
+        );
     }
-    for (const removedObj of removedObjects) {
-        let link = createLink(removedObj, prevVersion);
-        link = link ? "  " + link : "";
-        report.push(`${removedObj.type}: ${removedObj.identifier?.id}` + link);
-    }
-    return report.join("\n");
 }
 
 function createLink(element: SepticBase, cnfg: SepticCnfg): string {
-    return `${cnfg.uri}#${cnfg.positionAt(element.start).line + 1}`;
+    const lineNumber = cnfg.positionAt(element.start).line + 1;
+    // Use vscode:// URI scheme for better VS Code integration
+    const uri = cnfg.uri.replace(/^file:\/\/\//, "");
+    return `vscode://file/${uri}:${lineNumber}:1`;
+}
+
+function createTerminalLink(url: string, text: string): string {
+    // OSC 8 hyperlinks for modern terminals
+    // Format: \x1b]8;;URL\x1b\\TEXT\x1b]8;;\x1b\\
+    return `\x1b]8;;${url}\x1b\\${text}\x1b]8;;\x1b\\`;
+}
+
+function generateMarkdownReport(
+    updatedObjects: ObjectDiff[],
+    addedObjects: SepticObject[],
+    removedObjects: SepticObject[],
+    prevVersion: SepticCnfg,
+    currentVersion: SepticCnfg,
+): string {
+    const report: string[] = [];
+
+    // Header
+    report.push("# Configuration Comparison Report\n");
+    report.push(`**Previous Version:** \`${prevVersion.uri}\`\n`);
+    report.push(`**Current Version:** \`${currentVersion.uri}\`\n`);
+
+    // Summary
+    report.push("## 📊 Summary\n");
+    report.push("| Category | Count |");
+    report.push("|----------|-------|");
+    report.push(`| 🔄 Updated Objects | ${updatedObjects.length} |`);
+    report.push(`| ➕ Added Objects | ${addedObjects.length} |`);
+    report.push(`| ➖ Removed Objects | ${removedObjects.length} |`);
+    report.push("");
+
+    // Updated objects
+    if (updatedObjects.length) {
+        report.push("## 🔄 Updated Objects\n");
+        for (const updatedObj of updatedObjects) {
+            const linkPrev = createLink(updatedObj.prevObject, prevVersion);
+            const linkCurrent = createLink(
+                updatedObj.currentObject,
+                currentVersion,
+            );
+            report.push(
+                `### \`${updatedObj.prevObject.type}\`: ${updatedObj.prevObject.identifier?.id}\n`,
+            );
+            report.push(`[Previous](${linkPrev}) → [Current](${linkCurrent})`);
+            if (updatedObj.attributeDiff.length) {
+                report.push("| Attribute | Previous Value | Current Value |");
+                report.push("|-----------|----------------|---------------|");
+                for (const attrDiff of updatedObj.attributeDiff) {
+                    const prevVal = formatValue(attrDiff.prevValue);
+                    const currVal = formatValue(attrDiff.currentValue);
+                    report.push(
+                        `| \`${attrDiff.name}\` | ${prevVal} | ${currVal} |`,
+                    );
+                }
+                report.push("");
+            }
+        }
+    }
+
+    // Added objects
+    if (addedObjects.length) {
+        report.push("## ➕ Added Objects\n");
+        report.push("| Type | Identifier | Link |");
+        report.push("|------|------------|------|");
+        for (const addedObj of addedObjects) {
+            const link = createLink(addedObj, currentVersion);
+            report.push(
+                `| \`${addedObj.type}\` | ${addedObj.identifier?.id} | [View](${link}) |`,
+            );
+        }
+        report.push("");
+    }
+
+    // Removed objects
+    if (removedObjects.length) {
+        report.push("## ➖ Removed Objects\n");
+        report.push("| Type | Identifier | Link |");
+        report.push("|------|------------|------|");
+        for (const removedObj of removedObjects) {
+            const link = createLink(removedObj, prevVersion);
+            report.push(
+                `| \`${removedObj.type}\` | ${removedObj.identifier?.id} | [View](${link}) |`,
+            );
+        }
+        report.push("");
+    }
+
+    return report.join("\n");
+}
+
+function generateTerminalReport(
+    updatedObjects: ObjectDiff[],
+    addedObjects: SepticObject[],
+    removedObjects: SepticObject[],
+    prevVersion: SepticCnfg,
+    currentVersion: SepticCnfg,
+): string {
+    const report: string[] = [];
+    const colors = {
+        reset: "\x1b[0m",
+        bright: "\x1b[1m",
+        dim: "\x1b[2m",
+        green: "\x1b[32m",
+        yellow: "\x1b[33m",
+        red: "\x1b[31m",
+        blue: "\x1b[34m",
+        cyan: "\x1b[36m",
+    };
+
+    // Header
+    report.push(`${colors.bright}${"=".repeat(60)}${colors.reset}`);
+    report.push(
+        `${colors.bright}${colors.cyan}  Configuration Comparison Report${colors.reset}`,
+    );
+    report.push(`${colors.bright}${"=".repeat(60)}${colors.reset}\n`);
+
+    report.push(`${colors.dim}Previous:${colors.reset} ${prevVersion.uri}`);
+    report.push(
+        `${colors.dim}Current:${colors.reset}  ${currentVersion.uri}\n`,
+    );
+
+    // Summary
+    report.push(`${colors.bright}SUMMARY${colors.reset}`);
+    report.push(
+        `${colors.yellow}  🔄 Updated:${colors.reset} ${updatedObjects.length}`,
+    );
+    report.push(
+        `${colors.green}  ➕ Added:${colors.reset}   ${addedObjects.length}`,
+    );
+    report.push(
+        `${colors.red}  ➖ Removed:${colors.reset} ${removedObjects.length}\n`,
+    );
+
+    // Updated objects
+    if (updatedObjects.length) {
+        report.push(
+            `${colors.bright}${colors.yellow}UPDATED OBJECTS${colors.reset}`,
+        );
+        report.push(`${colors.dim}${"─".repeat(60)}${colors.reset}`);
+        for (const updatedObj of updatedObjects) {
+            const linkPrev = createLink(updatedObj.prevObject, prevVersion);
+            const linkCurrent = createLink(
+                updatedObj.currentObject,
+                currentVersion,
+            );
+            const objName = `${updatedObj.prevObject.type}: ${updatedObj.prevObject.identifier?.id}`;
+
+            report.push(`\n${colors.bright}${objName}${colors.reset}`);
+            report.push(
+                `  ${colors.dim}${createTerminalLink(linkPrev, "Previous")} → ${createTerminalLink(linkCurrent, "Current")}${colors.reset}`,
+            );
+
+            for (const attrDiff of updatedObj.attributeDiff) {
+                const prevVal = attrDiff.prevValue.join(", ");
+                const currVal = attrDiff.currentValue.join(", ");
+                report.push(
+                    `  ${colors.cyan}${attrDiff.name}: ${colors.reset}${colors.red}${prevVal}${colors.reset} -> ${colors.green}${currVal}${colors.reset}`,
+                );
+            }
+        }
+        report.push("");
+    }
+
+    // Added objects
+    if (addedObjects.length) {
+        report.push(
+            `${colors.bright}${colors.green}ADDED OBJECTS${colors.reset}`,
+        );
+        report.push(`${colors.dim}${"─".repeat(60)}${colors.reset}`);
+        for (const addedObj of addedObjects) {
+            const link = createLink(addedObj, currentVersion);
+            const objText = `${addedObj.type}: ${addedObj.identifier?.id}`;
+            const linkedText = createTerminalLink(link, objText);
+            report.push(
+                `  ${colors.green}+${colors.reset} ${colors.bright}${linkedText}${colors.reset}`,
+            );
+        }
+        report.push("");
+    }
+
+    // Removed objects
+    if (removedObjects.length) {
+        report.push(
+            `${colors.bright}${colors.red}REMOVED OBJECTS${colors.reset}`,
+        );
+        report.push(`${colors.dim}${"─".repeat(60)}${colors.reset}`);
+        for (const removedObj of removedObjects) {
+            const link = createLink(removedObj, prevVersion);
+            const objText = `${removedObj.type}: ${removedObj.identifier?.id}`;
+            const linkedText = createTerminalLink(link, objText);
+            report.push(
+                `  ${colors.red}─${colors.reset} ${colors.bright}${linkedText}${colors.reset}`,
+            );
+        }
+        report.push("");
+    }
+
+    report.push(`${colors.bright}${"=".repeat(60)}${colors.reset}`);
+    return report.join("\n");
+}
+
+function formatValue(value: string[]): string {
+    if (value.length === 1) {
+        return `\`${value[0]}\``;
+    }
+    return `\`${value.join(", ")}\``;
 }
 
 export function compareObjects(
