@@ -201,6 +201,10 @@ export class SepticAttribute extends SepticBase {
         this.values.push(value);
     }
 
+    setValues(values: SepticAttributeValue[]) {
+        this.values = values;
+    }
+
     updateEnd(): void {
         if (this.values.length) {
             this.end = this.values[this.values.length - 1]!.end;
