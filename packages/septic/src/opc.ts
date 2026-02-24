@@ -1,5 +1,5 @@
 import { SepticCnfg } from "./cnfg";
-import { SepticObject, SepticTokenType } from "./elements";
+import { SepticAttribute, SepticObject, SepticTokenType } from "./elements";
 import { createAttrValues, SepticObjectGenerator } from "./generator";
 
 // Type mappings between UA and Sopc object types
@@ -140,7 +140,6 @@ const SOPC_TO_UA_ATTR_MAP: Record<string, Record<string, string>> = {
         DvTrackTag: "yTracking",
     },
 };
-
 export function sopcToUA(obj: SepticObject): SepticObject {
     const uaType = SOPC_TO_UA_TYPE_MAP[obj.type];
     if (!uaType) {
@@ -154,20 +153,30 @@ export function sopcToUA(obj: SepticObject): SepticObject {
     for (const attr of obj.attributes) {
         const uaAttrName = attrMap[attr.key];
         if (uaAttrName) {
+            const value = getUAValue(attr);
             uaObj
                 .getAttribute(uaAttrName)
                 ?.setValues(
                     createAttrValues(
-                        [`"s=${attr.getFirstValue() || ""}"`],
+                        [value.length ? `"s=${value}"` : `""`],
                         SepticTokenType.string,
                     ),
                 );
         }
     }
-
     return uaObj;
 }
 
+function getUAValue(attr: SepticAttribute): string {
+    const value = attr.getFirstValue() || "";
+    if (
+        value.toLowerCase() === "dummy_tag" ||
+        value.toLowerCase() === "notused"
+    ) {
+        return "";
+    }
+    return value;
+}
 /**
  * Converts a UA object to a Sopc object
  * @param obj The UA object to convert
@@ -217,12 +226,13 @@ function sopcToUAProcAndAppl(sopcProc: SepticObject): SepticObject[] {
     const attrsMapUAAppl = SOPC_TO_UA_ATTR_MAP["SopcProcToUAAppl"] || {};
     for (const attr of sopcProc.attributes) {
         const uaProcAttr = attrsMapUAProc[attr.key];
+        const value = getUAValue(attr);
         if (uaProcAttr) {
             uaProc
                 .getAttribute(uaProcAttr)
                 ?.setValues(
                     createAttrValues(
-                        [`"s=${attr.getFirstValue() || ""}"`],
+                        [value.length ? `"s=${value}"` : `""`],
                         SepticTokenType.string,
                     ),
                 );
@@ -233,7 +243,7 @@ function sopcToUAProcAndAppl(sopcProc: SepticObject): SepticObject[] {
                 .getAttribute(uaApplAttr)
                 ?.setValues(
                     createAttrValues(
-                        [`"s=${attr.getFirstValue() || ""}"`],
+                        [value.length ? `"s=${value}"` : `""`],
                         SepticTokenType.string,
                     ),
                 );
