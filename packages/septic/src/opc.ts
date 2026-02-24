@@ -314,13 +314,13 @@ export function convertOPCObjects(
     const convertFn = direction === "sopc-to-ua" ? sopcToUA : uaToSopc;
     for (let i = 0; i < cnfg.objects.length; i++) {
         const obj = cnfg.objects[i]!;
-        if (obj.type == "SopcProc") {
+        if (obj.type == "SopcProc" && direction === "sopc-to-ua") {
             const uaObjects = sopcToUAProcAndAppl(obj);
             cnfg.objects.splice(i, 1, ...uaObjects);
             i += uaObjects.length - 1;
             continue;
         }
-        if (obj.type == "UAProc") {
+        if (obj.type == "UAProc" && direction === "ua-to-sopc") {
             const sopcProc = uaProcAndApplToSopc(obj, cnfg.objects[i + 1]!);
             if (sopcProc) {
                 cnfg.objects.splice(i, 2, sopcProc);
