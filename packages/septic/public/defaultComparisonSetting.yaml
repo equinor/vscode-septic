@@ -1,5 +1,7 @@
 ignoredVariables:
 ignoredObjectTypes:
+  - ImageStatusLabel
+  - Spacer
 ignoredAttributes:
   - objectName: Evr
     attributes:
