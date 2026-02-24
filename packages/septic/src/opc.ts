@@ -260,6 +260,18 @@ function uaProcAndApplToSopc(
     const sopcProc = generator.createObject(
         "SopcProc",
         uaAppl.identifier?.name || "",
+        [
+            {
+                key: "ServName",
+                type: SepticTokenType.string,
+                values: ['"Statoil.OPC.Server"'],
+            },
+            {
+                key: "Site",
+                type: SepticTokenType.string,
+                values: ["AIM_AIMGUI"],
+            },
+        ],
     );
 
     const attrsMapUAProc = UA_TO_SOPC_ATTR_MAP["UAProcToSopcProc"] || {};
