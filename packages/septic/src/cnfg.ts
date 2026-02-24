@@ -115,6 +115,9 @@ export class SepticCnfg implements SepticContext, TextDocument {
         return Promise.resolve();
     }
 
+    public toString(): string {
+        return this.objects.map((obj) => obj.toString()).join("\n");
+    }
     public get uri(): string {
         return this.doc.uri;
     }

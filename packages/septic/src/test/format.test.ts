@@ -202,3 +202,14 @@ describe("Test formatting", () => {
         compareFiles(expectedContent, formattedContent);
     });
 });
+
+describe("Test toString", () => {
+    it("Expect correct formatting of lists", () => {
+        const content = loadFile("formatting/toString.cnfg");
+        const doc = TextDocument.create("", "", 0, content);
+        const cnfg = parseSepticForTest(doc.getText());
+        const formattedContent = cnfg.toString();
+        const expectedContent = loadFile("formatting/toString.cnfg");
+        compareFiles(expectedContent, formattedContent);
+    });
+});
