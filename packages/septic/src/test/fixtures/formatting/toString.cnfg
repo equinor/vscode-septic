@@ -1,0 +1,71 @@
+  System:        SystemName
+         Text1=  ""
+         Text2=  ""
+         Nsecs=  10
+       PlotMax=  10
+         Nhist=  1440
+         Npred=  80
+         Nmodl=  80
+     ChngLogOn=  ON
+          Grps=  6
+                 "Test1"  "Test2"  "Test3"  "Test4"  "Test5"
+                 "Test6"
+       GrpLock=  0
+      MaxLogon=  ROOT
+       RootPwd=  ""
+       MngrPwd=  ""
+       OperPwd=  ""
+       UserPwd=  ""
+          Terr=  0
+       DebugNR=  1000
+       DebugOn=  00000000
+      FontSize=  -1
+  InitialGroup=  -1
+ShowText1WithName=  OFF
+       MinXPos=  0
+       MinYPos=  0
+       MaxXPos=  0
+       MaxYPos=  0
+    InitScreen=  -1
+      InitXPos=  -1
+      InitYPos=  -1
+     InitWidth=  -1
+    InitHeight=  -1
+MinimizeByHide=  OFF
+HideCloseButton=  OFF
+OPCSampleTimeOffset=  0
+  StepInterval=  0
+       AutoRun=  0
+ShowUpdateCounter=  ON
+
+  MPCAppl:       MPCApplName
+         Text1=  ""
+         Text2=  ""
+         Nhorz=  80
+         Npred=  80
+       FeasTol=  1e-10
+       FailMax=  0
+       DesMode=  STOPPED
+
+  Mvr:           MvrName
+         Text1=  ""
+         Text2=  ""
+          Mode=  STOPPED
+          Auto=  OFF
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+        MaxChg=  -1
+          Unit=  ""
+          Meas=  0
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+      Blocking=  6    2     4     7    11    16    22
+MeasValidation=  OFF
+ MeasHighLimit=  1e+10
+  MeasLowLimit=  -1e+10
+        LockHL=  OFF
+        LockIV=  OFF
+        LockLL=  OFF
+        PVPred=  OFF
