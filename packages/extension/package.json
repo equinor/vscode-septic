@@ -22,6 +22,11 @@
   ],
   "main": "./dist/extension",
   "contributes": {
+    "chatSkills": [
+      {
+        "path": "./skills/septic-language/SKILL.md"
+      }
+    ],
     "commands": [
       {
         "command": "septic.detectCycles",

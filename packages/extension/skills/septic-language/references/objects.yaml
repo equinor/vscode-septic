@@ -1,0 +1,374 @@
+- name: System
+  description: Description of system object
+  parents: []
+- name: DisplayGroup
+  description: Container-object for all display items in a view
+  parents:
+  - System
+- name: DmmyAppl
+  description: Dummy Application
+  parents:
+  - System
+- name: Event
+  description: Events/triggers for change of Septic parameters
+  parents:
+  - System
+- name: ExprProc
+  description: Experimental process, where the models are taken from the SmpcAppl
+    with same ID
+  parents:
+  - System
+- name: FdtaProc
+  description: Filedata process, playback or basecase comparison of data file, *.dta. If configured, the filename is taken from Path, else the id is used for filename
+  parents:
+  - System
+- name: MPCAppl
+  description: Septic MPC Application, MPCAppl version
+  parents:
+  - System
+- name: MasterTcip
+  description: Master TCIP
+  parents:
+  - System
+- name: Mdl4Proc
+  description: Nonlinear process, where the models are taken from the subr with same ID
+  parents:
+  - System
+- name: MsgBox
+  description: Message Box
+  parents:
+  - System
+- name: NMPCAppl
+  description: Description of Septic Nonlin MPC Application
+  parents:
+  - System
+- name: NoisProc
+  description: Simulate noise process
+  parents:
+  - System
+- name: RemoteTcip
+  description: RemoteTcip
+  parents:
+  - System
+- name: SmpcAppl
+  description: Description of Septic MPC Application
+  parents:
+  - System
+- name: SopcProc
+  description: SopcProc description
+  parents:
+  - System
+- name: SubrXvr
+  description: SubrXvr
+  parents:
+  - System
+- name: UAProc
+  description: UAProc handles the connection and interaction with the OPC UA server.
+  parents:
+  - System
+- name: WellProc
+  description: Nonlinear process, where the models are taken from the subr with same
+    ID
+  parents:
+  - System
+- name: multiphaseProc
+  description: Nonlinear process, where the models are taken from the subr with same
+    ID
+  parents:
+  - System
+- name: ApplPlot
+  description: Appl Plot
+  parents:
+  - DisplayGroup
+- name: BadXvrList
+  description: List of bad xvrs in application
+  parents:
+  - DisplayGroup
+- name: CalcModl
+  description: Calc Model
+  parents:
+  - DmmyAppl
+- name: CalcTable
+  description: Table of all calcs for indicated calc model
+  parents:
+  - DisplayGroup
+- name: Chart
+  description: Chart
+  parents:
+  - DisplayGroup
+- name: Cvr
+  description: Controlled Variable
+  parents:
+  - SmpcAppl
+  - MPCAppl
+  - NMPCAppl
+- name: Dvr
+  description: Disturbance Variable
+  parents:
+  - SmpcAppl
+  - MPCAppl
+  - NMPCAppl
+- name: Evr
+  description: Estimated/calculated Variable
+  parents:
+  - DmmyAppl
+  - SmpcAppl
+  - MPCAppl
+  - NMPCAppl
+- name: ExprModl
+  description: Experimental model in a MPC/SmpcAppl
+  parents:
+  - SmpcAppl
+  - MPCAppl
+  - NMPCAppl
+- name: Image
+  description: Image
+  parents:
+  - DisplayGroup
+- name: Mdl4Modl
+  description: Nonlinear model in a SmpcAppl or NMPCAppl
+  parents:
+  - SmpcAppl
+  - NMPCAppl
+- name: MessageView
+  description: Message View
+  parents:
+  - DisplayGroup
+- name: ModelMatrix
+  description: Model matrix between Mvrs/Dvrs and Cvrs
+  parents:
+  - DisplayGroup
+- name: ModelPlot
+  description: Plot model corresponding to Id, format cvr_mvr/dvr
+  parents:
+  - DisplayGroup
+- name: MultiXvrPlot
+  description: MultiXvrPlot, plot Meas from multiple Xvr in same plot. Cnfg wih optional
+    position and size if the group is gridded
+  parents:
+  - DisplayGroup
+- name: MultiphaseModel
+  description: Nonlinear model in an /SmpcAppl or NMPCAppl
+  parents:
+  - SmpcAppl
+  - NMPCAppl
+- name: Mvr
+  description: Manipulated Variable
+  parents:
+  - SmpcAppl
+  - MPCAppl
+  - NMPCAppl
+- name: NoisXvr
+  description: Noise variable
+  parents:
+  - NoisProc
+- name: OPCProcPlot
+  description: OPC Process Plot
+  parents:
+  - DisplayGroup
+- name: PriorityTable
+  description: Table of priority levels for cvrs and mvrs
+  parents:
+  - DisplayGroup
+- name: SampleTvr
+  description: Trend Variable for lab and online sampling values Has parameters that
+    are used by
+  parents:
+  - DmmyAppl
+- name: SopcChangeEvr
+  description: SopcChangeEvr
+  parents:
+  - SopcProc
+- name: SopcCvr
+  description: Control Variable OPC Connection
+  parents:
+  - SopcProc
+- name: SopcDvr
+  description: Disturbance variable OPC connection
+  parents:
+  - SopcProc
+- name: SopcEvr
+  description: Enviromental/Calculated Variable OPC Connection (Only Write)
+  parents:
+  - SopcProc
+- name: SopcMvr
+  description: Manipulated Variable OPC Connection
+  parents:
+  - SopcProc
+- name: SopcTvr
+  description: Trending variable OPC connection
+  parents:
+  - SopcProc
+- name: Svr
+  description: State Variable Use with subroutine model (SubrModl) for a variable
+    with nominal response calulated by the model. Transport mechanism to/from model
+    is identical to a Cvr
+  parents:
+  - SmpcAppl
+  - NMPCAppl
+- name: SystemPlot
+  description: SystemPlot
+  parents:
+  - DisplayGroup
+- name: Table
+  description: Defines table, setting parameters affecting all table configured as
+    children
+  parents:
+  - DisplayGroup
+- name: Tvr
+  description: Trend Variable Description
+  parents:
+  - DmmyAppl
+  - SmpcAppl
+  - MPCAppl
+  - NMPCAppl
+- name: UAAppl
+  description: Application OPC connection
+  parents:
+  - UAProc
+- name: UACvr
+  description: Control Variable (CV) OPC Connection
+  parents:
+  - UAProc
+- name: UADvr
+  description: Disturbance variable (DV) OPC connection
+  parents:
+  - UAProc
+- name: UAEvr
+  description: Enviromental/Calculated Variable (EV) OPC Connection
+  parents:
+  - UAProc
+- name: UAMvr
+  description: Manipulated Variable (MV) OPCUA Connection
+  parents:
+  - UAProc
+- name: UATvr
+  description: Trending variable (TV) OPC connection
+  parents:
+  - UAProc
+- name: WellModel
+  description: Nonlinear model in a SmpcAppl
+  parents:
+  - SmpcAppl
+  - NMPCAppl
+- name: XYPlot
+  description: XYPlot
+  parents:
+  - DisplayGroup
+- name: XvrMatrix
+  description: Matrix display for xvr values
+  parents:
+  - DisplayGroup
+- name: XvrPlot
+  description: XvrPlot cnfg wih optional position and size if the group is gridded
+  parents:
+  - DisplayGroup
+- name: Appl
+  description: Table appl
+  parents:
+  - Table
+- name: CalcPvr
+  description: Calculation
+  parents:
+  - CalcModl
+- name: ChartSerie
+  description: Chart Serie
+  parents:
+  - Chart
+- name: ColumnList
+  description: The Xvrs listed are placed in a new column to the right of the corresponding
+    XvrList The heading text is used as heading for the new column<br>
+  parents:
+  - Table
+- name: Curve
+  description: Curve
+  parents:
+  - XYPlot
+- name: CvrList
+  description: List of control variables with associated values
+  parents:
+  - Table
+- name: DvrList
+  description: List of disturbance variables with associated values
+  parents:
+  - Table
+- name: DynCurve
+  description: Dynamic Curve
+  parents:
+  - XYPlot
+- name: DynPoint
+  description: Dynamic Point (scatter plot)
+  parents:
+  - XYPlot
+- name: EvrList
+  description: List of environmental/calculated variables with associated values
+  parents:
+  - Table
+- name: FreeMeas
+  description: Present Meas of Xvr below the preceding element in a Table, adding
+    a new row to the table
+  parents:
+  - Table
+- name: FreeText
+  description: Present Text1/Text2 from a Xvr below the preceding element in a Table,
+    adding a new row to the table
+  parents:
+  - Table
+- name: Heading
+  description: Heading
+  parents:
+  - Table
+- name: ImageArea
+  description: Image Area
+  parents:
+  - Image
+- name: ImageMultiXvrPlot
+  description: MultiXvrPlot overlaid image
+  parents:
+  - Image
+- name: ImageStatusLabel
+  description: Image Status Label
+  parents:
+  - Image
+- name: ImageTextXvr
+  description: Image Text Xvr
+  parents:
+  - Image
+- name: ImageXvr
+  description: Xvr value overlaid on image
+  parents:
+  - Image
+- name: ImageXvrCollection
+  description: Collection of xvrs overlaid image
+  parents:
+  - Image
+- name: ImageXvrPlot
+  description: XvrPlot overlaid image. Name of object = Xvr to plot
+  parents:
+  - Image
+- name: ListMeas
+  description: Present Meas of Xvr below the preceding element in a Table, adding
+    a row to the table
+  parents:
+  - Table
+- name: MvrList
+  description: List of manipulated variables with associated values
+  parents:
+  - Table
+- name: SampleTvrList
+  description: List of sample based variables with associated values
+  parents:
+  - Table
+- name: Spacer
+  description: Spacer
+  parents:
+  - Table
+- name: TvrList
+  description: List of trend variables with associated values
+  parents:
+  - Table
+- name: XvrList
+  description: Defines list of xvrs to appear in a table. Interface def, not possible
+    to instantiate a XvrList
+  parents:
+  - Table
