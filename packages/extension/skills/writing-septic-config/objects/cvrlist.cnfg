@@ -1,0 +1,5 @@
+// List of control variables with associated values
+  CvrList:       CvrListName
+          Text=  ""
+          Cvrs=  1
+                 ""

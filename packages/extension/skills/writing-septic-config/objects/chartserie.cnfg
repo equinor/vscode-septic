@@ -1,0 +1,9 @@
+// Chart Serie
+  ChartSerie:    ChartSerieName
+         Color=  "black"
+          Text=  ""
+         Width=  1
+         Style=  Solid
+        Marker=  Cross
+        Values=  1
+                 "value"

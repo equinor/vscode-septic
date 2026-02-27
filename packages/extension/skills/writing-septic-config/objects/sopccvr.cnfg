@@ -1,0 +1,18 @@
+// Control Variable OPC Connection
+  SopcCvr:       SopcCvrName
+         Text1=  ""
+         Text2=  ""
+        CvrTag=  ""
+       MeasTag=  ".YX"
+         IdTag=  ""
+         SpTag=  ".YR"
+      CvLowTag=  "DUMMY_TAG"
+     CvHighTag=  "DUMMY_TAG"
+ CvSetpointTag=  "DUMMY_TAG"
+   NotValidTag=  ".YXF"
+   CvSwitchTag=  ".YADA"
+   CvActiveTag=  ".XAPC"
+         LoTag=  ".YWRL"
+         HiTag=  ".YWRH"
+         Scale=  1
+        Offset=  0

@@ -1,0 +1,10 @@
+// Trending variable OPC connection
+  SopcTvr:       SopcTvrName
+         Text1=  ""
+         Text2=  ""
+        TvrTag=  ""
+       MeasTag=  ".YX"
+   NotValidTag=  ".YXF"
+      Text1Tag=  ""
+         Scale=  1
+        Offset=  0

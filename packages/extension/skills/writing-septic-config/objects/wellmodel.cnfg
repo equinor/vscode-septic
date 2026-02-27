@@ -1,0 +1,8 @@
+// Nonlinear model in a SmpcAppl
+  WellModel:     WellModelName
+        Volume=  100
+        Height=  2000
+       Density=  700
+Compressibility=  500
+ProductionIndex=  8
+      StepSize=  0

@@ -1,0 +1,5 @@
+// Message Box
+  MsgBox:        MsgBoxName
+        MaxLvl=  4
+        MinLvl=  1
+           Obj=  ~

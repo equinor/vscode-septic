@@ -1,0 +1,14 @@
+// MultiXvrPlot, plot Meas from multiple Xvr in same plot. Cnfg wih optional position and size if the group is
+  gridded
+  MultiXvrPlot:  MultiXvrPlotName
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1
+         Title=  ""
+       PlotMax=  100
+       PlotMin=  0
+          Xvrs=  1
+                 ""
+        Colors=  1
+                 ""

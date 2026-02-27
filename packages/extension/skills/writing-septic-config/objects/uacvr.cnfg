@@ -1,0 +1,12 @@
+// Control Variable (CV) OPC Connection
+  UACvr:         UACvrName
+         xMeas=  ""
+     xNotValid=  ""
+xDesiredActive=  ""
+       yActive=  ""
+     xSetpoint=  ""
+    xHighLimit=  ""
+     xLowLimit=  ""
+     ySetpoint=  ""
+    yHighLimit=  ""
+     yLowLimit=  ""

@@ -1,0 +1,9 @@
+// Image Area
+  ImageArea:     ImageAreaName
+   TargetGroup=  1
+     LineWidth=  1
+         Color=  "black"
+       xPoints=  "4
+                 0   10  10  0"
+       yPoints=  "4
+                 20  20  40  40"

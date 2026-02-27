@@ -1,0 +1,6 @@
+// Table of all calcs for indicated calc model
+  CalcTable:     CalcTableName
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1

@@ -1,0 +1,15 @@
+// UAProc handles the connection and interaction with the OPC UA server.
+  UAProc:        UAProcName
+     ServerURL=  "opc.tcp://localhost:4840"
+        yPulse=  ""
+      UserName=  ""
+      Password=  ""
+  SecurityMode=  UA_MESSAGESECURITYMODE_SIGN
+DefaultNameSpaceURI=  ""
+credentialsPath=  ""
+useSubscription=  OFF
+monitorItemFilterTrigger=  UA_DATACHANGETRIGGER_STATUSVALUE
+       RunMenu=  OFF
+     xSchedule=  ""
+      ySimTime=  ""
+writeOnChangeOnly=  OFF

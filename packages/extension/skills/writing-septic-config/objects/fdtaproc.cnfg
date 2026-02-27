@@ -1,0 +1,8 @@
+// Filedata process, playback or basecase comparison of data file, *.dta
+  If configured, the filename is taken from Path, else the id is used for filename
+  FdtaProc:      FdtaProcName
+         Text1=  ""
+         Text2=  ""
+          Mode=  Playback
+       SkipEvr=  OFF
+         Nstep=  1

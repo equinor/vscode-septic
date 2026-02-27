@@ -1,0 +1,4 @@
+// Simulate noise process
+  NoisProc:      NoisProcName
+         Text1=  ""
+         Text2=  ""

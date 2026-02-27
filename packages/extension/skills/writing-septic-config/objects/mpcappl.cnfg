@@ -1,0 +1,9 @@
+// Septic MPC Application, MPCAppl version
+  MPCAppl:       MPCApplName
+         Text1=  ""
+         Text2=  ""
+         Nhorz=  80
+         Npred=  80
+       FeasTol=  1e-10
+       FailMax=  0
+       DesMode=  STOPPED

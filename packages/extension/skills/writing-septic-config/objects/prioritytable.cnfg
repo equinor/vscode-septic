@@ -1,0 +1,6 @@
+// Table of priority levels for cvrs and mvrs
+  PriorityTable:  PriorityTableName
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1

@@ -1,0 +1,2 @@
+// Defines list of xvrs to appear in a table. Interface def, not possible to instantiate a XvrList
+  XvrList:       XvrListName
