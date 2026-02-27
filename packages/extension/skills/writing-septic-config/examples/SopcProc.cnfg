@@ -1,0 +1,88 @@
+// Example of the typical SopcProc file showcasing the different objects that are used
+
+{% import "../MyApplication.j2" as globals %}
+  SopcProc:      MyApplication
+         Text1=  ""
+         Text2=  ""
+          Site=  AIM_AIMGUI
+      ServName=  {{ '"Cogent.DataHub.1"' if final else '"Statoil.OPC.Server"' }}
+      ServNode=  "SERVNODE"
+   RealTimeFac=  1
+       ProcTag=  ""
+AllowActiveTag=  "{{ globals.main_switch_tag }}"
+     StatusTag=  "NotUsed"
+    DesModeTag=  "NotUsed"
+       PulsTag=  "{{ globals.puls_tag }}"
+LoopcheckWriteTag=  "NotUsed"
+LoopcheckReadTag=  "NotUsed"
+ ServFactorTag=  "NotUsed"
+    CPUTimeTag=  "DUMMY_TAG"
+         IdTag=  ""
+   ScheduleTag=  {{ '"DUMMY_TAG"' if final else '"' + globals.schedule_tag + '"' }}
+        RunSec=  -1
+   RequestRate=  -1
+ BadCountLimit=  0
+SampleAgeLimit=  -1
+BlockWritingIfBad=  OFF
+   WriteGroups=  1
+WriteGroupPause=  10
+
+  SopcMvr:       MvrName
+         Text1=  "MvrTag"
+         Text2=  ""
+        MvrTag=  ""
+       MeasTag=  "MvrTag.YXSP"
+         PVTag=  "MvrTag.YX"
+         IdTag=  ""
+   NotValidTag=  "MvrTag.YXF"
+     SpCalcTag=  "MvrTag.XOUT"
+         HiTag=  "MvrTag.YWRH"
+         LoTag=  "MvrTag.YWRL"
+         IvTag=  "MvrTag.YR"
+      MvLowTag=  "NotUsed"
+     MvHighTag=  "NotUsed"
+       MvIvTag=  "NotUsed"
+      MaxUpTag=  ""
+    MaxDownTag=  ""
+       AutoTag=  "MvrTag.YBA"
+        WhiTag=  "MvrTag.YXWH"
+        WloTag=  "MvrTag.YXWL"
+       CompTag=  "MvrTag.YADA"
+       CaraTag=  "NotUsed"
+       TrakTag=  "NotUsed"
+     ToCompTag=  "NotUsed"
+    ToLocalTag=  "NotUsed"
+   MvActiveTag=  "MvrTag.XAPC"
+   MvSwitchTag=  "MvrTag.YADA"
+         Scale=  1
+        Offset=  0
+
+  SopcTvr:       TvrName
+         Text1=  ""
+         Text2=  ""
+        TvrTag=  ""
+       MeasTag=  "TvrTag.YWCU"
+   NotValidTag=  "DUMMY_TAG"
+      Text1Tag=  ""
+         Scale=  1
+        Offset=  0
+
+  SopcEvr:       EvrName
+         Text1=  ""
+         Text2=  ""
+        EvrTag=  ""
+       MeasTag=  "EvrTag.YX"
+         IdTag=  ""
+   NotValidTag=  "EvrTag.YXF"
+
+  SopcDvr:       DvrName
+         Text1=  ""
+         Text2=  ""
+        DvrTag=  ""
+       MeasTag=  "DvrTag.YX"
+         IdTag=  ""
+   NotValidTag=  "DvrTag.YXF"
+   DvSwitchTag=  "DUMMY_TAG"
+    DvTrackTag=  "DUMMY_TAG"
+         Scale=  1
+        Offset=  0

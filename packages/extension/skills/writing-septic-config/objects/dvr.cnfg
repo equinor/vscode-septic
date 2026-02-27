@@ -1,0 +1,17 @@
+// Disturbance Variable
+  Dvr:           DvrName
+         Text1=  ""
+         Text2=  ""
+          Mode=  STOPPED
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+          Unit=  ""
+          Meas=  0
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+MeasValidation=  OFF
+ MeasHighLimit=  1e+10
+  MeasLowLimit=  -1e+10

@@ -7,7 +7,6 @@ import * as vscode from "vscode";
 import * as protocol from "./protocol";
 import * as path from "path";
 import { LanguageClient } from "vscode-languageclient/node";
-import { generateCalc } from "./lm";
 import {
     ApplicationTreeItem,
     ApplicationTreeItemType,
@@ -385,22 +384,6 @@ export function registerCommandMakeConfig() {
     );
 }
 
-export function registerCommandGenerateCalc(
-    context: vscode.ExtensionContext,
-    client: LanguageClient,
-) {
-    vscode.commands.registerCommand(
-        "septic.generateCalc",
-        async (
-            description: string,
-            start: vscode.Position,
-            end: vscode.Position,
-        ) => {
-            generateCalc(client, description, start, end);
-        },
-    );
-}
-
 export function registerCommandPlotModel() {
     vscode.commands.registerCommand(
         "septic.plotModel",
@@ -430,7 +413,7 @@ export function registerCommandGetFunctions(
         });
         if (!functions || !functions.length) {
             vscode.window.showInformationMessage(
-                "Functions found in this file.",
+                "No functions found in this file.",
             );
             return;
         }
@@ -471,7 +454,6 @@ export function registerCommands(
     registerCommandDetectCycles(context, client);
     registerCommandCompareCnfg(context, client);
     registerCommandOpcTagList(context, client);
-    registerCommandGenerateCalc(context, client);
     registerCommandAddTemplate(applicationTreeProvider);
     registerCommandRemoveTemplate(applicationTreeProvider);
     registerCommandRenameTemplate(applicationTreeProvider);

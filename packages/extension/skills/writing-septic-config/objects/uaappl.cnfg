@@ -1,0 +1,5 @@
+// Application OPC connection
+  UAAppl:        UAApplName
+  xAllowActive=  ""
+  xDesiredMode=  ""
+       yStatus=  ""

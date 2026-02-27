@@ -1,0 +1,4 @@
+// Enviromental/Calculated Variable (EV) OPC Connection
+  UAEvr:         UAEvrName
+         yMeas=  ""
+     yNotValid=  ""

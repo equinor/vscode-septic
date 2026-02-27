@@ -1,0 +1,10 @@
+// Defines table, setting parameters affecting all table configured as children
+  Table:         TableName
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1
+   NameColSize=  -1
+   TextColSize=  -1
+  ValueColSize=  -1
+ GroupsColSize=  -1

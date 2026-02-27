@@ -1,0 +1,6 @@
+// Present Text1/Text2 from a Xvr below the preceding element in a Table, adding a new row to the table
+  FreeText:      FreeTextName
+       Heading=  ""
+        TextNo=  1
+        ColPos=  -1
+    SizeOffset=  0

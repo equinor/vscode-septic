@@ -1,0 +1,4 @@
+// Trending variable (TV) OPC connection
+  UATvr:         UATvrName
+         xMeas=  ""
+     xNotValid=  ""

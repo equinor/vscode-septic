@@ -1,0 +1,6 @@
+// XvrPlot cnfg wih optional position and size if the group is gridded
+  XvrPlot:       XvrPlotName
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1

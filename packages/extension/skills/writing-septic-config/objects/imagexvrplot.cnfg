@@ -1,0 +1,6 @@
+// XvrPlot overlaid image. Name of object = Xvr to plot
+  ImageXvrPlot:  ImageXvrPlotName
+            X1=  -1
+            Y1=  -1
+            X2=  -1
+            Y2=  -1

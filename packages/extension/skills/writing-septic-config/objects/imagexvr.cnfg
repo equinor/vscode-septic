@@ -1,0 +1,7 @@
+// Xvr value overlaid on image
+  ImageXvr:      ImageXvrName
+BackgroundColor=  "white"
+            X1=  -1
+            Y1=  -1
+            X2=  -1
+            Y2=  -1
