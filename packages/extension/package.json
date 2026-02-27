@@ -24,7 +24,7 @@
   "contributes": {
     "chatSkills": [
       {
-        "path": "./skills/septic-language/SKILL.md"
+        "path": "./skills/writing-septic-config/SKILL.md"
       }
     ],
     "commands": [
