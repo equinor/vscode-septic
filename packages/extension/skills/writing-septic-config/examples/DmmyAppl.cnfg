@@ -1,0 +1,124 @@
+// Example of a typical DmmyAppl file. Usually contains Evr objects for storing calculation results, Tvr objects for external measurements the relevant calculations and a set of calculations consisting of CalcModl and several CalcPvr objects. The calculations are performed prior to the main MPC calculations and can be used to prepare variables, perform intermediate calculations, or implement custom logic that is needed for the MPC application. 
+  DmmyAppl:      DmmyAppl
+         Text1=  ""
+         Text2=  ""
+         Nstep=  1
+       PlotMax=  25
+       DesMode=  ACTIVE
+
+  Tvr:           TvrName
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+          Unit=  ""
+          Meas=  0
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+MeasValidation=  OFF
+ MeasHighLimit=  1e+10
+  MeasLowLimit=  -1e+10
+         Color=  BLACK
+
+  Evr:           N
+         Text1=  "Num samples run"
+         Text2=  ""
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  0
+          Unit=  ""
+       GrpMask=  0000000000000000000000000000000
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+          Meas=  0
+     UserInput=  OFF
+    UserAccess=  WRRR
+      MinInput=  0
+      MaxInput=  0
+ValidationLimit=  -1
+         Color=  BLACK
+
+  Evr:           ST
+         Text1=  "Sample time [s]"
+         Text2=  ""
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  0
+          Unit=  ""
+       GrpMask=  0000000000000000000000000000000
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+          Meas=  10
+     UserInput=  OFF
+    UserAccess=  WRRR
+      MinInput=  0
+      MaxInput=  0
+ValidationLimit=  -1
+         Color=  BLACK
+
+  Evr:           SPH
+         Text1=  "Samples per hour"
+         Text2=  ""
+       PlotMax=  400
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  0
+          Unit=  ""
+       GrpMask=  0000000000000000000000000000000
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+          Meas=  360
+     UserInput=  OFF
+    UserAccess=  WRRR
+      MinInput=  0
+      MaxInput=  0
+ValidationLimit=  -1
+         Color=  BLACK
+
+  Evr:           SPM
+         Text1=  "Samples per minute"
+         Text2=  ""
+       PlotMax=  10
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  0
+          Unit=  ""
+       GrpMask=  0000000000000000000000000000000
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+          Meas=  6
+     UserInput=  OFF
+    UserAccess=  WRRR
+      MinInput=  0
+      MaxInput=  0
+ValidationLimit=  -1
+         Color=  BLACK
+
+  CalcModl:      StatusCalcs
+         Text1=  ""
+         Text2=  ""
+
+  CalcPvr:       N
+         Text1=  "Num samples run"
+         Text2=  ""
+           Alg=  "getappln()"
+
+  CalcPvr:       ST
+         Text1=  "Sample time [s]"
+         Text2=  ""
+           Alg=  "getapplnsecs()"
+
+  CalcPvr:       SPH
+         Text1=  "Samples per hour"
+         Text2=  ""
+           Alg=  "3600/ST"
+
+  CalcPvr:       SPM
+         Text1=  "Samples per minute"
+         Text2=  ""
+           Alg=  "60/ST"
