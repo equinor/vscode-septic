@@ -1,3 +1,4 @@
+// Example configuration for calculating a deadband around a pressure measurement 
   System:        SystemName
 
   DmmyAppl:      DmmyApplName
@@ -25,6 +26,11 @@
          Text1=  ""
          Text2=  ""
            Alg=  "timeron(abs(Pressure - PressureSteadyState) < PressureDeadbandSize, SPM)"
+
+  CalcPvr:       SetPressureDynFulf
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setfulfdynscale(Pressure, if(PressureInDeadband, 0, 1))"
 
   MPCAppl:       MPCApplName
 

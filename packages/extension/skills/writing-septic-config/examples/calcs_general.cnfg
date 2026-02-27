@@ -1,0 +1,105 @@
+// This is an general example of how to write Septic calculations. The calculations are independent of each other and declaration of referenced variables are left out.  
+  CalcModl:      General
+         Text1=  ""
+         Text2=  ""
+
+// Use of basic operators
+  CalcPvr:       ChokeEstQw
+         Text1=  ""
+         Text2=  ""
+           Alg=  "ChokeEstQo * ChokeEstWC/(1-ChokeEstWC)"
+
+  CalcPvr:       Test
+         Text1=  ""
+         Text2=  ""
+           Alg=  "Test1 + Test * Pressure/(1-Temperature)"
+
+  CalcPvr:       {{ Wellname }}PdhDbSize
+         Text1=  ""
+         Text2=  ""
+           Alg=  "max(0.2, 0.8*abs(modget({{ Wellname }}Pdh, {{ Wellname }}Zpc))*{{ Wellname }}StepSize)"
+
+// Use of if statements
+  CalcPvr:       {{ Wellname }}RampDir
+         Text1=  ""
+         Text2=  ""
+           Alg=  "if(({{ Wellname }}PdhSteadyState - {{Wellname}}Pdh) > -0.01, 1, -1)"
+
+  CalcPvr:       ModelUpdate
+         Text1=  ""
+         Text2=  ""
+           Alg=  "ifelif(timeron(ModelUpdate, 3), 0, N == 1, 1, ModelUpdate)"
+
+// Use of logical operators
+  CalcPvr:       {{ Wellname }}ZpcInDb
+         Text1=  ""
+         Text2=  ""
+           Alg=  "and({{Wellname}}IsActive, abs({{ Wellname }}Zpc - {{Wellname}}ZpcSS) <= 0.5)"
+
+  CalcPvr:       ZglOutside
+         Text1=  ""
+         Text2=  ""
+           Alg=  "and(GLActive, or(Zgl > Zgl.High, not(Zgl < Zgl.Low)))"
+
+// Set values type of calculations
+  CalcPvr:       {{ Wellname }}SetZpcOperatorLow
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setlow({{ Wellname }}Zpc, clamp({{ Wellname }}Zpc.Low, ChokeMinPos, ChokeMaxPos-1))"
+
+  CalcPvr:       {{Linename}}SetSetPntQo
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setsetpnt({{ Linename }}Qo, if({{ Linename }}InTest, {{Linename}}QoStartTest, {{ Linename }}Qo.SetPnt))"
+
+  CalcPvr:       {{ SeperatorName }}SetQo
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setmeas({{ SeperatorName }}Qo, {{ SeperatorName }}QoSumOfWells)"
+
+  CalcPvr:       ActivateZpcDV
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setmode(ZpcDV, if(getmode(Zpc)>0.5,3,0))"
+
+  CalcPvr:       {{ Wellname }}SetZglMovePen
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setmovepnlty({{ Wellname }}Zgl, if(or({{ Wellname }}AlternState == 2, {{ Wellname }}AlternState == 3), {{ Wellname }}ZglDynMvPnlty, 1000))"
+
+// Use of get functions
+  CalcPvr:       GLActive
+         Text1=  ""
+         Text2=  ""
+           Alg=  "getfinalstatus(Zgl) > 2"
+
+  CalcPvr:       {{ Wellname }}ZglSS
+         Text1=  ""
+         Text2=  ""
+           Alg=  "filt(getssval({{ Wellname }}Zgl), 1)"
+
+// Use of functions
+  CalcPvr:       {{Wellname}}QoMPFMFilt
+         Text1=  ""
+         Text2=  ""
+           Alg=  "filt({{Wellname}}QoMPFMQC, {{Wellname}}QoFiltTime)"
+
+  CalcPvr:       {{ Wellname }}ChokeEstCV
+         Text1=  ""
+         Text2=  ""
+           Alg=  "intpoltype1({{Wellname}}ChokeEstZpc+{{Wellname}}ChokeEstCVOffset,0,0,15,0,15.1,0.8,30,25,40,40,70,115,80,137,90,149,100,155)"
+
+  CalcPvr:       {{ Wellname }}SetPdhZpcGain
+         Text1=  ""
+         Text2=  ""
+           Alg=  "modset({{ Wellname }}Pdh, {{ Wellname }}Zpc, {{ Wellname }}ZpcGainSched/{{ GainSchedScale }}, 1)"
+
+  CalcPvr:       {{ Wellname }}QoStartTest
+         Text1=  ""
+         Text2=  ""
+           Alg=  "if(delta({{ Wellname }}InTest) > 0.5, moveavg({{ Wellname }}Qo.Meas, 10*SPM), {{Wellname}}QoStartTest)"
+
+  CalcPvr:       {{ Wellname }}QoFreeChokeMax
+         Text1=  ""
+         Text2=  ""
+           Alg=  "modget({{ Wellname }}Qo,{{ Wellname }}Zpc)*({{ Wellname }}Zpc.High - {{ Wellname }}Zpc.ProcessValue)"
