@@ -74,6 +74,7 @@ When you have multiple similar equipment (e.g., wells) that require similar conf
 
 - **General use of calculations**: [examples/calcs.cnfg](./examples/calcs_general.cnfg) demonstrates various CalcPvr objects with different types of expressions, including use of functions and referencing other variables.
 - **Implementation of deadband**: [examples/calc_deadband.cnfg](./examples/calcs_deadband.cnfg) shows how to implement a deadband using CalcPvr and logical expressions.
+- **Implementation of a state machine**: [examples/calcs_statemachine.cnfg](./examples/calcs_statemachine.cnfg) demonstrates how to implement a state machine using calculations in a DmmyAppl, where the current state is determined based on defined transitions and can be used in other calculations.
 
 ### Layouts of configuration files
 

@@ -1,0 +1,258 @@
+// Example of implementation of a state machine using calculations in a DmmyAppl. The state machine logic is implemented using a set of CalcPvr objects that determine the current state based on the defined transitions. The current state can then be used in other calculations, for example to implement conditional tuning or to disable certain functionality when in specific states. New states and transtions can be easily added by following the existing structure.
+  DmmyAppl:      {{ Wellname}}Appl
+         Text1=  ""
+         Text2=  ""
+         Nstep=  1
+       PlotMax=  25
+       DesMode=  ACTIVE
+
+// State Machine {{ Wellname }}
+  Evr:           {{Wellname}}State
+         Text1=  "{{ Wellname }} - Current State"
+         Text2=  ""
+       PlotMax=  100
+       PlotMin=  0
+          Nfix=  1
+
+  Evr:           {{Wellname}}IntermediateState
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  100
+       PlotMin=  0
+          Nfix=  1
+
+  Evr:           {{Wellname}}StateMapped
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  10
+       PlotMin=  0
+          Nfix=  1
+
+  Evr:           {{Wellname}}ToStateCount
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  10
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}ToState10
+         Text1=  "State: Inactive"
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}ToState30
+         Text1=  "State: Activation"
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}ToState51
+         Text1=  "State: Ramp Active"
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}ToState52
+         Text1=  "State: Ramp Behind"
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}ToState53
+         Text1=  "State: Ramp Ahead"
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}ToState61
+         Text1=  "State: Operative Active"
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}ToState62
+         Text1=  "State: Operative Deadband"
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}TransitionAllTo10
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}Transition10To30
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}Transition30To51
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}Transition51To52
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}Transition51To53
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}Transition52To51
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}Transition53To51
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}Transition51To61
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}Transition61To62
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}Transition62To61
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  Evr:           {{Wellname}}Transition61To51
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  1.1
+       PlotMin=  0
+          Nfix=  0
+
+  CalcModl:      {{ Wellname }}Calcs
+         Text1=  ""
+         Text2=  ""
+
+// Other calculations are left out for simplicity, but typically there will be multiple calculations for preparing the variables needed for the state machine logic
+  CalcPvr:       {{Wellname}}TransitionAllTo10
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setgood(and(not({{Wellname}}State == 10), not({{Wellname}}IsActive)))"
+
+  CalcPvr:       {{Wellname}}Transition10To30
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setgood(and({{Wellname}}State == 10, {{Wellname}}IsActive))"
+
+  CalcPvr:       {{Wellname}}Transition30To51
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setgood(and({{Wellname}}State == 30, {{Wellname}}IsActive, {{Wellname}}Zpc.Meas >= {{Wellname}}Zpc.Low))"
+
+  CalcPvr:       {{Wellname}}Transition51To61
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setgood(and({{Wellname}}State == 51, {{Wellname}}IsActive, abs({{Wellname}}Pdh - {{ Wellname }}PdhSteadyState) < {{ Wellname }}PdhRampLimit - {{ Wellname }}PdhHysteresis))"
+
+  CalcPvr:       {{Wellname}}Transition61To51
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setgood(and({{Wellname}}State == 61, {{Wellname}}IsActive, abs({{Wellname}}Pdh - {{ Wellname }}PdhSteadyState) > {{ Wellname }}PdhRampLimit))"
+
+  CalcPvr:       {{Wellname}}Transition61To62
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setgood(and({{Wellname}}State == 61, {{Wellname}}IsActive, {{Wellname}}PdhStableInDb))"
+
+  CalcPvr:       {{Wellname}}Transition62To61
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setgood(and({{Wellname}}State == 62, {{Wellname}}IsActive, not({{Wellname}}PdhStableInDb)))"
+
+  CalcPvr:       {{Wellname}}ToState10
+         Text1=  "State: Inactive"
+         Text2=  ""
+           Alg=  "{{Wellname}}TransitionAllTo10"
+
+  CalcPvr:       {{Wellname}}ToState30
+         Text1=  "State: Activation"
+         Text2=  ""
+           Alg=  "or({{Wellname}}Transition10To30)"
+
+  CalcPvr:       {{Wellname}}ToState51
+         Text1=  "State: Ramp Active"
+         Text2=  ""
+           Alg=  "or({{Wellname}}Transition30To51, {{Wellname}}Transition61To51)"
+
+  CalcPvr:       {{Wellname}}ToState61
+         Text1=  "State: Operative Active"
+         Text2=  ""
+           Alg=  "or({{Wellname}}Transition51To61, {{Wellname}}Transition62To61)"
+
+  CalcPvr:       {{Wellname}}ToState62
+         Text1=  "State: Operative Deadband"
+         Text2=  ""
+           Alg=  "{{Wellname}}Transition61To62"
+
+  CalcPvr:       {{Wellname}}ToStateCount
+         Text1=  "Count the number of active transitions to states"
+         Text2=  ""
+           Alg=  "{{Wellname}}ToState10  + {{Wellname}}ToState30 + {{Wellname}}ToState51  + {{Wellname}}ToState61 + {{Wellname}}ToState62"
+
+  CalcPvr:       {{Wellname}}DisableChokeIfMultipleStates
+         Text1=  "Disable the choke if there are multiple to states active at the same time"
+         Text2=  ""
+           Alg=  "setmode({{ Wellname }}Zpc, if({{Wellname}}ToStateCount > 1, min(1, getmode({{Wellname}}Zpc)), getmode({{Wellname}}Zpc)))"
+
+  CalcPvr:       {{Wellname}}IntermediateState
+         Text1=  "Find the next active state"
+         Text2=  ""
+           Alg=  "max({{Wellname}}ToState10*10, {{Wellname}}ToState30*30, {{Wellname}}ToState51*51, {{Wellname}}ToState52*52, {{Wellname}}ToState53*53, {{Wellname}}ToState61*61, {{Wellname}}ToState62*62)"
+
+  CalcPvr:       {{Wellname}}State
+         Text1=  "Current state of the state machine"
+         Text2=  ""
+           Alg=  "setgood(if({{Wellname}}IntermediateState > 0, {{Wellname}}IntermediateState, {{Wellname}}State))"
+
+  CalcPvr:       {{Wellname}}StateMapped
+         Text1=  ""
+         Text2=  ""
+           Alg=  "intpoltype1({{ Wellname }}State, 10.1, 0, 29.9, 1, 50.9, 2, 51.9, 3, 52.9, 4, 60.9, 5, 61.9, 6)"
+
+// Using the state in calculations
+  CalcPvr:       {{Wellname}}PdhSetFulf
+         Text1=  "Update the Pdh fulf based on current state"
+         Text2=  ""
+           Alg=  "setfulfdynscale({{Wellname}}Pdh, if({{Wellname}}State == 62, 0,  1))"
