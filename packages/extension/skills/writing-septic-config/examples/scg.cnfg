@@ -1,0 +1,65 @@
+// Examples of how SCG/Jinja2 is used in config files. Asumes that all sources are defined in the SCG config file (.yaml)
+
+
+// Conditional logic
+// Conditional attriute value
+
+  Evr:           Temperature
+         Text1=  ""
+          Meas=  {{ TempInit if sim else 0 }}
+
+// Conditional object creation
+{% if Producer %}
+  Evr:           TempInit
+         Text1=  ""
+          Meas=  100
+{% endif %}
+
+// For loops
+// Creating multiple variables
+{% for Wellname in wells | unpack("Wellname") %}
+  Tvr:           {{ Wellname }}Temperature
+         Text1=  ""
+          Meas=  0
+
+{% endfor %}
+
+// Setting attriute values based on for loop
+  XvrMatrix:     AUTOWELL
+           Row=  4
+           Col=  1
+       RowSize=  7
+       ColSize=  2
+       Heading=  "Downhole Pressure"
+        ColIds=  3
+                 "Setpoint"  "Meas"  "High"
+        RowIds=  {{ wells | length}}  {# noqa: E301 #}
+                 {%- for Wellname in wells|unpack("Wellname") %}"{{Wellname}}" {% endfor %}
+          Xvrs=  {{ 3 * wells|length}}  {# noqa: E301 #}
+              {%- for Wellname in wells | unpack("Wellname") %}
+                 {{ Wellname }}PdhSP {{ Wellname }}PdhY {{ Wellname }}PdhHigh
+              {% endfor %}
+
+// Filtering of SCG-source in for loop
+{% for Wellname in wells | selectattr(Linename, 'eq', 1) | unpack('Wellname') %}
+  CalcPvr:       {{ Linename }}Add{{Wellname}}Rate
+         Text1=  "Add swing well capacity up if it is active and not upper constrained"
+         Text2=  ""
+           Alg=  "setmeas({{ Linename }}Total, {{ Linename }}Total + {{ Wellname }}Rate)"
+
+{% endfor %}
+
+// Inline in calculations
+  CalcPvr:       {{ Flowline }}TotalCv
+         Text1=  "Total Cv for both topside chokes"
+         Text2=  ""
+           Alg=  "{% for Topline in toplines | selectattr('Flowline', 'eq', Flowline) | unpack('Topline') %}{{ Topline }}ChokeCv{% if not loop.last %} + {% endif %}{% endfor %}"
+
+// Using multiple parameters from one file
+{% for Wellname, StepSize in wells | unpack('Wellname', 'StepSize') %}
+  CalcPvr:       {{ Wellname }}PdhDbSize
+         Text1=  ""
+         Text2=  ""
+           Alg=  "max(0.2, 0.8*abs(modget({{ Wellname }}Pdh, {{ Wellname }}Zpc))*{{ StepSize }})"
+
+{% endfor %}
