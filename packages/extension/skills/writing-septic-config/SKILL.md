@@ -84,6 +84,10 @@ When you have multiple similar equipment (e.g., wells) that require similar conf
 - **DmmyApplPost layout**: [examples/dmmyapplpost.cnfg](./examples/DmmyApplPost.cnfg) shows the typical layout of a DmmyApplPost file, which contains calculations that are performed after the main MPC calculations.
 - **DisplayGroup layout**: [examples/DspGroup.cnfg](./examples/DspGroup.cnfg) shows example layout of a DisplayGroup file, which contains configuration for the HMI (plotting of variables, tables, etc.).
 
+### SCG
+
+- **SCG/Jinja2 in templates**: [examples/scg.cnfg](./examples/scg.cnfg) shows examples of how to use SCG/Jinja2 syntax in SCG templates for generating Septic config files.
+
 ## Guidelines
 
 ### 1. Naming Conventions
@@ -115,6 +119,7 @@ When you have multiple similar equipment (e.g., wells) that require similar conf
 - Validate template output before deployment
 - Use descriptive variable names in templates
 - Add comments explaining template logic
+- Check examples of SCG/Jinja2 syntax in the `examples/` directory when writing in templates
 
 ## Code Completion Hints
 
