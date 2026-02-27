@@ -1,0 +1,14 @@
+// Container-object for all display items in a view
+  DisplayGroup:  DisplayGroupName
+       GroupNo=  1
+        Locked=  OFF
+          Rows=  -1
+          Cols=  -1
+         xGrid=  OFF
+         yGrid=  OFF
+         xAxis=  OFF
+         yAxis=  ON
+     Autoscale=  OFF
+     Spanscale=  OFF
+      HistSize=  -1
+      PredSize=  -1

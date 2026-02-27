@@ -1,0 +1,8 @@
+// Dummy Application
+  DmmyAppl:      DmmyApplName
+         Text1=  ""
+         Text2=  ""
+         Nstep=  1
+       PlotMax=  25
+       DesMode=  ACTIVE
+     IterEachN=  1

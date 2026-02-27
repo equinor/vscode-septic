@@ -65,6 +65,7 @@ When you have multiple similar equipment (e.g., wells) that require similar conf
 
 ## Examples
 
+- **Objects** - [/objects](./objects/) contains examples of different object types and their attributes. Files are named `{objecttype}.cnfg` (lower case object type) and should be read before creating an instance of that particular object type.
 - **General use of calculations**: [examples/calcs.cnfg](./examples/calcs_general.cnfg) demonstrates various CalcPvr objects with different types of expressions, including use of functions and referencing other variables.
 - **Implementation of deadband**: [examples/calc_deadband.cnfg](./examples/calcs_deadband.cnfg) shows how to implement a deadband using CalcPvr and logical expressions.
 

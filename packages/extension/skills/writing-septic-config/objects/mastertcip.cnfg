@@ -1,0 +1,9 @@
+// Master TCIP
+  MasterTcip:    MasterTcipName
+    MasterPort=  12030
+        InitOn=  ON
+        HistOn=  ON
+        ModlOn=  ON
+    BufferSize=  64512
+    WriteHosts=  1
+                 "127.0.0.1"

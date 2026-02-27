@@ -1,0 +1,8 @@
+// Dynamic Point (scatter plot)
+  DynPoint:      DynPointName
+         Color=  "black"
+          Text=  ""
+         Width=  1
+      HistSize=  -1
+          xXvr=  "xXvr"
+          yXvr=  "yXvr"

@@ -1,0 +1,8 @@
+// Image Text Xvr
+  ImageTextXvr:  ImageTextXvrName
+     TextColor=  "black"
+BackgroundColor=  "white"
+            X1=  -1
+            Y1=  -1
+            X2=  -1
+            Y2=  -1

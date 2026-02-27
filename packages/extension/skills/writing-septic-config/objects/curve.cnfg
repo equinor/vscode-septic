@@ -1,0 +1,8 @@
+// Curve
+  Curve:         CurveName
+         Color=  ":black"
+          Text=  ""
+         Width=  1
+       xPoints=  1  
+       yPoints=  1  
+         Style=  Solid

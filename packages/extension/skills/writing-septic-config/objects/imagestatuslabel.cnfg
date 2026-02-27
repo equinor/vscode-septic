@@ -1,0 +1,11 @@
+// Image Status Label
+  ImageStatusLabel:  ImageStatusLabelName
+            X1=  -1
+            Y1=  -1
+            X2=  -1
+            Y2=  -1
+         Texts=  1
+                 ""
+BackgroundColors=  1
+                 ""
+   TargetGroup=  0

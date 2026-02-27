@@ -1,0 +1,5 @@
+// List of trend variables with associated values
+  TvrList:       TvrListName
+          Text=  ""
+          Tvrs=  1
+                 ""

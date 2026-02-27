@@ -1,0 +1,39 @@
+// Description of system object
+  System:        SystemName
+         Text1=  ""
+         Text2=  ""
+         Nsecs=  10
+       PlotMax=  10
+         Nhist=  1440
+         Npred=  80
+         Nmodl=  80
+     ChngLogOn=  ON
+          Grps=  1
+                 ""
+       GrpLock=  0
+      MaxLogon=  ROOT
+       RootPwd=  ""
+       MngrPwd=  ""
+       OperPwd=  ""
+       UserPwd=  ""
+          Terr=  0
+       DebugNR=  1000
+       DebugOn=  00000000
+      FontSize=  -1
+  InitialGroup=  -1
+ShowText1WithName=  OFF
+       MinXPos=  0
+       MinYPos=  0
+       MaxXPos=  0
+       MaxYPos=  0
+    InitScreen=  -1
+      InitXPos=  -1
+      InitYPos=  -1
+     InitWidth=  -1
+    InitHeight=  -1
+MinimizeByHide=  OFF
+HideCloseButton=  OFF
+OPCSampleTimeOffset=  0
+  StepInterval=  0
+       AutoRun=  0
+ShowUpdateCounter=  ON
