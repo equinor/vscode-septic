@@ -102,22 +102,3 @@ Suppress specific diagnostics using special comments:
          Text1=  ""
         MvrTag=  ""  // noqa: E001
 ```
-
-### Formatting Conventions
-
-#### Alignment Rules:
-
-1. Object types start at column 3 (2-space indent)
-2. Object names start at column 17
-3. Attribute names right-aligned to column 16
-4. Equals sign at column 17
-5. Values start at column 20
-
-### Multi-line Attributes
-
-Some attributes (like lists) span multiple lines:
-
-```septic
-	 UserEnums=  3
-				 "Option1" "Option2" "Option3" (max 5 items pr line)
-```

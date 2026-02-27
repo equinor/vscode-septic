@@ -1,0 +1,47 @@
+  System:        MyApplication
+         Text1=  "MPC for MyAsset{%- if release | default(false) %} {{ release }}{% endif -%}"
+         Text2=  ""
+         Nsecs=  10
+       PlotMax=  10
+         Nhist=  25920
+         Npred=  720
+         Nmodl=  100
+     ChngLogOn=  {{ "ON" if final else "OFF" }}
+          Grps=  {{1 + wells|length + 2}}  {# noqa: E301 #}
+                 "Oversikt" {% for Wellname in wells|unpack("Wellname") %} "{{Wellname}}" {% endfor %} "Free1"  "Free2"
+       GrpLock=  0000000000000000000000000000000
+      MaxLogon=  ROOT
+{%- if final  %}
+       RootPwd=  "Password1"
+       MngrPwd=  "Password2"
+       OperPwd=  "Password3"
+       UserPwd=  ""
+{%- endif %}
+          Terr=  0
+       DebugNR=  {{ 25920 if final  else 1000 }}
+       DebugOn=  {{ "00000011" if final else "00000000" }}
+      FontSize=  -1
+  InitialGroup=  -1
+ShowText1WithName=  ON
+       MinXPos=  0
+       MinYPos=  0
+       MaxXPos=  0
+       MaxYPos=  0
+    InitScreen=  -1
+      InitXPos=  -1
+      InitYPos=  -1
+     InitWidth=  -1
+    InitHeight=  -1
+MinimizeByHide=  OFF
+HideCloseButton=  OFF
+OPCSampleTimeOffset=  0
+
+{% if final %}
+  RemoteTcip:    RemoteTcipName
+    MasterPort=  12030
+    MasterAddr=  "127.0.0.1"
+      HistSize=  -1
+       FillMsg=  ON
+    BufferSize=  64512
+MasterBufferSize=  -1
+{% endif %}

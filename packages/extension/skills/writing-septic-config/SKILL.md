@@ -37,7 +37,7 @@ When adding a complex calculation, follow these steps:
 - Plan the calculation logic and break it down into intermediate steps if needed
 - Create a new `Evr` variable to store the intermediate or final result
 - Define a `CalcPvr` object with the appropriate `Alg` expression
-- Verify the calculation logic and ensure all referenced variables and functions are valid
+- Verify the calculation logic and ensure all referenced variables and functions are valid using the built-in diagnostics in the editor
 
 ### 3. Adding a variable
 
@@ -46,6 +46,7 @@ When adding a variable, follow these steps:
 - Choose the appropriate variable type (Mvr, Cvr, Tvr, Evr, Dvr) based on its purpose
 - Use a descriptive name that reflects the variable's purpose
 - Fill in the Text1 and Text2 attributes with meaningful descriptions
+- Place the variable in the appropriate section of the config file based on its role (e.g., input variables in SopcProc, calculated variables in DmmyAppl, cvr/mvr variables in MpcAppl)
 - If the variable is an input or output, ensure it is properly referenced in the corresponding Sopc or UA object
 
 ### 4. Generalizing configuration for multiple equipment
@@ -65,9 +66,23 @@ When you have multiple similar equipment (e.g., wells) that require similar conf
 
 ## Examples
 
+### Object types and attributes
+
 - **Objects** - [/objects](./objects/) contains examples of different object types and their attributes. Files are named `{objecttype}.cnfg` (lower case object type) and should be read before creating an instance of that particular object type.
+
+### Calculations
+
 - **General use of calculations**: [examples/calcs.cnfg](./examples/calcs_general.cnfg) demonstrates various CalcPvr objects with different types of expressions, including use of functions and referencing other variables.
 - **Implementation of deadband**: [examples/calc_deadband.cnfg](./examples/calcs_deadband.cnfg) shows how to implement a deadband using CalcPvr and logical expressions.
+
+### Layouts of configuration files
+
+- **System layout**: [examples/System.cnfg](./examples/System.cnfg) shows the typical layout of the system configuration file, which usually contains the general configuration of the system.
+- **SopcProc layout**: [examples/sopcproc.cnfg](./examples/SopcProc.cnfg) shows the typical layout of a SopcProc file. These files define the input and outputs opc-tags for the MPC.
+- **DmmyAppl layout**: [examples/dmmyappl.cnfg](./examples/DmmyAppl.cnfg) shows the typical layout of a DmmyAppl file. These files typically contain calculations and variables for storing calculation results and measurements from the process.
+- **MpcAppl layout**: [examples/mpc.cnfg](./examples/MpcAppl.cnfg) shows the typical layout of the main MPC config file, which contains the configuration of the MPC controller and references to the variables and calculations defined in the DmmyAppl and SopcProc files.
+- **DmmyApplPost layout**: [examples/dmmyapplpost.cnfg](./examples/DmmyApplPost.cnfg) shows the typical layout of a DmmyApplPost file, which contains calculations that are performed after the main MPC calculations.
+- **DisplayGroup layout**: [examples/DspGroup.cnfg](./examples/DspGroup.cnfg) shows example layout of a DisplayGroup file, which contains configuration for the HMI (plotting of variables, tables, etc.).
 
 ## Guidelines
 
@@ -92,6 +107,7 @@ When you have multiple similar equipment (e.g., wells) that require similar conf
 
 - Keep Alg expressions readable - break complex logic into multiple CalcPvr objects
 - Verify referenced variables and functions exist and are correctly named
+- Iteratilively validate calculations during development
 
 ### 5. SCG Templates
 
