@@ -50,7 +50,7 @@ jobs:
         with:
           add-paths: |
             packages/septic/public/*
-            packages/septic/package.json
+            packages/extension/package.json
           labels: "documentation"
           branch: "septic-documentation-${{ env.REF }}"
           title: "docs: update Septic documentation for ${{ env.REF }}"

@@ -7,9 +7,10 @@
     "configurations": [
         {
             "name": "Update Documentation",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "${workspaceRoot}/scripts/main.py",
+            "args": ["latest"],
             "console": "integratedTerminal",
             "justMyCode": true
         },

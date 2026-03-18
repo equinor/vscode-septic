@@ -45,8 +45,11 @@ def get_existing_versions(path: Path):
         dir_match = re.match(r"v(\d+)_(\d+)", dir.split("\\")[-1])
         if not dir_match:
             continue
-        meta = read_meta_file(path / dir / meta_info_name)
-        versions.append(tuple(int(x) for x in meta["version"].split(".")))
+        try:
+            meta = read_meta_file(path / dir / meta_info_name)
+            versions.append(tuple(int(x) for x in meta["version"].split(".")))
+        except Exception as e:
+            print(f"Error reading meta file for {dir}: {e}")
     return versions
 
 
