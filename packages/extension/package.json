@@ -118,7 +118,8 @@
             "v3.3",
             "v3.4",
             "v3.5",
-            "v3.6"
+            "v3.6",
+            "v3.7"
           ],
           "default": "latest",
           "description": "Select which version of Septic to use for documentation and diagnostics."
