@@ -101,7 +101,7 @@ def update_version_options():
         package = json.load(f)
     package["contributes"]["configuration"]["properties"][
         "septic.documentation.version"
-    ]["enum"] = list(map(folder_name_to_option, get_versions(output_path)))
+    ]["enum"] = sorted(list(map(folder_name_to_option, get_versions(output_path))))
     with open(package_path.resolve(), "w") as f:
         json.dump(package, f, indent=2)
 
