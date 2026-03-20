@@ -98,7 +98,9 @@ def parse_object_doxygen_doc(doxygen: str) -> Optional[SepticObject]:
         attr = parse_attribute(attr_dox)
         if attr:
             attributes.append(attr)
-    return SepticObject(name, description, attributes, parents)
+    return SepticObject(
+        name=name, description=description, attributes=attributes, parents=parents
+    )
 
 
 def parse_attribute(attribute: str) -> Optional[Attribute]:
