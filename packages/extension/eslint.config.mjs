@@ -10,8 +10,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig(
-    eslint.configs.recommended,
-    tseslint.configs.recommended,
+    ...eslint.configs.recommended,
+    ...tseslint.configs.recommended,
     {
         ignores: ["**/out", "**/dist", "**/*.d.ts", ".vscode-test/**/*"],
         languageOptions: {
