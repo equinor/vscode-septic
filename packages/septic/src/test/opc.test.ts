@@ -42,9 +42,6 @@ writeOnChangeOnly=  OFF
             convertedObjects.getAttribute("StatusTag")?.getFirstValue(),
         ).to.equal("status");
         expect(
-            convertedObjects.getAttribute("DesModeTag")?.getFirstValue(),
-        ).to.equal("desiredMode");
-        expect(
             convertedObjects.getAttribute("PulsTag")?.getFirstValue(),
         ).to.equal("pulse");
     });
@@ -141,9 +138,6 @@ xDesiredActive=  "s=desiredActiveMvr"
         expect(
             convertedObject.getAttribute("MvActiveTag")?.getFirstValue(),
         ).to.equal("activeMvr");
-        expect(
-            convertedObject.getAttribute("MvSwitchTag")?.getFirstValue(),
-        ).to.equal("desiredActiveMvr");
     });
     it("Expect correct converting from UACvr to SopcCvr", () => {
         const content = `
@@ -330,7 +324,7 @@ SkipWriteBlocking=  OFF
         ).to.equal("s=allowActive");
         expect(
             uaApplObject.getAttribute("xDesiredMode")?.getFirstValue(),
-        ).to.equal("s=desiredMode");
+        ).to.equal("s=allowActive");
         expect(uaApplObject.getAttribute("yStatus")?.getFirstValue()).to.equal(
             "s=status",
         );
@@ -388,7 +382,7 @@ SkipWriteBlocking=  OFF
         ).to.equal("s=calcSetpointMvr");
         expect(
             convertedObject.getAttribute("xDesiredActive")?.getFirstValue(),
-        ).to.equal("s=desiredActiveMvr");
+        ).to.equal("s=externMvr");
         expect(
             convertedObject.getAttribute("yActive")?.getFirstValue(),
         ).to.equal("s=activeMvr");

@@ -206,11 +206,11 @@ export function uaToSopc(obj: SepticObject): SepticObject {
             const sopcAttrNames = Array.isArray(sopcAttrName)
                 ? sopcAttrName
                 : [sopcAttrName];
+            const value = getSopcValue(attr);
+            if (value === "") {
+                continue;
+            }
             for (const name of sopcAttrNames) {
-                const value = getSopcValue(attr);
-                if (value === "") {
-                    continue;
-                }
                 sopcObj
                     .getAttribute(name)
                     ?.setValues(
@@ -333,11 +333,11 @@ function uaProcAndApplToSopc(
             const sopcAttrNames = Array.isArray(sopcAttr)
                 ? sopcAttr
                 : [sopcAttr];
+            const value = getSopcValue(attr);
+            if (value === "") {
+                continue;
+            }
             for (const name of sopcAttrNames) {
-                const value = getSopcValue(attr);
-                if (value === "") {
-                    continue;
-                }
                 sopcProc
                     .getAttribute(name)
                     ?.setValues(
@@ -358,12 +358,16 @@ function uaProcAndApplToSopc(
             const sopcAttrNames = Array.isArray(sopcAttr)
                 ? sopcAttr
                 : [sopcAttr];
+            const value = getSopcValue(attr);
+            if (value === "") {
+                continue;
+            }
             for (const name of sopcAttrNames) {
                 sopcProc
                     .getAttribute(name)
                     ?.setValues(
                         createAttrValues(
-                            [attr.values[0]?.value.replace("s=", "") || ""],
+                            [`"${value}"`],
                             SepticTokenType.string,
                         ),
                     );
