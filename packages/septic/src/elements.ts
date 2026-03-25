@@ -347,7 +347,7 @@ function formatNumericList(values: string[]): string {
 
 function formatList(values: string[]): string {
     let formatted = `${values.length - 1}`;
-    values.forEach((val) => {
+    values.slice(1).forEach((val) => {
         formatted += " ".repeat(spacesBetweenValues) + val;
     });
     return formatted;

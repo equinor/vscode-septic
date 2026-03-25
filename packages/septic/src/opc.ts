@@ -20,14 +20,13 @@ const SOPC_TO_UA_TYPE_MAP: Record<string, string> = {
 };
 
 // Attribute mappings for each object type pair
-const UA_TO_SOPC_ATTR_MAP: Record<string, Record<string, string>> = {
+const UA_TO_SOPC_ATTR_MAP: Record<string, Record<string, string | string[]>> = {
     UAProcToSopcProc: {
         yPulse: "PulsTag",
         xSchedule: "ScheduleTag",
     },
     UAApplToSopcProc: {
         xAllowActive: "AllowActiveTag",
-        xDesiredMode: "DesModeTag",
         yStatus: "StatusTag",
     },
     UACvr: {
@@ -47,7 +46,6 @@ const UA_TO_SOPC_ATTR_MAP: Record<string, Record<string, string>> = {
         xNotValid: "NotValidTag",
         xProcessValue: "PVTag",
         yCalcSetpoint: "SpCalcTag",
-        xDesiredActive: "MvSwitchTag",
         yActive: "MvActiveTag",
         xAuto: "AutoTag",
         xExtern: "CompTag",
@@ -80,14 +78,13 @@ const UA_TO_SOPC_ATTR_MAP: Record<string, Record<string, string>> = {
     },
 };
 
-const SOPC_TO_UA_ATTR_MAP: Record<string, Record<string, string>> = {
+const SOPC_TO_UA_ATTR_MAP: Record<string, Record<string, string | string[]>> = {
     SopcProcToUAProc: {
         PulsTag: "yPulse",
         ScheduleTag: "xSchedule",
     },
     SopcProcToUAAppl: {
-        AllowActiveTag: "xAllowActive",
-        DesModeTag: "xDesiredMode",
+        AllowActiveTag: ["xAllowActive", "xDesiredMode"],
         StatusTag: "yStatus",
     },
 
@@ -119,11 +116,10 @@ const SOPC_TO_UA_ATTR_MAP: Record<string, Record<string, string>> = {
         AutoTag: "xAuto",
         WhiTag: "xWindupHigh",
         WloTag: "xWindupLow",
-        CompTag: "xExtern",
+        CompTag: ["xExtern", "xDesiredActive"],
         ToCompTag: "yToComp",
         ToLocalTag: "yToLocal",
         MvActiveTag: "yActive",
-        MvSwitchTag: "xDesiredActive",
     },
     SopcEvr: {
         MeasTag: "yMeas",
@@ -154,14 +150,19 @@ export function sopcToUA(obj: SepticObject): SepticObject {
         const uaAttrName = attrMap[attr.key];
         if (uaAttrName) {
             const value = getUAValue(attr);
-            uaObj
-                .getAttribute(uaAttrName)
-                ?.setValues(
-                    createAttrValues(
-                        [value.length ? `"s=${value}"` : `""`],
-                        SepticTokenType.string,
-                    ),
-                );
+            const uaAttrNames = Array.isArray(uaAttrName)
+                ? uaAttrName
+                : [uaAttrName];
+            for (const name of uaAttrNames) {
+                uaObj
+                    .getAttribute(name)
+                    ?.setValues(
+                        createAttrValues(
+                            [value.length ? `"s=${value}"` : `""`],
+                            SepticTokenType.string,
+                        ),
+                    );
+            }
         }
     }
     return uaObj;
@@ -176,6 +177,10 @@ function getUAValue(attr: SepticAttribute): string {
         return "";
     }
     return value;
+}
+
+function getSopcValue(attr: SepticAttribute): string {
+    return attr.getFirstValue()?.replace("s=", "") || "";
 }
 /**
  * Converts a UA object to a Sopc object
@@ -198,24 +203,56 @@ export function uaToSopc(obj: SepticObject): SepticObject {
     for (const attr of obj.attributes) {
         const sopcAttrName = attrMap[attr.key];
         if (sopcAttrName) {
-            sopcObj
-                .getAttribute(sopcAttrName)
-                ?.setValues(
-                    createAttrValues(
-                        [attr.values[0]?.value.replace("s=", "") || ""],
-                        SepticTokenType.string,
-                    ),
-                );
+            const sopcAttrNames = Array.isArray(sopcAttrName)
+                ? sopcAttrName
+                : [sopcAttrName];
+            for (const name of sopcAttrNames) {
+                const value = getSopcValue(attr);
+                if (value === "") {
+                    continue;
+                }
+                sopcObj
+                    .getAttribute(name)
+                    ?.setValues(
+                        createAttrValues(
+                            [`"${value}"`],
+                            SepticTokenType.string,
+                        ),
+                    );
+            }
         }
     }
     return sopcObj;
 }
 
-function sopcToUAProcAndAppl(sopcProc: SepticObject): SepticObject[] {
+function sopcToUAProcAndAppl(
+    sopcProc: SepticObject,
+    simulator: boolean = false,
+): SepticObject[] {
     const generator = new SepticObjectGenerator();
+    const attributes = [
+        {
+            key: "DefaultNameSpaceURI",
+            type: SepticTokenType.string,
+            values: ['"urn:equinor:MiniOpcUaServer"'],
+        },
+        {
+            key: "SecurityMode",
+            type: SepticTokenType.identifier,
+            values: ["UA_MESSAGESECURITYMODE_NONE"],
+        },
+    ];
+    if (simulator) {
+        attributes.push({
+            key: "RunMenu",
+            type: SepticTokenType.identifier,
+            values: ["ON"],
+        });
+    }
     const uaProc = generator.createObject(
         "UAProc",
         sopcProc.identifier?.name || "",
+        attributes,
     );
     const uaAppl = generator.createObject(
         "UAAppl",
@@ -228,38 +265,52 @@ function sopcToUAProcAndAppl(sopcProc: SepticObject): SepticObject[] {
         const uaProcAttr = attrsMapUAProc[attr.key];
         const value = getUAValue(attr);
         if (uaProcAttr) {
-            uaProc
-                .getAttribute(uaProcAttr)
-                ?.setValues(
-                    createAttrValues(
-                        [value.length ? `"s=${value}"` : `""`],
-                        SepticTokenType.string,
-                    ),
-                );
+            const uaProcAttrNames = Array.isArray(uaProcAttr)
+                ? uaProcAttr
+                : [uaProcAttr];
+            for (const name of uaProcAttrNames) {
+                uaProc
+                    .getAttribute(name)
+                    ?.setValues(
+                        createAttrValues(
+                            [value.length ? `"s=${value}"` : `""`],
+                            SepticTokenType.string,
+                        ),
+                    );
+            }
         }
         const uaApplAttr = attrsMapUAAppl[attr.key];
         if (uaApplAttr) {
-            uaAppl
-                .getAttribute(uaApplAttr)
-                ?.setValues(
-                    createAttrValues(
-                        [value.length ? `"s=${value}"` : `""`],
-                        SepticTokenType.string,
-                    ),
-                );
+            const uaApplAttrNames = Array.isArray(uaApplAttr)
+                ? uaApplAttr
+                : [uaApplAttr];
+            for (const name of uaApplAttrNames) {
+                uaAppl
+                    .getAttribute(name)
+                    ?.setValues(
+                        createAttrValues(
+                            [value.length ? `"s=${value}"` : `""`],
+                            SepticTokenType.string,
+                        ),
+                    );
+            }
         }
+    }
+    if (simulator) {
+        return [uaProc];
     }
     return [uaProc, uaAppl];
 }
 
 function uaProcAndApplToSopc(
     uaProc: SepticObject,
-    uaAppl: SepticObject,
+    uaAppl: SepticObject | undefined,
+    simulator: boolean = false,
 ): SepticObject | undefined {
     const generator = new SepticObjectGenerator();
     const sopcProc = generator.createObject(
         "SopcProc",
-        uaAppl.identifier?.name || "",
+        uaAppl?.identifier?.name || uaProc.identifier?.name || "",
         [
             {
                 key: "ServName",
@@ -268,8 +319,8 @@ function uaProcAndApplToSopc(
             },
             {
                 key: "Site",
-                type: SepticTokenType.string,
-                values: ["AIM_AIMGUI"],
+                type: SepticTokenType.identifier,
+                values: [simulator ? "OPCSIMUL" : "AIM_AIMGUI"],
             },
         ],
     );
@@ -279,27 +330,44 @@ function uaProcAndApplToSopc(
     for (const attr of uaProc.attributes) {
         const sopcAttr = attrsMapUAProc[attr.key];
         if (sopcAttr) {
-            sopcProc
-                .getAttribute(sopcAttr)
-                ?.setValues(
-                    createAttrValues(
-                        [attr.values[0]?.value.replace("s=", "") || ""],
-                        SepticTokenType.string,
-                    ),
-                );
+            const sopcAttrNames = Array.isArray(sopcAttr)
+                ? sopcAttr
+                : [sopcAttr];
+            for (const name of sopcAttrNames) {
+                const value = getSopcValue(attr);
+                if (value === "") {
+                    continue;
+                }
+                sopcProc
+                    .getAttribute(name)
+                    ?.setValues(
+                        createAttrValues(
+                            [`"${value}"`],
+                            SepticTokenType.string,
+                        ),
+                    );
+            }
         }
+    }
+    if (!uaAppl) {
+        return sopcProc;
     }
     for (const attr of uaAppl.attributes) {
         const sopcAttr = attrsMapUAAppl[attr.key];
         if (sopcAttr) {
-            sopcProc
-                .getAttribute(sopcAttr)
-                ?.setValues(
-                    createAttrValues(
-                        [attr.values[0]?.value.replace("s=", "") || ""],
-                        SepticTokenType.string,
-                    ),
-                );
+            const sopcAttrNames = Array.isArray(sopcAttr)
+                ? sopcAttr
+                : [sopcAttr];
+            for (const name of sopcAttrNames) {
+                sopcProc
+                    .getAttribute(name)
+                    ?.setValues(
+                        createAttrValues(
+                            [attr.values[0]?.value.replace("s=", "") || ""],
+                            SepticTokenType.string,
+                        ),
+                    );
+            }
         }
     }
     return sopcProc;
@@ -308,6 +376,7 @@ function uaProcAndApplToSopc(
 export function convertOPCObjects(
     cnfg: SepticCnfg,
     direction: "sopc-to-ua" | "ua-to-sopc",
+    simulator: boolean = false,
 ): SepticCnfg {
     const typeMap =
         direction === "sopc-to-ua" ? SOPC_TO_UA_TYPE_MAP : UA_TO_SOPC_TYPE_MAP;
@@ -315,15 +384,20 @@ export function convertOPCObjects(
     for (let i = 0; i < cnfg.objects.length; i++) {
         const obj = cnfg.objects[i]!;
         if (obj.type == "SopcProc" && direction === "sopc-to-ua") {
-            const uaObjects = sopcToUAProcAndAppl(obj);
+            const uaObjects = sopcToUAProcAndAppl(obj, simulator);
             cnfg.objects.splice(i, 1, ...uaObjects);
             i += uaObjects.length - 1;
             continue;
         }
         if (obj.type == "UAProc" && direction === "ua-to-sopc") {
-            const sopcProc = uaProcAndApplToSopc(obj, cnfg.objects[i + 1]!);
+            const uaAppls = cnfg.getObjectsByType("UAAppl");
+            const sopcProc = uaProcAndApplToSopc(
+                obj,
+                uaAppls.length ? uaAppls[0] : undefined,
+                simulator,
+            );
             if (sopcProc) {
-                cnfg.objects.splice(i, 2, sopcProc);
+                cnfg.objects.splice(i, uaAppls.length ? 2 : 1, sopcProc);
             }
         }
         if (typeMap[obj.type]) {

@@ -14,6 +14,7 @@ interface OpcOptions {
     config: string;
     output: string;
     direction: "sopc-to-ua" | "ua-to-sopc";
+    simulator?: boolean;
 }
 
 async function loadSepticConfig(filePath: string): Promise<SepticCnfg> {
@@ -39,7 +40,11 @@ async function handler(options: OpcOptions): Promise<void> {
     const cnfg = await loadSepticConfig(options.config);
 
     console.log(`Converting OPC objects (${options.direction})...`);
-    const converted = convertOPCObjects(cnfg, options.direction);
+    const converted = convertOPCObjects(
+        cnfg,
+        options.direction,
+        options.simulator,
+    );
 
     const outputPath = path.resolve(options.output);
     const outputDir = path.dirname(outputPath);
@@ -75,9 +80,19 @@ export const opcCommand: CommandModule<object, OpcOptions> = {
                 choices: ["sopc-to-ua", "ua-to-sopc"],
                 demandOption: true,
             })
+            .option("simulator", {
+                alias: "s",
+                type: "boolean",
+                description: "Enable simulator mode",
+                demandOption: false,
+            })
             .example(
                 "$0 opc input.cnfg output.cnfg --direction sopc-to-ua",
                 "Convert Sopc objects to UA objects",
+            )
+            .example(
+                "$0 opc input.cnfg output.cnfg --direction sopc-to-ua --simulator",
+                "Convert Sopc objects to UA objects with simulator mode enabled",
             )
             .example(
                 "$0 opc input.cnfg output.cnfg -d ua-to-sopc",
