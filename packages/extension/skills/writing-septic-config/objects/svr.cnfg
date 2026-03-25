@@ -1,0 +1,16 @@
+// State Variable
+  Use with subroutine model (SubrModl) for a variable with nominal response calulated by the model. Transport
+  mechanism to/from model is identical to a Cvr
+  Svr:           SvrName
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+          Unit=  ""
+          Meas=  0
+          Span=  10
+MeasValidation=  OFF
+ MeasHighLimit=  1e+10
+  MeasLowLimit=  -1e+10

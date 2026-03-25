@@ -1,0 +1,9 @@
+// The Xvrs listed are placed in a new column to the right of the corresponding XvrList
+  The heading text is used as heading for the new column<br>
+  ColumnList:    ColumnListName
+       Heading=  ""
+       Tooltip=  ""
+          Xvrs=  1
+                 ""
+    StatusXvrs=  1
+                 ""

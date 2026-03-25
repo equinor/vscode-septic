@@ -37,7 +37,6 @@ import {
     SepticMetaInfoProvider,
     SepticCnfg,
     compareCnfgs,
-    validateStandAloneCalc,
 } from "@equinor/septic-config-lib";
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
 import { ContextManager } from "./contextManager";
@@ -232,19 +231,6 @@ connection.onRequest(protocol.variables, async (param) => {
                 type: xvr.type,
             };
         });
-});
-
-connection.onRequest(protocol.validateAlg, async (param) => {
-    let context: SepticContext | undefined = await scgContextManager.getContext(
-        param.uri,
-    );
-    if (!context) {
-        context = await langService.cnfgProvider.get(param.uri);
-        if (!context) {
-            return [];
-        }
-    }
-    return validateStandAloneCalc(param.calc, context);
 });
 
 connection.onRequest(protocol.getFunctions.method, async (param) => {

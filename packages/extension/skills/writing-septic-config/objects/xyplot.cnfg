@@ -1,0 +1,17 @@
+// XYPlot
+  XYPlot:        XYPlotName
+           Row=  1
+           Col=  1
+       RowSize=  4
+       ColSize=  5
+         Title=  ""
+        Legend=  OFF
+     SpanScale=  OFF
+        xTitle=  ""
+        yTitle=  ""
+          xMin=  -100
+          xMax=  100
+          yMin=  -100
+          yMax=  100
+         xSpan=  100
+         ySpan=  100

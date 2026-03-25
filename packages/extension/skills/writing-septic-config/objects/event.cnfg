@@ -1,0 +1,5 @@
+// Events/triggers for change of Septic parameters
+  Event:         EventName
+             N=  1
+        Ncycle=  0
+           Cmd=  ""

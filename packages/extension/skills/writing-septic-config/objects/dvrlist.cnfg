@@ -1,0 +1,5 @@
+// List of disturbance variables with associated values
+  DvrList:       DvrListName
+          Text=  ""
+          Dvrs=  1
+                 ""

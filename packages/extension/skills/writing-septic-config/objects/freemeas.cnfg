@@ -1,0 +1,6 @@
+// Present Meas of Xvr below the preceding element in a Table, adding a new row to the table
+  FreeMeas:      FreeMeasName
+       Heading=  ""
+     StatusXvr=  ""
+        ColPos=  -1
+    SizeOffset=  0

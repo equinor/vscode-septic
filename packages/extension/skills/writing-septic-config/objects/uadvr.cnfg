@@ -1,0 +1,6 @@
+// Disturbance variable (DV) OPC connection
+  UADvr:         UADvrName
+         xMeas=  ""
+     xNotValid=  ""
+xDesiredTracking=  ""
+     yTracking=  ""

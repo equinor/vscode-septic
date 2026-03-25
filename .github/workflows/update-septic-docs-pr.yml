@@ -44,6 +44,10 @@ jobs:
           fi
           echo "REF=$ref" >> $GITHUB_ENV
 
+      - name: Update skill object references
+        if: ${{ steps.checkfiles.outputs.changed != 0 && env.REF == 'latest' }}
+        run: python scripts/generate_examples.py latest
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         if: ${{ steps.checkfiles.outputs.changed != 0 }}
@@ -51,6 +55,7 @@ jobs:
           add-paths: |
             packages/septic/public/*
             packages/extension/package.json
+            packages/extension/skills/writing-septic-config/objects/*
           labels: "documentation"
           branch: "septic-documentation-${{ env.REF }}"
           title: "docs: update Septic documentation for ${{ env.REF }}"

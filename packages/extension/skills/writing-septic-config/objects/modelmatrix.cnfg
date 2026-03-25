@@ -1,0 +1,10 @@
+// Model matrix between Mvrs/Dvrs and Cvrs
+  ModelMatrix:   ModelMatrixName
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1
+        CvrIds=  1
+                 ""
+     MvrDvrIds=  1
+                 ""

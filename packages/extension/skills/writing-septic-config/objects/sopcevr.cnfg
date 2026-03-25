@@ -1,0 +1,8 @@
+// Enviromental/Calculated Variable OPC Connection (Only Write)
+  SopcEvr:       SopcEvrName
+         Text1=  ""
+         Text2=  ""
+        EvrTag=  ""
+       MeasTag=  ".YX"
+         IdTag=  ""
+   NotValidTag=  ".YXF"

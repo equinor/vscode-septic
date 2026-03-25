@@ -1,0 +1,12 @@
+// Disturbance variable OPC connection
+  SopcDvr:       SopcDvrName
+         Text1=  ""
+         Text2=  ""
+        DvrTag=  ""
+       MeasTag=  ".YX"
+         IdTag=  ""
+   NotValidTag=  ".YXF"
+   DvSwitchTag=  "DUMMY_TAG"
+    DvTrackTag=  "DUMMY_TAG"
+         Scale=  1
+        Offset=  0

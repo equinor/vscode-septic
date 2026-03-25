@@ -1,0 +1,7 @@
+// Image
+  Image:         ImageName
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1
+      FileName=  "", snippet: ""

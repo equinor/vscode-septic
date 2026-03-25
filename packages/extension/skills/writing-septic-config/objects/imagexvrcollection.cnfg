@@ -1,0 +1,13 @@
+// Collection of xvrs overlaid image
+  ImageXvrCollection:  ImageXvrCollectionName
+            X1=  -1
+            Y1=  -1
+            X2=  -1
+            Y2=  -1
+       Heading=  ""
+     StatusXvr=  ""
+BackgroundColor=  "white"
+          Xvrs=  1
+                 ""
+         Texts=  1
+                 ""

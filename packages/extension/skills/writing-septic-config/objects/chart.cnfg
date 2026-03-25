@@ -1,0 +1,16 @@
+// Chart
+  Chart:         ChartName
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1
+         Title=  ""
+        xTitle=  ""
+        yTitle=  ""
+     Autoscale=  OFF
+          yMin=  -100
+          yMax=  100
+    LegendPosX=  -1
+    LegendPosY=  100
+         Types=  1
+                 ""

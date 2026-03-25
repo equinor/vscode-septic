@@ -1,0 +1,5 @@
+// Present Meas of Xvr below the preceding element in a Table, adding a row to the table
+  ListMeas:      ListMeasName
+        ColPos=  
+       Heading=  ""
+     StatusXvr=  ""

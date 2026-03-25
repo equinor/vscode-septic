@@ -1,0 +1,12 @@
+// MultiXvrPlot overlaid image
+  ImageMultiXvrPlot:  ImageMultiXvrPlotName
+            X1=  -1
+            Y1=  -1
+            X2=  -1
+            Y2=  -1
+       PlotMax=  100
+       PlotMin=  0
+          Xvrs=  1
+                 ""
+        Colors=  1
+                 ""

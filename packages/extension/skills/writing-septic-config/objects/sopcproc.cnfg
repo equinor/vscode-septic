@@ -1,0 +1,28 @@
+// SopcProc description
+  SopcProc:      SopcProcName
+         Text1=  ""
+         Text2=  ""
+          Site=  AIM_AIMGUI
+      ServName=  "Statoil.OPC.Server"
+      ServNode=  "SERVNODE"
+   RealTimeFac=  1.0
+       ProcTag=  "DUMMY_TAG"
+AllowActiveTag=  "AllowActiveTag"
+     StatusTag=  "NotUsed"
+    DesModeTag=  "DUMMY_TAG"
+       PulsTag=  "PulsTag"
+LoopcheckWriteTag=  "DUMMY_TAG"
+LoopcheckReadTag=  "DUMMY_TAG"
+ ServFactorTag=  "DUMMY_TAG"
+    CPUTimeTag=  "DUMMY_TAG"
+         IdTag=  ""
+   ScheduleTag=  "DUMMY_TAG"
+        RunSec=  -1
+   RequestRate=  -1
+ BadCountLimit=  0
+SampleAgeLimit=  -1
+BlockWritingIfBad=  OFF
+   WriteGroups=  1
+WriteGroupPause=  1000
+SkipWriteBlocking=  OFF
+  UseDCOMAUTHN=  ON

@@ -1,0 +1,17 @@
+// Example of a typical DmmyApplPost file. This file is used for calculations that are performed after the main MPC calculations. For example sesetpntfilt() and mvget() needs to be used in a DmmyApplPost.
+  DmmyAppl:      DmmyApplPost
+         Text1=  ""
+         Text2=  ""
+         Nstep=  1
+       PlotMax=  25
+       DesMode=  ACTIVE
+     IterEachN=  1
+
+  CalcModl:      CalcModlName
+         Text1=  ""
+         Text2=  ""
+
+  CalcPvr:       QoSetPntFilt
+         Text1=  ""
+         Text2=  ""
+           Alg=  "setsetpntfilt(Qo, ifelif(or(timeron(and(Qo > Qo.Low,Qo.SetPntFilt < Qo.Low),1*SPM),setgood(ToState50)), setgood(QoCurVal), Qo.SetPnt - QoCurVal > 0,  QoSetPntFiltRampUp, QoSetPntFiltRampDown))"

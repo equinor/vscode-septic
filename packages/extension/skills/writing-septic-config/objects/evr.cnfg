@@ -1,0 +1,22 @@
+// Estimated/calculated Variable
+  Evr:           EvrName
+         Text1=  ""
+         Text2=  ""
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+          Unit=  ""
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+          Meas=  0
+     UserInput=  OFF
+     UserEnums=  1
+                 ""
+    UserAccess=  WRRR
+      UserMeas=  0
+      MinInput=  0
+      MaxInput=  0
+ValidationLimit=  -1
+         Color=  BLACK

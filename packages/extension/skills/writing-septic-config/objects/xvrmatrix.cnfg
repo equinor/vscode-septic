@@ -1,0 +1,20 @@
+// Matrix display for xvr values
+  XvrMatrix:     XvrMatrixName
+           Row=  -1
+           Col=  -1
+       RowSize=  1
+       ColSize=  1
+       Heading=  ""
+        ColIds=  1
+                 ""
+       ColTips=  1
+                 ""
+      ColSizes=  1    0
+        RowIds=  1
+                 ""
+       RowTips=  1
+                 ""
+      RowUnits=  1
+                 ""
+          Xvrs=  1
+                 ""

@@ -1,0 +1,8 @@
+// RemoteTcip
+  RemoteTcip:    RemoteTcipName
+    MasterPort=  12030
+    MasterAddr=  "127.0.0.1"
+      HistSize=  -1
+       FillMsg=  ON
+    BufferSize=  64512
+MasterBufferSize=  -1

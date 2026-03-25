@@ -1,0 +1,36 @@
+// Manipulated Variable
+  Mvr:           MvrName
+         Text1=  ""
+         Text2=  ""
+          Mode=  STOPPED
+          Auto=  OFF
+       PlotMax=  100
+       PlotMin=  0
+      PlotSpan=  -1
+          Nfix=  1
+        MaxChg=  -1
+          Unit=  ""
+          Meas=  0
+       GrpMask=  0000000000000000000000000000001
+       GrpType=  0000000000000000000000000000000
+          Span=  10
+        HighOn=  1e+10
+         LowOn=  -1e+10
+  ProcessValue=  0
+          IvOn=  0
+         MaxUp=  10
+         MaxDn=  -10
+     MovePnlty=  1
+         IvRoc=  -1
+        IvPrio=  99
+          Fulf=  1
+   FulfReScale=  0
+  FulfDynScale=  1
+      Blocking=  6    2     4     7    11    16    22
+MeasValidation=  OFF
+ MeasHighLimit=  1e+10
+  MeasLowLimit=  -1e+10
+        LockHL=  OFF
+        LockIV=  OFF
+        LockLL=  OFF
+        PVPred=  OFF

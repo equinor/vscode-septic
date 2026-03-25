@@ -1,0 +1,10 @@
+// Dynamic Curve
+  DynCurve:      DynCurveName
+         Color=  "black"
+          Text=  ""
+         Width=  1
+         Style=  Solid
+         xXvrs=  1
+                 "xXvr"
+         yXvrs=  1
+                 "yXvr"

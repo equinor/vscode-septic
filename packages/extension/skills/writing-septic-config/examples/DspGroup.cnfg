@@ -1,0 +1,81 @@
+// Example of a typical DspGroup file. A DspGroup is used to define the layout and appearance of the display in the Septic application. A grided layout is used to organize the display elements. Each DspGroup can contain multiple DisplayObjects (e.g., charts, tables, etc.) that are arranged according to the specified number of rows and columns.
+  DisplayGroup:  DisplayGroupName
+       GroupNo=  1 // Unique identifer for the group (ordering in the display)
+        Locked=  OFF
+          Rows=  2 // Number of rows in the display grid
+          Cols=  3 // Number of columns in the display grid
+         xGrid=  OFF
+         yGrid=  OFF
+         xAxis=  OFF
+         yAxis=  ON
+     Autoscale=  OFF
+     Spanscale=  OFF
+      HistSize=  -1
+      PredSize=  -1
+
+  XvrPlot:       MvrName // Refernces a variable for plotting
+           Row=  1
+           Col=  1
+       RowSize=  1
+       ColSize=  1
+
+  Table:         TableName
+           Row=  1
+           Col=  2
+       RowSize=  1
+       ColSize=  1
+   NameColSize=  -1
+   TextColSize=  -1
+  ValueColSize=  -1
+ GroupsColSize=  -1
+
+  Heading:       HeadingName
+          Text=  ""
+    SizeOffset=  0
+
+  MvrList:       MvrListName
+          Text=  ""
+          Mvrs=  1  MvrName
+
+  Spacer:        SpacerName
+          Size=  0
+
+  EvrList:       EvrListName
+          Text=  ""
+          Evrs=  1  EvrName
+
+  MultiXvrPlot:  MultiXvrPlotName
+           Row=  1
+           Col=  3
+       RowSize=  1
+       ColSize=  1
+         Title=  ""
+       PlotMax=  100
+       PlotMin=  0
+          Xvrs=  2  EvrName  TvrName
+        Colors=  1
+                 ""
+
+  CalcTable:     Calcs // Reference to CalcModl
+           Row=  2
+           Col=  1
+       RowSize=  1
+       ColSize=  1
+
+  XvrPlot:       MvrName
+           Row=  2
+           Col=  2
+       RowSize=  1
+       ColSize=  1
+
+  XvrMatrix:     XvrMatrixName
+           Row=  2
+           Col=  3
+       RowSize=  1
+       ColSize=  1
+       Heading=  "Table Heading"
+        ColIds=  1
+                 "Meas"
+        RowIds=  2
+                 "Well 1"  "Well 2"
+          Xvrs=  2  Well1Temperature  Well2Temperature
