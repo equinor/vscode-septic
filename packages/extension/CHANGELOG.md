@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.30.0](https://github.com/equinor/vscode-septic/compare/septic-config-v1.29.1...septic-config-v1.30.0) (2026-03-25)
+
+
+### 🧹 Chores
+
+* change default encoding of cnfg files to utf8 ([#902](https://github.com/equinor/vscode-septic/issues/902)) ([44439ea](https://github.com/equinor/vscode-septic/commit/44439eac90874cecca5fd28bb24391ee4917364b))
+* **deps:** bump esbuild from 0.25.5 to 0.27.1 ([#862](https://github.com/equinor/vscode-septic/issues/862)) ([bef3c65](https://github.com/equinor/vscode-septic/commit/bef3c654dc6f1a9c28af0b0592636f3fb02bce00))
+* fix settings for extensions ([#907](https://github.com/equinor/vscode-septic/issues/907)) ([23aec06](https://github.com/equinor/vscode-septic/commit/23aec06f923a02d143154c12cfe39c1bc9d11836))
+
+
+### 📚 Documentation
+
+* update Septic documentation for v3.6.1 ([#901](https://github.com/equinor/vscode-septic/issues/901)) ([bd609b1](https://github.com/equinor/vscode-septic/commit/bd609b1b57c70db160bdcf1162cdcb5b19556dcd))
+* update Septic documentation for v3.7.1 ([#911](https://github.com/equinor/vscode-septic/issues/911)) ([a790e3d](https://github.com/equinor/vscode-septic/commit/a790e3d3f238d37f3935d1aa7fdb1cda200a9092))
+
+
+### ✨ Features
+
+* add compare command to cli ([#903](https://github.com/equinor/vscode-septic/issues/903)) ([7b534df](https://github.com/equinor/vscode-septic/commit/7b534dff326bdc4315c11e9f8b6e8c35fa10b8bb))
+* add support for linting scg in CLI ([#887](https://github.com/equinor/vscode-septic/issues/887)) ([1ff84de](https://github.com/equinor/vscode-septic/commit/1ff84deb3f35697463a3dd2ef553afefbd6e3a31))
+
+
+### 🔨 Refactor
+
+* replace chat participant with skill ([#906](https://github.com/equinor/vscode-septic/issues/906)) ([8b934a1](https://github.com/equinor/vscode-septic/commit/8b934a122036eba787cebbd8b543feccfff9fc46))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @equinor/septic-config-lib bumped to 1.2.0
+
 ## [1.29.1](https://github.com/equinor/vscode-septic/compare/septic-config-v1.29.0...septic-config-v1.29.1) (2026-01-15)
 
 
