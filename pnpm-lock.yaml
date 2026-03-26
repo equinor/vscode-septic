@@ -45,8 +45,8 @@ importers:
         specifier: ^17.1.0
         version: 17.1.0
       prettier:
-        specifier: ^3.7.4
-        version: 3.7.4
+        specifier: ^3.8.1
+        version: 3.8.1
       source-map-support:
         specifier: ^0.5.21
         version: 0.5.21
@@ -73,8 +73,8 @@ importers:
         version: 4.1.1
     devDependencies:
       '@types/vscode':
-        specifier: ^1.105.0
-        version: 1.107.0
+        specifier: ^1.110.0
+        version: 1.110.0
       '@vscode/test-cli':
         specifier: ^0.0.12
         version: 0.0.12
@@ -517,8 +517,8 @@ packages:
   '@types/node@25.0.3':
     resolution: {integrity: sha512-W609buLVRVmeW693xKfzHeIV6nJGGz98uCPfeXI1ELMLXVeKYZ9m15fAMSaUPBHYLGFsVRcMmSCksQOrZV9BYA==}
 
-  '@types/vscode@1.107.0':
-    resolution: {integrity: sha512-XS8YE1jlyTIowP64+HoN30OlC1H9xqSlq1eoLZUgFEC8oUTO6euYZxti1xRiLSfZocs4qytTzR6xCBYtioQTCg==}
+  '@types/vscode@1.110.0':
+    resolution: {integrity: sha512-AGuxUEpU4F4mfuQjxPPaQVyuOMhs+VT/xRok1jiHVBubHK7lBRvCuOMZG0LKUwxncrPorJ5qq/uil3IdZBd5lA==}
 
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
@@ -1766,8 +1766,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier@3.7.4:
-    resolution: {integrity: sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==}
+  prettier@3.8.1:
+    resolution: {integrity: sha512-UOnG6LftzbdaHZcKoPFtOcCKztrQ57WkHDeRD9t/PTQtmT0NHSeWWepj6pS0z/N7+08BHFDQVUrfmfMRcZwbMg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -2644,7 +2644,7 @@ snapshots:
     dependencies:
       undici-types: 7.16.0
 
-  '@types/vscode@1.107.0': {}
+  '@types/vscode@1.110.0': {}
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -4080,7 +4080,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier@3.7.4: {}
+  prettier@3.8.1: {}
 
   process-nextick-args@2.0.1: {}
 
