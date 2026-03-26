@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.2.0](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.1.1...septic-config-lib-v1.2.0) (2026-03-26)
+
+
+### 🧹 Chores
+
+* **deps:** bump ajv from 8.17.1 to 8.18.0 in the npm_and_yarn group across 1 directory ([#904](https://github.com/equinor/vscode-septic/issues/904)) ([82ad918](https://github.com/equinor/vscode-septic/commit/82ad918b6fdcb75c22defd409ed54141aa082459))
+* **deps:** bump ajv in the npm_and_yarn group across 1 directory ([82ad918](https://github.com/equinor/vscode-septic/commit/82ad918b6fdcb75c22defd409ed54141aa082459))
+* fix settings for extensions ([#907](https://github.com/equinor/vscode-septic/issues/907)) ([23aec06](https://github.com/equinor/vscode-septic/commit/23aec06f923a02d143154c12cfe39c1bc9d11836))
+
+
+### 📚 Documentation
+
+* update Septic documentation for latest ([#870](https://github.com/equinor/vscode-septic/issues/870)) ([e508ed4](https://github.com/equinor/vscode-septic/commit/e508ed47bcbad690d1c311b4cfdb3e7a052f83f9))
+* update Septic documentation for latest ([#897](https://github.com/equinor/vscode-septic/issues/897)) ([2170be7](https://github.com/equinor/vscode-septic/commit/2170be7e791872601ab07e0fea4dc69fc01f0ca7))
+* update Septic documentation for latest ([#912](https://github.com/equinor/vscode-septic/issues/912)) ([177c02b](https://github.com/equinor/vscode-septic/commit/177c02b169c39d247b40133d980b7ba38265081d))
+* update Septic documentation for v3.6.1 ([#901](https://github.com/equinor/vscode-septic/issues/901)) ([bd609b1](https://github.com/equinor/vscode-septic/commit/bd609b1b57c70db160bdcf1162cdcb5b19556dcd))
+* update Septic documentation for v3.7.1 ([#911](https://github.com/equinor/vscode-septic/issues/911)) ([a790e3d](https://github.com/equinor/vscode-septic/commit/a790e3d3f238d37f3935d1aa7fdb1cda200a9092))
+
+
+### ✨ Features
+
+* add compare command to cli ([#903](https://github.com/equinor/vscode-septic/issues/903)) ([7b534df](https://github.com/equinor/vscode-septic/commit/7b534dff326bdc4315c11e9f8b6e8c35fa10b8bb))
+
 ## [1.1.1](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.1.0...septic-config-lib-v1.1.1) (2026-01-21)
 
 
