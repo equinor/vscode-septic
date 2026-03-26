@@ -1,6 +1,9 @@
 name: "🚀 Publish Extension"
 on:
   workflow_call:
+    secrets:
+      VSCE_PAT:
+        required: true
 permissions:
   contents: read
 jobs:
