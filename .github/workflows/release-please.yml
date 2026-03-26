@@ -31,6 +31,8 @@ jobs:
     if: ${{ needs.release_please.outputs.extension_release_created }}
     needs: [release_please]
     uses: ./.github/workflows/publish-extension.yml
+    secrets:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
   publish_lib:
     name: "Publish Lib"
     if: ${{ needs.release_please.outputs.lib_release_created }}
