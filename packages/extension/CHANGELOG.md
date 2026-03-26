@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.30.1](https://github.com/equinor/vscode-septic/compare/septic-config-v1.30.0...septic-config-v1.30.1) (2026-03-26)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @equinor/septic-config-lib bumped to 1.2.0
+
 ## [1.30.0](https://github.com/equinor/vscode-septic/compare/septic-config-v1.29.1...septic-config-v1.30.0) (2026-03-25)
 
 
