@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.30.2](https://github.com/equinor/vscode-septic/compare/septic-config-v1.30.1...septic-config-v1.30.2) (2026-03-26)
+
+
+### 🧹 Chores
+
+* **deps:** bump @types/vscode from 1.107.0 to 1.110.0 ([#919](https://github.com/equinor/vscode-septic/issues/919)) ([39d29da](https://github.com/equinor/vscode-septic/commit/39d29da02db7c8b53ee02249d48392696dfadef3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @equinor/septic-config-lib bumped to 1.2.0
+
 ## [1.30.1](https://github.com/equinor/vscode-septic/compare/septic-config-v1.30.0...septic-config-v1.30.1) (2026-03-26)
 
 
