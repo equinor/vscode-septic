@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.31.0](https://github.com/equinor/vscode-septic/compare/septic-config-v1.30.3...septic-config-v1.31.0) (2026-03-27)
+
+
+### 🧹 Chores
+
+* change default encoding of cnfg files to utf8 ([#902](https://github.com/equinor/vscode-septic/issues/902)) ([44439ea](https://github.com/equinor/vscode-septic/commit/44439eac90874cecca5fd28bb24391ee4917364b))
+* **deps:** bump @types/vscode from 1.107.0 to 1.110.0 ([#919](https://github.com/equinor/vscode-septic/issues/919)) ([39d29da](https://github.com/equinor/vscode-septic/commit/39d29da02db7c8b53ee02249d48392696dfadef3))
+* **deps:** bump esbuild from 0.25.5 to 0.27.1 ([#862](https://github.com/equinor/vscode-septic/issues/862)) ([bef3c65](https://github.com/equinor/vscode-septic/commit/bef3c654dc6f1a9c28af0b0592636f3fb02bce00))
+* fix settings for extensions ([#907](https://github.com/equinor/vscode-septic/issues/907)) ([23aec06](https://github.com/equinor/vscode-septic/commit/23aec06f923a02d143154c12cfe39c1bc9d11836))
+* release septic-config 1.29.1 ([#865](https://github.com/equinor/vscode-septic/issues/865)) ([9c79645](https://github.com/equinor/vscode-septic/commit/9c796457231544978553b125665c5e7ca66d8594))
+* release septic-config 1.30.0 ([#882](https://github.com/equinor/vscode-septic/issues/882)) ([2e6009c](https://github.com/equinor/vscode-septic/commit/2e6009c2ee4573eec2b81533ead926e8438cac5d))
+* release septic-config 1.30.1 ([#920](https://github.com/equinor/vscode-septic/issues/920)) ([dc331e6](https://github.com/equinor/vscode-septic/commit/dc331e6469aa74b4a17b5f37ed6c72257d58d04d))
+* release septic-config 1.30.1 ([#922](https://github.com/equinor/vscode-septic/issues/922)) ([8e47eb8](https://github.com/equinor/vscode-septic/commit/8e47eb82278b709cc34c6e438a6bc37200af3259))
+* release septic-config 1.30.2 ([#923](https://github.com/equinor/vscode-septic/issues/923)) ([3c66305](https://github.com/equinor/vscode-septic/commit/3c66305c581edb640c9f4e51e0dedb9d4b6e7975))
+
+
+### 📚 Documentation
+
+* update Septic documentation for v3.6.1 ([#901](https://github.com/equinor/vscode-septic/issues/901)) ([bd609b1](https://github.com/equinor/vscode-septic/commit/bd609b1b57c70db160bdcf1162cdcb5b19556dcd))
+* update Septic documentation for v3.7.1 ([#911](https://github.com/equinor/vscode-septic/issues/911)) ([a790e3d](https://github.com/equinor/vscode-septic/commit/a790e3d3f238d37f3935d1aa7fdb1cda200a9092))
+
+
+### ✨ Features
+
+* add compare command to cli ([#903](https://github.com/equinor/vscode-septic/issues/903)) ([7b534df](https://github.com/equinor/vscode-septic/commit/7b534dff326bdc4315c11e9f8b6e8c35fa10b8bb))
+* add support for linting scg in CLI ([#887](https://github.com/equinor/vscode-septic/issues/887)) ([1ff84de](https://github.com/equinor/vscode-septic/commit/1ff84deb3f35697463a3dd2ef553afefbd6e3a31))
+
+
+### 🔨 Refactor
+
+* create dedicated package for septic parsing ([#869](https://github.com/equinor/vscode-septic/issues/869)) ([2a4ff5b](https://github.com/equinor/vscode-septic/commit/2a4ff5bd4d0f3a77f5232fcf3751aa3f5eb8e0bb))
+* replace chat participant with skill ([#906](https://github.com/equinor/vscode-septic/issues/906)) ([8b934a1](https://github.com/equinor/vscode-septic/commit/8b934a122036eba787cebbd8b543feccfff9fc46))
+
 ## [1.30.2](https://github.com/equinor/vscode-septic/compare/septic-config-v1.30.1...septic-config-v1.30.2) (2026-03-26)
 
 
