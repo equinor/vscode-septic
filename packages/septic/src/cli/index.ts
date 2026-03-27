@@ -9,12 +9,14 @@ import { hideBin } from "yargs/helpers";
 import { formatCommand } from "./format";
 import { lintCommand } from "./lint";
 import { compareCommand } from "./compare";
+import { opcCommand } from "./opc";
 
 yargs(hideBin(process.argv))
     .scriptName("sca")
     .command(formatCommand)
     .command(lintCommand)
     .command(compareCommand)
+    .command(opcCommand)
     .demandCommand(1, "You need to specify a command")
     .help()
     .version()

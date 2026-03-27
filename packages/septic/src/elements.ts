@@ -24,6 +24,14 @@ export enum SepticTokenType {
     eof = "eof",
 }
 
+const indentsObjectDeclaration = 2;
+const startObjectName = 17;
+const spacesBetweenValues = 2;
+const spacesBetweenIntValues = 6;
+const indentsAttributeValuesStart = 17;
+const maxNumberAttrValuesPerLine = 5;
+const indentsAttributesDelimiter = 14;
+
 export type SepticToken = IToken<SepticTokenType>;
 
 export class SepticBase {
@@ -185,6 +193,28 @@ export class SepticObject extends SepticBase {
         }
         return { algExpr: expr, positionsMap: positionsMap };
     }
+
+    toString(): string {
+        const identifierStr = this.identifier ? ` ${this.identifier.name}` : "";
+        const objectTypeFormatted =
+            " ".repeat(indentsObjectDeclaration) + this.type + ":";
+        const indentsName = Math.max(
+            startObjectName - objectTypeFormatted.length - 1,
+            2,
+        );
+        const objectDeclartionFormatted =
+            objectTypeFormatted + " ".repeat(indentsName) + identifierStr;
+        return (
+            objectDeclartionFormatted +
+            "\n" +
+            this.attributes
+                .map((attr) => {
+                    return attr.toString();
+                })
+                .join("\n") +
+            "\n"
+        );
+    }
 }
 
 export class SepticAttribute extends SepticBase {
@@ -199,6 +229,10 @@ export class SepticAttribute extends SepticBase {
 
     addValue(value: SepticAttributeValue) {
         this.values.push(value);
+    }
+
+    setValues(values: SepticAttributeValue[]) {
+        this.values = values;
     }
 
     updateEnd(): void {
@@ -261,6 +295,62 @@ export class SepticAttribute extends SepticBase {
     isKey(key: string) {
         return key === this.key;
     }
+
+    toString(): string {
+        const indentsKey = Math.max(
+            indentsAttributesDelimiter - this.key.length,
+            0,
+        );
+        const attrDefFormatted = " ".repeat(indentsKey) + this.key + "=  ";
+        if (this.getType() === SepticValueTypes.stringList) {
+            return (
+                attrDefFormatted +
+                formatStringList(this.values.map((val) => val.value))
+            );
+        } else if (this.getType() === SepticValueTypes.numericList) {
+            return (
+                attrDefFormatted +
+                formatNumericList(this.values.map((val) => val.value))
+            );
+        } else if (this.getValues().length > 1) {
+            return (
+                attrDefFormatted +
+                formatList(this.values.map((val) => val.value))
+            );
+        } else {
+            return attrDefFormatted + (this.values[0]?.value || "");
+        }
+    }
+}
+
+function formatStringList(values: string[]): string {
+    let formatted = `${values.length - 1}`;
+    values.slice(1).forEach((val, ind) => {
+        if (ind % maxNumberAttrValuesPerLine === 0) {
+            formatted += "\n" + " ".repeat(indentsAttributeValuesStart) + val;
+        } else {
+            formatted += " ".repeat(spacesBetweenValues) + val;
+        }
+    });
+    return formatted;
+}
+
+function formatNumericList(values: string[]): string {
+    let formatted = `${values.length - 1}`;
+    values.slice(1).forEach((val, ind) => {
+        const spaces = Math.max(spacesBetweenIntValues - val.length, 1);
+        formatted +=
+            ind === 0 ? " ".repeat(spaces - 1) + val : " ".repeat(spaces) + val;
+    });
+    return formatted;
+}
+
+function formatList(values: string[]): string {
+    let formatted = `${values.length - 1}`;
+    values.slice(1).forEach((val) => {
+        formatted += " ".repeat(spacesBetweenValues) + val;
+    });
+    return formatted;
 }
 
 export class SepticIdentifier extends SepticBase {
