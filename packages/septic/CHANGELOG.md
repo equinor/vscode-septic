@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.2.0...septic-config-lib-v1.3.0) (2026-03-27)
+
+
+### ✨ Features
+
+* add command for converting between different opc types to cli ([#905](https://github.com/equinor/vscode-septic/issues/905)) ([2391266](https://github.com/equinor/vscode-septic/commit/23912661621bdee1a536cc56eec07f12b95307e7))
+
 ## [1.2.0](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.1.1...septic-config-lib-v1.2.0) (2026-03-26)
 
 
