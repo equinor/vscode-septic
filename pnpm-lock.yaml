@@ -66,8 +66,8 @@ importers:
         specifier: workspace:*
         version: link:../septic
       '@vscode/prompt-tsx':
-        specifier: ^0.4.0-alpha.5
-        version: 0.4.0-alpha.5
+        specifier: ^0.4.0-alpha.8
+        version: 0.4.0-alpha.8
       js-yaml:
         specifier: ^4.1.1
         version: 4.1.1
@@ -585,8 +585,8 @@ packages:
     resolution: {integrity: sha512-Xzmnb58+Db78gT/CCj/PVCvK+zxbnsw6F+O1oheYszJbBSdEjVhQi3C/Xttzxgi/GLmpvOggRs1RFpiJ8+c34Q==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@vscode/prompt-tsx@0.4.0-alpha.5':
-    resolution: {integrity: sha512-Zc7osfYG4w+BWniZGK3Yd9d4LC7MS1AGSUMllhQboxvMT6aWWNo4YnoRlko4YbEY6OWJyNmSGgWEiuT8z8Bjcg==}
+  '@vscode/prompt-tsx@0.4.0-alpha.8':
+    resolution: {integrity: sha512-AJbRUgrGpJNl59uiV0lRa2FsZnO74Fjm4KVt7dQT0PN+ghQjFGJ6lY+w4kF8Gj+2HbOIXNpJvDdGBwa7yuL1+w==}
 
   '@vscode/test-cli@0.0.12':
     resolution: {integrity: sha512-iYN0fDg29+a2Xelle/Y56Xvv7Nc8Thzq4VwpzAF/SIE6918rDicqfsQxV6w1ttr2+SOm+10laGuY9FG2ptEKsQ==}
@@ -2743,7 +2743,7 @@ snapshots:
       '@typescript-eslint/types': 8.50.0
       eslint-visitor-keys: 4.2.1
 
-  '@vscode/prompt-tsx@0.4.0-alpha.5': {}
+  '@vscode/prompt-tsx@0.4.0-alpha.8': {}
 
   '@vscode/test-cli@0.0.12':
     dependencies:

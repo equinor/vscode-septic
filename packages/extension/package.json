@@ -419,7 +419,7 @@
   },
   "dependencies": {
     "@equinor/septic-config-lib": "workspace:*",
-    "@vscode/prompt-tsx": "^0.4.0-alpha.5",
+    "@vscode/prompt-tsx": "^0.4.0-alpha.8",
     "js-yaml": "^4.1.1"
   },
   "devDependencies": {
