@@ -26,15 +26,22 @@ export async function getIgnorePatterns(
 }
 
 export function getIgnoredCodes(path: string, ignorePatterns: IgnoredPaths[]): string[] | undefined {
+    let matched = false;
+    const codes = new Set<string>();
     for (const ignorePattern of ignorePatterns) {
         if (ignorePattern.regex.test(path)) {
-            return ignorePattern.codes;
+            matched = true;
+            // An empty array means ignore all diagnostics for this path.
+            if (ignorePattern.codes.length === 0) {
+                return [];
+            }
+            ignorePattern.codes.forEach((code) => codes.add(code));
         }
     }
-    return undefined;
+    return matched ? [...codes] : undefined;
 }
 
-function pathToRegex(workspace: string, path: string): RegExp {
+export function pathToRegex(workspace: string, path: string): RegExp {
     path = path.replace(/^\./, "").replace(/^\//, "");
     const absPath = workspace + "/" + path;
     let pattern = absPath.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"); // Escape special characters
