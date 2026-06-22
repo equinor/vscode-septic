@@ -10,7 +10,7 @@ jobs:
     name: "🧪 Lint & Test Packages"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install pnpm
         uses: pnpm/action-setup@v5
       - name: Setup Node.js
