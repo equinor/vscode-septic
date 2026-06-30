@@ -109,6 +109,12 @@ export const compareCnfg = new RequestType<
     unknown
 >("septic/compareCnfg");
 
+export const removeDefaults = new RequestType<
+    { uri: string },
+    string,
+    unknown
+>("septic/removeDefaults");
+
 export const contexts = new RequestType<object, string[], unknown>(
     "septic/contexts",
 );
