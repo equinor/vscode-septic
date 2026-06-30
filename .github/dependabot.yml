@@ -8,7 +8,8 @@ updates:
       default-days: 7
       semver-major-days: 14
     commit-message:
-      prefix: "chore(deps): "
+      prefix: "chore"
+      include: "scope"
     groups:
       minor-and-patch:
         update-types:
@@ -25,7 +26,8 @@ updates:
     cooldown:
       default-days: 7
     commit-message:
-      prefix: "chore(deps): "
+      prefix: "chore"
+      include: "scope"
     groups:
       minor-and-patch:
         update-types:
