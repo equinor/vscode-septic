@@ -427,6 +427,6 @@
     "@vscode/test-electron": "^2.5.2",
     "esbuild": "^0.28.1",
     "npm-run-all": "^4.1.5",
-    "tsx": "^4.21.0"
+    "tsx": "^4.22.4"
   }
 }
