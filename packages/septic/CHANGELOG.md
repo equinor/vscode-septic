@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.3.1](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.3.0...septic-config-lib-v1.3.1) (2026-06-30)
+
+
+### 🧹 Chores
+
+* **deps:** bump ajv from 8.18.0 to 8.20.0 ([#949](https://github.com/equinor/vscode-septic/issues/949)) ([634a1d1](https://github.com/equinor/vscode-septic/commit/634a1d158be10ef88ebf0a299d58cfc6b8f4d991))
+* **deps:** bump js-yaml from 4.1.1 to 4.2.0 in the npm_and_yarn group across 1 directory ([#954](https://github.com/equinor/vscode-septic/issues/954)) ([814aa36](https://github.com/equinor/vscode-septic/commit/814aa36fd5a1ce5085f675e5d8908584ea515052))
+* **deps:** bump js-yaml in the npm_and_yarn group across 1 directory ([814aa36](https://github.com/equinor/vscode-septic/commit/814aa36fd5a1ce5085f675e5d8908584ea515052))
+* **deps:** bump the minor-and-patch group with 6 updates ([#958](https://github.com/equinor/vscode-septic/issues/958)) ([189d153](https://github.com/equinor/vscode-septic/commit/189d153c1cf2ddfeb24b1126aa6e9484d059ed99))
+
+
+### 📚 Documentation
+
+* update Septic documentation for v3.8.2 ([#943](https://github.com/equinor/vscode-septic/issues/943)) ([88ca899](https://github.com/equinor/vscode-septic/commit/88ca899c2024c7b19ea2529570ee90165166aae7))
+
 ## [1.3.0](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.2.0...septic-config-lib-v1.3.0) (2026-03-27)
 
 
