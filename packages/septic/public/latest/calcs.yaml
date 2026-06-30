@@ -692,7 +692,7 @@
   detailedDescription: "Construct the experimental model for use in ExprProc simulator\
     \ from parameters. Cvr and Mvr/Dvr needs to be\r\n  contained in same SmpcAppl/MPCAppl/NMPCAppl.\r\
     \n  The Laplace transform model is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1\
-    \ + lag2*s) where lead1, delay, lag1 and\r\n  lag2 are given in minutes."
+    \ + lag2*s) where lead1, delay, lag1\r\n  and lag2 are given in minutes."
   quality: GOOD if valid model between cvr and xvr, and all inputs are GOOD, else
     BAD
 - name: exprprocmodset
@@ -724,7 +724,7 @@
     - value
     arity: '1'
   retr: "steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl/MPCAppl/NMPCAppl\
-    \ with an ExprModl\r\n  and Amodl exists, else 0"
+    \ with an\r\n  ExprModl and Amodl exists, else 0"
   detailedDescription: Set the gain modifier in the active experimental model (ExprIvr.Scale)
     of ExprProc
   quality: GOOD if CV and IV belongs to same SmpcAppl/MPCAppl/NMPCAppl with an ExprModl
@@ -1580,6 +1580,29 @@
   retr: Calculated quality of mix, 0 if sum of volumes = 0
   detailedDescription: Calculate flash of a mix
   quality: GOOD if all supplied parameters are GOOD
+- name: idiv
+  signature: idiv(a, b)
+  parameters:
+  - name: a
+    description: Dividend
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: b
+    description: Divisor (must be non-zero)
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: Integer quotient trunc(a) / trunc(b)
+  detailedDescription: "Computes the integer quotient of a divided by b, following\
+    \ the C++\r\n  built-in integer division semantics (truncation toward zero), as\
+    \ described in\r\n  https://en.cppreference.com/w/cpp/language/operator_arithmetic.html\
+    \ and\r\n  https://en.cppreference.com/w/cpp/numeric/math/div.html. The inputs\
+    \ are\r\n  first truncated toward zero to int, and the integer quotient is\r\n\
+    \  returned as a double."
+  quality: GOOD only if both a and b are GOOD and b != 0
 - name: if
   signature: if(condition, trueexpr, falseexpr, notinuse)
   parameters:
@@ -1639,6 +1662,29 @@
   quality: "GOOD if number of arguments is odd and >= 3 and all cond's and selected\
     \ expressions up to and including the\r\n  last (returned) evaluated expression\
     \ are GOOD, else BAD."
+- name: imod
+  signature: imod(a, b)
+  parameters:
+  - name: a
+    description: Dividend
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: b
+    description: Divisor (must be non-zero)
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: Integer remainder trunc(a) % trunc(b)
+  detailedDescription: "Computes the integer remainder of a divided by b, following\
+    \ the C++\r\n  built-in integer remainder semantics (sign of result follows the\
+    \ dividend),\r\n  as described in\r\n  https://en.cppreference.com/w/cpp/language/operator_arithmetic.html\
+    \ and\r\n  https://en.cppreference.com/w/cpp/numeric/math/div.html. The inputs\
+    \ are\r\n  first truncated toward zero to int, then a % b is returned as a\r\n\
+    \  double. The identity (a/b)*b + a%b == a holds."
+  quality: GOOD only if both a and b are GOOD and b != 0
 - name: intpoltype1
   signature: intpoltype1(x, X1, Y1, X2, Y2, ..., XN, YN)
   parameters:
@@ -2106,7 +2152,7 @@
   retr: Steady state gain from xvr towards cvr if valid model, else 0
   detailedDescription: "Get the steady state gain from the active experimental model,\
     \ including the scaling by\r\n  the gain modifier (Scale) set by CalcModSet. Cvr\
-    \ and Mvr/Dvr needs to be contained in same SmpcAppl/MPCAppl/NMPCAppl."
+    \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl/NMPCAppl."
   quality: GOOD if valid model between cvr and xvr
 - name: modsched
   signature: modsched(cvr, xvr, gain, lag1, lag2, lead1, delay, apply)
@@ -2291,6 +2337,80 @@
   quality: quality(x)
 - name: neqsimjcafiv
   signature: neqsimjcafiv()
+  parameters:
+  - name: Slot
+    description: "Slot-index 1-32. Which slot to use for the calculation. Each well\
+      \ should use a dedicated and unique\r\n  slot."
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: Mode
+    description: "Calc mode 0-2. 0=execute NeqSim calculation thread, 1=get last calculated\
+      \ Frms, 2=get last\r\n  calculated F_rms_max"
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: FluidID
+    description: Fluid index 0-3. 0=default, 1= Skrugard, 2= Havis, 3= Drivis
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  - name: Qg
+    description: Gas rate std >= 0 [Sm3/h]
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  - name: Qo
+    description: Oil rate std >= 0 [Sm3/h]
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  - name: Qw
+    description: Water rate std >= 0 [Sm3/h]
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  - name: PT
+    description: Pressure >= 0 [barg]
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  - name: TT
+    description: Temperature >= -100 [degC]
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  - name: A
+    description: Pipe cross section area > 0.003 [m2]
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  retr: "Mode 0: Time spent performing the calculation. Mode > 0: Output variables\
+    \ from last valid result as defined\r\n  above."
+  detailedDescription: "Calculates liquid and gas rates at downstream choke conditions\
+    \ (flash) and returns current Frms and the max\r\n  acceptable Frms.<br>\r\n\r\
+    \n  The calculation is a NeqSim routine that runs in a Graal isolate. The time\
+    \ to complete one calc is around 100ms, but\r\n  can vary widely. Therefore the\
+    \ Graal isolate routine is run in a separate thread.\r\n\r\n  The calc has three\
+    \ modes, selectable with the input parameter \"Mode\".\r\n  - Mode = 0: The calculation\
+    \ is initiated unless it is already running. If already running, nothing is done.\
+    \ The\r\n  returned value in mode 0 is the time spent so far in the thread. If\
+    \ the thread has completed, the calculated values\r\n  are available using modes\
+    \ 1 and 2, and a new calculation is initiated.\r\n  - Mode = 1: The last calculated\
+    \ Frms is returned.\r\n  - Mode = 2: The last calculated F_rms_max is returned."
+  quality: 'Mode 0: GOOD if all inputs are GOOD, else BAD. Mode > 0: GOOD if the last
+    NeqSim calculation succeeded.'
+- name: neqsimkrifiv
+  signature: neqsimkrifiv()
   parameters:
   - name: Slot
     description: "Slot-index 1-32. Which slot to use for the calculation. Each well\
@@ -2786,6 +2906,96 @@
   retr: Set value
   detailedDescription: Set deas for dvr
   quality: state if valid dvr otherwise BAD
+- name: setdvdeltapred
+  signature: setdvdeltapred(dvr, N, X1, Y1, X2, Y2, ..., XN, YN)
+  parameters:
+  - name: dvr
+    description: Dvr Tag
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: N
+    description: Number of deltas (>= 0)
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: Xn
+    description: X - values (sample number). Assumed to be monotonically increasing
+    direction: in
+    datatype:
+    - value
+    arity: N
+  - name: Yn
+    description: Y - values corresponding to X - values
+    direction: in
+    datatype:
+    - value
+    arity: N
+  retr: Resulting sum of deltas Yn
+  detailedDescription: "Sets the DeltaPred member of a Dvr object. X1 is the number\
+    \ of samples until the first change (delta) in\r\n  DV in the prediction and Y1\
+    \ is the corresponding delta. Assumes that the sequence of X1, X2, ..., XN values\
+    \ are\r\n  monotonically increasing"
+  quality: GOOD only if ALL arguments are GOOD and valid dvr and else BAD
+- name: setdvdeltapredfromcv
+  signature: setdvdeltapredfromcv(dvr, cvr[, scale])
+  parameters:
+  - name: dvr
+    description: Dvr Tag
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: cvr
+    description: Cvr Tag whose predictions are copied as step deltas
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: scale
+    description: "Optional scaling factor applied to each step delta before storing\
+      \ in the\r\n                   DV. Defaults to 1.0 when omitted."
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: Sum of the copied (scaled) deltas
+  detailedDescription: "Copies the Cvr predictions into the DeltaPred member of a\
+    \ Dvr as steps at the\r\n  Cvr's evaluation points, optionally scaled by the given\
+    \ factor. For each evaluation point\r\n  EvalPnt[i] of the Cvr, the delta written\
+    \ into the Dvr is the change in the Cvr prediction\r\n  between consecutive evaluation\
+    \ points (the first eval point is referenced against the\r\n  current Cvr measurement),\
+    \ multiplied by scale."
+  quality: GOOD if all arguments resolve correctly, otherwise BAD
+- name: setdvdeltapredfrommv
+  signature: setdvdeltapredfrommv(dvr, mvr[, scale])
+  parameters:
+  - name: dvr
+    description: Dvr Tag
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: mvr
+    description: Mvr Tag whose predicted deltas are copied
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: scale
+    description: "Optional scaling factor applied to each MV delta before storing\
+      \ in the\r\n                   DV. Defaults to 1.0 when omitted."
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: Sum of the copied (scaled) deltas
+  detailedDescription: "Copies the predicted future moves of an Mvr into the DeltaPred\
+    \ member of a Dvr,\r\n  optionally scaled by the given factor. For each prediction\
+    \ step i in 1..Npred, sets\r\n  dvr->setDeltaPred(i, scale * mvr->mgetdv(N + i))."
+  quality: GOOD if all arguments resolve correctly, otherwise BAD
 - name: setfulf
   signature: setfulf(xvr, value)
   parameters:

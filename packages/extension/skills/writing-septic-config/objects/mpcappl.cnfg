@@ -7,3 +7,4 @@
        FeasTol=  1e-10
        FailMax=  0
        DesMode=  STOPPED
+        LmPrio=  100
