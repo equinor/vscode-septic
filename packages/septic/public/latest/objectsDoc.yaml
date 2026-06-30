@@ -1018,7 +1018,7 @@
     default:
     - '1'
     - '30'
-    - '90'
+    - '80'
     postfix: []
     snippet: ''
     calc: false
