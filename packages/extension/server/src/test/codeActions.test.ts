@@ -209,8 +209,8 @@ describe("Test codeaction for ignoring warning", () => {
         const textEdits = codeActions[0].edit?.documentChanges?.at(
             0,
         ) as TextDocumentEdit;
-        const updatedeContent = TextDocument.applyEdits(doc, textEdits.edits as TextEdit[]);
-        const updatedCnfg = parseSepticForTest(updatedeContent);
+        const updatedContent = TextDocument.applyEdits(doc, textEdits.edits as TextEdit[]);
+        const updatedCnfg = parseSepticForTest(updatedContent);
         expect(updatedCnfg.comments[1].content).to.equal("// noqa: W501, E202");
     });
     it("Expect code actions to suggest updating ignore comments for all codes", async () => {
