@@ -210,7 +210,7 @@ connection.onRequest(protocol.documentation, async () => {
     };
 });
 
-connection.onRequest(protocol.variables, async (param) => {
+connection.onRequest(protocol.variables.method, async (param) => {
     let context: SepticContext | undefined = await scgContextManager.getContext(
         param.uri,
     );
