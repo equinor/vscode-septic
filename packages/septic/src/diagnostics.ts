@@ -98,6 +98,7 @@ export enum SepticDiagnosticCode {
     invalidReference = "W502",
     unusedEvr = "W503",
     duplicate = "W504",
+    caseDiscrepancyPath = "W701",
     invalidComment = "W601",
 }
 
