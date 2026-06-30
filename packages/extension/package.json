@@ -15,7 +15,7 @@
     "multi-root ready"
   ],
   "engines": {
-    "vscode": "^1.110.0"
+    "vscode": "^1.125.0"
   },
   "activationEvents": [
     "onLanguage:septic"
@@ -422,7 +422,7 @@
     "js-yaml": "^4.2.0"
   },
   "devDependencies": {
-    "@types/vscode": "^1.110.0",
+    "@types/vscode": "^1.125.0",
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.0.0",
     "esbuild": "^0.28.1",

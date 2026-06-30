@@ -6,20 +6,20 @@
     "@eslint/js": "^9.39.4",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^24.10.2",
+    "@types/node": "^24.13.2",
     "@typescript-eslint/eslint-plugin": "^8.62.1",
     "@typescript-eslint/parser": "^8.62.1",
     "chai": "^6.2.2",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.1.0",
     "eslint": "^9.39.1",
-    "mocha": "^11.7.5",
+    "mocha": "^11.7.6",
     "nyc": "^18.0.0",
-    "prettier": "^3.8.1",
+    "prettier": "^3.8.4",
     "source-map-support": "^0.5.21",
     "ts-node": "^10.9.2",
     "typescript": "5.9.3",
-    "typescript-eslint": "^8.49.0"
+    "typescript-eslint": "^8.62.0"
   },
   "engines": {
     "node": ">=18"
