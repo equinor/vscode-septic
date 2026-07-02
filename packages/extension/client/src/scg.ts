@@ -111,7 +111,10 @@ export class ScgConfig {
     }
 
     public async updateConfig() {
-        this.config = await readScgConfig(this.path);
+        const config = await readScgConfig(this.path);
+        if (config) {
+            this.config = config;
+        }
     }
 
     get name(): string {
@@ -183,7 +186,7 @@ export class ScgSource {
         this.delimiter = delimiter;
     }
 
-    private async getData(): Promise<string[][]> {
+    private async getData(): Promise<string[][] | undefined> {
         if (!this.data) {
             try {
                 this.data = await this.load();

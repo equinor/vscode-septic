@@ -77,11 +77,11 @@ export class GetVariables implements vscode.LanguageModelTool<GetVariablesParams
             options.input.uri ??
             vscode.window.activeTextEditor?.document.uri.toString();
         const variables = await this.client.sendRequest(protocol.variables, {
-            uri: uri,
+            uri: uri ?? "",
         });
         const variablesString =
             variables
-                ?.map((variable) => {
+                ?.map((variable: { type: string; name: string; description: string }) => {
                     return `${variable.type} ${variable.name}: ${variable.description}`;
                 })
                 .join("\n") ?? "";

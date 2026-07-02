@@ -10,7 +10,7 @@ export function createMdfWebviewPanel(content: string, title: string): vscode.We
 		{ enableScripts: true }
 	);
 	panel.webview.html = getMdfWebviewContent();
-	const plotData = { amodel: parsedData.a ? { x: parsedData.a.map((val, idx) => (idx * parsedData.nsecs)) || [], y: parsedData.a || [] } : undefined, bmodel: parsedData.b ? { x: parsedData.b.map((val, idx) => (idx * parsedData.nsecs)) || [], y: parsedData.b || [] } : undefined, title: title };
+	const plotData = { amodel: parsedData.a ? { x: parsedData.a.map((val, idx) => (idx * (parsedData.nsecs ?? 0))) || [], y: parsedData.a || [] } : undefined, bmodel: parsedData.b ? { x: parsedData.b.map((val, idx) => (idx * (parsedData.nsecs ?? 0))) || [], y: parsedData.b || [] } : undefined, title: title };
 	panel.webview.postMessage({ type: 'plot', data: plotData });
 	return panel;
 }
