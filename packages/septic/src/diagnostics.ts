@@ -68,6 +68,7 @@ const maxAlgLength = 250;
     4**: Structure
     5**: References
     6**: Comments
+    7**: Files
 */
 export enum SepticDiagnosticCode {
     invalidIdentifier = "W101",
@@ -98,8 +99,8 @@ export enum SepticDiagnosticCode {
     invalidReference = "W502",
     unusedEvr = "W503",
     duplicate = "W504",
-    caseDiscrepancyPath = "W701",
     invalidComment = "W601",
+    caseDiscrepancyPath = "W701",
 }
 
 export enum SepticDiagnosticLevel {
