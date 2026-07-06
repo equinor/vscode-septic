@@ -420,7 +420,7 @@
   },
   "dependencies": {
     "@equinor/septic-config-lib": "workspace:*",
-    "js-yaml": "^4.2.0"
+    "js-yaml": "^5.0.0"
   },
   "devDependencies": {
     "@types/vscode": "^1.125.0",
