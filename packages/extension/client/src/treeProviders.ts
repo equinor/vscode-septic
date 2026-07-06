@@ -41,6 +41,9 @@ export class ApplicationTreeProvider implements vscode.TreeDataProvider<Applicat
 			return Promise.resolve([layout, sources]);
 		} else if (element.type === ApplicationTreeItemType.Layout) {
 			const items: ApplicationTreeItem[] = [];
+			if (!element.config) {
+				return Promise.resolve([]);
+			}
 			for (const layout of element.config.layout) {
 				items.push(new ApplicationTreeItem(layout.name, ApplicationTreeItemType.Template, vscode.TreeItemCollapsibleState.None, element.config, {
 					command: 'vscode.open',
@@ -51,6 +54,9 @@ export class ApplicationTreeProvider implements vscode.TreeDataProvider<Applicat
 			return Promise.resolve(items);
 		} else if (element.type === ApplicationTreeItemType.Sources) {
 			const items: ApplicationTreeItem[] = [];
+			if (!element.config) {
+				return Promise.resolve([]);
+			}
 			const sources = await element.config.getSources();
 			for (const source of sources) {
 				items.push(new ApplicationTreeItem(source.id, ApplicationTreeItemType.Source, vscode.TreeItemCollapsibleState.Collapsed, element.config, {
@@ -61,6 +67,9 @@ export class ApplicationTreeProvider implements vscode.TreeDataProvider<Applicat
 			}
 			return Promise.resolve(items);
 		} else if (element.type === ApplicationTreeItemType.Source) {
+			if (!element.config) {
+				return Promise.resolve([]);
+			}
 			const source = await element.config.getSourceById(element.label);
 			if (!source) {
 				return Promise.resolve([]);
@@ -81,7 +90,7 @@ export class ApplicationTreeProvider implements vscode.TreeDataProvider<Applicat
 		const applications = await this.appManager.getApplications();
 		const currentApplication = await this.appManager.getCurrentApplication();
 		const applicationTreeItems = [];
-		for (const app of applications) {
+		for (const app of applications ?? []) {
 			const itemState = app === currentApplication ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
 			applicationTreeItems.push(new ApplicationTreeItem(app.name, ApplicationTreeItemType.Application, itemState, undefined));
 		}
@@ -119,7 +128,7 @@ export class ApplicationTreeItem extends vscode.TreeItem {
 		public readonly label: string,
 		public readonly type: ApplicationTreeItemType,
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-		public readonly config: ScgConfig,
+		public readonly config: ScgConfig | undefined,
 		public readonly command?: vscode.Command,
 		public readonly source?: string
 	) {
@@ -172,26 +181,30 @@ export class JinjaVariablesTreeProvider implements vscode.TreeDataProvider<Jinja
 		if (!element) {
 			return Promise.resolve(this.getJinjaVariables());
 		}
+		return [];
 	}
 
 	private async getJinjaVariables(): Promise<JinjaVariableNode[]> {
 		const scg = await this.appManager.getCurrentScgContext();
 		if (!scg) {
-			return undefined;
+			return [];
 		}
 		const activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor) {
-			return undefined;
+			return [];
 		}
 		const filePath = activeEditor.document.uri.fsPath;
 		const template = scg.layout.find((t) => t.name === path.basename(filePath));
 		if (!template || template.source === undefined) {
-			return undefined;
+			return [];
 		}
-		const source = await scg.getSourceById(template.source)
+		const source = await scg.getSourceById(template.source);
+		if (!source) {
+			return [];
+		}
 		const columns = await source.getHeaders();
 		if (!columns) {
-			return undefined;
+			return [];
 		}
 		return columns.map(column => new JinjaVariableNode(column, vscode.TreeItemCollapsibleState.None, source));
 	}
@@ -254,7 +267,7 @@ export class SepticFunctionTreeProvider implements vscode.TreeDataProvider<Septi
 				} else {
 					label += `${line.name} = ${line.alg}`;
 				}
-				const uri = vscode.Uri.parse(line.uri).with({ fragment: 'L' + (line.pos.line + 1) });
+				const uri = vscode.Uri.parse(line.uri).with({ fragment: 'L' + ((line.pos?.line ?? 0) + 1) });
 				const command: vscode.Command = {
 					command: 'vscode.open',
 					title: 'Go to function',
@@ -265,7 +278,7 @@ export class SepticFunctionTreeProvider implements vscode.TreeDataProvider<Septi
 			return Promise.resolve(lines)
 		} else if (element.type === SepticFunctionTreeItemType.Inputs) {
 			const inputs = element.func.inputs.map((input) => {
-				const uri = vscode.Uri.parse(input.uri).with({ fragment: 'L' + (input.pos.line + 1) });
+				const uri = vscode.Uri.parse(input.uri).with({ fragment: 'L' + ((input.pos?.line ?? 0) + 1) });
 				const command: vscode.Command = {
 					command: 'vscode.open',
 					title: 'Go to function',
@@ -275,17 +288,17 @@ export class SepticFunctionTreeProvider implements vscode.TreeDataProvider<Septi
 			});
 			return Promise.resolve(inputs);
 		}
-
+		return [];
 	}
 
 	private async getSepticFunctions(): Promise<SepticFunctionTreeItem[]> {
 		const activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor) {
-			return undefined;
+			return [];
 		}
 		const functions: SepticFunctionExport[] = await this.client.sendRequest('septic/getFunctions', { uri: activeEditor.document.uri.toString() });
 		if (!functions || functions.length === 0) {
-			return this.functionsCache ? this.functionsCache.map(func => new SepticFunctionTreeItem(func.name, vscode.TreeItemCollapsibleState.Collapsed, func, SepticFunctionTreeItemType.Definition)) : undefined;
+			return this.functionsCache ? this.functionsCache.map(func => new SepticFunctionTreeItem(func.name, vscode.TreeItemCollapsibleState.Collapsed, func, SepticFunctionTreeItemType.Definition)) : [];
 		}
 		this.functionsCache = functions;
 		return functions.map(func => new SepticFunctionTreeItem(func.name, vscode.TreeItemCollapsibleState.Collapsed, func, SepticFunctionTreeItemType.Definition));

@@ -25,7 +25,7 @@ export function parseMdf(input: string): MdfData {
 			if (key === 'nsecs' || key === 'amodl' || key === 'bmodl') {
 				value = Number(value);
 			}
-			result[key] = value;
+			(result as Record<string, string | number>)[key] = value;
 			return true;
 		}
 		return false;

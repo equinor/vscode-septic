@@ -41,7 +41,7 @@ suite("Test OPC-taglist command", async () => {
 
         await commandPromise;
         await sleep(100);
-        const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        const wsPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath ?? "";
         const expectedFileName = "opc_tags_scg.csv";
         const filePath = vscode.Uri.file(`${wsPath}/${expectedFileName}`);
 
@@ -72,7 +72,7 @@ suite("Test OPC-taglist command", async () => {
 
         await commandPromise;
         await sleep(100);
-        const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        const wsPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath ?? "";
         const expectedFileName = "opc_tags_test.csv";
         const filePath = vscode.Uri.file(`${wsPath}/${expectedFileName}`);
 

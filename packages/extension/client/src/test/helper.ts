@@ -20,6 +20,9 @@ export async function activate() {
     }
     try {
         const ext = vscode.extensions.getExtension("EinarSIdso.septic-config");
+        if (!ext) {
+            return;
+        }
         await ext.activate();
         await sleep(2000);
         activated = true;

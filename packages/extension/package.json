@@ -415,7 +415,7 @@
     "package": "pnpm check-types && node esbuild.js --production && copyfiles -u 3 ../septic/public/* ../septic/public/**/*  dist/public",
     "lint": "eslint -c eslint.config.mjs ./client/src ./server/src",
     "integration-test": "pnpm build && pnpm build:test && vscode-test",
-    "test": "cross-env NODE_ENV=test mocha",
+    "test": "cross-env NODE_ENV=test TS_NODE_PROJECT=server/tsconfig.test.json mocha",
     "test_with_coverage": "pnpm build && nyc mocha --import ts-node/esm --require source-map-support/register --recursive server/src/test/**/*.test.ts "
   },
   "dependencies": {

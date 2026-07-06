@@ -152,7 +152,7 @@ export function registerCommandAddTemplate(
     vscode.commands.registerCommand(
         "septic.scgtree.addTemplate",
         async (node: ApplicationTreeItem) => {
-            if (!node) {
+            if (!node || !node.config) {
                 return;
             }
             const template = await vscode.window.showInputBox({
@@ -199,7 +199,7 @@ export function registerCommandRemoveTemplate(
     vscode.commands.registerCommand(
         "septic.scgtree.removeTemplate",
         async (node: ApplicationTreeItem) => {
-            if (!node) {
+            if (!node || !node.config) {
                 return;
             }
             const confirmation = await vscode.window.showQuickPick(
@@ -225,7 +225,7 @@ export function registerCommandRenameTemplate(
     vscode.commands.registerCommand(
         "septic.scgtree.renameTemplate",
         async (node: ApplicationTreeItem) => {
-            if (!node) {
+            if (!node || !node.config) {
                 return;
             }
             const newName = await vscode.window.showInputBox({
@@ -253,7 +253,7 @@ export function registerCommandAddSource(
     vscode.commands.registerCommand(
         "septic.scgtree.addSource",
         async (node: ApplicationTreeItem) => {
-            if (!node) {
+            if (!node || !node.config) {
                 return;
             }
             const newName = await vscode.window.showInputBox({
@@ -371,11 +371,11 @@ export function registerCommandMakeConfig() {
             });
             const terminal = vscode.window.createTerminal({
                 name: `Septic: Make scg config`,
-                cwd: path.dirname(e.config.path),
+                cwd: path.dirname(e.config?.path ?? ""),
             });
             terminal.show();
             terminal.sendText(`scg make ${e.label} ${args}`);
-            if (e.config.outputfile) {
+            if (e.config?.outputfile) {
                 vscode.window.showTextDocument(
                     vscode.Uri.file(e.config.outputfile),
                 );
