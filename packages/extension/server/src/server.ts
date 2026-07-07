@@ -37,6 +37,7 @@ import {
     SepticMetaInfoProvider,
     SepticCnfg,
     compareCnfgs,
+    removeDefaultLines,
 } from "@equinor/septic-config-lib";
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
 import { ContextManager } from "./contextManager";
@@ -178,6 +179,16 @@ connection.onRequest(protocol.compareCnfg, async (param) => {
         return "";
     }
     return compareCnfgs(prevCnfg, currentCnfg, param.settingsFile);
+});
+
+connection.onRequest(protocol.removeDefaults, async (param) => {
+    const cnfg: SepticCnfg | undefined = await langService.cnfgProvider.get(
+        param.uri,
+    );
+    if (!cnfg) {
+        return "";
+    }
+    return removeDefaultLines(cnfg);
 });
 
 connection.onRequest(protocol.contexts, async () => {
