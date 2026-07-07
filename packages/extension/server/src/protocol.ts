@@ -43,6 +43,10 @@ export const fsReadFile = new RequestType<{ uri: string }, number[], unknown>(
     "septic/fs_readfile",
 );
 
+export const fsReadDir = new RequestType<{ uri: string }, string[], unknown>(
+    "septic/fs_readdir",
+);
+
 export const findYamlFiles = new RequestType<object, string[], unknown>(
     "septic/findYamlFiles",
 );
