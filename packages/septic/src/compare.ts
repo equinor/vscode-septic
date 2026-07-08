@@ -370,7 +370,7 @@ export function compareAttributes(
         const prevValue = prevAttr?.getValues() ?? attr.default;
         const currentAttr = currentObj.getAttribute(attr.name);
         const currentValue = currentAttr?.getValues() ?? attr.default;
-        let isDiff = false;
+        let isDiff: boolean;
         if (prevObj.type === "CalcPvr" && attr.name === "Alg") {
             isDiff = !compareAlg(prevValue[0]!, currentValue[0]!);
         } else {
