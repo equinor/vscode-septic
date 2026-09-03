@@ -60,6 +60,63 @@
     noCnfg: false
     nosnippet: false
     tags: []
+- name: BadCalcList
+  description: List of bad calcs in application
+  parents:
+  - DisplayGroup
+  attributes:
+  - name: Row
+    description: Position in a gridded display group
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '1'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: Col
+    description: position in a gridded display group
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '1'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: RowSize
+    description: Height of item in a gridded group
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '-1'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: ColSize
+    description: Width of item in a gridded group
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '-1'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
 - name: BadXvrList
   description: List of bad xvrs in application
   parents:
@@ -1018,7 +1075,7 @@
     default:
     - '1'
     - '30'
-    - '90'
+    - '80'
     postfix: []
     snippet: ''
     calc: false
