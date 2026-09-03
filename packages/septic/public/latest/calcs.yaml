@@ -20,8 +20,8 @@
     - value
     arity: '1'
   retr: Inverse cosine of input
-  detailedDescription: "Computes the inverse cosine (arccosine) of input.\r\n  Use\
-    \ acos(min(1, max(-1, arg))) to avoid error in input"
+  detailedDescription: "Computes the inverse cosine (arccosine) of input.\n  Use acos(min(1,\
+    \ max(-1, arg))) to avoid error in input"
   quality: quality(x) if -1 <= x <= 1 else BAD
 - name: act
   signature: act(xvr)
@@ -35,7 +35,7 @@
     arity: '1'
   retr: 'Measurement value with quality GOOD if condition is true: Xvr.Meas'
   detailedDescription: "Checks the final status for given  xvr. Returns quality =\
-    \ GOOD if FinalStatus >= ADVISORY. Intended for\r\n  Mvr/Cvr"
+    \ GOOD if FinalStatus >= ADVISORY. Intended for\n  Mvr/Cvr"
   quality: GOOD if Xvr.FinalStatus >= ADVISORY and quality(Xvr.Meas) == GOOD, BAD
     otherwise
 - name: actchk
@@ -124,7 +124,7 @@
     - value
     arity: '1'
   retr: Inverse sine of input
-  detailedDescription: "Computes the inverse sine (arcsine) of input.\r\n  Use asin(min(1,\
+  detailedDescription: "Computes the inverse sine (arcsine) of input.\n  Use asin(min(1,\
     \ max(-1, arg))) to avoid error in input"
   quality: quality(x) if -1 <= x <= 1 else BAD
 - name: avgselection
@@ -164,8 +164,8 @@
   detailedDescription: Gets the number of consecutive BAD states on expression x.
     Reset to 0 when current x is GOOD
   quality: GOOD
-- name: calcdiluentrate2wio
-  signature: calcdiluentrate2wio(qoH,qoM,qdT,outMeas)
+- name: calcdiluentrate2meas
+  signature: calcdiluentrate2meas(qoH, qoM, qdT, outMeas)
   parameters:
   - name: qoH
     description: volumetric rate Heimdal oil Mariner
@@ -281,6 +281,40 @@
   retr: Calculated quality of mix, 0 if sum of volumes = 0
   detailedDescription: Calculate cloud of a mix
   quality: GOOD if all supplied parameters are GOOD
+- name: copypredtocvsetpnt
+  signature: copypredtocvsetpnt(cvr, src, apply)
+  parameters:
+  - name: cvr
+    description: Cvr Tag whose setpoint and prediction schedule are updated
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: src
+    description: Mvr or Cvr Tag whose predicted values are copied
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: apply
+    description: "Gate: must be 0 or 1 (+/- threshold). 1 applies the copy, 0 does\
+      \ nothing,\n                   any other value yields BAD."
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: The source current value when applied, 0 otherwise
+  detailedDescription: "When apply == 1, copies the predicted future values of the\
+    \ source Xvr into the\n  setpoint prediction schedule of a Cvr, and updates the\
+    \ Cvr current setpoint to the source\n  current value. For each prediction step\
+    \ i in 1..minNpred, sets\n  cvr->setSetpointPred(i, sourceValue(N + i)). The source\
+    \ may be an Mvr (read with mget()) or\n  a Cvr (read with cget()); that accessor\
+    \ is the only difference between the two. Any other\n  apply value (including\
+    \ 0) leaves the Cvr untouched. A small tolerance is applied when\n  comparing\
+    \ apply to 1.\n\n  Not supported for SMPC applications (sp_pred is only consumed\
+    \ by MPC / NMPC)."
+  quality: GOOD if all arguments resolve correctly and apply is 0 or 1, otherwise
+    BAD
 - name: cos
   signature: cos(x)
   parameters:
@@ -309,7 +343,7 @@
     - value
     arity: '?'
   retr: "Active control spec.: -1: CV not active, 0: ssval not equal to any of SetPnt,\
-    \ High, Low,\r\n  1: ssval = SetPnt, 2: ssval = Low, 3: ssval = High"
+    \ High, Low,\n  1: ssval = SetPnt, 2: ssval = Low, 3: ssval = High"
   detailedDescription: Computes the currently active control spec
   quality: GOOD
 - name: cvhighdevavg
@@ -349,7 +383,7 @@
     arity: '1'
   retr: 'Standard deviation for Cvr: 0 if BAD'
   detailedDescription: "Computes the standard deviation between measurement and highlimit\
-    \ for given cvr over the specified time\r\n  horizon."
+    \ for given cvr over the specified time\n  horizon."
   quality: GOOD if valid cvr else BAD
 - name: cvlowdevavg
   signature: cvlowdevavg(cvr, nsamp)
@@ -387,7 +421,7 @@
     arity: '1'
   retr: Standard deviation for Cvr:0 if BAD
   detailedDescription: "Computes the standard deviation between measurement and lowlimit\
-    \ for given cvr over the specified time\r\n  horizon."
+    \ for given cvr over the specified time\n  horizon."
   quality: GOOD if valid cvr else BAD
 - name: cvmodeldevstd
   signature: cvmodeldevstd(cvr, nsamp)
@@ -424,9 +458,9 @@
     - value
     arity: '?'
   retr: "Open loop prediction point for Cvr: Cvr.OpenLoop(n) - end value if npred\
-    \ is not given or npred is bad or\r\n  nonexisting Xvr"
+    \ is not given or npred is bad or\n  nonexisting Xvr"
   detailedDescription: "Gets the open loop prediction point n sample ahead. If n<1,\
-    \ current value (n=0, nomval + bias) is given, if\r\n  n>last evaluation point,\
+    \ current value (n=0, nomval + bias) is given, if\n  n>last evaluation point,\
     \ then prediction at last evaluation (end value) is given"
   quality: GOOD
 - name: cvpo
@@ -458,8 +492,8 @@
     arity: '1'
   retr: 'Future prediction point n samples ahead: Cvr.OptPred(pAppl->N + n)'
   detailedDescription: "Gets the future prediction point n sample ahead. If n<1, prediction\
-    \ 1 step forward is given, if n>last\r\n  evaluation point, then prediction at\
-    \ last evaluation (end value) is given"
+    \ 1 step forward is given, if n>last\n  evaluation point, then prediction at last\
+    \ evaluation (end value) is given"
   quality: GOOD
 - name: cvspdevavg
   signature: cvspdevavg(cvr, nsamp)
@@ -498,7 +532,7 @@
   retr: 'Standard deviation for Cvr over time horizon: cvspdevstd() if quality GOOD
     else 0'
   detailedDescription: "Computes the standard deviation between measurement and setpoint\
-    \ for given cvr over the specified time\r\n  horizon."
+    \ for given cvr over the specified time\n  horizon."
   quality: GOOD if valid cvr else BAD
 - name: datadebug
   signature: datadebug(debugon, <fileno>)
@@ -619,7 +653,7 @@
     - value
     arity: '1'
   retr: "Gradient multiplied by a/2, thus multiply by 2/a to get a correct value of\
-    \ gradient. Calculated quality of\r\n  mix, 0 if sum of volumes = 0"
+    \ gradient. Calculated quality of\n  mix, 0 if sum of volumes = 0"
   detailedDescription: Implements a gradient estimator based on Extremum seeking algorithm
     in discrete time domain
   quality: GOOD if all supplied parameters are GOOD
@@ -690,9 +724,9 @@
     arity: '1'
   retr: Value of apply paramter
   detailedDescription: "Construct the experimental model for use in ExprProc simulator\
-    \ from parameters. Cvr and Mvr/Dvr needs to be\r\n  contained in same SmpcAppl/MPCAppl/NMPCAppl.\r\
-    \n  The Laplace transform model is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1\
-    \ + lag2*s) where lead1, delay, lag1 and\r\n  lag2 are given in minutes."
+    \ from parameters. Cvr and Mvr/Dvr needs to be\n  contained in same SmpcAppl/MPCAppl/NMPCAppl.\n\
+    \  The Laplace transform model is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1\
+    \ + lag2*s) where lead1, delay, lag1\n  and lag2 are given in minutes."
   quality: GOOD if valid model between cvr and xvr, and all inputs are GOOD, else
     BAD
 - name: exprprocmodset
@@ -724,7 +758,7 @@
     - value
     arity: '1'
   retr: "steady state gain, of the scaled Amodl if CV and IV belongs to same SmpcAppl/MPCAppl/NMPCAppl\
-    \ with an ExprModl\r\n  and Amodl exists, else 0"
+    \ with an\n  ExprModl and Amodl exists, else 0"
   detailedDescription: Set the gain modifier in the active experimental model (ExprIvr.Scale)
     of ExprProc
   quality: GOOD if CV and IV belongs to same SmpcAppl/MPCAppl/NMPCAppl with an ExprModl
@@ -777,7 +811,7 @@
     arity: '?'
   retr: Filtered measurement value
   detailedDescription: "First order filter that keeps value unchanged for BAD raw\
-    \ value. To be used for instance for slow BIAS\r\n  updates from analyzers"
+    \ value. To be used for instance for slow BIAS\n  updates from analyzers"
   quality: quality(rawmeas)
 - name: filtopti
   signature: filtopti(currentValue, updateValue, tau, roc, update)
@@ -858,6 +892,30 @@
   detailedDescription: Implements a MPM flash from multiphase meter line conditions
     to standard conditions
   quality: GOOD if all inputs are GOOD
+- name: flashmix
+  signature: flashmix(ns, vol1, qual1, ..., volN, qualN)
+  parameters:
+  - name: ns
+    description: Number of volumes
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: volN
+    description: Volume of volume n
+    direction: in
+    datatype:
+    - value
+    arity: $ns
+  - name: qualN
+    description: Quality of volume n
+    direction: in
+    datatype:
+    - value
+    arity: $ns
+  retr: Calculated quality of mix, 0 if sum of volumes = 0
+  detailedDescription: Calculate flash of a mix
+  quality: GOOD if all supplied parameters are GOOD
 - name: floor
   signature: floor(x)
   parameters:
@@ -870,8 +928,8 @@
   retr: The greatest integer less than input
   detailedDescription: Computes the greatest integer less than input
   quality: BAD if x<0 else quality(x)
-- name: gasrate
-  signature: gasrate(UCP, pSEP, GIC, kvs1, kvs2, kvs3, kvs4)
+- name: gasrateChoke
+  signature: gasrateChoke(UCP, pSEP, GIC, kvs1, kvs2, kvs3, kvs4)
   parameters:
   - name: UCP
     description: pressure upstream choke
@@ -918,6 +976,137 @@
   retr: Calculated gas rate, 0 if BAD
   detailedDescription: Implements a gas rate estimator using choke.
   quality: GOOD if all supplied parameters are GOOD
+- name: gasrateChokeAdap
+  signature: gasrateChokeAdap(UCP, pSEP, GIC, MPG, kvs1, kvs2, z1, z2, NFrysOk, Gamma)
+  parameters:
+  - name: UCP
+    description: pressure upstream choke
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: pSEP
+    description: inlet separator pressure
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: GIC
+    description: choke pos %
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: MPG
+    description: Multiphase meter gas flow
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: kvs1
+    description: adaptive parameter for choke characteristics
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: kvs2
+    description: adaptive parameter for choke characteristics
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: z1
+    description: linearization interval
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: z2
+    description: linearization interval
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: NFrysOk
+    description: Number of samples with no parameter update before estimate is set
+      BAD
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: Gamma
+    description: Update "filter" for adaptation
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: Calculated gas rate, previous if BAD
+  detailedDescription: Implements an adaptive gas rate estimator using choke.
+  quality: GOOD if UCP, pSEP and GIC are GOOD
+- name: gasrateChokeTau
+  signature: gasrateChokeTau(UCP, pSEP, GIC, MPG, kvs1, kvs2, z1, z2, NFrysOk, Tau,
+    Alfa)
+  parameters:
+  - name: UCP
+    description: = pressure upstream choke
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: pSEP
+    description: = inlet separator pressure or pressure downstream choke
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: GIC
+    description: = choke pos %
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: MPG
+    description: = Multiphase meter gas flow
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: z1
+    description: = Startpoint for pfhi1 curve
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: z2
+    description: = Startpoint for pfhi2 curve
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: NFrysOk
+    description: = Number of samples with no parameter update before estimate is set
+      BAD
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: Tau
+    description: = Time constant for adaptation in minutes
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: Alfa
+    description: = Ratio between update of kvs2 and kvs1. Typical Alfa=4. Limited
+      to 0 - 100
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: Gas rate estimate
+  detailedDescription: Implements an adaptive gas rate estimator using choke
+  quality: if any of the inputs are BAD (except MPG or kvs 1/2), V= previous and Q=
+    BAD
 - name: gasrateChokeWell
   signature: gasrateChokeWell(BHP, UCP, DCP, UCT, Cv, h, rhoL, alpha, zG, Mw)
   parameters:
@@ -1027,139 +1216,8 @@
     arity: '1'
   retr: gas rate, 0 if BAD
   detailedDescription: "Implements a gas rate estimator using venturi from multiphase\
-    \ meter. Example for Heidrun A24 Alg=\r\n  gasrateVenturi(UCP, MPDP, 1735)"
+    \ meter. Example for Heidrun A24 Alg=\n  gasrateVenturi(UCP, MPDP, 1735)"
   quality: GOOD if all inputs are GOOD
-- name: gasratechokeadap
-  signature: gasratechokeadap(UCP, pSEP, GIC, MPG, kvs1, kvs2, z1, z2, NFrysOk, Gamma)
-  parameters:
-  - name: UCP
-    description: pressure upstream choke
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: pSEP
-    description: inlet separator pressure
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: GIC
-    description: choke pos %
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: MPG
-    description: Multiphase meter gas flow
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: kvs1
-    description: adaptive parameter for choke characteristics
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: kvs2
-    description: adaptive parameter for choke characteristics
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: z1
-    description: linearization interval
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: z2
-    description: linearization interval
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: NFrysOk
-    description: Number of samples with no parameter update before estimate is set
-      BAD
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: Gamma
-    description: Update "filter" for adaptation
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  retr: Calculated gas rate, previous if BAD
-  detailedDescription: Implements an adaptive gas rate estimator using choke.
-  quality: GOOD if UCP, pSEP and GIC are GOOD
-- name: gasratechoketau
-  signature: gasratechoketau(UCP, pSEP, GIC, MPG, kvs1, kvs2, z1, z2, NFrysOk, Tau,
-    Alfa)
-  parameters:
-  - name: UCP
-    description: = pressure upstream choke
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: pSEP
-    description: = inlet separator pressure or pressure downstream choke
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: GIC
-    description: = choke pos %
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: MPG
-    description: = Multiphase meter gas flow
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: z1
-    description: = Startpoint for pfhi1 curve
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: z2
-    description: = Startpoint for pfhi2 curve
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: NFrysOk
-    description: = Number of samples with no parameter update before estimate is set
-      BAD
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: Tau
-    description: = Time constant for adaptation in minutes
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: Alfa
-    description: = Ratio between update of kvs2 and kvs1. Typical Alfa=4. Limited
-      to 0 - 100
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  retr: Gas rate estimate
-  detailedDescription: Implements an adaptive gas rate estimator using choke
-  quality: if any of the inputs are BAD (except MPG or kvs 1/2), V= previous and Q=
-    BAD
 - name: getApplIterEachN
   signature: getApplIterEachN(DmmyApplID)
   parameters:
@@ -1170,8 +1228,8 @@
     - dmmyappl
     arity: '1'
   retr: number of iterations
-  detailedDescription: "Gets IterEachN for a DmmyAppl, number of internal iterations<br>\r\
-    \n  For use in process simulators to get time step pr iteration using"
+  detailedDescription: "Gets IterEachN for a DmmyAppl, number of internal iterations<br>\n\
+    \  For use in process simulators to get time step pr iteration using"
   quality: BAD if DmmyApplID is non-existing
 - name: getDay
   signature: getDay()
@@ -1184,15 +1242,15 @@
   parameters: []
   retr: hour of day, [0-23]
   detailedDescription: "Gets hour of day, using local settings on server where application\
-    \ is running.\r\n  All details related to time shift summer/wintertime will be\
-    \ handled by OS on server"
+    \ is running.\n  All details related to time shift summer/wintertime will be handled\
+    \ by OS on server"
   quality: GOOD
 - name: getMinute
   signature: getMinute()
   parameters: []
   retr: minute within current hour, [0-59]
   detailedDescription: "Gets minute whitin current hour, using local settings on server\
-    \ where application is running.\r\n  All details related to time shift summer/wintertime\
+    \ where application is running.\n  All details related to time shift summer/wintertime\
     \ will be handled by OS on server"
   quality: GOOD
 - name: getMonth
@@ -1206,15 +1264,15 @@
   parameters: []
   retr: pAppl->OPCReadTime
   detailedDescription: "Gets pAppl->OPCReadTime, time in sec for last OPC read. Identical\
-    \ to green curve in System info plot\r\n  Impl-detail, gets previus sample, as\
-    \ current value for write and dT in not yet calulated, keep all 3 in sync"
+    \ to green curve in System info plot\n  Impl-detail, gets previus sample, as current\
+    \ value for write and dT in not yet calulated, keep all 3 in sync"
   quality: GOOD
 - name: getOPCwritetime
   signature: getOPCwritetime()
   parameters: []
   retr: pAppl->OPCWriteTime
   detailedDescription: "Gets pAppl->opcWriteTime, time in sec for last OPC write.\
-    \ Identical to blue curve in System info plot\r\n  Impl-detail, gets previus sample,\
+    \ Identical to blue curve in System info plot\n  Impl-detail, gets previus sample,\
     \ as current value in not yet calulated"
   quality: GOOD
 - name: getSecond
@@ -1222,7 +1280,7 @@
   parameters: []
   retr: second within minute, [0-59]
   detailedDescription: "Gets current second within the minute, using local settings\
-    \ on server where application is running.\r\n  All details related to time shift\
+    \ on server where application is running.\n  All details related to time shift\
     \ summer/wintertime will be handled by OS on server"
   quality: GOOD
 - name: getUnixtime
@@ -1242,8 +1300,8 @@
   parameters: []
   retr: Delta time for last step [sec]
   detailedDescription: "Gets the time in secs for last step. Includes all activities\
-    \ in the step.\r\n  Identical to info in System info plot Impl-detail, gets previous\
-    \ sample, as current value\r\n  if not yet calulated"
+    \ in the step.\n  Identical to info in System info plot Impl-detail, gets previous\
+    \ sample, as current value\n  if not yet calulated"
   quality: GOOD
 - name: getappldesmode
   signature: getappldesmode(applID)
@@ -1354,12 +1412,12 @@
     arity: '?'
   retr: Average over given time horizon, 0 if quality BAD
   detailedDescription: "Gets the history from buffer. Computes the average over the\
-    \ buffer starting on the given point back and\r\n  until the specified number\
-    \ of samples\r\n\r\n  CalcPvr: T1MA     Alg= gethist(T1,10,5)\r\n  CalcPvr: T1SPMA\
-    \   Alg= gethist(T1.SetPnt,10)\r\n\r\n  T1MA will get the 5-samples average for\
-    \ the 14-10 samples back in time of T1.Meas, while T1SPMA\r\n  will get the single\
-    \ sample average 10 samples back in time of T1.SetPnt.<br>\r\n  However, if T1\
-    \ is an Xvr without SetPnt member (not Cvr), T1SPMA will get the T1.Meas."
+    \ buffer starting on the given point back and\n  until the specified number of\
+    \ samples\n\n  CalcPvr: T1MA     Alg= gethist(T1,10,5)\n  CalcPvr: T1SPMA   Alg=\
+    \ gethist(T1.SetPnt,10)\n\n  T1MA will get the 5-samples average for the 14-10\
+    \ samples back in time of T1.Meas, while T1SPMA\n  will get the single sample\
+    \ average 10 samples back in time of T1.SetPnt.<br>\n  However, if T1 is an Xvr\
+    \ without SetPnt member (not Cvr), T1SPMA will get the T1.Meas."
   quality: GOOD if valid Xvr (Optionally member variable) and all samples GOOD, otherwise
     BAD
 - name: getlagrangemultiplier
@@ -1425,7 +1483,7 @@
     arity: '1'
   retr: 'Steady state value for Xvr: Xvr.SSval'
   detailedDescription: "Get the calculated MPC steady state for given Xvr. Value reflects\
-    \ correct value at current sample only when\r\n  Xvr.FinalStatus >= ADVISORY"
+    \ correct value at current sample only when\n  Xvr.FinalStatus >= ADVISORY"
   quality: GOOD
 - name: getwindup
   signature: getwindup(mvr)
@@ -1437,7 +1495,7 @@
     - mvr
     arity: '1'
   retr: "Status of windup: 0: No Mvr windup, 1: Mvr in windup low, 2: Mvr in windup\
-    \ high, 3: Mvr in windup high and\r\n  low"
+    \ high, 3: Mvr in windup high and\n  low"
   detailedDescription: Get WindUp status for mvr
   quality: GOOD if valid mvr otherwise BAD
 - name: good
@@ -1536,7 +1594,7 @@
     arity: '1'
   retr: Specific enthalpy in MJ/T
   detailedDescription: "Computes the specific enthalpy of saturated or superheated\
-    \ steam in a stream from its temperature and the\r\n  total stream pressure."
+    \ steam in a stream from its temperature and the\n  total stream pressure."
   quality: GOOD if all inputs GOOD
 - name: ibpmix
   signature: ibpmix(kk1, kk2, kk3, ns, vol1, qual1, ..., volN, qualN)
@@ -1580,8 +1638,31 @@
   retr: Calculated quality of mix, 0 if sum of volumes = 0
   detailedDescription: Calculate flash of a mix
   quality: GOOD if all supplied parameters are GOOD
+- name: idiv
+  signature: idiv(a, b)
+  parameters:
+  - name: a
+    description: Dividend
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: b
+    description: Divisor (must be non-zero)
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: Integer quotient trunc(a) / trunc(b)
+  detailedDescription: "Computes the integer quotient of a divided by b, following\
+    \ the C++\n  built-in integer division semantics (truncation toward zero), as\
+    \ described in\n  https://en.cppreference.com/w/cpp/language/operator_arithmetic.html\
+    \ and\n  https://en.cppreference.com/w/cpp/numeric/math/div.html. The inputs are\n\
+    \  first truncated toward zero to int, and the integer quotient is\n  returned\
+    \ as a double."
+  quality: GOOD only if both a and b are GOOD and b != 0
 - name: if
-  signature: if(condition, trueexpr, falseexpr, notinuse)
+  signature: if(condition, trueexpr, falseexpr, notinuse?)
   parameters:
   - name: cond
     description: Condition to evaluate
@@ -1602,11 +1683,11 @@
     - value
     arity: '1'
   retr: "Value of evaluated expression according to condition: condition ? trueexpr\
-    \ : falseexpr.\r\n  Retain old value if condition is BAD"
+    \ : falseexpr.\n  Retain old value if condition is BAD"
   detailedDescription: "Evaluates the condition and perform the corresponding conditional\
-    \ expression.\r\n  NB! The if calc does not perform unselected expression anymore\
-    \ (Nov 2024, versions after 3.0.1)\r\n  NB! The fourth parameter is not in use\
-    \ anymore and will be removed in a future edition"
+    \ expression.\n  NB! The if calc does not perform unselected expression anymore\
+    \ (Nov 2024, versions after 3.0.1)\n  NB! The fourth parameter is not in use anymore\
+    \ and will be removed in a future edition"
   quality: GOOD if number of arguments is 3 or 4 and condition and selected expression
     is GOOD, else BAD.
 - name: ifelif
@@ -1631,14 +1712,37 @@
     - value
     arity: '1'
   retr: "Value of evaluated expressions according to condition: if(cond1, expr1, if(cond2,\
-    \ expr2, ..., if(condN,\r\n  exprN, exprf)...)). Retain old value if condition\
-    \ is BAD"
+    \ expr2, ..., if(condN,\n  exprN, exprf)...)). Retain old value if condition is\
+    \ BAD"
   detailedDescription: "Evaluate bool cond's and perform corresponding expressions.\
-    \ Expect odd number of arguments >= 3\r\n  NB! The ifelif calc does not perform\
+    \ Expect odd number of arguments >= 3\n  NB! The ifelif calc does not perform\
     \ unselected expressions anymore (Nov 2024, versions after 3.0.1)"
   quality: "GOOD if number of arguments is odd and >= 3 and all cond's and selected\
-    \ expressions up to and including the\r\n  last (returned) evaluated expression\
+    \ expressions up to and including the\n  last (returned) evaluated expression\
     \ are GOOD, else BAD."
+- name: imod
+  signature: imod(a, b)
+  parameters:
+  - name: a
+    description: Dividend
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: b
+    description: Divisor (must be non-zero)
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: Integer remainder trunc(a) % trunc(b)
+  detailedDescription: "Computes the integer remainder of a divided by b, following\
+    \ the C++\n  built-in integer remainder semantics (sign of result follows the\
+    \ dividend),\n  as described in\n  https://en.cppreference.com/w/cpp/language/operator_arithmetic.html\
+    \ and\n  https://en.cppreference.com/w/cpp/numeric/math/div.html. The inputs are\n\
+    \  first truncated toward zero to int, then a % b is returned as a\n  double.\
+    \ The identity (a/b)*b + a%b == a holds."
+  quality: GOOD only if both a and b are GOOD and b != 0
 - name: intpoltype1
   signature: intpoltype1(x, X1, Y1, X2, Y2, ..., XN, YN)
   parameters:
@@ -1661,8 +1765,8 @@
     - value
     arity: =Xn
   retr: Interpolated value. 0 when quality=BAD, Y1 when x <= X1, YN when x >= XN
-  detailedDescription: "Function calculates y by linear interpolation of the X,Y pairs.\r\
-    \n  Assumes that the sequence of X1, X2, ..., XN values are monotonically increasing.<br>"
+  detailedDescription: "Function calculates y by linear interpolation of the X,Y pairs.\n\
+    \  Assumes that the sequence of X1, X2, ..., XN values are monotonically increasing.<br>"
   quality: GOOD only if ALL arguments are GOOD and  else BAD
 - name: isbad
   signature: isbad(x1, x2, ..., xN)
@@ -1675,7 +1779,7 @@
     arity: +
   retr: 1 if quality of all inputs are BAD, 0 otherwise
   detailedDescription: "Check if quality of all given values are BAD. Returned Quality\
-    \ is GOOD with parameter(s), BAD if empty. PS!\r\n  Returns TRUE with nonexisting\
+    \ is GOOD with parameter(s), BAD if empty. PS!\n  Returns TRUE with nonexisting\
     \ XVRs (check .out file)"
   quality: GOOD if at least one argument, else BAD
 - name: isequal
@@ -1707,7 +1811,7 @@
     arity: +
   retr: 1 if quality if all inputs are GOOD, 0 otherwise
   detailedDescription: "Check if quality of all given values are GOOD. Returned Quality\
-    \ is GOOD with parameter(s), BAD if empty.\r\n  PS! Returns FALSE with nonexisting\
+    \ is GOOD with parameter(s), BAD if empty.\n  PS! Returns FALSE with nonexisting\
     \ XVRs (check .out file)"
   quality: GOOD if at least one argument, else BAD
 - name: labupdt
@@ -1733,11 +1837,11 @@
     arity: '?'
   retr: Something ???
   detailedDescription: "Perform checks for validity of SAMPLETVR, high limit, low\
-    \ limit etc.\r\n  The calc reports accepted and rejected sampled to the file 'labupdates.log'.\r\
-    \n  Also, it searches for an Xvr for reporting of rejected samples. First it searches\r\
-    \n  for Xvr with name of CalcModl+\"_LABREJECT\", if not found it searches for\
-    \ Xvr named \"LABREJECT\".\r\n  If any of these are found, this Xvr is incremented\
-    \ for each rejected sample. The Xvr value is\r\n  reset to 0 when it reached 100,\
+    \ limit etc.\n  The calc reports accepted and rejected sampled to the file 'labupdates.log'.\n\
+    \  Also, it searches for an Xvr for reporting of rejected samples. First it searches\n\
+    \  for Xvr with name of CalcModl+\"_LABREJECT\", if not found it searches for\
+    \ Xvr named \"LABREJECT\".\n  If any of these are found, this Xvr is incremented\
+    \ for each rejected sample. The Xvr value is\n  reset to 0 when it reached 100,\
     \ ie loops on 100.  This can be used for alarm/info."
   quality: Something ???
 - name: linmix
@@ -1763,31 +1867,7 @@
     arity: $ns
   retr: Calculated quality of mix, 0 if sum of volumes = 0
   detailedDescription: "Perform a linear mix of the given input streams, where each\
-    \ stream is given with volume and\r\n  quality/property."
-  quality: GOOD if all supplied parameters are GOOD
-- name: linmix
-  signature: linmix(ns, vol1, qual1, ..., volN, qualN)
-  parameters:
-  - name: ns
-    description: Number of volumes
-    direction: in
-    datatype:
-    - value
-    arity: '1'
-  - name: volN
-    description: Volume of volume n
-    direction: in
-    datatype:
-    - value
-    arity: $ns
-  - name: qualN
-    description: Quality of volume n
-    direction: in
-    datatype:
-    - value
-    arity: $ns
-  retr: Calculated quality of mix, 0 if sum of volumes = 0
-  detailedDescription: Calculate flash of a mix
+    \ stream is given with volume and\n  quality/property."
   quality: GOOD if all supplied parameters are GOOD
 - name: ln
   signature: ln(x)
@@ -1812,13 +1892,13 @@
     arity: '1'
   retr: State of lock - 0 if unlocked, 1 if locked
   detailedDescription: "Use when a High Limit should have a fixed value set by the\
-    \ engineer, or set by calculation\r\n  When the limit is locked, the Operator\
-    \ will not be able to change the value from RUI. The locked value\r\n  will have\
-    \ indication in MPC table and other GUI elements. Intended for Mvr and CVR, lock\
-    \ High Limit from Operator\r\n  changes<br>"
+    \ engineer, or set by calculation\n  When the limit is locked, the Operator will\
+    \ not be able to change the value from RUI. The locked value\n  will have indication\
+    \ in MPC table and other GUI elements. Intended for Mvr and CVR, lock High Limit\
+    \ from Operator\n  changes<br>"
   quality: GOOD if valid xvr, BAD if MVRCVR tag is invalid
-- name: lockiv
-  signature: lockiv(mvr, lock)
+- name: lockIV
+  signature: lockIV(mvr, lock)
   parameters:
   - name: mvr
     description: Mvr to lock
@@ -1833,13 +1913,13 @@
     - value
     arity: '1'
   retr: State of lock, 0 if unlocked, 1 if locked
-  detailedDescription: "Lock iv for mvr from operator changes\r\n  Use when a IV should\
-    \ have a fixed value set by the engineer, or set by calculation\r\n  When the\
-    \ limit is locked, the Operator will not be able to change the value from RUI.\
-    \ The locked value\r\n  will have indication in MPC table and other GUI elements."
+  detailedDescription: "Lock iv for mvr from operator changes\n  Use when a IV should\
+    \ have a fixed value set by the engineer, or set by calculation\n  When the limit\
+    \ is locked, the Operator will not be able to change the value from RUI. The locked\
+    \ value\n  will have indication in MPC table and other GUI elements."
   quality: GOOD if valid xvr
-- name: lockll
-  signature: lockll(xvr, lock)
+- name: lockLL
+  signature: lockLL(xvr, lock)
   parameters:
   - name: xvr
     description: Xvr to lock
@@ -1855,14 +1935,14 @@
     - value
     arity: '1'
   retr: State of lock, 0 if unlocked, 1 if locked
-  detailedDescription: "Lock low limit for mvr and cvr from operator changes.\r\n\
-    \  Use when a Low Limit should have a fixed value set by the engineer, or set\
-    \ by calculation\r\n  When the limit is locked, the Operator will not be able\
-    \ to change the value from RUI. The locked value\r\n  will have indication in\
-    \ MPC table and other GUI elements."
+  detailedDescription: "Lock low limit for mvr and cvr from operator changes.\n  Use\
+    \ when a Low Limit should have a fixed value set by the engineer, or set by calculation\n\
+    \  When the limit is locked, the Operator will not be able to change the value\
+    \ from RUI. The locked value\n  will have indication in MPC table and other GUI\
+    \ elements."
   quality: GOOD if valid xvr
-- name: locksp
-  signature: locksp(cvr, lock)
+- name: lockSP
+  signature: lockSP(cvr, lock)
   parameters:
   - name: cvr
     description: Xvr to lock
@@ -1877,10 +1957,10 @@
     - value
     arity: '1'
   retr: State of lock, 0 if unlocked, 1 if locked
-  detailedDescription: "Lock sp for cvr from operator changes\r\n  Use when a SP should\
-    \ have a fixed value set by the engineer, or set by calculation\r\n  When the\
-    \ limit is locked, the Operator will not be able to change the value from RUI.\
-    \ The locked value\r\n  will have indication in MPC table and other GUI elements."
+  detailedDescription: "Lock sp for cvr from operator changes\n  Use when a SP should\
+    \ have a fixed value set by the engineer, or set by calculation\n  When the limit\
+    \ is locked, the Operator will not be able to change the value from RUI. The locked\
+    \ value\n  will have indication in MPC table and other GUI elements."
   quality: GOOD if valid xvr
 - name: log10
   signature: log10(x)
@@ -1929,18 +2009,18 @@
     - value
     arity: '1'
   retr: optimal function value if calculations are ok, else 0
-  detailedDescription: "LPOPT maximises the objective function defined by the MV coefficients\r\
-    \n    OBJF = OBJFCOEFF_MVR1*MVR1 + ... + OBJFCOEFF_MVRnmv*MVRnmv\r\n  while respecting\
+  detailedDescription: "LPOPT maximises the objective function defined by the MV coefficients\n\
+    \    OBJF = OBJFCOEFF_MVR1*MVR1 + ... + OBJFCOEFF_MVRnmv*MVRnmv\n  while respecting\
     \ the upper and lower limits for the Mvrs/Dvrs (input variables) and for the Cvrs\
-    \ (output variables).\r\n  LPOPT reads upper/lower limits for Mvrs and Cvrs (if\
-    \ ON). If there exists an Evr in the LPOPT application with id\r\n  MVRTAG1LPHI,\
+    \ (output variables).\n  LPOPT reads upper/lower limits for Mvrs and Cvrs (if\
+    \ ON). If there exists an Evr in the LPOPT application with id\n  MVRTAG1LPHI,\
     \ this value will be used as high limit for Mvr1 if it is lower than HighOn. If\
-    \ an Evr with id\r\n  MVRTAG1LPLO exists, its value will be used as lower limit\
-    \ if it is higher than LowOn. For Cvrs however, the Evr\r\n  value of CVRTAGiLPLO\
+    \ an Evr with id\n  MVRTAG1LPLO exists, its value will be used as lower limit\
+    \ if it is higher than LowOn. For Cvrs however, the Evr\n  value of CVRTAGiLPLO\
     \ and CVRTAGiLPHI will override the values read from Cvr High and Low if such\
-    \ an Evr is\r\n  configured. This is changed from 10.12.07, as the Cvrs were treated\
-    \ like the Mvrs before.\r\n  If there exists Evrs with ids MVRTAGiRES or CVRTAGiRES,\
-    \ the optimal results will be written to Meas of those\r\n  variables."
+    \ an Evr is\n  configured. This is changed from 10.12.07, as the Cvrs were treated\
+    \ like the Mvrs before.\n  If there exists Evrs with ids MVRTAGiRES or CVRTAGiRES,\
+    \ the optimal results will be written to Meas of those\n  variables."
   quality: GOOD if calculations are ok, else BAD
 - name: lsqfit
   signature: lsqfit(u,y,nsamp)
@@ -2052,7 +2132,7 @@
     arity: +
   retr: Number of active Xvrs
   detailedDescription: "Lower all Xvr.Mode to TRACKING if not sufficiently many of\
-    \ them are ACTIVE. Typical use is to assure at\r\n  least minimum number of Mvrs\
+    \ them are ACTIVE. Typical use is to assure at\n  least minimum number of Mvrs\
     \ ACTIVE to run SmpcAppl/MPCAppl/NMPCAppl."
   quality: GOOD if number of active >= numMinActive
 - name: modgain
@@ -2085,7 +2165,7 @@
     arity: '1'
   retr: Steady state gain from xvr towards cvr, if valid model else 0
   detailedDescription: "Set the gain modifier in the active experimental model. Cvr\
-    \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl/NMPCAppl."
+    \ and Mvr/Dvr needs to be contained in same\n  SmpcAppl/MPCAppl/NMPCAppl."
   quality: GOOD if valid model between cvr and xvr
 - name: modget
   signature: modget(cvr, xvr)
@@ -2105,8 +2185,8 @@
     arity: '1'
   retr: Steady state gain from xvr towards cvr if valid model, else 0
   detailedDescription: "Get the steady state gain from the active experimental model,\
-    \ including the scaling by\r\n  the gain modifier (Scale) set by CalcModSet. Cvr\
-    \ and Mvr/Dvr needs to be contained in same SmpcAppl/MPCAppl/NMPCAppl."
+    \ including the scaling by\n  the gain modifier (Scale) set by CalcModSet. Cvr\
+    \ and Mvr/Dvr needs to be contained in same\n  SmpcAppl/MPCAppl/NMPCAppl."
   quality: GOOD if valid model between cvr and xvr
 - name: modsched
   signature: modsched(cvr, xvr, gain, lag1, lag2, lead1, delay, apply)
@@ -2163,9 +2243,9 @@
     arity: '1'
   retr: Update the model between given cvr and xvr
   detailedDescription: "Construct the experimental model from parameters. Cvr and\
-    \ Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl/NMPCAppl. The Laplace\
-    \ transform model is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1 + lag2*s)\r\
-    \n  where lead1, delay, lag1 and lag2 are given in minutes."
+    \ Mvr/Dvr needs to be contained in same\n  SmpcAppl/MPCAppl/NMPCAppl. The Laplace\
+    \ transform model is y/u = (1 + lead1*s)*exp(-delay*s)/(1 + lag1*s)(1 + lag2*s)\n\
+    \  where lead1, delay, lag1 and lag2 are given in minutes."
   quality: GOOD if valid model between cvr and xvr
 - name: modset
   signature: modset(cvr, xvr, gain, apply)
@@ -2197,7 +2277,7 @@
     arity: '1'
   retr: Steady state gain from xvr towards cvr. if valid model else 0
   detailedDescription: "Set the gain modifier in the active experimental model. Cvr\
-    \ and Mvr/Dvr needs to be contained in same\r\n  SmpcAppl/MPCAppl/NMPCAppl."
+    \ and Mvr/Dvr needs to be contained in same\n  SmpcAppl/MPCAppl/NMPCAppl."
   quality: GOOD if valid model between cvr and xvr
 - name: moveavg
   signature: moveavg(xvr, nsamp)
@@ -2253,8 +2333,8 @@
     - mvr
     arity: '1'
   retr: 'Calculated Mvr: Mvr.Mode == ACTIVE -> Mvr.mget(pAppl->N+1) else Mvr.Meas(pAppl->N)'
-  detailedDescription: "Gets the calculated Mvr from an SmpcAppl, MPCAppl or NMPCAppl.\r\
-    \n  Mvr.Mode == ACTIVE -> Mvr.mget(pAppl->N+1) else Mvr.Meas(pAppl->N)"
+  detailedDescription: "Gets the calculated Mvr from an SmpcAppl, MPCAppl or NMPCAppl.\n\
+    \  Mvr.Mode == ACTIVE -> Mvr.mget(pAppl->N+1) else Mvr.Meas(pAppl->N)"
   quality: GOOD if valid mvr otherwise BAD
 - name: mvpred
   signature: mvpred(TAG)
@@ -2266,9 +2346,9 @@
     - value
     arity: '1'
   retr: "Dynamic dynamic end prediction (Npred). if Mvr.Mode >= ADVISORY, V = Mvr.mget(pAppl->Npred)\
-    \ else V =\r\n  Mvr.Meas(pAppl->N)"
+    \ else V =\n  Mvr.Meas(pAppl->N)"
   detailedDescription: "Get dynamic dynamic end prediction (Npred) of Mvr from an\
-    \ SmpcAppl. Limitations: For MVR only. Tested only\r\n  for Mvr in SmpcAppl."
+    \ SmpcAppl. Limitations: For MVR only. Tested only\n  for Mvr in SmpcAppl."
   quality: GOOD if TAG found and MVR
 - name: nan
   signature: nan()
@@ -2294,14 +2374,14 @@
   parameters:
   - name: Slot
     description: "Slot-index 1-32. Which slot to use for the calculation. Each well\
-      \ should use a dedicated and unique\r\n  slot."
+      \ should use a dedicated and unique\n  slot."
     direction: in
     datatype:
     - value
     arity: '1'
   - name: Mode
     description: "Calc mode 0-2. 0=execute NeqSim calculation thread, 1=get last calculated\
-      \ Frms, 2=get last\r\n  calculated F_rms_max"
+      \ Frms, 2=get last\n  calculated F_rms_max"
     direction: in
     datatype:
     - value
@@ -2349,18 +2429,92 @@
     - value
     arity: '?'
   retr: "Mode 0: Time spent performing the calculation. Mode > 0: Output variables\
-    \ from last valid result as defined\r\n  above."
+    \ from last valid result as defined\n  above."
   detailedDescription: "Calculates liquid and gas rates at downstream choke conditions\
-    \ (flash) and returns current Frms and the max\r\n  acceptable Frms.<br>\r\n\r\
-    \n  The calculation is a NeqSim routine that runs in a Graal isolate. The time\
-    \ to complete one calc is around 100ms, but\r\n  can vary widely. Therefore the\
-    \ Graal isolate routine is run in a separate thread.\r\n\r\n  The calc has three\
-    \ modes, selectable with the input parameter \"Mode\".\r\n  - Mode = 0: The calculation\
-    \ is initiated unless it is already running. If already running, nothing is done.\
-    \ The\r\n  returned value in mode 0 is the time spent so far in the thread. If\
-    \ the thread has completed, the calculated values\r\n  are available using modes\
-    \ 1 and 2, and a new calculation is initiated.\r\n  - Mode = 1: The last calculated\
-    \ Frms is returned.\r\n  - Mode = 2: The last calculated F_rms_max is returned."
+    \ (flash) and returns current Frms and the max\n  acceptable Frms.<br>\n\n  The\
+    \ calculation is a NeqSim routine that runs in a Graal isolate. The time to complete\
+    \ one calc is around 100ms, but\n  can vary widely. Therefore the Graal isolate\
+    \ routine is run in a separate thread.\n\n  The calc has three modes, selectable\
+    \ with the input parameter \"Mode\".\n  - Mode = 0: The calculation is initiated\
+    \ unless it is already running. If already running, nothing is done. The\n  returned\
+    \ value in mode 0 is the time spent so far in the thread. If the thread has completed,\
+    \ the calculated values\n  are available using modes 1 and 2, and a new calculation\
+    \ is initiated.\n  - Mode = 1: The last calculated Frms is returned.\n  - Mode\
+    \ = 2: The last calculated F_rms_max is returned."
+  quality: 'Mode 0: GOOD if all inputs are GOOD, else BAD. Mode > 0: GOOD if the last
+    NeqSim calculation succeeded.'
+- name: neqsimkrifiv
+  signature: neqsimkrifiv()
+  parameters:
+  - name: Slot
+    description: "Slot-index 1-32. Which slot to use for the calculation. Each well\
+      \ should use a dedicated and unique\n  slot."
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: Mode
+    description: "Calc mode 0-2. 0=execute NeqSim calculation thread, 1=get last calculated\
+      \ Frms, 2=get last\n  calculated F_rms_max"
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: FluidID
+    description: Fluid index 0-3. 0=default, 1= Skrugard, 2= Havis, 3= Drivis
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  - name: Qg
+    description: Gas rate std >= 0 [Sm3/h]
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  - name: Qo
+    description: Oil rate std >= 0 [Sm3/h]
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  - name: Qw
+    description: Water rate std >= 0 [Sm3/h]
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  - name: PT
+    description: Pressure >= 0 [barg]
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  - name: TT
+    description: Temperature >= -100 [degC]
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  - name: A
+    description: Pipe cross section area > 0.003 [m2]
+    direction: in
+    datatype:
+    - value
+    arity: '?'
+  retr: "Mode 0: Time spent performing the calculation. Mode > 0: Output variables\
+    \ from last valid result as defined\n  above."
+  detailedDescription: "Calculates liquid and gas rates at downstream choke conditions\
+    \ (flash) and returns current Frms and the max\n  acceptable Frms.<br>\n\n  The\
+    \ calculation is a NeqSim routine that runs in a Graal isolate. The time to complete\
+    \ one calc is around 100ms, but\n  can vary widely. Therefore the Graal isolate\
+    \ routine is run in a separate thread.\n\n  The calc has three modes, selectable\
+    \ with the input parameter \"Mode\".\n  - Mode = 0: The calculation is initiated\
+    \ unless it is already running. If already running, nothing is done. The\n  returned\
+    \ value in mode 0 is the time spent so far in the thread. If the thread has completed,\
+    \ the calculated values\n  are available using modes 1 and 2, and a new calculation\
+    \ is initiated.\n  - Mode = 1: The last calculated Frms is returned.\n  - Mode\
+    \ = 2: The last calculated F_rms_max is returned."
   quality: 'Mode 0: GOOD if all inputs are GOOD, else BAD. Mode > 0: GOOD if the last
     NeqSim calculation succeeded.'
 - name: neqsimraia
@@ -2417,23 +2571,22 @@
   retr: Time spent performing the calculation if Mode <= 0, output variables as defined
     above otherwise.
   detailedDescription: "Calculates mass balance error, TVP and RVP for export oil,\
-    \ dewpoint temperature for export gas,\r\n  methane content in export gas and\
-    \ the Wobbe index.<br>\r\n\r\n  The calculation is a NeqSim routine that runs\
-    \ in a Graal isolate. The time to complete one calc is around 45s, but\r\n  can\
-    \ vary widely. Therefore the Graal isolate routine is run in a separate thread.\r\
-    \n\r\n  The calc has eight modes, selectable with the input parameter \"Mode\"\
-    .\r\n  - Mode = -1: Detach the running thread and restart the calculation with\
-    \ updated input parameters. The detached\r\n  calculation thread will keep running\
-    \ until it (eventually) completes. Be careful doing this since it may tie up\r\
-    \n  the CPU if running many parallel simulations.\r\n  - Mode = 0: The calculation\
-    \ is initiated unless it is already running. If already running, nothing is done.\
-    \ The\r\n  returned value in mode 0 is the time spent so far in the thread. If\
-    \ the thread has completed, the calculated values\r\n  are available using modes\
-    \ 1-6, and a new calculation is initiated.\r\n  - Mode = 1: Return mass balance\
-    \ error [%]\r\n  - Mode = 2: Return TVP for export oil [bara]\r\n  - Mode = 3:\
-    \ Return RVP for export oil [bara]\r\n  - Mode = 4: Return dewpoint temperature\
-    \ for export gas [degC]\r\n  - Mode = 5: Return methane content in export gas\
-    \ [mol%]\r\n  - Mode = 6: Return Wobbe index of export gas [MJ/m3]"
+    \ dewpoint temperature for export gas,\n  methane content in export gas and the\
+    \ Wobbe index.<br>\n\n  The calculation is a NeqSim routine that runs in a Graal\
+    \ isolate. The time to complete one calc is around 45s, but\n  can vary widely.\
+    \ Therefore the Graal isolate routine is run in a separate thread.\n\n  The calc\
+    \ has eight modes, selectable with the input parameter \"Mode\".\n  - Mode = -1:\
+    \ Detach the running thread and restart the calculation with updated input parameters.\
+    \ The detached\n  calculation thread will keep running until it (eventually) completes.\
+    \ Be careful doing this since it may tie up\n  the CPU if running many parallel\
+    \ simulations.\n  - Mode = 0: The calculation is initiated unless it is already\
+    \ running. If already running, nothing is done. The\n  returned value in mode\
+    \ 0 is the time spent so far in the thread. If the thread has completed, the calculated\
+    \ values\n  are available using modes 1-6, and a new calculation is initiated.\n\
+    \  - Mode = 1: Return mass balance error [%]\n  - Mode = 2: Return TVP for export\
+    \ oil [bara]\n  - Mode = 3: Return RVP for export oil [bara]\n  - Mode = 4: Return\
+    \ dewpoint temperature for export gas [degC]\n  - Mode = 5: Return methane content\
+    \ in export gas [mol%]\n  - Mode = 6: Return Wobbe index of export gas [MJ/m3]"
   quality: GOOD
 - name: not
   signature: not(x)
@@ -2584,8 +2737,8 @@
     arity: '1'
   retr: Boolean
   detailedDescription: "Pulse generator starting on rising edge of first argument\
-    \ and lasting a given duration. Output is TRUE for\r\n  given duration even if\
-    \ input becomes false before duration end"
+    \ and lasting a given duration. Output is TRUE for\n  given duration even if input\
+    \ becomes false before duration end"
   quality: GOOD if input GOOD
 - name: resetopenloop
   signature: resetopenloop(cvr, apply)
@@ -2621,7 +2774,7 @@
   signature: savedata(XVR,SAVE)
   parameters: []
   retr: "0:  Nothing saved. Q = BAD: Reason printed on application .out file, 1: Current\
-    \ sample successfully saved\r\n  on data file XVRID.txt. May be printouts on .out\
+    \ sample successfully saved\n  on data file XVRID.txt. May be printouts on .out\
     \ reflecting file actions"
   detailedDescription: ''
   quality: 'BAD:  Nothing saved'
@@ -2641,21 +2794,20 @@
     - value
     arity: +
   retr: 'Value of element n in list: value(xN) if  1 <= n <= N (length of list)'
-  detailedDescription: "Selects the value of index from list of elements\r\n  NB!\
-    \ The selectvalue calc does not perform unselected expressions anymore (Nov 2024,\
+  detailedDescription: "Selects the value of index from list of elements\n  NB! The\
+    \ selectvalue calc does not perform unselected expressions anymore (Nov 2024,\
     \ versions after 3.0.1)"
   quality: quality(xN) if 1 <= n <= N (length of list) else BAD
 - name: setPlotSpan
   signature: setPlotSpan(XVRTAG,spanvalue)
   parameters: []
   retr: Spanvalue
-  detailedDescription: "Intended for Xvr, change PlotSpan value based on criteria<br>\r\
-    \n  When an Xvr is added to a MultiXvrPlot which uses Span-scaling, scaling is\
-    \ based on first Xvr with PlotSpan set (not\r\n  -1) For some applications where\
+  detailedDescription: "Intended for Xvr, change PlotSpan value based on criteria<br>\n\
+    \  When an Xvr is added to a MultiXvrPlot which uses Span-scaling, scaling is\
+    \ based on first Xvr with PlotSpan set (not\n  -1) For some applications where\
     \ a variable has non-relevat value if (e.g. out of operation), its desired to\
-    \ 'remove'\r\n  this Xvr as basis for Span-scaling. This can be done by setting\
-    \ PlotSpan to -1 when out of operation, and normal\r\n  PlotSpan value when in\
-    \ operation"
+    \ 'remove'\n  this Xvr as basis for Span-scaling. This can be done by setting\
+    \ PlotSpan to -1 when out of operation, and normal\n  PlotSpan value when in operation"
   quality: BAD if XVR tag is invalid, else GOOD
 - name: setappldesmode
   signature: setappldesmode(applID, mode)
@@ -2762,6 +2914,50 @@
   retr: Resulting BiasTpredMaxUp if GOOD, value if BAD or negative, otherwise 0
   detailedDescription: Set limit for max positive effect of BiasTpred for given cvr
   quality: GOOD if arguments are GOOD - otherwise BAD
+- name: setcvsetpntpred
+  signature: setcvsetpntpred(cvr, N, X1, Y1, X2, Y2, ..., XN, YN)
+  parameters:
+  - name: cvr
+    description: Cvr Tag
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: N
+    description: Number of (X,Y) pairs (>= 0)
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: Xn
+    description: "Horizon-relative sample offsets, monotonically increasing in [1,\n\
+      \  Npred]"
+    direction: in
+    datatype:
+    - value
+    arity: N
+  - name: Yn
+    description: Absolute setpoint value at sample N+Xn
+    direction: in
+    datatype:
+    - value
+    arity: N
+  retr: The final scheduled setpoint value Yn (0 when N == 0)
+  detailedDescription: "Writes a piecewise-constant schedule of future setpoints into\
+    \ Cvr::sp_pred\n  (a std::vector of (sampleOffset, absoluteSetpoint) pairs, separate\
+    \ from the SetPnt\n  buffer). Xi is the horizon-relative sample offset (1..Npred)\
+    \ at which the setpoint\n  should take the absolute value Yi. Between scheduled\
+    \ points the previous Yi is held;\n  the last Yi is held out to N+Npred. Yi is\
+    \ an absolute setpoint, not a delta.\n\n  SetPnt is never modified by this calc\
+    \ \u2014 operator setpoint state (SetPnt[N]) is\n  preserved while the schedule\
+    \ is active. updateSetPntFilt in PRE_STDSOLVE consumes\n  sp_pred via setpointPred()\
+    \ when SpPredActive is true, applying the existing\n  ramp/filter machinery (SetPntChgMode,\
+    \ SetPntRocUp/Dn, SetpTref) sample-by-sample.\n\n  The schedule is anchored horizon-relative:\
+    \ the calc must be re-evaluated each sample\n  (typical usage is placement in\
+    \ a pre-MPC calculator).\n\n  SetPntFilt samples inherit their ON/OFF State from\
+    \ SetPnt.get(N).State via\n  updateSetPntFilt, so operator on/off intent continues\
+    \ to propagate."
+  quality: GOOD only if ALL arguments are GOOD and valid cvr, otherwise BAD
 - name: setdeas
   signature: setdeas(dvr, value, state)
   parameters:
@@ -2786,6 +2982,96 @@
   retr: Set value
   detailedDescription: Set deas for dvr
   quality: state if valid dvr otherwise BAD
+- name: setdvdeltapred
+  signature: setdvdeltapred(dvr, N, X1, Y1, X2, Y2, ..., XN, YN)
+  parameters:
+  - name: dvr
+    description: Dvr Tag
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: N
+    description: Number of deltas (>= 0)
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: Xn
+    description: X - values (sample number). Assumed to be monotonically increasing
+    direction: in
+    datatype:
+    - value
+    arity: N
+  - name: Yn
+    description: Y - values corresponding to X - values
+    direction: in
+    datatype:
+    - value
+    arity: N
+  retr: Resulting sum of deltas Yn
+  detailedDescription: "Sets the DeltaPred member of a Dvr object. X1 is the number\
+    \ of samples until the first change (delta) in\n  DV in the prediction and Y1\
+    \ is the corresponding delta. Assumes that the sequence of X1, X2, ..., XN values\
+    \ are\n  monotonically increasing"
+  quality: GOOD only if ALL arguments are GOOD and valid dvr and else BAD
+- name: setdvdeltapredfromcv
+  signature: setdvdeltapredfromcv(dvr, cvr[, scale])
+  parameters:
+  - name: dvr
+    description: Dvr Tag
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: cvr
+    description: Cvr Tag whose predictions are copied as step deltas
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: scale
+    description: "Optional scaling factor applied to each step delta before storing\
+      \ in the\n                   DV. Defaults to 1.0 when omitted."
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: Sum of the copied (scaled) deltas
+  detailedDescription: "Copies the Cvr predictions into the DeltaPred member of a\
+    \ Dvr as steps at the\n  Cvr's evaluation points, optionally scaled by the given\
+    \ factor. For each evaluation point\n  EvalPnt[i] of the Cvr, the delta written\
+    \ into the Dvr is the change in the Cvr prediction\n  between consecutive evaluation\
+    \ points (the first eval point is referenced against the\n  current Cvr measurement),\
+    \ multiplied by scale."
+  quality: GOOD if all arguments resolve correctly, otherwise BAD
+- name: setdvdeltapredfrommv
+  signature: setdvdeltapredfrommv(dvr, mvr[, scale])
+  parameters:
+  - name: dvr
+    description: Dvr Tag
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: mvr
+    description: Mvr Tag whose predicted deltas are copied
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: scale
+    description: "Optional scaling factor applied to each MV delta before storing\
+      \ in the\n                   DV. Defaults to 1.0 when omitted."
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: Sum of the copied (scaled) deltas
+  detailedDescription: "Copies the predicted future moves of an Mvr into the DeltaPred\
+    \ member of a Dvr,\n  optionally scaled by the given factor. For each prediction\
+    \ step i in 1..Npred, sets\n  dvr->setDeltaPred(i, scale * mvr->mgetdv(N + i))."
+  quality: GOOD if all arguments resolve correctly, otherwise BAD
 - name: setfulf
   signature: setfulf(xvr, value)
   parameters:
@@ -3217,8 +3503,7 @@
     arity: '1'
   retr: 'Updated meas validation mode: 1/0 for ON/OFF'
   detailedDescription: "Set mode of measurement validation. For all XVRs, but as Meas\
-    \ Validation only is performed on OPC read, it\r\n  will only have effect for\
-    \ OPCtags"
+    \ Validation only is performed on OPC read, it\n  will only have effect for OPCtags"
   quality: GOOD if valid xvr
 - name: setmode
   signature: setmode(xvr, mode)
@@ -3274,9 +3559,9 @@
     datatype:
     - value
     arity: '1'
-  retr: Resulting ProcessValue
+  retr: Resulting ProcessValue if arguments are valid, else 0
   detailedDescription: Set the ProcessValue property for given mvr
-  quality: GOOD if valid mvr and value otherwise BAD
+  quality: GOOD if valid mvr and GOOD value, otherwise BAD
 - name: setsetpnt
   signature: setsetpnt(cvr, value)
   parameters:
@@ -3311,11 +3596,11 @@
     - value
     arity: '1'
   retr: Resulting SetPntFilt
-  detailedDescription: "Sets the SetPntFilt value for given Cvr.\r\n  Purpose: Set\
-    \ a value as start point for a SP trajector from desired value towards\r\n  the\
-    \ SP target given as CV SetPnt, with SetpTref as filter time.\r\n  The calculation\
-    \ needs to be placed in a DmmyAppl/calculator processed\r\n  after the MPC due\
-    \ to internal spfilt logics using previous value"
+  detailedDescription: "Sets the SetPntFilt value for given Cvr.\n  Purpose: Set a\
+    \ value as start point for a SP trajector from desired value towards\n  the SP\
+    \ target given as CV SetPnt, with SetpTref as filter time.\n  The calculation\
+    \ needs to be placed in a DmmyAppl/calculator processed\n  after the MPC due to\
+    \ internal spfilt logics using previous value"
   quality: GOOD if valid cvr and value otherwise BAD
 - name: setsetpntprio
   signature: setsetpntprio(cvr, value)
@@ -3483,7 +3768,7 @@
     arity: '1'
   retr: max(0, sleepmsecs), 0 if BAD input
   detailedDescription: "Debugging code. Will sleep for sleepmsecs. Not part of release-builds,\
-    \ intended for debugging of\r\n  Master<->RUI issues to introduce a long \"exe-time\"\
+    \ intended for debugging of\n  Master<->RUI issues to introduce a long \"exe-time\"\
     \ in Master"
   quality: BAD if input sleepmsecs is BAD or empty input, else GOOD
 - name: spivon
@@ -3535,10 +3820,10 @@
     - dvr
     arity: '1'
   retr: "the current steady state gain from the Mvr to the Cvr if (CVRTAG is a Cvr)\
-    \ and (MVRTAG is an MVR)\r\n  and (CVRTAG and MVRTAG belongs to same appl) and\
-    \ (appl is SmpcAppl/NMPCAppl) and (the model is an SubrModl), else 0"
+    \ and (MVRTAG is an MVR)\n  and (CVRTAG and MVRTAG belongs to same appl) and (appl\
+    \ is SmpcAppl/NMPCAppl) and (the model is an SubrModl), else 0"
   detailedDescription: "Get the steady state gain from the MPC using a SUBR type model.\
-    \ The pair of CVRTAG/MVRTAG identifies which\r\n  model gain to fetch."
+    \ The pair of CVRTAG/MVRTAG identifies which\n  model gain to fetch."
   quality: GOOD if calculations are ok, else BAD
 - name: subrzerosens
   signature: subrzerosens(CVRTAG,MVRTAG,ZEROFLAG)
@@ -3562,12 +3847,12 @@
     - value
     arity: '1'
   retr: "if (CVRTAG is a Cvr) and (MVRTAG is an MVR) and (CVRTAG and MVRTAG belongs\
-    \ to same appl) and (appl is\r\n  SmpcAppl/NMPCAppl) and (the model is a SubrModl),\
-    \ then the corr element of ZeroSensitivity is set according to\r\n  ZEROFLAG (1\
+    \ to same appl) and (appl is\n  SmpcAppl/NMPCAppl) and (the model is a SubrModl),\
+    \ then the corr element of ZeroSensitivity is set according to\n  ZEROFLAG (1\
     \ means that it is zeroed), else 0"
   detailedDescription: "Set element of matrix ZeroSensitivity to 1/0 in the MPC using\
-    \ a SUBR type model<br>\r\n  Typical use: Zero sensitivity to avoid undesired\
-    \ use of Mvr/Cvr connection. The pair of CVRTAG/MVRTAG identifies the\r\n  sensitivity\
+    \ a SUBR type model<br>\n  Typical use: Zero sensitivity to avoid undesired use\
+    \ of Mvr/Cvr connection. The pair of CVRTAG/MVRTAG identifies the\n  sensitivity\
     \ element to set."
   quality: GOOD if calculations are ok, else BAD
 - name: tanh
@@ -3599,7 +3884,7 @@
     arity: '1'
   retr: Boolean
   detailedDescription: "This function delays the activation of the output signal for\
-    \ a specific number of samples after a\r\n   rising edge condition. Output becomes\
+    \ a specific number of samples after a\n   rising edge condition. Output becomes\
     \ TRUE at N samples of TRUE input."
   quality: GOOD if input GOOD
 - name: trk
@@ -3652,7 +3937,7 @@
     arity: '1'
   retr: Status of windup. Set Mvr.Mode to min of Mode and TRACKING if status is 3
   detailedDescription: "Disable control with an Mvr in windup high and low simultaneously,\
-    \ because this indicates that cascade to\r\n  lower level controller is broken.\
+    \ because this indicates that cascade to\n  lower level controller is broken.\
     \ Lowers Mvr.Mode to TRACKING if this happens"
   quality: GOOD if valid mvr, otherwise BAD
 - name: xvrtext1tosystemtext2
@@ -3671,7 +3956,7 @@
     - value
     arity: '1'
   retr: "1 if xvr(s) ok, 0 if any inputs are illegal when using selector, the Meas\
-    \ of the selector must be positive\r\n  and less or equal to number of xvrtext"
+    \ of the selector must be positive\n  and less or equal to number of xvrtext"
   detailedDescription: ''
   quality: GOOD if xvr(s) ok, else BAD
 - name: zfac
@@ -3697,7 +3982,7 @@
     arity: '1'
   retr: z factor, if BAD input the old value is kept with Q= BAD
   detailedDescription: "Calculates gas compressibility factor (z factor) for real\
-    \ gasses.<br>\r\n\r\n  Based on correlations from \"An efficient correlation for\
-    \ calculating compressibility\r\n  factor of natural gases\" by Azizi et al 2010<br>\r\
-    \n  Pseudo reduced properties are calculated by the Sutton correlations"
+    \ gasses.<br>\n\n  Based on correlations from \"An efficient correlation for calculating\
+    \ compressibility\n  factor of natural gases\" by Azizi et al 2010<br>\n  Pseudo\
+    \ reduced properties are calculated by the Sutton correlations"
   quality: GOOD if all inputs are GOOD, else BAD

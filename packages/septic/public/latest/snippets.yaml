@@ -11,6 +11,14 @@
   description: Appl Plot
   prefix: applplot
 - body:
+  - '  BadCalcList:   ${1:BadCalcListName}'
+  - '           Row=  1'
+  - '           Col=  1'
+  - '       RowSize=  -1'
+  - '       ColSize=  -1'
+  description: List of bad calcs in application
+  prefix: badcalclist
+- body:
   - '  BadXvrList:    ${1:BadXvrListName}'
   - '           Row=  1'
   - '           Col=  1'
@@ -112,7 +120,7 @@
   - '          Fulf=  1'
   - '     HighPnlty=  1'
   - '      LowPnlty=  1'
-  - '     RelxParam=  3    1    30    90'
+  - '     RelxParam=  3    1    30    80'
   - '   FulfReScale=  0.001'
   - '  FulfUniScale=  1'
   - '  FulfDynScale=  1'
