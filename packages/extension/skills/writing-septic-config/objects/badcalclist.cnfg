@@ -1,0 +1,6 @@
+// List of bad calcs in application
+  BadCalcList:   BadCalcListName
+           Row=  1
+           Col=  1
+       RowSize=  -1
+       ColSize=  -1
