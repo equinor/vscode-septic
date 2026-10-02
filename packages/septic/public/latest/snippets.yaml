@@ -11,6 +11,14 @@
   description: Appl Plot
   prefix: applplot
 - body:
+  - '  BadCalcList:   ${1:BadCalcListName}'
+  - '           Row=  1'
+  - '           Col=  1'
+  - '       RowSize=  -1'
+  - '       ColSize=  -1'
+  description: List of bad calcs in application
+  prefix: badcalclist
+- body:
   - '  BadXvrList:    ${1:BadXvrListName}'
   - '           Row=  1'
   - '           Col=  1'
@@ -112,7 +120,7 @@
   - '          Fulf=  1'
   - '     HighPnlty=  1'
   - '      LowPnlty=  1'
-  - '     RelxParam=  3    1    30    90'
+  - '     RelxParam=  3    1    30    80'
   - '   FulfReScale=  0.001'
   - '  FulfUniScale=  1'
   - '  FulfDynScale=  1'
@@ -271,8 +279,8 @@
   - '          Mode=  ${2|Playback,PlayBack_nomode,BaseCase|}'
   - '       SkipEvr=  OFF'
   - '         Nstep=  1'
-  description: "Filedata process, playback or basecase comparison of data file, *.dta\r\
-    \n  If configured, the filename is taken from Path, else the id is used for filename"
+  description: "Filedata process, playback or basecase comparison of data file, *.dta\n\
+    \  If configured, the filename is taken from Path, else the id is used for filename"
   prefix: fdtaproc
 - body:
   - '  FreeMeas:      ${1:FreeMeasName}'
@@ -518,7 +526,7 @@
   - '         IvRoc=  -1'
   - '        IvPrio=  99'
   - '          Fulf=  1'
-  - '   FulfReScale=  0'
+  - '  FulfUniScale=  0'
   - '  FulfDynScale=  1'
   - '      Blocking=  6    2     4     7    11    16    22'
   - MeasValidation=  OFF
@@ -645,6 +653,7 @@
   - MeasValidation=  OFF
   - ' MeasHighLimit=  1e+10'
   - '  MeasLowLimit=  -1e+10'
+  - '         Color=  BLACK'
   - '     HighLimit=  0'
   - '      LowLimit=  0'
   - '       MaxDiff=  0'
@@ -820,6 +829,20 @@
   description: SopcProc description
   prefix: sopcproc
 - body:
+  - '  SopcSampleTvr:  ${1:SopcSampleTvrName}'
+  - '         Text1=  ""'
+  - '         Text2=  ""'
+  - '       MeasTag=  "${2}"'
+  - ' SampleTimeTag=  "NotUsed"'
+  - '     StatusTag=  "NotUsed"'
+  - '   NormSdevTag=  "NotUsed"'
+  - ' OperAcceptTag=  "NotUsed"'
+  - SampleTimeInfoTag=  "NotUsed"
+  - ' ModelValueTag=  "NotUsed"'
+  description: Sample-based OPC measurement connection, lab or online analyser(GC).
+    Read on change/async
+  prefix: sopcsampletvr
+- body:
   - '  SopcTvr:       ${1:SopcTvrName}'
   - '         Text1=  ""'
   - '         Text2=  ""'
@@ -901,6 +924,12 @@
   - '  StepInterval=  0'
   - '       AutoRun=  0'
   - ShowUpdateCounter=  ON
+  - '      LogLevel=  INFO'
+  - '   MpcLogLevel=  WARN'
+  - '   OpcLogLevel=  WARN'
+  - '   LabLogLevel=  INFO'
+  - MaxLogFileSizeMB=  200
+  - '   MaxLogFiles=  5'
   description: Description of system object
   prefix: system
 - body:

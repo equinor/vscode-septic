@@ -1,0 +1,11 @@
+// Sample-based OPC measurement connection, lab or online analyser(GC). Read on change/async
+  SopcSampleTvr:  SopcSampleTvrName
+         Text1=  ""
+         Text2=  ""
+       MeasTag=  ""
+ SampleTimeTag=  "NotUsed"
+     StatusTag=  "NotUsed"
+   NormSdevTag=  "NotUsed"
+ OperAcceptTag=  "NotUsed"
+SampleTimeInfoTag=  "NotUsed"
+ ModelValueTag=  "NotUsed"

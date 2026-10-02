@@ -60,6 +60,63 @@
     noCnfg: false
     nosnippet: false
     tags: []
+- name: BadCalcList
+  description: List of bad calcs in application
+  parents:
+  - DisplayGroup
+  attributes:
+  - name: Row
+    description: Position in a gridded display group
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '1'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: Col
+    description: position in a gridded display group
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '1'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: RowSize
+    description: Height of item in a gridded group
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '-1'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: ColSize
+    description: Width of item in a gridded group
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '-1'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
 - name: BadXvrList
   description: List of bad xvrs in application
   parents:
@@ -1018,7 +1075,7 @@
     default:
     - '1'
     - '30'
-    - '90'
+    - '80'
     postfix: []
     snippet: ''
     calc: false
@@ -1402,7 +1459,8 @@
     nosnippet: false
     tags: []
   - name: ColdStart
-    description: Reset open loop when CV is activated
+    description: "Reset open loop when CV is activated. Note that the open loop is\
+      \ always reset when the CV goes from\r\n  OFF/FAILED to TRACKING or higher"
     dataType: enum
     list: false
     enums:
@@ -2511,8 +2569,8 @@
   - System
   attributes: []
 - name: FdtaProc
-  description: "Filedata process, playback or basecase comparison of data file, *.dta\r\
-    \n  If configured, the filename is taken from Path, else the id is used for filename"
+  description: "Filedata process, playback or basecase comparison of data file, *.dta\n\
+    \  If configured, the filename is taken from Path, else the id is used for filename"
   parents:
   - System
   attributes:
@@ -4727,7 +4785,7 @@
     noCnfg: false
     nosnippet: false
     tags: []
-  - name: FulfReScale
+  - name: FulfUniScale
     description: Rescaling of fulf if moving wrong direction from Iv
     dataType: float
     list: false
@@ -6059,6 +6117,24 @@
     enums: []
     default:
     - -1e+10
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: Color
+    description: Color used in plots for the variable
+    dataType: enum
+    list: false
+    enums:
+    - BLACK
+    - GREEN
+    - RED
+    - YELLOW
+    - MAGENTA
+    default:
+    - BLACK
     postfix: []
     snippet: ''
     calc: false
@@ -8062,6 +8138,129 @@
     noCnfg: false
     nosnippet: false
     tags: []
+- name: SopcSampleTvr
+  description: Sample-based OPC measurement connection, lab or online analyser(GC).
+    Read on change/async
+  parents:
+  - SopcProc
+  attributes:
+  - name: Text1
+    description: Free text description of object
+    dataType: string
+    list: false
+    enums: []
+    default:
+    - '""'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: Text2
+    description: Free text description of object
+    dataType: string
+    list: false
+    enums: []
+    default:
+    - '""'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: MeasTag
+    description: Main measurement tag READ
+    dataType: string
+    list: false
+    enums: []
+    default:
+    - '""'
+    postfix: []
+    snippet: '"${2}"'
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: SampleTimeTag
+    description: Optional sample time tag READ
+    dataType: string
+    list: false
+    enums: []
+    default:
+    - '"NotUsed"'
+    postfix: []
+    snippet: '"NotUsed"'
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: StatusTag
+    description: Optional sample status tag WRITE
+    dataType: string
+    list: false
+    enums: []
+    default:
+    - '"NotUsed"'
+    postfix: []
+    snippet: '"NotUsed"'
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: NormSdevTag
+    description: Optional normalized std.dev tag WRITE
+    dataType: string
+    list: false
+    enums: []
+    default:
+    - '"NotUsed"'
+    postfix: []
+    snippet: '"NotUsed"'
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: OperAcceptTag
+    description: Optional operator-accept tag READ
+    dataType: string
+    list: false
+    enums: []
+    default:
+    - '"NotUsed"'
+    postfix: []
+    snippet: '"NotUsed"'
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: SampleTimeInfoTag
+    description: Optional sample-time info tag WRITE
+    dataType: string
+    list: false
+    enums: []
+    default:
+    - '"NotUsed"'
+    postfix: []
+    snippet: '"NotUsed"'
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: ModelValueTag
+    description: Optional model value tag WRITE
+    dataType: string
+    list: false
+    enums: []
+    default:
+    - '"NotUsed"'
+    postfix: []
+    snippet: '"NotUsed"'
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
 - name: SopcTvr
   description: Trending variable OPC connection
   parents:
@@ -8552,7 +8751,8 @@
     nosnippet: false
     tags: []
   - name: GrpLock
-    description: Groups locked for update
+    description: Deprecated, superseded by DisplayGroup Locked=. Loaded but no longer
+      saved
     dataType: bit31
     list: false
     enums: []
@@ -8922,6 +9122,108 @@
     - 'OFF'
     default:
     - 'ON'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: LogLevel
+    description: Log level for default system logger
+    dataType: enum
+    list: false
+    enums:
+    - TRACE
+    - DEBUG
+    - INFO
+    - WARN
+    - ERROR
+    - 'OFF'
+    default:
+    - INFO
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: MpcLogLevel
+    description: Log level for MPC area logger
+    dataType: enum
+    list: false
+    enums:
+    - TRACE
+    - DEBUG
+    - INFO
+    - WARN
+    - ERROR
+    - 'OFF'
+    default:
+    - WARN
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: OpcLogLevel
+    description: Log level for OPC area logger
+    dataType: enum
+    list: false
+    enums:
+    - TRACE
+    - DEBUG
+    - INFO
+    - WARN
+    - ERROR
+    - 'OFF'
+    default:
+    - WARN
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: LabLogLevel
+    description: Log level for labupdates logger
+    dataType: enum
+    list: false
+    enums:
+    - TRACE
+    - DEBUG
+    - INFO
+    - WARN
+    - ERROR
+    - 'OFF'
+    default:
+    - INFO
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: MaxLogFileSizeMB
+    description: Maximum MB per rotating startup log file
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '200'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: MaxLogFiles
+    description: Maximum number of rotating startup log files to keep
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '5'
     postfix: []
     snippet: ''
     calc: false

@@ -1,5 +1,5 @@
-// State Variable
-  Use with subroutine model (SubrModl) for a variable with nominal response calulated by the model. Transport
+// State Variable
+  Use with subroutine model (SubrModl) for a variable with nominal response calulated by the model. Transport
   mechanism to/from model is identical to a Cvr
   Svr:           SvrName
          Text1=  ""
