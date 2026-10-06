@@ -99,6 +99,14 @@ export class SepticCnfg implements SepticContext, TextDocument {
         return this.doc.getText(range);
     }
 
+    public getLineRange(line: number): Range {
+        return this.doc.getLineRange(line);
+    }
+
+    public getEOLCharacters(line: number): string {
+        return this.doc.getEOLCharacters(line);
+    }
+
     public get lineCount(): number {
         return this.doc.lineCount;
     }
