@@ -55,6 +55,30 @@ class Document implements TextDocument {
         throw new Error("Document has been closed");
     }
 
+    getLineRange(line: number): Range {
+        if (this.inMemoryDoc) {
+            return this.inMemoryDoc.getLineRange(line);
+        }
+
+        if (this.onDiskDoc) {
+            return this.onDiskDoc.getLineRange(line);
+        }
+
+        throw new Error("Document has been closed");
+    }
+
+    getEOLCharacters(line: number): string {
+        if (this.inMemoryDoc) {
+            return this.inMemoryDoc.getEOLCharacters(line);
+        }
+
+        if (this.onDiskDoc) {
+            return this.onDiskDoc.getEOLCharacters(line);
+        }
+
+        throw new Error("Document has been closed");
+    }
+
     positionAt(offset: number): Position {
         if (this.inMemoryDoc) {
             return this.inMemoryDoc.positionAt(offset);
