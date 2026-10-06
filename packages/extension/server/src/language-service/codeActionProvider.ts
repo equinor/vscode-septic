@@ -334,7 +334,7 @@ function createUpdateIgnoreCommentEdit(
         .split(",")
         .map((code) => code.trim());
     const editBuilder = new WorkspaceEditBuilder();
-    let text = "";
+    let text: string;
     if (comment.type === SepticTokenType.jinjaComment) {
         text = `{# noqa: ${[...existingCodes, code].join(", ")} #}`;
     } else {
