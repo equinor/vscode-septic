@@ -473,7 +473,7 @@ function getObjectsSnippets(
     const relevantObjects: string[] = [];
     relevantObjects.push(...node.children);
     while (node) {
-        let parentType = "";
+        let parentType: string;
         if (currentObject?.parent) {
             parentType = currentObject.parent.type;
         } else {
