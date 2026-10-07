@@ -18,6 +18,8 @@ import {
     Location,
     DidChangeWatchedFilesNotification,
     CompletionParams,
+    Diagnostic,
+    DiagnosticSeverity,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -37,9 +39,15 @@ import {
     SepticMetaInfoProvider,
     SepticCnfg,
     compareCnfgs,
+    scgConfigFromYAML,
+    SepticDiagnosticCode,
 } from "@equinor/septic-config-lib";
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
 import { ContextManager } from "./contextManager";
+import {
+    findLayoutFileIssues,
+    findSourceFileIssues,
+} from "./util/caseCheck";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -97,6 +105,101 @@ async function publishDiagnosticsScgContext(
     });
 
     await Promise.all(diagnosticsPromises);
+
+    await publishCaseDiscrepancyDiagnostics(context);
+}
+
+async function publishCaseDiscrepancyDiagnostics(
+    context: ScgContext,
+): Promise<void> {
+    const yamlUri = context.filePath;
+    const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
+    const codes = getIgnoredCodes(yamlUri, ignorePatterns);
+    if (codes !== undefined && codes.length === 0) {
+        return;
+    }
+
+    const doc = await documentProvider.getDocument(yamlUri);
+    if (!doc) {
+        return;
+    }
+
+    const text = doc.getText();
+    let scgConfig;
+    try {
+        scgConfig = scgConfigFromYAML(text);
+    } catch {
+        return;
+    }
+    const templatepath = scgConfig.templatepath;
+
+    const templateDirUri = yamlUri.startsWith("file:")
+        ? new URL(templatepath + "/", new URL(".", new URL(yamlUri))).href
+        : path.join(path.dirname(yamlUri), templatepath);
+
+    const dirEntries = await connection
+        .sendRequest(protocol.fsReadDir, {
+            uri: templateDirUri,
+        })
+        .catch(() => []);
+
+    const layoutNames = scgConfig.layout.map((layout) => layout.name);
+    const sourcePaths = (scgConfig.sources ?? []).flatMap(({ filename }) =>
+        Array.isArray(filename) ? filename : [filename],
+    );
+    const sourceDirEntries = new Map<string, string[]>();
+    for (const sourcePath of sourcePaths) {
+        const sourceDir = path.posix.dirname(sourcePath.replace(/\\/g, "/"));
+        const sourceDirUri = yamlUri.startsWith("file:")
+            ? new URL(
+                  sourceDir === "." ? "./" : `${sourceDir}/`,
+                  new URL(".", new URL(yamlUri)),
+              ).href
+            : path.resolve(path.dirname(yamlUri), path.dirname(sourcePath));
+        try {
+            sourceDirEntries.set(
+                sourcePath,
+                await connection.sendRequest(protocol.fsReadDir, {
+                    uri: sourceDirUri,
+                }),
+            );
+        } catch {
+            sourceDirEntries.set(sourcePath, []);
+        }
+    }
+
+    const discrepancies = [
+        ...findLayoutFileIssues(layoutNames, dirEntries, text),
+        ...findSourceFileIssues(sourcePaths, sourceDirEntries, text),
+    ];
+
+    let diagnostics: Diagnostic[] = discrepancies.map((d) => ({
+        severity:
+            d.kind === "missing"
+                ? DiagnosticSeverity.Error
+                : DiagnosticSeverity.Warning,
+        range: {
+            start: doc.positionAt(d.offset),
+            end: doc.positionAt(d.offset + d.fileName.length),
+        },
+        message:
+            d.kind === "missing"
+                ? `File '${d.fileName}' does not exist.`
+                : `Case discrepancy in file path: '${d.fileName}' does not match actual file '${d.actualName}'. This will fail on case-sensitive file systems (Linux).`,
+        code:
+            d.kind === "missing"
+                ? SepticDiagnosticCode.missingFilePath
+                : SepticDiagnosticCode.caseDiscrepancyPath,
+        source: "septic",
+    }));
+
+    if (codes) {
+        diagnostics = diagnostics.filter(
+            (diag) => diag.code && !codes.includes(diag.code as string),
+        );
+    }
+
+    connection.sendDiagnostics({ uri: yamlUri, diagnostics: diagnostics });
 }
 
 async function publishDiagnosticsCnfg(cnfg: SepticCnfg): Promise<void> {
