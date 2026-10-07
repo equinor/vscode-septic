@@ -137,12 +137,11 @@ async function publishCaseDiscrepancyDiagnostics(
         ? new URL(templatepath + "/", new URL(".", new URL(yamlUri))).href
         : path.join(path.dirname(yamlUri), templatepath);
 
-    let dirEntries: string[] = [];
-    try {
-        dirEntries = await connection.sendRequest(protocol.fsReadDir, {
+    const dirEntries = await connection
+        .sendRequest(protocol.fsReadDir, {
             uri: templateDirUri,
-        });
-    } catch {}
+        })
+        .catch(() => []);
 
     const layoutNames = scgConfig.layout.map((layout) => layout.name);
     const sourcePaths = (scgConfig.sources ?? []).flatMap(({ filename }) =>
