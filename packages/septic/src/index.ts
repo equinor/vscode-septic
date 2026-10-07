@@ -29,6 +29,8 @@ export {
     SepticDiagnosticCode,
 } from "./diagnostics";
 export { compareCnfgs } from "./compare";
+export { removeDefaultLines } from "./removeDefaults";
+export type { ObjectDocProvider } from "./removeDefaults";
 export { SepticCnfgFormatter } from "./formatter";
 export {
     SepticConfigProviderFs,

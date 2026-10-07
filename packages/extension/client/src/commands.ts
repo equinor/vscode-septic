@@ -444,6 +444,49 @@ export function registerCommandGetFunctions(
     });
 }
 
+export function registerCommandRemoveDefaults(
+    context: vscode.ExtensionContext,
+    client: LanguageClient,
+) {
+    vscode.commands.registerCommand("septic.removeDefaults", async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            vscode.window.showInformationMessage("No active editor.");
+            return;
+        }
+        if (!editor.document.fileName.endsWith(".cnfg")) {
+            vscode.window.showInformationMessage(
+                "Active file is not a .cnfg file.",
+            );
+            return;
+        }
+        const uri = editor.document.uri.toString();
+        const result = await client.sendRequest(protocol.removeDefaults, {
+            uri,
+        });
+        if (!result) {
+            vscode.window.showInformationMessage(
+                "Unable to process file.",
+            );
+            return;
+        }
+        const currentText = editor.document.getText();
+        if (result === currentText) {
+            vscode.window.showInformationMessage(
+                "No default lines found to remove.",
+            );
+            return;
+        }
+        const fullRange = new vscode.Range(
+            editor.document.positionAt(0),
+            editor.document.positionAt(currentText.length),
+        );
+        const edit = new vscode.WorkspaceEdit();
+        edit.replace(editor.document.uri, fullRange, result);
+        await vscode.workspace.applyEdit(edit);
+    });
+}
+
 export function registerCommands(
     context: vscode.ExtensionContext,
     client: LanguageClient,
@@ -464,4 +507,5 @@ export function registerCommands(
     registerCommandMakeConfig();
     registerCommandPlotModel();
     registerCommandGetFunctions(context, client);
+    registerCommandRemoveDefaults(context, client);
 }

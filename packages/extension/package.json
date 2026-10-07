@@ -50,6 +50,10 @@
         "title": "Septic: Get functions in file"
       },
       {
+        "command": "septic.removeDefaults",
+        "title": "Septic: Remove default lines"
+      },
+      {
         "command": "septic.scgtree.addTemplate",
         "title": "Septic: Insert template below",
         "icon": "$(new-file)"
