@@ -45,7 +45,7 @@ import {
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
 import { ContextManager } from "./contextManager";
 import {
-    findCaseDiscrepancies,
+    findLayoutCaseDiscrepancies,
     findSourceCaseDiscrepancies,
 } from "./util/caseCheck";
 
@@ -172,7 +172,7 @@ async function publishCaseDiscrepancyDiagnostics(
     }
 
     const discrepancies = [
-        ...findCaseDiscrepancies(layoutNames, dirEntries, text),
+        ...findLayoutCaseDiscrepancies(layoutNames, dirEntries, text),
         ...findSourceCaseDiscrepancies(sourcePaths, sourceDirEntries, text),
     ];
 

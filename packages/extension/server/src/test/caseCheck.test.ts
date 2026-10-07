@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
 import {
-    findCaseDiscrepancies,
+    findLayoutCaseDiscrepancies,
     findLayoutNameOffset,
     findSourceCaseDiscrepancies,
     findSourceFilenameOffset,
@@ -39,14 +39,14 @@ describe("Test findLayoutNameOffset", () => {
     });
 });
 
-describe("Test findCaseDiscrepancies", () => {
+describe("Test findLayoutCaseDiscrepancies", () => {
     const yamlText =
         "layout:\n  - name: Template.cnfg\n  - name: correct.cnfg\n  - name: Other.cnfg\n";
 
     it("Detects case mismatch between layout name and directory entry", () => {
         const layoutNames = ["Template.cnfg"];
         const dirEntries = ["template.cnfg"];
-        const result = findCaseDiscrepancies(layoutNames, dirEntries, yamlText);
+        const result = findLayoutCaseDiscrepancies(layoutNames, dirEntries, yamlText);
         expect(result).to.have.lengthOf(1);
         expect(result[0].fileName).to.equal("Template.cnfg");
         expect(result[0].actualName).to.equal("template.cnfg");
@@ -56,21 +56,21 @@ describe("Test findCaseDiscrepancies", () => {
     it("Returns empty when casing matches exactly", () => {
         const layoutNames = ["correct.cnfg"];
         const dirEntries = ["correct.cnfg"];
-        const result = findCaseDiscrepancies(layoutNames, dirEntries, yamlText);
+        const result = findLayoutCaseDiscrepancies(layoutNames, dirEntries, yamlText);
         expect(result).to.have.lengthOf(0);
     });
 
     it("Returns empty when file does not exist in directory", () => {
         const layoutNames = ["nonexistent.cnfg"];
         const dirEntries = ["template.cnfg", "correct.cnfg"];
-        const result = findCaseDiscrepancies(layoutNames, dirEntries, yamlText);
+        const result = findLayoutCaseDiscrepancies(layoutNames, dirEntries, yamlText);
         expect(result).to.have.lengthOf(0);
     });
 
     it("Detects multiple case mismatches", () => {
         const layoutNames = ["Template.cnfg", "correct.cnfg", "Other.cnfg"];
         const dirEntries = ["template.cnfg", "correct.cnfg", "other.cnfg"];
-        const result = findCaseDiscrepancies(layoutNames, dirEntries, yamlText);
+        const result = findLayoutCaseDiscrepancies(layoutNames, dirEntries, yamlText);
         expect(result).to.have.lengthOf(2);
         expect(result[0].fileName).to.equal("Template.cnfg");
         expect(result[0].actualName).to.equal("template.cnfg");
@@ -79,12 +79,12 @@ describe("Test findCaseDiscrepancies", () => {
     });
 
     it("Returns empty for empty layout names", () => {
-        const result = findCaseDiscrepancies([], ["file.cnfg"], yamlText);
+        const result = findLayoutCaseDiscrepancies([], ["file.cnfg"], yamlText);
         expect(result).to.have.lengthOf(0);
     });
 
     it("Returns empty for empty directory entries", () => {
-        const result = findCaseDiscrepancies(["Template.cnfg"], [], yamlText);
+        const result = findLayoutCaseDiscrepancies(["Template.cnfg"], [], yamlText);
         expect(result).to.have.lengthOf(0);
     });
 });

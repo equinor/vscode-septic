@@ -9,28 +9,19 @@ export interface CaseDiscrepancy {
     offset: number;
 }
 
-export function findCaseDiscrepancies(
+export function findLayoutCaseDiscrepancies(
     layoutNames: string[],
     dirEntries: string[],
     yamlText: string,
 ): CaseDiscrepancy[] {
-    const discrepancies: CaseDiscrepancy[] = [];
-    for (const fileName of layoutNames) {
-        const actualEntry = dirEntries.find(
-            (entry) => entry.toLowerCase() === fileName.toLowerCase(),
-        );
-        if (actualEntry && actualEntry !== fileName) {
-            const offset = findLayoutNameOffset(yamlText, fileName);
-            if (offset >= 0) {
-                discrepancies.push({
-                    fileName,
-                    actualName: actualEntry,
-                    offset,
-                });
-            }
-        }
-    }
-    return discrepancies;
+    return findDiscrepancies(
+        layoutNames.map((fileName) => ({
+            fileName,
+            entryName: fileName,
+            dirEntries,
+            offset: findLayoutNameOffset(yamlText, fileName),
+        })),
+    );
 }
 
 export function findSourceCaseDiscrepancies(
@@ -38,32 +29,52 @@ export function findSourceCaseDiscrepancies(
     dirEntriesBySource: ReadonlyMap<string, string[]>,
     yamlText: string,
 ): CaseDiscrepancy[] {
-    const discrepancies: CaseDiscrepancy[] = [];
-    for (const sourcePath of sourcePaths) {
-        const fileName = sourcePath.split(/[\\/]/).pop() ?? sourcePath;
-        const dirEntries = dirEntriesBySource.get(sourcePath) ?? [];
-        const actualEntry = dirEntries.find(
-            (entry) => entry.toLowerCase() === fileName.toLowerCase(),
-        );
-        if (actualEntry && actualEntry !== fileName) {
-            const offset = findSourceFilenameOffset(yamlText, sourcePath);
-            if (offset >= 0) {
-                discrepancies.push({
-                    fileName: sourcePath,
-                    actualName: actualEntry,
-                    offset,
-                });
-            }
-        }
-    }
-    return discrepancies;
+    return findDiscrepancies(
+        sourcePaths.map((fileName) => ({
+            fileName,
+            entryName: fileName.split(/[\\/]/).pop() ?? fileName,
+            dirEntries: dirEntriesBySource.get(fileName) ?? [],
+            offset: findSourceFilenameOffset(yamlText, fileName),
+        })),
+    );
 }
 
-export function findSourceFilenameOffset(
+function findDiscrepancies(
+    candidates: {
+        fileName: string;
+        entryName: string;
+        dirEntries: string[];
+        offset: number;
+    }[],
+): CaseDiscrepancy[] {
+    return candidates.flatMap(({ fileName, entryName, dirEntries, offset }) => {
+        const actualName = dirEntries.find(
+            (entry) => entry.toLowerCase() === entryName.toLowerCase(),
+        );
+        return actualName && actualName !== entryName && offset >= 0
+            ? [{ fileName, actualName, offset }]
+            : [];
+    });
+}
+
+export function findSourceFilenameOffset(text: string, fileName: string): number {
+    return findYamlValueOffset(text, "sources", "filename", fileName);
+}
+
+export function findLayoutNameOffset(text: string, fileName: string): number {
+    return findYamlValueOffset(text, "layout", "name", fileName);
+}
+
+function findYamlValueOffset(
     text: string,
+    section: string,
+    field: string,
     sourcePath: string,
 ): number {
-    const header = /^sources:[ \t]*(?:#.*)?(?:\r?\n|$)/m.exec(text);
+    const header = new RegExp(
+        `^${escapeRegExp(section)}:[ \\t]*(?:#.*)?(?:\\r?\\n|$)`,
+        "m",
+    ).exec(text);
     if (!header) {
         return -1;
     }
@@ -77,17 +88,17 @@ export function findSourceFilenameOffset(
         .match(/[^\n]*\n|[^\n]+$/g) ?? [];
 
     let lineOffset = sectionStart;
-    let filenameListIndent: number | undefined;
+    let listIndent: number | undefined;
     for (const rawLine of lines) {
         const line = rawLine.replace(/\r?\n$/, "");
-        if (filenameListIndent !== undefined) {
+        if (listIndent !== undefined) {
             const indent = line.match(/^[ \t]*/)?.[0].length ?? 0;
-            if (line.trim() && indent <= filenameListIndent) {
-                filenameListIndent = undefined;
+            if (line.trim() && indent <= listIndent) {
+                listIndent = undefined;
             } else {
                 const listItem = /^\s*-\s*(.*)$/.exec(line);
                 if (listItem) {
-                    const valueOffset = findFilenameValueOffset(
+                    const valueOffset = findYamlValueInLine(
                         listItem[1],
                         sourcePath,
                     );
@@ -98,31 +109,22 @@ export function findSourceFilenameOffset(
             }
         }
 
-        const filenameField = /^\s*(?:-\s*)?filename:\s*(.*)$/.exec(line);
-        if (filenameField) {
-            const value = filenameField[1];
+        const fieldPattern = new RegExp(
+            `^\\s*(?:-\\s*)?${escapeRegExp(field)}:\\s*(.*)$`,
+        );
+        const fieldMatch = fieldPattern.exec(line);
+        if (fieldMatch) {
+            const value = fieldMatch[1];
             if (value.trim()) {
-                const valueOffset = findFilenameValueOffset(value, sourcePath);
+                const valueOffset = findYamlValueInLine(value, sourcePath);
                 if (valueOffset >= 0) {
                     return lineOffset + line.indexOf(value) + valueOffset;
                 }
             } else {
-                filenameListIndent = line.indexOf("filename:");
+                listIndent = line.indexOf(`${field}:`);
             }
         }
         lineOffset += rawLine.length;
-    }
-    return -1;
-}
-
-export function findLayoutNameOffset(text: string, fileName: string): number {
-    const regex = new RegExp(
-        `(?:^|\\n)\\s*-?\\s*name:\\s*${escapeRegExp(fileName)}`,
-        "m",
-    );
-    const match = regex.exec(text);
-    if (match) {
-        return match.index + match[0].indexOf(fileName);
     }
     return -1;
 }
@@ -131,7 +133,7 @@ function escapeRegExp(str: string): string {
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function findFilenameValueOffset(value: string, fileName: string): number {
+function findYamlValueInLine(value: string, fileName: string): number {
     const withoutComment = value.replace(/\s+#.*$/, "");
     const regex = new RegExp(
         `(?:^|\\[|,)\\s*(?:["'])?${escapeRegExp(fileName)}(?:["'])?(?=\\s*(?:,|\\]|$))`,
