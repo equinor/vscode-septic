@@ -1,9 +1,9 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
 import {
-    findLayoutCaseDiscrepancies,
+    findLayoutFileIssues,
     findLayoutNameOffset,
-    findSourceCaseDiscrepancies,
+    findSourceFileIssues,
     findSourceFilenameOffset,
 } from "../util/caseCheck";
 
@@ -39,53 +39,75 @@ describe("Test findLayoutNameOffset", () => {
     });
 });
 
-describe("Test findLayoutCaseDiscrepancies", () => {
+describe("Test findLayoutFileIssues", () => {
     const yamlText =
         "layout:\n  - name: Template.cnfg\n  - name: correct.cnfg\n  - name: Other.cnfg\n";
 
     it("Detects case mismatch between layout name and directory entry", () => {
         const layoutNames = ["Template.cnfg"];
         const dirEntries = ["template.cnfg"];
-        const result = findLayoutCaseDiscrepancies(layoutNames, dirEntries, yamlText);
+        const result = findLayoutFileIssues(layoutNames, dirEntries, yamlText);
         expect(result).to.have.lengthOf(1);
-        expect(result[0].fileName).to.equal("Template.cnfg");
-        expect(result[0].actualName).to.equal("template.cnfg");
-        expect(result[0].offset).to.equal(yamlText.indexOf("Template.cnfg"));
+        expect(result[0]).to.deep.equal({
+            kind: "case",
+            fileName: "Template.cnfg",
+            actualName: "template.cnfg",
+            offset: yamlText.indexOf("Template.cnfg"),
+        });
     });
 
     it("Returns empty when casing matches exactly", () => {
         const layoutNames = ["correct.cnfg"];
         const dirEntries = ["correct.cnfg"];
-        const result = findLayoutCaseDiscrepancies(layoutNames, dirEntries, yamlText);
+        const result = findLayoutFileIssues(layoutNames, dirEntries, yamlText);
         expect(result).to.have.lengthOf(0);
     });
 
-    it("Returns empty when file does not exist in directory", () => {
+    it("Reports an error when the file does not exist in the directory", () => {
         const layoutNames = ["nonexistent.cnfg"];
         const dirEntries = ["template.cnfg", "correct.cnfg"];
-        const result = findLayoutCaseDiscrepancies(layoutNames, dirEntries, yamlText);
-        expect(result).to.have.lengthOf(0);
+        const missingYaml = yamlText.replace("Other.cnfg", "nonexistent.cnfg");
+        const result = findLayoutFileIssues(layoutNames, dirEntries, missingYaml);
+        expect(result).to.deep.equal([
+            {
+                kind: "missing",
+                fileName: "nonexistent.cnfg",
+                offset: missingYaml.indexOf("nonexistent.cnfg"),
+            },
+        ]);
     });
 
     it("Detects multiple case mismatches", () => {
         const layoutNames = ["Template.cnfg", "correct.cnfg", "Other.cnfg"];
         const dirEntries = ["template.cnfg", "correct.cnfg", "other.cnfg"];
-        const result = findLayoutCaseDiscrepancies(layoutNames, dirEntries, yamlText);
+        const result = findLayoutFileIssues(layoutNames, dirEntries, yamlText);
         expect(result).to.have.lengthOf(2);
-        expect(result[0].fileName).to.equal("Template.cnfg");
-        expect(result[0].actualName).to.equal("template.cnfg");
-        expect(result[1].fileName).to.equal("Other.cnfg");
-        expect(result[1].actualName).to.equal("other.cnfg");
+        expect(result[0]).to.include({
+            kind: "case",
+            fileName: "Template.cnfg",
+            actualName: "template.cnfg",
+        });
+        expect(result[1]).to.include({
+            kind: "case",
+            fileName: "Other.cnfg",
+            actualName: "other.cnfg",
+        });
     });
 
     it("Returns empty for empty layout names", () => {
-        const result = findLayoutCaseDiscrepancies([], ["file.cnfg"], yamlText);
+        const result = findLayoutFileIssues([], ["file.cnfg"], yamlText);
         expect(result).to.have.lengthOf(0);
     });
 
-    it("Returns empty for empty directory entries", () => {
-        const result = findLayoutCaseDiscrepancies(["Template.cnfg"], [], yamlText);
-        expect(result).to.have.lengthOf(0);
+    it("Reports missing files for empty directory entries", () => {
+        const result = findLayoutFileIssues(["Template.cnfg"], [], yamlText);
+        expect(result).to.deep.equal([
+            {
+                kind: "missing",
+                fileName: "Template.cnfg",
+                offset: yamlText.indexOf("Template.cnfg"),
+            },
+        ]);
     });
 });
 
@@ -104,13 +126,14 @@ describe("Test source filename case discrepancies", () => {
             "sources/ONE.csv",
             ["One.csv"],
         ]]);
-        const result = findSourceCaseDiscrepancies(
+        const result = findSourceFileIssues(
             ["sources/ONE.csv"],
             dirEntriesBySource,
             mismatchedYaml,
         );
         expect(result).to.deep.equal([
             {
+            kind: "case",
                 fileName: "sources/ONE.csv",
                 actualName: "One.csv",
                 offset: mismatchedYaml.indexOf("sources/ONE.csv"),
@@ -127,13 +150,14 @@ describe("Test source filename case discrepancies", () => {
             "sources/THREE.csv",
             ["Two.csv", "Three.csv"],
         ]]);
-        const result = findSourceCaseDiscrepancies(
+        const result = findSourceFileIssues(
             ["sources/THREE.csv"],
             dirEntriesBySource,
             mismatchedYaml,
         );
         expect(result).to.deep.equal([
             {
+            kind: "case",
                 fileName: "sources/THREE.csv",
                 actualName: "Three.csv",
                 offset: mismatchedYaml.indexOf("sources/THREE.csv"),
@@ -148,5 +172,22 @@ describe("Test source filename case discrepancies", () => {
         expect(
             findSourceFilenameOffset(yamlText, "sources/Three.csv"),
         ).to.equal(yamlText.indexOf("sources/Three.csv"));
+    });
+
+    it("Reports a missing source filename", () => {
+        const missingPath = "sources/missing.csv";
+        const missingYaml = yamlText.replace("sources/One.csv", missingPath);
+        const result = findSourceFileIssues(
+            [missingPath],
+            new Map([[missingPath, ["One.csv"]]]),
+            missingYaml,
+        );
+        expect(result).to.deep.equal([
+            {
+                kind: "missing",
+                fileName: missingPath,
+                offset: missingYaml.indexOf(missingPath),
+            },
+        ]);
     });
 });

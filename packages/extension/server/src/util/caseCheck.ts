@@ -3,17 +3,15 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-export interface CaseDiscrepancy {
-    fileName: string;
-    actualName: string;
-    offset: number;
-}
+export type FilePathIssue =
+    | { kind: "case"; fileName: string; actualName: string; offset: number }
+    | { kind: "missing"; fileName: string; offset: number };
 
-export function findLayoutCaseDiscrepancies(
+export function findLayoutFileIssues(
     layoutNames: string[],
     dirEntries: string[],
     yamlText: string,
-): CaseDiscrepancy[] {
+): FilePathIssue[] {
     return findDiscrepancies(
         layoutNames.map((fileName) => ({
             fileName,
@@ -24,11 +22,11 @@ export function findLayoutCaseDiscrepancies(
     );
 }
 
-export function findSourceCaseDiscrepancies(
+export function findSourceFileIssues(
     sourcePaths: string[],
     dirEntriesBySource: ReadonlyMap<string, string[]>,
     yamlText: string,
-): CaseDiscrepancy[] {
+): FilePathIssue[] {
     return findDiscrepancies(
         sourcePaths.map((fileName) => ({
             fileName,
@@ -46,15 +44,25 @@ function findDiscrepancies(
         dirEntries: string[];
         offset: number;
     }[],
-): CaseDiscrepancy[] {
-    return candidates.flatMap(({ fileName, entryName, dirEntries, offset }) => {
+): FilePathIssue[] {
+    const issues: FilePathIssue[] = [];
+    for (const { fileName, entryName, dirEntries, offset } of candidates) {
+        if (offset < 0) {
+            continue;
+        }
         const actualName = dirEntries.find(
             (entry) => entry.toLowerCase() === entryName.toLowerCase(),
         );
-        return actualName && actualName !== entryName && offset >= 0
-            ? [{ fileName, actualName, offset }]
-            : [];
-    });
+        if (actualName === entryName) {
+            continue;
+        }
+        issues.push(
+            actualName
+                ? { kind: "case", fileName, actualName, offset }
+                : { kind: "missing", fileName, offset },
+        );
+    }
+    return issues;
 }
 
 export function findSourceFilenameOffset(text: string, fileName: string): number {

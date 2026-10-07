@@ -101,6 +101,7 @@ export enum SepticDiagnosticCode {
     duplicate = "W504",
     invalidComment = "W601",
     caseDiscrepancyPath = "W701",
+    missingFilePath = "E701",
 }
 
 export enum SepticDiagnosticLevel {

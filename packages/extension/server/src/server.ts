@@ -45,8 +45,8 @@ import {
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
 import { ContextManager } from "./contextManager";
 import {
-    findLayoutCaseDiscrepancies,
-    findSourceCaseDiscrepancies,
+    findLayoutFileIssues,
+    findSourceFileIssues,
 } from "./util/caseCheck";
 
 // Create a connection for the server, using Node's IPC as a transport.
@@ -137,14 +137,12 @@ async function publishCaseDiscrepancyDiagnostics(
         ? new URL(templatepath + "/", new URL(".", new URL(yamlUri))).href
         : path.join(path.dirname(yamlUri), templatepath);
 
-    let dirEntries: string[];
+    let dirEntries: string[] = [];
     try {
         dirEntries = await connection.sendRequest(protocol.fsReadDir, {
             uri: templateDirUri,
         });
-    } catch {
-        return;
-    }
+    } catch {}
 
     const layoutNames = scgConfig.layout.map((layout) => layout.name);
     const sourcePaths = (scgConfig.sources ?? []).flatMap(({ filename }) =>
@@ -172,18 +170,27 @@ async function publishCaseDiscrepancyDiagnostics(
     }
 
     const discrepancies = [
-        ...findLayoutCaseDiscrepancies(layoutNames, dirEntries, text),
-        ...findSourceCaseDiscrepancies(sourcePaths, sourceDirEntries, text),
+        ...findLayoutFileIssues(layoutNames, dirEntries, text),
+        ...findSourceFileIssues(sourcePaths, sourceDirEntries, text),
     ];
 
     let diagnostics: Diagnostic[] = discrepancies.map((d) => ({
-        severity: DiagnosticSeverity.Warning,
+        severity:
+            d.kind === "missing"
+                ? DiagnosticSeverity.Error
+                : DiagnosticSeverity.Warning,
         range: {
             start: doc.positionAt(d.offset),
             end: doc.positionAt(d.offset + d.fileName.length),
         },
-        message: `Case discrepancy in file path: '${d.fileName}' does not match actual file '${d.actualName}'. This will fail on case-sensitive file systems (Linux).`,
-        code: SepticDiagnosticCode.caseDiscrepancyPath,
+        message:
+            d.kind === "missing"
+                ? `File '${d.fileName}' does not exist.`
+                : `Case discrepancy in file path: '${d.fileName}' does not match actual file '${d.actualName}'. This will fail on case-sensitive file systems (Linux).`,
+        code:
+            d.kind === "missing"
+                ? SepticDiagnosticCode.missingFilePath
+                : SepticDiagnosticCode.caseDiscrepancyPath,
         source: "septic",
     }));
 
