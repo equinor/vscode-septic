@@ -44,7 +44,10 @@ import {
 } from "@equinor/septic-config-lib";
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
 import { ContextManager } from "./contextManager";
-import { findCaseDiscrepancies } from "./util/caseCheck";
+import {
+    findCaseDiscrepancies,
+    findSourceCaseDiscrepancies,
+} from "./util/caseCheck";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -128,8 +131,8 @@ async function publishCaseDiscrepancyDiagnostics(
     } catch {
         return;
     }
-
     const templatepath = scgConfig.templatepath;
+
     const templateDirUri = yamlUri.startsWith("file:")
         ? new URL(templatepath + "/", new URL(".", new URL(yamlUri))).href
         : path.join(path.dirname(yamlUri), templatepath);
@@ -143,8 +146,35 @@ async function publishCaseDiscrepancyDiagnostics(
         return;
     }
 
-    const layoutNames = scgConfig.layout.map((l) => l.name);
-    const discrepancies = findCaseDiscrepancies(layoutNames, dirEntries, text);
+    const layoutNames = scgConfig.layout.map((layout) => layout.name);
+    const sourcePaths = (scgConfig.sources ?? []).flatMap(({ filename }) =>
+        Array.isArray(filename) ? filename : [filename],
+    );
+    const sourceDirEntries = new Map<string, string[]>();
+    for (const sourcePath of sourcePaths) {
+        const sourceDir = path.posix.dirname(sourcePath.replace(/\\/g, "/"));
+        const sourceDirUri = yamlUri.startsWith("file:")
+            ? new URL(
+                  sourceDir === "." ? "./" : `${sourceDir}/`,
+                  new URL(".", new URL(yamlUri)),
+              ).href
+            : path.resolve(path.dirname(yamlUri), path.dirname(sourcePath));
+        try {
+            sourceDirEntries.set(
+                sourcePath,
+                await connection.sendRequest(protocol.fsReadDir, {
+                    uri: sourceDirUri,
+                }),
+            );
+        } catch {
+            sourceDirEntries.set(sourcePath, []);
+        }
+    }
+
+    const discrepancies = [
+        ...findCaseDiscrepancies(layoutNames, dirEntries, text),
+        ...findSourceCaseDiscrepancies(sourcePaths, sourceDirEntries, text),
+    ];
 
     let diagnostics: Diagnostic[] = discrepancies.map((d) => ({
         severity: DiagnosticSeverity.Warning,

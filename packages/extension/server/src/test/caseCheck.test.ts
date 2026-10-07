@@ -1,6 +1,11 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { findCaseDiscrepancies, findLayoutNameOffset } from "../util/caseCheck";
+import {
+    findCaseDiscrepancies,
+    findLayoutNameOffset,
+    findSourceCaseDiscrepancies,
+    findSourceFilenameOffset,
+} from "../util/caseCheck";
 
 describe("Test findLayoutNameOffset", () => {
     it("Finds offset for simple layout name", () => {
@@ -81,5 +86,67 @@ describe("Test findCaseDiscrepancies", () => {
     it("Returns empty for empty directory entries", () => {
         const result = findCaseDiscrepancies(["Template.cnfg"], [], yamlText);
         expect(result).to.have.lengthOf(0);
+    });
+});
+
+describe("Test source filename case discrepancies", () => {
+    const yamlText =
+        "sources:\n  - filename: sources/One.csv\n    id: one\n" +
+        "  - filename:\n      - sources/Two.csv\n      - sources/Three.csv\n    id: many\n" +
+        "layout:\n  - name: template.cnfg\n";
+
+    it("Detects a case mismatch for a scalar source filename", () => {
+        const mismatchedYaml = yamlText.replace(
+            "sources/One.csv",
+            "sources/ONE.csv",
+        );
+        const dirEntriesBySource = new Map([[
+            "sources/ONE.csv",
+            ["One.csv"],
+        ]]);
+        const result = findSourceCaseDiscrepancies(
+            ["sources/ONE.csv"],
+            dirEntriesBySource,
+            mismatchedYaml,
+        );
+        expect(result).to.deep.equal([
+            {
+                fileName: "sources/ONE.csv",
+                actualName: "One.csv",
+                offset: mismatchedYaml.indexOf("sources/ONE.csv"),
+            },
+        ]);
+    });
+
+    it("Detects a case mismatch for a filename in a source list", () => {
+        const mismatchedYaml = yamlText.replace(
+            "sources/Three.csv",
+            "sources/THREE.csv",
+        );
+        const dirEntriesBySource = new Map([[
+            "sources/THREE.csv",
+            ["Two.csv", "Three.csv"],
+        ]]);
+        const result = findSourceCaseDiscrepancies(
+            ["sources/THREE.csv"],
+            dirEntriesBySource,
+            mismatchedYaml,
+        );
+        expect(result).to.deep.equal([
+            {
+                fileName: "sources/THREE.csv",
+                actualName: "Three.csv",
+                offset: mismatchedYaml.indexOf("sources/THREE.csv"),
+            },
+        ]);
+    });
+
+    it("Finds a source filename offset in a scalar or list", () => {
+        expect(findSourceFilenameOffset(yamlText, "sources/One.csv")).to.equal(
+            yamlText.indexOf("sources/One.csv"),
+        );
+        expect(
+            findSourceFilenameOffset(yamlText, "sources/Three.csv"),
+        ).to.equal(yamlText.indexOf("sources/Three.csv"));
     });
 });
