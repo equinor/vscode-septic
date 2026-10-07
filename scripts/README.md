@@ -1,14 +1,18 @@
 ## Setup
 
-1. Install python (dependent of plattform)
-2. Create virtual environment in `/script` (dependent of plattform)
-3. Activate virtual environment (dependent of plattform)
-4. Install requirments `pip install -r requirements.txt`
-5. Create `.env` file in `/scripts`
-6. Create GitHub API Access Token by following this [guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
-    - NB! Step 11 is required for accessing the SEPTIC Repo using the token.
-7. Add the personal access token to the `.env` file
-    - Add the line `API_TOKEN=YOUR_PERSONAL_TOKEN`
+1. Install python, create virtual environment in `/scripts`, activate the environment and install requirements. For instance with `uv`:
+
+   ```pwsh
+   cd scripts
+   uv venv .venv
+   uv pip install -r requirements.txt
+   ```
+
+2. Create GitHub API Access Token by following this [guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). 
+   - Resource Owner: equinor
+   - Repository access: Only select repositories -> equinor/Septic
+   - Permissions: Contents, Read-only
+3. Create a `.env` file in `/scripts` and add the personal access token to the file like this: `API_TOKEN=YOUR_PERSONAL_TOKEN`
 
 ## Updating the documentation
 
