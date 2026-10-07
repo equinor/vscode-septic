@@ -1,6 +1,5 @@
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import List
 
 import yaml
 
@@ -13,7 +12,7 @@ spaces_between_values = 2
 @dataclass
 class Snippet:
     prefix: str
-    body: List[str]
+    body: list[str]
     description: str
 
 
@@ -61,7 +60,7 @@ def format_attribute(attribute: dict):
     return attribute_values
 
 
-def format_attribute_value(values: List[str], is_list: str, datatype: str) -> List[str]:
+def format_attribute_value(values: list[str], is_list: str, datatype: str) -> list[str]:
     if not values:
         return [""]
     if is_list == "true" and datatype.lower() in ["string", "variable"]:
@@ -74,8 +73,8 @@ def format_attribute_value(values: List[str], is_list: str, datatype: str) -> Li
     return [values[0]]
 
 
-def format_string_list(values: List[str]):
-    lines = [len(values)]
+def format_string_list(values: list[str]):
+    lines = [str(len(values))]
     current_line = " " * indents_attribute_value
     for ind, val in enumerate(values):
         if ind % 5 == 0 and ind != 0:
@@ -86,7 +85,7 @@ def format_string_list(values: List[str]):
     return lines
 
 
-def format_int_list(values: List[str]):
+def format_int_list(values: list[str]):
     line = f"{len(values)}"
     for ind, val in enumerate(values):
         if ind == 0:

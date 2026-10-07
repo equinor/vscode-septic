@@ -1,6 +1,6 @@
 import re
+from builtins import list as List  # Avoid name shadowing in Attribute class.
 from dataclasses import dataclass
-from typing import List, Optional
 
 doxygen_regex = r"\/\*![\s\S]*?\*\/"
 
@@ -25,8 +25,8 @@ class Attribute:
 class SepticObject:
     name: str
     description: str
-    parents: List[str]
-    attributes: List[Attribute]
+    parents: list[str]
+    attributes: list[Attribute]
 
 
 @dataclass
@@ -42,27 +42,25 @@ class Parameter:
 class Calc:
     name: str
     signature: str
-    parameters: Parameter
+    parameters: list[Parameter]
     retr: str
     detailedDescription: str
     quality: str
 
 
-def get_object_doxygen_from_file(file: str) -> List[str]:
+def get_object_doxygen_from_file(file: str) -> list[str]:
     matches_doxygen = re.findall(doxygen_regex, file)
     return list(filter(validate_object_doxygen, matches_doxygen))
 
 
 def validate_object_doxygen(doxygen: str) -> bool:
     vscode_regex = r"\\vscode\s+[\w]+"
-    if re.search(vscode_regex, doxygen):
-        return True
-    return False
+    return bool(re.search(vscode_regex, doxygen))
 
 
-def parse_object_documentation(file: str) -> List[SepticObject]:
+def parse_object_documentation(file: str) -> list[SepticObject]:
     doxygen_objects = get_object_doxygen_from_file(file)
-    septic_objects: List[SepticObject] = []
+    septic_objects: list[SepticObject] = []
     for obj_dox in doxygen_objects:
         obj = parse_object_doxygen_doc(obj_dox)
         if obj:
@@ -72,7 +70,7 @@ def parse_object_documentation(file: str) -> List[SepticObject]:
     return septic_objects
 
 
-def parse_object_doxygen_doc(doxygen: str) -> Optional[SepticObject]:
+def parse_object_doxygen_doc(doxygen: str) -> SepticObject | None:
     name_regex = r"\\vscode\s+([\w]+)"
     name_match = re.search(name_regex, doxygen)
     if not name_match:
@@ -93,7 +91,7 @@ def parse_object_doxygen_doc(doxygen: str) -> Optional[SepticObject]:
 
     attr_regex = r"\\param\s*[\S\s]*?(?:(?=(?:\r?\n){2})|(?=\\[^n]|\*\/))"
     attr_matches = re.findall(attr_regex, doxygen)
-    attributes: List[Attribute] = []
+    attributes: list[Attribute] = []
     for attr_dox in attr_matches:
         attr = parse_attribute(attr_dox)
         if attr:
@@ -103,7 +101,7 @@ def parse_object_doxygen_doc(doxygen: str) -> Optional[SepticObject]:
     )
 
 
-def parse_attribute(attribute: str) -> Optional[Attribute]:
+def parse_attribute(attribute: str) -> Attribute | None:
     attr_regex = (
         r"\\param\s+([\w]+)\s+([\S\s]*?)\s+(?:\{([\S\s]+)\})(?:\s*\[([\w\s,]+)\])?"
     )
@@ -153,10 +151,8 @@ def parse_attribute_details(input: str):
         if not datatype_match:
             return
         information["datatype"] = datatype_match.group(1).lower()
-        information["list"] = (
-            True
-            if datatype_match.group(2) and datatype_match.group(1).lower() != "enum"
-            else False
+        information["list"] = bool(
+            datatype_match.group(2) and datatype_match.group(1).lower() != "enum"
         )
         information["enums"] = (
             [elem.strip() for elem in datatype_match.group(3).split(",")]
@@ -214,7 +210,7 @@ def parse_attribute_details(input: str):
     return information
 
 
-def get_calc_doxygen_from_file(file: str) -> List[str]:
+def get_calc_doxygen_from_file(file: str) -> list[str]:
     matches_doxygen = re.findall(doxygen_regex, file)
     return list(filter(validate_calc_doxygen, matches_doxygen))
 
@@ -222,13 +218,11 @@ def get_calc_doxygen_from_file(file: str) -> List[str]:
 def validate_calc_doxygen(doxygen: str) -> bool:
     class_regex = r"\\class\s+(Calc[\w]+)\b"
     function_regex = r"\\calc\{[\S ]+\}"
-    if re.search(class_regex, doxygen) and re.search(function_regex, doxygen):
-        return True
-    return False
+    return bool(re.search(class_regex, doxygen) and re.search(function_regex, doxygen))
 
 
-def parse_calc_doxygen_doc(calc: str) -> Optional[Calc]:
-    parameters: List[dict] = []
+def parse_calc_doxygen_doc(calc: str) -> Calc | None:
+    parameters: list[Parameter] = []
     func = re.search(r"\\calc\{\s*(([\w]+)\([\S ]*\))\}", calc)
     name = func.group(2) if func else None
     if not name:
@@ -269,7 +263,7 @@ def parse_calc_doxygen_doc(calc: str) -> Optional[Calc]:
     )
 
 
-def parse_parameter(param: str) -> Optional[Parameter]:
+def parse_parameter(param: str) -> Parameter | None:
     param_match = re.search(
         r"\\param\[([\w,]+)\]\s+([\w]+)\s+([^\{]+)(?:\{([\S\s]+)\})?",
         param,
@@ -278,8 +272,12 @@ def parse_parameter(param: str) -> Optional[Parameter]:
     name = param_match.group(2) if param_match else None
     if not direction or not name:
         return None
-    description = param_match.group(3).strip() if param_match.group(3) else ""
-    param_details = parse_parameter_details(param_match.group(4))
+    description = (
+        param_match.group(3).strip() if param_match and param_match.group(3) else ""
+    )
+    param_details = parse_parameter_details(
+        param_match.group(4) if param_match else None
+    )
     return Parameter(
         name=name,
         description=description,
@@ -289,7 +287,7 @@ def parse_parameter(param: str) -> Optional[Parameter]:
     )
 
 
-def parse_parameter_details(inp: Optional[str]):
+def parse_parameter_details(inp: str | None):
     information = {"datatype": ["value"], "arity": "1"}
     if not inp:
         return information
@@ -320,9 +318,9 @@ def parse_parameter_details(inp: Optional[str]):
     return information
 
 
-def parse_calc_documentation(file: str) -> List[Calc]:
+def parse_calc_documentation(file: str) -> list[Calc]:
     calcs_doxygen = get_calc_doxygen_from_file(file)
-    parsedCalcs: List[Calc] = []
+    parsedCalcs: list[Calc] = []
     for calc_dox in calcs_doxygen:
         parsed_calc = parse_calc_doxygen_doc(calc_dox)
         if parsed_calc:
