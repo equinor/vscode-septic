@@ -1,3 +1,5 @@
+# Python helper scripts
+
 ## Setup
 
 1. Install python, create virtual environment in `/scripts`, activate the environment and install requirements. For instance with `uv`:
@@ -8,7 +10,7 @@
    uv pip install -r requirements.txt
    ```
 
-2. Create GitHub API Access Token by following this [guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). 
+2. Create GitHub API Access Token by following this [guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
    - Resource Owner: equinor
    - Repository access: Only select repositories -> equinor/Septic
    - Permissions: Contents, Read-only
