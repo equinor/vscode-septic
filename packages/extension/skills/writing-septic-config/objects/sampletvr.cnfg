@@ -1,4 +1,4 @@
-// Trend Variable for lab and online sampling values
+// Trend Variable for lab and online sampling values
   Has parameters that are used by
   SampleTvr:     SampleTvrName
          Text1=  ""
@@ -15,6 +15,7 @@
 MeasValidation=  OFF
  MeasHighLimit=  1e+10
   MeasLowLimit=  -1e+10
+         Color=  BLACK
      HighLimit=  0
       LowLimit=  0
        MaxDiff=  0
