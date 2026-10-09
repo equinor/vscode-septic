@@ -9,6 +9,7 @@
        DesMode=  STOPPED
        FailMax=  0
        IterOpt=  OFF
+     SolveMode=  BOTH
    IterNewSens=  OFF
      IterQpMax=  0
    IterLineMax=  0
