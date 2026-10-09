@@ -1,7 +1,7 @@
 import base64
-import os as os
+import os
 
-import requests as requests
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,7 +18,7 @@ def send_request_github(endpoint: str):
     }
     response = requests.get(url=url, headers=header)
     if response.status_code != 200:
-        raise Exception(response.status_code)
+        raise Exception(response.status_code)  # noqa: TRY002
     return response.json()
 
 
@@ -54,7 +54,7 @@ def get_object_files(ref: str):
     for path in paths:
         try:
             yield get_file(ref, path)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             print(e, path)
 
 
