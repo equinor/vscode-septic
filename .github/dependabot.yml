@@ -15,6 +15,9 @@ updates:
         update-types:
           - "minor"
           - "patch"
+        exclude-patterns:
+          - "@types/vscode"
+          - "vscode-languageserver-textdocument"
     ignore:
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
