@@ -2,12 +2,10 @@
 
 ## Setup
 
-1. Install python, create virtual environment in `/scripts`, activate the environment and install requirements. For instance with `uv`:
+1. Install `uv`, then create the Python 3.11 environment and install dependencies from the repository root:
 
    ```pwsh
-   cd scripts
-   uv venv .venv
-   uv pip install -r requirements.txt
+   uv sync --project scripts
    ```
 
 2. Create GitHub API Access Token by following this [guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
@@ -20,7 +18,12 @@
 
 1. Set the desired branch to pull the documentation from for both calcs and objects by updating the variables in the top of `/scripts/main.py`
 2. Update the desired output path for both calcs and objects by updating the variables in the top of `/scripts/main.py`
-3. Run the script from the root of the project in the terminal or by using the VSCode Launch script `Update Documentation`.
+3. Run the script from the root of the project in the terminal or by using the VSCode Launch script `Update Documentation`:
+
+   ```pwsh
+   uv run --project scripts python scripts/main.py latest
+   ```
+
 4. Check the terminal for error messages
 
 ## Generating example files from snippets
@@ -31,13 +34,13 @@ The `generate_examples.py` script automatically creates example `.cnfg` files fo
 
 ```bash
 # Generate examples from the latest version (default)
-python scripts/generate_examples.py
+uv run --project scripts python scripts/generate_examples.py
 
 # Generate examples from a specific version
-python scripts/generate_examples.py v3_0
+uv run --project scripts python scripts/generate_examples.py v3_0
 
 # Specify custom output directory
-python scripts/generate_examples.py latest --output custom/path
+uv run --project scripts python scripts/generate_examples.py latest --output custom/path
 ```
 
 ### What it does

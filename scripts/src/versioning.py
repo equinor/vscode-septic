@@ -1,7 +1,6 @@
 import os
 import re
 from pathlib import Path
-from typing import List
 
 import yaml
 
@@ -18,7 +17,7 @@ def version_to_folder_name(version: tuple):
 
 
 def read_meta_file(path: Path):
-    with open(path, "r") as file:
+    with open(path) as file:
         meta = yaml.safe_load(file)
     return meta
 
@@ -27,14 +26,13 @@ def get_major(version: tuple):
     return (version[0], version[1])
 
 
-def get_newest_version_for_major(versions: List[tuple]):
+def get_newest_version_for_major(versions: list[tuple]):
     majors = {}
     for ver in versions:
         major = get_major(ver)
         if not major in majors:
             majors[major] = ver
-        if majors[major] < ver:
-            majors[major] = ver
+        majors[major] = max(majors[major], ver)
     return majors
 
 
@@ -48,7 +46,7 @@ def get_existing_versions(path: Path):
         try:
             meta = read_meta_file(path / dir / meta_info_name)
             versions.append(tuple(int(x) for x in meta["version"].split(".")))
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             print(f"Error reading meta file for {dir}: {e}")
     return versions
 

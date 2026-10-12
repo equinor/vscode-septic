@@ -17,7 +17,7 @@ import argparse
 import re
 import sys
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any
 
 import yaml
 
@@ -36,7 +36,7 @@ def remove_snippet_placeholders(text: str) -> str:
     return text
 
 
-def clean_snippet_body(body: List[str]) -> str:
+def clean_snippet_body(body: list[str]) -> str:
     """
     Clean the snippet body by removing placeholders and joining lines.
     """
@@ -49,7 +49,7 @@ def clean_snippet_body(body: List[str]) -> str:
     return "\n".join(cleaned_lines)
 
 
-def generate_example_file(snippet: Dict[str, Any], output_dir: Path) -> None:
+def generate_example_file(snippet: dict[str, Any], output_dir: Path) -> None:
     """
     Generate a single example .cnfg file from a snippet definition.
     """
@@ -109,7 +109,7 @@ def main():
     # Validate snippets file exists
     if not snippets_path.exists():
         print(f"Error: snippets.yaml not found at {snippets_path}")
-        print(f"Available versions:")
+        print("Available versions:")
         public_dir = project_root / "packages" / "septic" / "public"
         for version_dir in sorted(public_dir.iterdir()):
             if version_dir.is_dir():
@@ -121,7 +121,7 @@ def main():
 
     # Read snippets.yaml
     print(f"Reading snippets from: {snippets_path}")
-    with open(snippets_path, "r", encoding="utf-8") as f:
+    with open(snippets_path, encoding="utf-8") as f:
         snippets = yaml.safe_load(f)
 
     if not isinstance(snippets, list):

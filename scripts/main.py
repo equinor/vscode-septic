@@ -3,9 +3,9 @@ import os
 import sys
 from dataclasses import asdict
 from pathlib import Path
-from typing import List, Union
 
 import yaml
+
 from src.github import get_calc_file, get_commit_id, get_object_files, get_tags
 from src.parse_doxygen import (
     SepticObject,
@@ -32,17 +32,15 @@ first_valid_version = (2, 88)
 
 
 def update_versioned_documentation_tag(tag: str):
-    tags = list(
-        map(
-            lambda x: x["commit"]["sha"], filter(lambda x: x["name"] == tag, get_tags())
-        )
-    )
+    tags = [
+        tag_info["commit"]["sha"] for tag_info in get_tags() if tag_info["name"] == tag
+    ]
     if len(tags) == 0:
-        raise Exception("Tag not found in repostitory")
+        raise ValueError("Tag not found in repository")
     commit = tags[0]
     version = get_versions_from_tag(tag)
     if not version:
-        raise Exception("Unable to get version from tag")
+        raise ValueError("Unable to get version from tag")
     major = get_major(version)
     majors_existing = get_newest_version_for_major(get_existing_versions(output_path))
     if major in majors_existing and version <= majors_existing[major]:
@@ -97,17 +95,19 @@ def update_latest_documentation():
 
 def update_version_options():
     package_path = Path("packages/extension/package.json")
-    with open(package_path.resolve(), "r") as f:
+    with open(package_path.resolve()) as f:
         package = json.load(f)
     package["contributes"]["configuration"]["properties"][
         "septic.documentation.version"
-    ]["enum"] = sorted(list(map(folder_name_to_option, get_versions(output_path))))
+    ]["enum"] = sorted(
+        folder_name_to_option(version) for version in get_versions(output_path)
+    )
     with open(package_path.resolve(), "w") as f:
         json.dump(package, f, indent=2)
 
 
 def updateObjects(ref: str, output_path: Path):
-    objects: List[SepticObject] = []
+    objects: list[SepticObject] = []
     file_generator = get_object_files(ref)
     for f in file_generator:
         objects.extend(parse_object_documentation(f))
@@ -124,12 +124,12 @@ def updateCalcs(ref: str, output_path: Path):
     calc_file = get_calc_file(ref)
     calcs = parse_calc_documentation(calc_file)
     calcs.sort(key=lambda x: x.name)
-    calcs = filter(test_calc, calcs)
+    calcs = [calc for calc in calcs if test_calc(calc)]
     with open(output_path, "w") as file:
         yaml.dump([asdict(calc) for calc in calcs], file, sort_keys=False)
 
 
-def update_meta_info(commit: str, version: Union[tuple, str], output_path: Path):
+def update_meta_info(commit: str, version: tuple[int, ...] | str, output_path: Path):
     if isinstance(version, tuple):
         version = ".".join([str(x) for x in version])
     meta = {"commit": commit[0:7], "version": version}
