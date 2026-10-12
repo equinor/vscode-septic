@@ -91,7 +91,7 @@ async function publishDiagnosticsScgContext(
     await context.updateObjectParents();
     const diagnosticsPromises = context.files.map(async (uri) => {
         const codes = getIgnoredCodes(uri, ignorePatterns);
-        if (codes !== undefined && codes.length == 0) {
+        if (codes !== undefined && codes.includes("*")) {
             connection.sendDiagnostics({ uri: uri, diagnostics: [] });
             return;
         }
@@ -205,7 +205,7 @@ async function publishCaseDiscrepancyDiagnostics(
 async function publishDiagnosticsCnfg(cnfg: SepticCnfg): Promise<void> {
     const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
     const codes = getIgnoredCodes(cnfg.uri, ignorePatterns);
-    if (codes !== undefined && codes.length == 0) {
+    if (codes !== undefined && codes.includes("*")) {
         connection.sendDiagnostics({ uri: cnfg.uri, diagnostics: [] });
         return;
     }
