@@ -24,7 +24,7 @@
          IvRoc=  -1
         IvPrio=  99
           Fulf=  1
-   FulfReScale=  0
+  FulfUniScale=  0
   FulfDynScale=  1
       Blocking=  6    2     4     7    11    16    22
 MeasValidation=  OFF
