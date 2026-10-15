@@ -22,7 +22,7 @@
     "typescript-eslint": "^8.71.1"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=24"
   },
   "workspaces": [
     "packages/*"

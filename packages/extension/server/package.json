@@ -1,12 +1,9 @@
 {
   "name": "septic-server",
-  "description": "Language server for SEPTIC extension in node",
+  "description": "Language server for Septic extension in node",
   "version": "1.0.0",
   "author": "Equinor ASA",
   "license": "MIT",
-  "engines": {
-    "node": "*"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/equinor/vscode-septic"
