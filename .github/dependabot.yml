@@ -16,11 +16,14 @@ updates:
           - "minor"
           - "patch"
         exclude-patterns:
-          - "@types/vscode"
           - "vscode-languageserver-textdocument"
     ignore:
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/vscode"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
 
   - package-ecosystem: "github-actions"
     directory: "/"

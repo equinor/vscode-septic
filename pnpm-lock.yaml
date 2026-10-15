@@ -70,7 +70,7 @@ importers:
         version: 5.4.3
     devDependencies:
       '@types/vscode':
-        specifier: ^1.138.0
+        specifier: ~1.138.0
         version: 1.138.0
       '@vscode/test-cli':
         specifier: ^0.0.15
