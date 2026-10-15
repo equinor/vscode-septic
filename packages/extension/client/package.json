@@ -11,8 +11,5 @@
   },
   "dependencies": {
     "vscode-languageclient": "^10.1.2"
-  },
-  "devDependencies": {
-    "@types/js-yaml": "^4.0.5"
   }
 }

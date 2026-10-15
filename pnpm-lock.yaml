@@ -90,10 +90,6 @@ importers:
       vscode-languageclient:
         specifier: ^10.1.2
         version: 10.1.2
-    devDependencies:
-      '@types/js-yaml':
-        specifier: ^4.0.5
-        version: 4.0.9
 
   packages/extension/server:
     dependencies:
@@ -107,9 +103,6 @@ importers:
       '@types/chai':
         specifier: ^5.2.3
         version: 5.2.3
-      '@types/js-yaml':
-        specifier: ^4.0.5
-        version: 4.0.9
       '@types/node':
         specifier: ^24.19.1
         version: 24.19.1
@@ -132,9 +125,6 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
     devDependencies:
-      '@types/js-yaml':
-        specifier: ^4.0.9
-        version: 4.0.9
       '@types/yargs':
         specifier: ^17.0.35
         version: 17.0.35
@@ -510,9 +500,6 @@ packages:
 
   '@types/istanbul-lib-coverage@2.0.6':
     resolution: {integrity: sha512-2QF/t/auWm0lsy8XtKVPG19v3sSOQlJe/YHZgfjb/KBBHOGSV+J2q/S671rcq9uTBrLAXmZpqJiaQbMT+zNU1w==}
-
-  '@types/js-yaml@4.0.9':
-    resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -2146,8 +2133,6 @@ snapshots:
   '@types/estree@1.0.9': {}
 
   '@types/istanbul-lib-coverage@2.0.6': {}
-
-  '@types/js-yaml@4.0.9': {}
 
   '@types/json-schema@7.0.15': {}
 
