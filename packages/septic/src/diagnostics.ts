@@ -739,11 +739,7 @@ export function validateIdentifier(
         return diagnostics;
     }
 
-    if (
-        obj.isType("FdtaProc") ||
-        checkIdentifier(obj.identifier.name) ||
-        (obj.isType("CalcPvr") && checkCalcPvrIdentifier(obj.identifier.name))
-    ) {
+    if (obj.isType("FdtaProc") || checkIdentifier(obj.identifier.name)) {
         return [];
     }
 
@@ -957,10 +953,6 @@ function validateCalcPvrIdentifierReferences(
         return [];
     }
     const diagnostics: SepticDiagnostic[] = [];
-    const identifierParts = obj.identifier!.name.split(".");
-    const baseName = identifierParts[0]!;
-    const property = identifierParts.length > 1 ? identifierParts[1] : undefined;
-
     if (
         contextProvider.validateReferences(
             obj.identifier!.name,
@@ -979,49 +971,13 @@ function validateCalcPvrIdentifierReferences(
             ),
         );
     }
-    const referenceToEvr = contextProvider.validateReferences(
-        baseName,
-        hasReferenceToEvr,
-    );
-    if (referenceToEvr) {
-        return diagnostics;
-    }
     const referenceToXvr = contextProvider.validateReferences(
-        baseName,
+        obj.identifier!.name,
         defaultRefValidationFunction,
     );
-
-    if (referenceToXvr && property) {
-        const metaInfoProvider = SepticMetaInfoProvider.getInstance();
-        const referencedObjects = contextProvider
-            .getObjectsByIdentifier(baseName)
-            .filter((o) => o.isXvr);
-        if (referencedObjects.length) {
-            const publicAttributes =
-                metaInfoProvider.getObjectDocumentation(
-                    referencedObjects[0]!.type,
-                )?.publicAttributes;
-            if (publicAttributes && !publicAttributes.includes(property)) {
-                diagnostics.push(
-                    createDiagnostic(
-                        SepticDiagnosticLevel.error,
-                        {
-                            start: doc.positionAt(obj.identifier!.start),
-                            end: doc.positionAt(obj.identifier!.end),
-                        },
-                        `Unknown public property ${property} for ${referencedObjects[0]!.type}`,
-                        SepticDiagnosticCode.unknownPublicProperty,
-                    ),
-                );
-                return diagnostics;
-            }
-        }
-    }
-
     if (referenceToXvr) {
         return diagnostics;
     }
-
     diagnostics.push(
         createDiagnostic(
             SepticDiagnosticLevel.hint,
@@ -1060,15 +1016,6 @@ function validateUAApplReferences(
         ),
     ];
 }
-
-const hasReferenceToEvr: RefValidationFunction = (refs: SepticReference[]) => {
-    for (const ref of refs) {
-        if (ref.obj?.isType("Evr")) {
-            return true;
-        }
-    }
-    return false;
-};
 
 const hasDuplicateCalcPvrRef: RefValidationFunction = (
     refs: SepticReference[],
@@ -1367,14 +1314,6 @@ export function checkIdentifier(identifier: string): boolean {
     const invalidChars = containsInvalidChars(filteredIdentifier);
 
     return containsLetter && !invalidChars;
-}
-
-function checkCalcPvrIdentifier(identifier: string): boolean {
-    const parts = identifier.split(".");
-    if (parts.length > 2) {
-        return false;
-    }
-    return parts.every((part) => checkIdentifier(part));
 }
 
 function containsInvalidChars(str: string): boolean {

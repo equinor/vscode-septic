@@ -1446,51 +1446,11 @@ describe("Test validation of object references", () => {
         );
         expect(diagFilterd.length).to.equal(0);
     });
-    it("Expect no diagnostic for CalcPvr with dotted identifier referencing non-Evr", () => {
+    it("Expect no diagnostics for CalcPvr referencing non-Evr Xvr", () => {
         const text = `
             Mvr: TestMvr
 
-            CalcPvr: TestMvr.WUpLo
-                Alg= "1"
-		`;
-        const cnfg = parseSepticForTest(text);
-        const objectInfo = metaInfoProvider.getObject("CalcPvr");
-        const diag = validateObjectReferences(
-            cnfg.objects[1]!,
-            cnfg.doc,
-            cnfg,
-            objectInfo!,
-        );
-        const warnings = diag.filter(
-            (d) => d.code === SepticDiagnosticCode.invalidReference,
-        );
-        expect(warnings.length).to.equal(0);
-    });
-    it("Expect error for CalcPvr with dotted identifier and unknown property", () => {
-        const text = `
-            Mvr: TestMvr
-
-            CalcPvr: TestMvr.FakeProperty
-                Alg= "1"
-		`;
-        const cnfg = parseSepticForTest(text);
-        const objectInfo = metaInfoProvider.getObject("CalcPvr");
-        const diag = validateObjectReferences(
-            cnfg.objects[1]!,
-            cnfg.doc,
-            cnfg,
-            objectInfo!,
-        );
-        const errors = diag.filter(
-            (d) => d.code === SepticDiagnosticCode.unknownPublicProperty,
-        );
-        expect(errors.length).to.equal(1);
-    });
-    it("Expect no diagnostics for CalcPvr with dotted identifier referencing Evr", () => {
-        const text = `
-            Evr: TestEvr
-
-            CalcPvr: TestEvr.Meas
+            CalcPvr: TestMvr
                 Alg= "1"
 		`;
         const cnfg = parseSepticForTest(text);
