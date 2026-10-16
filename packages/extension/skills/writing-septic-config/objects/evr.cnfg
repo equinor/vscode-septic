@@ -17,6 +17,6 @@
     UserAccess=  WRRR
       UserMeas=  0
       MinInput=  0
-      MaxInput=  0
+      MaxInput=  100
 ValidationLimit=  -1
          Color=  BLACK
