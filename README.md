@@ -4,11 +4,11 @@ Repo for the VSCode Septic Extension with a monorepo structure.
 
 ## Development
 
-Node is required for development and can be installed by using [node version manager](https://github.com/coreybutler/nvm-windows). After installation install node version 22 and select that version by running:
+Node is required for development and can be installed by using [node version manager](https://github.com/coreybutler/nvm-windows). After installation install node version 24 and select that version by running:
 
 ```bash
-nvm install 22
-nvm use 22
+nvm install 24
+nvm use 24
 ```
 
 Nvm also installs npm.
