@@ -2,6 +2,11 @@ name: "💎 Code Quality"
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      insiders:
+        description: Run integration tests on VS Code Insiders instead of minimum and stable
+        type: boolean
+        default: false
 permissions:
   contents: read
 
@@ -23,9 +28,16 @@ jobs:
         run: pnpm -r build
       - name: 🧹 Lint Packages
         run: pnpm -r lint
-      - name: 🧪 Run Unittests
+      - name: 🧪 Run Unit tests
         run: xvfb-run --auto-servernum pnpm -r test
-      - name: 🧪 Run Integrationtests
-        run: xvfb-run --auto-servernum  pnpm -r integration-test
+      - name: 🧪 Run Integration tests
+        if: ${{ !inputs.insiders }}
+        run: xvfb-run --auto-servernum pnpm -r integration-test
+      - name: Run integration tests on Insiders
+        if: ${{ inputs.insiders }}
+        working-directory: packages/extension
+        run: |
+          pnpm build:test
+          xvfb-run --auto-servernum pnpm exec vscode-test --label stable --code-version insiders
       - name: 🧪 Test Building of Extension
         run: cd packages/extension && npx @vscode/vsce package --no-dependencies
