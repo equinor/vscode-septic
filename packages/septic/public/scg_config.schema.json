@@ -65,6 +65,17 @@
       "items": {
         "$ref": "#/definitions/Drawio"
       }
+    },
+    "extract": {
+      "description": "Configuration for extracting values from an existing Septic config",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Extraction"
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
   "additionalProperties": false,
@@ -86,6 +97,7 @@
             "integer",
             "null"
           ],
+          "format": "int32",
           "default": null
         }
       },
@@ -113,7 +125,8 @@
           ],
           "items": {
             "$ref": "#/definitions/Include"
-          }
+          },
+          "minItems": 1
         },
         "exclude": {
           "description": "Optional list of rows from source to exclude globally",
@@ -123,7 +136,8 @@
           ],
           "items": {
             "$ref": "#/definitions/Include"
-          }
+          },
+          "minItems": 1
         },
         "id": {
           "description": "The unique identifier for this source",
@@ -191,14 +205,15 @@
           "type": "string"
         },
         "then": {
-          "description": "List of items to include if the condition is true",
+          "description": "Item(s) to include if the condition is true (can be a single string or array of strings)",
           "type": [
             "array",
             "null"
           ],
           "items": {
             "type": "string"
-          }
+          },
+          "default": null
         },
         "continue": {
           "description": "Whether to continue evaluating further conditions after this one",
@@ -235,7 +250,8 @@
           ],
           "items": {
             "$ref": "#/definitions/Include"
-          }
+          },
+          "minItems": 1
         },
         "exclude": {
           "description": "Optional list of fields from source to exclude in iteration",
@@ -245,7 +261,8 @@
           ],
           "items": {
             "$ref": "#/definitions/Include"
-          }
+          },
+          "minItems": 1
         }
       },
       "additionalProperties": false,
@@ -275,8 +292,108 @@
           ]
         }
       },
+      "additionalProperties": false,
       "required": [
         "input"
+      ]
+    },
+    "Extraction": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "Default Septic config file to extract values from",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "to": {
+          "description": "CSV sources to generate from the extracted values",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtractionSource"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "to"
+      ]
+    },
+    "ExtractionSource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID of the CSV source that receives the extracted values",
+          "type": "string"
+        },
+        "filename": {
+          "description": "Filename within a multi-file CSV source to receive the extracted values",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "objects": {
+          "description": "Object values or member/value-pair captures to extract",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtractionObject"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "objects"
+      ]
+    },
+    "ExtractionObject": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "Optional object type to match",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "description": "Object name template using columns from the target CSV source",
+          "type": "string"
+        },
+        "props": {
+          "description": "Object properties to extract",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "regexps": {
+          "description": "Regular expressions with exactly one capture group each",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "headers": {
+          "description": "CSV headers to receive the extracted member values",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "headers"
       ]
     }
   }
