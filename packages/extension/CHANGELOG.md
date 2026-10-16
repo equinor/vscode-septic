@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.31.1](https://github.com/equinor/vscode-septic/compare/septic-config-v1.31.0...septic-config-v1.31.1) (2026-10-16)
+
+
+### 👷 CI/CD
+
+* fix release issues ([#1013](https://github.com/equinor/vscode-septic/issues/1013)) ([7253976](https://github.com/equinor/vscode-septic/commit/7253976ff8aef0995721013a99c6800aa15d801f))
+
 ## [1.31.0](https://github.com/equinor/vscode-septic/compare/septic-config-v1.30.2...septic-config-v1.31.0) (2026-10-16)
 
 
