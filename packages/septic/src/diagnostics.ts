@@ -971,35 +971,22 @@ function validateCalcPvrIdentifierReferences(
             ),
         );
     }
-    const referenceToEvr = contextProvider.validateReferences(
-        obj.identifier!.name,
-        hasReferenceToEvr,
-    );
-    if (referenceToEvr) {
-        return diagnostics;
-    }
     const referenceToXvr = contextProvider.validateReferences(
         obj.identifier!.name,
         defaultRefValidationFunction,
     );
-    const severity = referenceToXvr
-        ? SepticDiagnosticLevel.warning
-        : SepticDiagnosticLevel.hint;
-    const message = referenceToXvr
-        ? `CalcPvr references non Evr ${obj.identifier!.name}`
-        : `No reference to Evr`;
-    const code = referenceToXvr
-        ? SepticDiagnosticCode.invalidReference
-        : SepticDiagnosticCode.missingReference;
+    if (referenceToXvr) {
+        return diagnostics;
+    }
     diagnostics.push(
         createDiagnostic(
-            severity,
+            SepticDiagnosticLevel.hint,
             {
                 start: doc.positionAt(obj.identifier!.start),
                 end: doc.positionAt(obj.identifier!.end),
             },
-            message,
-            code,
+            `No reference to Xvr`,
+            SepticDiagnosticCode.missingReference,
         ),
     );
     return diagnostics;
@@ -1029,15 +1016,6 @@ function validateUAApplReferences(
         ),
     ];
 }
-
-const hasReferenceToEvr: RefValidationFunction = (refs: SepticReference[]) => {
-    for (const ref of refs) {
-        if (ref.obj?.isType("Evr")) {
-            return true;
-        }
-    }
-    return false;
-};
 
 const hasDuplicateCalcPvrRef: RefValidationFunction = (
     refs: SepticReference[],

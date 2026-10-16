@@ -1446,6 +1446,23 @@ describe("Test validation of object references", () => {
         );
         expect(diagFilterd.length).to.equal(0);
     });
+    it("Expect no diagnostics for CalcPvr referencing non-Evr Xvr", () => {
+        const text = `
+            Mvr: TestMvr
+
+            CalcPvr: TestMvr
+                Alg= "1"
+		`;
+        const cnfg = parseSepticForTest(text);
+        const objectInfo = metaInfoProvider.getObject("CalcPvr");
+        const diag = validateObjectReferences(
+            cnfg.objects[1]!,
+            cnfg.doc,
+            cnfg,
+            objectInfo!,
+        );
+        expect(diag.length).to.equal(0);
+    });
 });
 
 describe("Test validation of object structure", () => {
