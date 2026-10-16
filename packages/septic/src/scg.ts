@@ -20,7 +20,15 @@ import * as yaml from "js-yaml";
 import Ajv from "ajv";
 import { getBasePublicPath } from "./path";
 
-const ajv = new Ajv();
+const ajv = new Ajv({
+    formats: {
+        int32: {
+            type: "number",
+            validate: (n: number) =>
+                Number.isInteger(n) && n >= -(2 ** 31) && n < 2 ** 31,
+        },
+    },
+});
 const scgSchemaPath = getBasePublicPath() + "/scg_config.schema.json";
 const scgSchema = JSON.parse(readFileSync(scgSchemaPath, "utf-8"));
 export const validate_scg = ajv.compile<ScgConfigSchema>(scgSchema);
