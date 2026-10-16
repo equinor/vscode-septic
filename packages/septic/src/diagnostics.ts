@@ -985,7 +985,7 @@ function validateCalcPvrIdentifierReferences(
                 start: doc.positionAt(obj.identifier!.start),
                 end: doc.positionAt(obj.identifier!.end),
             },
-            `No reference to Evr`,
+            `No reference to Xvr`,
             SepticDiagnosticCode.missingReference,
         ),
     );
