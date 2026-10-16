@@ -1,8 +1,11 @@
 name: 🎉 Release Please
+
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+
 permissions:
   contents: write
   pull-requests: write
@@ -26,6 +29,7 @@ jobs:
         run: |
           echo "Release outputs:"
           echo '${{ toJSON(steps.release.outputs) }}' | jq '.' || echo '${{ toJSON(steps.release.outputs) }}'
+
   publish_extension:
     name: "Publish Extension"
     if: ${{ needs.release_please.outputs.extension_release_created }}
@@ -33,6 +37,7 @@ jobs:
     uses: ./.github/workflows/publish-extension.yml
     secrets:
       VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
   publish_lib:
     name: "Publish Lib"
     if: ${{ needs.release_please.outputs.lib_release_created }}
