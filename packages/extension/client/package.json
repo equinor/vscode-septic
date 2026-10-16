@@ -1,6 +1,6 @@
 {
   "name": "septic-client",
-  "description": "VSCode client for SEPTIC language server",
+  "description": "VSCode client for Septic language server",
   "author": "Equinor ASA",
   "license": "MIT",
   "version": "0.0.1",
@@ -8,9 +8,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/equinor/vscode-septic"
-  },
-  "engines": {
-    "vscode": "^1.105.0"
   },
   "dependencies": {
     "vscode-languageclient": "^10.1.2"
