@@ -8889,19 +8889,6 @@
     noCnfg: false
     nosnippet: false
     tags: []
-  - name: DebugOn
-    description: Description
-    dataType: bit8
-    list: false
-    enums: []
-    default:
-    - '00000000'
-    postfix: []
-    snippet: ''
-    calc: false
-    noCnfg: false
-    nosnippet: false
-    tags: []
   - name: FontSize
     description: Font Size
     dataType: int
@@ -9158,6 +9145,21 @@
     noCnfg: false
     nosnippet: false
     tags: []
+  - name: DtaLoggingEnabled
+    description: Enable data logging for the application
+    dataType: enum
+    list: false
+    enums:
+    - 'ON'
+    - 'OFF'
+    default:
+    - 'ON'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
   - name: LogLevel
     description: Log level for default system logger
     dataType: enum
@@ -9166,8 +9168,9 @@
     - TRACE
     - DEBUG
     - INFO
-    - WARN
+    - WARNING
     - ERROR
+    - CRITICAL
     - 'OFF'
     default:
     - INFO
@@ -9185,11 +9188,12 @@
     - TRACE
     - DEBUG
     - INFO
-    - WARN
+    - WARNING
     - ERROR
+    - CRITICAL
     - 'OFF'
     default:
-    - WARN
+    - WARNING
     postfix: []
     snippet: ''
     calc: false
@@ -9204,106 +9208,52 @@
     - TRACE
     - DEBUG
     - INFO
-    - WARN
+    - WARNING
     - ERROR
+    - CRITICAL
     - 'OFF'
     default:
-    - WARN
+    - WARNING
     postfix: []
     snippet: ''
     calc: false
     noCnfg: false
     nosnippet: false
     tags: []
-  - name: LabLogLevel
-    description: Log level for labupdates logger
+  - name: CommsLogLevel
+    description: Log level for comms logger
     dataType: enum
     list: false
     enums:
     - TRACE
     - DEBUG
     - INFO
-    - WARN
+    - WARNING
     - ERROR
+    - CRITICAL
     - 'OFF'
     default:
-    - INFO
+    - WARNING
     postfix: []
     snippet: ''
     calc: false
     noCnfg: false
     nosnippet: false
     tags: []
-  - name: MasterLogLevel
-    description: Log level for the master default logger
+  - name: AlgLogLevel
+    description: Log level for Alg logger
     dataType: enum
     list: false
     enums:
     - TRACE
     - DEBUG
     - INFO
-    - WARN
+    - WARNING
     - ERROR
+    - CRITICAL
     - 'OFF'
     default:
-    - INFO
-    postfix: []
-    snippet: ''
-    calc: false
-    noCnfg: false
-    nosnippet: false
-    tags: []
-  - name: MasterMpcLogLevel
-    description: Log level for the master's MPC area logger
-    dataType: enum
-    list: false
-    enums:
-    - TRACE
-    - DEBUG
-    - INFO
-    - WARN
-    - ERROR
     - 'OFF'
-    default:
-    - WARN
-    postfix: []
-    snippet: ''
-    calc: false
-    noCnfg: false
-    nosnippet: false
-    tags: []
-  - name: MasterOpcLogLevel
-    description: Log level for the master's OPC area logger
-    dataType: enum
-    list: false
-    enums:
-    - TRACE
-    - DEBUG
-    - INFO
-    - WARN
-    - ERROR
-    - 'OFF'
-    default:
-    - WARN
-    postfix: []
-    snippet: ''
-    calc: false
-    noCnfg: false
-    nosnippet: false
-    tags: []
-  - name: MasterLabLogLevel
-    description: Log level for the master's labupdates logger
-    dataType: enum
-    list: false
-    enums:
-    - TRACE
-    - DEBUG
-    - INFO
-    - WARN
-    - ERROR
-    - 'OFF'
-    default:
-    - INFO
     postfix: []
     snippet: ''
     calc: false
@@ -10383,6 +10333,20 @@
     - 'OFF'
     default:
     - 'OFF'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: ReverseConnectPort
+    description: Port to listen on for reverse connect from server. 0 = disabled (normal
+      connect).
+    dataType: integer
+    list: false
+    enums: []
+    default:
+    - '0'
     postfix: []
     snippet: ''
     calc: false
