@@ -545,6 +545,26 @@
     \ 1 step forward is given, if n>last\n  evaluation point, then prediction at last\
     \ evaluation (end value) is given"
   quality: GOOD
+- name: cvpredsetpnt
+  signature: cvpredsetpnt(cvr, n)
+  parameters:
+  - name: cvr
+    description: Cvr
+    direction: in
+    datatype:
+    - cvr
+    arity: '1'
+  - name: n
+    description: npred
+    direction: in
+    datatype:
+    - value+
+    arity: '1'
+  retr: 'Predicted setpoint n samples ahead: Cvr.setpointPred(n)'
+  detailedDescription: "Gets the scheduled setpoint n samples ahead as set by setcvsetpntpred().\
+    \ If no setpoint schedule is\n  active, or no scheduled point exists at or before\
+    \ n, the current SetPnt is given."
+  quality: GOOD if valid cvr and n, else BAD
 - name: cvspdevavg
   signature: cvspdevavg(cvr, nsamp)
   parameters:
@@ -663,6 +683,26 @@
   detailedDescription: Dumps Application Ids and Xvrs Ids to file 'dumpxvrs.txt'.
     Actual dump controlled by parameter
   quality: GOOD
+- name: dvpred
+  signature: dvpred(dvr, n)
+  parameters:
+  - name: dvr
+    description: Dvr
+    direction: in
+    datatype:
+    - dvr
+    arity: '1'
+  - name: n
+    description: npred
+    direction: in
+    datatype:
+    - value+
+    arity: '1'
+  retr: 'Predicted DV value n samples ahead: Dvr.dget(pAppl->N + n)'
+  detailedDescription: "Gets the predicted DV value n samples ahead, i.e. the current\
+    \ measurement plus the accumulated\n  DeltaPred up to sample n (see setdvdeltapred()\
+    \ and related calcs). If n<1 the current measurement is given."
+  quality: GOOD if valid dvr and n, else BAD
 - name: escgrad
   signature: escgrad(J,sine,THP,TLP,Ts,sineOn)
   parameters:
@@ -3084,6 +3124,55 @@
     \ are\n  monotonically increasing. The number of deltas is deduced from the argument\
     \ count, which must be odd (dvr plus\n  complete X,Y pairs)."
   quality: GOOD only if ALL arguments are GOOD and valid dvr and else BAD
+- name: setdvdeltapredramp
+  signature: setdvdeltapredramp(dvr, counter, T1, Y1, T2, Y2, ..., TN, YN)
+  parameters:
+  - name: dvr
+    description: Dvr Tag
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: counter
+    description: Position in the sequence in samples (1 = start). < 1 gives flat predictions,
+      > TN gives BAD
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: Tn
+    description: Samples from the start of the sequence when Yn shall be reached
+    direction: in
+    datatype:
+    - value
+    arity: N
+  - name: Yn
+    description: Target level for the predicted DV at sample Tn
+    direction: in
+    datatype:
+    - value
+    arity: N
+  retr: counter + 1 while TN has not yet been reached, else 0
+  detailedDescription: "The schedule is a piecewise linear trajectory through the\
+    \ points (Tn, Yn), where Tn is the number of\n  samples from the start of the\
+    \ sequence at which the level Yn shall be reached. The counter gives the current\n\
+    \  position in the sequence in samples: counter = 1 is the first sample of the\
+    \ sequence (elapsed 0 samples),\n  counter = 2 is one sample later, and so on.\
+    \ At each sample the predicted trajectory starts from the current\n  measurement\
+    \ at the elapsed sample and goes linearly to the first point whose Tn lies ahead,\
+    \ then linearly from\n  point to point, and is held flat at YN after TN. Points\
+    \ whose Tn has already passed are skipped, so the\n  prediction is re-anchored\
+    \ to the measurement every sample while the schedule is kept fixed. When counter\
+    \ < 1\n  the DV delta predictions are zeroed (flat) and 0 is returned.\n  The\
+    \ calc returns counter + 1 while the elapsed samples have not yet reached TN,\
+    \ and 0 once they have, so it is\n  intended to be used as counter = setdvdeltapredramp(dvr,\
+    \ counter, ...) to step through the sequence and\n  switch itself off when the\
+    \ schedule is complete. Setting counter to 1 from outside starts the sequence;\n\
+    \  setting it to 0 stops it. If the counter is positioned beyond TN (counter -\
+    \ 1 > TN) the call is BAD, the\n  existing predictions are left untouched and\
+    \ 0 is returned."
+  quality: GOOD only if ALL arguments are GOOD, valid dvr and counter within the schedule,
+    else BAD
 - name: setfulf
   signature: setfulf(xvr, value)
   parameters:
