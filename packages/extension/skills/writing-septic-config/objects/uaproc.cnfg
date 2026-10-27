@@ -8,6 +8,7 @@ DefaultNameSpaceURI=  ""
 credentialsPath=  ""
   SecurityMode=  NONE
 useSubscription=  OFF
+ReverseConnectPort=  0
        RunMenu=  OFF
      xSchedule=  ""
         yPulse=  ""
