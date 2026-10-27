@@ -906,7 +906,6 @@
   - '       UserPwd=  ""'
   - '          Terr=  0'
   - '       DebugNR=  1000'
-  - '       DebugOn=  00000000'
   - '      FontSize=  -1'
   - '  InitialGroup=  -1'
   - ShowText1WithName=  OFF
@@ -925,14 +924,12 @@
   - '  StepInterval=  0'
   - '       AutoRun=  0'
   - ShowUpdateCounter=  ON
+  - '    DtaLogging=  ON'
   - '      LogLevel=  INFO'
-  - '   MpcLogLevel=  WARN'
-  - '   OpcLogLevel=  WARN'
-  - '   LabLogLevel=  INFO'
-  - MasterLogLevel=  INFO
-  - MasterMpcLogLevel=  WARN
-  - MasterOpcLogLevel=  WARN
-  - MasterLabLogLevel=  INFO
+  - '   MpcLogLevel=  WARNING'
+  - '   OpcLogLevel=  WARNING'
+  - ' CommsLogLevel=  WARNING'
+  - '   AlgLogLevel=  OFF'
   - MaxLogFileSizeMB=  200
   - '   MaxLogFiles=  5'
   description: Description of system object
@@ -1052,6 +1049,7 @@
   - credentialsPath=  ""
   - '  SecurityMode=  NONE'
   - useSubscription=  OFF
+  - ReverseConnectPort=  0
   - '       RunMenu=  OFF'
   - '     xSchedule=  ""'
   - '        yPulse=  ""'
