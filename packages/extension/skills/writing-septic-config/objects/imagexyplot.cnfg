@@ -1,0 +1,8 @@
+// XYPlot overlaid image. Name of object = id of an existing XYPlot (in any DisplayGroup) to show.
+  The XYPlot with its Curve/DynCurve/DynPoint items is configured as usual in a DisplayGroup;
+  this item only references it. An unknown id is reported and the item is skipped.
+  ImageXYPlot:   ImageXYPlotName
+            X1=  -1
+            Y1=  -1
+            X2=  -1
+            Y2=  -1
