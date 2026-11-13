@@ -3270,6 +3270,70 @@
     noCnfg: false
     nosnippet: false
     tags: []
+- name: ImageXYPlot
+  description: "XYPlot overlaid image. Name of object = id of an existing XYPlot (in\
+    \ any DisplayGroup) to show.\r\n  The XYPlot with its Curve/DynCurve/DynPoint\
+    \ items is configured as usual in a DisplayGroup;\r\n  this item only references\
+    \ it. An unknown id is reported and the item is skipped."
+  parents:
+  - Image
+  attributes:
+  - name: X1
+    description: X-position of upper left corner of plot relative to image in pixels.
+      X1 < X2
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '-1'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: Y1
+    description: Y-position of upper left corner of plot relative to image in pixels.
+      Y1 < Y2
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '-1'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: X2
+    description: X-position of lower right corner of plot relative to image in pixels.
+      X1 < X2
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '-1'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: Y2
+    description: Y-position of lower right corner of plot relative to image in pixels.
+      Y1 < Y2
+    dataType: int
+    list: false
+    enums: []
+    default:
+    - '-1'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
 - name: ImageXvr
   description: Xvr value overlaid on image
   parents:
@@ -8889,19 +8953,6 @@
     noCnfg: false
     nosnippet: false
     tags: []
-  - name: DebugOn
-    description: Description
-    dataType: bit8
-    list: false
-    enums: []
-    default:
-    - '00000000'
-    postfix: []
-    snippet: ''
-    calc: false
-    noCnfg: false
-    nosnippet: false
-    tags: []
   - name: FontSize
     description: Font Size
     dataType: int
@@ -9158,6 +9209,21 @@
     noCnfg: false
     nosnippet: false
     tags: []
+  - name: DtaLogging
+    description: Enable data logging for the application
+    dataType: enum
+    list: false
+    enums:
+    - 'ON'
+    - 'OFF'
+    default:
+    - 'ON'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
   - name: LogLevel
     description: Log level for default system logger
     dataType: enum
@@ -9166,8 +9232,9 @@
     - TRACE
     - DEBUG
     - INFO
-    - WARN
+    - WARNING
     - ERROR
+    - CRITICAL
     - 'OFF'
     default:
     - INFO
@@ -9185,11 +9252,12 @@
     - TRACE
     - DEBUG
     - INFO
-    - WARN
+    - WARNING
     - ERROR
+    - CRITICAL
     - 'OFF'
     default:
-    - WARN
+    - WARNING
     postfix: []
     snippet: ''
     calc: false
@@ -9204,106 +9272,52 @@
     - TRACE
     - DEBUG
     - INFO
-    - WARN
+    - WARNING
     - ERROR
+    - CRITICAL
     - 'OFF'
     default:
-    - WARN
+    - WARNING
     postfix: []
     snippet: ''
     calc: false
     noCnfg: false
     nosnippet: false
     tags: []
-  - name: LabLogLevel
-    description: Log level for labupdates logger
+  - name: CommsLogLevel
+    description: Log level for comms logger
     dataType: enum
     list: false
     enums:
     - TRACE
     - DEBUG
     - INFO
-    - WARN
+    - WARNING
     - ERROR
+    - CRITICAL
     - 'OFF'
     default:
-    - INFO
+    - WARNING
     postfix: []
     snippet: ''
     calc: false
     noCnfg: false
     nosnippet: false
     tags: []
-  - name: MasterLogLevel
-    description: Log level for the master default logger
+  - name: AlgLogLevel
+    description: Log level for Alg logger
     dataType: enum
     list: false
     enums:
     - TRACE
     - DEBUG
     - INFO
-    - WARN
+    - WARNING
     - ERROR
+    - CRITICAL
     - 'OFF'
     default:
-    - INFO
-    postfix: []
-    snippet: ''
-    calc: false
-    noCnfg: false
-    nosnippet: false
-    tags: []
-  - name: MasterMpcLogLevel
-    description: Log level for the master's MPC area logger
-    dataType: enum
-    list: false
-    enums:
-    - TRACE
-    - DEBUG
-    - INFO
-    - WARN
-    - ERROR
     - 'OFF'
-    default:
-    - WARN
-    postfix: []
-    snippet: ''
-    calc: false
-    noCnfg: false
-    nosnippet: false
-    tags: []
-  - name: MasterOpcLogLevel
-    description: Log level for the master's OPC area logger
-    dataType: enum
-    list: false
-    enums:
-    - TRACE
-    - DEBUG
-    - INFO
-    - WARN
-    - ERROR
-    - 'OFF'
-    default:
-    - WARN
-    postfix: []
-    snippet: ''
-    calc: false
-    noCnfg: false
-    nosnippet: false
-    tags: []
-  - name: MasterLabLogLevel
-    description: Log level for the master's labupdates logger
-    dataType: enum
-    list: false
-    enums:
-    - TRACE
-    - DEBUG
-    - INFO
-    - WARN
-    - ERROR
-    - 'OFF'
-    default:
-    - INFO
     postfix: []
     snippet: ''
     calc: false
@@ -10383,6 +10397,20 @@
     - 'OFF'
     default:
     - 'OFF'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: ReverseConnectPort
+    description: Port to listen on for reverse connect from server. 0 = disabled (normal
+      connect).
+    dataType: integer
+    list: false
+    enums: []
+    default:
+    - '0'
     postfix: []
     snippet: ''
     calc: false

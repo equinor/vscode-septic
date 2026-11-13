@@ -360,6 +360,17 @@
   description: Image Text Xvr
   prefix: imagetextxvr
 - body:
+  - '  ImageXYPlot:   ${1:ImageXYPlotName}'
+  - '            X1=  -1'
+  - '            Y1=  -1'
+  - '            X2=  -1'
+  - '            Y2=  -1'
+  description: "XYPlot overlaid image. Name of object = id of an existing XYPlot (in\
+    \ any DisplayGroup) to show.\r\n  The XYPlot with its Curve/DynCurve/DynPoint\
+    \ items is configured as usual in a DisplayGroup;\r\n  this item only references\
+    \ it. An unknown id is reported and the item is skipped."
+  prefix: imagexyplot
+- body:
   - '  ImageXvr:      ${1:ImageXvrName}'
   - BackgroundColor=  "white"
   - '            X1=  -1'
@@ -906,7 +917,6 @@
   - '       UserPwd=  ""'
   - '          Terr=  0'
   - '       DebugNR=  1000'
-  - '       DebugOn=  00000000'
   - '      FontSize=  -1'
   - '  InitialGroup=  -1'
   - ShowText1WithName=  OFF
@@ -925,14 +935,12 @@
   - '  StepInterval=  0'
   - '       AutoRun=  0'
   - ShowUpdateCounter=  ON
+  - '    DtaLogging=  ON'
   - '      LogLevel=  INFO'
-  - '   MpcLogLevel=  WARN'
-  - '   OpcLogLevel=  WARN'
-  - '   LabLogLevel=  INFO'
-  - MasterLogLevel=  INFO
-  - MasterMpcLogLevel=  WARN
-  - MasterOpcLogLevel=  WARN
-  - MasterLabLogLevel=  INFO
+  - '   MpcLogLevel=  WARNING'
+  - '   OpcLogLevel=  WARNING'
+  - ' CommsLogLevel=  WARNING'
+  - '   AlgLogLevel=  OFF'
   - MaxLogFileSizeMB=  200
   - '   MaxLogFiles=  5'
   description: Description of system object
@@ -1052,6 +1060,7 @@
   - credentialsPath=  ""
   - '  SecurityMode=  NONE'
   - useSubscription=  OFF
+  - ReverseConnectPort=  0
   - '       RunMenu=  OFF'
   - '     xSchedule=  ""'
   - '        yPulse=  ""'
