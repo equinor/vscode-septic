@@ -1,11 +1,12 @@
 name: "🚀 Publish Extension"
+
 on:
   workflow_call:
-    secrets:
-      VSCE_PAT:
-        required: true
+
 permissions:
   contents: read
+  id-token: write
+
 jobs:
   publish:
     name: "🚀 Publish"
@@ -26,6 +27,4 @@ jobs:
       - name: "Create Package"
         run: npx @vscode/vsce package --no-dependencies
       - name: Publish
-        run: npx @vscode/vsce publish --no-dependencies --pat $VSCE_PAT
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: npx @vscode/vsce publish --no-dependencies --oidc
