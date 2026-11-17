@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.2](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.4.1...septic-config-lib-v1.4.2) (2026-11-17)
+
+
+### 🧹 Chores
+
+* **deps:** bump glob from 14.0.4 to 14.0.5 ([#1039](https://github.com/equinor/vscode-septic/issues/1039)) ([d5b959d](https://github.com/equinor/vscode-septic/commit/d5b959d2b8580a28d5aa487eb6ea10e1aa92294b))
+* **deps:** bump glob from 14.0.5 to 14.0.6 ([#1042](https://github.com/equinor/vscode-septic/issues/1042)) ([717e5f7](https://github.com/equinor/vscode-septic/commit/717e5f7dbdb485b8686ebc258577ebba5c4f13a5))
+
 ## [1.4.1](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.4.0...septic-config-lib-v1.4.1) (2026-11-17)
 
 
