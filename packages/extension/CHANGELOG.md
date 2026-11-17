@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.31.1](https://github.com/equinor/vscode-septic/compare/septic-config-v1.31.0...septic-config-v1.31.1) (2026-11-17)
+
+
+### 🧹 Chores
+
+* **deps:** bump the minor-and-patch group across 1 directory with 7 updates ([#1020](https://github.com/equinor/vscode-septic/issues/1020)) ([ed0496e](https://github.com/equinor/vscode-septic/commit/ed0496e827cf063f2e1f2b27faf50e3e81fad134))
+* **deps:** bump vscode-languageserver-textdocument from 1.0.15 to 1.0.16 ([#1021](https://github.com/equinor/vscode-septic/issues/1021)) ([fcbea3e](https://github.com/equinor/vscode-septic/commit/fcbea3e113fde5abf964af4dcf9e018db5d873f0))
+
+
+### 👷 CI/CD
+
+* fix release issues ([#1013](https://github.com/equinor/vscode-septic/issues/1013)) ([7253976](https://github.com/equinor/vscode-septic/commit/7253976ff8aef0995721013a99c6800aa15d801f))
+
+
+### 📚 Documentation
+
+* update Septic documentation for latest ([#1018](https://github.com/equinor/vscode-septic/issues/1018)) ([663ee94](https://github.com/equinor/vscode-septic/commit/663ee947ba81de3ef9608e7037c5edc7c2372dc3))
+* update Septic documentation for v3.12.1 ([#1032](https://github.com/equinor/vscode-septic/issues/1032)) ([28872a4](https://github.com/equinor/vscode-septic/commit/28872a412303886e7d0f9547e4df06d9bb70481c))
+
 ## [1.31.0](https://github.com/equinor/vscode-septic/compare/septic-config-v1.30.2...septic-config-v1.31.0) (2026-10-16)
 
 
