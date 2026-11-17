@@ -1,0 +1,61 @@
+name: "🧩 Update SCG schema"
+
+on:
+  schedule:
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "septic-config-generator ref (tag/branch) to sync from. Defaults to latest release."
+        required: false
+        type: string
+  repository_dispatch:
+    types: [update-vscode-septic-scg-schema]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  SCG_REPO: equinor/septic-config-generator
+  SCHEMA_PATH: packages/septic/public/scg_config.schema.json
+
+jobs:
+  update_schema_pr:
+    name: "🧩 Update PR"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Resolve SCG ref
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_REF: ${{ inputs.ref || github.event.client_payload.ref }}
+        run: |
+          ref="${INPUT_REF#refs/tags/}"
+          ref="${ref#refs/heads/}"
+          if [ -z "$ref" ]; then
+            ref=$(gh api "repos/$SCG_REPO/releases/latest" --jq .tag_name)
+          fi
+          echo "SCG_REF=$ref" >> "$GITHUB_ENV"
+
+      - name: Download schema
+        run: curl -fsSL "https://raw.githubusercontent.com/$SCG_REPO/$SCG_REF/docs/config.schema.json" -o "$SCHEMA_PATH"
+
+      - name: Validate schema
+        run: jq empty "$SCHEMA_PATH"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          add-paths: ${{ env.SCHEMA_PATH }}
+          branch: "scg-schema-update"
+          title: "fix: update bundled SCG config schema to ${{ env.SCG_REF }}"
+          commit-message: "fix: update bundled SCG config schema to ${{ env.SCG_REF }}"
+          delete-branch: true
+          body: |
+            ## SCG config schema update :jigsaw:
+
+            This PR was automatically generated because `docs/config.schema.json` in [${{ env.SCG_REPO }}@${{ env.SCG_REF }}](https://github.com/${{ env.SCG_REPO }}/blob/${{ env.SCG_REF }}/docs/config.schema.json) differs from the bundled `${{ env.SCHEMA_PATH }}`.
+
+            The bundled schema is used by the language server and CLI to validate SCG configs. Merge this PR to keep it in sync with the schema used by the YAML editor.
