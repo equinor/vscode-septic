@@ -39,3 +39,18 @@ updates:
         update-types:
           - "minor"
           - "patch"
+
+  - package-ecosystem: "uv"
+    directory: "/scripts"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
