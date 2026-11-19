@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.31.3](https://github.com/equinor/vscode-septic/compare/septic-config-v1.31.2...septic-config-v1.31.3) (2026-11-19)
+
+
+### 🧹 Chores
+
+* **deps:** bump vscode-languageclient from 10.1.2 to 11.0.0 ([#1029](https://github.com/equinor/vscode-septic/issues/1029)) ([8b0573d](https://github.com/equinor/vscode-septic/commit/8b0573d115b6f73c4ea84322f0a63ee1aa39d646))
+* **deps:** bump vscode-languageserver from 10.1.2 to 11.0.0 ([#1030](https://github.com/equinor/vscode-septic/issues/1030)) ([3815ffb](https://github.com/equinor/vscode-septic/commit/3815ffb336f2d0de787ecdb07dde97dd98d106f8))
+
 ## [1.31.2](https://github.com/equinor/vscode-septic/compare/septic-config-v1.31.1...septic-config-v1.31.2) (2026-11-19)
 
 
