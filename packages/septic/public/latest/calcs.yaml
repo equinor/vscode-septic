@@ -1489,6 +1489,48 @@
   retr: 'Final status: 0/1/2/3 for STOPPED/TRACKING/ADVISORY/ACTIVE'
   detailedDescription: Gets the final status of the given Xvr
   quality: GOOD if valid xvr otherwise BAD
+- name: getgrpcritical
+  signature: getgrpcritical(xvr, group)
+  parameters:
+  - name: xvr
+    description: Xvr
+    direction: in
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    arity: '1'
+  - name: group
+    description: Group number 1-31
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: 1 if critical to the group, else 0
+  detailedDescription: Returns 1 if the given Xvr is critical to the given group,
+    else 0.
+  quality: GOOD if valid xvr and group number otherwise BAD
+- name: getgrpmember
+  signature: getgrpmember(xvr, group)
+  parameters:
+  - name: xvr
+    description: Xvr
+    direction: in
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    arity: '1'
+  - name: group
+    description: Group number 1-31
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: 1 if member of the group, else 0
+  detailedDescription: Returns 1 if the given Xvr is member of the given group, else
+    0.
+  quality: GOOD if valid xvr and group number otherwise BAD
 - name: gethist
   signature: gethist(xvr, nback, navg?)
   parameters:
@@ -3267,6 +3309,66 @@
   retr: Value with quality set to GOOD
   detailedDescription: Sets the quality of the input to GOOD
   quality: GOOD
+- name: setgrpcritical
+  signature: setgrpcritical(xvr, group1, onoff1, ..., groupN, onoffN)
+  parameters:
+  - name: xvr
+    description: Xvr
+    direction: in
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    arity: '1'
+  - name: group
+    description: Group number 1-31
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: onoff
+    description: '1 (0.9 to 1.1): critical to the group, 0 (-0.1 to 0.1): not critical.
+      Other values are invalid'
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: Number of the given groups set ON, i.e. 1 or 0 for a single group. 0 if BAD
+  detailedDescription: "Sets whether the given Xvr is critical to the given groups,\
+    \ one group, onoff pair for each group.\n  Other groups are not changed. A group\
+    \ given more than once gets the last onoff value.<br>\n  If any group number or\
+    \ onoff value is invalid or BAD, GrpType is unchanged for all groups."
+  quality: GOOD if valid xvr, group number and onoff otherwise BAD
+- name: setgrpmember
+  signature: setgrpmember(xvr, group1, onoff1, ..., groupN, onoffN)
+  parameters:
+  - name: xvr
+    description: Xvr
+    direction: in
+    datatype:
+    - mvr
+    - cvr
+    - dvr
+    arity: '1'
+  - name: group
+    description: Group number 1-31
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  - name: onoff
+    description: '1 (0.9 to 1.1): member of the group, 0 (-0.1 to 0.1): not member.
+      Other values are invalid'
+    direction: in
+    datatype:
+    - value
+    arity: '1'
+  retr: Number of the given groups set ON, i.e. 1 or 0 for a single group. 0 if BAD
+  detailedDescription: "Sets the membership of the given Xvr in the given groups,\
+    \ one group, onoff pair for each group.\n  Other groups are not changed. A group\
+    \ given more than once gets the last onoff value.<br>\n  If any group number or\
+    \ onoff value is invalid or BAD, GrpMask is unchanged for all groups."
+  quality: GOOD if valid xvr, group number and onoff otherwise BAD
 - name: sethigh
   signature: sethigh(xvr, value)
   parameters:
