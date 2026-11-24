@@ -984,6 +984,9 @@
   - ' MeasHighLimit=  1e+10'
   - '  MeasLowLimit=  -1e+10'
   - '         Color=  BLACK'
+  - '    OutputType=  DOUBLE'
+  - '   OutputEnums=  1'
+  - '                 ""'
   description: Trend Variable Description
   prefix: tvr
 - body:
