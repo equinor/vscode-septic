@@ -9750,6 +9750,37 @@
     noCnfg: false
     nosnippet: false
     tags: []
+  - name: OutputType
+    description: Presentation of Meas in tables, BOOL as read-only checkbox, ENUM
+      as text from OutputEnums
+    dataType: enum
+    list: false
+    enums:
+    - DOUBLE
+    - BOOL
+    - ENUM
+    - INT
+    default:
+    - DOUBLE
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: OutputEnums
+    description: List of enum-strings to use with OutputType= ENUM
+    dataType: string
+    list: true
+    enums: []
+    default:
+    - '""'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
 - name: TvrList
   description: List of trend variables with associated values
   parents:
