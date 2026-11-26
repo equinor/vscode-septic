@@ -457,17 +457,23 @@ connection.onInitialized(async () => {
     }
 });
 
-let eventBuffer: string[] = [];
+let eventBuffer = new Set<string>();
 
-documentProvider.onDidChangeDoc(async (uri) => {
-    eventBuffer.push(uri);
+documentProvider.onDidChangeDoc((uri) => {
+    eventBuffer.add(uri);
 });
 
 setInterval(async () => {
-    if (eventBuffer.length > 0) {
-        const uri = eventBuffer.pop();
-        eventBuffer = [];
-        publishDiagnostics(uri!);
+    const pending = eventBuffer;
+    eventBuffer = new Set<string>();
+    const contexts = new Set<string>();
+    for (const uri of pending) {
+        const context = await scgContextManager.getContext(uri);
+        const key = context?.filePath ?? uri;
+        if (!contexts.has(key)) {
+            contexts.add(key);
+            publishDiagnostics(uri);
+        }
     }
 }, 200);
 
