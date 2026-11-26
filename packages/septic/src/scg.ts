@@ -19,6 +19,7 @@ import * as yaml from "js-yaml";
 
 import Ajv from "ajv";
 import { getBasePublicPath } from "./path";
+import { removeSpaces } from "./util";
 
 const ajv = new Ajv({
     formats: {
@@ -136,6 +137,58 @@ export class ScgContext implements SepticContext {
         return this.cnfgCache.get(uri);
     }
 
+    public createDiagnosticsSnapshot(): ScgContext {
+        const snapshot = new ScgContext(
+            this.name,
+            this.filePath,
+            { templatepath: "", sources: [], layout: [] },
+            this.cnfgProvider,
+        );
+        snapshot.files = [...this.files];
+        snapshot.cnfgCache = new Map(this.cnfgCache);
+        snapshot.load = async () => {};
+
+        const configs = snapshot.files
+            .map((file) => snapshot.cnfgCache.get(file))
+            .filter((cnfg): cnfg is SepticCnfg => cnfg !== undefined);
+        if (
+            configs.every(
+                (cnfg) =>
+                    cnfg.getObjectsByIdentifier ===
+                    SepticCnfg.prototype.getObjectsByIdentifier,
+            )
+        ) {
+            const objects = new Map<string, SepticObject[]>();
+            for (const cnfg of configs) {
+                for (const object of cnfg.objects) {
+                    if (!object.identifier) {
+                        continue;
+                    }
+                    const identifier = object.identifier.id;
+                    const matches = objects.get(identifier);
+                    if (matches) {
+                        matches.push(object);
+                    } else {
+                        objects.set(identifier, [object]);
+                    }
+                }
+            }
+            snapshot.getObjectsByIdentifier = (identifier) => [
+                ...(objects.get(removeSpaces(identifier)) ?? []),
+            ];
+        }
+
+        const references = new Map<string, SepticReference[] | undefined>();
+        const getReferences = snapshot.getReferences.bind(snapshot);
+        snapshot.getReferences = (name) => {
+            if (!references.has(name)) {
+                references.set(name, getReferences(name));
+            }
+            const matches = references.get(name);
+            return matches ? [...matches] : undefined;
+        };
+        return snapshot;
+    }
     public getObjectsByIdentifier(identifier: string): SepticObject[] {
         const objects: SepticObject[] = [];
         for (const file of this.files) {

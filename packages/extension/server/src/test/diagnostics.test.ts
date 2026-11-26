@@ -452,3 +452,36 @@ describe("Diagnostics configuration", () => {
     });
 });
 
+describe("Diagnostics provider", () => {
+    it("uses captured and standalone configurations without reloading", async () => {
+        const captured = parseSepticForTest("Unknown: Old");
+        const current = parseSepticForTest("System: New");
+        let loads = 0;
+        const provider = new DiagnosticProvider(
+            {
+                get: async () => {
+                    loads++;
+                    return current;
+                },
+            },
+            {
+                getSettings: async () => ({ diagnostics: { enabled: true } }),
+            } as unknown as SettingsManager,
+        );
+
+        const diagnostics = await provider.provideDiagnostics(
+            captured.uri,
+            captured,
+            captured,
+        );
+        expect(loads).to.equal(0);
+        expect(
+            diagnostics.some(
+                (diag) => diag.code === SepticDiagnosticCode.unknownObjectType,
+            ),
+        ).to.equal(true);
+
+        await provider.provideDiagnostics(current.uri, current);
+        expect(loads).to.equal(0);
+    });
+});
