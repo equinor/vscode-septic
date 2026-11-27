@@ -40,6 +40,7 @@ export class DiagnosticProvider {
     public async provideDiagnostics(
         uri: string,
         context: SepticContext,
+        contextIsPrepared = false,
     ): Promise<Diagnostic[]> {
         const settingsWorkspace = await this.settingsManager.getSettings();
         const settings =
@@ -48,7 +49,9 @@ export class DiagnosticProvider {
         if (!settings.enabled) {
             return [];
         }
-        await context.load();
+        if (!contextIsPrepared) {
+            await context.load();
+        }
         let cnfg: SepticCnfg | undefined;
         if (context instanceof ScgContext) {
             context.updateLoadedObjectParents();
