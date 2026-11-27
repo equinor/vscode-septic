@@ -75,6 +75,20 @@
   description: Chart Serie
   prefix: chartserie
 - body:
+  - '  ColAModel:     ${1:ColAModelName}'
+  description: ''
+  prefix: colamodel
+- body:
+  - '  ColAProc:      ${1:ColAProcName}'
+  - '        Volume=  100'
+  - '        Height=  2000'
+  - '       Density=  700'
+  - Compressibility=  500
+  - ProductionIndex=  8
+  description: Nonlinear process, where the models are taken from the subr with same
+    ID
+  prefix: colaproc
+- body:
   - '  ColumnList:    ${1:ColumnListName}'
   - '       Heading=  "${2}"'
   - '       Tooltip=  ""'

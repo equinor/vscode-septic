@@ -3119,13 +3119,14 @@
     \ on/off intent continues to propagate."
   quality: GOOD only if ALL arguments are GOOD and valid cvr, otherwise BAD
 - name: setdeas
-  signature: setdeas(dvr, value, state)
+  signature: setdeas(xvr, value, state)
   parameters:
-  - name: dvr
-    description: Dvr
+  - name: xvr
+    description: Dvr or Mvr
     direction: in,out
     datatype:
     - dvr
+    - mvr
     arity: '1'
   - name: value
     description: Value
@@ -3140,8 +3141,8 @@
     - value
     arity: '1'
   retr: Set value
-  detailedDescription: Set deas for dvr
-  quality: state if valid dvr otherwise BAD
+  detailedDescription: Set deas for dvr or mvr
+  quality: state if valid dvr/mvr otherwise BAD
 - name: setdvdeltapred
   signature: setdvdeltapred(dvr, X1, Y1, X2, Y2, ..., XN, YN)
   parameters:

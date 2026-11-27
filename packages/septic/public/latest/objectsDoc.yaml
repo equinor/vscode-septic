@@ -577,6 +577,83 @@
     noCnfg: false
     nosnippet: false
     tags: []
+- name: ColAModel
+  description: ''
+  parents:
+  - SmpcAppl
+  - NMPCAppl
+  attributes: []
+- name: ColAProc
+  description: Nonlinear process, where the models are taken from the subr with same
+    ID
+  parents:
+  - System
+  attributes:
+  - name: Volume
+    description: Well volume [m3]
+    dataType: float
+    list: false
+    enums: []
+    default:
+    - '100'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: Height
+    description: Well vertical height [m]
+    dataType: float
+    list: false
+    enums: []
+    default:
+    - '2000'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: Density
+    description: Oil density [kg/m3]
+    dataType: float
+    list: false
+    enums: []
+    default:
+    - '700'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: Compressibility
+    description: Oil compressibility [bar]
+    dataType: float
+    list: false
+    enums: []
+    default:
+    - '500'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
+  - name: ProductionIndex
+    description: Production index [m3/h/bar]
+    dataType: float
+    list: false
+    enums: []
+    default:
+    - '8'
+    postfix: []
+    snippet: ''
+    calc: false
+    noCnfg: false
+    nosnippet: false
+    tags: []
 - name: ColumnList
   description: "The Xvrs listed are placed in a new column to the right of the corresponding\
     \ XvrList\r\n  The heading text is used as heading for the new column<br>"
