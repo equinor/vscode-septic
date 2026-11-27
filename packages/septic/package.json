@@ -1,6 +1,6 @@
 {
   "name": "@equinor/septic-config-lib",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "",
   "engines": {
     "node": ">=24"

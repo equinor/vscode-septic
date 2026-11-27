@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.31.5](https://github.com/equinor/vscode-septic/compare/septic-config-v1.31.4...septic-config-v1.31.5) (2026-11-27)
+
+
+### 🐛 Bug Fixes
+
+* keep diagnostics consistent during edits ([#1062](https://github.com/equinor/vscode-septic/issues/1062)) ([bef0cc5](https://github.com/equinor/vscode-septic/commit/bef0cc55ab1d93b57b6180f5062d9dc5091e4d57))
+* keep diagnostics current during concurrent updates ([#1066](https://github.com/equinor/vscode-septic/issues/1066)) ([5363c02](https://github.com/equinor/vscode-septic/commit/5363c02576050c5e586053dee274a64a6e58da7d))
+* retain diagnostics updates for all edited files ([#1059](https://github.com/equinor/vscode-septic/issues/1059)) ([fe91dfc](https://github.com/equinor/vscode-septic/commit/fe91dfcd1c90dd6cb1fe6e07fe129649158cf0a7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @equinor/septic-config-lib bumped to 1.4.5
+
 ## [1.31.4](https://github.com/equinor/vscode-septic/compare/septic-config-v1.31.3...septic-config-v1.31.4) (2026-11-24)
 
 
