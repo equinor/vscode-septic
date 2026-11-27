@@ -201,8 +201,8 @@ export class DocumentProvider {
             }
 
             doc.setInMemoryDoc(undefined);
-            const revision = this.diskRevisions.get(doc.uri);
             if (doc.isDetached()) {
+                const revision = this.bumpDiskRevision(doc.uri);
                 this.cache.delete(doc.uri);
                 this._onDidDeleteDoc.fire(doc.uri);
 

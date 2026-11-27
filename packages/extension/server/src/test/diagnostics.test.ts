@@ -286,6 +286,60 @@ describe("Diagnostics configuration", () => {
         watched.dispose();
     });
 
+    it("keeps a close-time disk read newer than a pending watcher read", async () => {
+        const opened = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const changed = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const closed = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const watched = new Emitter<DidChangeWatchedFilesParams>();
+        const watcherRead = Promise.withResolvers<number[]>();
+        const closeRead = Promise.withResolvers<number[]>();
+        const documents = {
+            onDidOpen: opened.event,
+            onDidChangeContent: changed.event,
+            onDidClose: closed.event,
+            get: () => undefined,
+        } as unknown as TextDocuments<TextDocument>;
+        let reads = 0;
+        const connection = {
+            onDidChangeWatchedFiles: watched.event,
+            sendRequest: async () =>
+                reads++ === 0 ? watcherRead.promise : closeRead.promise,
+        } as unknown as Connection;
+        const settings = {
+            getSettings: async () => ({ encoding: "utf8" }),
+        } as unknown as SettingsManager;
+        const provider = new DocumentProvider(connection, documents, settings);
+        const uri = "file:///test.cnfg";
+        const document = TextDocument.create(uri, "septic", 2, "Evr: Saved\n");
+        opened.fire({ document });
+
+        const loaded = Promise.withResolvers<void>();
+        const createdListener = provider.onDidCreateDoc(() => loaded.resolve());
+        const changedEvent = Promise.withResolvers<void>();
+        const changedListener = provider.onDidChangeDoc(() =>
+            changedEvent.resolve(),
+        );
+        watched.fire({ changes: [{ uri, type: FileChangeType.Changed }] });
+        expect(reads).to.equal(1);
+        closed.fire({ document });
+        expect(reads).to.equal(2);
+
+        closeRead.resolve(Array.from(Buffer.from("Evr: Saved\n")));
+        await loaded.promise;
+        watcherRead.resolve(Array.from(Buffer.from("Evr: Stale\n")));
+        await changedEvent.promise;
+
+        expect((await provider.getDocument(uri))?.getText()).to.equal(
+            "Evr: Saved\n",
+        );
+        createdListener.dispose();
+        changedListener.dispose();
+        opened.dispose();
+        changed.dispose();
+        closed.dispose();
+        watched.dispose();
+    });
+
     it("keeps a pending disk refresh when a cached document opens", async () => {
         const opened = new Emitter<TextDocumentChangeEvent<TextDocument>>();
         const changed = new Emitter<TextDocumentChangeEvent<TextDocument>>();
