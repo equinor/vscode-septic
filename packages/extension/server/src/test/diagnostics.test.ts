@@ -14,6 +14,7 @@ import { SepticConfigProvider } from "../configProvider";
 import { DocumentProvider } from "../documentProvider";
 import { DiagnosticProvider } from "../language-service/diagnosticsProvider";
 import { SettingsManager } from "../settings";
+import { ScgContextManager } from "../scgContextManager";
 import { DiagnosticPublicationTracker } from "../util/diagnosticPublication";
 import {
     ScgContext,
@@ -59,6 +60,48 @@ describe("Diagnostic publication tracking", () => {
         expect(tracker.isCurrent(contextUri, contextPublication)).to.equal(
             false,
         );
+    });
+});
+
+describe("SCG context resolution", () => {
+    it("returns every context containing a shared template", async () => {
+        const firstYamlUri = "file:///workspace/one/scg.yaml";
+        const secondYamlUri = "file:///workspace/two/scg.yaml";
+        const sharedTemplateUri = "file:///workspace/templates/shared.cnfg";
+        const yamlText =
+            "outputfile: result.cnfg\ntemplatepath: ../templates\nsources: []\nlayout:\n  - name: shared.cnfg\n";
+        const yamlDocuments = new Map([
+            [
+                firstYamlUri,
+                TextDocument.create(firstYamlUri, "yaml", 1, yamlText),
+            ],
+            [
+                secondYamlUri,
+                TextDocument.create(secondYamlUri, "yaml", 1, yamlText),
+            ],
+        ]);
+        const documentProvider = {
+            onDidChangeDoc: () => {},
+            onDidCreateDoc: () => {},
+            onDidDeleteDoc: () => {},
+            getDocument: async (uri: string) => yamlDocuments.get(uri),
+            loadDocument: async () => {},
+        } as unknown as DocumentProvider;
+        const configProvider = {
+            get: async () => undefined,
+        } as unknown as SepticConfigProvider;
+        const manager = new ScgContextManager(documentProvider, configProvider);
+
+        await Promise.all([
+            manager.createScgContext(firstYamlUri),
+            manager.createScgContext(secondYamlUri),
+        ]);
+
+        expect(
+            manager
+                .getContexts(sharedTemplateUri)
+                .map((context) => context.filePath),
+        ).to.have.deep.members([firstYamlUri, secondYamlUri]);
     });
 });
 
@@ -744,7 +787,14 @@ describe("Diagnostics configuration", () => {
 
     it("relinks a prepared SCG context without reloading it", async () => {
         const uri = "file:///project/templates/test.cnfg";
-        const cnfg = parseSepticForTest("Evr: Prepared");
+        const document = TextDocument.create(
+            uri,
+            "septic",
+            1,
+            "Unknown: Prepared",
+        );
+        const cnfg = new SepticCnfg(document);
+        cnfg.parse(undefined);
         const context = new ScgContext(
             "test",
             "file:///project/scg.yaml",
@@ -772,13 +822,22 @@ describe("Diagnostics configuration", () => {
             getSettings: async () => ({ diagnostics: { enabled: true } }),
         } as unknown as SettingsManager);
 
-        await provider.provideDiagnostics(uri, context, true);
+        const preparedDiagnostics = await provider.provideDiagnostics(
+            uri,
+            context,
+            true,
+        );
         expect(loads).to.equal(0);
         expect(parentUpdates).to.equal(1);
+        expect(
+            preparedDiagnostics.some(
+                (diagnostic) =>
+                    diagnostic.code === SepticDiagnosticCode.unknownObjectType,
+            ),
+        ).to.equal(true);
 
         await provider.provideDiagnostics(uri, context);
         expect(loads).to.equal(1);
         expect(parentUpdates).to.equal(2);
     });
 });
-

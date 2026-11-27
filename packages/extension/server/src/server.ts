@@ -542,11 +542,14 @@ setInterval(async () => {
     eventBuffer = new Set<string>();
     const contexts = new Set<string>();
     for (const uri of pending) {
-        const context = await scgContextManager.getContext(uri);
-        const key = context?.filePath ?? uri;
-        if (!contexts.has(key)) {
-            contexts.add(key);
-            publishDiagnostics(uri);
+        const contextUris = scgContextManager
+            .getContexts(uri)
+            .map((context) => context.filePath);
+        for (const contextUri of contextUris.length ? contextUris : [uri]) {
+            if (!contexts.has(contextUri)) {
+                contexts.add(contextUri);
+                publishDiagnostics(contextUri);
+            }
         }
     }
 }, 200);
@@ -729,4 +732,3 @@ documents.listen(connection);
 
 // Listen on the connection
 connection.listen();
-

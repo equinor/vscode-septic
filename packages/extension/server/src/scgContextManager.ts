@@ -44,19 +44,20 @@ export class ScgContextManager {
     }
 
     public async getContext(uri: string): Promise<ScgContext | undefined> {
+        return this.getContexts(uri)[0];
+    }
+
+    public getContexts(uri: string): ScgContext[] {
         const extensionName = path.extname(uri);
         if (extensionName === ".yaml") {
             const context = this.contexts.get(uri);
-            return context;
+            return context ? [context] : [];
         } else if (extensionName === ".cnfg") {
-            for (const context of this.contexts.values()) {
-                if (context.fileInContext(uri)) {
-                    return context;
-                }
-            }
-        } else {
-            return undefined;
+            return Array.from(this.contexts.values()).filter((context) =>
+                context.fileInContext(uri),
+            );
         }
+        return [];
     }
 
     private async onDidChangeDoc(uri: string) {
