@@ -307,18 +307,18 @@ async function publishDiagnostics(uri: string) {
 
 async function updateAllDiagnostics() {
     for (const context of await contextManager.getAllContexts()) {
-        if (context instanceof ScgContext) {
-            publishDiagnosticsScgContext(context);
-        } else {
-            publishDiagnosticsCnfg(context as SepticCnfg);
-        }
+        const uri =
+            context instanceof ScgContext
+                ? context.filePath
+                : (context as SepticCnfg).uri;
+        publishDiagnostics(uri);
     }
 }
 
 async function updateDiagnosticsAllStandaloneCnfgs() {
     for (const context of await contextManager.getAllContexts()) {
         if (context instanceof SepticCnfg) {
-            publishDiagnosticsCnfg(context);
+            publishDiagnostics(context.uri);
         }
     }
 }
