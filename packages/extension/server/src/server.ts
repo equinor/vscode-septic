@@ -44,10 +44,7 @@ import {
 } from "@equinor/septic-config-lib";
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
 import { ContextManager } from "./contextManager";
-import {
-    findLayoutFileIssues,
-    findSourceFileIssues,
-} from "./util/caseCheck";
+import { findLayoutFileIssues, findSourceFileIssues } from "./util/caseCheck";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -89,13 +86,23 @@ async function publishDiagnosticsScgContext(
     await context.load();
     const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
     await context.updateObjectParents();
+    const snapshot = context.createDiagnosticsSnapshot();
     const diagnosticsPromises = context.files.map(async (uri) => {
         const codes = getIgnoredCodes(uri, ignorePatterns);
         if (codes !== undefined && codes.length == 0) {
             connection.sendDiagnostics({ uri: uri, diagnostics: [] });
             return;
         }
-        let diagnostics = await langService.provideDiagnostics(uri, context);
+        const cnfg = snapshot.getCachedConfig(uri);
+        if (!cnfg) {
+            connection.sendDiagnostics({ uri: uri, diagnostics: [] });
+            return;
+        }
+        let diagnostics = await langService.provideDiagnostics(
+            uri,
+            snapshot,
+            cnfg,
+        );
         if (codes) {
             diagnostics = diagnostics.filter(
                 (diag) => diag.code && !codes.includes(diag.code as string),

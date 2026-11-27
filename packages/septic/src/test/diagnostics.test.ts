@@ -18,9 +18,97 @@ import {
     SepticMetaInfoProvider,
 } from "../metaInfoProvider";
 import { SepticAttributeValue, SepticTokenType } from "../elements";
+import { ScgContext } from "../scg";
+import { SepticCnfg } from "../cnfg";
+import { TextDocument } from "vscode-languageserver-textdocument";
 import { parseSepticForTest } from "./util";
 
 SepticMetaInfoProvider.setVersion("v3.0");
+
+describe("Test SCG diagnostic snapshots", () => {
+    it("preserves lookup order and diagnostics across document updates", async () => {
+        const firstUri = "file:///project/templates/first.cnfg";
+        const secondUri = "file:///project/templates/second.cnfg";
+        const parse = (uri: string, text: string) => {
+            const cnfg = new SepticCnfg(
+                TextDocument.create(uri, "septic", 1, text),
+            );
+            cnfg.parse(undefined);
+            return cnfg;
+        };
+        const first = parse(firstUri, "Evr: Var\nMvr: Var");
+        const second = parse(secondUri, 'CalcPvr: Calc\n Alg= "Var.Value"');
+        const configs = new Map([
+            [firstUri, first],
+            [secondUri, second],
+        ]);
+        let loads = 0;
+        const context = new ScgContext(
+            "test",
+            "file:///project/scg.yaml",
+            {
+                templatepath: "templates",
+                sources: [],
+                layout: [
+                    { name: "first.cnfg" },
+                    { name: "second.cnfg" },
+                    { name: "first.cnfg" },
+                    { name: "missing.cnfg" },
+                ],
+            },
+            {
+                get: async (uri) => {
+                    loads++;
+                    return configs.get(uri);
+                },
+            },
+        );
+        await context.load();
+        const snapshot = context.createDiagnosticsSnapshot();
+        await snapshot.load();
+        expect(loads).to.equal(4);
+        expect(
+            snapshot.getCachedConfig("file:///project/templates/missing.cnfg"),
+        ).to.equal(undefined);
+        expect(snapshot.getObjectsByIdentifier(" V a r ")).to.deep.equal(
+            context.getObjectsByIdentifier(" V a r "),
+        );
+        snapshot.getObjectsByIdentifier("Var").pop();
+        expect(snapshot.getObjectsByIdentifier("Var")).to.have.length(4);
+        expect(snapshot.getReferences("Var")).to.deep.equal(
+            context.getReferences("Var"),
+        );
+        snapshot.getReferences("Var")?.pop();
+        expect(snapshot.getReferences("Var")).to.deep.equal(
+            context.getReferences("Var"),
+        );
+        expect(snapshot.getReferences("missing")).to.equal(undefined);
+        expect(snapshot.getReferences("missing")).to.equal(undefined);
+        expect(getDiagnostics(second, snapshot)).to.deep.equal(
+            getDiagnostics(second, context),
+        );
+
+        const updated = parse(firstUri, "Evr: Other");
+        configs.set(firstUri, updated);
+        await context.load();
+        expect(snapshot.getCachedConfig(firstUri)).to.equal(first);
+        expect(snapshot.getObjectsByIdentifier("Var")).to.have.length(4);
+        const nextSnapshot = context.createDiagnosticsSnapshot();
+        expect(nextSnapshot.getCachedConfig(firstUri)).to.equal(updated);
+        expect(nextSnapshot.getObjectsByIdentifier("Var")).to.deep.equal(
+            context.getObjectsByIdentifier("Var"),
+        );
+        expect(getDiagnostics(second, nextSnapshot)).to.deep.equal(
+            getDiagnostics(second, context),
+        );
+
+        updated.getObjectsByIdentifier = () => [first.objects[0]!];
+        const customSnapshot = context.createDiagnosticsSnapshot();
+        expect(customSnapshot.getObjectsByIdentifier("Var")).to.deep.equal(
+            context.getObjectsByIdentifier("Var"),
+        );
+    });
+});
 
 describe("Test indexed diagnostic lookups", () => {
     it("matches normal lookups after object mutations", () => {
@@ -1691,4 +1779,3 @@ describe("Test validation of comments", () => {
         expect(diag.length).to.equal(0);
     });
 });
-

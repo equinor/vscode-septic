@@ -40,6 +40,7 @@ export class DiagnosticProvider {
     public async provideDiagnostics(
         uri: string,
         context: SepticContext,
+        cnfg?: SepticCnfg,
     ): Promise<Diagnostic[]> {
         const settingsWorkspace = await this.settingsManager.getSettings();
         const settings =
@@ -49,14 +50,13 @@ export class DiagnosticProvider {
             return [];
         }
         await context.load();
-        let cnfg: SepticCnfg | undefined;
         if (context instanceof ScgContext) {
             context.updateLoadedObjectParents();
-            cnfg = context.getCachedConfig(uri);
+            cnfg ??= context.getCachedConfig(uri);
         } else if (context instanceof SepticCnfg && context.uri === uri) {
-            cnfg = context;
+            cnfg ??= context;
         } else {
-            cnfg = await this.cnfgProvider.get(uri);
+            cnfg ??= await this.cnfgProvider.get(uri);
         }
         if (cnfg === undefined) {
             return [];
