@@ -27,7 +27,6 @@ class Document implements TextDocument {
     private onDiskDoc?: TextDocument;
 
     readonly uri: string;
-    readonly version: number = 0;
 
     constructor(uri: string, init: { inMemoryDoc: TextDocument });
     constructor(uri: string, init: { onDiskDoc: TextDocument });
@@ -131,6 +130,10 @@ class Document implements TextDocument {
         throw new Error("Document has been closed");
     }
 
+    get version(): number {
+        return this.inMemoryDoc?.version ?? this.onDiskDoc?.version ?? 0;
+    }
+
     get languageId(): string {
         if (this.inMemoryDoc) {
             return this.inMemoryDoc.languageId;
@@ -144,6 +147,7 @@ class Document implements TextDocument {
 
 export class DocumentProvider {
     private readonly cache = new ResourceMap<Document>();
+    private readonly diskRevisions = new ResourceMap<number>();
     private readonly documents: TextDocuments<TextDocument>;
     private readonly connection: Connection;
     private decoderUTF8 = new TextDecoder("utf-8");
@@ -200,6 +204,8 @@ export class DocumentProvider {
             if (doc.isDetached()) {
                 this.cache.delete(doc.uri);
                 this._onDidDeleteDoc.fire(doc.uri);
+            } else {
+                this._onDidChangeDoc.fire(doc.uri);
             }
         });
 
@@ -224,6 +230,10 @@ export class DocumentProvider {
                 if (!this.isRelevantFile(change.uri)) {
                     continue;
                 }
+                this.diskRevisions.set(
+                    change.uri,
+                    (this.diskRevisions.get(change.uri) ?? 0) + 1,
+                );
                 switch (change.type) {
                     case FileChangeType.Created: {
                         const doc = this.cache.get(change.uri);
@@ -288,6 +298,7 @@ export class DocumentProvider {
     private async openDocumentFromFs(
         uri: string,
     ): Promise<Document | undefined> {
+        const revision = this.diskRevisions.get(uri);
         try {
             const encodedContent = await this.connection.sendRequest(
                 protocol.fsReadFile,
@@ -304,9 +315,17 @@ export class DocumentProvider {
             } else {
                 content = this.decoderWindows1252.decode(bytes);
             }
-            const doc = new Document(uri, {
-                onDiskDoc: TextDocument.create(uri, "septic", 0, content),
-            });
+            if (this.diskRevisions.get(uri) !== revision) {
+                const current = this.cache.get(uri);
+                return current?.hasInMemoryDoc() ? current : undefined;
+            }
+            const onDiskDoc = TextDocument.create(uri, "septic", 0, content);
+            const existing = this.cache.get(uri);
+            if (existing) {
+                existing.setOnDiskDoc(onDiskDoc);
+                return existing;
+            }
+            const doc = new Document(uri, { onDiskDoc });
             this.cache.set(uri, doc);
             return doc;
         } catch {
@@ -319,3 +338,4 @@ export class DocumentProvider {
         return path.extname(uri) === ".cnfg" || path.extname(uri) === ".yaml";
     }
 }
+
