@@ -124,11 +124,16 @@ export class ScgContext implements SepticContext {
             this.files.map(async (file) => {
                 const cnfg = await this.cnfgProvider.get(file);
                 if (!cnfg) {
+                    this.cnfgCache.delete(file);
                     return;
                 }
                 this.cnfgCache.set(cnfg!.uri, cnfg);
             }),
         );
+    }
+
+    public getCachedConfig(uri: string): SepticCnfg | undefined {
+        return this.cnfgCache.get(uri);
     }
 
     public getObjectsByIdentifier(identifier: string): SepticObject[] {
@@ -241,6 +246,10 @@ export class ScgContext implements SepticContext {
 
     public async updateObjectParents(): Promise<void> {
         await this.load();
+        this.updateLoadedObjectParents();
+    }
+
+    public updateLoadedObjectParents(): void {
         const objects: SepticObject[] = [];
         for (const file of this.files) {
             const cnfg = this.cnfgCache.get(file);
@@ -252,3 +261,4 @@ export class ScgContext implements SepticContext {
         updateParentObjects(objects);
     }
 }
+

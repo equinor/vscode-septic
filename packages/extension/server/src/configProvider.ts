@@ -23,26 +23,33 @@ export interface ISepticConfigProvider {
 type GetValueFn = (
     document: TextDocument,
     token: CancellationToken,
-) => Promise<SepticCnfg>;
+) => Promise<SepticCnfg | undefined>;
 
 async function getValueCnfg(
     document: TextDocument,
     token: CancellationToken,
-): Promise<SepticCnfg> {
-    const cnfg = new SepticCnfg(document);
+): Promise<SepticCnfg | undefined> {
+    const snapshot = TextDocument.create(
+        document.uri,
+        document.languageId,
+        document.version,
+        document.getText(),
+    );
+    const cnfg = new SepticCnfg(snapshot);
     await cnfg.parseAsync(token);
-    return cnfg;
+    return token.isCancellationRequested ? undefined : cnfg;
 }
 
 export class SepticConfigProvider implements ISepticConfigProvider {
     private readonly cache = new ResourceMap<{
-        value: Lazy<Promise<SepticCnfg>>;
+        value: Lazy<Promise<SepticCnfg | undefined>>;
         cts: CancellationTokenSource;
     }>();
 
     private readonly loadingDocuments = new ResourceMap<
         Promise<TextDocument | undefined>
     >();
+    private readonly revisions = new ResourceMap<number>();
 
     readonly getValue;
 
@@ -58,7 +65,13 @@ export class SepticConfigProvider implements ISepticConfigProvider {
         docProvider.onDidChangeDoc(async (uri) => this.update(uri));
         docProvider.onDidCreateDoc(async (uri) => this.update(uri));
         docProvider.onDidLoadDoc(async (uri) => this.update(uri));
-        docProvider.onDidDeleteDoc((uri) => this.invalidate(uri));
+        docProvider.onDidDeleteDoc((uri) => {
+            if (path.extname(uri) !== ".cnfg") {
+                return;
+            }
+            this.bumpRevision(uri);
+            this.invalidate(uri);
+        });
     }
 
     public async get(resource: URI): Promise<SepticCnfg | undefined> {
@@ -68,14 +81,23 @@ export class SepticConfigProvider implements ISepticConfigProvider {
 
         const existing = this.cache.get(resource);
         if (existing) {
-            return existing.value.value;
+            const cnfg = await existing.value.value;
+            return this.cache.get(resource) === existing
+                ? cnfg
+                : this.get(resource);
         }
+        const revision = this.revisions.get(resource);
         const doc = await this.loadDocument(resource);
+        if (this.revisions.get(resource) !== revision) {
+            return this.get(resource);
+        }
         if (!doc) {
             return undefined;
         }
-        this.set(doc);
-        return this.cache.get(resource)?.value.value;
+        if (!this.cache.has(resource)) {
+            this.set(doc);
+        }
+        return this.get(resource);
     }
 
     private async update(uri: string) {
@@ -83,20 +105,27 @@ export class SepticConfigProvider implements ISepticConfigProvider {
             return;
         }
 
+        const revision = this.bumpRevision(uri);
         this.invalidate(uri);
 
         const doc = await this.loadDocument(uri);
 
-        if (!doc) {
+        if (!doc || this.revisions.get(uri) !== revision) {
             return;
         }
         this.set(doc);
     }
 
+    private bumpRevision(uri: string): number {
+        const revision = (this.revisions.get(uri) ?? 0) + 1;
+        this.revisions.set(uri, revision);
+        return revision;
+    }
+
     private set(doc: TextDocument) {
         const cts = new CancellationTokenSource();
         this.cache.set(doc.uri, {
-            value: lazy<Promise<SepticCnfg>>(async () => {
+            value: lazy<Promise<SepticCnfg | undefined>>(async () => {
                 const cnfg = await this.getValue(doc, cts.token);
                 return cnfg;
             }),
@@ -127,3 +156,4 @@ export class SepticConfigProvider implements ISepticConfigProvider {
         }
     }
 }
+

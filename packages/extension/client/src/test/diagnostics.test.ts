@@ -181,6 +181,139 @@ suite("Test diagnostics scg", async () => {
         await expectSimultaneousDiagnostics(docs);
     });
 
+    test("Rapid edits do not publish inconsistent standalone diagnostics", async () => {
+        const uri = getDocUri("test.cnfg");
+        const doc = await vscode.workspace.openTextDocument(uri);
+        const editor = await vscode.window.showTextDocument(doc);
+        const objects = Array.from(
+            { length: 4500 },
+            (_, index) => `Evr: V${index}\n Text1= "Value ${index}"\n`,
+        ).join("");
+        const calculations = Array.from(
+            { length: 1500 },
+            (_, index) =>
+                `CalcPvr: V${index}\n Alg= "V${index}.Meas + V${index + 1}.Meas"\n`,
+        ).join("");
+        const text = `System: Root\nDmmyAppl: Test\n${objects}CalcModl: Calc\n${calculations}CalcPvr: Result\n Alg= "getappln()"\n`;
+        const functionOffset = text.indexOf("getappln");
+        const unexpected: string[] = [];
+        let listener: vscode.Disposable | undefined;
+
+        const waitFor = async (condition: () => boolean) => {
+            const deadline = Date.now() + 10000;
+            while (Date.now() < deadline) {
+                if (condition()) return;
+                await new Promise((resolve) => setTimeout(resolve, 50));
+            }
+            throw new Error("Timed out waiting for diagnostics");
+        };
+
+        try {
+            expect(
+                await editor.edit((builder) => {
+                    builder.replace(
+                        new vscode.Range(
+                            doc.positionAt(0),
+                            doc.positionAt(doc.getText().length),
+                        ),
+                        text,
+                    );
+                }),
+            ).to.equal(true);
+            await waitFor(() =>
+                vscode.languages
+                    .getDiagnostics(uri)
+                    .some((diagnostic) => diagnostic.code === "W503"),
+            );
+            await new Promise((resolve) => setTimeout(resolve, 300));
+            listener = vscode.languages.onDidChangeDiagnostics((event) => {
+                if (
+                    !event.uris.some(
+                        (changed) => changed.toString() === uri.toString(),
+                    )
+                ) {
+                    return;
+                }
+                const diagnostics = vscode.languages.getDiagnostics(uri);
+                if (!diagnostics.length) unexpected.push("empty diagnostics");
+                if (
+                    diagnostics.some((diagnostic) => diagnostic.code === "W402")
+                ) {
+                    unexpected.push("missing parent");
+                }
+                if (
+                    diagnostics.some(
+                        (diagnostic) =>
+                            diagnostic.code === "W501" &&
+                            diagnostic.message.startsWith(
+                                "Reference to undefined variable: V",
+                            ),
+                    )
+                ) {
+                    unexpected.push("missing reference");
+                }
+            });
+
+            for (const interval of [35, 120]) {
+                const name = "x".repeat(20) + "getappln";
+                for (let index = 0; index < 20; index++) {
+                    expect(
+                        await editor.edit((builder) =>
+                            builder.insert(
+                                doc.positionAt(functionOffset + index),
+                                "x",
+                            ),
+                        ),
+                    ).to.equal(true);
+                    if (index < 19) {
+                        await new Promise((resolve) =>
+                            setTimeout(resolve, interval),
+                        );
+                    }
+                }
+                await waitFor(() =>
+                    vscode.languages
+                        .getDiagnostics(uri)
+                        .some(
+                            (diagnostic) =>
+                                diagnostic.code === "E202" &&
+                                diagnostic.message ===
+                                    `Unknown function: ${name}`,
+                        ),
+                );
+                await new Promise((resolve) => setTimeout(resolve, 300));
+                expect(
+                    await editor.edit((builder) =>
+                        builder.delete(
+                            new vscode.Range(
+                                doc.positionAt(functionOffset),
+                                doc.positionAt(functionOffset + 20),
+                            ),
+                        ),
+                    ),
+                ).to.equal(true);
+                await waitFor(
+                    () =>
+                        !vscode.languages
+                            .getDiagnostics(uri)
+                            .some(
+                                (diagnostic) =>
+                                    diagnostic.code === "E202" &&
+                                    diagnostic.message ===
+                                        `Unknown function: ${name}`,
+                            ),
+                );
+            }
+            expect(unexpected).to.deep.equal([]);
+        } finally {
+            listener?.dispose();
+            await vscode.window.showTextDocument(doc);
+            await vscode.commands.executeCommand(
+                "workbench.action.revertAndCloseActiveEditor",
+            );
+        }
+    });
+
     async function expectSourcePathDiagnostic(
         filenameField: string,
         filename: string,
@@ -233,3 +366,4 @@ suite("Test diagnostics scg", async () => {
         );
     });
 });
+

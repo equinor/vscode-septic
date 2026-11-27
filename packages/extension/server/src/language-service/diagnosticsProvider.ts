@@ -8,6 +8,8 @@ import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
 import { ISepticConfigProvider } from "../configProvider";
 import {
     SepticContext,
+    SepticCnfg,
+    ScgContext,
     getDiagnostics,
     SepticDiagnosticLevel,
 } from "@equinor/septic-config-lib";
@@ -39,10 +41,6 @@ export class DiagnosticProvider {
         uri: string,
         context: SepticContext,
     ): Promise<Diagnostic[]> {
-        const cnfg = await this.cnfgProvider.get(uri);
-        if (cnfg === undefined) {
-            return [];
-        }
         const settingsWorkspace = await this.settingsManager.getSettings();
         const settings =
             settingsWorkspace?.diagnostics ?? defaultDiagnosticsSettings;
@@ -51,6 +49,18 @@ export class DiagnosticProvider {
             return [];
         }
         await context.load();
+        let cnfg: SepticCnfg | undefined;
+        if (context instanceof ScgContext) {
+            context.updateLoadedObjectParents();
+            cnfg = context.getCachedConfig(uri);
+        } else if (context instanceof SepticCnfg && context.uri === uri) {
+            cnfg = context;
+        } else {
+            cnfg = await this.cnfgProvider.get(uri);
+        }
+        if (cnfg === undefined) {
+            return [];
+        }
         const diagnostics = getDiagnostics(cnfg, context);
         return diagnostics.map((diag) => {
             return {
@@ -78,3 +88,4 @@ function mapDiagnosticSeverity(
             return DiagnosticSeverity.Hint;
     }
 }
+
