@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.5](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.4.4...septic-config-lib-v1.4.5) (2026-11-27)
+
+
+### 🐛 Bug Fixes
+
+* keep diagnostics consistent during edits ([#1062](https://github.com/equinor/vscode-septic/issues/1062)) ([bef0cc5](https://github.com/equinor/vscode-septic/commit/bef0cc55ab1d93b57b6180f5062d9dc5091e4d57))
+
 ## [1.4.4](https://github.com/equinor/vscode-septic/compare/septic-config-lib-v1.4.3...septic-config-lib-v1.4.4) (2026-11-24)
 
 
