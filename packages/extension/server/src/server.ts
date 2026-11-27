@@ -133,7 +133,7 @@ async function publishDiagnosticsScgContext(
         );
     }
 
-    await context.updateObjectParents();
+    await context.load();
     const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
     const diagnosticsPromises = context.files.map(async (uri) => {
         const publication = publications.get(uri);
@@ -560,6 +560,7 @@ documentProvider.onDidDeleteDoc(async (uri) => {
     diagnosticPublications.invalidate(uri);
     if (path.extname(uri) === ".cnfg") {
         connection.sendDiagnostics({ uri: uri, diagnostics: [] });
+        eventBuffer.add(uri);
     }
 });
 

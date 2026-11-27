@@ -201,14 +201,17 @@ export class DocumentProvider {
             }
 
             doc.setInMemoryDoc(undefined);
-            const revision = this.bumpDiskRevision(doc.uri);
+            const revision = this.diskRevisions.get(doc.uri);
             if (doc.isDetached()) {
                 this.cache.delete(doc.uri);
                 this._onDidDeleteDoc.fire(doc.uri);
 
                 void this.openDocumentFromFs(doc.uri).then((loaded) => {
+                    const current = this.cache.get(doc.uri);
                     if (
                         loaded &&
+                        loaded === current &&
+                        !current.hasInMemoryDoc() &&
                         this.diskRevisions.get(doc.uri) === revision
                     ) {
                         this._onDidCreateDoc.fire(doc.uri);
@@ -223,7 +226,6 @@ export class DocumentProvider {
             if (!this.isRelevantFile(e.document.uri)) {
                 return;
             }
-            this.bumpDiskRevision(e.document.uri);
             const doc = this.cache.get(e.document.uri);
             if (doc) {
                 doc.setInMemoryDoc(e.document);

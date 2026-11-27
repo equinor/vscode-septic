@@ -54,9 +54,7 @@ export class DiagnosticProvider {
         }
         let cnfg: SepticCnfg | undefined;
         if (context instanceof ScgContext) {
-            if (!contextIsPrepared) {
-                context.updateLoadedObjectParents();
-            }
+            context.updateLoadedObjectParents();
             cnfg = context.getCachedConfig(uri);
         } else if (context instanceof SepticCnfg && context.uri === uri) {
             cnfg = context;

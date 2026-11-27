@@ -233,6 +233,117 @@ describe("Diagnostics configuration", () => {
         watched.dispose();
     });
 
+    it("keeps a pending disk refresh when an open document closes", async () => {
+        const opened = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const changed = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const closed = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const watched = new Emitter<DidChangeWatchedFilesParams>();
+        const refreshed = Promise.withResolvers<number[]>();
+        const documents = {
+            onDidOpen: opened.event,
+            onDidChangeContent: changed.event,
+            onDidClose: closed.event,
+            get: () => undefined,
+        } as unknown as TextDocuments<TextDocument>;
+        let reads = 0;
+        const connection = {
+            onDidChangeWatchedFiles: watched.event,
+            sendRequest: async () => {
+                reads++;
+                return reads === 1
+                    ? Array.from(Buffer.from("Evr: Before\n"))
+                    : refreshed.promise;
+            },
+        } as unknown as Connection;
+        const settings = {
+            getSettings: async () => ({ encoding: "utf8" }),
+        } as unknown as SettingsManager;
+        const provider = new DocumentProvider(connection, documents, settings);
+        const uri = "file:///test.cnfg";
+        const wrapped = await provider.getDocument(uri);
+        const document = TextDocument.create(uri, "septic", 2, "Evr: Saved\n");
+        opened.fire({ document });
+
+        let changes = 0;
+        const update = Promise.withResolvers<void>();
+        const listener = provider.onDidChangeDoc(() => {
+            changes++;
+            if (changes === 2) {
+                update.resolve();
+            }
+        });
+        watched.fire({ changes: [{ uri, type: FileChangeType.Changed }] });
+        expect(reads).to.equal(2);
+        closed.fire({ document });
+        refreshed.resolve(Array.from(Buffer.from("Evr: AfterSave\n")));
+        await update.promise;
+
+        expect(wrapped?.getText()).to.equal("Evr: AfterSave\n");
+        listener.dispose();
+        opened.dispose();
+        changed.dispose();
+        closed.dispose();
+        watched.dispose();
+    });
+
+    it("keeps a pending disk refresh when a cached document opens", async () => {
+        const opened = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const changed = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const closed = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const watched = new Emitter<DidChangeWatchedFilesParams>();
+        const refreshed = Promise.withResolvers<number[]>();
+        const documents = {
+            onDidOpen: opened.event,
+            onDidChangeContent: changed.event,
+            onDidClose: closed.event,
+            get: () => undefined,
+        } as unknown as TextDocuments<TextDocument>;
+        let reads = 0;
+        const connection = {
+            onDidChangeWatchedFiles: watched.event,
+            sendRequest: async () => {
+                reads++;
+                return reads === 1
+                    ? Array.from(Buffer.from("Evr: Before\n"))
+                    : refreshed.promise;
+            },
+        } as unknown as Connection;
+        const settings = {
+            getSettings: async () => ({ encoding: "utf8" }),
+        } as unknown as SettingsManager;
+        const provider = new DocumentProvider(connection, documents, settings);
+        const uri = "file:///test.cnfg";
+        const wrapped = await provider.getDocument(uri);
+
+        let changes = 0;
+        const update = Promise.withResolvers<void>();
+        const listener = provider.onDidChangeDoc(() => {
+            changes++;
+            if (changes === 2) {
+                update.resolve();
+            }
+        });
+        watched.fire({ changes: [{ uri, type: FileChangeType.Changed }] });
+        expect(reads).to.equal(2);
+        const document = TextDocument.create(
+            uri,
+            "septic",
+            2,
+            "Evr: Unsaved\n",
+        );
+        opened.fire({ document });
+        refreshed.resolve(Array.from(Buffer.from("Evr: AfterSave\n")));
+        await update.promise;
+        closed.fire({ document });
+
+        expect(wrapped?.getText()).to.equal("Evr: AfterSave\n");
+        listener.dispose();
+        opened.dispose();
+        changed.dispose();
+        closed.dispose();
+        watched.dispose();
+    });
+
     it("does not cache a disk read that completes after deletion", async () => {
         const opened = new Emitter<TextDocumentChangeEvent<TextDocument>>();
         const changed = new Emitter<TextDocumentChangeEvent<TextDocument>>();
@@ -577,7 +688,7 @@ describe("Diagnostics configuration", () => {
         ).to.equal(false);
     });
 
-    it("does not reload or relink a prepared SCG context", async () => {
+    it("relinks a prepared SCG context without reloading it", async () => {
         const uri = "file:///project/templates/test.cnfg";
         const cnfg = parseSepticForTest("Evr: Prepared");
         const context = new ScgContext(
@@ -609,11 +720,11 @@ describe("Diagnostics configuration", () => {
 
         await provider.provideDiagnostics(uri, context, true);
         expect(loads).to.equal(0);
-        expect(parentUpdates).to.equal(0);
+        expect(parentUpdates).to.equal(1);
 
         await provider.provideDiagnostics(uri, context);
         expect(loads).to.equal(1);
-        expect(parentUpdates).to.equal(1);
+        expect(parentUpdates).to.equal(2);
     });
 });
 
