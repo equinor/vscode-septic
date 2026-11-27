@@ -44,10 +44,8 @@ import {
 } from "@equinor/septic-config-lib";
 import { getIgnorePatterns, getIgnoredCodes } from "./ignorePath";
 import { ContextManager } from "./contextManager";
-import {
-    findLayoutFileIssues,
-    findSourceFileIssues,
-} from "./util/caseCheck";
+import { findLayoutFileIssues, findSourceFileIssues } from "./util/caseCheck";
+import { DiagnosticPublicationTracker } from "./util/diagnosticPublication";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -69,6 +67,28 @@ const langService: ILanguageService = createLanguageService(
     documentProvider,
 );
 
+const diagnosticPublications = new DiagnosticPublicationTracker();
+
+function sendDiagnosticsIfCurrent(
+    uri: string,
+    publication: symbol,
+    diagnostics: Diagnostic[],
+    contextPublication?: { uri: string; token: symbol },
+): void {
+    if (
+        !diagnosticPublications.isCurrent(uri, publication) ||
+        (contextPublication &&
+            !diagnosticPublications.isCurrent(
+                contextPublication.uri,
+                contextPublication.token,
+            ))
+    ) {
+        return;
+    }
+    connection.sendDiagnostics({ uri, diagnostics });
+    diagnosticPublications.finish(uri, publication);
+}
+
 const scgContextManager = new ScgContextManager(
     documentProvider,
     langService.cnfgProvider,
@@ -85,34 +105,79 @@ let hasWorkspaceFolderCapability = false;
 
 async function publishDiagnosticsScgContext(
     context: ScgContext,
+    initialPublication?: { uri: string; token: symbol },
 ): Promise<void> {
-    await context.load();
-    const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
+    const yamlUri = context.filePath;
+    diagnosticPublications.registerContext(yamlUri, context.files);
+    const publications = new Map<string, symbol>();
+    for (const uri of context.files) {
+        publications.set(
+            uri,
+            initialPublication?.uri === uri
+                ? initialPublication.token
+                : diagnosticPublications.begin(uri),
+        );
+    }
+    const yamlPublication =
+        initialPublication?.uri === yamlUri
+            ? initialPublication.token
+            : diagnosticPublications.begin(yamlUri);
+    if (
+        initialPublication &&
+        !publications.has(initialPublication.uri) &&
+        initialPublication.uri !== yamlUri
+    ) {
+        diagnosticPublications.finish(
+            initialPublication.uri,
+            initialPublication.token,
+        );
+    }
+
     await context.updateObjectParents();
+    const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
     const diagnosticsPromises = context.files.map(async (uri) => {
-        const codes = getIgnoredCodes(uri, ignorePatterns);
-        if (codes !== undefined && codes.length == 0) {
-            connection.sendDiagnostics({ uri: uri, diagnostics: [] });
+        const publication = publications.get(uri);
+        if (!publication) {
             return;
         }
-        let diagnostics = await langService.provideDiagnostics(uri, context);
+        const codes = getIgnoredCodes(uri, ignorePatterns);
+        if (codes !== undefined && codes.length == 0) {
+            sendDiagnosticsIfCurrent(uri, publication, [], {
+                uri: yamlUri,
+                token: yamlPublication,
+            });
+            return;
+        }
+        let diagnostics = await langService.provideDiagnostics(
+            uri,
+            context,
+            true,
+        );
         if (codes) {
             diagnostics = diagnostics.filter(
                 (diag) => diag.code && !codes.includes(diag.code as string),
             );
         }
-        connection.sendDiagnostics({ uri: uri, diagnostics: diagnostics });
+        sendDiagnosticsIfCurrent(uri, publication, diagnostics, {
+            uri: yamlUri,
+            token: yamlPublication,
+        });
     });
 
     await Promise.all(diagnosticsPromises);
 
-    await publishCaseDiscrepancyDiagnostics(context);
+    await publishCaseDiscrepancyDiagnostics(context, yamlPublication);
+    diagnosticPublications.finish(yamlUri, yamlPublication);
 }
 
 async function publishCaseDiscrepancyDiagnostics(
     context: ScgContext,
+    publication: symbol,
 ): Promise<void> {
     const yamlUri = context.filePath;
+    if (!diagnosticPublications.isCurrent(yamlUri, publication)) {
+        return;
+    }
     const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
     const codes = getIgnoredCodes(yamlUri, ignorePatterns);
     if (codes !== undefined && codes.length === 0) {
@@ -199,14 +264,17 @@ async function publishCaseDiscrepancyDiagnostics(
         );
     }
 
-    connection.sendDiagnostics({ uri: yamlUri, diagnostics: diagnostics });
+    sendDiagnosticsIfCurrent(yamlUri, publication, diagnostics);
 }
 
-async function publishDiagnosticsCnfg(cnfg: SepticCnfg): Promise<void> {
+async function publishDiagnosticsCnfg(
+    cnfg: SepticCnfg,
+    publication = diagnosticPublications.begin(cnfg.uri),
+): Promise<void> {
     const ignorePatterns = await getIgnorePatterns(connection, settingsManager);
     const codes = getIgnoredCodes(cnfg.uri, ignorePatterns);
     if (codes !== undefined && codes.length == 0) {
-        connection.sendDiagnostics({ uri: cnfg.uri, diagnostics: [] });
+        sendDiagnosticsIfCurrent(cnfg.uri, publication, []);
         return;
     }
     await cnfg.updateObjectParents();
@@ -216,20 +284,25 @@ async function publishDiagnosticsCnfg(cnfg: SepticCnfg): Promise<void> {
             (diag) => diag.code && !codes.includes(diag.code as string),
         );
     }
-    connection.sendDiagnostics({ uri: cnfg.uri, diagnostics: diagnostics });
+    sendDiagnosticsIfCurrent(cnfg.uri, publication, diagnostics);
 }
 
 async function publishDiagnostics(uri: string) {
+    const publication = diagnosticPublications.begin(uri);
     const context: SepticContext | undefined =
         await contextManager.getContext(uri);
     if (!context) {
+        diagnosticPublications.finish(uri, publication);
+        return;
+    }
+    if (!diagnosticPublications.isCurrent(uri, publication)) {
         return;
     }
     if (context instanceof ScgContext) {
-        publishDiagnosticsScgContext(context);
+        publishDiagnosticsScgContext(context, { uri, token: publication });
         return;
     }
-    publishDiagnosticsCnfg(context as SepticCnfg);
+    publishDiagnosticsCnfg(context as SepticCnfg, publication);
 }
 
 async function updateAllDiagnostics() {
@@ -460,6 +533,7 @@ connection.onInitialized(async () => {
 let eventBuffer = new Set<string>();
 
 documentProvider.onDidChangeDoc((uri) => {
+    diagnosticPublications.invalidate(uri);
     eventBuffer.add(uri);
 });
 
@@ -478,10 +552,12 @@ setInterval(async () => {
 }, 200);
 
 documentProvider.onDidCreateDoc(async (uri) => {
+    diagnosticPublications.invalidate(uri);
     publishDiagnostics(uri);
 });
 
 documentProvider.onDidDeleteDoc(async (uri) => {
+    diagnosticPublications.invalidate(uri);
     if (path.extname(uri) === ".cnfg") {
         connection.sendDiagnostics({ uri: uri, diagnostics: [] });
     }
@@ -652,3 +728,4 @@ documents.listen(connection);
 
 // Listen on the connection
 connection.listen();
+

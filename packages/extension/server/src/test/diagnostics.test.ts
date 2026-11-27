@@ -14,12 +14,53 @@ import { SepticConfigProvider } from "../configProvider";
 import { DocumentProvider } from "../documentProvider";
 import { DiagnosticProvider } from "../language-service/diagnosticsProvider";
 import { SettingsManager } from "../settings";
+import { DiagnosticPublicationTracker } from "../util/diagnosticPublication";
 import {
     ScgContext,
     SepticCnfg,
     SepticDiagnosticCode,
 } from "@equinor/septic-config-lib";
 import { parseSepticForTest } from "./util";
+
+describe("Diagnostic publication tracking", () => {
+    it("invalidates older requests after an edit or a newer publication", () => {
+        const tracker = new DiagnosticPublicationTracker();
+        const uri = "file:///test.cnfg";
+        const first = tracker.begin(uri);
+        expect(tracker.isCurrent(uri, first)).to.equal(true);
+
+        tracker.invalidate(uri);
+        expect(tracker.isCurrent(uri, first)).to.equal(false);
+
+        const second = tracker.begin(uri);
+        const third = tracker.begin(uri);
+        expect(tracker.isCurrent(uri, second)).to.equal(false);
+        expect(tracker.isCurrent(uri, third)).to.equal(true);
+        tracker.finish(uri, third);
+        expect(tracker.isCurrent(uri, third)).to.equal(false);
+    });
+
+    it("invalidates every pending publication in a changed SCG context", () => {
+        const tracker = new DiagnosticPublicationTracker();
+        const contextUri = "file:///project/scg.yaml";
+        const firstFile = "file:///project/templates/first.cnfg";
+        const secondFile = "file:///project/templates/second.cnfg";
+        tracker.registerContext(contextUri, [firstFile, secondFile]);
+        const contextPublication = tracker.begin(contextUri);
+        const firstPublication = tracker.begin(firstFile);
+        const secondPublication = tracker.begin(secondFile);
+
+        tracker.invalidate(firstFile);
+
+        expect(tracker.isCurrent(firstFile, firstPublication)).to.equal(false);
+        expect(tracker.isCurrent(secondFile, secondPublication)).to.equal(
+            false,
+        );
+        expect(tracker.isCurrent(contextUri, contextPublication)).to.equal(
+            false,
+        );
+    });
+});
 
 describe("Diagnostics configuration", () => {
     it("exposes the current in-memory document version", async () => {
@@ -96,6 +137,47 @@ describe("Diagnostics configuration", () => {
         expect(
             (await provider.get(uri))?.objects[0]?.identifier?.name,
         ).to.equal("OnDisk");
+        opened.dispose();
+        changed.dispose();
+        closed.dispose();
+    });
+
+    it("reloads a saved file when it closes without a disk snapshot", async () => {
+        const opened = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const changed = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const closed = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const documents = {
+            onDidOpen: opened.event,
+            onDidChangeContent: changed.event,
+            onDidClose: closed.event,
+            get: () => undefined,
+        } as unknown as TextDocuments<TextDocument>;
+        let reads = 0;
+        const connection = {
+            onDidChangeWatchedFiles: () => {},
+            sendRequest: async () => {
+                reads++;
+                return Array.from(Buffer.from("Evr: Saved\n"));
+            },
+        } as unknown as Connection;
+        const settings = {
+            getSettings: async () => ({ encoding: "utf8" }),
+        } as unknown as SettingsManager;
+        const provider = new DocumentProvider(connection, documents, settings);
+        const loaded = Promise.withResolvers<void>();
+        const listener = provider.onDidCreateDoc(() => loaded.resolve());
+        const uri = "file:///saved.cnfg";
+        const document = TextDocument.create(uri, "septic", 1, "Evr: Saved\n");
+        opened.fire({ document });
+
+        closed.fire({ document });
+
+        expect(reads).to.equal(1);
+        await loaded.promise;
+        expect((await provider.getDocument(uri))?.getText()).to.equal(
+            "Evr: Saved\n",
+        );
+        listener.dispose();
         opened.dispose();
         changed.dispose();
         closed.dispose();
@@ -181,6 +263,50 @@ describe("Diagnostics configuration", () => {
         read.resolve(Array.from(Buffer.from("Evr: Deleted\n")));
         expect(await pending).to.equal(undefined);
         expect(documentProvider.getAllDocumentUris()).to.deep.equal([]);
+        opened.dispose();
+        changed.dispose();
+        closed.dispose();
+        watched.dispose();
+    });
+
+    it("returns a newer cached disk document when an old read finishes", async () => {
+        const opened = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const changed = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const closed = new Emitter<TextDocumentChangeEvent<TextDocument>>();
+        const watched = new Emitter<DidChangeWatchedFilesParams>();
+        const oldRead = Promise.withResolvers<number[]>();
+        const newRead = Promise.withResolvers<number[]>();
+        const documents = {
+            onDidOpen: opened.event,
+            onDidChangeContent: changed.event,
+            onDidClose: closed.event,
+            get: () => undefined,
+        } as unknown as TextDocuments<TextDocument>;
+        let reads = 0;
+        const connection = {
+            onDidChangeWatchedFiles: watched.event,
+            sendRequest: async () =>
+                reads++ === 0 ? oldRead.promise : newRead.promise,
+        } as unknown as Connection;
+        const settings = {
+            getSettings: async () => ({ encoding: "utf8" }),
+        } as unknown as SettingsManager;
+        const provider = new DocumentProvider(connection, documents, settings);
+        const created = Promise.withResolvers<void>();
+        const listener = provider.onDidCreateDoc(() => created.resolve());
+        const uri = "file:///test.cnfg";
+        const oldDocument = provider.getDocument(uri);
+
+        watched.fire({ changes: [{ uri, type: FileChangeType.Created }] });
+        expect(reads).to.equal(2);
+        newRead.resolve(Array.from(Buffer.from("Evr: New\n")));
+        await created.promise;
+        const current = await provider.getDocument(uri);
+        oldRead.resolve(Array.from(Buffer.from("Evr: Old\n")));
+
+        expect(await oldDocument).to.equal(current);
+        expect(current?.getText()).to.equal("Evr: New\n");
+        listener.dispose();
         opened.dispose();
         changed.dispose();
         closed.dispose();
@@ -449,6 +575,45 @@ describe("Diagnostics configuration", () => {
         expect(
             missingShared(await provider.provideDiagnostics(calcUri, context)),
         ).to.equal(false);
+    });
+
+    it("does not reload or relink a prepared SCG context", async () => {
+        const uri = "file:///project/templates/test.cnfg";
+        const cnfg = parseSepticForTest("Evr: Prepared");
+        const context = new ScgContext(
+            "test",
+            "file:///project/scg.yaml",
+            {
+                templatepath: "templates",
+                sources: [],
+                layout: [{ name: "test.cnfg" }],
+            },
+            { get: async () => cnfg },
+        );
+        await context.updateObjectParents();
+        let loads = 0;
+        let parentUpdates = 0;
+        const load = context.load.bind(context);
+        const updateParents = context.updateLoadedObjectParents.bind(context);
+        context.load = async () => {
+            loads++;
+            await load();
+        };
+        context.updateLoadedObjectParents = () => {
+            parentUpdates++;
+            updateParents();
+        };
+        const provider = new DiagnosticProvider({ get: async () => cnfg }, {
+            getSettings: async () => ({ diagnostics: { enabled: true } }),
+        } as unknown as SettingsManager);
+
+        await provider.provideDiagnostics(uri, context, true);
+        expect(loads).to.equal(0);
+        expect(parentUpdates).to.equal(0);
+
+        await provider.provideDiagnostics(uri, context);
+        expect(loads).to.equal(1);
+        expect(parentUpdates).to.equal(1);
     });
 });
 

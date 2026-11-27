@@ -35,6 +35,7 @@ export interface ILanguageService {
     provideDiagnostics(
         uri: string,
         contextProvider: SepticContext,
+        contextIsPrepared?: boolean,
     ): Promise<lsp.Diagnostic[]>;
 
     provideDocumentSymbols(
@@ -165,3 +166,4 @@ export function createLanguageService(
         provideOpcTagList: generateOpcReport,
     });
 }
+

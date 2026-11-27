@@ -201,9 +201,19 @@ export class DocumentProvider {
             }
 
             doc.setInMemoryDoc(undefined);
+            const revision = this.bumpDiskRevision(doc.uri);
             if (doc.isDetached()) {
                 this.cache.delete(doc.uri);
                 this._onDidDeleteDoc.fire(doc.uri);
+
+                void this.openDocumentFromFs(doc.uri).then((loaded) => {
+                    if (
+                        loaded &&
+                        this.diskRevisions.get(doc.uri) === revision
+                    ) {
+                        this._onDidCreateDoc.fire(doc.uri);
+                    }
+                });
             } else {
                 this._onDidChangeDoc.fire(doc.uri);
             }
@@ -213,6 +223,7 @@ export class DocumentProvider {
             if (!this.isRelevantFile(e.document.uri)) {
                 return;
             }
+            this.bumpDiskRevision(e.document.uri);
             const doc = this.cache.get(e.document.uri);
             if (doc) {
                 doc.setInMemoryDoc(e.document);
@@ -230,10 +241,7 @@ export class DocumentProvider {
                 if (!this.isRelevantFile(change.uri)) {
                     continue;
                 }
-                this.diskRevisions.set(
-                    change.uri,
-                    (this.diskRevisions.get(change.uri) ?? 0) + 1,
-                );
+                this.bumpDiskRevision(change.uri);
                 switch (change.type) {
                     case FileChangeType.Created: {
                         const doc = this.cache.get(change.uri);
@@ -316,8 +324,7 @@ export class DocumentProvider {
                 content = this.decoderWindows1252.decode(bytes);
             }
             if (this.diskRevisions.get(uri) !== revision) {
-                const current = this.cache.get(uri);
-                return current?.hasInMemoryDoc() ? current : undefined;
+                return this.cache.get(uri);
             }
             const onDiskDoc = TextDocument.create(uri, "septic", 0, content);
             const existing = this.cache.get(uri);
@@ -336,6 +343,12 @@ export class DocumentProvider {
 
     private isRelevantFile(uri: string): boolean {
         return path.extname(uri) === ".cnfg" || path.extname(uri) === ".yaml";
+    }
+
+    private bumpDiskRevision(uri: string): number {
+        const revision = (this.diskRevisions.get(uri) ?? 0) + 1;
+        this.diskRevisions.set(uri, revision);
+        return revision;
     }
 }
 
