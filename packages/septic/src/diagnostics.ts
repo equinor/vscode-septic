@@ -47,6 +47,7 @@ import {
 
 import { SepticCnfg } from "./cnfg";
 import { SepticContext } from "./context";
+import { removeSpaces } from "./util";
 
 export function isPureJinja(str: string) {
     return /^\{\{.*\}\}$/.test(str);
@@ -159,6 +160,36 @@ export function getDiagnostics(
     cnfg: SepticCnfg,
     contextProvider: SepticContext,
 ): SepticDiagnostic[] {
+    if (
+        contextProvider === cnfg &&
+        cnfg.getObjectsByIdentifier ===
+            SepticCnfg.prototype.getObjectsByIdentifier
+    ) {
+        const index = new Map<string, SepticObject[]>();
+        for (const object of cnfg.objects) {
+            if (!object.identifier) {
+                continue;
+            }
+            const identifier = object.identifier.id;
+            const matches = index.get(identifier);
+            if (matches) {
+                matches.push(object);
+            } else {
+                index.set(identifier, [object]);
+            }
+        }
+        contextProvider = new Proxy(contextProvider, {
+            get(target, property) {
+                if (property === "getObjectsByIdentifier") {
+                    return (identifier: string) => [
+                        ...(index.get(removeSpaces(identifier)) ?? []),
+                    ];
+                }
+                const value: unknown = Reflect.get(target, property, target);
+                return typeof value === "function" ? value.bind(target) : value;
+            },
+        });
+    }
     const diagnostics: SepticDiagnostic[] = [];
     diagnostics.push(...validateObjects(cnfg, contextProvider));
     diagnostics.push(...validateAlgs(cnfg, contextProvider));
@@ -1396,3 +1427,4 @@ function formatDataType(attrDoc: SepticAttributeDocumentation) {
 function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
+

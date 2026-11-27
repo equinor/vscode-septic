@@ -22,6 +22,57 @@ import { parseSepticForTest } from "./util";
 
 SepticMetaInfoProvider.setVersion("v3.0");
 
+describe("Test indexed diagnostic lookups", () => {
+    it("matches normal lookups after object mutations", () => {
+        const cnfg = parseSepticForTest(`
+            Evr: Var
+            Mvr: Var
+            CalcPvr: Calc
+                Alg= "Var.Value"
+        `);
+        const fallback = new Proxy(cnfg, {
+            get(target, property) {
+                const value: unknown = Reflect.get(target, property, target);
+                return typeof value === "function" ? value.bind(target) : value;
+            },
+        });
+
+        expect(cnfg.getObjectsByIdentifier(" V a r ")).to.deep.equal(
+            cnfg.objects.slice(0, 2),
+        );
+        expect(getDiagnostics(cnfg, cnfg)).to.deep.equal(
+            getDiagnostics(cnfg, fallback),
+        );
+
+        cnfg.objects.reverse();
+        expect(getDiagnostics(cnfg, cnfg)).to.deep.equal(
+            getDiagnostics(cnfg, fallback),
+        );
+
+        cnfg.objects.splice(1, 1);
+        cnfg.objects[1]!.identifier!.id = "Changed";
+        expect(getDiagnostics(cnfg, cnfg)).to.deep.equal(
+            getDiagnostics(cnfg, fallback),
+        );
+    });
+
+    it("respects custom identifier lookups", () => {
+        const cnfg = parseSepticForTest(`
+            Evr: Var
+            CalcPvr: Calc
+                Alg= "Var.Value"
+        `);
+        let calls = 0;
+        cnfg.getObjectsByIdentifier = () => {
+            calls++;
+            return [];
+        };
+
+        getDiagnostics(cnfg, cnfg);
+        expect(calls).to.be.greaterThan(0);
+    });
+});
+
 describe("Test diagnostics for invalid algs", () => {
     it("Expect diagnostics for missing parenthesis in alg", () => {
         const text = `
@@ -1640,3 +1691,4 @@ describe("Test validation of comments", () => {
         expect(diag.length).to.equal(0);
     });
 });
+
